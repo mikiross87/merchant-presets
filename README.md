@@ -1,7 +1,12 @@
 # Merchant Presets — Shops for 5e
 
-Seventeen ready-made shops as [Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles)
-merchants, in Village / Town / City sizes — **51 merchants, 1,185 stock lines.**
+A module for **[Foundry Virtual Tabletop](https://foundryvtt.com/)** v14 and the
+**dnd5e** system, built on
+[Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles).
+
+Seventeen ready-made shops as Item Piles merchants, in Village / Town / City
+sizes — **51 merchants, 1,351 stock lines.** Drag one out of the compendium,
+drop a token, and your players can shop.
 
 Built entirely from **SRD 5.2** (CC-BY-4.0) plus this module's own goods, so it
 works in any `dnd5e` world and redistributes no paid content.
@@ -9,6 +14,14 @@ works in any `dnd5e` world and redistributes no paid content.
 Inspired by the free homebrew *Stores for D&D 2024* by
 [The Inspired Arcana](https://www.patreon.com/TheInspiredArcana) — worth your
 time, and worth a follow.
+
+## Install
+
+Paste this manifest URL into Foundry's **Install Module** dialog:
+
+```
+https://github.com/mikiross87/merchant-presets/releases/latest/download/module.json
+```
 
 ## Requirements
 

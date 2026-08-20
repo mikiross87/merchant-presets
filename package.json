@@ -4,11 +4,11 @@
   "description": "Build tooling for the Merchant Presets Foundry VTT module",
   "scripts": {
     "pack": "npm run pack:merchants && npm run pack:stock && npm run pack:goods",
-    "pack:merchants": "fvtt package pack -n merchants --in _source/merchants --out packs",
-    "pack:stock": "fvtt package pack -n stock --in _source/stock --out packs",
-    "pack:goods": "fvtt package pack -n goods --in _source/goods --out packs"
+    "pack:merchants": "fvtt package pack -n merchants --id merchant-presets --type Module --in _source/merchants --out packs",
+    "pack:stock": "fvtt package pack -n stock --id merchant-presets --type Module --in _source/stock --out packs",
+    "pack:goods": "fvtt package pack -n goods --id merchant-presets --type Module --in _source/goods --out packs"
   },
   "devDependencies": {
-    "@foundryvtt/foundryvtt-cli": "^1.0.4"
+    "@foundryvtt/foundryvtt-cli": "^3.0.3"
   }
 }
