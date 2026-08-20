@@ -206,32 +206,10 @@ have no such flag, so those filters never touch them.
 
 Every price, weight and description is the SRD's, with no exceptions.
 
-## Building
+## Contributing
 
-`packs/` is generated and not tracked in git. `_source/` holds the JSON it is
-compiled from, and `data/recipes.json` holds the shop composition.
-
-```sh
-npm install
-npm run pack        # _source/*.json  ->  packs/*  (LevelDB)
-```
-
-That is all CI and the release workflow need — compiling the packs requires
-nothing but this repository.
-
-Regenerating `_source/` itself is a separate, rarer step. `tools/build_srd.py`
-reads `data/recipes.json`, resolves each stock line against an unpacked copy of
-the system's `dnd5e.equipment24` compendium, and writes the merchant and stock
-table JSON. It needs the dnd5e system installed locally, and the paths at the
-top of the script pointed at it.
-
-Document ids are content-derived hashes and the stock rolls are seeded per item,
-so a rebuild reproduces the same packs rather than churning them.
-
-> **Close the world before building.** Foundry holds module packs open while a
-> world is loaded and flushes its own in-memory copy over anything written
-> underneath, silently reverting the build. `tools/build_srd.py` refuses to run
-> in that case; `npm run pack` does not check.
+Building the packs, changing what the shops stock, and cutting releases are all
+covered in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Legal
 
