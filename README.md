@@ -1,5 +1,12 @@
 # Merchant Presets — Shops for 5e
 
+![Foundry Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmikiross87%2Fmerchant-presets%2FHEAD%2Fmodule.json&query=%24.compatibility.verified&prefix=v&label=foundry&color=informational)
+![System](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmikiross87%2Fmerchant-presets%2FHEAD%2Fmodule.json&query=%24.relationships.systems%5B0%5D.compatibility.verified&prefix=dnd5e%20v&label=system&color=informational)
+![Latest Release](https://img.shields.io/github/v/release/mikiross87/merchant-presets?label=version)
+![Downloads](https://img.shields.io/github/downloads/mikiross87/merchant-presets/module.zip?label=downloads)
+[![CI](https://github.com/mikiross87/merchant-presets/actions/workflows/ci.yml/badge.svg)](https://github.com/mikiross87/merchant-presets/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT%20code%20%7C%20CC%20BY%204.0%20content-informational)](LICENSE)
+
 A module for **[Foundry Virtual Tabletop](https://foundryvtt.com/)** v14 and the
 **dnd5e** system, built on
 [Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles).
