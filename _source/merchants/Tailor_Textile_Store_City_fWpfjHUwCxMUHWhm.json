@@ -102,6 +102,132 @@
       "_key": "!actors.items!fWpfjHUwCxMUHWhm.BFp9y71KTjhwmtpS"
     },
     {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "hPgcVficcEEmcoNk",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.hPgcVficcEEmcoNk"
+    },
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "aalGKrzNfTlK44ox",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.aalGKrzNfTlK44ox"
+    },
+    {
       "name": "Clothes, Fine",
       "system": {
         "description": {
@@ -423,6 +549,69 @@
       "_key": "!actors.items!fWpfjHUwCxMUHWhm.0br4zQwmR7XrSfNp"
     },
     {
+      "name": "Entertainer's Pack",
+      "system": {
+        "description": {
+          "value": "<p>An Entertainer's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBedroll0000]{Bedroll}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBell0000000]{Bell}, @UUID[Compendium.dnd5e.items.Item.UkWdyJYQTfVX2cJW]{Bullseye Lantern}, 3 @UUID[Compendium.dnd5e.equipment24.Item.phbagCostume0000]{Costumes}, @UUID[Compendium.dnd5e.equipment24.Item.phbagMirror00000]{Mirror}, 8 flasks of @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{Oil}, 9 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 40,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "entertainers-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-leather-gold-pink.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagEntertainer"
+      },
+      "_id": "BgpuVV8D05rt9G4h",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.BgpuVV8D05rt9G4h"
+    },
+    {
       "name": "Pouch",
       "system": {
         "description": {
@@ -484,6 +673,69 @@
       },
       "_id": "ewuE1fYwUU4rMSNa",
       "_key": "!actors.items!fWpfjHUwCxMUHWhm.ewuE1fYwUU4rMSNa"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "mQhzkZ4NIQXbKsH0",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.mQhzkZ4NIQXbKsH0"
     },
     {
       "name": "Robe",
@@ -633,6 +885,195 @@
       },
       "_id": "IEcFTyg6zFLByaw4",
       "_key": "!actors.items!fWpfjHUwCxMUHWhm.IEcFTyg6zFLByaw4"
+    },
+    {
+      "name": "Sack",
+      "system": {
+        "description": {
+          "value": "<p>A Sack holds up to 30 pounds within 1 cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "sack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagSack0000000"
+      },
+      "_id": "xngXtFb4npgm67Om",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.xngXtFb4npgm67Om"
+    },
+    {
+      "name": "Sack",
+      "system": {
+        "description": {
+          "value": "<p>A Sack holds up to 30 pounds within 1 cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "sack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagSack0000000"
+      },
+      "_id": "dAEohbhfMK8flR3d",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.dAEohbhfMK8flR3d"
+    },
+    {
+      "name": "Sack",
+      "system": {
+        "description": {
+          "value": "<p>A Sack holds up to 30 pounds within 1 cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "sack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagSack0000000"
+      },
+      "_id": "QCv4lMRwaD5pe2yp",
+      "_key": "!actors.items!fWpfjHUwCxMUHWhm.QCv4lMRwaD5pe2yp"
     },
     {
       "name": "Tent",
@@ -1047,6 +1488,12 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Basket": 3,
+        "Entertainer's Pack": 2,
+        "Pouch": 2,
+        "Sack": 4
       }
     },
     "item-piles": {

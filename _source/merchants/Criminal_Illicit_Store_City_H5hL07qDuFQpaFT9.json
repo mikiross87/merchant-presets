@@ -1411,6 +1411,195 @@
       "_key": "!actors.items!H5hL07qDuFQpaFT9.lRDg7nUeX26LwqMa"
     },
     {
+      "name": "Burglar's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Burglar's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBallBearing]{Ball Bearings}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBell0000000]{Bell}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagCandle00000]{Candles}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCrowbar0000]{Crowbar}, @UUID[Compendium.dnd5e.items.Item.wjHtGnd05SPdURqE]{Hooded Lantern}, 7 @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{flasks of Oil}, 5 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 16,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "burglars-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-canvas-white-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBurglarsPac"
+      },
+      "_id": "C0DBWTRb5dgcTuPX",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.C0DBWTRb5dgcTuPX"
+    },
+    {
+      "name": "Burglar's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Burglar's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBallBearing]{Ball Bearings}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBell0000000]{Bell}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagCandle00000]{Candles}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCrowbar0000]{Crowbar}, @UUID[Compendium.dnd5e.items.Item.wjHtGnd05SPdURqE]{Hooded Lantern}, 7 @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{flasks of Oil}, 5 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 16,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "burglars-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-canvas-white-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBurglarsPac"
+      },
+      "_id": "uOBlf71hSKk5ILiR",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.uOBlf71hSKk5ILiR"
+    },
+    {
+      "name": "Burglar's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Burglar's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBallBearing]{Ball Bearings}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBell0000000]{Bell}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagCandle00000]{Candles}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCrowbar0000]{Crowbar}, @UUID[Compendium.dnd5e.items.Item.wjHtGnd05SPdURqE]{Hooded Lantern}, 7 @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{flasks of Oil}, 5 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 16,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "burglars-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-canvas-white-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBurglarsPac"
+      },
+      "_id": "92NvyAy1R7YNpjzk",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.92NvyAy1R7YNpjzk"
+    },
+    {
       "name": "Burnt Othur Fumes",
       "type": "consumable",
       "img": "icons/magic/air/fog-gas-smoke-dense-green.webp",
@@ -9111,6 +9300,9 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Burglar's Pack": 4
       }
     },
     "item-piles": {

@@ -901,6 +901,132 @@
       "_key": "!actors.items!IZ2qsuJc4ynG0OMI.GbuF7gBZZbXzeG7P"
     },
     {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "FY0UJkSm26KRPNNq",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.FY0UJkSm26KRPNNq"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "NwZ2h4upweQni2Kb",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.NwZ2h4upweQni2Kb"
+    },
+    {
       "name": "Ink",
       "system": {
         "description": {
@@ -2513,6 +2639,132 @@
       "_key": "!actors.items!IZ2qsuJc4ynG0OMI.iPakGhBP20pLEZTM"
     },
     {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "2LMJ5SSGL4OiZeRG",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.2LMJ5SSGL4OiZeRG"
+    },
+    {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "r48sHjFrHaBMEJqr",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.r48sHjFrHaBMEJqr"
+    },
+    {
       "name": "Alchemist's Supplies",
       "system": {
         "description": {
@@ -4096,6 +4348,10 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Flask": 3,
+        "Vial": 3
       }
     },
     "item-piles": {

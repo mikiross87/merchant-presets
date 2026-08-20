@@ -515,6 +515,68 @@
       "_key": "!actors.items!4ehrvYemvvZQEVf1.AsnvvRldmm0YvPzb"
     },
     {
+      "name": "Quiver",
+      "system": {
+        "description": {
+          "value": "<p>A Quiver holds up to 20 Arrows.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 20
+        },
+        "identifier": "quiver"
+      },
+      "type": "container",
+      "img": "icons/containers/ammunition/arrows-quiver-black.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagQuiver00000"
+      },
+      "_id": "ry8WNGXE9xoOxTqQ",
+      "_key": "!actors.items!4ehrvYemvvZQEVf1.ry8WNGXE9xoOxTqQ"
+    },
+    {
       "name": "Rope",
       "system": {
         "description": {
@@ -3261,6 +3323,10 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Case, Crossbow Bolt": 1,
+        "Quiver": 2
       }
     },
     "item-piles": {

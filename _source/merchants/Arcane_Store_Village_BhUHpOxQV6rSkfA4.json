@@ -328,6 +328,69 @@
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.8wLZfwzNRVXjU86o"
     },
     {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "NIdpViTSZ1wAKEzi",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.NIdpViTSZ1wAKEzi"
+    },
+    {
       "name": "Candle",
       "system": {
         "description": {
@@ -603,6 +666,69 @@
       },
       "_id": "viCScXEdYiEnSTMt",
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.viCScXEdYiEnSTMt"
+    },
+    {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "9mhj08zx0FEF3L6r",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.9mhj08zx0FEF3L6r"
     },
     {
       "name": "Ink",
@@ -946,6 +1072,69 @@
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.JY8OsZY12FxrkxCQ"
     },
     {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "Smba0xTWxg40xOKD",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.Smba0xTWxg40xOKD"
+    },
+    {
       "name": "Robe",
       "system": {
         "description": {
@@ -1179,6 +1368,69 @@
       },
       "_id": "QJCUqhNquZEfKck6",
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.QJCUqhNquZEfKck6"
+    },
+    {
+      "name": "Scholar's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Scholar's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBook0000000]{Book}, @UUID[Compendium.dnd5e.equipment24.Item.phbagInk00000000]{Ink}, @UUID[Compendium.dnd5e.equipment24.Item.phbagInkPen00000]{Ink Pen}, @UUID[Compendium.dnd5e.equipment24.Item.phbagLamp0000000]{Lamp}, 10 flasks of @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{Oil}, 10 sheets of @UUID[Compendium.dnd5e.equipment24.Item.phbagParchment00]{Parchment}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 40,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "scholars-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-leather-strapped-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagScholarsPac"
+      },
+      "_id": "0bfUCBRVdgZgQL5L",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.0bfUCBRVdgZgQL5L"
     },
     {
       "name": "Sprig of mistletoe",
@@ -2185,6 +2437,13 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Bottle, Glass": 2,
+        "Case, Map or Scroll": 1,
+        "Component Pouch": 2,
+        "Pouch": 2,
+        "Scholar's Pack": 2
       }
     },
     "item-piles": {

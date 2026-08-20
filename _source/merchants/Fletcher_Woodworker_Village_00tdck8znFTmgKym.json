@@ -453,6 +453,68 @@
       "_key": "!actors.items!00tdck8znFTmgKym.LvhzNjbalncqBITe"
     },
     {
+      "name": "Case, Crossbow Bolt",
+      "system": {
+        "description": {
+          "value": "<p>A Crossbow Bolt Case holds up to 20 Bolts.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 20
+        },
+        "identifier": "case-crossbow-bolt"
+      },
+      "type": "container",
+      "img": "icons/containers/ammunition/quiver-simple-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaseCrossbo"
+      },
+      "_id": "wNJ9OEHGJuQtD990",
+      "_key": "!actors.items!00tdck8znFTmgKym.wNJ9OEHGJuQtD990"
+    },
+    {
       "name": "Quiver",
       "system": {
         "description": {
@@ -2832,6 +2894,10 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Case, Crossbow Bolt": 2,
+        "Quiver": 1
       }
     },
     "item-piles": {

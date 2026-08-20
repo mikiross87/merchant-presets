@@ -698,6 +698,69 @@
       "_key": "!actors.items!AJOSFf4SWAuYEJJJ.0yoOuC10BIn7siMY"
     },
     {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "3DKyGsJE96GctIuy",
+      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.3DKyGsJE96GctIuy"
+    },
+    {
       "name": "Flask",
       "system": {
         "description": {
@@ -1684,6 +1747,132 @@
       "_key": "!actors.items!AJOSFf4SWAuYEJJJ.mWaPHXrxZ27oisf5"
     },
     {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "FS9O02h1rWl0MwuH",
+      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.FS9O02h1rWl0MwuH"
+    },
+    {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "zkrlMUh1plRnKxCl",
+      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.zkrlMUh1plRnKxCl"
+    },
+    {
       "name": "Alchemist's Supplies",
       "system": {
         "description": {
@@ -2262,6 +2451,12 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Component Pouch": 2,
+        "Flask": 1,
+        "Pouch": 1,
+        "Vial": 3
       }
     },
     "item-piles": {

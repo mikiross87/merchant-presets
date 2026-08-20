@@ -328,6 +328,132 @@
       "_key": "!actors.items!5orkNAaxcp1pokP1.2e358JHQBX2wqdWl"
     },
     {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "ffixYZwZv0BYFBfQ",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.ffixYZwZv0BYFBfQ"
+    },
+    {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "4DenhTmT9PuXZ2bG",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.4DenhTmT9PuXZ2bG"
+    },
+    {
       "name": "Candle",
       "system": {
         "description": {
@@ -542,6 +668,68 @@
       "_key": "!actors.items!5orkNAaxcp1pokP1.lViS7tXga5dtlUiH"
     },
     {
+      "name": "Case, Map or Scroll",
+      "system": {
+        "description": {
+          "value": "<p>A Map or Scroll Case holds up to 10 sheets of paper or 5 sheets of parchment.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 10
+        },
+        "identifier": "case-map-or-scroll"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/case-leather-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaseMaporSc"
+      },
+      "_id": "4a9SsvyJZ4Z7OcJr",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.4a9SsvyJZ4Z7OcJr"
+    },
+    {
       "name": "Component Pouch",
       "type": "container",
       "flags": {
@@ -603,6 +791,195 @@
       },
       "_id": "0ZTKeBFadJPDgXoI",
       "_key": "!actors.items!5orkNAaxcp1pokP1.0ZTKeBFadJPDgXoI"
+    },
+    {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "Shgh9CLwd71Gcvq2",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.Shgh9CLwd71Gcvq2"
+    },
+    {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "qlfBm4PssMOpWY9c",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.qlfBm4PssMOpWY9c"
+    },
+    {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "C2hN2s1TSseaaHtp",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.C2hN2s1TSseaaHtp"
     },
     {
       "name": "Ink",
@@ -944,6 +1321,195 @@
       },
       "_id": "7BNt0hoK8vBcxxg1",
       "_key": "!actors.items!5orkNAaxcp1pokP1.7BNt0hoK8vBcxxg1"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "P7E8bb2GD2sBo3B9",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.P7E8bb2GD2sBo3B9"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "DLzdRQKnRHoHywVw",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.DLzdRQKnRHoHywVw"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "snHptKYu7agoxuLw",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.snHptKYu7agoxuLw"
     },
     {
       "name": "Robe",
@@ -3309,6 +3875,13 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Bottle, Glass": 3,
+        "Case, Map or Scroll": 2,
+        "Component Pouch": 4,
+        "Pouch": 4,
+        "Scholar's Pack": 1
       }
     },
     "item-piles": {

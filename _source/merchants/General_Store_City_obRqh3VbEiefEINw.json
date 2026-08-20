@@ -718,6 +718,132 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.WAi2psjQRs5udQXR"
     },
     {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "ASTf8Hr7ejGvsi7K",
+      "_key": "!actors.items!obRqh3VbEiefEINw.ASTf8Hr7ejGvsi7K"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "9GH1CX4zYWlFvA1c",
+      "_key": "!actors.items!obRqh3VbEiefEINw.9GH1CX4zYWlFvA1c"
+    },
+    {
       "name": "Ink",
       "system": {
         "description": {
@@ -1305,6 +1431,195 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.FWix4sONE1YZ3GMw"
     },
     {
+      "name": "Waterskin",
+      "system": {
+        "description": {
+          "value": "<p>A Waterskin holds up to 4 pints. If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": "phbagDungeoneers",
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 4
+        },
+        "identifier": "waterskin"
+      },
+      "type": "container",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+      },
+      "_id": "kYWLzKwDBkIftbtB",
+      "_key": "!actors.items!obRqh3VbEiefEINw.kYWLzKwDBkIftbtB"
+    },
+    {
+      "name": "Waterskin",
+      "system": {
+        "description": {
+          "value": "<p>A Waterskin holds up to 4 pints. If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": "phbagDungeoneers",
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 4
+        },
+        "identifier": "waterskin"
+      },
+      "type": "container",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+      },
+      "_id": "c3ZcKWerQOCBslKU",
+      "_key": "!actors.items!obRqh3VbEiefEINw.c3ZcKWerQOCBslKU"
+    },
+    {
+      "name": "Waterskin",
+      "system": {
+        "description": {
+          "value": "<p>A Waterskin holds up to 4 pints. If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": "phbagDungeoneers",
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 4
+        },
+        "identifier": "waterskin"
+      },
+      "type": "container",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+      },
+      "_id": "9NuOWZWc70NSz9Et",
+      "_key": "!actors.items!obRqh3VbEiefEINw.9NuOWZWc70NSz9Et"
+    },
+    {
       "name": "Rope",
       "system": {
         "description": {
@@ -1700,6 +2015,69 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.pAwhdIKxIO6ApFSq"
     },
     {
+      "name": "Pot, Iron",
+      "system": {
+        "description": {
+          "value": "<p>An Iron Pot holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 10,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "pot-iron"
+      },
+      "type": "container",
+      "img": "icons/tools/laboratory/cauldron-filled-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPotIron0000"
+      },
+      "_id": "rpQrjRPyrbsffbxi",
+      "_key": "!actors.items!obRqh3VbEiefEINw.rpQrjRPyrbsffbxi"
+    },
+    {
       "name": "Barrel",
       "system": {
         "description": {
@@ -1763,6 +2141,132 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.BVQ42yMjnrYLNI0D"
     },
     {
+      "name": "Barrel",
+      "system": {
+        "description": {
+          "value": "<p>A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 70,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 333.6
+        },
+        "identifier": "barrel"
+      },
+      "type": "container",
+      "img": "icons/containers/barrels/barrel-oak-banded-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBarrel00000"
+      },
+      "_id": "fxNmiUynZ7YgJYzB",
+      "_key": "!actors.items!obRqh3VbEiefEINw.fxNmiUynZ7YgJYzB"
+    },
+    {
+      "name": "Barrel",
+      "system": {
+        "description": {
+          "value": "<p>A Barrel holds up to 40 gallons of liquid or up to 4 cubic feet of dry goods.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 70,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 333.6
+        },
+        "identifier": "barrel"
+      },
+      "type": "container",
+      "img": "icons/containers/barrels/barrel-oak-banded-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBarrel00000"
+      },
+      "_id": "CV3LjLo1Av6B3lBk",
+      "_key": "!actors.items!obRqh3VbEiefEINw.CV3LjLo1Av6B3lBk"
+    },
+    {
       "name": "Basket",
       "system": {
         "description": {
@@ -1824,6 +2328,195 @@
       },
       "_id": "AHMyszfafrRk4jhM",
       "_key": "!actors.items!obRqh3VbEiefEINw.AHMyszfafrRk4jhM"
+    },
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "ZeLjfVeZNAUoe3Rv",
+      "_key": "!actors.items!obRqh3VbEiefEINw.ZeLjfVeZNAUoe3Rv"
+    },
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "b7sy342LOKKzb8x6",
+      "_key": "!actors.items!obRqh3VbEiefEINw.b7sy342LOKKzb8x6"
+    },
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "iRBKRXEoAkdTrviD",
+      "_key": "!actors.items!obRqh3VbEiefEINw.iRBKRXEoAkdTrviD"
     },
     {
       "name": "Bedroll",
@@ -1943,6 +2636,195 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.xencjXqWmNP8EJ8i"
     },
     {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "MATwLXfAO97jAPsx",
+      "_key": "!actors.items!obRqh3VbEiefEINw.MATwLXfAO97jAPsx"
+    },
+    {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "0027Jl0EwUOi3uiF",
+      "_key": "!actors.items!obRqh3VbEiefEINw.0027Jl0EwUOi3uiF"
+    },
+    {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "Ln1fiex6RTZBB6FW",
+      "_key": "!actors.items!obRqh3VbEiefEINw.Ln1fiex6RTZBB6FW"
+    },
+    {
       "name": "Bucket",
       "system": {
         "description": {
@@ -2004,6 +2886,195 @@
       },
       "_id": "NW375FduQPxmRuEj",
       "_key": "!actors.items!obRqh3VbEiefEINw.NW375FduQPxmRuEj"
+    },
+    {
+      "name": "Bucket",
+      "system": {
+        "description": {
+          "value": "<p>A Bucket holds up to half a cubic foot of contents.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bucket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/bucket-steel.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBucket00000"
+      },
+      "_id": "bKJKEzzgTMMHxeOG",
+      "_key": "!actors.items!obRqh3VbEiefEINw.bKJKEzzgTMMHxeOG"
+    },
+    {
+      "name": "Bucket",
+      "system": {
+        "description": {
+          "value": "<p>A Bucket holds up to half a cubic foot of contents.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bucket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/bucket-steel.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBucket00000"
+      },
+      "_id": "JZmAVz5nQbndxVmV",
+      "_key": "!actors.items!obRqh3VbEiefEINw.JZmAVz5nQbndxVmV"
+    },
+    {
+      "name": "Bucket",
+      "system": {
+        "description": {
+          "value": "<p>A Bucket holds up to half a cubic foot of contents.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bucket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/bucket-steel.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBucket00000"
+      },
+      "_id": "wrq40pw0OG5wJbcB",
+      "_key": "!actors.items!obRqh3VbEiefEINw.wrq40pw0OG5wJbcB"
     },
     {
       "name": "Chest",
@@ -2216,6 +3287,195 @@
       },
       "_id": "YoDD19l03zaqPppk",
       "_key": "!actors.items!obRqh3VbEiefEINw.YoDD19l03zaqPppk"
+    },
+    {
+      "name": "Jug",
+      "system": {
+        "description": {
+          "value": "<p>A Jug holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "jug"
+      },
+      "type": "container",
+      "img": "icons/containers/kitchenware/jug-terracotta-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagJug00000000"
+      },
+      "_id": "vTBBTjS9d8aswI4B",
+      "_key": "!actors.items!obRqh3VbEiefEINw.vTBBTjS9d8aswI4B"
+    },
+    {
+      "name": "Jug",
+      "system": {
+        "description": {
+          "value": "<p>A Jug holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "jug"
+      },
+      "type": "container",
+      "img": "icons/containers/kitchenware/jug-terracotta-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagJug00000000"
+      },
+      "_id": "5iyLAKBzHMi3YYFM",
+      "_key": "!actors.items!obRqh3VbEiefEINw.5iyLAKBzHMi3YYFM"
+    },
+    {
+      "name": "Jug",
+      "system": {
+        "description": {
+          "value": "<p>A Jug holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "jug"
+      },
+      "type": "container",
+      "img": "icons/containers/kitchenware/jug-terracotta-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagJug00000000"
+      },
+      "_id": "6e3tve9vj34bGjEq",
+      "_key": "!actors.items!obRqh3VbEiefEINw.6e3tve9vj34bGjEq"
     },
     {
       "name": "Ladder",
@@ -2583,6 +3843,132 @@
       "_key": "!actors.items!obRqh3VbEiefEINw.qliArPFQqdoAEDrK"
     },
     {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "Z4oSdFa97m9HKV2k",
+      "_key": "!actors.items!obRqh3VbEiefEINw.Z4oSdFa97m9HKV2k"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "3mndwKhyzcIUUFmn",
+      "_key": "!actors.items!obRqh3VbEiefEINw.3mndwKhyzcIUUFmn"
+    },
+    {
       "name": "Rations",
       "system": {
         "description": {
@@ -2792,6 +4178,69 @@
       },
       "_id": "TDNgSPwhI6AS9Gfy",
       "_key": "!actors.items!obRqh3VbEiefEINw.TDNgSPwhI6AS9Gfy"
+    },
+    {
+      "name": "Sack",
+      "system": {
+        "description": {
+          "value": "<p>A Sack holds up to 30 pounds within 1 cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "sack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagSack0000000"
+      },
+      "_id": "4ZkBqT19zlrScW7h",
+      "_key": "!actors.items!obRqh3VbEiefEINw.4ZkBqT19zlrScW7h"
     },
     {
       "name": "Shovel",
@@ -5784,6 +7233,19 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Flask": 3,
+        "Waterskin": 4,
+        "Pot, Iron": 2,
+        "Barrel": 3,
+        "Basket": 4,
+        "Bottle, Glass": 4,
+        "Bucket": 4,
+        "Chest": 1,
+        "Jug": 4,
+        "Pouch": 3,
+        "Sack": 2
       }
     },
     "item-piles": {

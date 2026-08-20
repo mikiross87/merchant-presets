@@ -190,6 +190,69 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.IrS9zpkBEHFkdkCK"
     },
     {
+      "name": "Backpack",
+      "system": {
+        "description": {
+          "value": "<p>A Backpack holds up to 30 pounds within 1 cubic foot. It can also serve as a saddlebag.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "backpack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-leather.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBackpack000"
+      },
+      "_id": "1Fl71cncw7oAl4JH",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.1Fl71cncw7oAl4JH"
+    },
+    {
       "name": "Bedroll",
       "system": {
         "description": {
@@ -503,6 +566,132 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.ggzMt0IkbDCCg46f"
     },
     {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "djZEn8bnDeOoiWhc",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.djZEn8bnDeOoiWhc"
+    },
+    {
+      "name": "Bottle, Glass",
+      "system": {
+        "description": {
+          "value": "<p>A Glass Bottle holds up to 1½ pints.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "bottle-glass"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass"
+      },
+      "_id": "XImVBldgARjbLgjZ",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.XImVBldgARjbLgjZ"
+    },
+    {
       "name": "Bullets, Sling",
       "system": {
         "description": {
@@ -803,6 +992,68 @@
       },
       "_id": "Gy0vRk8mi9OgFoAh",
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.Gy0vRk8mi9OgFoAh"
+    },
+    {
+      "name": "Case, Crossbow Bolt",
+      "system": {
+        "description": {
+          "value": "<p>A Crossbow Bolt Case holds up to 20 Bolts.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 20
+        },
+        "identifier": "case-crossbow-bolt"
+      },
+      "type": "container",
+      "img": "icons/containers/ammunition/quiver-simple-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaseCrossbo"
+      },
+      "_id": "xC9dFwwBhkpwExcb",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.xC9dFwwBhkpwExcb"
     },
     {
       "name": "Case, Map or Scroll",
@@ -1234,6 +1485,69 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.g9FgN0Q9eoOsrMQQ"
     },
     {
+      "name": "Chest",
+      "system": {
+        "description": {
+          "value": "<p>A Chest holds up to 12 cubic feet of contents.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 25,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 360
+        },
+        "identifier": "chest"
+      },
+      "type": "container",
+      "img": "icons/containers/chest/chest-reinforced-steel-walnut-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagChest000000"
+      },
+      "_id": "7xtOQun1CK9b08bp",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.7xtOQun1CK9b08bp"
+    },
+    {
       "name": "Climber's Kit",
       "system": {
         "description": {
@@ -1611,6 +1925,132 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.PXJs8Y6hkjSYDs1U"
     },
     {
+      "name": "Dungeoneer's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Dungeoneer's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCaltrops000]{Caltrops}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCrowbar0000]{Crowbar}, 2 flasks of @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{Oil}, 10 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagTorch000000]{Torches}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 12,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "dungeoneers-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-stitched-leather-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagDungeoneers"
+      },
+      "_id": "f2sh09zNgqbBBtgU",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.f2sh09zNgqbBBtgU"
+    },
+    {
+      "name": "Dungeoneer's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Dungeoneer's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCaltrops000]{Caltrops}, @UUID[Compendium.dnd5e.equipment24.Item.phbagCrowbar0000]{Crowbar}, 2 flasks of @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{Oil}, 10 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagTorch000000]{Torches}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 12,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "dungeoneers-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-stitched-leather-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagDungeoneers"
+      },
+      "_id": "uiar3YJuzc20VY0l",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.uiar3YJuzc20VY0l"
+    },
+    {
       "name": "Explorer's Pack",
       "system": {
         "description": {
@@ -1735,6 +2175,69 @@
       },
       "_id": "dRjCcQMLGAHbFfD4",
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.dRjCcQMLGAHbFfD4"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "nsMcTXuTUQgwmlZv",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.nsMcTXuTUQgwmlZv"
     },
     {
       "name": "Grappling Hook",
@@ -3453,6 +3956,195 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.Uqt3wfJ8xUykgZgd"
     },
     {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "vcExtSLfmP6Gik33",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.vcExtSLfmP6Gik33"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "V7X0yE3QG3gyanya",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.V7X0yE3QG3gyanya"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "eVy8lyfzT9fa0Iwy",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.eVy8lyfzT9fa0Iwy"
+    },
+    {
       "name": "Quiver",
       "system": {
         "description": {
@@ -4181,6 +4873,19 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Backpack": 2,
+        "Bottle, Glass": 3,
+        "Case, Crossbow Bolt": 2,
+        "Case, Map or Scroll": 1,
+        "Chest": 2,
+        "Dungeoneer's Pack": 3,
+        "Explorer's Pack": 1,
+        "Flask": 2,
+        "Pot, Iron": 1,
+        "Pouch": 4,
+        "Quiver": 1
       }
     },
     "item-piles": {

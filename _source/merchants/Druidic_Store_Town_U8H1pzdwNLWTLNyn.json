@@ -305,6 +305,69 @@
       "_key": "!actors.items!U8H1pzdwNLWTLNyn.kJxE2NyqZxSUQom3"
     },
     {
+      "name": "Backpack",
+      "system": {
+        "description": {
+          "value": "<p>A Backpack holds up to 30 pounds within 1 cubic foot. It can also serve as a saddlebag.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "backpack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-leather.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBackpack000"
+      },
+      "_id": "hh8gA2AFNAbikgDc",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.hh8gA2AFNAbikgDc"
+    },
+    {
       "name": "Basket",
       "system": {
         "description": {
@@ -366,6 +429,69 @@
       },
       "_id": "QhROrYI3VezchocL",
       "_key": "!actors.items!U8H1pzdwNLWTLNyn.QhROrYI3VezchocL"
+    },
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "04zlARmRIWPDFMi6",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.04zlARmRIWPDFMi6"
     },
     {
       "name": "Bedroll",
@@ -885,6 +1011,132 @@
       "_key": "!actors.items!U8H1pzdwNLWTLNyn.YWmm2yVnuKZMhaYg"
     },
     {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "zmn3XvcqP8pOigwq",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.zmn3XvcqP8pOigwq"
+    },
+    {
+      "name": "Component Pouch",
+      "type": "container",
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A Component Pouch is watertight and filled with compartments that hold all the free Material components of your spells.</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "component-pouch"
+      },
+      "effects": [],
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagComponentPo"
+      },
+      "_id": "0leUKP3ySqAk84df",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.0leUKP3ySqAk84df"
+    },
+    {
       "name": "Explorer's Pack",
       "system": {
         "description": {
@@ -1009,6 +1261,132 @@
       },
       "_id": "M4kr7u3gyTTkdbZA",
       "_key": "!actors.items!U8H1pzdwNLWTLNyn.M4kr7u3gyTTkdbZA"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "FbvHx91iGST5jILJ",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.FbvHx91iGST5jILJ"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "IIJmcEhwDV1KIUC7",
+      "_key": "!actors.items!U8H1pzdwNLWTLNyn.IIJmcEhwDV1KIUC7"
     },
     {
       "name": "Poison, Basic",
@@ -5529,6 +5907,15 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Backpack": 2,
+        "Basket": 2,
+        "Component Pouch": 3,
+        "Explorer's Pack": 1,
+        "Flask": 3,
+        "Pot, Iron": 1,
+        "Pouch": 1
       }
     },
     "item-piles": {

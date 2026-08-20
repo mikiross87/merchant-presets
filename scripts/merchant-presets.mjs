@@ -283,6 +283,39 @@ async function reapplyItemFlags(actor) {
 }
 
 /**
+ * Put the shop's containers back to their proper number.
+ *
+ * A container cannot carry a quantity — dnd5e's ContainerData declares
+ * `quantity: new NumberField({min: 1, max: 1})`, because each one is a distinct
+ * object with its own contents, exactly as two pouches on a character sheet are
+ * two items. So the shop stocks them as separate documents. A restock cannot
+ * reproduce that on its own: Item Piles' Transaction appends one document per
+ * table result and calls setItemQuantity on it, which dnd5e clamps straight
+ * back to 1. Each merchant records how many of each it should carry.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<number>} how many container documents were created
+ */
+async function reconcileContainers(actor) {
+  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.containers");
+  if (!wanted) return 0;
+  const have = actor.items.filter(i => i.type === "container");
+  const creates = [];
+  for (const [name, target] of Object.entries(wanted)) {
+    const existing = have.filter(i => i.name === name);
+    if (!existing.length || existing.length >= target) continue;
+    const template = existing[0].toObject();
+    for (let n = existing.length; n < target; n++) {
+      const copy = foundry.utils.deepClone(template);
+      delete copy._id;
+      creates.push(copy);
+    }
+  }
+  if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
+  return creates.length;
+}
+
+/**
  * Refill the till. Coin is finite, and buying from the party drains it, so
  * without this a shop that once bought a hoard is poor for the rest of the
  * campaign. A new day's trading starts from the shop's own purse.
@@ -307,6 +340,7 @@ async function replenishPurse(actor) {
 async function restock(actor) {
   await game.itempiles.API.refreshMerchantInventory(actor);
   await reapplyItemFlags(actor);
+  await reconcileContainers(actor);
   await replenishPurse(actor);
   return true;
 }
@@ -467,7 +501,8 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
-  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags, replenishPurse };
+  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
+    reconcileContainers, replenishPurse };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.

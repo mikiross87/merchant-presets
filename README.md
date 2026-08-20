@@ -92,11 +92,17 @@ drink is a pint; a Medium creature needs a gallon a day.
   Item Piles flags, so each merchant stores the intended per-item flags by name
   and the module re-applies them afterwards — otherwise limited stock would
   quietly become unlimited after the first restock.
-- **Containers are one-of.** dnd5e pins a container's quantity to exactly 1
-  (`ContainerData` declares `quantity: new NumberField({min: 1, max: 1})`)
-  because each is a distinct object holding its own contents, so a count of
-  backpacks cannot be represented at all. The shop has one; it sells out and
-  comes back on restock.
+- **Containers are stocked as separate items.** dnd5e pins a container's
+  quantity to exactly 1 (`ContainerData` declares
+  `quantity: new NumberField({min: 1, max: 1})`) because each is a distinct
+  object with its own contents — two pouches are two items, just as on a
+  character sheet. So a shop with four pouches holds four documents, and Item
+  Piles keeps them apart because `itempilesdnd5e` lists `container` in
+  `UNSTACKABLE_ITEM_TYPES`. They appear as separate rows with no quantity shown,
+  and are bought one at a time. Counts are small on purpose (1d2 village, 1d3
+  town, 1d4 city) — the price bands would put forty pouches on a city shelf.
+  A restock cannot rebuild them by itself, so the module recreates the missing
+  copies afterwards.
 - **Restocking** — open the merchant, *Populate Items* tab, **Roll All Tables**.
   Each merchant is pre-wired to its own stock table in `addAll` mode, so this
   rebuilds the canonical list and re-rolls the counts.

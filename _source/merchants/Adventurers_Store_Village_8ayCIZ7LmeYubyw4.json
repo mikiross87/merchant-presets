@@ -190,6 +190,69 @@
       "_key": "!actors.items!8ayCIZ7LmeYubyw4.zlS3748X4xQhucuK"
     },
     {
+      "name": "Backpack",
+      "system": {
+        "description": {
+          "value": "<p>A Backpack holds up to 30 pounds within 1 cubic foot. It can also serve as a saddlebag.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "backpack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-leather.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBackpack000"
+      },
+      "_id": "gmkEFbmt2iUoebNi",
+      "_key": "!actors.items!8ayCIZ7LmeYubyw4.gmkEFbmt2iUoebNi"
+    },
+    {
       "name": "Bedroll",
       "system": {
         "description": {
@@ -805,6 +868,68 @@
       "_key": "!actors.items!8ayCIZ7LmeYubyw4.jHIgrdYn9QF1sx8N"
     },
     {
+      "name": "Case, Crossbow Bolt",
+      "system": {
+        "description": {
+          "value": "<p>A Crossbow Bolt Case holds up to 20 Bolts.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 20
+        },
+        "identifier": "case-crossbow-bolt"
+      },
+      "type": "container",
+      "img": "icons/containers/ammunition/quiver-simple-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaseCrossbo"
+      },
+      "_id": "CAq5RWBRTlaS5qDw",
+      "_key": "!actors.items!8ayCIZ7LmeYubyw4.CAq5RWBRTlaS5qDw"
+    },
+    {
       "name": "Chain",
       "system": {
         "description": {
@@ -1398,6 +1523,69 @@
       },
       "_id": "SZK7tXnctoVpSLre",
       "_key": "!actors.items!8ayCIZ7LmeYubyw4.SZK7tXnctoVpSLre"
+    },
+    {
+      "name": "Explorer's Pack",
+      "system": {
+        "description": {
+          "value": "<p>An Explorer's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBedroll0000]{Bedroll}, 2 flasks of @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{Oil}, 10 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}, 10 @UUID[Compendium.dnd5e.equipment24.Item.phbagTorch000000]{Torches}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagWaterskin00]{Waterskin}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "explorers-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-leather-fur-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagExplorersPa"
+      },
+      "_id": "wgMePV4DpDZg7Fbs",
+      "_key": "!actors.items!8ayCIZ7LmeYubyw4.wgMePV4DpDZg7Fbs"
     },
     {
       "name": "Flask",
@@ -2514,6 +2702,69 @@
       "_key": "!actors.items!8ayCIZ7LmeYubyw4.vs5PUlisqmb8drvT"
     },
     {
+      "name": "Pot, Iron",
+      "system": {
+        "description": {
+          "value": "<p>An Iron Pot holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 10,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "pot-iron"
+      },
+      "type": "container",
+      "img": "icons/tools/laboratory/cauldron-filled-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPotIron0000"
+      },
+      "_id": "XeS2msLJdVypzm0a",
+      "_key": "!actors.items!8ayCIZ7LmeYubyw4.XeS2msLJdVypzm0a"
+    },
+    {
       "name": "Pouch",
       "system": {
         "description": {
@@ -3245,6 +3496,16 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Backpack": 2,
+        "Bottle, Glass": 1,
+        "Case, Crossbow Bolt": 2,
+        "Explorer's Pack": 2,
+        "Flask": 1,
+        "Pot, Iron": 2,
+        "Pouch": 1,
+        "Quiver": 1
       }
     },
     "item-piles": {

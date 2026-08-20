@@ -663,6 +663,68 @@
       "_key": "!actors.items!MLTOIp7Dsy7NlAgx.y8HHEtG8AoZLRqRj"
     },
     {
+      "name": "Case, Map or Scroll",
+      "system": {
+        "description": {
+          "value": "<p>A Map or Scroll Case holds up to 10 sheets of paper or 5 sheets of parchment.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "count": 10
+        },
+        "identifier": "case-map-or-scroll"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/case-leather-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaseMaporSc"
+      },
+      "_id": "6zx43rpjwIFIRvon",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.6zx43rpjwIFIRvon"
+    },
+    {
       "name": "Flask",
       "system": {
         "description": {
@@ -724,6 +786,69 @@
       },
       "_id": "1jIhrtDUZlwlrL6y",
       "_key": "!actors.items!MLTOIp7Dsy7NlAgx.1jIhrtDUZlwlrL6y"
+    },
+    {
+      "name": "Flask",
+      "system": {
+        "description": {
+          "value": "<p>A Flask holds up to 1 pint.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "identifier": "flask"
+      },
+      "type": "container",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagFlask000000"
+      },
+      "_id": "zr8gEwATL5wMRnwV",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.zr8gEwATL5wMRnwV"
     },
     {
       "name": "Healer's Kit",
@@ -2284,6 +2409,11 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Case, Map or Scroll": 2,
+        "Flask": 2,
+        "Vial": 1
       }
     },
     "item-piles": {

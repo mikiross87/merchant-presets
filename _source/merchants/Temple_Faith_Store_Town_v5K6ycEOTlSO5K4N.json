@@ -780,6 +780,132 @@
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.PFXlSJxl8XOoqRRM"
     },
     {
+      "name": "Diplomat's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Diplomat's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagChest000000]{Chest}, @UUID[Compendium.dnd5e.items.Item.FqFmdzIBUSxFKKfi]{Fine Clothes}, @UUID[Compendium.dnd5e.equipment24.Item.phbagInk00000000]{Ink}, 5 @UUID[Compendium.dnd5e.equipment24.Item.phbagInkPen00000]{Ink Pens}, @UUID[Compendium.dnd5e.equipment24.Item.phbagLamp0000000]{Lamp}, 2 @UUID[Compendium.dnd5e.items.Item.5mIeX824uMklU3xq]{Map or Scroll Cases}, 4 @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{flasks of Oil}, 5 sheets of @UUID[Compendium.dnd5e.equipment24.Item.phbagPaper000000]{Paper}, 5 sheets of @UUID[Compendium.dnd5e.equipment24.Item.phbagParchment00]{Parchment}, @UUID[Compendium.dnd5e.equipment24.Item.phbagPerfume0000]{Perfume}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 39,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 25,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 360
+        },
+        "identifier": "diplomats-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/chest/chest-reinforced-steel-red.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagDiplomatsPa"
+      },
+      "_id": "Ip6mTMFLNFq5sZnE",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.Ip6mTMFLNFq5sZnE"
+    },
+    {
+      "name": "Diplomat's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Diplomat's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagChest000000]{Chest}, @UUID[Compendium.dnd5e.items.Item.FqFmdzIBUSxFKKfi]{Fine Clothes}, @UUID[Compendium.dnd5e.equipment24.Item.phbagInk00000000]{Ink}, 5 @UUID[Compendium.dnd5e.equipment24.Item.phbagInkPen00000]{Ink Pens}, @UUID[Compendium.dnd5e.equipment24.Item.phbagLamp0000000]{Lamp}, 2 @UUID[Compendium.dnd5e.items.Item.5mIeX824uMklU3xq]{Map or Scroll Cases}, 4 @UUID[Compendium.dnd5e.equipment24.Item.phbagOil00000000]{flasks of Oil}, 5 sheets of @UUID[Compendium.dnd5e.equipment24.Item.phbagPaper000000]{Paper}, 5 sheets of @UUID[Compendium.dnd5e.equipment24.Item.phbagParchment00]{Parchment}, @UUID[Compendium.dnd5e.equipment24.Item.phbagPerfume0000]{Perfume}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 39,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 25,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 360
+        },
+        "identifier": "diplomats-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/chest/chest-reinforced-steel-red.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagDiplomatsPa"
+      },
+      "_id": "UKduJ08uS1UD2ZlA",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.UKduJ08uS1UD2ZlA"
+    },
+    {
       "name": "Flask",
       "system": {
         "description": {
@@ -1892,6 +2018,132 @@
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.iCXq11DwxEEOm6it"
     },
     {
+      "name": "Priest's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Priest's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBlanket0000]{Blanket}, @UUID[Compendium.dnd5e.equipment24.Item.phbagHolyWater00]{Holy Water}, @UUID[Compendium.dnd5e.equipment24.Item.phbagLamp0000000]{Lamp}, 7 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRobe0000000]{Robe}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 33,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "priests-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-engraved-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPriestsPack"
+      },
+      "_id": "sPdMWFey7oPjR3RJ",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.sPdMWFey7oPjR3RJ"
+    },
+    {
+      "name": "Priest's Pack",
+      "system": {
+        "description": {
+          "value": "<p>A Priest's Pack contains the following items: @UUID[Compendium.dnd5e.equipment24.Item.phbagBackpack000]{Backpack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBlanket0000]{Blanket}, @UUID[Compendium.dnd5e.equipment24.Item.phbagHolyWater00]{Holy Water}, @UUID[Compendium.dnd5e.equipment24.Item.phbagLamp0000000]{Lamp}, 7 days of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRobe0000000]{Robe}, and @UUID[Compendium.dnd5e.equipment24.Item.phbagTinderbox00]{Tinderbox}.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 33,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "priests-pack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-engraved-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPriestsPack"
+      },
+      "_id": "hmh7L7XyfWut7gNe",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.hmh7L7XyfWut7gNe"
+    },
+    {
       "name": "Robe",
       "system": {
         "description": {
@@ -2039,6 +2291,132 @@
       },
       "_id": "bXohxFMCatL92l47",
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.bXohxFMCatL92l47"
+    },
+    {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "ulKcCH8ksL1spxAX",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.ulKcCH8ksL1spxAX"
+    },
+    {
+      "name": "Vial",
+      "system": {
+        "description": {
+          "value": "<p>A Vial holds up to 4 ounces.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 0.25
+        },
+        "identifier": "vial"
+      },
+      "type": "container",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagVial0000000"
+      },
+      "_id": "mKWavPnUARwKgFTw",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.mKWavPnUARwKgFTw"
     },
     {
       "name": "Calligrapher's Supplies",
@@ -2981,6 +3359,13 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Case, Map or Scroll": 1,
+        "Diplomat's Pack": 3,
+        "Flask": 1,
+        "Priest's Pack": 3,
+        "Vial": 3
       }
     },
     "item-piles": {

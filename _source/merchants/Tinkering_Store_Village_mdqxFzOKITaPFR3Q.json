@@ -3202,6 +3202,10 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         }
+      },
+      "containers": {
+        "Flask": 1,
+        "Vial": 1
       }
     },
     "item-piles": {

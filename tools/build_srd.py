@@ -88,6 +88,11 @@ DND5E_ITEM_FILTERS = [
     {"path": "system.type.value", "filters": "natural"},
 ]
 
+# Containers are stocked as separate documents, one each, so their count is the
+# number of rows in the merchant list. Keep it small deliberately: the price
+# bands would put forty pouches on a city shelf.
+CONTAINER_COUNTS = ["1d2", "1d3", "1d4"]
+
 STOCK_BANDS = [(1,["2d6+4","3d6+8","4d10+20"]), (10,["1d6+2","2d6+4","3d8+8"]),
                (50,["1d4+1","1d6+2","2d6+4"]), (250,["1d2","1d3+1","1d4+2"]),
                (1000,["1d2-1","1d2","1d3"]), (float("inf"),["1d3-2","1d2-1","1d2-1"])]
@@ -110,9 +115,9 @@ def roll(formula, seed):
     rng = random.Random(seed)
     return max(0, sum(rng.randint(1, d) for _ in range(n)) + mod)
 
-def make_item(src, line, actor_id, uuid, own, tier_index):
+def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
     it = json.loads(json.dumps(src))
-    iid = fid(actor_id, uuid)
+    iid = fid(actor_id, uuid, copy) if copy else fid(actor_id, uuid)
     for k in ("_id", "_key", "folder", "sort", "ownership"):
         it.pop(k, None)
     sysd = it.setdefault("system", {})
@@ -208,7 +213,7 @@ def main():
             aid = fid("actor", shop["id"], label)
             tid = fid("table", shop["id"], label)
 
-            items = []; results = []
+            items = []; results = []; containers = {}
             for line in lines:
                 if line.get("uuid"):
                     gid = line["uuid"].rsplit(".", 1)[-1]
@@ -222,15 +227,28 @@ def main():
                 it, is_container = make_item(src, line, aid, uuid, own, ti)
                 items.append(it); counts[label] += 1
 
+                # dnd5e pins a container's quantity to exactly 1, because each
+                # is a distinct object with its own contents — two pouches are
+                # two items, exactly as on a character sheet. So stock them as
+                # separate documents rather than one with a count.
+                if is_container:
+                    n = roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
+                    containers[src["name"]] = n
+                    for c in range(1, n):
+                        dup, _ = make_item(src, line, aid, uuid, own, ti, copy=c)
+                        items.append(dup); counts[label] += 1
+
                 price = (it["system"].get("price") or {})
                 gp = (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
                 bundle = line.get("bundle", 1)
                 if line.get("service") or is_container:
                     formula = "1"
                 else:
-                    roll = band(gp, ti)
-                    formula = f"({roll})*{bundle}" if bundle > 1 else roll
+                    stock_roll = band(gp, ti)
+                    formula = f"({stock_roll})*{bundle}" if bundle > 1 else stock_roll
                 rid = fid(tid, uuid)
+                if any(r["_id"] == rid for r in results):
+                    continue
                 results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}",
                                 "type": "document", "name": src["name"], "img": src.get("img"),
                                 "documentUuid": uuid, "weight": 1,
@@ -254,8 +272,12 @@ def main():
                 item_filters.append({"path": "flags.merchant-presets.kind",
                                      "filters": ",".join(refuse_kinds)})
 
-            per_result = {r["_id"]: i["flags"]["item-piles"].pop("__formula")
-                          for r, i in zip(results, items)}
+            by_uuid = {}
+            for i in items:
+                f = i["flags"]["item-piles"].pop("__formula", None)
+                if f is not None:
+                    by_uuid[i["_stats"]["compendiumSource"]] = f
+            per_result = {r["_id"]: by_uuid.get(r["documentUuid"], "1") for r in results}
 
             # Item Piles rebuilds a restocked shelf straight from the source
             # compendium, and SRD items carry no Item Piles flags — so poisons
@@ -290,7 +312,8 @@ def main():
                     # The shop's own record of itself: what its purse should be
                     # refilled to, and the item flags a restock must restore.
                     "merchant-presets": {"purse": round(shop["purse"] * purse_mul),
-                                         "itemFlags": item_flags},
+                                         "itemFlags": item_flags,
+                                         "containers": containers},
                     "item-piles": {"data": {
                     "enabled": True, "type": "merchant",
                     "description": f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else ""),

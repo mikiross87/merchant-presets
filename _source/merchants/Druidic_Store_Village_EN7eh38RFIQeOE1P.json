@@ -305,6 +305,69 @@
       "_key": "!actors.items!EN7eh38RFIQeOE1P.WBwnQ67LAhnvfQdA"
     },
     {
+      "name": "Backpack",
+      "system": {
+        "description": {
+          "value": "<p>A Backpack holds up to 30 pounds within 1 cubic foot. It can also serve as a saddlebag.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "backpack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/pack-simple-leather.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBackpack000"
+      },
+      "_id": "VnutoSTlG4PE6TBb",
+      "_key": "!actors.items!EN7eh38RFIQeOE1P.VnutoSTlG4PE6TBb"
+    },
+    {
       "name": "Basket",
       "system": {
         "description": {
@@ -1241,6 +1304,69 @@
       },
       "_id": "IEzz4sMnL3iFCU8L",
       "_key": "!actors.items!EN7eh38RFIQeOE1P.IEzz4sMnL3iFCU8L"
+    },
+    {
+      "name": "Pot, Iron",
+      "system": {
+        "description": {
+          "value": "<p>An Iron Pot holds up to 1 gallon.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 10,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 8.4
+        },
+        "identifier": "pot-iron"
+      },
+      "type": "container",
+      "img": "icons/tools/laboratory/cauldron-filled-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPotIron0000"
+      },
+      "_id": "QKcnWYtwWezMSs2F",
+      "_key": "!actors.items!EN7eh38RFIQeOE1P.QKcnWYtwWezMSs2F"
     },
     {
       "name": "Potion of Healing",
@@ -5195,6 +5321,15 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         }
+      },
+      "containers": {
+        "Backpack": 2,
+        "Basket": 1,
+        "Component Pouch": 1,
+        "Explorer's Pack": 1,
+        "Flask": 1,
+        "Pot, Iron": 2,
+        "Pouch": 1
       }
     },
     "item-piles": {
