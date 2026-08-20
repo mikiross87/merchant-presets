@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Provides care and housing for horses and other riding animals. Grooms and feeds steeds, and sells riding gear and mounts. Usually attached to inns and taverns.</p>"
+        "value": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -1179,7 +1179,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Provides care and housing for horses and other riding animals. Grooms and feeds steeds, and sells riding gear and mounts. Usually attached to inns and taverns.</p>",
+        "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>",
         "merchantImage": "icons/environment/settlement/stables-horses.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

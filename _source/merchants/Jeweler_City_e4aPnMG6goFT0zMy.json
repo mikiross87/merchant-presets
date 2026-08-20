@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Crafts and sells fine jewellery, precious gems, and accessories. Primarily caters to those seeking jewellery, but another major source of business is adventurers seeking spell components or offloading goods from dungeons.</p>"
+        "value": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -661,7 +661,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Crafts and sells fine jewellery, precious gems, and accessories. Primarily caters to those seeking jewellery, but another major source of business is adventurers seeking spell components or offloading goods from dungeons.</p>",
+        "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>",
         "merchantImage": "icons/environment/settlement/house-city.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

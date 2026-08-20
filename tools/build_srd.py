@@ -9,8 +9,11 @@ Ids are content-derived hashes so a rebuild keeps every UUID stable.
 """
 import json, glob, os, re, sys, hashlib, unicodedata, urllib.request, collections, random
 
-MOD   = "/Users/miguelross/Foundry VTT/Data/modules/merchant-presets"
-SRD   = "/private/tmp/claude-501/-Users-miguelross-Foundry-VTT/699030c9-30ea-42a1-8ee0-f2a3e3992ebf/scratchpad/unpack/sys-equipment24"
+MOD   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# An unpacked copy of the system's dnd5e.equipment24 pack. Not in this repo:
+# unpack it from the installed system with
+#   fvtt package unpack -n equipment24 --in <dnd5e>/packs --out <dir>
+SRD   = os.environ.get("MP_SRD_DIR") or (sys.argv[1] if len(sys.argv) > 1 else "")
 SRD_PACK = "dnd5e.equipment24"
 B62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -171,6 +174,8 @@ def make_item(src, line, actor_id, uuid, own, tier_index):
     return it, is_container
 
 def main():
+    if not SRD or not os.path.isdir(SRD):
+        sys.exit("point MP_SRD_DIR (or argv[1]) at an unpacked dnd5e.equipment24 directory")
     assert_world_closed()
     srd = load_srd(); goods = load_goods()
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))

@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Specialise in crafting bows, arrows, and wooden items. Workshops filled with wood, carving tools, and feathers.</p>"
+        "value": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -2727,7 +2727,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Specialise in crafting bows, arrows, and wooden items. Workshops filled with wood, carving tools, and feathers.</p>",
+        "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>",
         "merchantImage": "icons/environment/settlement/lumbermill.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

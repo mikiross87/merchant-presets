@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Primarily offers instruments and musical supplies. Caters to adventurers in need of more music in their life, but its primary customers are those who live within the settlement.</p>"
+        "value": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -1532,7 +1532,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Primarily offers instruments and musical supplies. Caters to adventurers in need of more music in their life, but its primary customers are those who live within the settlement.</p>",
+        "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>",
         "merchantImage": "icons/environment/settlement/gazebo.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

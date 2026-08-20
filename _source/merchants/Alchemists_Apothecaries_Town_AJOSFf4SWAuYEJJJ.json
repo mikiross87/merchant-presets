@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Specialise in potions, herbs, and remedies. Shelves lined with colourful bottles, drying herbs, and the scent of exotic ingredients.</p>"
+        "value": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -2173,7 +2173,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Specialise in potions, herbs, and remedies. Shelves lined with colourful bottles, drying herbs, and the scent of exotic ingredients.</p>",
+        "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>",
         "merchantImage": "icons/environment/settlement/winemaker-still-vintner.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

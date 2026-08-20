@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Carries a wide variety of goods and caters as much to the general population as to adventurers. Everyday goods including clothing, pots, lighting, and tools.</p>"
+        "value": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -5503,7 +5503,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Carries a wide variety of goods and caters as much to the general population as to adventurers. Everyday goods including clothing, pots, lighting, and tools.</p>",
+        "description": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>",
         "merchantImage": "icons/environment/settlement/wood-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

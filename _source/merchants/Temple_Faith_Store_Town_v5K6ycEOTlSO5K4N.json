@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Provides religious items and services. Often within temples, connected to them, or associated with religious practices. Serves both adventurers and townsfolk.</p>"
+        "value": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -2808,7 +2808,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Provides religious items and services. Often within temples, connected to them, or associated with religious practices. Serves both adventurers and townsfolk.</p><p><em>From the Cleric & Paladin spell lists. Limited spellcasting: village 1d4+1, town 1d8+1, city 1d12+1 total spell slots, refreshed weekly. Spell components (Cleric & Paladin lists): 150gp and below village+, 500gp and below town+, 501gp and above city.</em></p>",
+        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city.</em></p>",
         "merchantImage": "icons/environment/settlement/church.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

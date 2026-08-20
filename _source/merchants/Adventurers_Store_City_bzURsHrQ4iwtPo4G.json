@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Well-stocked with essential gear for journeys. Frequented by adventurers; provides most of what they need for exploration and survival in the wild.</p>"
+        "value": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -3950,7 +3950,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Well-stocked with essential gear for journeys. Frequented by adventurers; provides most of what they need for exploration and survival in the wild.</p>",
+        "description": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>",
         "merchantImage": "icons/environment/settlement/market-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

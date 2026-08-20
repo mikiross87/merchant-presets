@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p>"
+        "value": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -480,7 +480,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p>",
+        "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
         "merchantImage": "icons/environment/settlement/abandoned-pier.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

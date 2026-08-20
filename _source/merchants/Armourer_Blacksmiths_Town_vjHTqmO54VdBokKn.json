@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Craft and sell weapons, armour, and other related goods. Their shops often include forges for the owners and work to ply their trade.</p>"
+        "value": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -8419,7 +8419,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Craft and sell weapons, armour, and other related goods. Their shops often include forges for the owners and work to ply their trade.</p>",
+        "description": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p>",
         "merchantImage": "icons/environment/settlement/blacksmith.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

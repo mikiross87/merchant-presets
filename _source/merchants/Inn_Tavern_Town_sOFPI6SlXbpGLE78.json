@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Hubs of social activity, offering food, drink, and lodging whilst also being common spots for adventurers. Lively atmospheres, with music, games, and hearty meals.</p>"
+        "value": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -1373,7 +1373,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Hubs of social activity, offering food, drink, and lodging whilst also being common spots for adventurers. Lively atmospheres, with music, games, and hearty meals.</p>",
+        "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
         "merchantImage": "icons/environment/settlement/tavern.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

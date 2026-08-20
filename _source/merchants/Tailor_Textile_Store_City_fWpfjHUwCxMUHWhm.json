@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Tailors and textile workers craft and sell clothing and fabrics. A range of products from simple travel clothes to elaborate costumes and robes.</p>"
+        "value": "<p>Bolts of cloth stacked to the ceiling and a tailor who can tell your station from your hem. Everyday wear off the shelf, finery to measure.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -982,7 +982,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Tailors and textile workers craft and sell clothing and fabrics. A range of products from simple travel clothes to elaborate costumes and robes.</p>",
+        "description": "<p>Bolts of cloth stacked to the ceiling and a tailor who can tell your station from your hem. Everyday wear off the shelf, finery to measure.</p>",
         "merchantImage": "icons/environment/settlement/house-two-stories.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

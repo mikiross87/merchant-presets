@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Offers spell components, scrolls, spellcasting services, and other related magical goods. Shelves packed with tomes and components.</p>"
+        "value": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -2042,7 +2042,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Offers spell components, scrolls, spellcasting services, and other related magical goods. Shelves packed with tomes and components.</p><p><em>From the Artificer, Sorcerer, and Wizard spell lists. Limited spellcasting: village 1d4+1, town 1d8+1, city 1d12+1 total spell slots, refreshed weekly.</em></p>",
+        "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city.</em></p>",
         "merchantImage": "icons/environment/settlement/wizard-castle.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

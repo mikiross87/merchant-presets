@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Not particularly common, but adventurers can often find druids who are more business minded and are willing to supply wares.</p>"
+        "value": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -4962,7 +4962,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Not particularly common, but adventurers can often find druids who are more business minded and are willing to supply wares.</p><p><em>From the Druid and Ranger spell lists. Limited spellcasting: village 1d4+1, town 1d8+1, city 1d12+1 total spell slots, refreshed weekly.</em></p>",
+        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city.</em></p>",
         "merchantImage": "icons/environment/settlement/house-woods.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

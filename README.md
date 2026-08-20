@@ -6,8 +6,9 @@ merchants, in Village / Town / City sizes — **51 merchants, 1,185 stock lines.
 Built entirely from **SRD 5.2** (CC-BY-4.0) plus this module's own goods, so it
 works in any `dnd5e` world and redistributes no paid content.
 
-Stock lists adapted from the free homebrew *Stores for D&D 2024* by
-[The Inspired Arcana](https://www.patreon.com/TheInspiredArcana).
+Inspired by the free homebrew *Stores for D&D 2024* by
+[The Inspired Arcana](https://www.patreon.com/TheInspiredArcana) — worth your
+time, and worth a follow.
 
 ## Requirements
 
@@ -169,11 +170,7 @@ Mucus** and **Lolth's Sting** (Criminal & Illicit Store), **Gunpowder Keg** and
 **Gunpowder Powder Horn** (Tinkering Store). Everything else in the guide is
 present.
 
-One price is deliberately not the book's. The guide states its healing-potion
-prices are lower than the published ones on purpose, so Potion of Healing
-(Superior) is 1000 gp and (Supreme) is 5000 gp. Every other place the guide
-disagreed with the rules was a 2014-era or typo'd figure (Shield 50 gp, Javelin
-50 sp, Dart 5 gp) and the SRD wins.
+Every price is the SRD's, with no exceptions.
 
 ## Building
 
@@ -208,5 +205,5 @@ Unofficial fan content, not approved or endorsed by Wizards of the Coast.
 Item statistics, prices and descriptions derive from System Reference Document
 5.2, © Wizards of the Coast LLC, licensed under
 [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
-Shop composition adapted from The Inspired Arcana's free homebrew *Stores for
-D&D 2024*.
+Shops inspired by The Inspired Arcana's free homebrew *Stores for D&D 2024*;
+no text, artwork or prices from it are reproduced here.

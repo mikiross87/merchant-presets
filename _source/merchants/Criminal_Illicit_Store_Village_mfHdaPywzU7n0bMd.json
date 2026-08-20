@@ -16,7 +16,7 @@
     },
     "details": {
       "biography": {
-        "value": "<p>Operates in the shadows, offering black market goods and services. Found within thieves' and assassins' guilds and the seedier parts of settlements. Deals in stolen items, poisons, and other illegal wares — and can often be relied upon to buy stolen goods.</p>"
+        "value": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>"
       },
       "type": {
         "value": "humanoid"
@@ -4464,7 +4464,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Operates in the shadows, offering black market goods and services. Found within thieves' and assassins' guilds and the seedier parts of settlements. Deals in stolen items, poisons, and other illegal wares — and can often be relied upon to buy stolen goods.</p>",
+        "description": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>",
         "merchantImage": "icons/environment/settlement/sewer-entrance.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
