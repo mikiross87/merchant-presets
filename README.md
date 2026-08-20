@@ -112,17 +112,13 @@ drink is a pint; a Medium creature needs a gallon a day.
   Item Piles flags, so each merchant stores the intended per-item flags by name
   and the module re-applies them afterwards — otherwise limited stock would
   quietly become unlimited after the first restock.
-- **Containers are stocked as separate items.** dnd5e pins a container's
-  quantity to exactly 1 (`ContainerData` declares
-  `quantity: new NumberField({min: 1, max: 1})`) because each is a distinct
-  object with its own contents — two pouches are two items, just as on a
-  character sheet. So a shop with four pouches holds four documents, and Item
-  Piles keeps them apart because `itempilesdnd5e` lists `container` in
-  `UNSTACKABLE_ITEM_TYPES`. They appear as separate rows with no quantity shown,
-  and are bought one at a time. Counts are small on purpose (1d2 village, 1d3
-  town, 1d4 city) — the price bands would put forty pouches on a city shelf.
-  A restock cannot rebuild them by itself, so the module recreates the missing
-  copies afterwards.
+- **Containers are stocked as separate items.** Backpacks, pouches, chests and
+  the like can't carry a quantity in dnd5e — each container is its own object
+  with its own contents, exactly as two pouches on a character sheet are two
+  items. So a shop with four pouches lists four pouches, shown as separate rows
+  with no quantity, bought one at a time. Counts are deliberately small (1d2 in
+  a village, up to 1d4 in a city), because they are rows in the list rather than
+  a number.
 - **Restocking** — open the merchant, *Populate Items* tab, **Roll All Tables**.
   Each merchant is pre-wired to its own stock table in `addAll` mode, so this
   rebuilds the canonical list and re-rolls the counts.
@@ -134,14 +130,11 @@ keeps 09:00–17:00, a dock opens at 05:00, the tavern runs 06:00 to 02:00, and
 the fence trades 20:00 to 04:00 — along with `refreshItemsOnOpen`, so the shop
 restocks each morning when the doors open.
 
-**This module fires them, not Item Piles.** Item Piles has the same feature, but
-only triggers it through its Simple Calendar plugin, and `BasePlugin.initialize()`
-gates on that module being active *by id* — so no API shim helps, and neither
-Foundry's built-in calendar nor Calendaria can drive it. Everything needed is
-native in V14 (`game.time.components`, `game.time.calendar`) and
-`game.itempiles.API.refreshMerchantInventory()` is public, so Merchant Presets
-reads the same flags and calls the same refresh off `updateWorldTime`. Any
-module that advances the world clock works, including Calendaria.
+**This module fires them, not Item Piles.** Item Piles has the same feature but
+only triggers it through Simple Calendar, which it requires by name — so it will
+not fire from Foundry's built-in calendar or from Calendaria. This module drives
+the same restock off Foundry's own world clock instead, so anything that
+advances time works.
 
 **Off by default**, via the *Restock shops when they open* setting. A restock
 rebuilds the shelf from the shop's stock table, and Item Piles clears the
@@ -184,23 +177,15 @@ restock, so a party carrying 3,000 gp of loot has to find someone who can afford
 it — or come back another day. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
 can always pay.
 
-**Shops only buy what they deal in.** Item Piles has no "only buys what it
-sells" switch, but `overrideItemFilters` refuses items per merchant, so every
-shop refuses each physical item type and each kind of this module's goods that
-it does not itself stock. A fletcher takes weapons and ammunition but not plate
-armour; a jeweler takes gems and jewellery but not a galley. The filters are
-derived from each shop's own stock list at build time, so a merchant can never
-refuse something it sells.
+**Shops only buy what they deal in.** Every merchant refuses item types it does
+not itself stock: a fletcher takes weapons and ammunition but not plate armour,
+a jeweler takes gems and jewellery but not a galley. What each will accept is
+derived from its own stock list, so a shop can never refuse something it sells.
 
-That last part needs a tag, because a ship and a gemstone are both dnd5e `loot`.
-Every one of this module's goods carries `flags.merchant-presets.kind` —
-`vehicle`, `mount`, `tack`, `drink`, `meal`, `lodging`, `service`,
-`spellcasting`, `component` or `travel` — which the filters key on. SRD items
-have no such flag, so those filters never touch them.
-
-> Because `overrideItemFilters` **replaces** the global filter list rather than
-> adding to it, each merchant also carries the `itempilesdnd5e` defaults
-> (`background,class,facility,feat,race,spell,subclass` and `natural`).
+Item type alone is not enough to tell a galley from a gemstone — dnd5e calls
+both `loot` — so this module's goods each carry a kind (vehicle, mount, tack,
+drink, meal, lodging, service, spellcasting, component, travel) that the filters
+match on.
 
 ## Prices
 
