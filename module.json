@@ -25,7 +25,8 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "minimum": "5.0.0"
+          "minimum": "5.0.0",
+          "verified": "5.3.3"
         }
       }
     ],
@@ -34,12 +35,19 @@
         "id": "item-piles",
         "type": "module",
         "compatibility": {
-          "minimum": "3.2.7"
-        }
+          "minimum": "3.2.7",
+          "verified": "3.3.4"
+        },
+        "reason": "The merchants are Item Piles merchants; without it they are inert NPCs."
       },
       {
         "id": "itempilesdnd5e",
-        "type": "module"
+        "type": "module",
+        "compatibility": {
+          "minimum": "1.1.0",
+          "verified": "1.1.0"
+        },
+        "reason": "Teaches Item Piles how dnd5e stores currency, prices and quantities."
       }
     ]
   },
