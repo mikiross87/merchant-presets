@@ -9,10 +9,6 @@ works in any `dnd5e` world and redistributes no paid content.
 Stock lists adapted from the free homebrew *Stores for D&D 2024* by
 [The Inspired Arcana](https://www.patreon.com/TheInspiredArcana).
 
-> **Pre-release.** Versions stay below `1.0.0` until the module is ready to
-> publish. Not yet cleared for release: permission from The Inspired Arcana for
-> the shop composition.
-
 ## Requirements
 
 | | |
