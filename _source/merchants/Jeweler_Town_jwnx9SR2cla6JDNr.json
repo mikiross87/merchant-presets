@@ -550,6 +550,47 @@
     "default": 0
   },
   "flags": {
+    "merchant-presets": {
+      "purse": 3000,
+      "itemFlags": {
+        "Amulet": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Crystal": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Orb": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Jeweler's Tools": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Spell Components (gems), 150 gp and below": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spell Components (gems), 500 gp and below": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        }
+      }
+    },
     "item-piles": {
       "data": {
         "enabled": true,

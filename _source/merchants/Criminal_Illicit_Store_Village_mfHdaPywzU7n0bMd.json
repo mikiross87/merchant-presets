@@ -4460,6 +4460,162 @@
     "default": 0
   },
   "flags": {
+    "merchant-presets": {
+      "purse": 600,
+      "itemFlags": {
+        "Acid": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Antitoxin": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ball Bearings": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Burglar's Pack": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Caltrops": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Costume": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Crowbar": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Grappling Hook": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Hunting Trap": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Lock": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Manacles": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Oil": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Poison, Basic": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ram, Portable": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rope": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Spikes, Iron": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false,
+          "quantityForPrice": 10
+        },
+        "Padded Armor": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dice": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Playing Cards": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Thieves' Tools": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Light Crossbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dagger": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dart": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Shortbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Shortsword": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        }
+      }
+    },
     "item-piles": {
       "data": {
         "enabled": true,

@@ -2912,6 +2912,197 @@
     "default": 0
   },
   "flags": {
+    "merchant-presets": {
+      "purse": 1250,
+      "itemFlags": {
+        "Bell": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Lamp": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Lantern, Hooded": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Book": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Candle": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Case, Map or Scroll": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diplomat's Pack": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Flask": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Healer's Kit": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Amulet": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Emblem": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Reliquary": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Holy Water": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ink": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Paper": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Parchment": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Perfume": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Potion of Healing": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Priest's Pack": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Robe": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Vial": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Calligrapher's Supplies": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Herbalism Kit": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Quarterstaff": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Spellcasting: Cantrip": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 1": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 2": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 3": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 4-5": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 6-8": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Level 9": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        }
+      }
+    },
     "item-piles": {
       "data": {
         "enabled": true,

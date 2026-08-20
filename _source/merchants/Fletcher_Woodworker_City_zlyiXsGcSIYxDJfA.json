@@ -3348,6 +3348,135 @@
     "default": 0
   },
   "flags": {
+    "merchant-presets": {
+      "purse": 750,
+      "itemFlags": {
+        "Arrows": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false,
+          "quantityForPrice": 20
+        },
+        "Bolts": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false,
+          "quantityForPrice": 20
+        },
+        "Bullets, Sling": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false,
+          "quantityForPrice": 20
+        },
+        "Needles": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false,
+          "quantityForPrice": 50
+        },
+        "Case, Crossbow Bolt": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Quiver": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rope": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Weaver's Tools": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Woodcarver's Tools": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Handaxe": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Javelin": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Spear": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Club": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Greatclub": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Quarterstaff": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Light Crossbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Shortbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Hand Crossbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Heavy Crossbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Longbow": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        }
+      }
+    },
     "item-piles": {
       "data": {
         "enabled": true,

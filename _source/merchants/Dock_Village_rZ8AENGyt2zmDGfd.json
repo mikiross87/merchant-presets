@@ -206,6 +206,29 @@
     "default": 0
   },
   "flags": {
+    "merchant-presets": {
+      "purse": 2000,
+      "itemFlags": {
+        "Keelboat": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rowboat": {
+          "infiniteQuantity": "default",
+          "keepOnMerchant": true,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ship Passage, Hammock (per day)": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        }
+      }
+    },
     "item-piles": {
       "data": {
         "enabled": true,

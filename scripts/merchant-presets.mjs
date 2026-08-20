@@ -247,6 +247,71 @@ function isOpenAt(pileData, minute) {
 }
 
 /**
+ * Put back what a restock cannot know.
+ *
+ * Item Piles rebuilds a restocked shelf from the source compendium, and SRD
+ * items carry no Item Piles flags — so a poison or a spell scroll would come
+ * back as ordinary unlimited stock, quietly undoing the limited-items rule.
+ * Each merchant carries the intended flags keyed by item name; re-apply them.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<number>} how many items were corrected
+ */
+async function reapplyItemFlags(actor) {
+  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.itemFlags");
+  if (!wanted) return 0;
+  const updates = [];
+  for (const item of actor.items) {
+    const want = wanted[item.name];
+    if (!want) continue;
+    const { quantityForPrice, ...itemFlags } = want;
+    const have = foundry.utils.getProperty(item, "flags.item-piles.item") ?? {};
+    const update = { _id: item.id };
+    let changed = false;
+    for (const [k, v] of Object.entries(itemFlags)) {
+      if (have[k] !== v) { update[`flags.item-piles.item.${k}`] = v; changed = true; }
+    }
+    if (quantityForPrice
+      && foundry.utils.getProperty(item, "flags.item-piles.system.quantityForPrice") !== quantityForPrice) {
+      update["flags.item-piles.system.quantityForPrice"] = quantityForPrice;
+      changed = true;
+    }
+    if (changed) updates.push(update);
+  }
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  return updates.length;
+}
+
+/**
+ * Refill the till. Coin is finite, and buying from the party drains it, so
+ * without this a shop that once bought a hoard is poor for the rest of the
+ * campaign. A new day's trading starts from the shop's own purse.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether the purse changed
+ */
+async function replenishPurse(actor) {
+  const purse = foundry.utils.getProperty(actor, "flags.merchant-presets.purse");
+  if (!Number.isFinite(purse)) return false;
+  if (actor.system?.currency?.gp === purse) return false;
+  await actor.update({ "system.currency.gp": purse });
+  return true;
+}
+
+/**
+ * Restock one merchant: rebuild the shelf, then put back what the rebuild lost.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>}
+ */
+async function restock(actor) {
+  await game.itempiles.API.refreshMerchantInventory(actor);
+  await reapplyItemFlags(actor);
+  await replenishPurse(actor);
+  return true;
+}
+
+/**
  * Restock every merchant whose doors just opened.
  *
  * @param {number} worldTime  The new world time.
@@ -274,7 +339,7 @@ async function restockOnTimeChange(worldTime, previous) {
     if (!dayPassed && (isOpenAt(pileData, wasMinute) || !isOpenAt(pileData, nowMinute))) continue;
 
     try {
-      await game.itempiles.API.refreshMerchantInventory(actor);
+      await restock(actor);
       restocked.push(actor.name);
     } catch (err) {
       console.error(`${MODULE} | could not restock "${actor.name}"`, err);
@@ -373,14 +438,15 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "autoRestock", {
     name: "Restock shops when they open",
-    hint: "Each merchant carries trading hours and restocks when its doors open for the day, using "
-      + "Foundry's own calendar. Item Piles has this built in but only fires it through Simple "
-      + "Calendar, which it requires by module id — this does the same job off the world clock, so "
-      + "it works with the built-in calendar and with Calendaria. Takes effect on reload.",
+    hint: "Each merchant carries trading hours and can restock when its doors open for the day, "
+      + "using Foundry's own calendar rather than Simple Calendar. OFF BY DEFAULT: a restock "
+      + "rebuilds the shelf from the shop's stock table, which discards anything you added to that "
+      + "merchant by hand. Turn it on once your shops hold nothing you would miss. Takes effect on "
+      + "reload.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: true
+    default: false
   });
 
   // Last world time a restock pass ran for, so a reload cannot re-fire one.
@@ -401,7 +467,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
-  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restockOnTimeChange };
+  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags, replenishPurse };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.

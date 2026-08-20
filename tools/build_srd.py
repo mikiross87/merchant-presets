@@ -257,6 +257,19 @@ def main():
             per_result = {r["_id"]: i["flags"]["item-piles"].pop("__formula")
                           for r, i in zip(results, items)}
 
+            # Item Piles rebuilds a restocked shelf straight from the source
+            # compendium, and SRD items carry no Item Piles flags — so poisons
+            # and scrolls would quietly stop being limited after the first
+            # restock. Bake the intended flags in, keyed by name, for the
+            # runtime to re-apply.
+            item_flags = {}
+            for i in items:
+                f = dict(i["flags"]["item-piles"]["item"])
+                q = (i["flags"]["item-piles"].get("system") or {}).get("quantityForPrice")
+                if q:
+                    f["quantityForPrice"] = q
+                item_flags[i["name"]] = f
+
             docs_t.append({"_id": tid, "_key": f"!tables!{tid}", "name": name,
                            "img": shop["img"], "folder": fold_t,
                            "description": f"<p>{shop['desc']}</p><p><em>Stock list for a {label.lower()}.</em></p>",
@@ -273,7 +286,12 @@ def main():
                            "attributes": {"hp": {"value": 10, "max": 10}}},
                 "prototypeToken": {"name": name, "actorLink": True, "texture": {"src": shop["img"]}},
                 "items": items, "effects": [], "ownership": {"default": 0},
-                "flags": {"item-piles": {"data": {
+                "flags": {
+                    # The shop's own record of itself: what its purse should be
+                    # refilled to, and the item flags a restock must restore.
+                    "merchant-presets": {"purse": round(shop["purse"] * purse_mul),
+                                         "itemFlags": item_flags},
+                    "item-piles": {"data": {
                     "enabled": True, "type": "merchant",
                     "description": f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else ""),
                     "merchantImage": shop["img"], "displayItemTypes": True, "canInspectItems": True,

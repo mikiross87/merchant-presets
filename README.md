@@ -1,4 +1,4 @@
-# Merchant Presets — Stores for D&D 2024
+# Merchant Presets — Shops for 5e
 
 Seventeen ready-made shops as [Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles)
 merchants, in Village / Town / City sizes — **51 merchants, 1,185 stock lines.**
@@ -86,8 +86,12 @@ drink is a pint; a Medium creature needs a gallon a day.
   size, so two copies of the same shop differ, and expensive goods may not be in
   stock at all.
 - **Unlimited** — shops never run out of ordinary goods.
-- **Always limited either way** — poisons, spell scrolls, gunpowder and firearms,
-  per the guide's *Limited Items* note. Sell out and they're gone until restock.
+- **Always limited either way** — poisons, spell scrolls and other consumables
+  a party would not find in unlimited supply. Sell out and they're gone until
+  restock. A restock rebuilds items from the SRD compendium, which carries no
+  Item Piles flags, so each merchant stores the intended per-item flags by name
+  and the module re-applies them afterwards — otherwise limited stock would
+  quietly become unlimited after the first restock.
 - **Containers are one-of.** dnd5e pins a container's quantity to exactly 1
   (`ContainerData` declares `quantity: new NumberField({min: 1, max: 1})`)
   because each is a distinct object holding its own contents, so a count of
@@ -113,9 +117,18 @@ native in V14 (`game.time.components`, `game.time.calendar`) and
 reads the same flags and calls the same refresh off `updateWorldTime`. Any
 module that advances the world clock works, including Calendaria.
 
-Turn it off with the *Restock shops when they open* setting. Only the designated
-GM runs the pass, and the last processed world time is stored so a reload cannot
-re-fire one. Winding the clock backwards never restocks.
+**Off by default**, via the *Restock shops when they open* setting. A restock
+rebuilds the shelf from the shop's stock table, and Item Piles clears the
+merchant's existing items to do it — so anything you added to a shop by hand is
+discarded. Turn it on once your shops hold nothing you would miss. Only the
+designated GM runs the pass, the last processed world time is stored so a reload
+cannot re-fire one, and winding the clock backwards never restocks.
+
+To restock one shop by hand, with the flags and purse restored:
+
+```js
+game.modules.get("merchant-presets").api.restock(actor)
+```
 
 Not supported: **closed days and holiday restocks**. Those are built on Simple
 Calendar notes, which core has no equivalent for. The flags are shipped empty
@@ -140,9 +153,9 @@ throws on a locked module compendium.
 settlement — 40 gp for a village innkeeper, 12,500 gp for a city dock — and
 cannot buy past it. Most shops pay **50%** of list; the Jeweler pays **60%**,
 and the Criminal & Illicit Store pays **35%** while charging **125%**, the only
-markup in the set. A merchant's coin depletes as it buys and only returns on
+markup in the set. A merchant's coin depletes as it buys and is refilled to the shop's own purse on
 restock, so a party carrying 3,000 gp of loot has to find someone who can afford
-it. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
+it — or come back another day. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
 can always pay.
 
 **Shops only buy what they deal in.** Item Piles has no "only buys what it
