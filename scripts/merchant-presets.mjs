@@ -130,9 +130,9 @@ async function wireTables(actor) {
  * quantity to exactly 1 (`ContainerData` declares
  * `quantity: new NumberField({min: 1, max: 1})`) because each one is a distinct
  * object holding its own contents, so a count of them cannot be represented —
- * the shop has one, and it sells out. Goods the guide calls out as limited
- * (poisons, scrolls, gunpowder, firearms) are always rolled; everything else is
- * rolled only when the world is set to finite stock. Anything that rolls zero
+ * the shop has one, and it sells out. Stock flagged as limited — poisons, spell
+ * scrolls, and anything else a shop would not hold in depth — is always rolled;
+ * everything else is rolled only when the world is set to finite stock. Anything that rolls zero
  * is simply not in stock today — "Roll All Tables" on the Populate Items tab
  * brings it back.
  */

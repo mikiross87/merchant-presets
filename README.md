@@ -195,14 +195,9 @@ have no such flag, so those filters never touch them.
 > adding to it, each merchant also carries the `itempilesdnd5e` defaults
 > (`background,class,facility,feat,race,spell,subclass` and `natural`).
 
-## What the SRD costs you
+## Prices
 
-Four stock lines have no SRD equivalent and are absent: **Carrion Crawler
-Mucus** and **Lolth's Sting** (Criminal & Illicit Store), **Gunpowder Keg** and
-**Gunpowder Powder Horn** (Tinkering Store). Everything else in the guide is
-present.
-
-Every price is the SRD's, with no exceptions.
+Every price, weight and description is the SRD's, with no exceptions.
 
 ## Building
 
