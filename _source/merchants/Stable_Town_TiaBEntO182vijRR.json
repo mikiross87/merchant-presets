@@ -1,0 +1,988 @@
+{
+  "_id": "TiaBEntO182vijRR",
+  "_key": "!actors!TiaBEntO182vijRR",
+  "name": "Stable (Town)",
+  "type": "npc",
+  "img": "icons/environment/settlement/stables-horses.webp",
+  "folder": "4BFqBmqLT3EmMDAj",
+  "sort": 0,
+  "system": {
+    "currency": {
+      "pp": 0,
+      "gp": 600,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "details": {
+      "biography": {
+        "value": "<p>Provides care and housing for horses and other riding animals. Grooms and feeds steeds, and sells riding gear and mounts. Usually attached to inns and taverns.</p>"
+      },
+      "type": {
+        "value": "humanoid"
+      },
+      "cr": 0
+    },
+    "attributes": {
+      "hp": {
+        "value": 10,
+        "max": 10
+      }
+    }
+  },
+  "prototypeToken": {
+    "name": "Stable (Town)",
+    "actorLink": true,
+    "texture": {
+      "src": "icons/environment/settlement/stables-horses.webp"
+    }
+  },
+  "items": [
+    {
+      "name": "Carriage",
+      "type": "loot",
+      "img": "icons/environment/settlement/wagon.webp",
+      "system": {
+        "description": {
+          "value": "<p>An enclosed four-wheeled passenger vehicle.</p>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 600,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.B58PzC3u328BRdzB"
+      },
+      "_id": "6QCDDbzlScN8Tfut",
+      "_key": "!actors.items!TiaBEntO182vijRR.6QCDDbzlScN8Tfut"
+    },
+    {
+      "name": "Cart",
+      "type": "loot",
+      "img": "icons/environment/settlement/wagon-black.webp",
+      "system": {
+        "description": {
+          "value": "<p>A two-wheeled cart drawn by a single beast.</p>",
+          "chat": ""
+        },
+        "quantity": 7,
+        "weight": {
+          "value": 200,
+          "units": "lb"
+        },
+        "price": {
+          "value": 15,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.MSIYVRgKtAtsq1SL"
+      },
+      "_id": "7tLeghfJftypNYam",
+      "_key": "!actors.items!TiaBEntO182vijRR.7tLeghfJftypNYam"
+    },
+    {
+      "name": "Saddle, Military",
+      "type": "loot",
+      "img": "icons/sundries/survival/bedroll-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>A saddle that helps you stay mounted in combat.</p>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 30,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "tack"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.04I1fORrH4hSEKDV"
+      },
+      "_id": "RBQWu2E2G85HeMXw",
+      "_key": "!actors.items!TiaBEntO182vijRR.RBQWu2E2G85HeMXw"
+    },
+    {
+      "name": "Saddle, Riding",
+      "type": "loot",
+      "img": "icons/sundries/survival/bedroll-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>A common riding saddle.</p>",
+          "chat": ""
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 25,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "tack"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.nU7Twg6fpNPjWLlx"
+      },
+      "_id": "3TQzSryyuGSCWLqU",
+      "_key": "!actors.items!TiaBEntO182vijRR.3TQzSryyuGSCWLqU"
+    },
+    {
+      "name": "Sled",
+      "type": "loot",
+      "img": "icons/environment/settlement/wagon-black.webp",
+      "system": {
+        "description": {
+          "value": "<p>A runnered vehicle for snow and ice.</p>",
+          "chat": ""
+        },
+        "quantity": 7,
+        "weight": {
+          "value": 300,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.ePe7wMUpfuP2G2oW"
+      },
+      "_id": "lux7CmwI0kVNz8q5",
+      "_key": "!actors.items!TiaBEntO182vijRR.lux7CmwI0kVNz8q5"
+    },
+    {
+      "name": "Wagon",
+      "type": "loot",
+      "img": "icons/environment/settlement/wagon.webp",
+      "system": {
+        "description": {
+          "value": "<p>A four-wheeled cargo wagon.</p>",
+          "chat": ""
+        },
+        "quantity": 5,
+        "weight": {
+          "value": 400,
+          "units": "lb"
+        },
+        "price": {
+          "value": 35,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.1NQ9ATGe4QjGpk02"
+      },
+      "_id": "NZm8CZrgeJjkwMMy",
+      "_key": "!actors.items!TiaBEntO182vijRR.NZm8CZrgeJjkwMMy"
+    },
+    {
+      "name": "Animal Feed (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/farm-silo-windmill.webp",
+      "system": {
+        "description": {
+          "value": "<p>Feed for one animal for a day.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 10,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "service"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.AuopHRckMfSOnnUn"
+      },
+      "_id": "q9UUj64KQuiZqvmu",
+      "_key": "!actors.items!TiaBEntO182vijRR.q9UUj64KQuiZqvmu"
+    },
+    {
+      "name": "Stabling (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/stable.webp",
+      "system": {
+        "description": {
+          "value": "<p>Stabling and grooming for one mount, per day.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "service"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.yR49eNXCQGCGG0Ld"
+      },
+      "_id": "T2PtihUAM6exYiLO",
+      "_key": "!actors.items!TiaBEntO182vijRR.T2PtihUAM6exYiLO"
+    },
+    {
+      "name": "Camel",
+      "type": "loot",
+      "img": "icons/commodities/treasure/figurine-camel.webp",
+      "system": {
+        "description": {
+          "value": "<p>A desert beast of burden.</p>",
+          "chat": ""
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.QIKX4JCTF5WLCoFq"
+      },
+      "_id": "DhUJpquTyoLX7ybt",
+      "_key": "!actors.items!TiaBEntO182vijRR.DhUJpquTyoLX7ybt"
+    },
+    {
+      "name": "Horse, Draft",
+      "type": "loot",
+      "img": "icons/creatures/mammals/ox-bull-horned-glowing-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A heavy horse bred for hauling.</p>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.zIkxXwxhZl5POdri"
+      },
+      "_id": "kA72u1jVwZzHZ6hs",
+      "_key": "!actors.items!TiaBEntO182vijRR.kA72u1jVwZzHZ6hs"
+    },
+    {
+      "name": "Horse, Riding",
+      "type": "loot",
+      "img": "icons/creatures/mammals/deer-antlers-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A saddle horse.</p>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 75,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.egOdzurWnblkl5Y0"
+      },
+      "_id": "FWcDox2c1RFQZDtI",
+      "_key": "!actors.items!TiaBEntO182vijRR.FWcDox2c1RFQZDtI"
+    },
+    {
+      "name": "Mastiff",
+      "type": "loot",
+      "img": "icons/creatures/mammals/dog-husky-white-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A large guard and hunting dog.</p>",
+          "chat": ""
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.CLGOx3NIv7ONKGSm"
+      },
+      "_id": "Sap4JVDzkMYq1eoe",
+      "_key": "!actors.items!TiaBEntO182vijRR.Sap4JVDzkMYq1eoe"
+    },
+    {
+      "name": "Mule",
+      "type": "loot",
+      "img": "icons/creatures/mammals/livestock-sheep-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>A sure-footed pack animal.</p>",
+          "chat": ""
+        },
+        "quantity": 15,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 8,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.NBSkiyXIeQYgBbWD"
+      },
+      "_id": "2ino08ByXtJpfEmL",
+      "_key": "!actors.items!TiaBEntO182vijRR.2ino08ByXtJpfEmL"
+    },
+    {
+      "name": "Pony",
+      "type": "loot",
+      "img": "icons/creatures/mammals/deer-antlers-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>A small riding horse.</p>",
+          "chat": ""
+        },
+        "quantity": 6,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 30,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "mount"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.0AvDPhxs289znYZH"
+      },
+      "_id": "cNFFcC15arPih7CS",
+      "_key": "!actors.items!TiaBEntO182vijRR.cNFFcC15arPih7CS"
+    },
+    {
+      "name": "Coach Ride between Towns (per mile)",
+      "type": "loot",
+      "img": "icons/environment/settlement/wagon.webp",
+      "system": {
+        "description": {
+          "value": "<p>A seat on a coach between settlements, per mile.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "custom": "Merchant Presets",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "travel"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.aoRU3x8WIjLDElJu"
+      },
+      "_id": "O0O3f8QOiB7utsgw",
+      "_key": "!actors.items!TiaBEntO182vijRR.O0O3f8QOiB7utsgw"
+    },
+    {
+      "name": "Road or Gate Toll",
+      "type": "loot",
+      "img": "icons/environment/settlement/city-gate.webp",
+      "system": {
+        "description": {
+          "value": "<p>A toll levied on a road or at a gate.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "custom": "Merchant Presets",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "travel"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.PT7FtDwr7B48MWSb"
+      },
+      "_id": "7c78J0Hg2PqtiFKP",
+      "_key": "!actors.items!TiaBEntO182vijRR.7c78J0Hg2PqtiFKP"
+    }
+  ],
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "data": {
+        "enabled": true,
+        "type": "merchant",
+        "description": "<p>Provides care and housing for horses and other riding animals. Grooms and feeds steeds, and sells riding gear and mounts. Usually attached to inns and taverns.</p>",
+        "merchantImage": "icons/environment/settlement/stables-horses.webp",
+        "displayItemTypes": true,
+        "canInspectItems": true,
+        "infiniteQuantity": false,
+        "infiniteCurrencies": false,
+        "keepZeroQuantity": true,
+        "overrideItemFilters": [
+          {
+            "path": "type",
+            "filters": "background,class,facility,feat,race,spell,subclass"
+          },
+          {
+            "path": "system.type.value",
+            "filters": "natural"
+          },
+          {
+            "path": "type",
+            "filters": "weapon,equipment,consumable,tool,container"
+          },
+          {
+            "path": "flags.merchant-presets.kind",
+            "filters": "drink,meal,lodging,spellcasting,component"
+          }
+        ],
+        "buyPriceModifier": 1.0,
+        "sellPriceModifier": 0.5,
+        "tablesForPopulate": [
+          {
+            "uuid": "Compendium.merchant-presets.stock.RollTable.2lufn6IsplTh9UgL",
+            "addAll": true,
+            "timesToRoll": "1",
+            "customCategory": "",
+            "items": {
+              "bBbTzFhrG41kfTBn": "1d3+1",
+              "7M9mdiIZIFMC78H6": "1d6+2",
+              "uAfEkuTxwdqgJJj4": "1d6+2",
+              "WHdkVnqhGU9Kw4DY": "1d6+2",
+              "JsOMwUrPfeNyOqGV": "1d6+2",
+              "eSuw8ab3AiKcjVyB": "1d6+2",
+              "rDHlqz7HAYgStQ0x": "1",
+              "rsU5obkZKNBzfmY0": "1",
+              "Rx3ZCuvErUtlVvHY": "1d3+1",
+              "EMY2c8lHXMV3Q30N": "1d3+1",
+              "Of3144Xc61i4oC9N": "1d3+1",
+              "XGvvhLAfDfyQgviP": "1d6+2",
+              "rc6SG4pTPJ1YmCpn": "2d6+4",
+              "oM3D9HIvGD79W1Ry": "1d6+2",
+              "WnqA8YM8mLurVpfC": "1",
+              "h6vA3oZtthlx3qPG": "1"
+            }
+          }
+        ],
+        "openTimes": {
+          "enabled": true,
+          "status": "open",
+          "open": {
+            "hour": 5,
+            "minute": 0
+          },
+          "close": {
+            "hour": 20,
+            "minute": 0
+          }
+        },
+        "closedDays": [],
+        "closedHolidays": [],
+        "refreshItemsOnOpen": true,
+        "refreshItemsDays": [],
+        "refreshItemsHolidays": [],
+        "hideTokenWhenClosed": false
+      },
+      "version": "3.3.4"
+    }
+  }
+}

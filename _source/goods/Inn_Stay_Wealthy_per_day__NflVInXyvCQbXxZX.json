@@ -1,0 +1,53 @@
+{
+  "_id": "NflVInXyvCQbXxZX",
+  "_key": "!items!NflVInXyvCQbXxZX",
+  "name": "Inn Stay, Wealthy (per day)",
+  "type": "loot",
+  "img": "icons/environment/settlement/house-manor.webp",
+  "folder": "rO99kNCOnq8kzgqT",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A night's lodging, wealthy.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 2,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "lodging"
+    }
+  }
+}

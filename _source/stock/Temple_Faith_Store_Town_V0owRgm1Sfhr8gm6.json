@@ -1,0 +1,482 @@
+{
+  "_id": "V0owRgm1Sfhr8gm6",
+  "_key": "!tables!V0owRgm1Sfhr8gm6",
+  "name": "Temple & Faith Store (Town)",
+  "img": "icons/environment/settlement/church.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Provides religious items and services. Often within temples, connected to them, or associated with religious practices. Serves both adventurers and townsfolk.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d29",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "g02fuRW26TvIkbpn",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.g02fuRW26TvIkbpn",
+      "type": "document",
+      "name": "Bell",
+      "img": "icons/tools/instruments/bell-brass-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBell0000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SmSg5E1IZVrcv7EK",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.SmSg5E1IZVrcv7EK",
+      "type": "document",
+      "name": "Lamp",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLamp0000000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hSg75DvdColdmmJL",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.hSg75DvdColdmmJL",
+      "type": "document",
+      "name": "Lantern, Hooded",
+      "img": "icons/sundries/lights/lantern-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLanternHood",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BeeIY0vYgAHxgZCE",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.BeeIY0vYgAHxgZCE",
+      "type": "document",
+      "name": "Book",
+      "img": "icons/sundries/books/book-worn-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBook0000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LM0TrJ6gLJbwWROK",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.LM0TrJ6gLJbwWROK",
+      "type": "document",
+      "name": "Candle",
+      "img": "icons/sundries/lights/candle-unlit-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCandle00000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UD6yTgmUXx7NoxGd",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.UD6yTgmUXx7NoxGd",
+      "type": "document",
+      "name": "Case, Map or Scroll",
+      "img": "icons/containers/bags/case-leather-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCaseMaporSc",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "T76YK2PPEX9TXDLm",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.T76YK2PPEX9TXDLm",
+      "type": "document",
+      "name": "Diplomat's Pack",
+      "img": "icons/containers/chest/chest-reinforced-steel-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagDiplomatsPa",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3GtPtqoFjfstciL0",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.3GtPtqoFjfstciL0",
+      "type": "document",
+      "name": "Flask",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagFlask000000",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Pt9eVstQPSZQoHGS",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.Pt9eVstQPSZQoHGS",
+      "type": "document",
+      "name": "Healer's Kit",
+      "img": "icons/containers/bags/sack-leather-brown-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHealersKit0",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fttqJSbycd6jr2li",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.fttqJSbycd6jr2li",
+      "type": "document",
+      "name": "Amulet",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbhsyAmuletworn",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "StyNkQ7N7WbpnF21",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.StyNkQ7N7WbpnF21",
+      "type": "document",
+      "name": "Emblem",
+      "img": "icons/sundries/flags/banner-symbol-sun-gold-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbhsyEmblemborn",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4fOyWsGKllsCAeY4",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.4fOyWsGKllsCAeY4",
+      "type": "document",
+      "name": "Reliquary",
+      "img": "icons/containers/chest/chest-reinforced-steel-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbhsyReliquaryh",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dCCf1pZqF1LSdYvl",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.dCCf1pZqF1LSdYvl",
+      "type": "document",
+      "name": "Holy Water",
+      "img": "icons/consumables/potions/bottle-round-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHolyWater00",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "a24FDOqWx6i8ShDH",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.a24FDOqWx6i8ShDH",
+      "type": "document",
+      "name": "Ink",
+      "img": "icons/tools/scribal/ink-quill-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.vi0j4PYnO596a2L1",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "W4T5LMynJL4VO3oC",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.W4T5LMynJL4VO3oC",
+      "type": "document",
+      "name": "Paper",
+      "img": "icons/sundries/documents/paper-plain-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPaper000000",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mNYZkZVBCODg6UMG",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.mNYZkZVBCODg6UMG",
+      "type": "document",
+      "name": "Parchment",
+      "img": "icons/sundries/scrolls/scroll-plain-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagParchment00",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "stAZmZO5tokL2mie",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.stAZmZO5tokL2mie",
+      "type": "document",
+      "name": "Perfume",
+      "img": "icons/consumables/potions/bottle-bulb-corked-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.yoRKNd2QddQp1XuX",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Gd9HZ4G7L6vmoLsb",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.Gd9HZ4G7L6vmoLsb",
+      "type": "document",
+      "name": "Potion of Healing",
+      "img": "icons/consumables/potions/potion-tube-corked-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfHeali",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "tX3AOYGUW2zdOgT8",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.tX3AOYGUW2zdOgT8",
+      "type": "document",
+      "name": "Priest's Pack",
+      "img": "icons/containers/bags/pack-engraved-leather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPriestsPack",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "docIswn9e7ColUhq",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.docIswn9e7ColUhq",
+      "type": "document",
+      "name": "Robe",
+      "img": "icons/equipment/back/mantle-collared-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.jLcAY4Oph8ZEniG2",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LWsT9U0eavtOAcyG",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.LWsT9U0eavtOAcyG",
+      "type": "document",
+      "name": "Vial",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagVial0000000",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SWWDMI9xrQA6v2ks",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.SWWDMI9xrQA6v2ks",
+      "type": "document",
+      "name": "Calligrapher's Supplies",
+      "img": "icons/tools/scribal/pen-steel-grey-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulCalligraph",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lOQiAOqyzAgnSOve",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.lOQiAOqyzAgnSOve",
+      "type": "document",
+      "name": "Herbalism Kit",
+      "img": "icons/containers/bags/pouch-leather-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulHerbalismK",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Kkoo1O60YAOazsNi",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.Kkoo1O60YAOazsNi",
+      "type": "document",
+      "name": "Quarterstaff",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepQuartersta",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8Y7Dr0zf5UV7MKP6",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.8Y7Dr0zf5UV7MKP6",
+      "type": "document",
+      "name": "Spellcasting: Cantrip",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MjuoRa01YO8dNzOn",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "j6c1hvP3XNOPO2Jd",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.j6c1hvP3XNOPO2Jd",
+      "type": "document",
+      "name": "Spellcasting: Level 1",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.70Hh6evpYxQ8qhpd",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ntLdbq9HdtTS6LVq",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.ntLdbq9HdtTS6LVq",
+      "type": "document",
+      "name": "Spellcasting: Level 2",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.XXYzPkKRuOixSneU",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wTGc7HORmXdonHhc",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.wTGc7HORmXdonHhc",
+      "type": "document",
+      "name": "Spellcasting: Level 3",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4S1FNQxHwffmxqGR",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9yPE2aVOoM0lbQfY",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.9yPE2aVOoM0lbQfY",
+      "type": "document",
+      "name": "Spellcasting: Level 4-5",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3eCTnmQEAZ7WEbGc",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

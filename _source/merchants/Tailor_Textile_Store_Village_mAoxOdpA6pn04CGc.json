@@ -1,0 +1,904 @@
+{
+  "_id": "mAoxOdpA6pn04CGc",
+  "_key": "!actors!mAoxOdpA6pn04CGc",
+  "name": "Tailor & Textile Store (Village)",
+  "type": "npc",
+  "img": "icons/environment/settlement/house-two-stories.webp",
+  "folder": "Kf0bhHmByPSOBg7x",
+  "sort": 0,
+  "system": {
+    "currency": {
+      "pp": 0,
+      "gp": 80,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "details": {
+      "biography": {
+        "value": "<p>Tailors and textile workers craft and sell clothing and fabrics. A range of products from simple travel clothes to elaborate costumes and robes.</p>"
+      },
+      "type": {
+        "value": "humanoid"
+      },
+      "cr": 0
+    },
+    "attributes": {
+      "hp": {
+        "value": 10,
+        "max": 10
+      }
+    }
+  },
+  "prototypeToken": {
+    "name": "Tailor & Textile Store (Village)",
+    "actorLink": true,
+    "texture": {
+      "src": "icons/environment/settlement/house-two-stories.webp"
+    }
+  },
+  "items": [
+    {
+      "name": "Basket",
+      "system": {
+        "description": {
+          "value": "<p>A Basket holds up to 40 pounds within 2 cubic feet.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 4,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 40
+        },
+        "identifier": "basket"
+      },
+      "type": "container",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBasket00000"
+      },
+      "_id": "k2kl21fqkwSStg5P",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.k2kl21fqkwSStg5P"
+    },
+    {
+      "name": "Clothes, Traveler's",
+      "system": {
+        "description": {
+          "value": "<p>Traveler's Clothes are resilient garments designed for travel in various environments.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 8,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "clothing",
+          "baseItem": ""
+        },
+        "properties": [],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "clothes-travelers"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/shirt-collared-yellow.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagClothesTrav"
+      },
+      "_id": "gpBx08yXWB1qFghK",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.gpBx08yXWB1qFghK"
+    },
+    {
+      "name": "Costume",
+      "system": {
+        "description": {
+          "value": "<p>While wearing a Costume, you have Advantage on any ability check you make to impersonate the person or type of person it represents.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "clothing",
+          "baseItem": ""
+        },
+        "properties": [],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "costume"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/head/hood-purple-mask.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCostume0000"
+      },
+      "_id": "FbGt1g4ddNFu9Vaj",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.FbGt1g4ddNFu9Vaj"
+    },
+    {
+      "name": "Pouch",
+      "system": {
+        "description": {
+          "value": "<p>A Pouch holds up to 6 pounds within one-fifth of a cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 6
+        },
+        "identifier": "pouch"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPouch000000"
+      },
+      "_id": "L9uj4PiqLFY1AsuU",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.L9uj4PiqLFY1AsuU"
+    },
+    {
+      "name": "Robe",
+      "system": {
+        "description": {
+          "value": "<p>A Robe has vocational or ceremonial significance. Some events and locations admit only people wearing a Robe bearing certain colors or symbols.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": "phbagPriestsPack",
+        "quantity": 6,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "clothing",
+          "baseItem": ""
+        },
+        "properties": [],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "robe"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/back/mantle-collared-black.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.jLcAY4Oph8ZEniG2"
+      },
+      "_id": "ikHSrIYe8BidBqh4",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.ikHSrIYe8BidBqh4"
+    },
+    {
+      "name": "Sack",
+      "system": {
+        "description": {
+          "value": "<p>A Sack holds up to 30 pounds within 1 cubic foot.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 30
+        },
+        "identifier": "sack"
+      },
+      "type": "container",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagSack0000000"
+      },
+      "_id": "nWCMJTbo5JfV9wMv",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.nWCMJTbo5JfV9wMv"
+    },
+    {
+      "name": "Tent",
+      "system": {
+        "description": {
+          "value": "<p>A Tent sleeps up to two Small or Medium creatures.</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 4,
+        "weight": {
+          "value": 20,
+          "units": "lb"
+        },
+        "rarity": "",
+        "properties": [],
+        "type": {
+          "value": "gear",
+          "subtype": ""
+        },
+        "identifier": "tent"
+      },
+      "type": "loot",
+      "img": "icons/environment/settlement/tent.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagTent0000000"
+      },
+      "_id": "eAOkenglHzMfp1cH",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.eAOkenglHzMfp1cH"
+    },
+    {
+      "name": "Cobbler's Tools",
+      "system": {
+        "description": {
+          "value": "<p class=\"phb-meta\"><strong>Ability:</strong> Dexterity</p><p class=\"phb-meta\"><strong>Utilize:</strong> Modify footwear to give Advantage on the wearer's next Dexterity (Acrobatics) check (DC 10)</p><p class=\"phb-meta\"><strong>Craft:</strong> @UUID[Compendium.dnd5e.equipment24.Item.phbagClimbersKit]{Climber's Kit}</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "type": {
+          "value": "art",
+          "baseItem": "cobbler"
+        },
+        "ability": "dex",
+        "chatFlavor": "",
+        "properties": [],
+        "bonus": "",
+        "activities": {
+          "dnvBdyoNniSVN9Ky": {
+            "type": "check",
+            "activation": {
+              "type": "action",
+              "value": null,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "units": "self",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "check": {
+              "ability": "dex",
+              "dc": {
+                "calculation": "",
+                "formula": "10"
+              },
+              "associated": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "dnvBdyoNniSVN9Ky",
+            "name": "Modify Footwear",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "identifier": "cobblers-tools"
+      },
+      "type": "tool",
+      "img": "icons/tools/hand/awl-steel-tan.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbtulCobblersTo"
+      },
+      "_id": "iMlFdoCktj18gj4p",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.iMlFdoCktj18gj4p"
+    },
+    {
+      "name": "Weaver's Tools",
+      "system": {
+        "description": {
+          "value": "<p class=\"phb-meta\"><strong>Ability:</strong> Dexterity</p><p class=\"phb-meta\"><strong>Utilize:</strong> Mend a tear in clothing (DC 10), or sew a Tiny design (DC 10)</p><p class=\"phb-meta\"><strong>Craft:</strong> @UUID[Compendium.dnd5e.equipment24.Item.phbarmPaddedArmo]{Padded Armor}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBasket00000]{Basket}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBedroll0000]{Bedroll}, @UUID[Compendium.dnd5e.equipment24.Item.phbagBlanket0000]{Blanket}, @UUID[Compendium.dnd5e.equipment24.Item.phbagClothesFine]{Fine Clothes}, @UUID[Compendium.dnd5e.equipment24.Item.phbagNet00000000]{Net}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRobe0000000]{Robe}, @UUID[Compendium.dnd5e.equipment24.Item.phbagRope0000000]{Rope}, @UUID[Compendium.dnd5e.equipment24.Item.phbagSack0000000]{Sack}, @UUID[Compendium.dnd5e.equipment24.Item.phbagString00000]{String}, @UUID[Compendium.dnd5e.equipment24.Item.phbagTent0000000]{Tent}, @UUID[Compendium.dnd5e.equipment24.Item.phbagClothesTrav]{Traveler's Clothes}</p>",
+          "chat": ""
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 7,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "type": {
+          "value": "art",
+          "baseItem": "weaver"
+        },
+        "ability": "dex",
+        "chatFlavor": "",
+        "properties": [],
+        "bonus": "",
+        "activities": {
+          "UccmCl9KzcTB4zGS": {
+            "type": "check",
+            "activation": {
+              "type": "action",
+              "value": null,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "units": "self",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "check": {
+              "ability": "dex",
+              "dc": {
+                "calculation": "",
+                "formula": "10"
+              },
+              "associated": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "UccmCl9KzcTB4zGS",
+            "name": "Mend or Sew",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "identifier": "weavers-tools"
+      },
+      "type": "tool",
+      "img": "icons/equipment/back/cloak-hooded-pink.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbtulWeaversToo"
+      },
+      "_id": "Geqk5L02svRIBAuL",
+      "_key": "!actors.items!mAoxOdpA6pn04CGc.Geqk5L02svRIBAuL"
+    }
+  ],
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "data": {
+        "enabled": true,
+        "type": "merchant",
+        "description": "<p>Tailors and textile workers craft and sell clothing and fabrics. A range of products from simple travel clothes to elaborate costumes and robes.</p>",
+        "merchantImage": "icons/environment/settlement/house-two-stories.webp",
+        "displayItemTypes": true,
+        "canInspectItems": true,
+        "infiniteQuantity": false,
+        "infiniteCurrencies": false,
+        "keepZeroQuantity": true,
+        "overrideItemFilters": [
+          {
+            "path": "type",
+            "filters": "background,class,facility,feat,race,spell,subclass"
+          },
+          {
+            "path": "system.type.value",
+            "filters": "natural"
+          },
+          {
+            "path": "type",
+            "filters": "weapon,consumable"
+          },
+          {
+            "path": "flags.merchant-presets.kind",
+            "filters": "vehicle,mount,tack,drink,meal,lodging,service,spellcasting,component,travel"
+          }
+        ],
+        "buyPriceModifier": 1.0,
+        "sellPriceModifier": 0.5,
+        "tablesForPopulate": [
+          {
+            "uuid": "Compendium.merchant-presets.stock.RollTable.90eF1tNIGxBjx8bY",
+            "addAll": true,
+            "timesToRoll": "1",
+            "customCategory": "",
+            "items": {
+              "1o6FlAi83w0Giqo3": "1",
+              "ljfSmzKtHE6FPsup": "1d6+2",
+              "PG6aAIgo04Te2S0t": "1d6+2",
+              "GAz6RE6ZcNybDz05": "1",
+              "hUVoUmUNs8iUzSPh": "1d6+2",
+              "aEWbSgPJd4Cx7rxT": "1",
+              "k2UtAZbMSYDiA18Q": "1d6+2",
+              "FI0yk65I2YGAJmkD": "1d6+2",
+              "fQ4tX9mgTqWXhBWF": "1d6+2"
+            }
+          }
+        ],
+        "openTimes": {
+          "enabled": true,
+          "status": "open",
+          "open": {
+            "hour": 8,
+            "minute": 0
+          },
+          "close": {
+            "hour": 18,
+            "minute": 0
+          }
+        },
+        "closedDays": [],
+        "closedHolidays": [],
+        "refreshItemsOnOpen": true,
+        "refreshItemsDays": [],
+        "refreshItemsHolidays": [],
+        "hideTokenWhenClosed": false
+      },
+      "version": "3.3.4"
+    }
+  }
+}

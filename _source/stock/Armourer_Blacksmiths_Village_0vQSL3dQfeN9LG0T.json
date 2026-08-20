@@ -1,0 +1,610 @@
+{
+  "_id": "0vQSL3dQfeN9LG0T",
+  "_key": "!tables!0vQSL3dQfeN9LG0T",
+  "name": "Armourer & Blacksmiths (Village)",
+  "img": "icons/environment/settlement/blacksmith.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Craft and sell weapons, armour, and other related goods. Their shops often include forges for the owners and work to ply their trade.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d37",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "rDIj5JYBcTgcM6cR",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.rDIj5JYBcTgcM6cR",
+      "type": "document",
+      "name": "Ball Bearings",
+      "img": "icons/weapons/ammunition/shot-round-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBallBearing",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WN3qpdef5X4x8DCu",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.WN3qpdef5X4x8DCu",
+      "type": "document",
+      "name": "Bell",
+      "img": "icons/tools/instruments/bell-brass-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBell0000000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UF5GpogHQYO5MqI8",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.UF5GpogHQYO5MqI8",
+      "type": "document",
+      "name": "Block and Tackle",
+      "img": "icons/tools/fishing/reel-brown-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBlockandTac",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "czNSdbbjRWFwpDlT",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.czNSdbbjRWFwpDlT",
+      "type": "document",
+      "name": "Caltrops",
+      "img": "icons/weapons/thrown/bomb-spiked-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.iYwrPPLmuVD9eqfa",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "knpqwzL6enJW9DB5",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.knpqwzL6enJW9DB5",
+      "type": "document",
+      "name": "Chain",
+      "img": "icons/tools/fasteners/chain-steel-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagChain000000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NtKmeROXZTl2ce9Y",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.NtKmeROXZTl2ce9Y",
+      "type": "document",
+      "name": "Crowbar",
+      "img": "icons/tools/hand/pickaxe-steel-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.QjcMSfmrMwjPoWKn",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DKmCWekqf0yGjV6s",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.DKmCWekqf0yGjV6s",
+      "type": "document",
+      "name": "Hunting Trap",
+      "img": "icons/environment/traps/trap-jaw-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHuntingTrap",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PPIQEB7qZNA3zCpU",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.PPIQEB7qZNA3zCpU",
+      "type": "document",
+      "name": "Lamp",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLamp0000000",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "viwYPlXKcVQrzicK",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.viwYPlXKcVQrzicK",
+      "type": "document",
+      "name": "Lantern, Hooded",
+      "img": "icons/sundries/lights/lantern-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLanternHood",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zoknphwwP1vpFszU",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.zoknphwwP1vpFszU",
+      "type": "document",
+      "name": "Manacles",
+      "img": "icons/sundries/survival/cuffs-shackles-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagManacles000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QrtQa0bLKx2d2t2l",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.QrtQa0bLKx2d2t2l",
+      "type": "document",
+      "name": "Pot, Iron",
+      "img": "icons/tools/laboratory/cauldron-filled-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPotIron0000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sTCflPclFyp0oi5P",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.sTCflPclFyp0oi5P",
+      "type": "document",
+      "name": "Spikes, Iron",
+      "img": "icons/tools/fasteners/nails-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagSpikesIron0",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8CBvFfVHL1Lm1ZUn",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.8CBvFfVHL1Lm1ZUn",
+      "type": "document",
+      "name": "Chain Shirt",
+      "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmChainShirt",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pmMejx5Aeb5YerbZ",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.pmMejx5Aeb5YerbZ",
+      "type": "document",
+      "name": "Scale Mail",
+      "img": "icons/equipment/chest/breastplate-banded-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lJ0CzQov9xhOv9e3",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.lJ0CzQov9xhOv9e3",
+      "type": "document",
+      "name": "Ring Mail",
+      "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmRingMail00",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OdpVe5HohkS0qGPk",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.OdpVe5HohkS0qGPk",
+      "type": "document",
+      "name": "Chain Mail",
+      "img": "icons/equipment/chest/breastplate-metal-scaled-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmChainMail0",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0975kgaNvn2Krc9t",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.0975kgaNvn2Krc9t",
+      "type": "document",
+      "name": "Shield",
+      "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmShield0000",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Li6mWFK6lSX4PdhL",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.Li6mWFK6lSX4PdhL",
+      "type": "document",
+      "name": "Smith's Tools",
+      "img": "icons/skills/trades/smithing-tongs-metal-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulSmithsTool",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QqPeVCPiXneg8odm",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.QqPeVCPiXneg8odm",
+      "type": "document",
+      "name": "Dagger",
+      "img": "icons/weapons/daggers/dagger-straight-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepDagger0000",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sSWlV7TRZ0NR8dtf",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.sSWlV7TRZ0NR8dtf",
+      "type": "document",
+      "name": "Handaxe",
+      "img": "icons/weapons/axes/axe-broad-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepHandaxe000",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PZm7PsL8Cjk4WPod",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.PZm7PsL8Cjk4WPod",
+      "type": "document",
+      "name": "Javelin",
+      "img": "icons/weapons/polearms/javelin-flared.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepJavelin000",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IS0eScYbTPwyvjqc",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.IS0eScYbTPwyvjqc",
+      "type": "document",
+      "name": "Light Hammer",
+      "img": "icons/weapons/hammers/shorthammer-double-stone-engraved.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepLightHamme",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "USQ4ouUo3F28V13a",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.USQ4ouUo3F28V13a",
+      "type": "document",
+      "name": "Mace",
+      "img": "icons/weapons/maces/mace-flanged-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepMace000000",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uwLQyNZWQB5lHgUE",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.uwLQyNZWQB5lHgUE",
+      "type": "document",
+      "name": "Sickle",
+      "img": "icons/weapons/sickles/sickle-curved.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepSickle0000",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EqhTxFshEvsFRPFw",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.EqhTxFshEvsFRPFw",
+      "type": "document",
+      "name": "Spear",
+      "img": "icons/weapons/polearms/spear-flared-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepSpear00000",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7fw41W4mdAbrdvyQ",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.7fw41W4mdAbrdvyQ",
+      "type": "document",
+      "name": "Dart",
+      "img": "icons/weapons/thrown/dart-feathered.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepDart000000",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AP5QlkHOxRiZaPgd",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.AP5QlkHOxRiZaPgd",
+      "type": "document",
+      "name": "Battleaxe",
+      "img": "icons/weapons/axes/axe-battle-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepBattleaxe0",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "te648MotgzmsLB5h",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.te648MotgzmsLB5h",
+      "type": "document",
+      "name": "Flail",
+      "img": "icons/weapons/maces/flail-ball-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepFlail00000",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "YUxlV9cFTAF20SQO",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.YUxlV9cFTAF20SQO",
+      "type": "document",
+      "name": "Greataxe",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepGreataxe00",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "We0oap6n6Ff3564T",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.We0oap6n6Ff3564T",
+      "type": "document",
+      "name": "Greatsword",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepGreatsword",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vnCm0iF5duOAfwYd",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.vnCm0iF5duOAfwYd",
+      "type": "document",
+      "name": "Longsword",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepLongsword0",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "CbXVo3cKe0Y0V2Nu",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.CbXVo3cKe0Y0V2Nu",
+      "type": "document",
+      "name": "Maul",
+      "img": "icons/weapons/hammers/hammer-double-stone-worn.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepMaul000000",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TQuqKW2v4ijwE6ZX",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.TQuqKW2v4ijwE6ZX",
+      "type": "document",
+      "name": "Morningstar",
+      "img": "icons/weapons/maces/mace-cube-spiked-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepMorningsta",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "D2WzVa7xDBfnEVEk",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.D2WzVa7xDBfnEVEk",
+      "type": "document",
+      "name": "Shortsword",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepShortsword",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6P5YM7K1CttAaFPF",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.6P5YM7K1CttAaFPF",
+      "type": "document",
+      "name": "Trident",
+      "img": "icons/weapons/polearms/trident-silver-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepTrident000",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iagcC6ZV8Iw1DE4z",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.iagcC6ZV8Iw1DE4z",
+      "type": "document",
+      "name": "Warhammer",
+      "img": "icons/weapons/hammers/hammer-drilling-spiked.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepWarhammer0",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pin4zWIegvd3j1MK",
+      "_key": "!tables.results!0vQSL3dQfeN9LG0T.pin4zWIegvd3j1MK",
+      "type": "document",
+      "name": "War Pick",
+      "img": "icons/weapons/axes/pickaxe-iron-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepWarPick000",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

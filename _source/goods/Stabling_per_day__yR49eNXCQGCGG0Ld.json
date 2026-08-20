@@ -1,0 +1,53 @@
+{
+  "_id": "yR49eNXCQGCGG0Ld",
+  "_key": "!items!yR49eNXCQGCGG0Ld",
+  "name": "Stabling (per day)",
+  "type": "loot",
+  "img": "icons/environment/settlement/stable.webp",
+  "folder": "hwVUUqkE6fhNurbD",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Stabling and grooming for one mount, per day.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 5,
+      "denomination": "sp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "service"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "_id": "q6nFWHdvyN6MmWgK",
+  "_key": "!items!q6nFWHdvyN6MmWgK",
+  "name": "Airship",
+  "type": "loot",
+  "img": "icons/magic/air/wind-weather-sailing-ship.webp",
+  "folder": "EdzKIeXcodu8d4bT",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A flying vessel kept aloft by bound elemental air.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 40000,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": false
+      }
+    },
+    "merchant-presets": {
+      "kind": "vehicle"
+    }
+  }
+}

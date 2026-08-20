@@ -1,0 +1,98 @@
+{
+  "_id": "8edx4QHryzzW9MVL",
+  "_key": "!tables!8edx4QHryzzW9MVL",
+  "name": "Jeweler (Village)",
+  "img": "icons/environment/settlement/house-city.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Crafts and sells fine jewellery, precious gems, and accessories. Primarily caters to those seeking jewellery, but another major source of business is adventurers seeking spell components or offloading goods from dungeons.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d5",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "FJmOUr8v0WqxXuNi",
+      "_key": "!tables.results!8edx4QHryzzW9MVL.FJmOUr8v0WqxXuNi",
+      "type": "document",
+      "name": "Amulet",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbhsyAmuletworn",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HrFqPidymSWTScaC",
+      "_key": "!tables.results!8edx4QHryzzW9MVL.HrFqPidymSWTScaC",
+      "type": "document",
+      "name": "Crystal",
+      "img": "icons/commodities/gems/gem-faceted-large-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcCrystal000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "t8P5ofZTFNhgQBK7",
+      "_key": "!tables.results!8edx4QHryzzW9MVL.t8P5ofZTFNhgQBK7",
+      "type": "document",
+      "name": "Orb",
+      "img": "icons/commodities/gems/pearl-purple-smooth.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcOrb0000000",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VjcqtPalcav7oIpc",
+      "_key": "!tables.results!8edx4QHryzzW9MVL.VjcqtPalcav7oIpc",
+      "type": "document",
+      "name": "Jeweler's Tools",
+      "img": "icons/commodities/gems/gem-rough-rose-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulJewelersTo",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wc86uyBImLuecVby",
+      "_key": "!tables.results!8edx4QHryzzW9MVL.wc86uyBImLuecVby",
+      "type": "document",
+      "name": "Spell Components (gems), 150 gp and below",
+      "img": "icons/commodities/gems/gem-faceted-navette-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.HeRVCROhFBnqI3sU",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

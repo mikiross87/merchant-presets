@@ -1,0 +1,52 @@
+{
+  "_id": "6ag3rqyy0kHW8h8a",
+  "_key": "!items!6ag3rqyy0kHW8h8a",
+  "name": "Spell Components (gems), 500 gp and below",
+  "type": "loot",
+  "img": "icons/commodities/gems/gem-faceted-radiant-purple.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Assorted gemstone spell components worth up to 500 gp.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 500,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "custom": "Merchant Presets",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

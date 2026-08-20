@@ -1,0 +1,418 @@
+{
+  "_id": "ydl01Gw3hdTxQPbr",
+  "_key": "!tables!ydl01Gw3hdTxQPbr",
+  "name": "Criminal & Illicit Store (Village)",
+  "img": "icons/environment/settlement/sewer-entrance.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Operates in the shadows, offering black market goods and services. Found within thieves' and assassins' guilds and the seedier parts of settlements. Deals in stolen items, poisons, and other illegal wares — and can often be relied upon to buy stolen goods.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d25",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "uzhu6KGfyrzkyab5",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.uzhu6KGfyrzkyab5",
+      "type": "document",
+      "name": "Acid",
+      "img": "icons/consumables/potions/bottle-round-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAcid0000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fElhRay8ue8Fvrt7",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.fElhRay8ue8Fvrt7",
+      "type": "document",
+      "name": "Antitoxin",
+      "img": "icons/consumables/potions/bottle-round-corked-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAntitoxin00",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2nYMzgAFy5pxpR1B",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.2nYMzgAFy5pxpR1B",
+      "type": "document",
+      "name": "Ball Bearings",
+      "img": "icons/weapons/ammunition/shot-round-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBallBearing",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7x1pJ2pcEmKEFnqh",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.7x1pJ2pcEmKEFnqh",
+      "type": "document",
+      "name": "Burglar's Pack",
+      "img": "icons/containers/bags/pack-canvas-white-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBurglarsPac",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "92l6dQR3nwOzQuta",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.92l6dQR3nwOzQuta",
+      "type": "document",
+      "name": "Caltrops",
+      "img": "icons/weapons/thrown/bomb-spiked-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.iYwrPPLmuVD9eqfa",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GRXpblJZO8pb7MWY",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.GRXpblJZO8pb7MWY",
+      "type": "document",
+      "name": "Costume",
+      "img": "icons/equipment/head/hood-purple-mask.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCostume0000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WbWAd8VT5Hi641g9",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.WbWAd8VT5Hi641g9",
+      "type": "document",
+      "name": "Crowbar",
+      "img": "icons/tools/hand/pickaxe-steel-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.QjcMSfmrMwjPoWKn",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZxHtnaVfNxQqyGd5",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.ZxHtnaVfNxQqyGd5",
+      "type": "document",
+      "name": "Grappling Hook",
+      "img": "icons/tools/fishing/hook-multi-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagGrapplingHo",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ScSOFRDpDmDPtu6U",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.ScSOFRDpDmDPtu6U",
+      "type": "document",
+      "name": "Hunting Trap",
+      "img": "icons/environment/traps/trap-jaw-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHuntingTrap",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "K4UsXj0FMSa4pnui",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.K4UsXj0FMSa4pnui",
+      "type": "document",
+      "name": "Lock",
+      "img": "icons/sundries/misc/lock-bronze-reinforced.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLock0000000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "guUpvJb707BzFtLx",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.guUpvJb707BzFtLx",
+      "type": "document",
+      "name": "Manacles",
+      "img": "icons/sundries/survival/cuffs-shackles-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagManacles000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Yp756dfEBjHHFKMv",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.Yp756dfEBjHHFKMv",
+      "type": "document",
+      "name": "Oil",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagOil00000000",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "plXWcGxyqXGZ3r1B",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.plXWcGxyqXGZ3r1B",
+      "type": "document",
+      "name": "Poison, Basic",
+      "img": "icons/consumables/potions/potion-bottle-skull-label-poison-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPoisonBasic",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ghhE6XM3Y2BJy1ZX",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.ghhE6XM3Y2BJy1ZX",
+      "type": "document",
+      "name": "Ram, Portable",
+      "img": "icons/weapons/maces/mace-skull-ram.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagRamPortable",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oxLWS5qLxJxQgo2X",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.oxLWS5qLxJxQgo2X",
+      "type": "document",
+      "name": "Rope",
+      "img": "icons/sundries/survival/rope-wrapped-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gcUd1Up3ulepvNnl",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.gcUd1Up3ulepvNnl",
+      "type": "document",
+      "name": "Spikes, Iron",
+      "img": "icons/tools/fasteners/nails-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagSpikesIron0",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oEVYbCiiqbtKWaUS",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.oEVYbCiiqbtKWaUS",
+      "type": "document",
+      "name": "Padded Armor",
+      "img": "icons/equipment/chest/breastplate-quilted-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmPaddedArmo",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "li8cqoY9RGb18e6K",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.li8cqoY9RGb18e6K",
+      "type": "document",
+      "name": "Dice",
+      "img": "icons/sundries/gaming/dice-runed-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbgstDice000000",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "kRQ1jNyLpIbecfWw",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.kRQ1jNyLpIbecfWw",
+      "type": "document",
+      "name": "Playing Cards",
+      "img": "icons/sundries/gaming/playing-cards.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbgstPlayingcar",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ep0Z9TwnXmE6o6wg",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.Ep0Z9TwnXmE6o6wg",
+      "type": "document",
+      "name": "Thieves' Tools",
+      "img": "icons/tools/hand/lockpicks-steel-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulThievesToo",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uLdta9lpzTlZlsHd",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.uLdta9lpzTlZlsHd",
+      "type": "document",
+      "name": "Light Crossbow",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepLightCross",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ubs9yB8VPNmIlW5y",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.Ubs9yB8VPNmIlW5y",
+      "type": "document",
+      "name": "Dagger",
+      "img": "icons/weapons/daggers/dagger-straight-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepDagger0000",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Q0VpEWoDMtIKetJQ",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.Q0VpEWoDMtIKetJQ",
+      "type": "document",
+      "name": "Dart",
+      "img": "icons/weapons/thrown/dart-feathered.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepDart000000",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0B2mIBX0hVy40gah",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.0B2mIBX0hVy40gah",
+      "type": "document",
+      "name": "Shortbow",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepShortbow00",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "id71EzWBBDjgPTA7",
+      "_key": "!tables.results!ydl01Gw3hdTxQPbr.id71EzWBBDjgPTA7",
+      "type": "document",
+      "name": "Shortsword",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepShortsword",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

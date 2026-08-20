@@ -1,0 +1,53 @@
+{
+  "_id": "0AvDPhxs289znYZH",
+  "_key": "!items!0AvDPhxs289znYZH",
+  "name": "Pony",
+  "type": "loot",
+  "img": "icons/creatures/mammals/deer-antlers-green.webp",
+  "folder": "Jqon6Hv8ow4gpZjs",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A small riding horse.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 30,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": false
+      }
+    },
+    "merchant-presets": {
+      "kind": "mount"
+    }
+  }
+}

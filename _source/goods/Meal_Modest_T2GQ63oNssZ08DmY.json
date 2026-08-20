@@ -1,0 +1,53 @@
+{
+  "_id": "T2GQ63oNssZ08DmY",
+  "_key": "!items!T2GQ63oNssZ08DmY",
+  "name": "Meal, Modest",
+  "type": "loot",
+  "img": "icons/consumables/food/bowl-stew-brown.webp",
+  "folder": "0VsNVjaoQGW2g1oA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A modest meal.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 1,
+      "denomination": "sp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "meal"
+    }
+  }
+}

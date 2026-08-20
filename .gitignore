@@ -1,0 +1,13 @@
+# Built LevelDB packs — regenerated from _source by `npm run pack`.
+# Binary, and reproducible from tracked JSON, so they never belong in git.
+packs/
+
+node_modules/
+
+# OS and editor noise.
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/

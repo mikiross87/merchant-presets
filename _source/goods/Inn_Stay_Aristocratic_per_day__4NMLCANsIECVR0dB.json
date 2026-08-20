@@ -1,0 +1,53 @@
+{
+  "_id": "4NMLCANsIECVR0dB",
+  "_key": "!items!4NMLCANsIECVR0dB",
+  "name": "Inn Stay, Aristocratic (per day)",
+  "type": "loot",
+  "img": "icons/environment/settlement/palast.webp",
+  "folder": "rO99kNCOnq8kzgqT",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A night's lodging, aristocratic.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 4,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "lodging"
+    }
+  }
+}

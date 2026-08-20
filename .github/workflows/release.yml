@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag matches module.json version
+        run: |
+          MODULE_VERSION="$(jq -r .version module.json)"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$MODULE_VERSION" != "$TAG_VERSION" ]; then
+            echo "module.json version ($MODULE_VERSION) does not match tag ($TAG_VERSION)" >&2
+            exit 1
+          fi
+
+      - name: Determine prerelease status
+        id: prerelease
+        run: |
+          # Standard semver prerelease convention: a hyphen after the patch
+          # number, e.g. v1.1.0-beta.1. Such tags are marked as GitHub
+          # prereleases and are not registered with the Foundry registry —
+          # they're for testing via their own pinned manifest URL only.
+          if [[ "${GITHUB_REF_NAME#v}" == *-* ]]; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pin download URL to this release
+        run: |
+          # The manifest URL stays on releases/latest so Foundry's update
+          # check finds new versions; the download URL is pinned so the
+          # package registry can install this exact version.
+          jq --arg url "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.zip" \
+             '.download = $url' module.json > module.json.tmp
+          mv module.json.tmp module.json
+
+      - name: Build the compendium packs
+        run: |
+          npm install --no-audit --no-fund
+          npm run pack
+
+      - name: Build module archive
+        run: |
+          # _source is the JSON the packs are compiled from — tracked in git so
+          # the packs are reproducible, but ~6 MB that players never load.
+          zip -r module.zip . \
+            -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" \
+            -x "node_modules/*" -x "package*.json"
+
+      - name: Build release notes
+        run: |
+          set -euo pipefail
+          PREV="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          {
+            echo "## What's changed"
+            echo ""
+            # Commit subjects since the previous tag, skipping commits that
+            # only touch CI/workflow files — players don't care about those.
+            if [ -n "$PREV" ]; then
+              RANGE="$PREV..${GITHUB_REF_NAME}"
+            else
+              RANGE="${GITHUB_REF_NAME}"
+            fi
+            git log --pretty='- %s' "$RANGE" -- . ':!.github'
+            echo ""
+            if [ -n "$PREV" ]; then
+              echo "**Full changelog:** [\`$PREV...${GITHUB_REF_NAME}\`](https://github.com/${GITHUB_REPOSITORY}/compare/$PREV...${GITHUB_REF_NAME})"
+              echo ""
+            fi
+            echo "## Install"
+            echo ""
+            if [ "${{ steps.prerelease.outputs.is_prerelease }}" = "true" ]; then
+              echo "⚠️ This is a prerelease — not registered with the Foundry package registry and not picked up by the stable \`latest\` manifest. Install or update it explicitly with this version-pinned manifest URL:"
+              echo ""
+              echo '```'
+              echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.json"
+              echo '```'
+            else
+              echo "Paste this manifest URL into Foundry's **Install Module** dialog:"
+              echo ""
+              echo '```'
+              echo "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/module.json"
+              echo '```'
+            fi
+          } > release-notes.md
+          cat release-notes.md
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          body_path: release-notes.md
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          files: |
+            module.json
+            module.zip
+
+      - name: Publish to Foundry package registry
+        if: ${{ env.FOUNDRY_RELEASE_TOKEN != '' && steps.prerelease.outputs.is_prerelease != 'true' }}
+        run: |
+          set -euo pipefail
+          BODY="$(jq -n \
+            --arg id "$(jq -r .id module.json)" \
+            --arg version "$(jq -r .version module.json)" \
+            --arg manifest "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.json" \
+            --arg notes "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${GITHUB_REF_NAME}" \
+            --argjson compat "$(jq .compatibility module.json)" \
+            '{id: $id, release: {version: $version, manifest: $manifest, notes: $notes, compatibility: $compat}}')"
+          RESPONSE="$(curl -s -w '\n%{http_code}' -X POST "https://foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${FOUNDRY_RELEASE_TOKEN}" \
+            -d "$BODY")"
+          STATUS="$(printf '%s' "$RESPONSE" | tail -1)"
+          printf '%s\n' "$RESPONSE" | sed '$d'
+          if [ "$STATUS" != "200" ]; then
+            echo "Foundry registry publish failed with HTTP $STATUS" >&2
+            exit 1
+          fi

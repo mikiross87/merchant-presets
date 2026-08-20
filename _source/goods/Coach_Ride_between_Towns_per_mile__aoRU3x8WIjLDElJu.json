@@ -1,0 +1,52 @@
+{
+  "_id": "aoRU3x8WIjLDElJu",
+  "_key": "!items!aoRU3x8WIjLDElJu",
+  "name": "Coach Ride between Towns (per mile)",
+  "type": "loot",
+  "img": "icons/environment/settlement/wagon.webp",
+  "folder": "1NfNyxoAUF9p0FSL",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A seat on a coach between settlements, per mile.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 3,
+      "denomination": "cp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "custom": "Merchant Presets",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "travel"
+    }
+  }
+}

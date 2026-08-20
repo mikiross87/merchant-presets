@@ -1,0 +1,52 @@
+{
+  "_id": "PT7FtDwr7B48MWSb",
+  "_key": "!items!PT7FtDwr7B48MWSb",
+  "name": "Road or Gate Toll",
+  "type": "loot",
+  "img": "icons/environment/settlement/city-gate.webp",
+  "folder": "1NfNyxoAUF9p0FSL",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A toll levied on a road or at a gate.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 1,
+      "denomination": "cp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "custom": "Merchant Presets",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "travel"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "_id": "gqWrPq8c0sVaiZY4",
+  "_key": "!tables!gqWrPq8c0sVaiZY4",
+  "name": "Dock (Village)",
+  "img": "icons/environment/settlement/abandoned-pier.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d3",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "sfedd7ql3Gi8pDVJ",
+      "_key": "!tables.results!gqWrPq8c0sVaiZY4.sfedd7ql3Gi8pDVJ",
+      "type": "document",
+      "name": "Keelboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3hEwQiXGd9kjzg4g",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "K4exZ1tDGdtBoivn",
+      "_key": "!tables.results!gqWrPq8c0sVaiZY4.K4exZ1tDGdtBoivn",
+      "type": "document",
+      "name": "Rowboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cfLj9vz3SC1DaLQq",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XrtzBP5gZsNOpMWs",
+      "_key": "!tables.results!gqWrPq8c0sVaiZY4.XrtzBP5gZsNOpMWs",
+      "type": "document",
+      "name": "Ship Passage, Hammock (per day)",
+      "img": "icons/environment/settlement/abandoned-pier.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.mO2FT09ZmHvoNBJ2",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

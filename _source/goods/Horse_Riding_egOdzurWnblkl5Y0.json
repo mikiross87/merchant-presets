@@ -1,0 +1,53 @@
+{
+  "_id": "egOdzurWnblkl5Y0",
+  "_key": "!items!egOdzurWnblkl5Y0",
+  "name": "Horse, Riding",
+  "type": "loot",
+  "img": "icons/creatures/mammals/deer-antlers-blue.webp",
+  "folder": "Jqon6Hv8ow4gpZjs",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A saddle horse.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 75,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": false
+      }
+    },
+    "merchant-presets": {
+      "kind": "mount"
+    }
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "_id": "dwvFE5Ni1XXbfaoM",
+  "_key": "!tables!dwvFE5Ni1XXbfaoM",
+  "name": "Alchemists & Apothecaries (Town)",
+  "img": "icons/environment/settlement/winemaker-still-vintner.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Specialise in potions, herbs, and remedies. Shelves lined with colourful bottles, drying herbs, and the scent of exotic ingredients.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d15",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "FMzW1naccXZWlQoN",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.FMzW1naccXZWlQoN",
+      "type": "document",
+      "name": "Acid",
+      "img": "icons/consumables/potions/bottle-round-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAcid0000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4excbTsskMQYQxmA",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.4excbTsskMQYQxmA",
+      "type": "document",
+      "name": "Alchemist's Fire",
+      "img": "icons/consumables/potions/bottle-round-label-cork-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAlchemistsF",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BADO1TIoc8ZNxCkE",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.BADO1TIoc8ZNxCkE",
+      "type": "document",
+      "name": "Antitoxin",
+      "img": "icons/consumables/potions/bottle-round-corked-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAntitoxin00",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bHhExZQObdx848Rz",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.bHhExZQObdx848Rz",
+      "type": "document",
+      "name": "Component Pouch",
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagComponentPo",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mZvw1anzwW1gfq53",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.mZvw1anzwW1gfq53",
+      "type": "document",
+      "name": "Flask",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagFlask000000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "leEHtERpt30ShgoH",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.leEHtERpt30ShgoH",
+      "type": "document",
+      "name": "Oil",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagOil00000000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "B4LuaGeObiCWwkm2",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.B4LuaGeObiCWwkm2",
+      "type": "document",
+      "name": "Perfume",
+      "img": "icons/consumables/potions/bottle-bulb-corked-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.yoRKNd2QddQp1XuX",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "frexhx1UALqaCAtw",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.frexhx1UALqaCAtw",
+      "type": "document",
+      "name": "Poison, Basic",
+      "img": "icons/consumables/potions/potion-bottle-skull-label-poison-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPoisonBasic",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9BAEOgTDcrElt5Sf",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.9BAEOgTDcrElt5Sf",
+      "type": "document",
+      "name": "Potion of Healing",
+      "img": "icons/consumables/potions/potion-tube-corked-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfHeali",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GgWi44JkDBGlXPAW",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.GgWi44JkDBGlXPAW",
+      "type": "document",
+      "name": "Potion of Healing (Greater)",
+      "img": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGreaterPotion",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4QSFnR9mvUZh3jK9",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.4QSFnR9mvUZh3jK9",
+      "type": "document",
+      "name": "Pouch",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPouch000000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "v36eh7g8rg4thifZ",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.v36eh7g8rg4thifZ",
+      "type": "document",
+      "name": "Vial",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagVial0000000",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vYSTOyORFCvOl7Qf",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.vYSTOyORFCvOl7Qf",
+      "type": "document",
+      "name": "Alchemist's Supplies",
+      "img": "icons/tools/cooking/mortar-herbs-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulAlchemists",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hcEy63VPWWtImAFT",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.hcEy63VPWWtImAFT",
+      "type": "document",
+      "name": "Brewer's Supplies",
+      "img": "icons/consumables/plants/herb-marjoram-basil-oregano-leaf-bunch-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulBrewersSup",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "JTzhqXXPLJKS2sjg",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.JTzhqXXPLJKS2sjg",
+      "type": "document",
+      "name": "Herbalism Kit",
+      "img": "icons/containers/bags/pouch-leather-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulHerbalismK",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

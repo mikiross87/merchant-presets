@@ -1,0 +1,354 @@
+{
+  "_id": "Zo7FQ1U9WAIDxcxO",
+  "_key": "!tables!Zo7FQ1U9WAIDxcxO",
+  "name": "Stable (City)",
+  "img": "icons/environment/settlement/stables-horses.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Provides care and housing for horses and other riding animals. Grooms and feeds steeds, and sells riding gear and mounts. Usually attached to inns and taverns.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d21",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "AczGarj50CYWd1tB",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.AczGarj50CYWd1tB",
+      "type": "document",
+      "name": "Carriage",
+      "img": "icons/environment/settlement/wagon.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.B58PzC3u328BRdzB",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "swhpm5g86pKrVOjp",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.swhpm5g86pKrVOjp",
+      "type": "document",
+      "name": "Cart",
+      "img": "icons/environment/settlement/wagon-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MSIYVRgKtAtsq1SL",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oxEsdbIJSlwHnKmT",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.oxEsdbIJSlwHnKmT",
+      "type": "document",
+      "name": "Chariot",
+      "img": "icons/environment/settlement/wagon-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.L3tSCr9eQ91kt9wK",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4Vdfy7L7QznROX5Q",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.4Vdfy7L7QznROX5Q",
+      "type": "document",
+      "name": "Saddle, Exotic",
+      "img": "icons/sundries/survival/bedroll-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.8FDJzoeUAtq6ZYJx",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NJRD4la2cbA6xG4Y",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.NJRD4la2cbA6xG4Y",
+      "type": "document",
+      "name": "Saddle, Military",
+      "img": "icons/sundries/survival/bedroll-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.04I1fORrH4hSEKDV",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aBVLom21sWWqQ8Gn",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.aBVLom21sWWqQ8Gn",
+      "type": "document",
+      "name": "Saddle, Riding",
+      "img": "icons/sundries/survival/bedroll-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nU7Twg6fpNPjWLlx",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wPzkUi5S5TYHyY8b",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.wPzkUi5S5TYHyY8b",
+      "type": "document",
+      "name": "Sled",
+      "img": "icons/environment/settlement/wagon-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ePe7wMUpfuP2G2oW",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GxPupZQiX9SjD7e4",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.GxPupZQiX9SjD7e4",
+      "type": "document",
+      "name": "Wagon",
+      "img": "icons/environment/settlement/wagon.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.1NQ9ATGe4QjGpk02",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hAYB9VkQAXwy974A",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.hAYB9VkQAXwy974A",
+      "type": "document",
+      "name": "Animal Feed (per day)",
+      "img": "icons/environment/settlement/farm-silo-windmill.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AuopHRckMfSOnnUn",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OwWv2q6ou1cQbF4F",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.OwWv2q6ou1cQbF4F",
+      "type": "document",
+      "name": "Stabling (per day)",
+      "img": "icons/environment/settlement/stable.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.yR49eNXCQGCGG0Ld",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yv1KXDTSB5B0oYjD",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.yv1KXDTSB5B0oYjD",
+      "type": "document",
+      "name": "Camel",
+      "img": "icons/commodities/treasure/figurine-camel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QIKX4JCTF5WLCoFq",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dpxw5scnu0UyZk3e",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.dpxw5scnu0UyZk3e",
+      "type": "document",
+      "name": "Elephant",
+      "img": "icons/creatures/mammals/ox-buffalo-horned-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.s3qNp7Lo4mQpfo7K",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gAJrsB2NC9okkYvW",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.gAJrsB2NC9okkYvW",
+      "type": "document",
+      "name": "Horse, Draft",
+      "img": "icons/creatures/mammals/ox-bull-horned-glowing-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.zIkxXwxhZl5POdri",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "l0S9lthvjJEpHjuz",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.l0S9lthvjJEpHjuz",
+      "type": "document",
+      "name": "Horse, Riding",
+      "img": "icons/creatures/mammals/deer-antlers-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.egOdzurWnblkl5Y0",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "a4pJNqrdb2nHtKr0",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.a4pJNqrdb2nHtKr0",
+      "type": "document",
+      "name": "Mastiff",
+      "img": "icons/creatures/mammals/dog-husky-white-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CLGOx3NIv7ONKGSm",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fmtI6UXBY6CAZ3jx",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.fmtI6UXBY6CAZ3jx",
+      "type": "document",
+      "name": "Mule",
+      "img": "icons/creatures/mammals/livestock-sheep-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.NBSkiyXIeQYgBbWD",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "z0nQJ2mqQyaTBz5h",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.z0nQJ2mqQyaTBz5h",
+      "type": "document",
+      "name": "Pony",
+      "img": "icons/creatures/mammals/deer-antlers-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.0AvDPhxs289znYZH",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r91iFCNs10uoUChR",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.r91iFCNs10uoUChR",
+      "type": "document",
+      "name": "Warhorse",
+      "img": "icons/creatures/mammals/unicorn-horned-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.tOGdOLsaBVeiR1Js",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XBKO8eIUgOZRnV9b",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.XBKO8eIUgOZRnV9b",
+      "type": "document",
+      "name": "Coach Ride between Towns (per mile)",
+      "img": "icons/environment/settlement/wagon.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.aoRU3x8WIjLDElJu",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "prSKvcg3gBqAO5C3",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.prSKvcg3gBqAO5C3",
+      "type": "document",
+      "name": "Coach Ride within a City (per mile)",
+      "img": "icons/environment/settlement/wagon.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.TmkfaPAJ5g00V9cM",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "83UQhQb0xgCIryNH",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.83UQhQb0xgCIryNH",
+      "type": "document",
+      "name": "Road or Gate Toll",
+      "img": "icons/environment/settlement/city-gate.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.PT7FtDwr7B48MWSb",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

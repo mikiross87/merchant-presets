@@ -1,0 +1,550 @@
+{
+  "_id": "AQvzAugD0mDLKKOn",
+  "_key": "!actors!AQvzAugD0mDLKKOn",
+  "name": "Dock (City)",
+  "type": "npc",
+  "img": "icons/environment/settlement/abandoned-pier.webp",
+  "folder": "anMLbjfhLPsKWmVI",
+  "sort": 0,
+  "system": {
+    "currency": {
+      "pp": 0,
+      "gp": 12500,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "details": {
+      "biography": {
+        "value": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p>"
+      },
+      "type": {
+        "value": "humanoid"
+      },
+      "cr": 0
+    },
+    "attributes": {
+      "hp": {
+        "value": 10,
+        "max": 10
+      }
+    }
+  },
+  "prototypeToken": {
+    "name": "Dock (City)",
+    "actorLink": true,
+    "texture": {
+      "src": "icons/environment/settlement/abandoned-pier.webp"
+    }
+  },
+  "items": [
+    {
+      "name": "Airship",
+      "type": "loot",
+      "img": "icons/magic/air/wind-weather-sailing-ship.webp",
+      "system": {
+        "description": {
+          "value": "<p>A flying vessel kept aloft by bound elemental air.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 40000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.q6nFWHdvyN6MmWgK"
+      },
+      "_id": "jq3Vg7hJiCnNc5Fh",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.jq3Vg7hJiCnNc5Fh"
+    },
+    {
+      "name": "Galley",
+      "type": "loot",
+      "img": "icons/environment/settlement/ship.webp",
+      "system": {
+        "description": {
+          "value": "<p>A large oared warship.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 30000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.lx7TO0LWw6wjLiJj"
+      },
+      "_id": "pM0QhXl8omuBA2l4",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.pM0QhXl8omuBA2l4"
+    },
+    {
+      "name": "Keelboat",
+      "type": "loot",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "system": {
+        "description": {
+          "value": "<p>A shallow-draft river and coastal boat.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.3hEwQiXGd9kjzg4g"
+      },
+      "_id": "ztorXeLteW1jey9p",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.ztorXeLteW1jey9p"
+    },
+    {
+      "name": "Longship",
+      "type": "loot",
+      "img": "icons/environment/settlement/ship.webp",
+      "system": {
+        "description": {
+          "value": "<p>A narrow raiding vessel, oared and sailed.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.nn3hstDi8hHrm1Mr"
+      },
+      "_id": "PXJFI2latoo4PVJY",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.PXJFI2latoo4PVJY"
+    },
+    {
+      "name": "Rowboat",
+      "type": "loot",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "system": {
+        "description": {
+          "value": "<p>A small open boat for two to four passengers.</p>",
+          "chat": ""
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 100,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.cfLj9vz3SC1DaLQq"
+      },
+      "_id": "WVEAObBK60Ncr6m5",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.WVEAObBK60Ncr6m5"
+    },
+    {
+      "name": "Sailing Ship",
+      "type": "loot",
+      "img": "icons/skills/trades/profession-sailing-ship.webp",
+      "system": {
+        "description": {
+          "value": "<p>A seagoing merchant vessel.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Q3IyuOcTyJGuJnsa"
+      },
+      "_id": "cN6q7QL0ITc0xBXt",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.cN6q7QL0ITc0xBXt"
+    },
+    {
+      "name": "Warship",
+      "type": "loot",
+      "img": "icons/environment/settlement/ship.webp",
+      "system": {
+        "description": {
+          "value": "<p>A purpose-built vessel of war.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "vehicle"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.JGcedo86AV2R4kVt"
+      },
+      "_id": "pdgXtCju1qYpgmyO",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.pdgXtCju1qYpgmyO"
+    },
+    {
+      "name": "Ship Passage, Hammock (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/abandoned-pier.webp",
+      "system": {
+        "description": {
+          "value": "<p>Passage aboard a vessel, per mile.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "travel"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.mO2FT09ZmHvoNBJ2"
+      },
+      "_id": "CrP0Lmls4hqJ6YEa",
+      "_key": "!actors.items!AQvzAugD0mDLKKOn.CrP0Lmls4hqJ6YEa"
+    }
+  ],
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "data": {
+        "enabled": true,
+        "type": "merchant",
+        "description": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p>",
+        "merchantImage": "icons/environment/settlement/abandoned-pier.webp",
+        "displayItemTypes": true,
+        "canInspectItems": true,
+        "infiniteQuantity": false,
+        "infiniteCurrencies": false,
+        "keepZeroQuantity": true,
+        "overrideItemFilters": [
+          {
+            "path": "type",
+            "filters": "background,class,facility,feat,race,spell,subclass"
+          },
+          {
+            "path": "system.type.value",
+            "filters": "natural"
+          },
+          {
+            "path": "type",
+            "filters": "weapon,equipment,consumable,tool,container"
+          },
+          {
+            "path": "flags.merchant-presets.kind",
+            "filters": "mount,tack,drink,meal,lodging,service,spellcasting,component"
+          }
+        ],
+        "buyPriceModifier": 1.0,
+        "sellPriceModifier": 0.5,
+        "tablesForPopulate": [
+          {
+            "uuid": "Compendium.merchant-presets.stock.RollTable.NBJ9U00pcqWmS53J",
+            "addAll": true,
+            "timesToRoll": "1",
+            "customCategory": "",
+            "items": {
+              "lYQkhf14j9co3xpW": "1d2-1",
+              "ekGQf9D6bDWumHrJ": "1d2-1",
+              "Q1ELpAvRwZ026FCD": "1d2-1",
+              "3CLQOXcBd8khkEIB": "1d2-1",
+              "Kg1fGV9ihyO34HkF": "1d4+2",
+              "2d86DjEYuJGLBgEE": "1d2-1",
+              "4OYr0PdyDJyseb2X": "1d2-1",
+              "w4Jf0uy52lQ3FqyV": "1"
+            }
+          }
+        ],
+        "openTimes": {
+          "enabled": true,
+          "status": "open",
+          "open": {
+            "hour": 5,
+            "minute": 0
+          },
+          "close": {
+            "hour": 19,
+            "minute": 0
+          }
+        },
+        "closedDays": [],
+        "closedHolidays": [],
+        "refreshItemsOnOpen": true,
+        "refreshItemsDays": [],
+        "refreshItemsHolidays": [],
+        "hideTokenWhenClosed": false
+      },
+      "version": "3.3.4"
+    }
+  }
+}

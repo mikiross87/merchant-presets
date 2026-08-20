@@ -1,0 +1,53 @@
+{
+  "_id": "OwxKx2vQ28EaBXMP",
+  "_key": "!items!OwxKx2vQ28EaBXMP",
+  "name": "Meal, Comfortable",
+  "type": "loot",
+  "img": "icons/consumables/food/bowl-stew-brown.webp",
+  "folder": "0VsNVjaoQGW2g1oA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A comfortable meal.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 2,
+      "denomination": "sp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "meal"
+    }
+  }
+}

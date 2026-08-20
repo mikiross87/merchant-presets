@@ -1,0 +1,17 @@
+name: Feature or preset request
+description: Suggest a new preset or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: >
+        For a new preset, describe the light: color, animation feel, whether it
+        should have a bright core or read as pure atmosphere.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What scene or use case is it for?

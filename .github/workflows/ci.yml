@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Syntax-check ES modules
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r -d '' f; do
+            if node --check "$f"; then
+              echo "OK   $f"
+            else
+              echo "FAIL $f" >&2
+              status=1
+            fi
+          done < <(find scripts -name '*.mjs' -print0)
+          exit "$status"
+
+      - name: Validate module.json
+        run: |
+          set -euo pipefail
+          jq -e . module.json > /dev/null
+
+          id="$(jq -r .id module.json)"
+          expected_id="${GITHUB_REPOSITORY#*/}"
+          if [ "$id" != "$expected_id" ]; then
+            echo "module id '$id' does not match repository name '$expected_id'" >&2
+            exit 1
+          fi
+
+          version="$(jq -r .version module.json)"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "version '$version' is not semver (plain or prerelease, e.g. 1.1.0-beta.1)" >&2
+            exit 1
+          fi
+
+          jq -e '.compatibility.minimum' module.json > /dev/null
+
+          # Every declared script/style/language file must exist in the repo.
+          while IFS= read -r f; do
+            if [ ! -f "$f" ]; then
+              echo "module.json references missing file: $f" >&2
+              exit 1
+            fi
+          done < <(jq -r '(.esmodules[]?, .styles[]?, .languages[]?.path?)' module.json)
+
+          # Manifest and download URLs must point at this repository's releases,
+          # or the Foundry installer will fetch someone else's package.
+          for field in manifest download; do
+            url="$(jq -r ".$field" module.json)"
+            case "$url" in
+              "https://github.com/${GITHUB_REPOSITORY}/releases/"*) ;;
+              *) echo "$field URL does not point at ${GITHUB_REPOSITORY} releases: $url" >&2; exit 1 ;;
+            esac
+          done
+
+          echo "module.json OK (id=$id version=$version)"
+
+      - name: Compendium sources are valid JSON
+        run: |
+          set -euo pipefail
+          n=0
+          while IFS= read -r -d '' f; do
+            jq -e . "$f" > /dev/null || { echo "bad JSON: $f" >&2; exit 1; }
+            n=$((n+1))
+          done < <(find _source data -name '*.json' -print0)
+          echo "$n source documents parse"
+
+      - name: Packs build from source
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm run pack
+          for p in merchants stock goods; do
+            [ -d "packs/$p" ] || { echo "packs/$p was not built" >&2; exit 1; }
+          done
+          echo "all three packs compiled"
+
+      - name: No paid-content references
+        run: |
+          set -euo pipefail
+          # Everything ships from SRD 5.2. A reference to a premium book module
+          # would mean redistributing content this module has no licence for.
+          if grep -rlE 'dnd-players-handbook|dnd-dungeon-masters-guide|PHB 2024|DMG 2024' _source data; then
+            echo "found references to paid book modules" >&2
+            exit 1
+          fi
+          echo "no paid-content references"

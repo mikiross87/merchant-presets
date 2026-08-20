@@ -1,0 +1,98 @@
+{
+  "_id": "c6C412BJN9BgYIA7",
+  "_key": "!tables!c6C412BJN9BgYIA7",
+  "name": "Dock (Town)",
+  "img": "icons/environment/settlement/abandoned-pier.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d5",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "bHP83l2gsBJ61dXH",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.bHP83l2gsBJ61dXH",
+      "type": "document",
+      "name": "Keelboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3hEwQiXGd9kjzg4g",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EI1KIKBGVa9g8lOJ",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.EI1KIKBGVa9g8lOJ",
+      "type": "document",
+      "name": "Longship",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nn3hstDi8hHrm1Mr",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GlbPaSQyZTEq3PXn",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.GlbPaSQyZTEq3PXn",
+      "type": "document",
+      "name": "Rowboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cfLj9vz3SC1DaLQq",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KgSIUpHXObeevVQa",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.KgSIUpHXObeevVQa",
+      "type": "document",
+      "name": "Sailing Ship",
+      "img": "icons/skills/trades/profession-sailing-ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Q3IyuOcTyJGuJnsa",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Z5vT80yuydp0WqEa",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.Z5vT80yuydp0WqEa",
+      "type": "document",
+      "name": "Ship Passage, Hammock (per day)",
+      "img": "icons/environment/settlement/abandoned-pier.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.mO2FT09ZmHvoNBJ2",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

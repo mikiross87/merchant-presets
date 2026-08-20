@@ -1,0 +1,146 @@
+{
+  "_id": "Bw7GPIP7vKUGq9dI",
+  "_key": "!tables!Bw7GPIP7vKUGq9dI",
+  "name": "Jeweler (City)",
+  "img": "icons/environment/settlement/house-city.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Crafts and sells fine jewellery, precious gems, and accessories. Primarily caters to those seeking jewellery, but another major source of business is adventurers seeking spell components or offloading goods from dungeons.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d8",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "Q5jjJpuqweqaz3LD",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.Q5jjJpuqweqaz3LD",
+      "type": "document",
+      "name": "Amulet",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbhsyAmuletworn",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XwivHKKBc15UwSDp",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.XwivHKKBc15UwSDp",
+      "type": "document",
+      "name": "Crystal",
+      "img": "icons/commodities/gems/gem-faceted-large-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcCrystal000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LZAyLSiPC6yIqZX5",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.LZAyLSiPC6yIqZX5",
+      "type": "document",
+      "name": "Magnifying Glass",
+      "img": "icons/tools/scribal/magnifying-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagMagnifyingG",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NFz4Uh1n3fEGw8GE",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.NFz4Uh1n3fEGw8GE",
+      "type": "document",
+      "name": "Orb",
+      "img": "icons/commodities/gems/pearl-purple-smooth.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcOrb0000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0ralr5CqfV8ysFSy",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.0ralr5CqfV8ysFSy",
+      "type": "document",
+      "name": "Jeweler's Tools",
+      "img": "icons/commodities/gems/gem-rough-rose-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulJewelersTo",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KKBCM1QdntdM2KzQ",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.KKBCM1QdntdM2KzQ",
+      "type": "document",
+      "name": "Spell Components (gems), 150 gp and below",
+      "img": "icons/commodities/gems/gem-faceted-navette-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.HeRVCROhFBnqI3sU",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4namCg4iX9qDHRAo",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.4namCg4iX9qDHRAo",
+      "type": "document",
+      "name": "Spell Components (gems), 500 gp and below",
+      "img": "icons/commodities/gems/gem-faceted-radiant-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.6ag3rqyy0kHW8h8a",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "F2E1JW9Qw9Vku8ri",
+      "_key": "!tables.results!Bw7GPIP7vKUGq9dI.F2E1JW9Qw9Vku8ri",
+      "type": "document",
+      "name": "Spell Components (gems), 501 gp and above",
+      "img": "icons/commodities/gems/gem-faceted-round-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.x0GrOSe5jyiDCTYJ",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

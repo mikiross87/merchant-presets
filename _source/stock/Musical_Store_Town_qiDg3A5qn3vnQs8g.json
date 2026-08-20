@@ -1,0 +1,178 @@
+{
+  "_id": "qiDg3A5qn3vnQs8g",
+  "_key": "!tables!qiDg3A5qn3vnQs8g",
+  "name": "Musical Store (Town)",
+  "img": "icons/environment/settlement/gazebo.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Primarily offers instruments and musical supplies. Caters to adventurers in need of more music in their life, but its primary customers are those who live within the settlement.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d10",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "nykwLj3kl9gsG39h",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.nykwLj3kl9gsG39h",
+      "type": "document",
+      "name": "Book",
+      "img": "icons/sundries/books/book-worn-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBook0000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vZ61wbnDbMnZE2Ms",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.vZ61wbnDbMnZE2Ms",
+      "type": "document",
+      "name": "Drum",
+      "img": "icons/tools/instruments/drum-brown-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusDrum000000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wZVLLPr6kppqNPem",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.wZVLLPr6kppqNPem",
+      "type": "document",
+      "name": "Dulcimer",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusDulcimer00",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DmQs7mgXqZkAal06",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.DmQs7mgXqZkAal06",
+      "type": "document",
+      "name": "Flute",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusFlute00000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "JxA4G59NHOQ73Ypo",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.JxA4G59NHOQ73Ypo",
+      "type": "document",
+      "name": "Horn",
+      "img": "icons/tools/instruments/horn-flared-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusHorn000000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jSI1RezyBz75nsIe",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.jSI1RezyBz75nsIe",
+      "type": "document",
+      "name": "Lute",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusLute000000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QnjkytdDnHBbvlSl",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.QnjkytdDnHBbvlSl",
+      "type": "document",
+      "name": "Lyre",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusLyre000000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2sntXsNfd0nzHh9h",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.2sntXsNfd0nzHh9h",
+      "type": "document",
+      "name": "Pan Flute",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusPanflute00",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DuqqYagxKKCHKesu",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.DuqqYagxKKCHKesu",
+      "type": "document",
+      "name": "Shawm",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusShawm00000",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0INu5W9YFM3BZezp",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.0INu5W9YFM3BZezp",
+      "type": "document",
+      "name": "Viol",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusViol000000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

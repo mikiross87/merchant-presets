@@ -1,0 +1,52 @@
+{
+  "_id": "TmkfaPAJ5g00V9cM",
+  "_key": "!items!TmkfaPAJ5g00V9cM",
+  "name": "Coach Ride within a City (per mile)",
+  "type": "loot",
+  "img": "icons/environment/settlement/wagon.webp",
+  "folder": "1NfNyxoAUF9p0FSL",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A seat on a coach inside a city, per mile.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 1,
+      "denomination": "cp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "custom": "Merchant Presets",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "travel"
+    }
+  }
+}

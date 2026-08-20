@@ -1,0 +1,402 @@
+{
+  "_id": "QfNemaVvxU8Eh0lJ",
+  "_key": "!tables!QfNemaVvxU8Eh0lJ",
+  "name": "Arcane Store (Village)",
+  "img": "icons/environment/settlement/wizard-castle.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Offers spell components, scrolls, spellcasting services, and other related magical goods. Shelves packed with tomes and components.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d24",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "GaEUhgM3vrQVsO0y",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.GaEUhgM3vrQVsO0y",
+      "type": "document",
+      "name": "Crystal",
+      "img": "icons/commodities/gems/gem-faceted-large-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcCrystal000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "viB66FBBnJLJzbqv",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.viB66FBBnJLJzbqv",
+      "type": "document",
+      "name": "Orb",
+      "img": "icons/commodities/gems/pearl-purple-smooth.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcOrb0000000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZU6oMTJZEzZKfDfN",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.ZU6oMTJZEzZKfDfN",
+      "type": "document",
+      "name": "Book",
+      "img": "icons/sundries/books/book-worn-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBook0000000",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6PoOVDRheMXza8kT",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.6PoOVDRheMXza8kT",
+      "type": "document",
+      "name": "Bottle, Glass",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "u4oEaCtahVzAWsEx",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.u4oEaCtahVzAWsEx",
+      "type": "document",
+      "name": "Candle",
+      "img": "icons/sundries/lights/candle-unlit-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCandle00000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oKEHpEkyYrGDgr48",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.oKEHpEkyYrGDgr48",
+      "type": "document",
+      "name": "Case, Map or Scroll",
+      "img": "icons/containers/bags/case-leather-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCaseMaporSc",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "80lY53vHoA9E48ve",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.80lY53vHoA9E48ve",
+      "type": "document",
+      "name": "Component Pouch",
+      "img": "icons/containers/bags/pouch-leather-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagComponentPo",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LxJbySDw7fZWdBNl",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.LxJbySDw7fZWdBNl",
+      "type": "document",
+      "name": "Ink",
+      "img": "icons/tools/scribal/ink-quill-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.vi0j4PYnO596a2L1",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TgjShF50ozSPPuns",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.TgjShF50ozSPPuns",
+      "type": "document",
+      "name": "Ink Pen",
+      "img": "icons/tools/scribal/pen-steel-grey-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.x9BzTUcsOj6K6OJE",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "q85qCaW0OCtN7m73",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.q85qCaW0OCtN7m73",
+      "type": "document",
+      "name": "Paper",
+      "img": "icons/sundries/documents/paper-plain-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPaper000000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BiQFGvqZ8BeN7RDM",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.BiQFGvqZ8BeN7RDM",
+      "type": "document",
+      "name": "Parchment",
+      "img": "icons/sundries/scrolls/scroll-plain-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagParchment00",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mQlwW3uFLYykL0JR",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.mQlwW3uFLYykL0JR",
+      "type": "document",
+      "name": "Pouch",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPouch000000",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4MVaDaa0zwgiU5n3",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.4MVaDaa0zwgiU5n3",
+      "type": "document",
+      "name": "Robe",
+      "img": "icons/equipment/back/mantle-collared-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.jLcAY4Oph8ZEniG2",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8ImeUJ4LDnughSDs",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.8ImeUJ4LDnughSDs",
+      "type": "document",
+      "name": "Rod",
+      "img": "icons/weapons/staves/staff-blue-jewel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcRod0000000",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Rw5p7lIXnfFvkNWN",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.Rw5p7lIXnfFvkNWN",
+      "type": "document",
+      "name": "Scholar's Pack",
+      "img": "icons/containers/bags/pack-leather-strapped-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagScholarsPac",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QMwZEAw63P9xG9Tt",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.QMwZEAw63P9xG9Tt",
+      "type": "document",
+      "name": "Sprig of mistletoe",
+      "img": "icons/consumables/plants/fern-lady-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbdfcSprigofmis",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "10FgptxreK95Zqlk",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.10FgptxreK95Zqlk",
+      "type": "document",
+      "name": "Wand",
+      "img": "icons/weapons/staves/staff-orante-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbafcWand000000",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4c7zyTa7bHcWqHRa",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.4c7zyTa7bHcWqHRa",
+      "type": "document",
+      "name": "Calligrapher's Supplies",
+      "img": "icons/tools/scribal/pen-steel-grey-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulCalligraph",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9sThupndyOuBd9T7",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.9sThupndyOuBd9T7",
+      "type": "document",
+      "name": "Quarterstaff",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepQuartersta",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LisgFWt0nVmDH1mY",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.LisgFWt0nVmDH1mY",
+      "type": "document",
+      "name": "Spell Scroll, Cantrip",
+      "img": "icons/sundries/scrolls/scroll-bound-orange-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCantripScro",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HptysC3gagu5gl0i",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.HptysC3gagu5gl0i",
+      "type": "document",
+      "name": "Spell Scroll, Level 1",
+      "img": "icons/sundries/scrolls/scroll-bound-blue-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagSpellScroll",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ebheZbPYFMrSqoVT",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.ebheZbPYFMrSqoVT",
+      "type": "document",
+      "name": "Spellcasting: Cantrip",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MjuoRa01YO8dNzOn",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3DxqSimCqhDdR3pM",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.3DxqSimCqhDdR3pM",
+      "type": "document",
+      "name": "Spellcasting: Level 1",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.70Hh6evpYxQ8qhpd",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "up268ePL682jPcq1",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.up268ePL682jPcq1",
+      "type": "document",
+      "name": "Spellcasting: Level 2",
+      "img": "icons/magic/symbols/runes-star-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.XXYzPkKRuOixSneU",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

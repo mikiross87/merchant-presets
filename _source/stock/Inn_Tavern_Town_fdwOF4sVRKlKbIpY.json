@@ -1,0 +1,274 @@
+{
+  "_id": "fdwOF4sVRKlKbIpY",
+  "_key": "!tables!fdwOF4sVRKlKbIpY",
+  "name": "Inn & Tavern (Town)",
+  "img": "icons/environment/settlement/tavern.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Hubs of social activity, offering food, drink, and lodging whilst also being common spots for adventurers. Lively atmospheres, with music, games, and hearty meals.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d16",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "kjzICq7N6uQBjvzX",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.kjzICq7N6uQBjvzX",
+      "type": "document",
+      "name": "Water (Pint)",
+      "img": "icons/magic/water/water-drop-swirl-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbWaterpint0000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4TOJ4cGgaCPGqitV",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.4TOJ4cGgaCPGqitV",
+      "type": "document",
+      "name": "Ale (mug)",
+      "img": "icons/consumables/drinks/alcohol-beer-mug-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.5rhgtJzkTCWzRATg",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "w1suzLARLe5wN09y",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.w1suzLARLe5wN09y",
+      "type": "document",
+      "name": "Bread (loaf)",
+      "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bCVz2SKAGws8rCLq",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "I34lOv8Ftdy8NsVK",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.I34lOv8Ftdy8NsVK",
+      "type": "document",
+      "name": "Cheese (wedge)",
+      "img": "icons/consumables/food/cheese-wedge-swiss-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.xjW2wldJb98ggjQR",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xSnwfqPMmbX9074M",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.xSnwfqPMmbX9074M",
+      "type": "document",
+      "name": "Wine, Common (bottle)",
+      "img": "icons/consumables/drinks/wine-amphora-clay-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.7SDvqzSyEHkOoFjj",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LtGMmlvMfaHdODSW",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.LtGMmlvMfaHdODSW",
+      "type": "document",
+      "name": "Wine, Fine (bottle)",
+      "img": "icons/consumables/drinks/wine-bottle-glass-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AftgNcudTImlyy2Y",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "x1jvhDRpObNTgVBO",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.x1jvhDRpObNTgVBO",
+      "type": "document",
+      "name": "Inn Stay, Squalid (per day)",
+      "img": "icons/environment/settlement/hut.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.7kKTRH6BROHHE82w",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "l1yBAOVGfbOWXLJA",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.l1yBAOVGfbOWXLJA",
+      "type": "document",
+      "name": "Inn Stay, Poor (per day)",
+      "img": "icons/environment/settlement/hut.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Z5sHo9VFAhEoyXIX",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ICW4inhVORcKcojg",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.ICW4inhVORcKcojg",
+      "type": "document",
+      "name": "Inn Stay, Modest (per day)",
+      "img": "icons/environment/settlement/tavern-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.PXaV2K0t5GQcgsJ2",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gFOrhXE6b4OHecJd",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.gFOrhXE6b4OHecJd",
+      "type": "document",
+      "name": "Inn Stay, Comfortable (per day)",
+      "img": "icons/environment/settlement/tavern.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ORDFWTp6b8CiFGGO",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1vatc6helNLt28S7",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.1vatc6helNLt28S7",
+      "type": "document",
+      "name": "Inn Stay, Wealthy (per day)",
+      "img": "icons/environment/settlement/house-manor.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.NflVInXyvCQbXxZX",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TixGB0t4HXVZoUBm",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.TixGB0t4HXVZoUBm",
+      "type": "document",
+      "name": "Meal, Squalid",
+      "img": "icons/containers/kitchenware/pot-meal.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AaXsydDkadKI8bkQ",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KeImhMkkNtngLLkR",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.KeImhMkkNtngLLkR",
+      "type": "document",
+      "name": "Meal, Poor",
+      "img": "icons/containers/kitchenware/pot-meal.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.jWHa0tpy76NkMDLL",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6wIJwZoxil6faNQN",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.6wIJwZoxil6faNQN",
+      "type": "document",
+      "name": "Meal, Modest",
+      "img": "icons/consumables/food/bowl-stew-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.T2GQ63oNssZ08DmY",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rS9yAXqB1cd6yOQv",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.rS9yAXqB1cd6yOQv",
+      "type": "document",
+      "name": "Meal, Comfortable",
+      "img": "icons/consumables/food/bowl-stew-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.OwxKx2vQ28EaBXMP",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "RdgwanOSsBV8iEMk",
+      "_key": "!tables.results!fdwOF4sVRKlKbIpY.RdgwanOSsBV8iEMk",
+      "type": "document",
+      "name": "Meal, Wealthy",
+      "img": "icons/consumables/food/bowl-ribs-meat-rice-mash-brown-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.yjhtFu0pXUUpv4ZZ",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

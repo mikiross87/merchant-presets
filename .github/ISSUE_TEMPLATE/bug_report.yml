@@ -1,0 +1,46 @@
+name: Bug report
+description: Something broken or behaving unexpectedly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: foundry-version
+    attributes:
+      label: Foundry VTT version
+      placeholder: "e.g. 14.360"
+    validations:
+      required: true
+  - type: input
+    id: module-version
+    attributes:
+      label: Light Presets version
+      placeholder: "e.g. 1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Game system and version
+      placeholder: "e.g. dnd5e 5.3.2, daggerheart 2.0.0"
+  - type: dropdown
+    id: isolated
+    attributes:
+      label: Does it still happen with all other modules disabled?
+      options:
+        - "Yes — reproduced with only Light Presets enabled"
+        - "No — it needs another module active (name it below)"
+        - "Haven't tried"
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors
+      description: Press F12, reproduce the bug, paste anything red.
+      render: text

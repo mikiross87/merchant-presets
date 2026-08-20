@@ -1,0 +1,162 @@
+{
+  "_id": "90eF1tNIGxBjx8bY",
+  "_key": "!tables!90eF1tNIGxBjx8bY",
+  "name": "Tailor & Textile Store (Village)",
+  "img": "icons/environment/settlement/house-two-stories.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Tailors and textile workers craft and sell clothing and fabrics. A range of products from simple travel clothes to elaborate costumes and robes.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d9",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "1o6FlAi83w0Giqo3",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.1o6FlAi83w0Giqo3",
+      "type": "document",
+      "name": "Basket",
+      "img": "icons/containers/misc/basket-handle-woven-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBasket00000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ljfSmzKtHE6FPsup",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.ljfSmzKtHE6FPsup",
+      "type": "document",
+      "name": "Clothes, Traveler's",
+      "img": "icons/equipment/chest/shirt-collared-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagClothesTrav",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PG6aAIgo04Te2S0t",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.PG6aAIgo04Te2S0t",
+      "type": "document",
+      "name": "Costume",
+      "img": "icons/equipment/head/hood-purple-mask.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCostume0000",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GAz6RE6ZcNybDz05",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.GAz6RE6ZcNybDz05",
+      "type": "document",
+      "name": "Pouch",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPouch000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hUVoUmUNs8iUzSPh",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.hUVoUmUNs8iUzSPh",
+      "type": "document",
+      "name": "Robe",
+      "img": "icons/equipment/back/mantle-collared-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.jLcAY4Oph8ZEniG2",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aEWbSgPJd4Cx7rxT",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.aEWbSgPJd4Cx7rxT",
+      "type": "document",
+      "name": "Sack",
+      "img": "icons/containers/bags/sack-cloth-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagSack0000000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "k2UtAZbMSYDiA18Q",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.k2UtAZbMSYDiA18Q",
+      "type": "document",
+      "name": "Tent",
+      "img": "icons/environment/settlement/tent.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagTent0000000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FI0yk65I2YGAJmkD",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.FI0yk65I2YGAJmkD",
+      "type": "document",
+      "name": "Cobbler's Tools",
+      "img": "icons/tools/hand/awl-steel-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulCobblersTo",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fQ4tX9mgTqWXhBWF",
+      "_key": "!tables.results!90eF1tNIGxBjx8bY.fQ4tX9mgTqWXhBWF",
+      "type": "document",
+      "name": "Weaver's Tools",
+      "img": "icons/equipment/back/cloak-hooded-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulWeaversToo",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

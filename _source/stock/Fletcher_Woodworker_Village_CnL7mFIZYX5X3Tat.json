@@ -1,0 +1,290 @@
+{
+  "_id": "CnL7mFIZYX5X3Tat",
+  "_key": "!tables!CnL7mFIZYX5X3Tat",
+  "name": "Fletcher & Woodworker (Village)",
+  "img": "icons/environment/settlement/lumbermill.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Specialise in crafting bows, arrows, and wooden items. Workshops filled with wood, carving tools, and feathers.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d17",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "ow3T8BuYwdTVUwFA",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.ow3T8BuYwdTVUwFA",
+      "type": "document",
+      "name": "Arrows",
+      "img": "icons/weapons/ammunition/arrows-broadhead-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoArrows0000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AJDoNcoA9GSt0HMs",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.AJDoNcoA9GSt0HMs",
+      "type": "document",
+      "name": "Bolts",
+      "img": "icons/weapons/ammunition/arrow-broadhead-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoBolts00000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nC18Fu9q5vGojpLn",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.nC18Fu9q5vGojpLn",
+      "type": "document",
+      "name": "Bullets, Sling",
+      "img": "icons/weapons/ammunition/shot-round-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoBulletsSli",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yBQcwi4KqhWSdyOV",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.yBQcwi4KqhWSdyOV",
+      "type": "document",
+      "name": "Needles",
+      "img": "icons/weapons/ammunition/arrows-fletching.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoNeedles000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Dk1DP0pLYuPNfwLl",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.Dk1DP0pLYuPNfwLl",
+      "type": "document",
+      "name": "Case, Crossbow Bolt",
+      "img": "icons/containers/ammunition/quiver-simple-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCaseCrossbo",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wfKm0jJwTQDCrepT",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.wfKm0jJwTQDCrepT",
+      "type": "document",
+      "name": "Quiver",
+      "img": "icons/containers/ammunition/arrows-quiver-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagQuiver00000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "YCsHT0hg4Zn5yluK",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.YCsHT0hg4Zn5yluK",
+      "type": "document",
+      "name": "Rope",
+      "img": "icons/sundries/survival/rope-wrapped-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hBlcO214J9PqJW72",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.hBlcO214J9PqJW72",
+      "type": "document",
+      "name": "Weaver's Tools",
+      "img": "icons/equipment/back/cloak-hooded-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulWeaversToo",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2VYc23Q6thYzrIhe",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.2VYc23Q6thYzrIhe",
+      "type": "document",
+      "name": "Woodcarver's Tools",
+      "img": "icons/tools/hand/chisel-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulWoodcarver",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DaDtts4RaKzC2DKD",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.DaDtts4RaKzC2DKD",
+      "type": "document",
+      "name": "Handaxe",
+      "img": "icons/weapons/axes/axe-broad-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepHandaxe000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pzpvmnKfhjyO6gUb",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.pzpvmnKfhjyO6gUb",
+      "type": "document",
+      "name": "Javelin",
+      "img": "icons/weapons/polearms/javelin-flared.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepJavelin000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6T7NPV83ZjyNVS7G",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.6T7NPV83ZjyNVS7G",
+      "type": "document",
+      "name": "Spear",
+      "img": "icons/weapons/polearms/spear-flared-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepSpear00000",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fOcHS7v8y7D8E94x",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.fOcHS7v8y7D8E94x",
+      "type": "document",
+      "name": "Club",
+      "img": "icons/weapons/clubs/club-banded-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepClub000000",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "96ZshUUphXNdxMZ4",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.96ZshUUphXNdxMZ4",
+      "type": "document",
+      "name": "Greatclub",
+      "img": "icons/weapons/clubs/club-heavy-barbed-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepGreatclub0",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NGhwI1jkuetmV1zq",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.NGhwI1jkuetmV1zq",
+      "type": "document",
+      "name": "Quarterstaff",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepQuartersta",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IMx73CUGv4LjyByA",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.IMx73CUGv4LjyByA",
+      "type": "document",
+      "name": "Light Crossbow",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepLightCross",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5W62CKQOmhyM53Wt",
+      "_key": "!tables.results!CnL7mFIZYX5X3Tat.5W62CKQOmhyM53Wt",
+      "type": "document",
+      "name": "Shortbow",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepShortbow00",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

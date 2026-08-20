@@ -1,0 +1,1451 @@
+{
+  "_id": "sOFPI6SlXbpGLE78",
+  "_key": "!actors!sOFPI6SlXbpGLE78",
+  "name": "Inn & Tavern (Town)",
+  "type": "npc",
+  "img": "icons/environment/settlement/tavern.webp",
+  "folder": "4BFqBmqLT3EmMDAj",
+  "sort": 0,
+  "system": {
+    "currency": {
+      "pp": 0,
+      "gp": 100,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "details": {
+      "biography": {
+        "value": "<p>Hubs of social activity, offering food, drink, and lodging whilst also being common spots for adventurers. Lively atmospheres, with music, games, and hearty meals.</p>"
+      },
+      "type": {
+        "value": "humanoid"
+      },
+      "cr": 0
+    },
+    "attributes": {
+      "hp": {
+        "value": 10,
+        "max": 10
+      }
+    }
+  },
+  "prototypeToken": {
+    "name": "Inn & Tavern (Town)",
+    "actorLink": true,
+    "texture": {
+      "src": "icons/environment/settlement/tavern.webp"
+    }
+  },
+  "items": [
+    {
+      "name": "Water (Pint)",
+      "type": "consumable",
+      "img": "icons/magic/water/water-drop-swirl-blue.webp",
+      "system": {
+        "activities": {
+          "XlTBFtJ0jyBJ71bh": {
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "XlTBFtJ0jyBJ71bh"
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p>If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
+          "chat": ""
+        },
+        "identifier": "water-pint",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 22,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "price": {
+          "value": 0,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbWaterpint0000"
+      },
+      "_id": "4ofWeBoSMwIoZLES",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.4ofWeBoSMwIoZLES"
+    },
+    {
+      "name": "Ale (mug)",
+      "type": "consumable",
+      "img": "icons/consumables/drinks/alcohol-beer-mug-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A mug of ale.</p>",
+          "chat": ""
+        },
+        "quantity": 17,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "ale",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "properties": [],
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "activities": {
+          "w1eQTI7ql4WnuGiB": {
+            "_id": "w1eQTI7ql4WnuGiB",
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "drink"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.5rhgtJzkTCWzRATg"
+      },
+      "_id": "Nd2z2YUOaj01TSAm",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.Nd2z2YUOaj01TSAm"
+    },
+    {
+      "name": "Bread (loaf)",
+      "type": "consumable",
+      "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>A loaf of bread.</p>",
+          "chat": ""
+        },
+        "quantity": 20,
+        "weight": {
+          "value": 1.0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "bread",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "properties": [],
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "activities": {
+          "2OBWY1NCj6exA1aN": {
+            "_id": "2OBWY1NCj6exA1aN",
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "drink"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.bCVz2SKAGws8rCLq"
+      },
+      "_id": "5mYG3dnV2FBADbF5",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.5mYG3dnV2FBADbF5"
+    },
+    {
+      "name": "Cheese (wedge)",
+      "type": "consumable",
+      "img": "icons/consumables/food/cheese-wedge-swiss-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A wedge of cheese.</p>",
+          "chat": ""
+        },
+        "quantity": 19,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "cheese",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "properties": [],
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "activities": {
+          "jQLca8Uh7gDhddCC": {
+            "_id": "jQLca8Uh7gDhddCC",
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "drink"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.xjW2wldJb98ggjQR"
+      },
+      "_id": "KYTKPUxm81LlvCXE",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.KYTKPUxm81LlvCXE"
+    },
+    {
+      "name": "Wine, Common (bottle)",
+      "type": "consumable",
+      "img": "icons/consumables/drinks/wine-amphora-clay-red.webp",
+      "system": {
+        "description": {
+          "value": "<p>A bottle of common wine.</p>",
+          "chat": ""
+        },
+        "quantity": 21,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "wine-common",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "properties": [],
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "activities": {
+          "XgxoUF00eKH9wa5L": {
+            "_id": "XgxoUF00eKH9wa5L",
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "drink"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.7SDvqzSyEHkOoFjj"
+      },
+      "_id": "03YWBtGJm3G9jEBJ",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.03YWBtGJm3G9jEBJ"
+    },
+    {
+      "name": "Wine, Fine (bottle)",
+      "type": "consumable",
+      "img": "icons/consumables/drinks/wine-bottle-glass-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>A bottle of fine vintage.</p>",
+          "chat": ""
+        },
+        "quantity": 6,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "wine-fine",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "food",
+          "subtype": ""
+        },
+        "properties": [],
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "activities": {
+          "ObylqfvMRDphI0yA": {
+            "_id": "ObylqfvMRDphI0yA",
+            "type": "utility",
+            "name": "Consume",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "default",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "kind": "drink"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.AftgNcudTImlyy2Y"
+      },
+      "_id": "lHS380enwoieO1sJ",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.lHS380enwoieO1sJ"
+    },
+    {
+      "name": "Inn Stay, Squalid (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/hut.webp",
+      "system": {
+        "description": {
+          "value": "<p>A night's lodging, squalid.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 7,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "lodging"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.7kKTRH6BROHHE82w"
+      },
+      "_id": "7vKOMUfkFs7djgtp",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.7vKOMUfkFs7djgtp"
+    },
+    {
+      "name": "Inn Stay, Poor (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/hut.webp",
+      "system": {
+        "description": {
+          "value": "<p>A night's lodging, poor.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "lodging"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Z5sHo9VFAhEoyXIX"
+      },
+      "_id": "QTwiHY3MdiqesRM2",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.QTwiHY3MdiqesRM2"
+    },
+    {
+      "name": "Inn Stay, Modest (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/tavern-tan.webp",
+      "system": {
+        "description": {
+          "value": "<p>A night's lodging, modest.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 5,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "lodging"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.PXaV2K0t5GQcgsJ2"
+      },
+      "_id": "FrVBCwxQxcow2cBy",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.FrVBCwxQxcow2cBy"
+    },
+    {
+      "name": "Inn Stay, Comfortable (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/tavern.webp",
+      "system": {
+        "description": {
+          "value": "<p>A night's lodging, comfortable.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 8,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "lodging"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.ORDFWTp6b8CiFGGO"
+      },
+      "_id": "blBhcK3Obm57XwMD",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.blBhcK3Obm57XwMD"
+    },
+    {
+      "name": "Inn Stay, Wealthy (per day)",
+      "type": "loot",
+      "img": "icons/environment/settlement/house-manor.webp",
+      "system": {
+        "description": {
+          "value": "<p>A night's lodging, wealthy.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "lodging"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.NflVInXyvCQbXxZX"
+      },
+      "_id": "UVNk36dU44jEEoCG",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.UVNk36dU44jEEoCG"
+    },
+    {
+      "name": "Meal, Squalid",
+      "type": "loot",
+      "img": "icons/containers/kitchenware/pot-meal.webp",
+      "system": {
+        "description": {
+          "value": "<p>A squalid meal.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "meal"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.AaXsydDkadKI8bkQ"
+      },
+      "_id": "8DkZrreQiJolLI6T",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.8DkZrreQiJolLI6T"
+    },
+    {
+      "name": "Meal, Poor",
+      "type": "loot",
+      "img": "icons/containers/kitchenware/pot-meal.webp",
+      "system": {
+        "description": {
+          "value": "<p>A poor meal.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "cp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "meal"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.jWHa0tpy76NkMDLL"
+      },
+      "_id": "j8WdiNNlzwSoOlsg",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.j8WdiNNlzwSoOlsg"
+    },
+    {
+      "name": "Meal, Modest",
+      "type": "loot",
+      "img": "icons/consumables/food/bowl-stew-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>A modest meal.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "meal"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.T2GQ63oNssZ08DmY"
+      },
+      "_id": "GVPtNDLCub9P22jJ",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.GVPtNDLCub9P22jJ"
+    },
+    {
+      "name": "Meal, Comfortable",
+      "type": "loot",
+      "img": "icons/consumables/food/bowl-stew-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>A comfortable meal.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "meal"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.OwxKx2vQ28EaBXMP"
+      },
+      "_id": "cP8HUQO3fr0Rzj2I",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.cP8HUQO3fr0Rzj2I"
+    },
+    {
+      "name": "Meal, Wealthy",
+      "type": "loot",
+      "img": "icons/consumables/food/bowl-ribs-meat-rice-mash-brown-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>A wealthy meal.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3,
+          "denomination": "sp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "meal"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.yjhtFu0pXUUpv4ZZ"
+      },
+      "_id": "unFaxjtbhS0BHfgI",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.unFaxjtbhS0BHfgI"
+    }
+  ],
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "data": {
+        "enabled": true,
+        "type": "merchant",
+        "description": "<p>Hubs of social activity, offering food, drink, and lodging whilst also being common spots for adventurers. Lively atmospheres, with music, games, and hearty meals.</p>",
+        "merchantImage": "icons/environment/settlement/tavern.webp",
+        "displayItemTypes": true,
+        "canInspectItems": true,
+        "infiniteQuantity": false,
+        "infiniteCurrencies": false,
+        "keepZeroQuantity": true,
+        "overrideItemFilters": [
+          {
+            "path": "type",
+            "filters": "background,class,facility,feat,race,spell,subclass"
+          },
+          {
+            "path": "system.type.value",
+            "filters": "natural"
+          },
+          {
+            "path": "type",
+            "filters": "weapon,equipment,tool,container"
+          },
+          {
+            "path": "flags.merchant-presets.kind",
+            "filters": "vehicle,mount,tack,service,spellcasting,component,travel"
+          }
+        ],
+        "buyPriceModifier": 1.0,
+        "sellPriceModifier": 0.5,
+        "tablesForPopulate": [
+          {
+            "uuid": "Compendium.merchant-presets.stock.RollTable.fdwOF4sVRKlKbIpY",
+            "addAll": true,
+            "timesToRoll": "1",
+            "customCategory": "",
+            "items": {
+              "kjzICq7N6uQBjvzX": "3d6+8",
+              "4TOJ4cGgaCPGqitV": "3d6+8",
+              "w1suzLARLe5wN09y": "3d6+8",
+              "I34lOv8Ftdy8NsVK": "3d6+8",
+              "xSnwfqPMmbX9074M": "3d6+8",
+              "LtGMmlvMfaHdODSW": "1d6+2",
+              "x1jvhDRpObNTgVBO": "1",
+              "l1yBAOVGfbOWXLJA": "1",
+              "ICW4inhVORcKcojg": "1",
+              "gFOrhXE6b4OHecJd": "1",
+              "1vatc6helNLt28S7": "1",
+              "TixGB0t4HXVZoUBm": "1",
+              "KeImhMkkNtngLLkR": "1",
+              "6wIJwZoxil6faNQN": "1",
+              "rS9yAXqB1cd6yOQv": "1",
+              "RdgwanOSsBV8iEMk": "1"
+            }
+          }
+        ],
+        "openTimes": {
+          "enabled": true,
+          "status": "open",
+          "open": {
+            "hour": 6,
+            "minute": 0
+          },
+          "close": {
+            "hour": 2,
+            "minute": 0
+          }
+        },
+        "closedDays": [],
+        "closedHolidays": [],
+        "refreshItemsOnOpen": true,
+        "refreshItemsDays": [],
+        "refreshItemsHolidays": [],
+        "hideTokenWhenClosed": false
+      },
+      "version": "3.3.4"
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "_id": "NBJ9U00pcqWmS53J",
+  "_key": "!tables!NBJ9U00pcqWmS53J",
+  "name": "Dock (City)",
+  "img": "icons/environment/settlement/abandoned-pier.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Bustling areas where ships come and go, transporting goods and passengers. Adventurers can find vessels and passage on ships for sale.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d8",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "lYQkhf14j9co3xpW",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.lYQkhf14j9co3xpW",
+      "type": "document",
+      "name": "Airship",
+      "img": "icons/magic/air/wind-weather-sailing-ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.q6nFWHdvyN6MmWgK",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ekGQf9D6bDWumHrJ",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.ekGQf9D6bDWumHrJ",
+      "type": "document",
+      "name": "Galley",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lx7TO0LWw6wjLiJj",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Q1ELpAvRwZ026FCD",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.Q1ELpAvRwZ026FCD",
+      "type": "document",
+      "name": "Keelboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3hEwQiXGd9kjzg4g",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3CLQOXcBd8khkEIB",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.3CLQOXcBd8khkEIB",
+      "type": "document",
+      "name": "Longship",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nn3hstDi8hHrm1Mr",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Kg1fGV9ihyO34HkF",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.Kg1fGV9ihyO34HkF",
+      "type": "document",
+      "name": "Rowboat",
+      "img": "icons/environment/vehicles/boat-fishing-masted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cfLj9vz3SC1DaLQq",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2d86DjEYuJGLBgEE",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.2d86DjEYuJGLBgEE",
+      "type": "document",
+      "name": "Sailing Ship",
+      "img": "icons/skills/trades/profession-sailing-ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Q3IyuOcTyJGuJnsa",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4OYr0PdyDJyseb2X",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.4OYr0PdyDJyseb2X",
+      "type": "document",
+      "name": "Warship",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.JGcedo86AV2R4kVt",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "w4Jf0uy52lQ3FqyV",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.w4Jf0uy52lQ3FqyV",
+      "type": "document",
+      "name": "Ship Passage, Hammock (per day)",
+      "img": "icons/environment/settlement/abandoned-pier.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.mO2FT09ZmHvoNBJ2",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

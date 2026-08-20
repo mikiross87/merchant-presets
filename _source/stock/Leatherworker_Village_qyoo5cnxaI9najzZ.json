@@ -1,0 +1,178 @@
+{
+  "_id": "qyoo5cnxaI9najzZ",
+  "_key": "!tables!qyoo5cnxaI9najzZ",
+  "name": "Leatherworker (Village)",
+  "img": "icons/environment/settlement/house-two-stories-small.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Crafts and sells a variety of leather goods, including armor, boots, belts, and pouches. Provides essential gear for adventurers seeking durable and flexible protection.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d10",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "ujn4h3ceS883EHow",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.ujn4h3ceS883EHow",
+      "type": "document",
+      "name": "Waterskin",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ayYVdmkYgYaO30vc",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.ayYVdmkYgYaO30vc",
+      "type": "document",
+      "name": "Shield",
+      "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmShield0000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9U2kyiHvA5HHZGr9",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.9U2kyiHvA5HHZGr9",
+      "type": "document",
+      "name": "Padded Armor",
+      "img": "icons/equipment/chest/breastplate-quilted-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmPaddedArmo",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "eTOvj408E3GryJde",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.eTOvj408E3GryJde",
+      "type": "document",
+      "name": "Hide Armor",
+      "img": "icons/equipment/chest/vest-cloth-tattered-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbarmHideArmor0",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "w0Jrb4Jdbz83lGog",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.w0Jrb4Jdbz83lGog",
+      "type": "document",
+      "name": "Cobbler's Tools",
+      "img": "icons/tools/hand/awl-steel-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulCobblersTo",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4AxYAmhaOaBZVo3k",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.4AxYAmhaOaBZVo3k",
+      "type": "document",
+      "name": "Leatherworker's Tools",
+      "img": "icons/commodities/leather/leather-buckle-steel-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulLeatherwor",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "z6nFCy3ynMH1YSYj",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.z6nFCy3ynMH1YSYj",
+      "type": "document",
+      "name": "Bagpipes",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusBagpipes00",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "RLqkHIN0yaQJ8Jwa",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.RLqkHIN0yaQJ8Jwa",
+      "type": "document",
+      "name": "Drum",
+      "img": "icons/tools/instruments/drum-brown-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusDrum000000",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UPdHZCFAgxZrHhts",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.UPdHZCFAgxZrHhts",
+      "type": "document",
+      "name": "Sling",
+      "img": "icons/weapons/slings/slingshot-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepSling00000",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vFhUEUK12XV27Yuq",
+      "_key": "!tables.results!qyoo5cnxaI9najzZ.vFhUEUK12XV27Yuq",
+      "type": "document",
+      "name": "Whip",
+      "img": "icons/sundries/survival/leather-strap-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepWhip000000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "_id": "jWHa0tpy76NkMDLL",
+  "_key": "!items!jWHa0tpy76NkMDLL",
+  "name": "Meal, Poor",
+  "type": "loot",
+  "img": "icons/containers/kitchenware/pot-meal.webp",
+  "folder": "0VsNVjaoQGW2g1oA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A poor meal.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 2,
+      "denomination": "cp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "meal"
+    }
+  }
+}

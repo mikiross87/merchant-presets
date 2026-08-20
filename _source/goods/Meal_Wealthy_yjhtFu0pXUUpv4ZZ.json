@@ -1,0 +1,53 @@
+{
+  "_id": "yjhtFu0pXUUpv4ZZ",
+  "_key": "!items!yjhtFu0pXUUpv4ZZ",
+  "name": "Meal, Wealthy",
+  "type": "loot",
+  "img": "icons/consumables/food/bowl-ribs-meat-rice-mash-brown-white.webp",
+  "folder": "0VsNVjaoQGW2g1oA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A wealthy meal.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 3,
+      "denomination": "sp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "meal"
+    }
+  }
+}

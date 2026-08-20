@@ -1,0 +1,53 @@
+{
+  "_id": "B58PzC3u328BRdzB",
+  "_key": "!items!B58PzC3u328BRdzB",
+  "name": "Carriage",
+  "type": "loot",
+  "img": "icons/environment/settlement/wagon.webp",
+  "folder": "EdzKIeXcodu8d4bT",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>An enclosed four-wheeled passenger vehicle.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 600,
+      "units": "lb"
+    },
+    "price": {
+      "value": 100,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": false
+      }
+    },
+    "merchant-presets": {
+      "kind": "vehicle"
+    }
+  }
+}

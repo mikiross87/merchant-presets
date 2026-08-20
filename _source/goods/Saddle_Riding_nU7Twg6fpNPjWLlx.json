@@ -1,0 +1,53 @@
+{
+  "_id": "nU7Twg6fpNPjWLlx",
+  "_key": "!items!nU7Twg6fpNPjWLlx",
+  "name": "Saddle, Riding",
+  "type": "loot",
+  "img": "icons/sundries/survival/bedroll-brown.webp",
+  "folder": "ogJfkCKGpMDSAm7P",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A common riding saddle.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 25,
+      "units": "lb"
+    },
+    "price": {
+      "value": 10,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": false
+      }
+    },
+    "merchant-presets": {
+      "kind": "tack"
+    }
+  }
+}

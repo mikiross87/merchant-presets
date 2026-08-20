@@ -1,0 +1,130 @@
+{
+  "_id": "s0USbRr2bhOddLKO",
+  "_key": "!tables!s0USbRr2bhOddLKO",
+  "name": "Musical Store (Village)",
+  "img": "icons/environment/settlement/gazebo.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Primarily offers instruments and musical supplies. Caters to adventurers in need of more music in their life, but its primary customers are those who live within the settlement.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d7",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "VTMnSK5E1nClMX6L",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.VTMnSK5E1nClMX6L",
+      "type": "document",
+      "name": "Drum",
+      "img": "icons/tools/instruments/drum-brown-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusDrum000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TECm39BV7RhJMieo",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.TECm39BV7RhJMieo",
+      "type": "document",
+      "name": "Flute",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusFlute00000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "P9rnjPdKZTJw6scz",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.P9rnjPdKZTJw6scz",
+      "type": "document",
+      "name": "Horn",
+      "img": "icons/tools/instruments/horn-flared-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusHorn000000",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "F2N0RUkHE8ZjWliL",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.F2N0RUkHE8ZjWliL",
+      "type": "document",
+      "name": "Lute",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusLute000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "alNmK2LtMgRJokd1",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.alNmK2LtMgRJokd1",
+      "type": "document",
+      "name": "Pan Flute",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusPanflute00",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VfffF4t8st6umvJl",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.VfffF4t8st6umvJl",
+      "type": "document",
+      "name": "Shawm",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusShawm00000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wXpdqY3QGrh9avI6",
+      "_key": "!tables.results!s0USbRr2bhOddLKO.wXpdqY3QGrh9avI6",
+      "type": "document",
+      "name": "Viol",
+      "img": "icons/tools/instruments/lute-gold-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbmusViol000000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "_id": "FoTPHRm8DVpL3r1O",
+  "_key": "!tables!FoTPHRm8DVpL3r1O",
+  "name": "Adventurers' Store (Village)",
+  "img": "icons/environment/settlement/market-stall.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Well-stocked with essential gear for journeys. Frequented by adventurers; provides most of what they need for exploration and survival in the wild.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d28",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "DUwphtg8Hc9KEFEb",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.DUwphtg8Hc9KEFEb",
+      "type": "document",
+      "name": "Arrows",
+      "img": "icons/weapons/ammunition/arrows-broadhead-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoArrows0000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0U9bOwHxtirj5pi6",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.0U9bOwHxtirj5pi6",
+      "type": "document",
+      "name": "Backpack",
+      "img": "icons/containers/bags/pack-simple-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBackpack000",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9G9gB8PQ4RyODxdr",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.9G9gB8PQ4RyODxdr",
+      "type": "document",
+      "name": "Bedroll",
+      "img": "icons/sundries/survival/bedroll-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.ABjsMdpDnWlkjbMq",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qpSYWDQM9zExqv0Y",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.qpSYWDQM9zExqv0Y",
+      "type": "document",
+      "name": "Blanket",
+      "img": "icons/sundries/survival/bedroll-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.1NwTdI5LHEH5WThq",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pIFgoPIffWTo1KX3",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.pIFgoPIffWTo1KX3",
+      "type": "document",
+      "name": "Block and Tackle",
+      "img": "icons/tools/fishing/reel-brown-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBlockandTac",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cDvavQj0umex7bfT",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.cDvavQj0umex7bfT",
+      "type": "document",
+      "name": "Needles",
+      "img": "icons/weapons/ammunition/arrows-fletching.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoNeedles000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yotaGu5Mzeszlgw4",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.yotaGu5Mzeszlgw4",
+      "type": "document",
+      "name": "Bottle, Glass",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBottleGlass",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "tfPy05aSIR3kAsC8",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.tfPy05aSIR3kAsC8",
+      "type": "document",
+      "name": "Bullets, Sling",
+      "img": "icons/weapons/ammunition/shot-round-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoBulletsSli",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zH7rKYWfL4sFvetf",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.zH7rKYWfL4sFvetf",
+      "type": "document",
+      "name": "Candle",
+      "img": "icons/sundries/lights/candle-unlit-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCandle00000",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "m8hgPVsrXXa9G6uE",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.m8hgPVsrXXa9G6uE",
+      "type": "document",
+      "name": "Case, Crossbow Bolt",
+      "img": "icons/containers/ammunition/quiver-simple-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagCaseCrossbo",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0jnQjrbnJ5VYmyzI",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.0jnQjrbnJ5VYmyzI",
+      "type": "document",
+      "name": "Chain",
+      "img": "icons/tools/fasteners/chain-steel-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagChain000000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8Qw6329wUdGqJSdj",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.8Qw6329wUdGqJSdj",
+      "type": "document",
+      "name": "Clothes, Traveler's",
+      "img": "icons/equipment/chest/shirt-collared-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagClothesTrav",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0TEQK1G1Ug8drn50",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.0TEQK1G1Ug8drn50",
+      "type": "document",
+      "name": "Bolts",
+      "img": "icons/weapons/ammunition/arrow-broadhead-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbamoBolts00000",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lDAinj1MkVWBc6Qa",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.lDAinj1MkVWBc6Qa",
+      "type": "document",
+      "name": "Crowbar",
+      "img": "icons/tools/hand/pickaxe-steel-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.QjcMSfmrMwjPoWKn",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fMvPxdx25oG5qd3c",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.fMvPxdx25oG5qd3c",
+      "type": "document",
+      "name": "Explorer's Pack",
+      "img": "icons/containers/bags/pack-simple-leather-fur-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagExplorersPa",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ifmFFQ54r88BH4MJ",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.ifmFFQ54r88BH4MJ",
+      "type": "document",
+      "name": "Flask",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagFlask000000",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QPbzdVDd4vGTfOVB",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.QPbzdVDd4vGTfOVB",
+      "type": "document",
+      "name": "Grappling Hook",
+      "img": "icons/tools/fishing/hook-multi-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagGrapplingHo",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qmSlEZJIgGuToDO7",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.qmSlEZJIgGuToDO7",
+      "type": "document",
+      "name": "Healer's Kit",
+      "img": "icons/containers/bags/sack-leather-brown-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHealersKit0",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "I3rraLYvjVdchpP7",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.I3rraLYvjVdchpP7",
+      "type": "document",
+      "name": "Hunting Trap",
+      "img": "icons/environment/traps/trap-jaw-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagHuntingTrap",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yowX8NcKWxAyPdLR",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.yowX8NcKWxAyPdLR",
+      "type": "document",
+      "name": "Ladder",
+      "img": "icons/sundries/misc/ladder-improvised.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLadder00000",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ujcMQvOmEYoFHY1Y",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.ujcMQvOmEYoFHY1Y",
+      "type": "document",
+      "name": "Mirror",
+      "img": "icons/sundries/survival/mirror-plain.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagMirror00000",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "g0SO2aqZSlkPP37s",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.g0SO2aqZSlkPP37s",
+      "type": "document",
+      "name": "Oil",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagOil00000000",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aTd5sNDhrIjsxu5O",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.aTd5sNDhrIjsxu5O",
+      "type": "document",
+      "name": "Pole",
+      "img": "icons/commodities/wood/wood-pole.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPole0000000",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6ZQCNta91MvrlD1y",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.6ZQCNta91MvrlD1y",
+      "type": "document",
+      "name": "Pot, Iron",
+      "img": "icons/tools/laboratory/cauldron-filled-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPotIron0000",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cUTiUvPn64Sq2koN",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.cUTiUvPn64Sq2koN",
+      "type": "document",
+      "name": "Pouch",
+      "img": "icons/containers/bags/coinpouch-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPouch000000",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uHYX4MVHeC7YTHPY",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.uHYX4MVHeC7YTHPY",
+      "type": "document",
+      "name": "Quiver",
+      "img": "icons/containers/ammunition/arrows-quiver-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagQuiver00000",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Opbo9jsYhriP99mM",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.Opbo9jsYhriP99mM",
+      "type": "document",
+      "name": "Rations",
+      "img": "icons/consumables/food/berries-ration-round-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagRations0000",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KA31FVuWMIBBsQyV",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.KA31FVuWMIBBsQyV",
+      "type": "document",
+      "name": "Rope",
+      "img": "icons/sundries/survival/rope-wrapped-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

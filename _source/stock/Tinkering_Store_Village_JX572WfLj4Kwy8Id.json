@@ -1,0 +1,338 @@
+{
+  "_id": "JX572WfLj4Kwy8Id",
+  "_key": "!tables!JX572WfLj4Kwy8Id",
+  "name": "Tinkering Store (Village)",
+  "img": "icons/environment/settlement/pottery-shop-shed-red.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Workshops that offer mechanical and gunpowder wares. Typically owned by eccentric characters that practise crafts overlooked by more conventional people.</p><p><em>Stock list for a village.</em></p>",
+  "formula": "1d20",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "Gs5ekfwRv7TDRGBr",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.Gs5ekfwRv7TDRGBr",
+      "type": "document",
+      "name": "Acid",
+      "img": "icons/consumables/potions/bottle-round-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagAcid0000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LPM3QlEkeqxLDOMx",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.LPM3QlEkeqxLDOMx",
+      "type": "document",
+      "name": "Ball Bearings",
+      "img": "icons/weapons/ammunition/shot-round-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagBallBearing",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "b5GSx3Uw8b5HqPww",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.b5GSx3Uw8b5HqPww",
+      "type": "document",
+      "name": "Caltrops",
+      "img": "icons/weapons/thrown/bomb-spiked-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.iYwrPPLmuVD9eqfa",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mwoiz0XwE62iKGYl",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.mwoiz0XwE62iKGYl",
+      "type": "document",
+      "name": "Flask",
+      "img": "icons/consumables/drinks/tea-jug-gourd-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagFlask000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HImwomkFOqwVPRE0",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.HImwomkFOqwVPRE0",
+      "type": "document",
+      "name": "Lamp",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagLamp0000000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oanOIU8UZPeic28I",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.oanOIU8UZPeic28I",
+      "type": "document",
+      "name": "Oil",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagOil00000000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jzzW3NABpHgGw5Ad",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.jzzW3NABpHgGw5Ad",
+      "type": "document",
+      "name": "Paper",
+      "img": "icons/sundries/documents/paper-plain-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagPaper000000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8EcxFbX9a09OJ2zS",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.8EcxFbX9a09OJ2zS",
+      "type": "document",
+      "name": "Parchment",
+      "img": "icons/sundries/scrolls/scroll-plain-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagParchment00",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "a5U09e7c7TGPx5Nt",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.a5U09e7c7TGPx5Nt",
+      "type": "document",
+      "name": "Rope",
+      "img": "icons/sundries/survival/rope-wrapped-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ydg6rvZ8iYCP7gxJ",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.ydg6rvZ8iYCP7gxJ",
+      "type": "document",
+      "name": "Signal Whistle",
+      "img": "icons/tools/instruments/pipe-flute-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagSignalWhist",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7WrEsiewwmAl7GfF",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.7WrEsiewwmAl7GfF",
+      "type": "document",
+      "name": "String",
+      "img": "icons/tools/hand/needle-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagString00000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SJJSakVPCy9rVAdl",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.SJJSakVPCy9rVAdl",
+      "type": "document",
+      "name": "Tinderbox",
+      "img": "icons/sundries/lights/torch-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.367bsHMaHI1II4k9",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LgT5HtLqTnTsRtt2",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.LgT5HtLqTnTsRtt2",
+      "type": "document",
+      "name": "Vial",
+      "img": "icons/consumables/potions/vial-cork-empty.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbagVial0000000",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "D3xxmuyidkHpzVsJ",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.D3xxmuyidkHpzVsJ",
+      "type": "document",
+      "name": "Glassblower's Tools",
+      "img": "icons/commodities/tech/metal-insert.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulGlassblowe",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "A0BNsXknew3R7fhu",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.A0BNsXknew3R7fhu",
+      "type": "document",
+      "name": "Mason's Tools",
+      "img": "icons/tools/hand/hammer-and-nail.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulMasonsTool",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "kLqhMbTILq1k2ro2",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.kLqhMbTILq1k2ro2",
+      "type": "document",
+      "name": "Painter's Supplies",
+      "img": "icons/tools/hand/brush-paint-brown-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulPaintersSu",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lP5BE4pQzjHU9L8G",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.lP5BE4pQzjHU9L8G",
+      "type": "document",
+      "name": "Smith's Tools",
+      "img": "icons/skills/trades/smithing-tongs-metal-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulSmithsTool",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "CE26iiUAc249UXMu",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.CE26iiUAc249UXMu",
+      "type": "document",
+      "name": "Tinker's Tools",
+      "img": "icons/commodities/cloth/thread-spindle-white-needle.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulTinkersToo",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AG0SCu4anxvbdk9P",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.AG0SCu4anxvbdk9P",
+      "type": "document",
+      "name": "Woodcarver's Tools",
+      "img": "icons/tools/hand/chisel-steel-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbtulWoodcarver",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FFqeLFG9FBYW8GmF",
+      "_key": "!tables.results!JX572WfLj4Kwy8Id.FFqeLFG9FBYW8GmF",
+      "type": "document",
+      "name": "Light Hammer",
+      "img": "icons/weapons/hammers/shorthammer-double-stone-engraved.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.phbwepLightHamme",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}
