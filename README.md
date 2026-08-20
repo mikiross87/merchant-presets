@@ -232,5 +232,3 @@ Unofficial fan content, not approved or endorsed by Wizards of the Coast.
 Item statistics, prices and descriptions derive from System Reference Document
 5.2, © Wizards of the Coast LLC, licensed under
 [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
-Shops inspired by The Inspired Arcana's free homebrew *Stores for D&D 2024*;
-no text, artwork or prices from it are reproduced here.
