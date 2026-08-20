@@ -1,5 +1,5 @@
-name: Feature or preset request
-description: Suggest a new preset or improvement
+name: Feature or shop request
+description: Suggest a new shop, stock change, or improvement
 labels: [enhancement]
 body:
   - type: textarea
@@ -7,11 +7,19 @@ body:
     attributes:
       label: What would you like?
       description: >
-        For a new preset, describe the light: color, animation feel, whether it
-        should have a bright core or read as pure atmosphere.
+        For a stock change, name the shop and the items. For a new shop, say
+        what trade it is and roughly what it deals in.
     validations:
       required: true
+  - type: input
+    id: srd
+    attributes:
+      label: Is everything involved in SRD 5.2?
+      description: >
+        This module ships only SRD content, so items from the paid Player's
+        Handbook or Dungeon Master's Guide cannot be added.
+      placeholder: "yes / no / not sure"
   - type: textarea
     id: why
     attributes:
-      label: What scene or use case is it for?
+      label: What table or use case is it for?

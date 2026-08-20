@@ -4,3 +4,10 @@ updates:
     directory: /
     schedule:
       interval: monthly
+
+  # The Foundry CLI compiles the compendium packs in CI and at release time.
+  # A version drift here already broke the build once, so it is worth watching.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly

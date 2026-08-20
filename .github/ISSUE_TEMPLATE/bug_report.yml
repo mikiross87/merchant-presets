@@ -13,28 +13,51 @@ body:
     id: foundry-version
     attributes:
       label: Foundry VTT version
-      placeholder: "e.g. 14.360"
+      placeholder: "e.g. 14.367"
     validations:
       required: true
   - type: input
     id: module-version
     attributes:
-      label: Light Presets version
+      label: Merchant Presets version
       placeholder: "e.g. 1.0.0"
     validations:
       required: true
   - type: input
-    id: system
+    id: system-version
     attributes:
-      label: Game system and version
-      placeholder: "e.g. dnd5e 5.3.2, daggerheart 2.0.0"
+      label: dnd5e system version
+      placeholder: "e.g. 5.3.3"
+    validations:
+      required: true
+  - type: input
+    id: itempiles-version
+    attributes:
+      label: Item Piles and itempilesdnd5e versions
+      description: Both are required by this module; most issues involve them.
+      placeholder: "e.g. Item Piles 3.3.4, itempilesdnd5e 1.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it happen?
+      options:
+        - "A merchant dragged into the world"
+        - "A merchant opened inside the compendium"
+        - "During a restock"
+        - "Buying or selling"
+        - "Somewhere else (say where)"
+    validations:
+      required: true
   - type: dropdown
     id: isolated
     attributes:
-      label: Does it still happen with all other modules disabled?
+      label: Does it still happen with other modules disabled?
+      description: Item Piles and itempilesdnd5e have to stay on — they are required.
       options:
-        - "Yes — reproduced with only Light Presets enabled"
-        - "No — it needs another module active (name it below)"
+        - "Yes — only Merchant Presets and Item Piles enabled"
+        - "No — it needs another module active (name it above)"
         - "Haven't tried"
     validations:
       required: true
