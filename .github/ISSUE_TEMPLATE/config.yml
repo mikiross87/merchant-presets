@@ -1,0 +1,22 @@
+# Force every issue through one of the forms, so nothing arrives unlabelled
+# and bug reports always carry the Foundry, dnd5e and Item Piles versions
+# needed to reproduce them.
+blank_issues_enabled: false
+
+contact_links:
+  - name: Item Piles support
+    url: https://github.com/fantasycalendar/FoundryVTT-ItemPiles/issues
+    about: >-
+      Merchant windows, currency handling, buying and selling are Item Piles
+      features. If the problem is with how a merchant sheet behaves rather
+      than with this module's shops or stock, report it there.
+  - name: Foundry VTT help and general questions
+    url: https://foundryvtt.com/community/
+    about: >-
+      Questions about Foundry or dnd5e in general rather than a bug in this
+      module. The community links there will get you a faster answer.
+  - name: What ships in this module
+    url: https://github.com/mikiross87/merchant-presets#readme
+    about: >-
+      The README lists the shops, what they stock, and why everything comes
+      from SRD 5.2 rather than the paid books.

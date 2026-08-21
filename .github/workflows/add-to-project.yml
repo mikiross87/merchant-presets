@@ -1,0 +1,46 @@
+name: Add to project
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_PAT: ${{ secrets.PROJECT_PAT }}
+      PROJECT_URL: ${{ vars.PROJECT_URL }}
+    # Inert until both are configured, so the workflow never fails a repo
+    # (or a fork) that has no project set up. Same pattern the release
+    # workflow uses for the Foundry registry token.
+    #
+    # To switch it on:
+    #   1. Create a user or org Project and copy its URL, e.g.
+    #      https://github.com/users/mikiross87/projects/1
+    #   2. Add it as a repository *variable* named PROJECT_URL
+    #      (Settings > Secrets and variables > Actions > Variables).
+    #   3. Create a fine-grained PAT with the Projects permission set to
+    #      "Read and write", plus Issues "Read-only" on this repository, and
+    #      add it as a repository *secret* named PROJECT_PAT.
+    #      GITHUB_TOKEN cannot write to Projects, which is why a PAT is needed.
+    if: ${{ github.event.repository.fork == false }}
+    steps:
+      - name: Check configuration
+        id: check
+        run: |
+          set -euo pipefail
+          if [ -n "$PROJECT_PAT" ] && [ -n "$PROJECT_URL" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "PROJECT_PAT and/or PROJECT_URL not set - skipping."
+          fi
+
+      - uses: actions/add-to-project@v1
+        if: steps.check.outputs.configured == 'true'
+        with:
+          project-url: ${{ vars.PROJECT_URL }}
+          github-token: ${{ secrets.PROJECT_PAT }}

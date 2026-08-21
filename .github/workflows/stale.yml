@@ -1,0 +1,37 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"   # Mondays, 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Deliberately scoped to issues already waiting on the reporter.
+          # Untriaged issues are the maintainer's backlog, not the reporter's
+          # fault, and closing those would lose real reports.
+          only-labels: needs-repro
+          days-before-issue-stale: 21
+          days-before-issue-close: 14
+          stale-issue-label: stale
+          stale-issue-message: >
+            This has been waiting on a reproduction with other modules disabled
+            for three weeks. Item Piles and itempilesdnd5e should stay enabled —
+            they are required — but if it still happens with everything else
+            off, say so and it stays open. Otherwise it will close in fourteen
+            days. Reopening is always fine.
+          close-issue-message: >
+            Closing for now, since there is still no reproduction with other
+            modules disabled. If you hit this again, comment here with what you
+            found and it will be reopened.
+          # Pull requests are reviewed, not chased.
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
