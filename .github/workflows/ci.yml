@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  # Called by the release workflow so a tag cannot publish without the same
+  # validation a pull request gets, run against the tagged tree.
+  workflow_call:
 
 permissions:
   contents: read
