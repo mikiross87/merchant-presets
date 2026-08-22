@@ -37,6 +37,9 @@ jobs:
           done < <(find scripts -name '*.mjs' -print0)
           exit "$status"
 
+      - name: Unit tests
+        run: npm test
+
       - name: Validate module.json
         run: |
           set -euo pipefail

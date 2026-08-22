@@ -1706,7 +1706,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 0.25,
+            "water": 0
+          }
         }
       },
       "_stats": {
@@ -1760,7 +1764,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 0.5,
+            "water": 0.125
+          }
         }
       },
       "_stats": {
@@ -1814,7 +1822,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 1,
+            "water": 0.125
+          }
         }
       },
       "_stats": {
@@ -1868,7 +1880,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 1,
+            "water": 0.25
+          }
         }
       },
       "_stats": {
@@ -1922,7 +1938,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 2,
+            "water": 0.5
+          }
         }
       },
       "_stats": {
@@ -1976,7 +1996,11 @@
           }
         },
         "merchant-presets": {
-          "kind": "meal"
+          "kind": "meal",
+          "nutrition": {
+            "food": 4,
+            "water": 1
+          }
         }
       },
       "_stats": {

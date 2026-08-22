@@ -47,7 +47,11 @@
       }
     },
     "merchant-presets": {
-      "kind": "meal"
+      "kind": "meal",
+      "nutrition": {
+        "food": 2,
+        "water": 0.5
+      }
     }
   }
 }
