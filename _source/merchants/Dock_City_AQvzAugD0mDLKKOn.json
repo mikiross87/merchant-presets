@@ -556,7 +556,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "mount,tack,drink,meal,lodging,service,spellcasting,component"
+            "filters": "mount,tack,food-drink,meal,lodging,service,spellcasting,component"
           }
         ],
         "buyPriceModifier": 1.0,

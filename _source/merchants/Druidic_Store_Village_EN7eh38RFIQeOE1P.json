@@ -5354,7 +5354,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,drink,meal,lodging,service,component,travel"
+            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,component,travel"
           }
         ],
         "buyPriceModifier": 1.0,

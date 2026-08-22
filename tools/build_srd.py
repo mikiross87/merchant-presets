@@ -81,7 +81,7 @@ SRD_SOURCE = {"book": "SRD 5.2", "license": "CC-BY-4.0", "rules": "2024", "revis
 # not take a galley. Note this REPLACES the global filter list rather than
 # adding to it, so the dnd5e defaults have to be carried along.
 PHYSICAL_TYPES = ["weapon", "equipment", "consumable", "tool", "loot", "container"]
-GOODS_KINDS = ["vehicle", "mount", "tack", "drink", "meal", "lodging",
+GOODS_KINDS = ["vehicle", "mount", "tack", "food-drink", "meal", "lodging",
                "service", "spellcasting", "component", "travel"]
 DND5E_ITEM_FILTERS = [
     {"path": "type", "filters": "background,class,facility,feat,race,spell,subclass"},
