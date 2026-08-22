@@ -130,15 +130,22 @@ keeps 09:00–17:00, a dock opens at 05:00, the tavern runs 06:00 to 02:00, and
 the fence trades 20:00 to 04:00 — along with `refreshItemsOnOpen`, so the shop
 restocks each morning when the doors open.
 
-**This module fires them, not Item Piles.** Item Piles has the same feature but
-only triggers it through Simple Calendar, which it requires by name — so it will
-not fire from Foundry's built-in calendar or from Calendaria. This module drives
-the same restock off Foundry's own world clock instead, so anything that
-advances time works.
+**This module fires them, not Item Piles.** Item Piles has both features but
+reaches them only through Simple Calendar, which it requires by name — so
+neither fires from Foundry's built-in calendar or from Calendaria. Worse for the
+hours: when Simple Calendar is absent, Item Piles rewrites the merchant's status
+from *auto* back to *always open* and saves it, so the hours cannot even be left
+armed for later. Simple Calendar is unmaintained and does not support v14, which
+this module requires, so that route is shut for good rather than merely missing.
 
-**Off by default**, via the *Restock shops when they open* setting. A restock
-rebuilds the shelf from the shop's stock table, and Item Piles clears the
-merchant's existing items to do it — so anything you added to a shop by hand is
+This module therefore drives both off Foundry's own world clock, and anything
+that advances time works. The hours are **on by default**, via *Shops keep their
+trading hours*: a shop outside its hours closes to players, and the GM can still
+open the sheet. Turn the setting off for shops that never shut.
+
+Restocking, by contrast, is **off by default**, via the *Restock shops when they
+open* setting. A restock rebuilds the shelf from the shop's stock table, and Item
+Piles clears the merchant's existing items to do it — so anything you added by hand is
 discarded. Turn it on once your shops hold nothing you would miss. Only the
 designated GM runs the pass, the last processed world time is stored so a reload
 cannot re-fire one, and winding the clock backwards never restocks.
@@ -149,13 +156,15 @@ To restock one shop by hand, with the flags and purse restored:
 game.modules.get("merchant-presets").api.restock(actor)
 ```
 
-Not supported: **closed days and holiday restocks**. Those are built on Simple
-Calendar notes, which core has no equivalent for. The flags are shipped empty
-and will work if you ever install Simple Calendar.
+Not supported: **closed days and holidays**. Those are keyed to Simple Calendar
+notes, which core has no equivalent for, and Simple Calendar is not coming back
+for v14. The `closedDays` and `closedHolidays` flags ship empty and are left
+alone — a shop keeps the same hours every day of the year.
 
 Merchants ship with status `open` rather than `auto` deliberately: with `auto`
 and no Simple Calendar, Item Piles rewrites the flag on first render, which
-throws on a locked module compendium.
+throws on a locked module compendium. The module sets the status itself once a
+merchant is in the world, so the shipped value is only ever a starting point.
 - **Bundled goods** (Arrows ×20, Bolts ×20, Sling Bullets ×20, Needles ×50,
   Firearm Bullets ×10, Iron Spikes ×10) carry Item Piles' `quantityForPrice`,
   so a player pays the bundle price and receives the bundle. The Quantity column

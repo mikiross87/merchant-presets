@@ -328,11 +328,13 @@ def main():
                                            "addAll": True, "timesToRoll": "1", "customCategory": "",
                                            "items": per_result}],
                     # Trading hours, and a restock each morning when the doors
-                    # open. Both are driven by Simple Calendar: without it
-                    # Item Piles never fires the refresh, and `status: "auto"`
-                    # would be rewritten to "open" on first sheet render — which
-                    # throws on a locked compendium. So ship an explicit "open"
-                    # and let the GM switch to auto once a calendar is present.
+                    # open. Item Piles reaches both only through Simple Calendar,
+                    # which it requires by name, and rewrites `status: "auto"`
+                    # back to "open" when that module is absent — a write that
+                    # throws on a locked compendium. Simple Calendar is
+                    # unmaintained and has no v14 build, so there is no calendar
+                    # to wait for: ship "open" and let the module's own runtime
+                    # drive the status off Foundry's clock instead.
                     "openTimes": {"enabled": True, "status": "open",
                                   "open":  {"hour": shop["hours"][0], "minute": 0},
                                   "close": {"hour": shop["hours"][1], "minute": 0}},
