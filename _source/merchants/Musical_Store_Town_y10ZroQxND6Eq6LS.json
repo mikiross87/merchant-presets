@@ -2921,7 +2921,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmParry000000000"
+      },
       "_id": "umlyXWdiBADfClKQ",
       "_key": "!actors.items!y10ZroQxND6Eq6LS.umlyXWdiBADfClKQ"
     }

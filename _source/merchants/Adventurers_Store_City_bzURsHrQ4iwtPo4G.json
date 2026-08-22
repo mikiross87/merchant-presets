@@ -5768,7 +5768,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmMultiattack000"
+      },
       "_id": "CFzay5suAe7GSuhc",
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.CFzay5suAe7GSuhc"
     },
@@ -5889,7 +5891,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmParry000000000"
+      },
       "_id": "TxmQ6iKo6KiEd6PQ",
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.TxmQ6iKo6KiEd6PQ"
     }

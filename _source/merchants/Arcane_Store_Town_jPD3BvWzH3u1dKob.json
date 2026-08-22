@@ -3793,7 +3793,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmRadiantFlame00"
+      },
       "_id": "wuefMO9RxAupBetz",
       "_key": "!actors.items!jPD3BvWzH3u1dKob.wuefMO9RxAupBetz"
     },
@@ -3980,7 +3982,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmSpellcasting00"
+      },
       "_id": "pt8YkisVjZ40wfh7",
       "_key": "!actors.items!jPD3BvWzH3u1dKob.pt8YkisVjZ40wfh7"
     },
@@ -4261,7 +4265,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmDivineAid00000"
+      },
       "_id": "0cZLAf7EyBkrUGc2",
       "_key": "!actors.items!jPD3BvWzH3u1dKob.0cZLAf7EyBkrUGc2"
     },

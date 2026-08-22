@@ -19,6 +19,10 @@ SRD_PACK = "dnd5e.equipment24"
 # blocks. Same SRD 5.2 licence as the equipment, unpacked the same way.
 ACTORS = os.environ.get("MP_ACTORS_DIR") or (sys.argv[2] if len(sys.argv) > 2 else "")
 ACTORS_PACK = "dnd5e.actors24"
+# And of dnd5e.monsterfeatures24, which holds the traits and actions those stat
+# blocks reference — Multiattack, Parry, Spellcasting and the rest.
+FEATS  = os.environ.get("MP_FEATS_DIR") or (sys.argv[3] if len(sys.argv) > 3 else "")
+FEATS_PACK = "dnd5e.monsterfeatures24"
 B62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def assert_world_closed():
@@ -76,6 +80,15 @@ def load_actors():
         d = json.load(open(f))
         if d.get("type") == "npc":
             out[norm(d["name"])] = d
+    return out
+
+def load_feats():
+    """id -> name, for the SRD monster features the stat blocks point at."""
+    out = {}
+    for f in glob.glob(os.path.join(FEATS, "*.json")):
+        d = json.load(open(f))
+        if d.get("_key", "").startswith("!items!"):
+            out[d["_id"]] = d["name"]
     return out
 
 def load_goods():
@@ -232,7 +245,7 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
         eff["origin"] = None
     return it, is_container
 
-def make_gear(src, actor_id, srd):
+def make_gear(src, actor_id, srd, feats):
     """Copy one item off a stat block onto a merchant.
 
     Unlike make_item this keeps `equipped`/`proficient`/`prepared`: most
@@ -251,13 +264,18 @@ def make_gear(src, actor_id, srd):
     # modules. Those are dangling references for anyone without those modules,
     # and CI refuses a build that mentions them at all.
     #
-    # A pointer into the system itself is kept as-is. Otherwise, for physical
-    # gear, look for the SRD equipment item of the same name and point at that
-    # instead: a priest's Mace and Chain Shirt are the same documents the shops
-    # already sell, so blanking their provenance loses something real. What is
-    # left sourceless is what genuinely has no SRD equipment entry — monster
-    # features like Multiattack, and monster-only attacks like Radiant Flame.
+    # Three ways back to a real SRD document, in order of exactness:
+    #
+    #  1. A pointer already into the system is kept, only reformatted.
+    #  2. A Monster Manual feature id is the *same* id the system ships in
+    #     monsterfeatures24 — Multiattack, Parry, Training and the rest are one
+    #     document each, not per-monster variants — so swap the pack and keep
+    #     the id. This is exact, not a guess by name.
+    #  3. Physical gear otherwise falls back to the equipment item of the same
+    #     name: a priest's Mace and Chain Shirt are the documents the shops
+    #     already sell, so blanking their provenance loses something real.
     prior = (src.get("_stats") or {}).get("compendiumSource") or ""
+    prior_id = prior.rsplit(".", 1)[-1]
     if prior.startswith("Compendium.dnd5e."):
         # The stat blocks use the older typeless uuid form
         # (Compendium.<pack>.<id>). Everything else in these packs, stock
@@ -265,6 +283,8 @@ def make_gear(src, actor_id, srd):
         # segment. The id is untouched, so a pointer that resolved still does.
         head, _, tail = prior.rpartition(".")
         source = prior if head.endswith(".Item") else f"{head}.Item.{tail}"
+    elif feats.get(prior_id) == src.get("name"):
+        source = f"Compendium.{FEATS_PACK}.Item.{prior_id}"
     elif src.get("type") in PHYSICAL_TYPES:
         alt = srd.get(norm(src.get("name") or ""))
         source = f"Compendium.{SRD_PACK}.Item.{alt['_id']}" if alt else ""
@@ -302,8 +322,11 @@ def main():
         sys.exit("point MP_SRD_DIR (or argv[1]) at an unpacked dnd5e.equipment24 directory")
     if not ACTORS or not os.path.isdir(ACTORS):
         sys.exit("point MP_ACTORS_DIR (or argv[2]) at an unpacked dnd5e.actors24 directory")
+    if not FEATS or not os.path.isdir(FEATS):
+        sys.exit("point MP_FEATS_DIR (or argv[3]) at an unpacked dnd5e.monsterfeatures24 directory")
     assert_world_closed()
-    srd = load_srd(); goods = load_goods(); actors = load_actors()
+    srd = load_srd(); goods = load_goods()
+    actors = load_actors(); feats = load_feats()
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
 
     actors_dir = os.path.join(MOD, "_source/merchants")
@@ -427,7 +450,7 @@ def main():
             npc = actors.get(norm(profile))
             if not npc:
                 sys.exit(f"stat profile '{profile}' is not in {ACTORS_PACK}")
-            gear = [make_gear(g, aid, srd) for g in npc.get("items") or []]
+            gear = [make_gear(g, aid, srd, feats) for g in npc.get("items") or []]
             gear_counts[label] += len(gear)
             sysd = statblock(npc)
             sysd["currency"] = {"pp": 0, "gp": round(shop["purse"] * purse_mul),

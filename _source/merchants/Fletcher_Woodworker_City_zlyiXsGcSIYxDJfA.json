@@ -4662,7 +4662,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmMultiattack000"
+      },
       "_id": "SQ5HYlWIgHKIGgMv",
       "_key": "!actors.items!zlyiXsGcSIYxDJfA.SQ5HYlWIgHKIGgMv"
     }
