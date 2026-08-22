@@ -1009,7 +1009,7 @@
     {
       "name": "Spell Components (gems), 150 gp and below",
       "type": "loot",
-      "img": "icons/commodities/gems/gem-faceted-navette-blue.webp",
+      "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
       "system": {
         "description": {
           "value": "<p>Assorted gemstone spell components worth up to 150 gp.</p>",
@@ -1062,7 +1062,7 @@
     {
       "name": "Spell Components (gems), 500 gp and below",
       "type": "loot",
-      "img": "icons/commodities/gems/gem-faceted-radiant-purple.webp",
+      "img": "icons/commodities/gems/gem-faceted-navette-red.webp",
       "system": {
         "description": {
           "value": "<p>Assorted gemstone spell components worth up to 500 gp.</p>",
@@ -1115,7 +1115,7 @@
     {
       "name": "Spell Components (gems), 501 gp and above",
       "type": "loot",
-      "img": "icons/commodities/gems/gem-faceted-round-red.webp",
+      "img": "icons/commodities/gems/gem-faceted-round-white.webp",
       "system": {
         "description": {
           "value": "<p>Assorted gemstone spell components worth 501 gp or more.</p>",
