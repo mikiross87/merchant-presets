@@ -210,6 +210,7 @@ async function rewire(actor) {
   let changed = false;
   changed = await wireTables(actor) || changed;
   changed = await applyStockMode(actor) || changed;
+  changed = await syncStockWeight(actor) || changed;
   changed = await syncOpenState(actor) || changed;
   if (changed) log(`prepared "${actor.name}"`);
   return changed;
@@ -336,6 +337,90 @@ async function reconcileContainers(actor) {
 }
 
 /**
+ * Keep the shop's own goods off the shopkeeper's back.
+ *
+ * A merchant's wares live in its inventory because that is what Item Piles
+ * reads, so a shopkeeper is carrying every barrel and anvil on the shelves —
+ * 14,775 lb for a city stable, against a capacity of 240. dnd5e ignores this
+ * until a world turns encumbrance on, and then the shopkeeper is Exceeding
+ * Carrying Capacity for good, which in the 2024 rules means Speed 0.
+ *
+ * The stock cannot be moved off the actor without hiding it from Item Piles, so
+ * cancel its weight instead: an effect raising the thresholds by exactly what
+ * the shop holds, leaving the shopkeeper's own kit to count normally. Off by
+ * default, because dnd5e ships encumbrance off and then none of this bites.
+ *
+ * `encumbrance.value` is the system's own total, currency included, so the
+ * shop's till is cancelled along with its goods — both belong to the shop
+ * rather than to whoever minds it.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether the effect was added, changed or removed
+ */
+async function syncStockWeight(actor) {
+  const existing = actor.effects.find(e => e.getFlag(MODULE, "stockWeight"));
+
+  if (!game.settings.get(MODULE, "ignoreStockWeight")) {
+    if (!existing) return false;
+    await existing.delete();
+    return true;
+  }
+
+  const base = CONFIG.DND5E.encumbrance.baseUnits;
+  const units = (base[actor.type] ?? base.default)[
+    game.settings.get("dnd5e", "metricWeightUnits") ? "metric" : "imperial"];
+  const carried = actor.system.attributes?.encumbrance?.value ?? 0;
+  // Contained items are already outside the system's own sum; skipping them
+  // here too keeps this the exact complement of what it measured.
+  const personal = actor.items
+    .filter(i => !i.container && isGear(i))
+    .reduce((w, i) => w + (i.system.totalWeightIn?.(units) ?? 0), 0);
+  const shop = Math.max(0, Math.ceil(carried - personal));
+
+  // These bonuses are roll formulas, so ADD appends rather than replaces and a
+  // leading "+" keeps the result a valid formula — "10" from another module
+  // becomes "10+700", which simplifyBonus evaluates to 710 rather than losing
+  // one of them.
+  const changes = [{
+    key: "system.attributes.encumbrance.bonuses.overall",
+    mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+    value: `+${shop}`
+  }];
+
+  if (existing) {
+    if (existing.changes[0]?.value === changes[0].value && !existing.disabled) return false;
+    await existing.update({ changes, disabled: false });
+    return true;
+  }
+
+  await actor.createEmbeddedDocuments("ActiveEffect", [{
+    name: "Shop stock (not carried)",
+    img: "icons/commodities/currency/coins-assorted-mix-copper-silver-gold.webp",
+    description: "<p>The shop's goods and till sit in this actor's inventory because that is how "
+      + "Item Piles stocks a merchant. This cancels their weight, so only the shopkeeper's own "
+      + "equipment counts against their carrying capacity.</p>",
+    changes,
+    flags: { [MODULE]: { stockWeight: true } }
+  }]);
+  return true;
+}
+
+/**
+ * Apply the stock-weight setting across every merchant already in the world.
+ * @returns {Promise<number>} how many actors changed
+ */
+async function syncStockWeightAll() {
+  if (!game.user.isGM) return 0;
+  let n = 0;
+  for (const actor of game.actors) {
+    if (!isPreset(actor)) continue;
+    try { if (await syncStockWeight(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not set stock weight on "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/**
  * Refill the till. Coin is finite, and buying from the party drains it, so
  * without this a shop that once bought a hoard is poor for the rest of the
  * campaign. A new day's trading starts from the shop's own purse.
@@ -362,6 +447,7 @@ async function restock(actor) {
   await reapplyItemFlags(actor);
   await reconcileContainers(actor);
   await replenishPurse(actor);
+  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
   return true;
 }
 
@@ -582,6 +668,21 @@ Hooks.once("init", () => {
     onChange: () => syncOpenStateAll()
   });
 
+  game.settings.register(MODULE, "ignoreStockWeight", {
+    name: "Shop stock is not carried",
+    hint: "A merchant's wares and till sit in its own inventory, because that is what Item Piles "
+      + "reads as the shop. dnd5e therefore has the shopkeeper carrying the whole shelf — a city "
+      + "stable holds 14,775 lb against a capacity of 240 — which does nothing until you turn on "
+      + "dnd5e's Encumbrance variant, and then leaves every shopkeeper permanently Exceeding "
+      + "Carrying Capacity. Turn this on to cancel the weight of the stock and the purse, leaving "
+      + "the shopkeeper's own equipment to count normally. Off by default, because encumbrance is.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: () => syncStockWeightAll()
+  });
+
   game.settings.register(MODULE, "drinksHydrate", {
     name: "Ale and wine slake thirst",
     hint: "With Simple Nutrition 5e installed, count ale and wine towards a character's water "
@@ -596,7 +697,8 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
-    reconcileContainers, replenishPurse, syncOpenState, syncOpenStateAll };
+    reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
+    syncOpenState, syncOpenStateAll };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.
