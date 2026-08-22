@@ -69,6 +69,17 @@ function isPreset(actor) {
     .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
 }
 
+/**
+ * Whether an item is the shopkeeper's own kit rather than stock.
+ *
+ * Merchants carry an SRD stat block, and its gear rides along as ordinary
+ * embedded items. `overrideItemFilters` keeps it out of the shop window, but
+ * the restock helpers below walk `actor.items` directly and match on name — so
+ * without this the mage's own Wand would be treated as merchandise.
+ */
+const isGear = item =>
+  foundry.utils.getProperty(item, "flags.merchant-presets.kind") === "gear";
+
 /** An item's price expressed in gold pieces. */
 function priceInGp(item) {
   const p = item.system?.price ?? {};
@@ -152,6 +163,9 @@ async function applyStockMode(actor) {
   const updates = [];
   const soldOut = [];
   for (const item of actor.items) {
+    // The shopkeeper's own kit is not stock: rolling it would put the smith's
+    // armour on a stock band and, on a zero, delete it off the stat block.
+    if (isGear(item)) continue;
     if (foundry.utils.getProperty(item, "flags.item-piles.item.isService")) continue;
     if (item.type === "container") continue;
 
@@ -267,6 +281,7 @@ async function reapplyItemFlags(actor) {
   if (!wanted) return 0;
   const updates = [];
   for (const item of actor.items) {
+    if (isGear(item)) continue;
     const want = wanted[item.name];
     if (!want) continue;
     const { quantityForPrice, ...itemFlags } = want;
@@ -304,7 +319,7 @@ async function reapplyItemFlags(actor) {
 async function reconcileContainers(actor) {
   const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.containers");
   if (!wanted) return 0;
-  const have = actor.items.filter(i => i.type === "container");
+  const have = actor.items.filter(i => i.type === "container" && !isGear(i));
   const creates = [];
   for (const [name, target] of Object.entries(wanted)) {
     const existing = have.filter(i => i.name === name);
