@@ -8,7 +8,11 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    uses: ./.github/workflows/ci.yml
+
   release:
+    needs: validate
     runs-on: ubuntu-latest
     env:
       FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
@@ -68,14 +72,17 @@ jobs:
           {
             echo "## What's changed"
             echo ""
-            # Commit subjects since the previous tag, skipping commits that
-            # only touch CI/workflow files — players don't care about those.
+            # Commit subjects since the previous tag, skipping merge commits
+            # and commits that only touch CI/workflow files — players care
+            # about neither. Without --no-merges a release batching several
+            # pull requests lists some of them twice: once as the change and
+            # once as "Merge pull request #N from ...".
             if [ -n "$PREV" ]; then
               RANGE="$PREV..${GITHUB_REF_NAME}"
             else
               RANGE="${GITHUB_REF_NAME}"
             fi
-            git log --pretty='- %s' "$RANGE" -- . ':!.github'
+            git log --no-merges --pretty='- %s' "$RANGE" -- . ':!.github'
             echo ""
             if [ -n "$PREV" ]; then
               echo "**Full changelog:** [\`$PREV...${GITHUB_REF_NAME}\`](https://github.com/${GITHUB_REPOSITORY}/compare/$PREV...${GITHUB_REF_NAME})"
