@@ -222,6 +222,24 @@ physical consumables, bread and cheese included. What Simple Nutrition 5e treats
 as water is decided separately, by item identifier, and only ale and wine are in
 that list.
 
+### Encumbrance
+
+A merchant's wares and its till live in the actor's own inventory, because that
+is what Item Piles reads as the shop. dnd5e therefore counts the whole shelf
+against the shopkeeper: a city stable carries 14,775 lb of horses and wagons
+against a capacity of 240.
+
+This costs nothing while dnd5e's **Encumbrance** variant is off, which is how
+the system ships — the figure is shown but no condition is applied. Turn that
+variant on and every shopkeeper is permanently Exceeding Carrying Capacity,
+which under the 2024 rules is Speed 0.
+
+The stock cannot be moved off the actor without hiding it from Item Piles, so
+the *Shop stock is not carried* setting cancels its weight instead: an effect on
+each merchant lifts the thresholds by exactly what the shop holds, leaving the
+shopkeeper's own equipment to count normally. It is off by default, and only
+worth turning on if you run encumbrance.
+
 ## Prices
 
 Every price, weight and description is the SRD's, with no exceptions.
