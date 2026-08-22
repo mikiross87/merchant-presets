@@ -3084,7 +3084,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbwepMace000000"
+      },
       "_id": "5YTxqVVSTrw8wBqj",
       "_key": "!actors.items!AJOSFf4SWAuYEJJJ.5YTxqVVSTrw8wBqj"
     },
@@ -5048,7 +5050,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbarmChainShirt"
+      },
       "_id": "MxQPgdWSMnsWbxWY",
       "_key": "!actors.items!AJOSFf4SWAuYEJJJ.MxQPgdWSMnsWbxWY"
     },
