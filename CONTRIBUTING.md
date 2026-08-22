@@ -45,11 +45,16 @@ Document ids are content-derived hashes and the stock rolls are seeded per item,
 so regenerating reproduces the same packs rather than churning them. A stock line
 naming an item that is not in the SRD is reported and skipped, not guessed at.
 
-Two constraints worth knowing before changing the generator:
+Three constraints worth knowing before changing the generator:
 
 - Everything must resolve against **SRD 5.2** (`dnd5e.equipment24`). CI fails the
   build if any reference to the paid Player's Handbook or Dungeon Master's Guide
   modules appears in `_source` or `data`.
+- **`load_srd` skips folders.** The equipment pack ships 44 of them alongside its
+  items, and 43 share no name with any item — `Wands`, `Potions`, `Rods`,
+  `Scrolls`, `Tools`, `Holy Symbol`. Indexed by name they shadow the lookup, and
+  a stock line naming one would resolve to the folder and be embedded as an item
+  rather than being reported missing.
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four

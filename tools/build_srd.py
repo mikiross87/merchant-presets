@@ -49,6 +49,13 @@ def load_srd():
     best = {}
     for f in glob.glob(os.path.join(SRD, "*.json")):
         d = json.load(open(f))
+        # The pack ships its folders alongside its items, and 43 of them share
+        # no name with any item — Wands, Potions, Rods, Scrolls, Tools, Holy
+        # Symbol. Indexed by name they shadow the lookup: a stock line naming
+        # one would resolve to the folder and be embedded as an item, instead
+        # of being reported missing as this generator promises.
+        if d.get("_key", "").startswith("!folders!"):
+            continue
         k = norm(d["name"])
         sysd = d.get("system") or {}
         qty = sysd.get("quantity") or 1
