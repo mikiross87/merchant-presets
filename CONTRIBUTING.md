@@ -31,13 +31,16 @@ Thanks for your interest. Two halves to this repo, with different rules:
 and which settlement sizes carry them — and `tools/build_srd.py` turns that into
 `_source/merchants` and `_source/stock`.
 
-Regenerating is a separate, rarer step than packing, because it needs the dnd5e
-system's SRD compendium unpacked to JSON:
+Regenerating is a separate, rarer step than packing, because it needs two of
+the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
+sell, and the actors the shopkeepers are statted from:
 
 ```
 fvtt package unpack -n equipment24 --id dnd5e --type System \
   --in <dnd5e>/packs --out /tmp/equipment24
-MP_SRD_DIR=/tmp/equipment24 python3 tools/build_srd.py
+fvtt package unpack -n actors24 --id dnd5e --type System \
+  --in <dnd5e>/packs --out /tmp/actors24
+MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 python3 tools/build_srd.py
 npm run pack
 ```
 
@@ -45,16 +48,26 @@ Document ids are content-derived hashes and the stock rolls are seeded per item,
 so regenerating reproduces the same packs rather than churning them. A stock line
 naming an item that is not in the SRD is reported and skipped, not guessed at.
 
-Three constraints worth knowing before changing the generator:
+Four constraints worth knowing before changing the generator:
 
-- Everything must resolve against **SRD 5.2** (`dnd5e.equipment24`). CI fails the
-  build if any reference to the paid Player's Handbook or Dungeon Master's Guide
-  modules appears in `_source` or `data`.
+- Everything must resolve against **SRD 5.2** (`dnd5e.equipment24` and
+  `dnd5e.actors24`). CI fails the build if any reference to the paid Player's
+  Handbook, Dungeon Master's Guide or Monster Manual modules appears in
+  `_source` or `data`. Stat block items are the easy way to trip this: they ship
+  inside the system's own SRD pack but carry `compendiumSource` pointers back at
+  those modules, so `make_gear` drops any source that is not `Compendium.dnd5e.`.
 - **`load_srd` skips folders.** The equipment pack ships 44 of them alongside its
   items, and 43 share no name with any item — `Wands`, `Potions`, `Rods`,
   `Scrolls`, `Tools`, `Holy Symbol`. Indexed by name they shadow the lookup, and
   a stock line naming one would resolve to the folder and be embedded as an item
   rather than being reported missing.
+- **Shopkeeper gear is not stock.** `PROFILES` maps each shop and size to an SRD
+  stat block, whose items ride along on the merchant tagged
+  `flags.merchant-presets.kind: "gear"`. That kind is in every shop's refuse
+  list, so it never reaches the shop window, and the three restock helpers in
+  `scripts/merchant-presets.mjs` skip it via `isGear`. Gear is appended *after*
+  the item filters are computed — inside the loop its own types would otherwise
+  read as stocked and let a chain shirt onto the shelf.
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four

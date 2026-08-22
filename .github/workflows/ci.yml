@@ -99,7 +99,10 @@ jobs:
           set -euo pipefail
           # Everything ships from SRD 5.2. A reference to a premium book module
           # would mean redistributing content this module has no licence for.
-          if grep -rlE 'dnd-players-handbook|dnd-dungeon-masters-guide|PHB 2024|DMG 2024' _source data; then
+          # The shopkeeper stat blocks make this easy to trip: they come from
+          # the system's own SRD actor pack, but their items carry provenance
+          # pointers back at the Monster Manual and Player's Handbook modules.
+          if grep -rlE 'dnd-players-handbook|dnd-dungeon-masters-guide|dnd-monster-manual|PHB 2024|DMG 2024' _source data; then
             echo "found references to paid book modules" >&2
             exit 1
           fi

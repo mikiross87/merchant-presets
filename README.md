@@ -44,7 +44,7 @@ Guide modules are not consulted even when installed.
 
 All three sit in a **Merchant Presets** compendium folder.
 
-- **Merchants** (Actor) — 51 shopkeepers in `Village` / `Town` / `City` folders.
+- **Merchants** (Actor) — 51 statted shopkeepers in `Village` / `Town` / `City` folders.
 - **Shop Stock Tables** (RollTable) — one stock list per shop per size.
 - **Merchant Goods** (Item) — 56 goods no 2024 book ships as items.
 
@@ -77,6 +77,24 @@ Adventurers' Store · Alchemists & Apothecaries · Arcane Store · Armourer &
 Blacksmiths · Criminal & Illicit Store · Dock · Druidic Store · Fletcher &
 Woodworker · General Store · Inn & Tavern · Jeweler · Leatherworker · Musical
 Store · Stable · Tailor & Textile Store · Temple & Faith Store · Tinkering Store
+
+### The shopkeepers
+
+Every merchant is a working NPC, not an empty till. Each shop and size is statted
+from an SRD 5.2 block, so the counter escalates with the settlement: a village
+smith is a **Commoner** with a hammer, a town smith a **Warrior Infantry**, a city
+smith a **Warrior Veteran**. A village arcane shop is a commoner; the city one is
+a **Mage**. Criminal & Illicit runs Bandit → Spy → Bandit Captain, the Dock runs
+Commoner → Pirate → Pirate Captain.
+
+That means a shopkeeper has ability scores to roll against when the party tries
+to haggle, lie or intimidate, and real AC, hit points and actions if the party
+decides to rob the place instead.
+
+Their gear is on the stat block, not the shelf — the smith's warhammer and splint
+armour never appear as stock, and a restock will not sell, re-roll or delete
+them. The whole shopkeeper comes from `dnd5e.actors24`, the same SRD 5.2 the
+stock does, so nothing here needs a book module either.
 
 ### Merchant Goods
 
