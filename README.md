@@ -86,10 +86,13 @@ items — ale, bread, cheese, wine, meals, lodging, mounts, vehicles, saddles,
 stabling, feed, ship passage and spellcasting services. Without them the Inn &
 Tavern, Stable and Dock would have almost nothing to sell.
 
-Prices and weights are the SRD's, verified line by line against those tables. 53
-are marked `SRD 5.2 · CC-BY-4.0`. Three are this module's own, being neither in
-the SRD nor in the 2024 rules at all: the two coach rides and the road toll,
-carried over from the 2014 *Services* table because the shop guide sells them.
+Prices and weights are the SRD's, verified line by line against those tables, so
+50 of them are marked `SRD 5.2 · CC-BY-4.0` even though this module authors the
+item document — the content is the SRD's, and CC-BY asks to be told so.
+
+Six carry no source at all, being neither in the SRD nor in the 2024 rules: the
+two coach rides and the road toll, carried over from the 2014 *Services* table
+because the shop guide sells them, and the three spell-component price bands.
 
 Ale, bread, cheese and wine are weighted consumables so Simple Nutrition 5e
 counts them as meals; their weights are chosen for that (nutrition equals weight
