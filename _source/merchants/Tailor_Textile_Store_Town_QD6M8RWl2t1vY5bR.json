@@ -1967,7 +1967,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmTraining000000"
+      },
       "_id": "K9Z64P6iWe9bWKZp",
       "_key": "!actors.items!QD6M8RWl2t1vY5bR.K9Z64P6iWe9bWKZp"
     }

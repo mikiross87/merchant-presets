@@ -31,16 +31,18 @@ Thanks for your interest. Two halves to this repo, with different rules:
 and which settlement sizes carry them — and `tools/build_srd.py` turns that into
 `_source/merchants` and `_source/stock`.
 
-Regenerating is a separate, rarer step than packing, because it needs two of
+Regenerating is a separate, rarer step than packing, because it needs three of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
-sell, and the actors the shopkeepers are statted from:
+sell, the actors the shopkeepers are statted from, and the monster features
+those stat blocks reference:
 
 ```
-fvtt package unpack -n equipment24 --id dnd5e --type System \
-  --in <dnd5e>/packs --out /tmp/equipment24
-fvtt package unpack -n actors24 --id dnd5e --type System \
-  --in <dnd5e>/packs --out /tmp/actors24
-MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 python3 tools/build_srd.py
+for p in equipment24 actors24 monsterfeatures24; do
+  fvtt package unpack -n "$p" --id dnd5e --type System \
+    --in <dnd5e>/packs --out "/tmp/$p"
+done
+MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 \
+  MP_FEATS_DIR=/tmp/monsterfeatures24 python3 tools/build_srd.py
 npm run pack
 ```
 
@@ -50,12 +52,15 @@ naming an item that is not in the SRD is reported and skipped, not guessed at.
 
 Four constraints worth knowing before changing the generator:
 
-- Everything must resolve against **SRD 5.2** (`dnd5e.equipment24` and
-  `dnd5e.actors24`). CI fails the build if any reference to the paid Player's
-  Handbook, Dungeon Master's Guide or Monster Manual modules appears in
-  `_source` or `data`. Stat block items are the easy way to trip this: they ship
-  inside the system's own SRD pack but carry `compendiumSource` pointers back at
-  those modules, so `make_gear` drops any source that is not `Compendium.dnd5e.`.
+- Everything must resolve against **SRD 5.2** (`dnd5e.equipment24`,
+  `dnd5e.actors24`, `dnd5e.monsterfeatures24`). CI fails the build if any
+  reference to the paid Player's Handbook, Dungeon Master's Guide or Monster
+  Manual modules appears in `_source` or `data`. Stat block items are the easy
+  way to trip this: they ship inside the system's own SRD packs but point at
+  those modules. `make_gear` repairs the pointer rather than dropping it — a
+  Monster Manual feature id is the same id `monsterfeatures24` ships, so only
+  the pack changes, and physical gear falls back to the equipment item of the
+  same name. Only what has no SRD document at all ends up sourceless.
 - **`load_srd` skips folders.** The equipment pack ships 44 of them alongside its
   items, and 43 share no name with any item — `Wands`, `Potions`, `Rods`,
   `Scrolls`, `Tools`, `Holy Symbol`. Indexed by name they shadow the lookup, and

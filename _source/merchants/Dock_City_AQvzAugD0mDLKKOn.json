@@ -1560,7 +1560,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmMultiattack000"
+      },
       "_id": "y1U3r8HYrXsFOVo6",
       "_key": "!actors.items!AQvzAugD0mDLKKOn.y1U3r8HYrXsFOVo6"
     },
@@ -1737,7 +1739,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmCaptainsCharm0"
+      },
       "_id": "ANHw8Y6AGP7O2tcy",
       "_key": "!actors.items!AQvzAugD0mDLKKOn.ANHw8Y6AGP7O2tcy"
     },
@@ -1915,7 +1919,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmRiposte0000000"
+      },
       "_id": "8lbk0MgvZLkcs5nH",
       "_key": "!actors.items!AQvzAugD0mDLKKOn.8lbk0MgvZLkcs5nH"
     }

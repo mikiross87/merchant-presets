@@ -2536,7 +2536,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmPackTactics000"
+      },
       "_id": "i0dXbEAZpAOu7W7C",
       "_key": "!actors.items!Ei1x8J4RXvsHELuA.i0dXbEAZpAOu7W7C"
     },
@@ -2656,7 +2658,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmMultiattack000"
+      },
       "_id": "i2knHzkXjtEZf49e",
       "_key": "!actors.items!Ei1x8J4RXvsHELuA.i2knHzkXjtEZf49e"
     }

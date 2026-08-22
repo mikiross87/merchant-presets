@@ -2775,7 +2775,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmPackTactics000"
+      },
       "_id": "EhCLdhIiM0N5U0qs",
       "_key": "!actors.items!ynVWaEF6RzWJdx78.EhCLdhIiM0N5U0qs"
     }

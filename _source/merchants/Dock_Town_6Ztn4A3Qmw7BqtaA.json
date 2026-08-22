@@ -1230,7 +1230,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmMultiattack000"
+      },
       "_id": "9eEWiUWqvQlWZYnY",
       "_key": "!actors.items!6Ztn4A3Qmw7BqtaA.9eEWiUWqvQlWZYnY"
     },
@@ -1407,7 +1409,9 @@
           "kind": "gear"
         }
       },
-      "_stats": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.monsterfeatures24.Item.mmEnthrallingPan"
+      },
       "_id": "TIwQl1yGfvWrKlcG",
       "_key": "!actors.items!6Ztn4A3Qmw7BqtaA.TIwQl1yGfvWrKlcG"
     }
