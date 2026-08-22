@@ -31,6 +31,9 @@ Thanks for your interest. Two halves to this repo, with different rules:
 and which settlement sizes carry them — and `tools/build_srd.py` turns that into
 `_source/merchants` and `_source/stock`.
 
+Shopkeeper tokens are neutral — a tradesperson is on nobody's side — unless the
+shop's recipe sets `disposition` (1 friendly, 0 neutral, -1 hostile, -2 secret).
+
 Regenerating is a separate, rarer step than packing, because it needs three of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
 sell, the actors the shopkeepers are statted from, and the monster features

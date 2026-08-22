@@ -461,7 +461,13 @@ def main():
                 "_id": aid, "_key": f"!actors!{aid}", "name": name, "type": "npc",
                 "img": shop["img"], "folder": fold_a[key], "sort": 0,
                 "system": sysd,
-                "prototypeToken": {"name": name, "actorLink": True, "texture": {"src": shop["img"]}},
+                "prototypeToken": {"name": name, "actorLink": True, "texture": {"src": shop["img"]},
+                                   # Unset, Foundry defaults a token to HOSTILE: a shopkeeper
+                                   # with a red border, listed as an enemy in the tracker.
+                                   # Neutral is what a tradesperson is — not on the party's
+                                   # side, not against it. A recipe may override per shop
+                                   # (1 friendly, 0 neutral, -1 hostile, -2 secret).
+                                   "disposition": shop.get("disposition", 0)},
                 "items": items + gear, "effects": [], "ownership": {"default": 0},
                 "flags": {
                     # The shop's own record of itself: what its purse should be
