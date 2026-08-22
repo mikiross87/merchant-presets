@@ -196,8 +196,13 @@ derived from its own stock list, so a shop can never refuse something it sells.
 
 Item type alone is not enough to tell a galley from a gemstone — dnd5e calls
 both `loot` — so this module's goods each carry a kind (vehicle, mount, tack,
-drink, meal, lodging, service, spellcasting, component, travel) that the filters
-match on.
+food-drink, meal, lodging, service, spellcasting, component, travel) that the
+filters match on.
+
+`food-drink` is a shelf category, not a nutrition one: it covers the five
+physical consumables, bread and cheese included. What Simple Nutrition 5e treats
+as water is decided separately, by item identifier, and only ale and wine are in
+that list.
 
 ## Prices
 

@@ -1034,7 +1034,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "drink,meal,lodging,spellcasting,component"
+            "filters": "food-drink,meal,lodging,spellcasting,component"
           }
         ],
         "buyPriceModifier": 1.0,
