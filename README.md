@@ -119,6 +119,15 @@ With the *Ale and wine slake thirst* setting on, ale and wine count towards
 water instead — that module treats an item as food or water, never both. One
 drink is a pint; a Medium creature needs a gallon a day.
 
+Meals are services — you eat at the inn's table, and nothing goes in the pack —
+so with the *Meals feed the buyer* setting on, buying one asks the buyer whether
+to eat it there and then, and credits today's food and drink by quality: a
+squalid meal is a quarter of a Medium creature's day with nothing to drink, a
+modest one a full day's food and a pint, a wealthy one two days' food and half a
+gallon, an aristocratic one a feast — four days' food and a gallon — enough to
+feed a Large character in one sitting. Simple Nutrition resets the tally every
+long rest, so surplus is flavour rather than stockpiling.
+
 ## How stock behaves
 
 - **Finite (default)** — the packs ship a rolled stock snapshot, so a merchant

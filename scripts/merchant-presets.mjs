@@ -18,6 +18,8 @@
  *    settlement size, so two copies of the same shop differ.
  */
 
+import { applyMeal } from "./nutrition.mjs";
+
 const MODULE = "merchant-presets";
 const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
 const TABLE_FOLDER = "Merchant Stock";
@@ -600,6 +602,90 @@ async function registerDrinks() {
   }
 }
 
+/* -------------------------------------------------------------------- meals */
+
+/**
+ * Offer to eat a meal the moment it is bought.
+ *
+ * Meals are Item Piles services: paying for one hands nothing over, because
+ * the eating happens at the inn's table. Simple Nutrition 5e can only feed a
+ * character from an item in their inventory, so without this the meal would
+ * be money for nothing. Instead, when a preset merchant sells a good carrying
+ * a `nutrition` flag, the buyer is asked whether to eat it now, and saying
+ * yes credits today's food and water the way that module's own Eat dialog
+ * would (see scripts/nutrition.mjs for the arithmetic, and the imports below
+ * for its state helpers and condition ids). The flag is the whole contract, so
+ * a meal copied onto a tavern of your own works the same way.
+ *
+ * Item Piles fires `item-piles-tradeItems` on every client; only the buying
+ * user's client acts, so one purchase gets one prompt. Players own their own
+ * characters, so the flag write and the condition toggle need no GM.
+ */
+async function offerMeals(_sellerUuid, buyerUuid, itemPrices, userId) {
+  if (userId !== game.user.id) return;
+  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!game.settings.get(MODULE, "mealsFeed")) return;
+  const buyer = await fromUuid(buyerUuid);
+  if (buyer?.type !== "character") return;
+
+  const meals = (itemPrices?.buyerReceive ?? []).filter(e =>
+    e.quantity > 0 && e.item?.getFlag?.(MODULE, "nutrition"));
+  for (const entry of meals) {
+    await eatMeal(buyer, entry.item, entry.quantity)
+      .catch(err => console.error(`${MODULE} | could not apply ${entry.item.name}`, err));
+  }
+}
+
+async function eatMeal(actor, item, quantity) {
+  const base = `modules/${NUTRITION_MODULE}/scripts`;
+  const [cfg, sn] = await Promise.all([
+    import(foundry.utils.getRoute(`${base}/config.mjs`)),
+    import(foundry.utils.getRoute(`${base}/nutrition/actor.mjs`))
+  ]);
+  for (const fn of ["getNutritionState", "setNutritionState", "getNutritionNeeds", "formatNutritionAmount"]) {
+    if (typeof sn[fn] !== "function") throw new Error(`Simple Nutrition no longer exports ${fn}`);
+  }
+
+  const nutrition = item.getFlag(MODULE, "nutrition");
+  const needs = sn.getNutritionNeeds(actor);
+  const food = nutrition.food * quantity;
+  const water = nutrition.water * quantity;
+  const parts = [];
+  if (food) parts.push(`Food ${sn.formatNutritionAmount("food", food)}${food >= needs.food ? " (a full day)" : ""}`);
+  if (water) parts.push(`Drink ${sn.formatNutritionAmount("water", water)}${water >= needs.water ? " (a full day)" : ""}`);
+  const label = quantity > 1 ? `${quantity} × ${item.name}` : item.name;
+
+  const eat = await foundry.applications.api.DialogV2.confirm({
+    window: { title: "Eat now?" },
+    content: `<p>${actor.name} bought <strong>${label}</strong>. Eat it here?</p><p>${parts.join(" · ")}</p>`,
+    yes: { label: "Eat", icon: "fa-solid fa-utensils" },
+    no: { label: "Not now" },
+    rejectClose: false
+  });
+  if (!eat) return;
+
+  const has = {
+    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
+    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
+  };
+  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, quantity, has);
+  await sn.setNutritionState(actor, result.state);
+  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
+  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<p><strong>${actor.name}</strong> eats: ${label}.</p><p>${parts.join(" · ")}</p>`
+  });
+  log(`${actor.name} ate ${label}: food ${result.state.food}, water ${result.state.water}`);
+}
+
+function registerMeals() {
+  Hooks.on("item-piles-tradeItems", (...args) => {
+    offerMeals(...args).catch(err => console.error(`${MODULE} |`, err));
+  });
+}
+
 /* ----------------------------------------------------------------- settings */
 
 Hooks.once("init", () => {
@@ -693,6 +779,19 @@ Hooks.once("init", () => {
     type: Boolean,
     default: true
   });
+
+  game.settings.register(MODULE, "mealsFeed", {
+    name: "Meals feed the buyer",
+    hint: "With Simple Nutrition 5e installed, buying a meal at an inn asks the buyer whether to "
+      + "eat it there and then, and credits today's food and drink by the meal's quality — a "
+      + "squalid meal is a quarter of a Medium creature's day with nothing to drink, a modest one "
+      + "a full day's food and a pint, an aristocratic one a feast. Meals are services, so no item "
+      + "changes hands either way.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 });
 
 Hooks.once("ready", () => {
@@ -703,6 +802,8 @@ Hooks.once("ready", () => {
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.
   registerDrinks();
+  // The buyer's own client answers the meal prompt, so this is for players too.
+  registerMeals();
 
   if (!game.user.isGM) return;
   if (!game.modules.get("item-piles")?.active) {
