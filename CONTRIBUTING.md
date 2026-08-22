@@ -73,6 +73,12 @@ Four constraints worth knowing before changing the generator:
   `scripts/merchant-presets.mjs` skip it via `isGear`. Gear is appended *after*
   the item filters are computed — inside the loop its own types would otherwise
   read as stocked and let a chain shirt onto the shelf.
+- **Goods can carry behaviour flags** that the runtime acts on at purchase, via
+  Item Piles' `tradeItems` hook: `flags.merchant-presets.actor` names the SRD
+  stat block an animal good stands for, and buying it copies that actor into the
+  world. The generator copies the whole goods document onto each merchant, so a
+  flag set in `_source/goods` needs a regeneration to reach the shops that sell
+  it.
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four

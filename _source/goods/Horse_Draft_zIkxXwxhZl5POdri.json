@@ -8,7 +8,7 @@
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>A heavy horse bred for hauling.</p>",
+      "value": "<p>A heavy horse bred for hauling.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmDraftHorse0000]{Draft Horse}</p>",
       "chat": ""
     },
     "quantity": 1,
@@ -47,7 +47,8 @@
       }
     },
     "merchant-presets": {
-      "kind": "mount"
+      "kind": "mount",
+      "actor": "Compendium.dnd5e.actors24.Actor.mmDraftHorse0000"
     }
   }
 }

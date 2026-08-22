@@ -8,7 +8,7 @@
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>A saddle horse.</p>",
+      "value": "<p>A saddle horse.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmRidingHorse000]{Riding Horse}</p>",
       "chat": ""
     },
     "quantity": 1,
@@ -47,7 +47,8 @@
       }
     },
     "merchant-presets": {
-      "kind": "mount"
+      "kind": "mount",
+      "actor": "Compendium.dnd5e.actors24.Actor.mmRidingHorse000"
     }
   }
 }

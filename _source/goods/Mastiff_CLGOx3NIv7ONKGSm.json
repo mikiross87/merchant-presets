@@ -8,7 +8,7 @@
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>A large guard and hunting dog.</p>",
+      "value": "<p>A large guard and hunting dog.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMastiff0000000]{Mastiff}</p>",
       "chat": ""
     },
     "quantity": 1,
@@ -47,7 +47,8 @@
       }
     },
     "merchant-presets": {
-      "kind": "mount"
+      "kind": "mount",
+      "actor": "Compendium.dnd5e.actors24.Actor.mmMastiff0000000"
     }
   }
 }
