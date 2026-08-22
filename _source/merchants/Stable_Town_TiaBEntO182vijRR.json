@@ -990,7 +990,7 @@
       "img": "icons/commodities/treasure/figurine-camel.webp",
       "system": {
         "description": {
-          "value": "<p>A desert beast of burden.</p>",
+          "value": "<p>A desert beast of burden.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmCamel000000000]{Camel}</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -1029,7 +1029,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmCamel000000000"
         }
       },
       "_stats": {
@@ -1044,7 +1045,7 @@
       "img": "icons/creatures/mammals/ox-bull-horned-glowing-orange.webp",
       "system": {
         "description": {
-          "value": "<p>A heavy horse bred for hauling.</p>",
+          "value": "<p>A heavy horse bred for hauling.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmDraftHorse0000]{Draft Horse}</p>",
           "chat": ""
         },
         "quantity": 3,
@@ -1083,7 +1084,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmDraftHorse0000"
         }
       },
       "_stats": {
@@ -1098,7 +1100,7 @@
       "img": "icons/creatures/mammals/deer-antlers-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A saddle horse.</p>",
+          "value": "<p>A saddle horse.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmRidingHorse000]{Riding Horse}</p>",
           "chat": ""
         },
         "quantity": 3,
@@ -1137,7 +1139,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmRidingHorse000"
         }
       },
       "_stats": {
@@ -1152,7 +1155,7 @@
       "img": "icons/creatures/mammals/dog-husky-white-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A large guard and hunting dog.</p>",
+          "value": "<p>A large guard and hunting dog.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMastiff0000000]{Mastiff}</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -1191,7 +1194,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmMastiff0000000"
         }
       },
       "_stats": {
@@ -1206,7 +1210,7 @@
       "img": "icons/creatures/mammals/livestock-sheep-green.webp",
       "system": {
         "description": {
-          "value": "<p>A sure-footed pack animal.</p>",
+          "value": "<p>A sure-footed pack animal.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMule0000000000]{Mule}</p>",
           "chat": ""
         },
         "quantity": 15,
@@ -1245,7 +1249,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmMule0000000000"
         }
       },
       "_stats": {
@@ -1260,7 +1265,7 @@
       "img": "icons/creatures/mammals/deer-antlers-green.webp",
       "system": {
         "description": {
-          "value": "<p>A small riding horse.</p>",
+          "value": "<p>A small riding horse.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmPony0000000000]{Pony}</p>",
           "chat": ""
         },
         "quantity": 6,
@@ -1299,7 +1304,8 @@
           }
         },
         "merchant-presets": {
-          "kind": "mount"
+          "kind": "mount",
+          "actor": "Compendium.dnd5e.actors24.Actor.mmPony0000000000"
         }
       },
       "_stats": {

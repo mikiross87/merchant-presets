@@ -686,6 +686,107 @@ function registerMeals() {
   });
 }
 
+/* ------------------------------------------------------------------ animals */
+
+const ANIMAL_FOLDER = "Purchased Animals";
+
+/**
+ * Put a bought animal in the world.
+ *
+ * The SRD has no animal items: a riding horse is a stat block in
+ * dnd5e.actors24, the pack the shopkeepers are statted from. The goods the
+ * stables sell are therefore loot placeholders at the SRD price, each carrying
+ * an `actor` flag naming its stat block. When one is bought, the stat block is
+ * copied into the world — one actor per animal, in a "Purchased Animals"
+ * folder, owned by whoever owns the buying character — and the loot item
+ * becomes the bill of sale, linking to the creatures it stands for.
+ *
+ * Item Piles runs every trade through a GM, so one is always online; the
+ * active GM's client does the creating, which players are not allowed to.
+ * Nothing is placed on a scene: the GM drags the animal in from the sidebar.
+ * Selling the deed back is money only — the animal stays for the GM to deal
+ * with, since deleting actors unasked is not this module's business.
+ */
+async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, userId) {
+  if (game.users.activeGM !== game.user) return;
+  if (!game.settings.get(MODULE, "animalsSpawn")) return;
+  const bought = (itemPrices?.buyerReceive ?? []).filter(e =>
+    e.quantity > 0 && e.item?.getFlag?.(MODULE, "actor"));
+  if (!bought.length) return;
+
+  const buyer = await fromUuid(buyerUuid);
+  const seller = await fromUuid(sellerUuid);
+  if (!buyer) return;
+
+  // Selling a deed to a merchant: the deed is the merchant's entry now.
+  if (game.itempiles?.API?.isItemPileMerchant?.(buyer)) {
+    const names = bought.map(e => e.item.name).join(", ");
+    await ChatMessage.create({
+      content: `<p><strong>${seller?.name ?? "Someone"}</strong> sold ${names} to ${buyer.name}. `
+        + `The animal is still in the <em>${ANIMAL_FOLDER}</em> folder for the GM to remove or keep.</p>`,
+      whisper: game.users.filter(u => u.isGM).map(u => u.id)
+    });
+    return;
+  }
+
+  const folder = await ensureFolder(ANIMAL_FOLDER, "Actor");
+  for (const entry of bought) {
+    try {
+      const uuids = await spawnAnimals(buyer, entry.item, entry.quantity, folder);
+      await recordDeed(buyer, entry.item, uuids);
+      const links = uuids.map(u => `@UUID[${u}]`).join(", ");
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: buyer }),
+        content: `<p><strong>${buyer.name}</strong> bought ${entry.quantity > 1 ? `${entry.quantity} × ` : ""}`
+          + `${entry.item.name} from ${seller?.name ?? "a merchant"}: ${links}</p>`
+      });
+    } catch (err) {
+      console.error(`${MODULE} | could not deliver ${entry.item.name}`, err);
+    }
+  }
+}
+
+async function spawnAnimals(buyer, good, quantity, folder) {
+  const src = await fromUuid(good.getFlag(MODULE, "actor"));
+  if (!src) throw new Error(`stat block ${good.getFlag(MODULE, "actor")} not found — is the dnd5e system's SRD installed?`);
+  const data = game.actors.fromCompendium(src, { clearFolder: true, clearOwnership: true });
+  data.folder = folder.id;
+  data.ownership = { ...buyer.ownership };
+  if (good.img) {
+    data.img = good.img;
+    foundry.utils.setProperty(data, "prototypeToken.texture.src", good.img);
+  }
+  foundry.utils.setProperty(data, "prototypeToken.actorLink", true);
+  foundry.utils.setProperty(data, "prototypeToken.disposition", CONST.TOKEN_DISPOSITIONS.FRIENDLY);
+  foundry.utils.setProperty(data, `flags.${MODULE}.boughtBy`, buyer.uuid);
+
+  const created = await Actor.implementation.createDocuments(
+    Array.from({ length: quantity }, () => foundry.utils.deepClone(data)));
+  return created.map(a => a.uuid);
+}
+
+/** Mark the buyer's copy of the good as the deed for these animals. */
+async function recordDeed(buyer, good, uuids) {
+  const source = good._stats?.compendiumSource ?? good.uuid;
+  const deed = buyer.items.find(i => i.name === good.name
+    && (i._stats?.compendiumSource === source || i.getFlag(MODULE, "actor") === good.getFlag(MODULE, "actor")));
+  if (!deed) return;
+  const all = [...(deed.getFlag(MODULE, "animals") ?? []), ...uuids];
+  const links = all.map(u => `@UUID[${u}]`).join(", ");
+  const desc = deed.system.description?.value ?? "";
+  const body = desc.replace(/<p class="mp-animals">.*?<\/p>/s, "");
+  await deed.update({
+    [`flags.${MODULE}.animals`]: all,
+    "system.description.value": `${body}<p class="mp-animals">Your ${all.length > 1 ? "animals" : "animal"}: ${links}</p>`
+  });
+}
+
+function registerAnimals() {
+  Hooks.on("item-piles-tradeItems", (...args) => {
+    deliverAnimals(...args).catch(err => console.error(`${MODULE} |`, err));
+  });
+}
+
 /* ----------------------------------------------------------------- settings */
 
 Hooks.once("init", () => {
@@ -792,6 +893,19 @@ Hooks.once("init", () => {
     type: Boolean,
     default: true
   });
+
+  game.settings.register(MODULE, "animalsSpawn", {
+    name: "Bought animals are added to the world",
+    hint: "The SRD has no animal items — a riding horse is a stat block — so the goods a stable "
+      + "sells are placeholders at the SRD price. With this on, buying one copies the SRD stat "
+      + "block into the world as an actor in a \"Purchased Animals\" folder, owned by whoever owns "
+      + "the buying character, and the item in their pack becomes the bill of sale linking to it. "
+      + "Nothing is placed on a scene; drag the animal in from the sidebar.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 });
 
 Hooks.once("ready", () => {
@@ -818,6 +932,7 @@ Hooks.once("ready", () => {
 
   registerRestock();
   registerTradingHours();
+  registerAnimals();
   // Time moves while a world is closed, so put the shops on the right side of
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });

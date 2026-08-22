@@ -108,6 +108,15 @@ Prices and weights are the SRD's, verified line by line against those tables, so
 50 of them are marked `SRD 5.2 · CC-BY-4.0` even though this module authors the
 item document — the content is the SRD's, and CC-BY asks to be told so.
 
+The eight animals are the one place the SRD does publish the thing itself — as a
+stat block in the system's own SRD actor compendium, not as an item. So with the
+*Bought animals are added to the world* setting on (it is by default), buying a
+riding horse copies the SRD Riding Horse into the world as an actor in a
+*Purchased Animals* folder, owned by whoever owns the buying character, and the
+item in their pack becomes the bill of sale, linking to the creature. Nothing is
+placed on a scene; the GM drags it in from the sidebar. Selling the deed back to
+a stable is money only — the animal stays for the GM to remove or keep.
+
 Six carry no source at all, being neither in the SRD nor in the 2024 rules: the
 two coach rides and the road toll, carried over from the 2014 *Services* table
 because the shop guide sells them, and the three spell-component price bands.
