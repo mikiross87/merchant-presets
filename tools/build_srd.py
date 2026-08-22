@@ -232,7 +232,7 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
         eff["origin"] = None
     return it, is_container
 
-def make_gear(src, actor_id):
+def make_gear(src, actor_id, srd):
     """Copy one item off a stat block onto a merchant.
 
     Unlike make_item this keeps `equipped`/`proficient`/`prepared`: most
@@ -249,11 +249,28 @@ def make_gear(src, actor_id):
     # The stat blocks ship in the system's SRD pack, but their items still carry
     # provenance pointers at the paid Monster Manual and Player's Handbook
     # modules. Those are dangling references for anyone without those modules,
-    # and CI refuses a build that mentions them at all — so keep a source only
-    # when it points back into the system itself.
+    # and CI refuses a build that mentions them at all.
+    #
+    # A pointer into the system itself is kept as-is. Otherwise, for physical
+    # gear, look for the SRD equipment item of the same name and point at that
+    # instead: a priest's Mace and Chain Shirt are the same documents the shops
+    # already sell, so blanking their provenance loses something real. What is
+    # left sourceless is what genuinely has no SRD equipment entry — monster
+    # features like Multiattack, and monster-only attacks like Radiant Flame.
     prior = (src.get("_stats") or {}).get("compendiumSource") or ""
-    it["_stats"] = ({"compendiumSource": prior}
-                    if prior.startswith("Compendium.dnd5e.") else {})
+    if prior.startswith("Compendium.dnd5e."):
+        # The stat blocks use the older typeless uuid form
+        # (Compendium.<pack>.<id>). Everything else in these packs, stock
+        # included, uses the modern Compendium.<pack>.Item.<id> — so insert the
+        # segment. The id is untouched, so a pointer that resolved still does.
+        head, _, tail = prior.rpartition(".")
+        source = prior if head.endswith(".Item") else f"{head}.Item.{tail}"
+    elif src.get("type") in PHYSICAL_TYPES:
+        alt = srd.get(norm(src.get("name") or ""))
+        source = f"Compendium.{SRD_PACK}.Item.{alt['_id']}" if alt else ""
+    else:
+        source = ""
+    it["_stats"] = {"compendiumSource": source} if source else {}
     it.setdefault("system", {})["source"] = dict(SRD_SOURCE)
 
     flags = it.setdefault("flags", {})
@@ -410,7 +427,7 @@ def main():
             npc = actors.get(norm(profile))
             if not npc:
                 sys.exit(f"stat profile '{profile}' is not in {ACTORS_PACK}")
-            gear = [make_gear(g, aid) for g in npc.get("items") or []]
+            gear = [make_gear(g, aid, srd) for g in npc.get("items") or []]
             gear_counts[label] += len(gear)
             sysd = statblock(npc)
             sysd["currency"] = {"pp": 0, "gp": round(shop["purse"] * purse_mul),
