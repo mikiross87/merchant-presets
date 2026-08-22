@@ -62,6 +62,13 @@ const log = (...args) => console.log(`${MODULE} |`, ...args);
 const rollStock = async formula =>
   Math.max(0, (await new Roll(formula).evaluate({ allowInteractive: false })).total);
 
+/** Whether this is one of our merchants, sitting in the world rather than a pack. */
+function isPreset(actor) {
+  if (!actor || actor.pack) return false;              // never touch compendium copies
+  return (foundry.utils.getProperty(actor, FLAG_PATH) ?? [])
+    .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
+}
+
 /** An item's price expressed in gold pieces. */
 function priceInGp(item) {
   const p = item.system?.price ?? {};
@@ -184,14 +191,12 @@ async function applyStockMode(actor) {
  * @returns {Promise<boolean>} whether anything changed
  */
 async function rewire(actor) {
-  if (actor?.pack) return false;                       // never touch compendium copies
-  const isPreset = (foundry.utils.getProperty(actor, FLAG_PATH) ?? [])
-    .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
-  if (!isPreset) return false;
+  if (!isPreset(actor)) return false;
 
   let changed = false;
   changed = await wireTables(actor) || changed;
   changed = await applyStockMode(actor) || changed;
+  changed = await syncOpenState(actor) || changed;
   if (changed) log(`prepared "${actor.name}"`);
   return changed;
 }
@@ -387,6 +392,65 @@ async function restockOnTimeChange(worldTime, previous) {
   return restocked.length;
 }
 
+/**
+ * Open and close the shops on the world clock.
+ *
+ * Every merchant ships with trading hours, and Item Piles can act on them —
+ * but only through Simple Calendar, which it requires by name. Worse, its
+ * `updateOpenCloseStatus` rewrites `status: "auto"` back to `"open"` and saves
+ * it when that module is absent, so the hours cannot even be left armed for
+ * later. Simple Calendar is unmaintained and does not support v14, which this
+ * module requires, so that path is closed for good rather than merely absent.
+ *
+ * Item Piles documents `open` and `closed` as first-class manual statuses,
+ * though, so drive those from Foundry's own clock — the same trick this module
+ * already plays for restocking, and using the same `isOpenAt` it reads the
+ * hours with. No patching, and any calendar that advances world time works.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether the status changed
+ */
+async function syncOpenState(actor) {
+  const pileData = foundry.utils.getProperty(actor, "flags.item-piles.data");
+  if (!pileData?.openTimes?.enabled) return false;
+
+  let wanted = "open";
+  if (game.settings.get(MODULE, "tradingHours")) {
+    const now = minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime));
+    wanted = isOpenAt(pileData, now) ? "open" : "closed";
+  }
+  // Turning the setting off hands the shops back always-open, rather than
+  // leaving whichever ones happened to be shut stuck that way.
+  if (pileData.openTimes.status === wanted) return false;
+  await actor.update({ "flags.item-piles.data.openTimes.status": wanted });
+  return true;
+}
+
+/**
+ * Put every merchant in the world on the right side of its own door.
+ * @returns {Promise<number>} how many changed
+ */
+async function syncOpenStateAll() {
+  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    if (!isPreset(actor)) continue;
+    try { if (await syncOpenState(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not set open state on "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/** Wire trading hours to the world clock. Separate from restocking, which is off by default. */
+function registerTradingHours() {
+  if (!game.settings.get(MODULE, "tradingHours")) return;
+  Hooks.on("updateWorldTime", async () => {
+    if (game.users.activeGM !== game.user) return;
+    await syncOpenStateAll();
+  });
+  log(`trading hours active on the ${game.time.calendar.name ?? "world"} calendar`);
+}
+
 /** Wire restocking to the world clock. Only the designated GM acts. */
 function registerRestock() {
   if (!game.settings.get(MODULE, "autoRestock")) return;
@@ -488,6 +552,21 @@ Hooks.once("init", () => {
     scope: "world", config: false, type: Number, default: 0
   });
 
+  game.settings.register(MODULE, "tradingHours", {
+    name: "Shops keep their trading hours",
+    hint: "Every merchant ships with hours — a jeweler keeps 09:00-17:00, a dock opens at 05:00, "
+      + "a fence trades 20:00 to 04:00 — and closes to players outside them. Item Piles can do "
+      + "this itself, but only through Simple Calendar, which it requires by name and which is "
+      + "unmaintained and does not support v14; this module drives the same hours off Foundry's "
+      + "own world clock instead, so any calendar that advances time works. Turn it off and every "
+      + "shop stays open around the clock. Takes effect on reload.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: () => syncOpenStateAll()
+  });
+
   game.settings.register(MODULE, "drinksHydrate", {
     name: "Ale and wine slake thirst",
     hint: "With Simple Nutrition 5e installed, count ale and wine towards a character's water "
@@ -502,7 +581,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
-    reconcileContainers, replenishPurse };
+    reconcileContainers, replenishPurse, syncOpenState, syncOpenStateAll };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.
@@ -520,6 +599,10 @@ Hooks.once("ready", () => {
   });
 
   registerRestock();
+  registerTradingHours();
+  // Time moves while a world is closed, so put the shops on the right side of
+  // their doors now rather than at the next tick of the clock.
+  syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
 
   log("ready");
 });
