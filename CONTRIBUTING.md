@@ -21,9 +21,30 @@ Thanks for your interest. Two halves to this repo, with different rules:
 4. Enable the module in a `dnd5e` world alongside Item Piles and its dnd5e
    extension, and reload the browser after each change (`hotReload` is off).
 
-Run `npm run lint` and `npm test` before pushing; CI runs both. The lint config
-(`eslint.config.mjs`) is deliberately narrow — correctness rules, not a house
-style — and splits the two halves of the repo, since `scripts/` runs in
+Run `npm run lint` and `npm test` before pushing; CI runs both.
+
+There are three linters, one per language, and `npm run lint` runs all three —
+`lint:js`, `lint:py` and `lint:sh` run them individually. ESLint comes with
+`npm install`; the other two you need on your PATH:
+
+```
+pip install -r requirements-dev.txt   # ruff
+brew install shellcheck               # or apt-get install shellcheck
+```
+
+| Files | Tool | Config |
+| --- | --- | --- |
+| `scripts/*.mjs`, `tools/*.mjs` | ESLint | `eslint.config.mjs` |
+| `tools/build_srd.py` | Ruff | `ruff.toml` |
+| `tools/*.sh` | ShellCheck | — |
+
+All three are configured the same way: correctness rules that catch real
+mistakes, not a house style. The generator's compact Python and the runtime's
+formatting are both left alone deliberately, and each config records what it
+does *not* enforce and why — read that before adding a rule or an ignore
+comment.
+
+The ESLint config splits the two halves of the repo, since `scripts/` runs in
 Foundry's browser globals and `tools/` runs under plain Node. When the runtime
 starts using a Foundry global the config does not list yet, add it to
 `foundryGlobals` rather than reaching for an `eslint-disable` comment.
@@ -96,9 +117,9 @@ Four constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Target `main`. CI must pass: ESLint, unit tests, manifest validation, JSON
-  parse over `_source` and `data`, a full pack compile from source, and the
-  paid-content check.
+- Target `main`. CI must pass: the three linters, unit tests, manifest
+  validation, JSON parse over `_source` and `data`, a full pack compile from
+  source, and the paid-content check.
 - One logical change per PR, with a subject line that would read well in release
   notes — commit subjects become release-note bullets.
 - Open an issue first for anything beyond a typo, and put `Closes #N` in the PR

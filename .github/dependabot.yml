@@ -11,3 +11,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+
+  # requirements-dev.txt pins ruff, the Python linter, so CI is reproducible.
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly

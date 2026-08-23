@@ -1,0 +1,24 @@
+# Lint config for tools/build_srd.py, the SRD pack generator. Same intent as
+# eslint.config.mjs: correctness rules that catch real mistakes, not a house
+# style. The generator is written in a deliberately compact style — aligned
+# assignments, one-line imports, `if not items: continue` — and reformatting it
+# is not what a linter is here for.
+
+target-version = "py39"   # a floor, not a requirement: nothing here needs newer
+line-length = 100
+
+[lint]
+# E9  syntax and IO errors
+# F   pyflakes — undefined names, unused imports, shadowed definitions
+# B   bugbear — mutable default arguments, loop-variable capture, silent excepts
+# PLE pylint's error class only, not its style or refactor suggestions
+select = ["E9", "F", "B", "PLE"]
+
+# Deliberately not selected:
+#   E1-E7   whitespace and statement layout — the compact style is intentional
+#   SIM115  `open()` without a context manager: true, but this is a one-shot
+#           build script that exits, and the rewrite touches seven call sites
+#           for no behaviour change
+#   RUF001  flags the curly apostrophe in `norm()`, which is there on purpose:
+#           SRD names contain it and the function exists to normalise it away
+

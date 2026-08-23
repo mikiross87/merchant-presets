@@ -1,0 +1,6 @@
+# Python lint tooling. The repo ships no Python — tools/build_srd.py is a
+# maintainer script — so this exists only to pin the linter, the same way
+# package.json pins the JavaScript one.
+#
+#   pip install -r requirements-dev.txt
+ruff==0.15.8
