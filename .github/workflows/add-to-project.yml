@@ -39,7 +39,7 @@ jobs:
             echo "PROJECT_PAT and/or PROJECT_URL not set - skipping."
           fi
 
-      - uses: actions/add-to-project@v1
+      - uses: actions/add-to-project@v2
         if: steps.check.outputs.configured == 'true'
         with:
           project-url: ${{ vars.PROJECT_URL }}
