@@ -12,3 +12,6 @@ Thumbs.db
 .idea/
 .vscode/
 tools/__pycache__/
+
+# Local Claude Code guidance — per-machine, never published.
+CLAUDE.md
