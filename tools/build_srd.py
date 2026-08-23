@@ -340,7 +340,7 @@ def main():
     unresolved = collections.defaultdict(set)
     counts = collections.Counter(); gear_counts = collections.Counter()
 
-    for key, label, _purse_mul, ti in TIERS:
+    for key, label, purse_mul, ti in TIERS:
         fold_a[key] = fid("actorfolder", label)
         docs_a.append({"_id": fold_a[key], "_key": f"!folders!{fold_a[key]}", "name": label,
                        "type": "Actor", "sorting": "a", "folder": None, "sort": ti * 100000,

@@ -65,8 +65,7 @@ jobs:
           # the packs are reproducible, but ~6 MB that players never load.
           zip -r module.zip . \
             -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" \
-            -x "node_modules/*" -x "package*.json" \
-            -x "eslint.config.mjs" -x "ruff.toml" -x "requirements-dev.txt"
+            -x "node_modules/*" -x "package*.json" -x "eslint.config.mjs"
 
       - name: Require a CHANGELOG section for this version
         run: |

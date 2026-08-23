@@ -23,46 +23,37 @@ Thanks for your interest. Two halves to this repo, with different rules:
 
 Run `npm run lint` and `npm test` before pushing; CI runs both.
 
-There are four linters, one per language, and `npm run lint` runs all four —
-`lint:js`, `lint:py`, `lint:sh` and `lint:actions` run them individually.
-ESLint comes with `npm install`; the rest you need on your PATH:
-
-```
-pip install -r requirements-dev.txt   # ruff
-brew install shellcheck actionlint    # or apt-get install shellcheck, and see
-                                      # rhysd/actionlint for its install script
-```
+Two linters, and `npm run lint` runs both — `lint:js` and `lint:actions` run
+them individually:
 
 | Files | Tool | Config |
 | --- | --- | --- |
 | `scripts/*.mjs`, `tools/*.mjs` | ESLint | `eslint.config.mjs` |
-| `tools/build_srd.py` | Ruff | `ruff.toml` |
-| `tools/*.sh` | ShellCheck | — |
 | `.github/workflows/*.yml` | actionlint | — |
 
-They are configured on the same principle: correctness rules that catch real
-mistakes, not a house style. The generator's compact Python and the runtime's
-formatting are both left alone deliberately, and each config records what it
-does *not* enforce and why — read that before adding a rule or an ignore
-comment.
+ESLint comes with `npm install`. It is configured for correctness rather than
+house style — the formatting is left alone deliberately, and the config records
+what it does *not* enforce and why, which is worth reading before adding a rule
+or an `eslint-disable` comment. It splits the two halves of the repo, since
+`scripts/` runs in Foundry's browser globals and `tools/` runs under plain Node;
+when the runtime starts using a Foundry global the config does not list yet, add
+it to `foundryGlobals` rather than suppressing the error.
 
-actionlint is the one that earns its keep least obviously. These workflows are
-mostly inline `bash`, and `lint:sh` never sees a line of it — it only reads
-`tools/*.sh`. actionlint pipes every `run:` block through ShellCheck on top of
-checking the workflow schema, expressions and context properties, so a typo in
-`${{ github.event_name }}` fails a pull request rather than a push to `main`.
-Its version and checksum are pinned in `ci.yml`; bump the two together.
+actionlint earns its place less obviously. These workflows are mostly inline
+`bash`, and none of it lives in a `.sh` file where a shell linter would find it.
+actionlint checks the workflow schema, expressions and context properties *and*
+pipes every `run:` block through ShellCheck, so a typo'd
+`${{ github.event_name }}` or a broken heredoc fails a pull request instead of a
+tag push — which is the only way you would otherwise find out, since a release
+workflow cannot be run locally. CI uses the published image, which bundles
+ShellCheck; for local runs install actionlint yourself (`brew install
+actionlint`, or the install script in rhysd/actionlint) along with ShellCheck.
+Without ShellCheck on your PATH actionlint drops that rule and still exits 0, so
+the inline bash goes unchecked rather than unreported.
 
-It reaches for the same `shellcheck` binary as `lint:sh`, but the two do not
-overlap: `lint:sh` reads `tools/*.sh` and never the workflows, actionlint reads
-the workflows and never `tools/`. Install ShellCheck before trusting a green
-`lint:actions` — without it actionlint drops that rule and still exits 0, so
-the inline bash goes unchecked rather than unreported. CI asserts it is there.
-
-The ESLint config splits the two halves of the repo, since `scripts/` runs in
-Foundry's browser globals and `tools/` runs under plain Node. When the runtime
-starts using a Foundry global the config does not list yet, add it to
-`foundryGlobals` rather than reaching for an `eslint-disable` comment.
+Neither `tools/build_srd.py` nor `tools/check_icons.sh` is linted. Both are
+maintainer scripts, run by hand and never shipped, and they fail visibly in
+front of the person who just changed them.
 
 > **Close the world before running `npm run pack`.** Foundry holds module packs
 > open while a world is loaded and flushes its own in-memory copy over anything
@@ -132,9 +123,9 @@ Four constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Target `main`. CI must pass: the four linters, unit tests, manifest
-  validation, JSON parse over `_source` and `data`, a full pack compile from
-  source, and the paid-content check.
+- Target `main`. CI must pass: both linters, unit tests, manifest validation,
+  JSON parse over `_source` and `data`, a full pack compile from source, and
+  the paid-content check.
 - One logical change per PR, with a subject line that would read well in release
   notes — commit subjects become release-note bullets.
 - Open an issue first for anything beyond a typo, and put `Closes #N` in the PR
