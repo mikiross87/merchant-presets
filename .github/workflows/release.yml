@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: write
+  # To close the release's milestone once it ships.
+  issues: write
 
 jobs:
   validate:
@@ -65,24 +67,30 @@ jobs:
             -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" \
             -x "node_modules/*" -x "package*.json"
 
+      - name: Require a CHANGELOG section for this version
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no [$VERSION] section — run 'npm run release:prepare -- $VERSION' and release via a PR" >&2
+            exit 1
+          fi
+
       - name: Build release notes
         run: |
           set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
           PREV="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
           {
-            echo "## What's changed"
-            echo ""
-            # Commit subjects since the previous tag, skipping merge commits
-            # and commits that only touch CI/workflow files — players care
-            # about neither. Without --no-merges a release batching several
-            # pull requests lists some of them twice: once as the change and
-            # once as "Merge pull request #N from ...".
-            if [ -n "$PREV" ]; then
-              RANGE="$PREV..${GITHUB_REF_NAME}"
-            else
-              RANGE="${GITHUB_REF_NAME}"
-            fi
-            git log --no-merges --pretty='- %s' "$RANGE" -- . ':!.github'
+            # The body is the CHANGELOG section written alongside the changes,
+            # not a git log: commit subjects are for developers, release notes
+            # are for the GMs installing the module.
+            node -e '
+              import("./tools/changelog.mjs").then(({ changelogSection }) => {
+                const text = require("fs").readFileSync("CHANGELOG.md", "utf8");
+                process.stdout.write(changelogSection(text, process.argv[1]) + "\n");
+              });
+            ' "$VERSION"
             echo ""
             if [ -n "$PREV" ]; then
               echo "**Full changelog:** [\`$PREV...${GITHUB_REF_NAME}\`](https://github.com/${GITHUB_REPOSITORY}/compare/$PREV...${GITHUB_REF_NAME})"
@@ -97,7 +105,7 @@ jobs:
               echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.json"
               echo '```'
             else
-              echo "Paste this manifest URL into Foundry's **Install Module** dialog:"
+              echo "Paste this manifest URL into Foundry's **Install Module** dialog, or update from the Add-on Modules tab:"
               echo ""
               echo '```'
               echo "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/module.json"
@@ -136,3 +144,24 @@ jobs:
             echo "Foundry registry publish failed with HTTP $STATUS" >&2
             exit 1
           fi
+
+      - name: Close the release milestone
+        if: ${{ steps.prerelease.outputs.is_prerelease != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Milestones are named after the tag (v1.2.0). Shipping closes it;
+          # anything still open inside it is reported, not silently carried.
+          NUMBER="$(gh api "repos/${GITHUB_REPOSITORY}/milestones?state=open&per_page=100" \
+            --jq ".[] | select(.title == \"${GITHUB_REF_NAME}\") | .number")"
+          if [ -z "$NUMBER" ]; then
+            echo "no open milestone named ${GITHUB_REF_NAME} — nothing to close"
+            exit 0
+          fi
+          OPEN="$(gh api "repos/${GITHUB_REPOSITORY}/milestones/$NUMBER" --jq .open_issues)"
+          if [ "$OPEN" != "0" ]; then
+            echo "::warning::milestone ${GITHUB_REF_NAME} still has $OPEN open issue(s); move them to the next milestone"
+          fi
+          gh api -X PATCH "repos/${GITHUB_REPOSITORY}/milestones/$NUMBER" -f state=closed > /dev/null
+          echo "closed milestone ${GITHUB_REF_NAME} (#$NUMBER)"

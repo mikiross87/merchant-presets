@@ -80,6 +80,16 @@ jobs:
 
           echo "module.json OK (id=$id version=$version)"
 
+      - name: CHANGELOG keeps an Unreleased section
+        run: |
+          set -euo pipefail
+          grep -q '^## \[Unreleased\]' CHANGELOG.md || { echo "CHANGELOG.md lost its [Unreleased] section" >&2; exit 1; }
+          # The last release must be documented: the tag workflow refuses to
+          # publish without its section, so catch a missing one here first.
+          version="$(jq -r .version module.json)"
+          grep -q "^## \[$version\]" CHANGELOG.md || { echo "CHANGELOG.md has no [$version] section for module.json's version" >&2; exit 1; }
+          echo "CHANGELOG OK"
+
       - name: Compendium sources are valid JSON
         run: |
           set -euo pipefail
