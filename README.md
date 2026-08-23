@@ -264,8 +264,10 @@ Every price, weight and description is the SRD's, with no exceptions.
 
 ## Contributing
 
-Building the packs, changing what the shops stock, and cutting releases are all
-covered in [CONTRIBUTING.md](CONTRIBUTING.md).
+Found a problem or want a shop that isn't here? [Open an issue](https://github.com/mikiross87/merchant-presets/issues/new/choose).
+Building the packs and changing what the shops stock are covered in
+[CONTRIBUTING.md](CONTRIBUTING.md); what changed in each version is in
+[CHANGELOG.md](CHANGELOG.md), and the release process in [RELEASING.md](RELEASING.md).
 
 ## Legal
 
