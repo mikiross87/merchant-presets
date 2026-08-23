@@ -9,8 +9,8 @@ Thanks for your interest. Two halves to this repo, with different rules:
 
 ## Local development
 
-1. Clone the repo, then `npm install` (this only fetches the Foundry CLI, used
-   to compile the packs).
+1. Clone the repo, then `npm install` (this fetches the Foundry CLI, used to
+   compile the packs, and ESLint).
 2. Build the packs — nothing works without them, since they are not in git:
    ```
    npm run pack
@@ -20,6 +20,13 @@ Thanks for your interest. Two halves to this repo, with different rules:
    at `<userdata>/Data/modules/merchant-presets`.
 4. Enable the module in a `dnd5e` world alongside Item Piles and its dnd5e
    extension, and reload the browser after each change (`hotReload` is off).
+
+Run `npm run lint` and `npm test` before pushing; CI runs both. The lint config
+(`eslint.config.mjs`) is deliberately narrow — correctness rules, not a house
+style — and splits the two halves of the repo, since `scripts/` runs in
+Foundry's browser globals and `tools/` runs under plain Node. When the runtime
+starts using a Foundry global the config does not list yet, add it to
+`foundryGlobals` rather than reaching for an `eslint-disable` comment.
 
 > **Close the world before running `npm run pack`.** Foundry holds module packs
 > open while a world is loaded and flushes its own in-memory copy over anything
@@ -89,8 +96,8 @@ Four constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Target `main`. CI must pass: ES module syntax check, manifest validation,
-  JSON parse over `_source` and `data`, a full pack compile from source, and the
+- Target `main`. CI must pass: ESLint, unit tests, manifest validation, JSON
+  parse over `_source` and `data`, a full pack compile from source, and the
   paid-content check.
 - One logical change per PR, with a subject line that would read well in release
   notes — commit subjects become release-note bullets.

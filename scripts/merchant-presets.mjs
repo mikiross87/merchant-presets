@@ -707,7 +707,7 @@ const ANIMAL_FOLDER = "Purchased Animals";
  * Selling the deed back is money only — the animal stays for the GM to deal
  * with, since deleting actors unasked is not this module's business.
  */
-async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, userId) {
+async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, _userId) {
   if (game.users.activeGM !== game.user) return;
   if (!game.settings.get(MODULE, "animalsSpawn")) return;
   const bought = (itemPrices?.buyerReceive ?? []).filter(e =>
