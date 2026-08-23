@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-23
+
 ### Added
 
 - Buying an animal puts a copy of its SRD stat block in the world, ready to
@@ -59,6 +61,7 @@ than for the code. Reference the issue or PR it closes.
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/mikiross87/merchant-presets/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/mikiross87/merchant-presets/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/mikiross87/merchant-presets/releases/tag/v1.0.0
