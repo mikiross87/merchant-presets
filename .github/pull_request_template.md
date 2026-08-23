@@ -1,5 +1,6 @@
 # What does this PR change?
 
+Closes #
 
 
 ## Checklist
@@ -10,4 +11,5 @@
       and the world was closed while building
 - [ ] Nothing references the paid Player's Handbook or Dungeon Master's Guide
       modules — everything resolves against SRD 5.2
-- [ ] No version bump in `module.json` (releases are cut by the maintainer)
+- [ ] A line under `[Unreleased]` in `CHANGELOG.md`, written for GMs
+- [ ] No version bump in `module.json` (that happens in the release PR)
