@@ -23,19 +23,23 @@ jobs:
         with:
           node-version: 22
 
-      - name: Syntax-check ES modules
-        run: |
-          set -euo pipefail
-          status=0
-          while IFS= read -r -d '' f; do
-            if node --check "$f"; then
-              echo "OK   $f"
-            else
-              echo "FAIL $f" >&2
-              status=1
-            fi
-          done < <(find scripts -name '*.mjs' -print0)
-          exit "$status"
+      - name: Install dependencies
+        run: npm ci
+
+      # Replaces a hand-rolled `node --check` sweep: ESLint parses the same
+      # files, and covers tools/ as well as scripts/.
+      - name: Lint JavaScript
+        run: npm run lint:js
+
+      # Checks the workflow schema, expressions and context properties, and
+      # pipes every `run:` block through shellcheck — the only check the inline
+      # bash in these workflows gets, since it lives in YAML rather than in a
+      # .sh file. The published image bundles shellcheck, so there is nothing
+      # to install and no second version to keep in step.
+      - name: Lint workflows
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: -color
 
       - name: Unit tests
         run: npm test
@@ -103,7 +107,6 @@ jobs:
       - name: Packs build from source
         run: |
           set -euo pipefail
-          npm install --no-audit --no-fund
           npm run pack
           for p in merchants stock goods; do
             [ -d "packs/$p" ] || { echo "packs/$p was not built" >&2; exit 1; }

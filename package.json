@@ -3,6 +3,9 @@
   "private": true,
   "description": "Build tooling for the Merchant Presets Foundry VTT module",
   "scripts": {
+    "lint": "npm run lint:js && npm run lint:actions",
+    "lint:js": "eslint .",
+    "lint:actions": "actionlint -color",
     "test": "node --test 'tools/*.test.mjs'",
     "pack": "npm run pack:merchants && npm run pack:stock && npm run pack:goods",
     "pack:merchants": "fvtt package pack -n merchants --id merchant-presets --type Module --in _source/merchants --out packs",
@@ -11,6 +14,9 @@
     "release:prepare": "node tools/prepare-release.mjs"
   },
   "devDependencies": {
-    "@foundryvtt/foundryvtt-cli": "^3.0.3"
+    "@eslint/js": "^10.0.1",
+    "@foundryvtt/foundryvtt-cli": "^3.0.3",
+    "eslint": "^10.9.0",
+    "globals": "^17.11.0"
   }
 }
