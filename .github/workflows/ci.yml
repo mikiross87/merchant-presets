@@ -60,6 +60,10 @@ jobs:
           mkdir -p "$RUNNER_TEMP/bin"
           tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP/bin" actionlint
           export PATH="$RUNNER_TEMP/bin:$PATH"
+          # actionlint resolves `shellcheck` off PATH and, if it is missing,
+          # silently drops the rule and still exits 0 — losing every check on
+          # the inline bash without failing. Assert it rather than trust it.
+          shellcheck --version > /dev/null
           npm run lint:actions
 
       - name: Unit tests

@@ -53,6 +53,12 @@ checking the workflow schema, expressions and context properties, so a typo in
 `${{ github.event_name }}` fails a pull request rather than a push to `main`.
 Its version and checksum are pinned in `ci.yml`; bump the two together.
 
+It reaches for the same `shellcheck` binary as `lint:sh`, but the two do not
+overlap: `lint:sh` reads `tools/*.sh` and never the workflows, actionlint reads
+the workflows and never `tools/`. Install ShellCheck before trusting a green
+`lint:actions` — without it actionlint drops that rule and still exits 0, so
+the inline bash goes unchecked rather than unreported. CI asserts it is there.
+
 The ESLint config splits the two halves of the repo, since `scripts/` runs in
 Foundry's browser globals and `tools/` runs under plain Node. When the runtime
 starts using a Foundry global the config does not list yet, add it to
