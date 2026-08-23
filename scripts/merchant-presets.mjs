@@ -18,7 +18,7 @@
  *    settlement size, so two copies of the same shop differ.
  */
 
-import { applyMeal } from "./nutrition.mjs";
+import { applyMeal, nutritionOfItem, usageConsumes } from "./nutrition.mjs";
 
 const MODULE = "merchant-presets";
 const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
@@ -686,6 +686,67 @@ function registerMeals() {
   });
 }
 
+/* ------------------------------------------------------- eating by activity */
+
+/**
+ * Count a good eaten or drunk through its own Consume activity.
+ *
+ * Simple Nutrition 5e only records nutrition from its own dialog; it watches
+ * no item-use hook, so using the activity on a bottle of wine from the sheet
+ * empties the bottle and feeds nobody (#19). This listens to
+ * `dnd5e.postUseActivity`, which fires only on the using client — the one
+ * that owns the character — and records what Simple Nutrition would have for
+ * the same item, by its own rules. Scoped to this module's goods: every other
+ * item is Simple Nutrition's business (Kapuzenjoe/simple-nutrition-5e#4).
+ *
+ * dnd5e has already consumed the use and reduced the quantity by the time
+ * this fires; a use with consumption unticked is not a meal.
+ */
+async function countActivityMeal(activity, usageConfig) {
+  const item = activity?.item;
+  const actor = item?.actor;
+  if (!actor || actor.type !== "character") return;
+  if (!item.getFlag(MODULE, "kind")) return;                // our goods only
+  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!game.settings.get(MODULE, "activityFeeds")) return;
+  if (!usageConsumes(usageConfig)) return;
+
+  const base = `modules/${NUTRITION_MODULE}/scripts`;
+  const [cfg, sn] = await Promise.all([
+    import(foundry.utils.getRoute(`${base}/config.mjs`)),
+    import(foundry.utils.getRoute(`${base}/nutrition/actor.mjs`))
+  ]);
+  const nutrition = nutritionOfItem({
+    type: item.type,
+    consumableType: item.system.type?.value,
+    identifier: item.system.identifier,
+    weightLb: game.dnd5e.utils.convertWeight(item.system.weight?.value ?? 0, item.system.weight?.units ?? "lb", "lb")
+  }, cfg.WATER_IDENTIFIERS, cfg.WATER_ITEM_AMOUNT);
+  if (!nutrition) return;
+
+  const needs = sn.getNutritionNeeds(actor);
+  const has = {
+    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
+    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
+  };
+  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, 1, has);
+  await sn.setNutritionState(actor, result.state);
+  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
+  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
+
+  const what = nutrition.water
+    ? `Drink ${sn.formatNutritionAmount("water", nutrition.water)}`
+    : `Food ${sn.formatNutritionAmount("food", nutrition.food)}`;
+  ui.notifications.info(`${actor.name}: ${item.name} — ${what}`);
+  log(`${actor.name} consumed ${item.name} by activity: food ${result.state.food}, water ${result.state.water}`);
+}
+
+function registerActivityMeals() {
+  Hooks.on("dnd5e.postUseActivity", (activity, usageConfig) => {
+    countActivityMeal(activity, usageConfig).catch(err => console.error(`${MODULE} |`, err));
+  });
+}
+
 /* ------------------------------------------------------------------ animals */
 
 const ANIMAL_FOLDER = "Purchased Animals";
@@ -894,6 +955,17 @@ Hooks.once("init", () => {
     default: true
   });
 
+  game.settings.register(MODULE, "activityFeeds", {
+    name: "Eating from the sheet counts",
+    hint: "With Simple Nutrition 5e installed, using the Consume activity on ale, wine, bread or cheese "
+      + "from a character sheet records the food or water, as if it had been consumed through Simple "
+      + "Nutrition's own dialog. Off: only that dialog counts.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
   game.settings.register(MODULE, "animalsSpawn", {
     name: "Bought animals are added to the world",
     hint: "The SRD has no animal items — a riding horse is a stat block — so the goods a stable "
@@ -918,6 +990,7 @@ Hooks.once("ready", () => {
   registerDrinks();
   // The buyer's own client answers the meal prompt, so this is for players too.
   registerMeals();
+  registerActivityMeals();
 
   if (!game.user.isGM) return;
   if (!game.modules.get("item-piles")?.active) {

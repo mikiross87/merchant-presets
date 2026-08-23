@@ -43,3 +43,36 @@ test("untouched state fields survive", () => {
   const r = applyMeal({ food: 0, water: 0, starvation: 3 }, needs, modest, 1, {});
   assert.equal(r.state.starvation, 3);
 });
+
+import { nutritionOfItem, usageConsumes } from "../scripts/nutrition.mjs";
+
+const water = new Set(["water-pint", "ale", "wine-common"]);
+const ale = { type: "consumable", consumableType: "food", identifier: "ale", weightLb: 0.5 };
+const bread = { type: "consumable", consumableType: "food", identifier: "bread", weightLb: 1 };
+
+test("a registered drink is water, worth one pint, never food", () => {
+  assert.deepEqual(nutritionOfItem(ale, water, 0.125), { food: 0, water: 0.125 });
+});
+
+test("other food consumables are food by weight", () => {
+  assert.deepEqual(nutritionOfItem(bread, water, 0.125), { food: 1, water: 0 });
+});
+
+test("things Simple Nutrition would not list are not nutrition", () => {
+  assert.equal(nutritionOfItem({ ...bread, type: "loot" }, water, 0.125), null);
+  assert.equal(nutritionOfItem({ ...bread, consumableType: "potion" }, water, 0.125), null);
+  assert.equal(nutritionOfItem({ ...bread, weightLb: 0 }, water, 0.125), null);
+  assert.equal(nutritionOfItem({ ...bread, identifier: "waterskin" }, water, 0.125), null);
+  // loose water needs a waterskin around it; that is Simple Nutrition's call, not ours
+  assert.equal(nutritionOfItem({ ...ale, identifier: "water-pint" }, water, 0.125), null);
+});
+
+test("a use only counts when it actually consumed the item", () => {
+  assert.equal(usageConsumes({}), true);
+  assert.equal(usageConsumes({ consume: true }), true);
+  assert.equal(usageConsumes({ consume: { resources: true } }), true);
+  assert.equal(usageConsumes({ consume: { resources: [0] } }), true);
+  assert.equal(usageConsumes({ consume: false }), false);
+  assert.equal(usageConsumes({ consume: { resources: false } }), false);
+  assert.equal(usageConsumes({ consume: { resources: [] } }), false);
+});

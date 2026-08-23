@@ -34,3 +34,45 @@ export function applyMeal(state, needs, nutrition, quantity, has) {
     clearDehydration
   };
 }
+
+/**
+ * What one unit of an item is worth when eaten or drunk, by Simple Nutrition's
+ * own rules (scripts/nutrition/hooks.mjs, getFoodCandidates/getWaterCandidates):
+ * only consumables; a registered water identifier is a pint of water and never
+ * food; any other consumable of type "food" is food by its weight in pounds.
+ * Loose "water-pint" only counts inside a waterskin, which needs the live
+ * document to judge, so it is left to Simple Nutrition's own dialog.
+ *
+ * @param {object} item  { type, consumableType, identifier, weightLb }
+ * @param {Set<string>} waterIdentifiers  Simple Nutrition's WATER_IDENTIFIERS.
+ * @param {number} waterAmount  Simple Nutrition's WATER_ITEM_AMOUNT (gallons).
+ * @returns {{ food: number, water: number } | null}  null when it is not nutrition.
+ */
+export function nutritionOfItem(item, waterIdentifiers, waterAmount) {
+  if (item.type !== "consumable") return null;
+  if (waterIdentifiers.has(item.identifier)) {
+    if (item.identifier === "water-pint") return null;
+    return { food: 0, water: waterAmount };
+  }
+  if (item.consumableType !== "food") return null;
+  if (item.identifier === "waterskin") return null;
+  if (!(item.weightLb > 0)) return null;
+  return { food: item.weightLb, water: 0 };
+}
+
+/**
+ * Did an activity use actually consume its item? dnd5e lets the user untick
+ * consumption in the usage dialog, which lands in usageConfig.consume as
+ * false, { resources: false } or an empty resources list.
+ *
+ * @param {object} usageConfig  dnd5e's ActivityUseConfiguration.
+ * @returns {boolean}
+ */
+export function usageConsumes(usageConfig) {
+  const consume = usageConfig?.consume;
+  if (consume === false) return false;
+  const resources = consume?.resources;
+  if (resources === false) return false;
+  if (Array.isArray(resources) && resources.length === 0) return false;
+  return true;
+}
