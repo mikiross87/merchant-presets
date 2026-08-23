@@ -3,10 +3,11 @@
   "private": true,
   "description": "Build tooling for the Merchant Presets Foundry VTT module",
   "scripts": {
-    "lint": "npm run lint:js && npm run lint:py && npm run lint:sh",
+    "lint": "npm run lint:js && npm run lint:py && npm run lint:sh && npm run lint:actions",
     "lint:js": "eslint .",
     "lint:py": "ruff check .",
     "lint:sh": "shellcheck tools/*.sh",
+    "lint:actions": "actionlint -color",
     "test": "node --test 'tools/*.test.mjs'",
     "pack": "npm run pack:merchants && npm run pack:stock && npm run pack:goods",
     "pack:merchants": "fvtt package pack -n merchants --id merchant-presets --type Module --in _source/merchants --out packs",
