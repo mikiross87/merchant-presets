@@ -94,9 +94,14 @@ Four constraints worth knowing before changing the generator:
   paid-content check.
 - One logical change per PR, with a subject line that would read well in release
   notes — commit subjects become release-note bullets.
-- Don't bump `version` in `module.json`. Between releases it carries the *next*
-  version with a `-dev` suffix (e.g. `1.1.0-dev`); the maintainer sets the real
-  version when tagging.
+- Open an issue first for anything beyond a typo, and put `Closes #N` in the PR
+  body so merging closes it. Issues go through the forms; there are no blank
+  issues.
+- Add a line under `[Unreleased]` in `CHANGELOG.md` — _Added_, _Changed_,
+  _Fixed_ or _Removed_ — written for the GM reading the release page. That
+  section becomes the release notes verbatim.
+- Don't bump `version` in `module.json`. `main` carries the version of the last
+  release; the bump happens in a release PR (see [RELEASING.md](RELEASING.md)).
 
 ## Releases (maintainer)
 
