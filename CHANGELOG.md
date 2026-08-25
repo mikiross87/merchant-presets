@@ -11,6 +11,13 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- Using the Consume activity on ale, wine, bread or cheese from the character
+  sheet now counts towards Simple Nutrition 5e, the same as consuming it through
+  Simple Nutrition's own dialog. New world setting *Eating from the sheet
+  counts*, on by default (#19)
+
 ## [1.2.0] - 2026-08-23
 
 ### Added
