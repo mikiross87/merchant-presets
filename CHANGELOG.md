@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-08-25
+
 ### Fixed
 
 - Shopkeepers who can cast — the Temple, and the town and city Alchemist,
@@ -79,7 +81,8 @@ than for the code. Reference the issue or PR it closes.
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/mikiross87/merchant-presets/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/mikiross87/merchant-presets/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/mikiross87/merchant-presets/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/mikiross87/merchant-presets/compare/v1.0.0...v1.1.0
