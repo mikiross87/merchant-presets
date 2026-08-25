@@ -68,7 +68,7 @@ Staged v${version} on ${release} (${module_.version} -> ${version}).
 Review the [${version}] section of CHANGELOG.md, then:
 
   git push -u origin ${release}
-  gh pr create --fill --milestone v${version}
+  gh pr create --fill
 
 After the PR merges, tag main (never the release branch) — see RELEASING.md:
 
