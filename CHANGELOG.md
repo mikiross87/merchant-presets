@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-08-25
+
 ### Fixed
 
 - Using the Consume activity on ale, wine, bread or cheese from the character
@@ -68,7 +70,8 @@ than for the code. Reference the issue or PR it closes.
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/mikiross87/merchant-presets/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/mikiross87/merchant-presets/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/mikiross87/merchant-presets/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/mikiross87/merchant-presets/releases/tag/v1.0.0
