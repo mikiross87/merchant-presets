@@ -11,6 +11,15 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- Shopkeepers who can cast — the Temple, and the town and city Alchemist,
+  Druidic, Arcane and Tinkering stores — now show their spells on the Spells
+  tab. Their spells were copied with a link to the wrong feature, so the sheet
+  hid them and casting through Divine Aid or Spellcasting left a stray copy on
+  the merchant. Merchants already in a world keep the old links; drag a fresh
+  one from the compendium. (#36)
+
 ## [1.2.1] - 2026-08-25
 
 ### Fixed

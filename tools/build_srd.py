@@ -245,6 +245,22 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
         eff["origin"] = None
     return it, is_container
 
+# A stat block's spells are dnd5e "cached spells": each carries
+# `flags.dnd5e.cachedFor`, a uuid relative to the actor that names the feature
+# whose Cast activity granted it — `.Item.<feature id>.Activity.<activity id>`.
+# dnd5e resolves it with `actor.items.get(<feature id>)`, so once make_gear
+# re-ids the feature the link dangles: the sheet drops the spell from the
+# spellbook, and casting clones a fresh, untagged copy onto the merchant.
+# `fid` is a pure hash, so the new feature id is known before it is made.
+CACHED_FOR = re.compile(r"\.Item\.([^.]+)\.Activity\.([^.]+)")
+
+def relink_cached_for(flag, actor_id):
+    """Point a copied spell's `cachedFor` at the copied feature."""
+    m = CACHED_FOR.fullmatch(flag or "")
+    if not m:
+        return flag
+    return f".Item.{fid(actor_id, 'gear', m[1])}.Activity.{m[2]}"
+
 def make_gear(src, actor_id, srd, feats):
     """Copy one item off a stat block onto a merchant.
 
@@ -295,6 +311,9 @@ def make_gear(src, actor_id, srd, feats):
 
     flags = it.setdefault("flags", {})
     flags.setdefault("merchant-presets", {})["kind"] = "gear"
+    cached = (flags.get("dnd5e") or {}).get("cachedFor")
+    if cached:
+        flags["dnd5e"]["cachedFor"] = relink_cached_for(cached, actor_id)
 
     it["_id"] = iid
     it["_key"] = f"!actors.items!{actor_id}.{iid}"
