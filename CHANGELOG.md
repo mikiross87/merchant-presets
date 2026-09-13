@@ -11,6 +11,11 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Changed
+
+- Verified on dnd5e 6.0.1. dnd5e 5.0.0 or later is still enough; nothing here
+  needs 6.0. (#45)
+
 ## [1.2.2] - 2026-08-25
 
 ### Fixed

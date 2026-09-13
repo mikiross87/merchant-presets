@@ -27,7 +27,7 @@ body:
     id: system-version
     attributes:
       label: dnd5e system version
-      placeholder: "e.g. 5.3.3"
+      placeholder: "e.g. 6.0.1"
     validations:
       required: true
   - type: input
