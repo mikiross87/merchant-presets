@@ -43,6 +43,8 @@ const TIER_INDEX = { Village: 0, Town: 1, City: 2 };
 const COIN_IN_GP = { pp: 10, gp: 1, ep: 0.5, sp: 0.1, cp: 0.01 };
 
 const NUTRITION_MODULE = "simple-nutrition-5e";
+/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
+const NUTRITION_MINIMUM = "1.0.0";
 /** Identifiers on our drinks that should slake thirst rather than hunger. */
 const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
@@ -602,6 +604,31 @@ async function registerDrinks() {
   }
 }
 
+/**
+ * Can we feed characters through the active Simple Nutrition?
+ *
+ * Meals and sheet consumption write straight into its daily tally, and the
+ * unit of that tally changed in 1.0: before it, the same flag held pounds and
+ * gallons. Writing fractions of a day into 0.5 would credit every creature
+ * that is not Medium wrongly, and still pass the export checks below, so an
+ * older version gets no meals rather than wrong ones. Drinks are unaffected —
+ * WATER_IDENTIFIERS means the same in both.
+ */
+function nutritionFeeds() {
+  const sn = game.modules.get(NUTRITION_MODULE);
+  return !!sn?.active && !foundry.utils.isNewerVersion(NUTRITION_MINIMUM, sn.version);
+}
+
+/** Tell the GM once, at load, when a Simple Nutrition too old to feed is why meals do nothing. */
+function warnOutdatedNutrition() {
+  const sn = game.modules.get(NUTRITION_MODULE);
+  if (!sn?.active || nutritionFeeds()) return;
+  if (!game.settings.get(MODULE, "mealsFeed") && !game.settings.get(MODULE, "activityFeeds")) return;
+  ui.notifications.warn(`Merchant Presets feeds characters through Simple Nutrition 5e ${NUTRITION_MINIMUM} `
+    + `or later, but ${sn.version} is installed. Update it; until then meals and food eaten from the sheet `
+    + "are not recorded.", { permanent: true });
+}
+
 /* -------------------------------------------------------------------- meals */
 
 /**
@@ -623,7 +650,7 @@ async function registerDrinks() {
  */
 async function offerMeals(_sellerUuid, buyerUuid, itemPrices, userId) {
   if (userId !== game.user.id) return;
-  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "mealsFeed")) return;
   const buyer = await fromUuid(buyerUuid);
   if (buyer?.type !== "character") return;
@@ -677,7 +704,7 @@ async function eatMeal(actor, item, quantity) {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<p><strong>${actor.name}</strong> eats: ${label}.</p><p>${parts.join(" · ")}</p>`
   });
-  log(`${actor.name} ate ${label}: food ${result.state.food}, water ${result.state.water}`);
+  log(`${actor.name} ate ${label}: today's tally food ${result.state.food}, water ${result.state.water} (days)`);
 }
 
 function registerMeals() {
@@ -707,7 +734,7 @@ async function countActivityMeal(activity, usageConfig) {
   const actor = item?.actor;
   if (!actor || actor.type !== "character") return;
   if (!item.getFlag(MODULE, "kind")) return;                // our goods only
-  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "activityFeeds")) return;
   if (!usageConsumes(usageConfig)) return;
 
@@ -738,7 +765,8 @@ async function countActivityMeal(activity, usageConfig) {
     ? `Drink ${sn.formatNutritionAmount("water", nutrition.water)}`
     : `Food ${sn.formatNutritionAmount("food", nutrition.food)}`;
   ui.notifications.info(`${actor.name}: ${item.name} — ${what}`);
-  log(`${actor.name} consumed ${item.name} by activity: food ${result.state.food}, water ${result.state.water}`);
+  log(`${actor.name} consumed ${item.name} by activity: today's tally food ${result.state.food}, `
+    + `water ${result.state.water} (days)`);
 }
 
 function registerActivityMeals() {
@@ -944,7 +972,7 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "mealsFeed", {
     name: "Meals feed the buyer",
-    hint: "With Simple Nutrition 5e installed, buying a meal at an inn asks the buyer whether to "
+    hint: "With Simple Nutrition 5e 1.0 or later installed, buying a meal at an inn asks the buyer whether to "
       + "eat it there and then, and credits today's food and drink by the meal's quality — a "
       + "squalid meal is a quarter of a Medium creature's day with nothing to drink, a modest one "
       + "a full day's food and a pint, an aristocratic one a feast. Meals are services, so no item "
@@ -957,7 +985,7 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "activityFeeds", {
     name: "Eating from the sheet counts",
-    hint: "With Simple Nutrition 5e installed, using the Consume activity on ale, wine, bread or cheese "
+    hint: "With Simple Nutrition 5e 1.0 or later installed, using the Consume activity on ale, wine, bread or cheese "
       + "from a character sheet records the food or water, as if it had been consumed through Simple "
       + "Nutrition's own dialog. Off: only that dialog counts.",
     scope: "world",
@@ -993,6 +1021,7 @@ Hooks.once("ready", () => {
   registerActivityMeals();
 
   if (!game.user.isGM) return;
+  warnOutdatedNutrition();
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
     return;
