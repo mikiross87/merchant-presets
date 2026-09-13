@@ -58,6 +58,33 @@ function tally(current, amount, quantity, need) {
   return Math.abs(sum - tidy) < 1e-9 ? tidy : sum;
 }
 
+/** The tail of each actor's queue of nutrition credits, by key. */
+const queues = new Map();
+
+/**
+ * Run `task` once every task queued before it under the same key has settled.
+ *
+ * Crediting a meal reads Simple Nutrition's tally and then awaits the flag
+ * write, which Foundry applies to the local actor only once the server
+ * answers. Two credits for one actor that overlap both read the tally without
+ * the other, and the later write erases the earlier credit (#44). Queued, each
+ * read waits for the write before it. A task that fails still lets the next
+ * one run. This orders credits made on this client only: Simple Nutrition's
+ * own dialog, or another user's client, can still interleave.
+ *
+ * @template T
+ * @param {string} key           What to serialise on: the actor's uuid.
+ * @param {() => Promise<T>} task
+ * @returns {Promise<T>}         The task's own result or rejection.
+ */
+export function oneAtATime(key, task) {
+  const run = (queues.get(key) ?? Promise.resolve()).then(task);
+  const tail = run.catch(() => {});
+  queues.set(key, tail);
+  tail.then(() => { if (queues.get(key) === tail) queues.delete(key); });
+  return run;
+}
+
 /**
  * What one unit of an item is worth when eaten or drunk, by Simple Nutrition's
  * own rules (scripts/nutrition/consumption.mjs, getFoodCandidates/getWaterCandidates):

@@ -133,3 +133,37 @@ test("a use only counts when it actually consumed the item", () => {
   assert.equal(usageConsumes({ consume: { resources: false } }), false);
   assert.equal(usageConsumes({ consume: { resources: [] } }), false);
 });
+
+import { oneAtATime } from "../scripts/nutrition.mjs";
+
+// Foundry applies a flag update locally only once the server answers, so a
+// second read that starts before then sees the tally without the first credit.
+function slowActor() {
+  const actor = { flag: { food: 0, water: 0 } };
+  actor.write = state => new Promise(resolve => setTimeout(() => { actor.flag = state; resolve(); }, 10));
+  return actor;
+}
+
+test("credits for one actor started together all land (#44)", async () => {
+  const actor = slowActor();
+  const credit = () => oneAtATime("Actor.tess", async () => {
+    await actor.write(applyMeal(actor.flag, needs, squalid, 1, {}).state);
+  });
+  await Promise.all([credit(), credit(), credit(), credit()]);
+  assert.equal(actor.flag.food, 1);
+});
+
+test("a credit that fails does not hold up the ones queued behind it", async () => {
+  const failed = oneAtATime("Actor.tess", async () => { throw new Error("server went away"); });
+  const next = oneAtATime("Actor.tess", async () => "fed");
+  await assert.rejects(failed, /server went away/);
+  assert.equal(await next, "fed");
+});
+
+test("different actors do not wait for each other", async () => {
+  const order = [];
+  const slow = oneAtATime("Actor.a", () => new Promise(resolve => setTimeout(() => { order.push("a"); resolve(); }, 20)));
+  const quick = oneAtATime("Actor.b", async () => { order.push("b"); });
+  await Promise.all([slow, quick]);
+  assert.deepEqual(order, ["b", "a"]);
+});

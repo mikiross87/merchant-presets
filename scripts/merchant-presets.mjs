@@ -18,7 +18,7 @@
  *    settlement size, so two copies of the same shop differ.
  */
 
-import { applyMeal, nutritionOfItem, usageConsumes } from "./nutrition.mjs";
+import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 
 const MODULE = "merchant-presets";
 const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
@@ -691,20 +691,33 @@ async function eatMeal(actor, item, quantity) {
   });
   if (!eat) return;
 
-  const has = {
-    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
-    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
-  };
-  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, quantity, has);
-  await sn.setNutritionState(actor, result.state);
-  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
-  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
-
+  const result = await creditMeal(actor, cfg, sn, nutrition, quantity);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<p><strong>${actor.name}</strong> eats: ${label}.</p><p>${parts.join(" · ")}</p>`
   });
   log(`${actor.name} ate ${label}: today's tally food ${result.state.food}, water ${result.state.water} (days)`);
+}
+
+/**
+ * Add what was eaten to the actor's day in Simple Nutrition, clearing any
+ * condition it now satisfies. Queued per actor (see oneAtATime): the tally is
+ * read only once an earlier credit's write has landed, so two quick uses
+ * cannot erase each other (#44). The condition check sits inside the queue
+ * too, so a credit that clears Malnourished is seen by the next.
+ */
+function creditMeal(actor, cfg, sn, nutrition, quantity) {
+  return oneAtATime(actor.uuid, async () => {
+    const has = {
+      malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
+      dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
+    };
+    const result = applyMeal(sn.getNutritionState(actor), sn.getNutritionNeeds(actor), nutrition, quantity, has);
+    await sn.setNutritionState(actor, result.state);
+    if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
+    if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
+    return result;
+  });
 }
 
 function registerMeals() {
@@ -751,16 +764,7 @@ async function countActivityMeal(activity, usageConfig) {
   }, cfg.WATER_IDENTIFIERS, cfg.WATER_ITEM_AMOUNT);
   if (!nutrition) return;
 
-  const needs = sn.getNutritionNeeds(actor);
-  const has = {
-    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
-    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
-  };
-  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, 1, has);
-  await sn.setNutritionState(actor, result.state);
-  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
-  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
-
+  const result = await creditMeal(actor, cfg, sn, nutrition, 1);
   const what = nutrition.water
     ? `Drink ${sn.formatNutritionAmount("water", nutrition.water)}`
     : `Food ${sn.formatNutritionAmount("food", nutrition.food)}`;
