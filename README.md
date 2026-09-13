@@ -136,12 +136,12 @@ squalid meal is a quarter of a Medium creature's day with nothing to drink, a
 modest one a full day's food and a pint, a wealthy one two days' food and half a
 gallon, an aristocratic one a feast — four days' food and a gallon — enough to
 feed a Large character in one sitting. Simple Nutrition resets the tally when
-a new day begins — at midnight when dnd5e's calendar handles daily recovery,
-otherwise at a long rest that starts a new day — so surplus is flavour rather
-than stockpiling. Crediting meals, and ale, wine, bread or cheese consumed from
-the sheet, needs Simple Nutrition 1.0 or later, which counts the tally as a
-share of the day; with an older version nothing is recorded and the GM is
-warned at load.
+a new day begins — at midnight when dnd5e's calendar handles daily recovery
+(dnd5e 6.0 or later), otherwise at a long rest that starts a new day — so
+surplus is flavour rather than stockpiling. Crediting meals, and ale, wine,
+bread or cheese consumed from the sheet, needs Simple Nutrition 1.0 or later,
+which counts the tally as a share of the day; with an older version nothing is
+recorded and the GM is warned at load.
 
 ## How stock behaves
 
