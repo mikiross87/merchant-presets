@@ -19,6 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
 const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
@@ -646,20 +647,20 @@ function warnOutdatedNutrition() {
  *
  * Item Piles fires `item-piles-tradeItems` on every client; only the buying
  * user's client acts, so one purchase gets one prompt. Players own their own
- * characters, so the flag write and the condition toggle need no GM.
+ * characters, so the flag write and the condition toggle need no GM. That
+ * client gets the buyer as an actor and the meal as plain data, not the UUID
+ * and Item document the hook is documented with (scripts/trade.mjs, #48).
  */
-async function offerMeals(_sellerUuid, buyerUuid, itemPrices, userId) {
+async function offerMeals(_seller, buyerRef, itemPrices, userId) {
   if (userId !== game.user.id) return;
   if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "mealsFeed")) return;
-  const buyer = await fromUuid(buyerUuid);
+  const buyer = await fromUuid(uuidOf(buyerRef));
   if (buyer?.type !== "character") return;
 
-  const meals = (itemPrices?.buyerReceive ?? []).filter(e =>
-    e.quantity > 0 && e.item?.getFlag?.(MODULE, "nutrition"));
-  for (const entry of meals) {
+  for (const entry of boughtWith(itemPrices, "nutrition")) {
     await eatMeal(buyer, entry.item, entry.quantity)
-      .catch(err => console.error(`${MODULE} | could not apply ${entry.item.name}`, err));
+      .catch(err => console.error(`${MODULE} | could not apply ${entry.item?.name}`, err));
   }
 }
 
@@ -673,7 +674,7 @@ async function eatMeal(actor, item, quantity) {
     if (typeof sn[fn] !== "function") throw new Error(`Simple Nutrition no longer exports ${fn}`);
   }
 
-  const nutrition = item.getFlag(MODULE, "nutrition");
+  const nutrition = goodFlag(item, "nutrition");
   const needs = sn.getNutritionNeeds(actor);
   const food = nutrition.food * quantity;
   const water = nutrition.water * quantity;
@@ -800,15 +801,15 @@ const ANIMAL_FOLDER = "Purchased Animals";
  * Selling the deed back is money only — the animal stays for the GM to deal
  * with, since deleting actors unasked is not this module's business.
  */
-async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, _userId) {
+async function deliverAnimals(sellerRef, buyerRef, itemPrices, _userId) {
   if (game.users.activeGM !== game.user) return;
   if (!game.settings.get(MODULE, "animalsSpawn")) return;
-  const bought = (itemPrices?.buyerReceive ?? []).filter(e =>
-    e.quantity > 0 && e.item?.getFlag?.(MODULE, "actor"));
+  const bought = boughtWith(itemPrices, "actor");
   if (!bought.length) return;
 
-  const buyer = await fromUuid(buyerUuid);
-  const seller = await fromUuid(sellerUuid);
+  // Actors rather than UUIDs, despite the hook's documentation (#48).
+  const buyer = await fromUuid(uuidOf(buyerRef));
+  const seller = await fromUuid(uuidOf(sellerRef));
   if (!buyer) return;
 
   // Selling a deed to a merchant: the deed is the merchant's entry now.
@@ -840,8 +841,8 @@ async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, _userId) {
 }
 
 async function spawnAnimals(buyer, good, quantity, folder) {
-  const src = await fromUuid(good.getFlag(MODULE, "actor"));
-  if (!src) throw new Error(`stat block ${good.getFlag(MODULE, "actor")} not found — is the dnd5e system's SRD installed?`);
+  const src = await fromUuid(goodFlag(good, "actor"));
+  if (!src) throw new Error(`stat block ${goodFlag(good, "actor")} not found — is the dnd5e system's SRD installed?`);
   const data = game.actors.fromCompendium(src, { clearFolder: true, clearOwnership: true });
   data.folder = folder.id;
   data.ownership = { ...buyer.ownership };
@@ -862,7 +863,7 @@ async function spawnAnimals(buyer, good, quantity, folder) {
 async function recordDeed(buyer, good, uuids) {
   const source = good._stats?.compendiumSource ?? good.uuid;
   const deed = buyer.items.find(i => i.name === good.name
-    && (i._stats?.compendiumSource === source || i.getFlag(MODULE, "actor") === good.getFlag(MODULE, "actor")));
+    && (i._stats?.compendiumSource === source || i.getFlag(MODULE, "actor") === goodFlag(good, "actor")));
   if (!deed) return;
   const all = [...(deed.getFlag(MODULE, "animals") ?? []), ...uuids];
   const links = all.map(u => `@UUID[${u}]`).join(", ");

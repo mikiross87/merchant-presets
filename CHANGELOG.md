@@ -33,6 +33,10 @@ than for the code. Reference the issue or PR it closes.
   succession now counts every one. Uses that landed before the previous one had
   saved could count as a single item, leaving a character short for the day.
   (#44)
+- Buying a meal at an inn asks the buyer whether to eat it, and buying an
+  animal at a stable adds it to the world, again. With Item Piles 3.3, both
+  purchases went through but nothing else happened: no prompt, no credit, no
+  animal. (#48)
 
 ## [1.2.2] - 2026-08-25
 
