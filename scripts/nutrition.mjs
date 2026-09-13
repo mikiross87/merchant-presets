@@ -2,14 +2,16 @@
  * The arithmetic of eating a meal, kept free of Foundry so it can be tested
  * with plain Node (tools/nutrition.test.mjs).
  *
- * This mirrors what Simple Nutrition 5e does when its own Eat dialog consumes
- * an item (scripts/nutrition/hooks.mjs, consumeNutrition): add the amount to
- * today's tally, and if that tally now meets the day's need while the actor is
- * carrying the matching condition, clear it and remember having done so. Both
- * tallies reset to zero at the next long rest, so nothing carries over.
+ * This mirrors what Simple Nutrition 5e (1.0+) does when its own Eat dialog
+ * consumes an item (scripts/nutrition/consumption.mjs, consumeNutrition): add
+ * the amount to today's tally as a fraction of the day's need, and if that
+ * tally reaches a whole day while the actor is carrying the matching condition,
+ * clear it and remember having done so. Both tallies reset at Simple
+ * Nutrition's day change, so nothing carries over.
  *
- * @param {object} state      Simple Nutrition's state for the actor: food, water,
- *                            starvation, foodConditionRemoved, waterConditionRemoved.
+ * @param {object} state      Simple Nutrition's state for the actor: food, water
+ *                            (fractions of a day), starvation, foodConditionRemoved,
+ *                            waterConditionRemoved.
  * @param {object} needs      The actor's daily need: { food (lb), water (gallons) }.
  * @param {object} nutrition  What one meal provides: { food (lb), water (gallons) }.
  * @param {number} quantity   How many were bought.
@@ -18,10 +20,10 @@
  * @returns {{ state: object, clearMalnutrition: boolean, clearDehydration: boolean }}
  */
 export function applyMeal(state, needs, nutrition, quantity, has) {
-  const food = (state.food ?? 0) + (nutrition.food ?? 0) * quantity;
-  const water = (state.water ?? 0) + (nutrition.water ?? 0) * quantity;
-  const clearMalnutrition = !!has.malnourished && food >= needs.food;
-  const clearDehydration = !!has.dehydrated && water >= needs.water;
+  const food = (state.food ?? 0) + ((nutrition.food ?? 0) * quantity) / needs.food;
+  const water = (state.water ?? 0) + ((nutrition.water ?? 0) * quantity) / needs.water;
+  const clearMalnutrition = !!has.malnourished && food >= 1;
+  const clearDehydration = !!has.dehydrated && water >= 1;
   return {
     state: {
       ...state,
@@ -37,7 +39,7 @@ export function applyMeal(state, needs, nutrition, quantity, has) {
 
 /**
  * What one unit of an item is worth when eaten or drunk, by Simple Nutrition's
- * own rules (scripts/nutrition/hooks.mjs, getFoodCandidates/getWaterCandidates):
+ * own rules (scripts/nutrition/consumption.mjs, getFoodCandidates/getWaterCandidates):
  * only consumables; a registered water identifier is a pint of water and never
  * food; any other consumable of type "food" is food by its weight in pounds.
  * Loose "water-pint" only counts inside a waterskin, which needs the live

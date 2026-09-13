@@ -11,6 +11,14 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- With Simple Nutrition 5e 1.0, meals eaten at an inn and ale, wine, bread or
+  cheese consumed from the sheet credit the right share of a day for every
+  creature size. Tiny, Large and bigger characters, and characters with a
+  custom daily need, were credited as if they were Medium, and could stay
+  Malnourished or Dehydrated after eating a full day's worth. (#42)
+
 ## [1.2.2] - 2026-08-25
 
 ### Fixed
