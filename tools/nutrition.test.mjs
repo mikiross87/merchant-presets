@@ -68,6 +68,12 @@ test("a day's worth eaten a piece at a time reaches a whole day, whatever the ne
   for (let i = 0; i < 6; i++) drunk = applyMeal(drunk.state, { food: 1, water: 0.75 }, ale, 1, { dehydrated: true });
   assert.equal(drunk.state.water, 1);
   assert.equal(drunk.clearDehydration, true);
+  let thirds = { state: { food: 0, water: 0 } };
+  for (let i = 0; i < 3; i++) thirds = applyMeal(thirds.state, { food: 3, water: 1 }, { food: 1, water: 0 }, 1, { malnourished: true });
+  assert.equal(thirds.state.food, 1);
+  assert.equal(thirds.clearMalnutrition, true);
+  const third = applyMeal({ food: 0, water: 0 }, { food: 3, water: 1 }, { food: 1, water: 0 }, 1, {});
+  assert.equal(third.state.food, 1 / 3);
 });
 
 test("a meal leaves the tally it provides nothing for untouched, even against a need of zero", () => {
