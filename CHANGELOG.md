@@ -17,6 +17,8 @@ than for the code. Reference the issue or PR it closes.
   goods consumed from the sheet — now needs Simple Nutrition 1.0 or later.
   With an older version nothing is recorded and the GM sees a warning at load
   asking to update it. Without Simple Nutrition, merchants work as before. (#42)
+- Verified on dnd5e 6.0.1. dnd5e 5.0.0 or later is still enough; nothing here
+  needs 6.0. (#45)
 
 ### Fixed
 
