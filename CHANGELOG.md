@@ -29,6 +29,10 @@ than for the code. Reference the issue or PR it closes.
   already eaten, and eating no longer clears Dehydrated because the day's water
   was already drunk; as in Simple Nutrition's own dialog, a meal only counts
   towards the condition for what it provides. (#42)
+- Using ale, wine, bread or cheese from the sheet several times in quick
+  succession now counts every one. Uses that landed before the previous one had
+  saved could count as a single item, leaving a character short for the day.
+  (#44)
 
 ## [1.2.2] - 2026-08-25
 
