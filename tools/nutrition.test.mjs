@@ -57,6 +57,39 @@ test("never clears a condition the actor does not have, and keeps an earlier mar
   assert.equal(r.state.foodConditionRemoved, true);
 });
 
+test("a day's worth eaten a piece at a time reaches a whole day, whatever the need", () => {
+  const wedge = { food: 0.5, water: 0 };
+  const ale = { food: 0, water: 0.125 };
+  let fed = { state: { food: 0, water: 0 } };
+  for (let i = 0; i < 6; i++) fed = applyMeal(fed.state, { food: 3, water: 1 }, wedge, 1, { malnourished: true });
+  assert.equal(fed.state.food, 1);
+  assert.equal(fed.clearMalnutrition, true);
+  let drunk = { state: { food: 0, water: 0 } };
+  for (let i = 0; i < 6; i++) drunk = applyMeal(drunk.state, { food: 1, water: 0.75 }, ale, 1, { dehydrated: true });
+  assert.equal(drunk.state.water, 1);
+  assert.equal(drunk.clearDehydration, true);
+});
+
+test("a meal leaves the tally it provides nothing for untouched, even against a need of zero", () => {
+  const bread = { food: 1, water: 0 };
+  const r = applyMeal({ food: 0, water: 0.5 }, { food: 1, water: 0 }, bread, 1, {});
+  assert.equal(r.state.water, 0.5);
+});
+
+test("anything meets a need of zero", () => {
+  const bread = { food: 1, water: 0 };
+  const r = applyMeal({ food: 0, water: 0 }, { food: 0, water: 1 }, bread, 1, { malnourished: true });
+  assert.equal(r.state.food, 1);
+  assert.equal(r.clearMalnutrition, true);
+});
+
+test("only clears the condition for what the meal provides, as Simple Nutrition does", () => {
+  const ale = { food: 0, water: 0.125 };
+  const r = applyMeal({ food: 1, water: 0 }, needs, ale, 1, { malnourished: true });
+  assert.equal(r.clearMalnutrition, false);
+  assert.equal(r.state.foodConditionRemoved, false);
+});
+
 test("untouched state fields survive", () => {
   const r = applyMeal({ food: 0, water: 0, starvation: 3 }, needs, modest, 1, {});
   assert.equal(r.state.starvation, 3);
