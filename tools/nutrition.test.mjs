@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { applyMeal } from "../scripts/nutrition.mjs";
 
 const needs = { food: 1, water: 1 };          // a Medium creature's day
+const large = { food: 4, water: 4 };
+const tiny = { food: 0.25, water: 0.25 };
 const modest = { food: 1, water: 0.125 };
 const squalid = { food: 0.25, water: 0 };
 
@@ -10,6 +12,22 @@ test("adds the meal's food and water to today's tally", () => {
   const r = applyMeal({ food: 0.5, water: 0.25 }, needs, modest, 1, {});
   assert.equal(r.state.food, 1.5);
   assert.equal(r.state.water, 0.375);
+});
+
+test("the tally is a fraction of the day's need, not pounds or gallons", () => {
+  const big = applyMeal({ food: 0, water: 0 }, large, modest, 1, {});
+  assert.equal(big.state.food, 0.25);
+  assert.equal(big.state.water, 0.03125);
+  const small = applyMeal({ food: 0, water: 0 }, tiny, { food: 0, water: 0.125 }, 1, {});
+  assert.equal(small.state.water, 0.5);
+});
+
+test("a condition clears when the fraction reaches a whole day, whatever the size", () => {
+  const r = applyMeal({ food: 0.75, water: 0 }, large, modest, 1, { malnourished: true });
+  assert.equal(r.state.food, 1);
+  assert.equal(r.clearMalnutrition, true);
+  const short = applyMeal({ food: 0, water: 0 }, large, modest, 3, { malnourished: true });
+  assert.equal(short.clearMalnutrition, false);
 });
 
 test("quantity multiplies", () => {
