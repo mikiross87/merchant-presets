@@ -18,7 +18,8 @@
  *    settlement size, so two copies of the same shop differ.
  */
 
-import { applyMeal, nutritionOfItem, usageConsumes } from "./nutrition.mjs";
+import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
 const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
@@ -43,6 +44,8 @@ const TIER_INDEX = { Village: 0, Town: 1, City: 2 };
 const COIN_IN_GP = { pp: 10, gp: 1, ep: 0.5, sp: 0.1, cp: 0.01 };
 
 const NUTRITION_MODULE = "simple-nutrition-5e";
+/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
+const NUTRITION_MINIMUM = "1.0.0";
 /** Identifiers on our drinks that should slake thirst rather than hunger. */
 const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
@@ -602,6 +605,31 @@ async function registerDrinks() {
   }
 }
 
+/**
+ * Can we feed characters through the active Simple Nutrition?
+ *
+ * Meals and sheet consumption write straight into its daily tally, and the
+ * unit of that tally changed in 1.0: before it, the same flag held pounds and
+ * gallons. Writing fractions of a day into 0.5 would credit every creature
+ * that is not Medium wrongly, and still pass the export checks below, so an
+ * older version gets no meals rather than wrong ones. Drinks are unaffected —
+ * WATER_IDENTIFIERS means the same in both.
+ */
+function nutritionFeeds() {
+  const sn = game.modules.get(NUTRITION_MODULE);
+  return !!sn?.active && !foundry.utils.isNewerVersion(NUTRITION_MINIMUM, sn.version);
+}
+
+/** Tell the GM once, at load, when a Simple Nutrition too old to feed is why meals do nothing. */
+function warnOutdatedNutrition() {
+  const sn = game.modules.get(NUTRITION_MODULE);
+  if (!sn?.active || nutritionFeeds()) return;
+  if (!game.settings.get(MODULE, "mealsFeed") && !game.settings.get(MODULE, "activityFeeds")) return;
+  ui.notifications.warn(`Merchant Presets feeds characters through Simple Nutrition 5e ${NUTRITION_MINIMUM} `
+    + `or later, but ${sn.version} is installed. Update it; until then meals and food eaten from the sheet `
+    + "are not recorded.", { permanent: true });
+}
+
 /* -------------------------------------------------------------------- meals */
 
 /**
@@ -619,20 +647,20 @@ async function registerDrinks() {
  *
  * Item Piles fires `item-piles-tradeItems` on every client; only the buying
  * user's client acts, so one purchase gets one prompt. Players own their own
- * characters, so the flag write and the condition toggle need no GM.
+ * characters, so the flag write and the condition toggle need no GM. That
+ * client gets the buyer as an actor and the meal as plain data, not the UUID
+ * and Item document the hook is documented with (scripts/trade.mjs, #48).
  */
-async function offerMeals(_sellerUuid, buyerUuid, itemPrices, userId) {
+async function offerMeals(_seller, buyerRef, itemPrices, userId) {
   if (userId !== game.user.id) return;
-  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "mealsFeed")) return;
-  const buyer = await fromUuid(buyerUuid);
+  const buyer = await fromUuid(uuidOf(buyerRef));
   if (buyer?.type !== "character") return;
 
-  const meals = (itemPrices?.buyerReceive ?? []).filter(e =>
-    e.quantity > 0 && e.item?.getFlag?.(MODULE, "nutrition"));
-  for (const entry of meals) {
+  for (const entry of boughtWith(itemPrices, "nutrition")) {
     await eatMeal(buyer, entry.item, entry.quantity)
-      .catch(err => console.error(`${MODULE} | could not apply ${entry.item.name}`, err));
+      .catch(err => console.error(`${MODULE} | could not apply ${entry.item?.name}`, err));
   }
 }
 
@@ -646,7 +674,7 @@ async function eatMeal(actor, item, quantity) {
     if (typeof sn[fn] !== "function") throw new Error(`Simple Nutrition no longer exports ${fn}`);
   }
 
-  const nutrition = item.getFlag(MODULE, "nutrition");
+  const nutrition = goodFlag(item, "nutrition");
   const needs = sn.getNutritionNeeds(actor);
   const food = nutrition.food * quantity;
   const water = nutrition.water * quantity;
@@ -664,20 +692,33 @@ async function eatMeal(actor, item, quantity) {
   });
   if (!eat) return;
 
-  const has = {
-    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
-    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
-  };
-  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, quantity, has);
-  await sn.setNutritionState(actor, result.state);
-  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
-  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
-
+  const result = await creditMeal(actor, cfg, sn, nutrition, quantity);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<p><strong>${actor.name}</strong> eats: ${label}.</p><p>${parts.join(" · ")}</p>`
   });
-  log(`${actor.name} ate ${label}: food ${result.state.food}, water ${result.state.water}`);
+  log(`${actor.name} ate ${label}: today's tally food ${result.state.food}, water ${result.state.water} (days)`);
+}
+
+/**
+ * Add what was eaten to the actor's day in Simple Nutrition, clearing any
+ * condition it now satisfies. Queued per actor (see oneAtATime): the tally is
+ * read only once an earlier credit's write has landed, so two quick uses
+ * cannot erase each other (#44). The condition check sits inside the queue
+ * too, so a credit that clears Malnourished is seen by the next.
+ */
+function creditMeal(actor, cfg, sn, nutrition, quantity) {
+  return oneAtATime(actor.uuid, async () => {
+    const has = {
+      malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
+      dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
+    };
+    const result = applyMeal(sn.getNutritionState(actor), sn.getNutritionNeeds(actor), nutrition, quantity, has);
+    await sn.setNutritionState(actor, result.state);
+    if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
+    if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
+    return result;
+  });
 }
 
 function registerMeals() {
@@ -707,7 +748,7 @@ async function countActivityMeal(activity, usageConfig) {
   const actor = item?.actor;
   if (!actor || actor.type !== "character") return;
   if (!item.getFlag(MODULE, "kind")) return;                // our goods only
-  if (!game.modules.get(NUTRITION_MODULE)?.active) return;
+  if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "activityFeeds")) return;
   if (!usageConsumes(usageConfig)) return;
 
@@ -724,21 +765,13 @@ async function countActivityMeal(activity, usageConfig) {
   }, cfg.WATER_IDENTIFIERS, cfg.WATER_ITEM_AMOUNT);
   if (!nutrition) return;
 
-  const needs = sn.getNutritionNeeds(actor);
-  const has = {
-    malnourished: actor.hasConditionEffect(cfg.CONDITION_EFFECT_MALNOURISHED),
-    dehydrated: actor.hasConditionEffect(cfg.CONDITION_EFFECT_DEHYDRATED)
-  };
-  const result = applyMeal(sn.getNutritionState(actor), needs, nutrition, 1, has);
-  await sn.setNutritionState(actor, result.state);
-  if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
-  if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
-
+  const result = await creditMeal(actor, cfg, sn, nutrition, 1);
   const what = nutrition.water
     ? `Drink ${sn.formatNutritionAmount("water", nutrition.water)}`
     : `Food ${sn.formatNutritionAmount("food", nutrition.food)}`;
   ui.notifications.info(`${actor.name}: ${item.name} — ${what}`);
-  log(`${actor.name} consumed ${item.name} by activity: food ${result.state.food}, water ${result.state.water}`);
+  log(`${actor.name} consumed ${item.name} by activity: today's tally food ${result.state.food}, `
+    + `water ${result.state.water} (days)`);
 }
 
 function registerActivityMeals() {
@@ -768,15 +801,15 @@ const ANIMAL_FOLDER = "Purchased Animals";
  * Selling the deed back is money only — the animal stays for the GM to deal
  * with, since deleting actors unasked is not this module's business.
  */
-async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, _userId) {
+async function deliverAnimals(sellerRef, buyerRef, itemPrices, _userId) {
   if (game.users.activeGM !== game.user) return;
   if (!game.settings.get(MODULE, "animalsSpawn")) return;
-  const bought = (itemPrices?.buyerReceive ?? []).filter(e =>
-    e.quantity > 0 && e.item?.getFlag?.(MODULE, "actor"));
+  const bought = boughtWith(itemPrices, "actor");
   if (!bought.length) return;
 
-  const buyer = await fromUuid(buyerUuid);
-  const seller = await fromUuid(sellerUuid);
+  // Actors rather than UUIDs, despite the hook's documentation (#48).
+  const buyer = await fromUuid(uuidOf(buyerRef));
+  const seller = await fromUuid(uuidOf(sellerRef));
   if (!buyer) return;
 
   // Selling a deed to a merchant: the deed is the merchant's entry now.
@@ -808,8 +841,8 @@ async function deliverAnimals(sellerUuid, buyerUuid, itemPrices, _userId) {
 }
 
 async function spawnAnimals(buyer, good, quantity, folder) {
-  const src = await fromUuid(good.getFlag(MODULE, "actor"));
-  if (!src) throw new Error(`stat block ${good.getFlag(MODULE, "actor")} not found — is the dnd5e system's SRD installed?`);
+  const src = await fromUuid(goodFlag(good, "actor"));
+  if (!src) throw new Error(`stat block ${goodFlag(good, "actor")} not found — is the dnd5e system's SRD installed?`);
   const data = game.actors.fromCompendium(src, { clearFolder: true, clearOwnership: true });
   data.folder = folder.id;
   data.ownership = { ...buyer.ownership };
@@ -830,7 +863,7 @@ async function spawnAnimals(buyer, good, quantity, folder) {
 async function recordDeed(buyer, good, uuids) {
   const source = good._stats?.compendiumSource ?? good.uuid;
   const deed = buyer.items.find(i => i.name === good.name
-    && (i._stats?.compendiumSource === source || i.getFlag(MODULE, "actor") === good.getFlag(MODULE, "actor")));
+    && (i._stats?.compendiumSource === source || i.getFlag(MODULE, "actor") === goodFlag(good, "actor")));
   if (!deed) return;
   const all = [...(deed.getFlag(MODULE, "animals") ?? []), ...uuids];
   const links = all.map(u => `@UUID[${u}]`).join(", ");
@@ -944,7 +977,7 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "mealsFeed", {
     name: "Meals feed the buyer",
-    hint: "With Simple Nutrition 5e installed, buying a meal at an inn asks the buyer whether to "
+    hint: "With Simple Nutrition 5e 1.0 or later installed, buying a meal at an inn asks the buyer whether to "
       + "eat it there and then, and credits today's food and drink by the meal's quality — a "
       + "squalid meal is a quarter of a Medium creature's day with nothing to drink, a modest one "
       + "a full day's food and a pint, an aristocratic one a feast. Meals are services, so no item "
@@ -957,7 +990,7 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "activityFeeds", {
     name: "Eating from the sheet counts",
-    hint: "With Simple Nutrition 5e installed, using the Consume activity on ale, wine, bread or cheese "
+    hint: "With Simple Nutrition 5e 1.0 or later installed, using the Consume activity on ale, wine, bread or cheese "
       + "from a character sheet records the food or water, as if it had been consumed through Simple "
       + "Nutrition's own dialog. Off: only that dialog counts.",
     scope: "world",
@@ -993,6 +1026,7 @@ Hooks.once("ready", () => {
   registerActivityMeals();
 
   if (!game.user.isGM) return;
+  warnOutdatedNutrition();
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
     return;
