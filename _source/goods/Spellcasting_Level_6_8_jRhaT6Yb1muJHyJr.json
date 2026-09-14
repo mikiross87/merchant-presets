@@ -8,7 +8,7 @@
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p>",
+      "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
       "chat": ""
     },
     "quantity": 1,
