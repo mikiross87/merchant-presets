@@ -720,7 +720,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725846653216,
@@ -7190,7 +7190,8 @@
         },
         "identifier": "bless",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
@@ -7215,12 +7216,12 @@
             "compendiumSource": "Compendium.dnd5e.spells.Item.8dzaICjGy6mTUaUr.ActiveEffect.8rP3gwmXVTgZqYZE",
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544182023,
+            "modifiedTime": 1783544182023
           },
           "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
           "type": "base",
@@ -7230,33 +7231,44 @@
                 "key": "system.bonuses.abilities.save",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "JA478LhnZkRugozz"
               },
               {
                 "key": "system.bonuses.mwak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "pa9XtWKExy8bzKaA"
               },
               {
                 "key": "system.bonuses.msak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "WuXlYkO303M9ZT69"
               },
               {
                 "key": "system.bonuses.rsak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "22O9GpEXGN1Lip7z"
               },
               {
                 "key": "system.bonuses.rwak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "jmnDJrLWMcxwz29D"
               }
-            ]
+            ],
+            "magical": true
           },
           "sort": 0,
           "start": null,
@@ -7280,7 +7292,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "IGl9VL9AOIoVeaXo"
               }
             ]
           },
@@ -7305,12 +7319,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544182023,
+            "modifiedTime": 1783544182023
           },
           "start": {
             "combat": null,
@@ -7467,7 +7481,8 @@
         },
         "identifier": "healing-word",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/magic/life/cross-beam-green.webp",
@@ -7488,7 +7503,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "lR5qolNI7shbqJ2G"
               }
             ]
           },
@@ -7513,12 +7530,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544182024,
+            "modifiedTime": 1783544182024
           },
           "start": {
             "combat": null,
@@ -7747,7 +7764,8 @@
         },
         "identifier": "sanctuary",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "effects": [
         {
@@ -7758,7 +7776,8 @@
           "_id": "IQC3o1AaZoXlZPac",
           "type": "base",
           "system": {
-            "changes": []
+            "changes": [],
+            "magical": true
           },
           "disabled": false,
           "duration": {
@@ -7776,12 +7795,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544182024,
+            "modifiedTime": 1783544182024
           },
           "start": null,
           "showIcon": 1,
@@ -7818,7 +7837,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8008,7 +8027,8 @@
         },
         "identifier": "light",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/sundries/lights/candle-pillar-lit-yellow.webp",
@@ -8043,7 +8063,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8197,7 +8217,8 @@
         },
         "identifier": "thaumaturgy",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/environment/people/cleric-orange.webp",
@@ -8232,7 +8253,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,

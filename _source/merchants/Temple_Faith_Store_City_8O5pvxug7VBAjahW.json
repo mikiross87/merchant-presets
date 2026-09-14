@@ -5418,7 +5418,8 @@
         },
         "identifier": "bless",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
@@ -5443,12 +5444,12 @@
             "compendiumSource": "Compendium.dnd5e.spells.Item.8dzaICjGy6mTUaUr.ActiveEffect.8rP3gwmXVTgZqYZE",
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544181923,
+            "modifiedTime": 1783544181923
           },
           "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
           "type": "base",
@@ -5458,33 +5459,44 @@
                 "key": "system.bonuses.abilities.save",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "HD5bXzOd8DDcj09X"
               },
               {
                 "key": "system.bonuses.mwak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "sfhVrKNNvhH5aCF3"
               },
               {
                 "key": "system.bonuses.msak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "n4Zafdd4UMFFOWnB"
               },
               {
                 "key": "system.bonuses.rsak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "iPHPxYfC2ma641A1"
               },
               {
                 "key": "system.bonuses.rwak.attack",
                 "value": "1d4",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "klh6Xe9fUVBAXAQ1"
               }
-            ]
+            ],
+            "magical": true
           },
           "sort": 0,
           "start": null,
@@ -5508,7 +5520,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "9xQgqH46HxW7CgxJ"
               }
             ]
           },
@@ -5533,12 +5547,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544181923,
+            "modifiedTime": 1783544181923
           },
           "start": {
             "combat": null,
@@ -5685,7 +5699,8 @@
         },
         "identifier": "dispel-magic",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/skills/melee/sword-damaged-broken-purple.webp",
@@ -5706,7 +5721,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "SRREyRC4ANOFGqUY"
               }
             ]
           },
@@ -5731,12 +5748,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544181924,
+            "modifiedTime": 1783544181924
           },
           "start": {
             "combat": null,
@@ -5893,7 +5910,8 @@
         },
         "identifier": "healing-word",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/magic/life/cross-beam-green.webp",
@@ -5914,7 +5932,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "GZGWsfEgkGwoe3XI"
               }
             ]
           },
@@ -5939,12 +5959,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544181924,
+            "modifiedTime": 1783544181924
           },
           "start": {
             "combat": null,
@@ -6090,7 +6110,8 @@
         },
         "identifier": "lesser-restoration",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:divine-aid"
       },
       "type": "spell",
       "img": "icons/magic/holy/prayer-hands-glowing-yellow-green.webp",
@@ -6111,7 +6132,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "LTXb8f6xBCeFpMeE"
               }
             ]
           },
@@ -6136,12 +6159,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544181924,
+            "modifiedTime": 1783544181924
           },
           "start": {
             "combat": null,
@@ -6322,7 +6345,8 @@
         },
         "identifier": "light",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/sundries/lights/candle-pillar-lit-yellow.webp",
@@ -6357,7 +6381,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -6511,7 +6535,8 @@
         },
         "identifier": "thaumaturgy",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/environment/people/cleric-orange.webp",
@@ -6546,7 +6571,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -6736,7 +6761,8 @@
         },
         "identifier": "spiritual-weapon",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/weapons/axes/axe-double-gold.webp",
@@ -6771,7 +6797,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,

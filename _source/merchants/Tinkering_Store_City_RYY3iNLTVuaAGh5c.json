@@ -978,7 +978,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725847255172,
@@ -1278,31 +1278,41 @@
                 "key": "system.attributes.movement.walk",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "2UQTBIeB7tb8cVtS"
               },
               {
                 "key": "system.attributes.movement.fly",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "yRngdJ50SMnRXj7p"
               },
               {
                 "key": "system.attributes.movement.swim",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "qFO1XsU8o5HMZ05g"
               },
               {
                 "key": "system.attributes.movement.climb",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "mO7n6WLWfdwK2ZHx"
               },
               {
                 "key": "system.attributes.movement.burrow",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "D7kNNb43BF3UBz2R"
               }
             ]
           },
@@ -1321,12 +1331,12 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "4.0.1",
-            "createdTime": null,
-            "modifiedTime": null,
-            "lastModifiedBy": null,
+            "systemVersion": "6.0.0",
+            "createdTime": 1783544099821,
+            "modifiedTime": 1783544099821,
+            "lastModifiedBy": "dnd5ebuilder0000",
             "exportSource": null
           },
           "start": null,
@@ -6266,7 +6276,8 @@
         },
         "identifier": "misty-step",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:misty-step"
       },
       "type": "spell",
       "img": "icons/magic/lightning/orb-ball-spiral-blue.webp",
@@ -6287,7 +6298,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "RlDOBsjczytl91kH"
               }
             ]
           },
@@ -6312,12 +6325,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180910,
+            "modifiedTime": 1783544180910
           },
           "start": {
             "combat": null,
@@ -6680,7 +6693,8 @@
         },
         "identifier": "counterspell",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:protective-magic"
       },
       "type": "spell",
       "img": "icons/magic/unholy/hands-circle-light-green.webp",
@@ -6701,7 +6715,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "YuVRxnUJcXvr4AYt"
               }
             ]
           },
@@ -6726,12 +6742,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180910,
+            "modifiedTime": 1783544180910
           },
           "start": {
             "combat": null,
@@ -6887,7 +6903,8 @@
         },
         "identifier": "shield",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:protective-magic"
       },
       "type": "spell",
       "img": "icons/equipment/shield/heater-crystal-blue.webp",
@@ -6912,12 +6929,12 @@
             "compendiumSource": "Compendium.dnd5e.spells.Item.z1mx84ONwkXKUZd7.ActiveEffect.6pbotGIvqQkraPva",
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180910,
+            "modifiedTime": 1783544180910
           },
           "img": "icons/equipment/shield/heater-steel-crystal-red.webp",
           "type": "base",
@@ -6927,9 +6944,12 @@
                 "key": "system.attributes.ac.bonus",
                 "value": 5,
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "4WIuvHGzHybQpe2P"
               }
-            ]
+            ],
+            "magical": true
           },
           "sort": 0,
           "start": null,
@@ -6953,7 +6973,9 @@
                   "condition": ""
                 },
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "T8FlqE6e2S3ZHKr8"
               }
             ]
           },
@@ -6978,12 +7000,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180911,
+            "modifiedTime": 1783544180911
           },
           "start": {
             "combat": null,
@@ -7144,7 +7166,8 @@
         },
         "identifier": "detect-magic",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/symbols/runes-carved-stone-green.webp",
@@ -7164,7 +7187,8 @@
           "_id": "irL4C5rZ6AbW2Eww",
           "type": "base",
           "system": {
-            "changes": []
+            "changes": [],
+            "magical": true
           },
           "description": "",
           "tint": "#ffffff",
@@ -7175,12 +7199,12 @@
             "compendiumSource": "Compendium.dnd5e.spells24.Item.phbsplDetectEvil.ActiveEffect.pOgbtXbKVGdbwjjE",
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180911,
+            "modifiedTime": 1783544180911
           },
           "start": null,
           "showIcon": 1,
@@ -7217,7 +7241,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -7407,7 +7431,8 @@
         },
         "identifier": "light",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/sundries/lights/candle-pillar-lit-yellow.webp",
@@ -7442,7 +7467,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -7604,7 +7629,8 @@
         },
         "identifier": "mage-armor",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/equipment/head/hat-pointed-buckle-leather-purple.webp",
@@ -7629,12 +7655,12 @@
             "compendiumSource": "Compendium.dnd5e.spells.Item.CKZTpZlxj7hjjo2H.ActiveEffect.cfwMU7LuOJ619Lny",
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180912,
+            "modifiedTime": 1783544180912
           },
           "img": "icons/equipment/chest/breastplate-helmet-metal.webp",
           "type": "base",
@@ -7644,9 +7670,12 @@
                 "key": "system.attributes.ac.calc",
                 "value": "mage",
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "fCUuZhpcHDAvglhf"
               }
-            ]
+            ],
+            "magical": true
           },
           "sort": 0,
           "start": null,
@@ -7684,7 +7713,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -7871,7 +7900,8 @@
         },
         "identifier": "mage-hand",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/light/hand-sparks-smoke-teal.webp",
@@ -7906,7 +7936,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8060,7 +8090,8 @@
         },
         "identifier": "prestidigitation",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/weapons/wands/wand-star-white.webp",
@@ -8095,7 +8126,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8278,7 +8309,8 @@
         },
         "identifier": "fireball",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/fire/barrier-shield-explosion-yellow.webp",
@@ -8313,7 +8345,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8474,7 +8506,8 @@
         },
         "identifier": "invisibility",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/creatures/magical/spirit-undead-ghost-purple.webp",
@@ -8494,7 +8527,8 @@
           "_id": "hO1mWs2mYbnYQ9NX",
           "type": "base",
           "system": {
-            "changes": []
+            "changes": [],
+            "magical": true
           },
           "description": "<p>The spell ends early immediately after the target makes an attack roll, deals damage, or casts a spell.</p>",
           "tint": "#ffffff",
@@ -8507,12 +8541,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180913,
+            "modifiedTime": 1783544180913
           },
           "showIcon": 2,
           "start": null,
@@ -8549,7 +8583,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8726,7 +8760,8 @@
         },
         "identifier": "cone-of-cold",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/air/wind-tornado-wall-blue.webp",
@@ -8761,7 +8796,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8922,7 +8957,8 @@
         },
         "identifier": "fly",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/creatures/birds/songbird-yellow-flying.webp",
@@ -8947,15 +8983,20 @@
                 "key": "system.attributes.movement.fly",
                 "value": 60,
                 "priority": null,
-                "type": "upgrade"
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "vcZSRYh5lcSJa7ia"
               },
               {
                 "key": "system.attributes.movement.hover",
                 "value": true,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "8wlbp5aZyBbMOV3j"
               }
-            ]
+            ],
+            "magical": true
           },
           "description": "",
           "tint": "#ffffff",
@@ -8966,12 +9007,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544180914,
+            "modifiedTime": 1783544180914
           },
           "start": null,
           "showIcon": 1,
@@ -9008,7 +9049,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,

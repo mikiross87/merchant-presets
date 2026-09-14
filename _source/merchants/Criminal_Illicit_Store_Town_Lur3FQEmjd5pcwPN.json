@@ -917,7 +917,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.4.0",
             "createdTime": null,
@@ -1114,7 +1114,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725846653216,
@@ -1338,7 +1338,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.1.0",
             "createdTime": 1730739953658,
@@ -1620,7 +1620,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725847255172,
@@ -2102,31 +2102,41 @@
                 "key": "system.attributes.movement.walk",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "2UQTBIeB7tb8cVtS"
               },
               {
                 "key": "system.attributes.movement.fly",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "yRngdJ50SMnRXj7p"
               },
               {
                 "key": "system.attributes.movement.swim",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "qFO1XsU8o5HMZ05g"
               },
               {
                 "key": "system.attributes.movement.climb",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "mO7n6WLWfdwK2ZHx"
               },
               {
                 "key": "system.attributes.movement.burrow",
                 "value": 0,
                 "priority": null,
-                "type": "override"
+                "type": "override",
+                "phase": "initial",
+                "_id": "D7kNNb43BF3UBz2R"
               }
             ]
           },
@@ -2145,12 +2155,12 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "4.0.1",
-            "createdTime": null,
-            "modifiedTime": null,
-            "lastModifiedBy": null,
+            "systemVersion": "6.0.0",
+            "createdTime": 1783544099821,
+            "modifiedTime": 1783544099821,
+            "lastModifiedBy": "dnd5ebuilder0000",
             "exportSource": null
           },
           "start": null,
@@ -2493,7 +2503,7 @@
           "_stats": {
             "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAssassinsBloo.ActiveEffect.zpDCMRInMzrnRAAd",
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.1.0",
             "createdTime": 1730740405450,
@@ -2920,7 +2930,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725851254906,
@@ -3182,7 +3192,7 @@
           "_stats": {
             "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAssassinsBloo.ActiveEffect.zpDCMRInMzrnRAAd",
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.1.0",
             "createdTime": 1730740929229,
@@ -3511,7 +3521,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725852629542,
@@ -3959,7 +3969,9 @@
                 "key": "system.attributes.hp.max",
                 "value": 0,
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "iceRx24ODrSRHBlg"
               }
             ]
           },
@@ -3980,11 +3992,11 @@
           "_stats": {
             "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAssassinsBloo.ActiveEffect.zpDCMRInMzrnRAAd",
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "4.1.0",
+            "systemVersion": "6.0.0",
             "createdTime": 1730741351123,
-            "modifiedTime": 1730741667881,
+            "modifiedTime": 1783544097165,
             "lastModifiedBy": "dnd5ebuilder0000",
             "exportSource": null
           },
@@ -4920,7 +4932,7 @@
           "_stats": {
             "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAssassinsBloo.ActiveEffect.zpDCMRInMzrnRAAd",
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.1.0",
             "createdTime": 1730742210347,
