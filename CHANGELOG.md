@@ -23,6 +23,12 @@ than for the code. Reference the issue or PR it closes.
   stock that sells out and restocks, and shops that sell no components won't
   buy them. Merchants already in your world keep their old stock list; drag in
   a fresh merchant from the compendium to get them. (#51)
+- Gems, art objects and trade goods sell back at their full price, as SRD 5.2
+  has it, instead of at the shop's rate: an unused Diamond (300 GP) returns
+  300 GP at any shop that buys components, wherever it was bought. Everything
+  else, incense and inks included, still sells at the shop's rate. The shop
+  window lists them under their own *Valuables* heading. Merchants already in
+  your world keep their old prices; drag in a fresh merchant to get this. (#53)
 
 ### Removed
 

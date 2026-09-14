@@ -17,7 +17,7 @@ Run before tools/build_srd.py, which embeds the goods in the merchants:
 import json, glob, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_srd import fid, SRD_SOURCE
+from build_srd import fid, is_valuable, SRD_SOURCE, VALUABLES
 
 MOD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # An unpacked copy of the system's dnd5e.spells24 pack, unpacked like the others:
@@ -192,7 +192,7 @@ def make_component(row, spells, parts):
         uses.append(f"<li>{link}: {use_note(part)}</li>")
     desc = row.get("desc") or sentence(row["spells"][0]["phrase"])
     gid = good_id(row)
-    return {
+    doc = {
         "_id": gid, "_key": f"!items!{gid}", "name": good_name(row), "type": "loot",
         "img": row["img"], "folder": COMPONENT_FOLDER, "sort": 0,
         "system": {
@@ -208,6 +208,11 @@ def make_component(row, spells, parts):
             "type": {"value": row["kind"], "subtype": ""}, "properties": []},
         "effects": [], "ownership": {"default": 0},
         "flags": {"merchant-presets": {"kind": "component"}}}
+    # Filed where a shop's full-value price for valuables finds it, so a gem
+    # dragged straight from the compendium sells like one bought over a counter.
+    if is_valuable(doc):
+        doc["flags"]["item-piles"] = {"item": {"customCategory": VALUABLES}}
+    return doc
 
 def write_goods(docs):
     """Replace every component good with `docs`, leaving the other goods alone."""
