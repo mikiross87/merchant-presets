@@ -722,7 +722,7 @@
           "_stats": {
             "compendiumSource": null,
             "duplicateSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "4.0.0",
             "createdTime": 1725846653216,
@@ -8029,7 +8029,8 @@
         },
         "identifier": "druidcraft",
         "method": "spell",
-        "prepared": 2
+        "prepared": 2,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/nature/plant-seed-hands-glow-yellow.webp",
@@ -8064,7 +8065,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8223,7 +8224,8 @@
         },
         "identifier": "speak-with-animals",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/creatures/mammals/dog-husky-white-blue.webp",
@@ -8248,9 +8250,12 @@
                 "key": "system.traits.languages.custom",
                 "value": ";comprehend and verbally communicate with Beasts",
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "Kfwdgqz9Z72qMxJp"
               }
-            ]
+            ],
+            "magical": true
           },
           "description": "",
           "tint": "#ffffff",
@@ -8261,12 +8266,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544176888,
+            "modifiedTime": 1783544176888
           },
           "start": null,
           "showIcon": 1,
@@ -8303,7 +8308,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8469,7 +8474,8 @@
         },
         "identifier": "entangle",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/nature/root-vine-entangle-foot-green.webp",
@@ -8489,7 +8495,8 @@
           "_id": "GDhwBLe7RiH3mMDM",
           "type": "base",
           "system": {
-            "changes": []
+            "changes": [],
+            "magical": true
           },
           "description": "<p>A Restrained creature can take an action to make a [[/check ability=str skill=ath]] check against your spell save DC. On a success, it frees itself from the grasping plants and is no longer Restrained by them.</p>",
           "tint": "#ffffff",
@@ -8502,12 +8509,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544176889,
+            "modifiedTime": 1783544176889
           },
           "showIcon": 2,
           "start": null,
@@ -8544,7 +8551,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8724,7 +8731,8 @@
         },
         "identifier": "thunderwave",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/sonic/explosion-shock-wave-teal.webp",
@@ -8759,7 +8767,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -8926,7 +8934,8 @@
         },
         "identifier": "animal-messenger",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/creatures/mammals/rabbit-movement-glowing-green.webp",
@@ -8946,7 +8955,8 @@
           "_id": "4SZJQiHAAa8eCzMZ",
           "type": "base",
           "system": {
-            "changes": []
+            "changes": [],
+            "magical": true
           },
           "description": "<p>The Beast travels for the duration toward the specified location, covering about 25 miles per 24 hours or 50 miles if the Beast can fly.</p><p>When the Beast arrives, it delivers your message to the creature that you described, mimicking your communication. If the Beast doesn’t reach its destination before the spell ends, the message is lost, and the Beast returns to where you cast the spell.</p>",
           "tint": "#ffffff",
@@ -8957,12 +8967,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544176890,
+            "modifiedTime": 1783544176890
           },
           "start": null,
           "showIcon": 1,
@@ -8999,7 +9009,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -9161,7 +9171,8 @@
         },
         "identifier": "longstrider",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/equipment/feet/boots-leather-laced-brown.webp",
@@ -9186,9 +9197,12 @@
                 "key": "system.attributes.movement.walk",
                 "value": 10,
                 "priority": null,
-                "type": "add"
+                "type": "add",
+                "phase": "initial",
+                "_id": "YskJzHWnXFvjjcFh"
               }
-            ]
+            ],
+            "magical": true
           },
           "description": "<p>The target’s Speed increases by 10 feet until the spell ends.</p>",
           "tint": "#ffffff",
@@ -9199,12 +9213,12 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
-            "systemVersion": "5.3.0",
-            "lastModifiedBy": null,
-            "createdTime": null,
-            "modifiedTime": null
+            "systemVersion": "6.0.0",
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "createdTime": 1783544176890,
+            "modifiedTime": 1783544176890
           },
           "start": null,
           "showIcon": 1,
@@ -9241,7 +9255,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
@@ -9420,7 +9434,8 @@
         },
         "identifier": "moonbeam",
         "method": "spell",
-        "prepared": 0
+        "prepared": 0,
+        "sourceItem": "feat:spellcasting"
       },
       "type": "spell",
       "img": "icons/magic/light/beam-rays-yellow-blue-large.webp",
@@ -9455,7 +9470,7 @@
             "compendiumSource": null,
             "duplicateSource": null,
             "exportSource": null,
-            "coreVersion": "14.361",
+            "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "5.3.0",
             "lastModifiedBy": null,
