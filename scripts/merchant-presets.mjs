@@ -19,7 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
-import { isPreset, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
+import { isPreset, needsWiring, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
@@ -51,6 +51,9 @@ const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
 /** Serialises table imports so dragging several merchants at once cannot duplicate them. */
 const inFlight = new Map();
+
+/** Ids of the merchants `rewire` is working on right now. */
+const rewiring = new Set();
 
 const log = (...args) => console.log(`${MODULE} |`, ...args);
 
@@ -122,9 +125,8 @@ async function ensureWorldTable(src) {
 
 /** Repoint the merchant's populate tables at world copies. */
 async function wireTables(actor) {
+  if (!needsWiring(actor)) return false;
   const tables = foundry.utils.getProperty(actor, FLAG_PATH);
-  if (!Array.isArray(tables) || !tables.length) return false;
-  if (!tables.some(t => typeof t?.uuid === "string" && t.uuid.startsWith(STOCK_PREFIX))) return false;
 
   const next = [];
   for (const entry of tables) {
@@ -212,17 +214,45 @@ async function applyStockMode(actor) {
  */
 async function rewire(actor) {
   if (!isPreset(actor)) return false;
+  // One pass per merchant at a time. A merchant can arrive through createActor
+  // and updateActor together, and both would see the compendium table and
+  // roll its stock.
+  if (rewiring.has(actor.id)) return false;
+  rewiring.add(actor.id);
+  try {
+    // Stock is rolled once, in the call that wires the compendium table. A shop
+    // already wired keeps the shelf it has: rewireAll and a duplicated merchant
+    // reach here too, and must not re-roll it.
+    const wired = await wireTables(actor);
+    let changed = wired;
+    if (wired) changed = await applyStockMode(actor) || changed;
+    changed = await syncStockWeight(actor) || changed;
+    changed = await syncOpenState(actor) || changed;
+    if (changed) log(`prepared "${actor.name}"`);
+    return changed;
+  } finally {
+    rewiring.delete(actor.id);
+  }
+}
 
-  // Stock is rolled once, in the call that wires the compendium table. A shop
-  // already wired keeps the shelf it has: rewireAll and a duplicated merchant
-  // reach here too, and must not re-roll it.
-  const wired = await wireTables(actor);
-  let changed = wired;
-  if (wired) changed = await applyStockMode(actor) || changed;
-  changed = await syncStockWeight(actor) || changed;
-  changed = await syncOpenState(actor) || changed;
-  if (changed) log(`prepared "${actor.name}"`);
-  return changed;
+/**
+ * Wire every merchant of ours still on its compendium stock table.
+ *
+ * Catches merchants replaced from the compendium while nothing was listening
+ * for it (#66), before anyone opens their Populate Items tab and Item Piles
+ * drops the table. Unlike rewireAll it leaves wired merchants alone.
+ *
+ * @returns {Promise<number>} how many merchants were wired
+ */
+async function wireReplacedAll() {
+  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    if (!needsWiring(actor)) continue;
+    try { if (await rewire(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | failed on "${actor.name}"`, err); }
+  }
+  return n;
 }
 
 /**
@@ -1040,6 +1070,15 @@ Hooks.once("ready", () => {
     if (userId !== game.user.id) return;
     rewire(actor).catch(err => console.error(`${MODULE} |`, err));
   });
+  // Dragging in a shop the world already holds offers Replace Actor, and that
+  // is the default: Foundry keeps the compendium id on import, then writes the
+  // compendium data over the existing actor as an update (#66). Only a
+  // merchant left on its compendium table is touched, so an ordinary edit
+  // never re-rolls a shop or overrides its open/closed status.
+  Hooks.on("updateActor", (actor, _changes, _options, userId) => {
+    if (userId !== game.user.id || !needsWiring(actor)) return;
+    rewire(actor).catch(err => console.error(`${MODULE} |`, err));
+  });
 
   registerRestock();
   registerTradingHours();
@@ -1047,6 +1086,7 @@ Hooks.once("ready", () => {
   // Time moves while a world is closed, so put the shops on the right side of
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
+  wireReplacedAll().then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); });
 
   log("ready");
 });

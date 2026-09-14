@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { isPreset, planWorldTable } from "../scripts/shop.mjs";
+import { isPreset, needsWiring, planWorldTable } from "../scripts/shop.mjs";
 
 /** A real shipped document, as the generator writes it. */
 function source(sub, prefix) {
@@ -106,4 +106,19 @@ test("a stamped copy of another shop's identical list is not reused", () => {
   const { name, stamp } = planWorldTable([], village, "1.3.0");
   const other = worldTable(name, before.results, stamp);
   assert.equal(planWorldTable([other], before, "1.3.0").existing, undefined);
+});
+
+/* ---------------------------------------------------------- needs wiring */
+
+test("a merchant still on its compendium stock table needs wiring (#66)", () => {
+  assert.equal(needsWiring(dragged()), true);
+});
+
+test("a merchant wired to a world table, a compendium copy, or a GM's own merchant does not", () => {
+  assert.equal(needsWiring(imported()), false);
+  assert.equal(needsWiring({ ...dragged(), pack: "merchant-presets.merchants" }), false);
+  const own = imported();
+  delete own.flags["merchant-presets"];
+  assert.equal(needsWiring(own), false);
+  assert.equal(needsWiring(undefined), false);
 });

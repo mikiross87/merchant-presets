@@ -27,6 +27,20 @@ export function isPreset(actor) {
 }
 
 /**
+ * Whether one of our merchants still has to be brought into the world: its
+ * populate table is the compendium's, which Item Piles cannot use and drops the
+ * first time its Populate Items tab saves.
+ *
+ * @param {object|undefined} actor  An Actor document or its data.
+ * @returns {boolean}
+ */
+export function needsWiring(actor) {
+  const tables = actor?.flags?.["item-piles"]?.data?.tablesForPopulate;
+  return isPreset(actor) && Array.isArray(tables)
+    && tables.some(t => typeof t?.uuid === "string" && t.uuid.startsWith(STOCK_PREFIX));
+}
+
+/**
  * A stock list's identity: what its results point at, in any order. FNV-1a
  * over the sorted document UUIDs, short enough to keep on a flag.
  *
