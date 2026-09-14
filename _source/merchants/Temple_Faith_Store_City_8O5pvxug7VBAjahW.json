@@ -3743,7 +3743,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3797,7 +3797,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3851,7 +3851,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3905,7 +3905,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3959,7 +3959,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -4013,7 +4013,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -4067,7 +4067,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -4114,6 +4114,1546 @@
       },
       "_id": "4zh4uFvM7xvVRcfS",
       "_key": "!actors.items!8O5pvxug7VBAjahW.4zh4uFvM7xvVRcfS"
+    },
+    {
+      "name": "Spellcasting: Bless",
+      "type": "loot",
+      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplBless00000]{Bless} on your behalf and provides its material component: a Holy Symbol worth 5+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 55,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplBless00000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8"
+      },
+      "_id": "oJ8O5B5KLX8qeg7Y",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.oJ8O5B5KLX8qeg7Y"
+    },
+    {
+      "name": "Spellcasting: Protection from Evil and Good",
+      "type": "loot",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr]{Protection from Evil and Good} on your behalf and provides its material component: a flask of Holy Water worth 25+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 75,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI"
+      },
+      "_id": "JdLzSlRfT1dBlLI9",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.JdLzSlRfT1dBlLI9"
+    },
+    {
+      "name": "Spellcasting: Augury",
+      "type": "loot",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury} on your behalf and provides its material component: specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 225,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplAugury0000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc"
+      },
+      "_id": "jtReLHd1AwMVNUEv",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.jtReLHd1AwMVNUEv"
+    },
+    {
+      "name": "Spellcasting: Continual Flame",
+      "type": "loot",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplContinualF]{Continual Flame} on your behalf and provides its material component: ruby dust worth 50+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 250,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV"
+      },
+      "_id": "W48nKncoRSNKTGWK",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.W48nKncoRSNKTGWK"
+    },
+    {
+      "name": "Spellcasting: Warding Bond",
+      "type": "loot",
+      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond} on your behalf and provides its material component: a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 300,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplWardingBon"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT"
+      },
+      "_id": "50ks0DjvaRQWuUWE",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.50ks0DjvaRQWuUWE"
+    },
+    {
+      "name": "Spellcasting: Clairvoyance",
+      "type": "loot",
+      "img": "icons/magic/perception/third-eye-blue-red.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplClairvoyan]{Clairvoyance} on your behalf and provides its material component: a focus worth 100+ GP, either a jeweled horn for hearing or a glass eye for seeing.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplClairvoyan"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.fvRA9Q6fm2J4xBpC"
+      },
+      "_id": "ZgCrUIN8r7E0P2zW",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.ZgCrUIN8r7E0P2zW"
+    },
+    {
+      "name": "Spellcasting: Glyph of Warding",
+      "type": "loot",
+      "img": "icons/magic/symbols/triangle-glowing-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplGlyphofWar]{Glyph of Warding} on your behalf and provides its material component: powdered diamond worth 200+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 500,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGlyphofWar"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.lPcQMkyeNrbcWmjI"
+      },
+      "_id": "7dkbFkuBt3SdaDvC",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.7dkbFkuBt3SdaDvC"
+    },
+    {
+      "name": "Spellcasting: Magic Circle",
+      "type": "loot",
+      "img": "icons/magic/symbols/ring-circle-smoke-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplMagicCircl]{Magic Circle} on your behalf and provides its material component: salt and powdered silver worth 100+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplMagicCircl"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.4ErAqbhZ4I3NjVnT"
+      },
+      "_id": "8RSIvBSsezt0a8wJ",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.8RSIvBSsezt0a8wJ"
+    },
+    {
+      "name": "Spellcasting: Revivify",
+      "type": "loot",
+      "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify} on your behalf and provides its material component: a diamond worth 300+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 600,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplRevivify00"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM"
+      },
+      "_id": "vHD93IV4vMffV3vL",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.vHD93IV4vMffV3vL"
+    },
+    {
+      "name": "Spellcasting: Divination",
+      "type": "loot",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination} on your behalf and provides its material component: incense worth 25+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2025,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplDivination"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9"
+      },
+      "_id": "XiraFKtq5cSUPdhX",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.XiraFKtq5cSUPdhX"
+    },
+    {
+      "name": "Spellcasting: Greater Restoration",
+      "type": "loot",
+      "img": "icons/magic/life/heart-hand-gold-green-light.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration} on your behalf and provides its material component: diamond dust worth 100+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch"
+      },
+      "_id": "8jDWsa0nVFoiRPZD",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.8jDWsa0nVFoiRPZD"
+    },
+    {
+      "name": "Spellcasting: Hallow",
+      "type": "loot",
+      "img": "icons/magic/symbols/star-inverted-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplHallow0000]{Hallow} on your behalf and provides its material component: incense worth 1,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHallow0000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.CpH0e07N1GHaaNkY"
+      },
+      "_id": "KYBiJjMU0Mv39OUW",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.KYBiJjMU0Mv39OUW"
+    },
+    {
+      "name": "Spellcasting: Legend Lore",
+      "type": "loot",
+      "img": "icons/sundries/books/book-red-exclamation.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplLegendLore]{Legend Lore} on your behalf and provides its material components: incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2450,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplLegendLore"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.2V4podU9BqxWyQ3B"
+      },
+      "_id": "7ZVFpfOTG5Q6V4m2",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.7ZVFpfOTG5Q6V4m2"
+    },
+    {
+      "name": "Spellcasting: Planar Binding",
+      "type": "loot",
+      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplPlanarBind]{Planar Binding} on your behalf and provides its material component: a jewel worth 1,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplPlanarBind"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY"
+      },
+      "_id": "ZU7KRSEag2MqYjLG",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.ZU7KRSEag2MqYjLG"
+    },
+    {
+      "name": "Spellcasting: Raise Dead",
+      "type": "loot",
+      "img": "icons/magic/death/skull-fire-white-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead} on your behalf and provides its material component: a diamond worth 500+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2500,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplRaiseDead0"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Tnu09aEApYt7UTNo"
+      },
+      "_id": "keBAC2rdCj3zHZr0",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.keBAC2rdCj3zHZr0"
+    },
+    {
+      "name": "Spellcasting: Scrying",
+      "type": "loot",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplScrying000]{Scrying} on your behalf and provides its material component: a focus worth 1,000+ GP, such as a crystal ball, mirror, or water-filled font.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 3000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplScrying000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV"
+      },
+      "_id": "TomUed8a3qrLHrPj",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.TomUed8a3qrLHrPj"
+    },
+    {
+      "name": "Spellcasting: Create Undead",
+      "type": "loot",
+      "img": "icons/magic/death/skull-flames-white-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplCreateUnde]{Create Undead} on your behalf and provides its material component: one 150+ GP black onyx stone for each corpse.</p><p>The price covers one corpse; each further corpse costs 150 GP more.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20150,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplCreateUnde"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.EgwdiqdERTxQSvbw"
+      },
+      "_id": "rdvOexEogoB0ImVp",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.rdvOexEogoB0ImVp"
+    },
+    {
+      "name": "Spellcasting: Find the Path",
+      "type": "loot",
+      "img": "icons/tools/navigation/spyglass-telescope-brass-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplFindthePat]{Find the Path} on your behalf and provides its material component: a set of divination tools—such as cards or runes—worth 100+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplFindthePat"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.qS7CRt0IvLZacUHI"
+      },
+      "_id": "aJ5G2SPWrjKU4epJ",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.aJ5G2SPWrjKU4epJ"
+    },
+    {
+      "name": "Spellcasting: Forbiddance",
+      "type": "loot",
+      "img": "icons/magic/symbols/squares-3d-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplForbiddanc]{Forbiddance} on your behalf and provides its material component: ruby dust worth 1,000+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 21000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplForbiddanc"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.YKycbOBKHxQ92OZN"
+      },
+      "_id": "Ke4Rgi197sySefbJ",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.Ke4Rgi197sySefbJ"
+    },
+    {
+      "name": "Spellcasting: Heroes' Feast",
+      "type": "loot",
+      "img": "icons/consumables/food/cooked-hock-glowing-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplHeroesFeas]{Heroes' Feast} on your behalf and provides its material component: a gem-encrusted bowl worth 1,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 21000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHeroesFeas"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.dDIdElCAnVfXBcJ5"
+      },
+      "_id": "4RAVoKbzHHEBHLkq",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.4RAVoKbzHHEBHLkq"
+    },
+    {
+      "name": "Spellcasting: True Seeing",
+      "type": "loot",
+      "img": "icons/magic/perception/eye-slit-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplTrueSeeing]{True Seeing} on your behalf and provides its material component: mushroom powder worth 25+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20025,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueSeeing"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.J2J46nkMLgnAa3k7"
+      },
+      "_id": "1IYGkju7EPAMTsdx",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.1IYGkju7EPAMTsdx"
+    },
+    {
+      "name": "Spellcasting: Plane Shift",
+      "type": "loot",
+      "img": "icons/skills/targeting/target-glowing-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplPlaneShift]{Plane Shift} on your behalf and provides its material component: a forked, metal rod worth 250+ GP and attuned to a plane of existence.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 20250,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplPlaneShift"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR"
+      },
+      "_id": "k1zzrzJCi4jZfRjx",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.k1zzrzJCi4jZfRjx"
+    },
+    {
+      "name": "Spellcasting: Resurrection",
+      "type": "loot",
+      "img": "icons/magic/death/skeleton-skull-soul-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplResurrecti]{Resurrection} on your behalf and provides its material component: a diamond worth 1,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 21000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplResurrecti"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.rcImXTwCNM5aDopJ"
+      },
+      "_id": "v0LxwNgR75jIAQC2",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.v0LxwNgR75jIAQC2"
+    },
+    {
+      "name": "Spellcasting: Symbol",
+      "type": "loot",
+      "img": "icons/magic/symbols/rune-sigil-green-purple.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplSymbol0000]{Symbol} on your behalf and provides its material component: powdered diamond worth 1,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 21000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplSymbol0000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.0qEsbRG0RIKAqfly"
+      },
+      "_id": "VrcVrgHIIVsdNylm",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.VrcVrgHIIVsdNylm"
+    },
+    {
+      "name": "Spellcasting: Holy Aura",
+      "type": "loot",
+      "img": "icons/magic/life/ankh-shadow-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplHolyAura00]{Holy Aura} on your behalf and provides its material component: a reliquary worth 1,000+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 21000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHolyAura00"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.geNwvxJwu7OYnLDL"
+      },
+      "_id": "4jepG0g8gxtxMj4X",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.4jepG0g8gxtxMj4X"
+    },
+    {
+      "name": "Spellcasting: Astral Projection",
+      "type": "loot",
+      "img": "icons/magic/light/orbs-hand-gray.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAstralProj]{Astral Projection} on your behalf and provides its material components: for each of the spell’s targets, one jacinth worth 1,000+ GP and one silver bar worth 100+ GP, all of which the spell consumes.</p><p>The price covers one target; each further target costs 1,100 GP more.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 101100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplAstralProj"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.ASNEQUZGdt5ejRUn"
+      },
+      "_id": "fcyMBZgp8zxum8j8",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.fcyMBZgp8zxum8j8"
+    },
+    {
+      "name": "Spellcasting: Gate",
+      "type": "loot",
+      "img": "icons/magic/symbols/circled-gem-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplGate000000]{Gate} on your behalf and provides its material component: a diamond worth 5,000+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 105000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGate000000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.8yhm1wwayAIONgAT"
+      },
+      "_id": "sScHV3oZD4oBT88L",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.sScHV3oZD4oBT88L"
+    },
+    {
+      "name": "Spellcasting: True Resurrection",
+      "type": "loot",
+      "img": "icons/magic/life/ankh-gold-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplTrueResurr]{True Resurrection} on your behalf and provides its material component: diamonds worth 25,000+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 125000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueResurr"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.hJ2Bq6dbYnSznR8W"
+      },
+      "_id": "yaNNNeRYrd5pnSEQ",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.yaNNNeRYrd5pnSEQ"
     },
     {
       "name": "Diamond (300 GP)",
@@ -7766,6 +9306,174 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         },
+        "Spellcasting: Bless": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Protection from Evil and Good": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Augury": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Continual Flame": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Warding Bond": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Clairvoyance": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Glyph of Warding": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Magic Circle": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Revivify": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Divination": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Greater Restoration": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Hallow": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Legend Lore": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Planar Binding": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Raise Dead": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Scrying": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Create Undead": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Find the Path": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Forbiddance": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Heroes' Feast": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: True Seeing": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Plane Shift": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Resurrection": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Symbol": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Holy Aura": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Astral Projection": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: Gate": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
+        "Spellcasting: True Resurrection": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true
+        },
         "Diamond (300 GP)": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
@@ -7850,7 +9558,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. A spell with expensive components costs those components on top.</em></p>",
+        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components are listed by name, with the components in the price; any other spell, or one you bring the components for, costs its level's price.</em></p>",
         "merchantImage": "icons/environment/settlement/church.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
@@ -7920,6 +9628,34 @@
               "XhvhLgrBvelB66Tu": "1",
               "ZQLBfTpSH3n5dT9G": "1",
               "xrhREdthCM7iw5mx": "1",
+              "oxZQdsXm9FwJ6SO8": "1",
+              "q8FlQJkwUYCyc9s1": "1",
+              "S0xmFrhYvWxzVZex": "1",
+              "0ENR3KtXKO89j2Ku": "1",
+              "MtAJ5fL5cY7YdUiG": "1",
+              "vdAh7X5BE7sNKH3M": "1",
+              "C6YHSFxcqhIIyTsB": "1",
+              "9CiinoLidrrTFUQ3": "1",
+              "GQ4JPwJIyNuqHUqq": "1",
+              "vkdiUDhQoMB4IpV9": "1",
+              "MkF3QO0g6bNP07Gx": "1",
+              "Z1XIgxOCeeXwp67u": "1",
+              "Uzy6tuKuvNTK8UOt": "1",
+              "NFuLdMIh5bQWcBCd": "1",
+              "Ujpq6a2OZbsbSTAX": "1",
+              "pm72WKlRQEeIR7nA": "1",
+              "8lkNGehV9jHQyFuc": "1",
+              "oV8NYistR8rQ2FvP": "1",
+              "odpwPwKQHt4x1rXv": "1",
+              "AmBCaM8OfyKzA5qh": "1",
+              "bN8UkhL0KXCpuBvM": "1",
+              "o70osIDV7VoL3rvG": "1",
+              "StliQqzK4zBZPkLW": "1",
+              "hGwNDCGUFrgo2hoy": "1",
+              "SKjQSQFzcRm5vgBb": "1",
+              "eF62COA8gaaYJK6t": "1",
+              "5fB945cU1dODqKqy": "1",
+              "UXiOLDb7pZCOptbl": "1",
               "wjiKGEANU5fvqNs8": "1d3",
               "NPPnUUNIkTxoIZr4": "1d3",
               "K6JNk2BDvPVpAjFy": "1d2-1",

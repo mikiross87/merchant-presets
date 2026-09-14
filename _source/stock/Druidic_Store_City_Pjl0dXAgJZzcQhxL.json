@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d45",
+  "formula": "1d63",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -719,6 +719,294 @@
       "flags": {}
     },
     {
+      "_id": "kW8UXWfp0hQT4pfY",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.kW8UXWfp0hQT4pfY",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DcZbppTkfBQjmbQx",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.DcZbppTkfBQjmbQx",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1zQSIq0qAuQmjqhF",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.1zQSIq0qAuQmjqhF",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "elccVHcpDXeVWXPw",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.elccVHcpDXeVWXPw",
+      "type": "document",
+      "name": "Spellcasting: Nondetection",
+      "img": "icons/magic/perception/hand-eye-fire-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.P3rfzjfJhz6bJaJq",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mtOJkkE8RJMdQWdu",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.mtOJkkE8RJMdQWdu",
+      "type": "document",
+      "name": "Spellcasting: Revivify",
+      "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qvucsMNJLlVN0G1N",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.qvucsMNJLlVN0G1N",
+      "type": "document",
+      "name": "Spellcasting: Divination",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fRnyuHg4qVDZ9EOD",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.fRnyuHg4qVDZ9EOD",
+      "type": "document",
+      "name": "Spellcasting: Stoneskin",
+      "img": "icons/magic/defensive/armor-stone-skin.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.czRnWIYeLA6pgce1",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6eqxONuoW3D05pl7",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.6eqxONuoW3D05pl7",
+      "type": "document",
+      "name": "Spellcasting: Awaken",
+      "img": "icons/magic/nature/root-vines-face-glow-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.2rV3IH7sluLhenoa",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6m2TUBXwEntFseAc",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.6m2TUBXwEntFseAc",
+      "type": "document",
+      "name": "Spellcasting: Greater Restoration",
+      "img": "icons/magic/life/heart-hand-gold-green-light.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BY86aUTrQ4HJ03QS",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.BY86aUTrQ4HJ03QS",
+      "type": "document",
+      "name": "Spellcasting: Planar Binding",
+      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zEVCI4FyQj0txOKA",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.zEVCI4FyQj0txOKA",
+      "type": "document",
+      "name": "Spellcasting: Reincarnate",
+      "img": "icons/creatures/magical/spirit-undead-horned-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.SG6UX7uGksVjnR5k",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "h4D26JkY20NjQ0Qy",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.h4D26JkY20NjQ0Qy",
+      "type": "document",
+      "name": "Spellcasting: Scrying",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IDQ16lHN9qTlx1Wp",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.IDQ16lHN9qTlx1Wp",
+      "type": "document",
+      "name": "Spellcasting: Find the Path",
+      "img": "icons/tools/navigation/spyglass-telescope-brass-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qS7CRt0IvLZacUHI",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "peryWzrPmSpq6COY",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.peryWzrPmSpq6COY",
+      "type": "document",
+      "name": "Spellcasting: Heroes' Feast",
+      "img": "icons/consumables/food/cooked-hock-glowing-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.dDIdElCAnVfXBcJ5",
+      "weight": 1,
+      "range": [
+        58,
+        58
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sAd2mtErl07K0ccq",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.sAd2mtErl07K0ccq",
+      "type": "document",
+      "name": "Spellcasting: Plane Shift",
+      "img": "icons/skills/targeting/target-glowing-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR",
+      "weight": 1,
+      "range": [
+        59,
+        59
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ptekCddUvmnldATP",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.ptekCddUvmnldATP",
+      "type": "document",
+      "name": "Spellcasting: Symbol",
+      "img": "icons/magic/symbols/rune-sigil-green-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.0qEsbRG0RIKAqfly",
+      "weight": 1,
+      "range": [
+        60,
+        60
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WXDgDqBjyRSydHOn",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.WXDgDqBjyRSydHOn",
+      "type": "document",
+      "name": "Spellcasting: Shapechange",
+      "img": "icons/magic/unholy/hand-fire-skeleton-pink.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.DDTfOQrapsfrZsyY",
+      "weight": 1,
+      "range": [
+        61,
+        61
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0zXkVui9oO0h3Sn1",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.0zXkVui9oO0h3Sn1",
+      "type": "document",
+      "name": "Spellcasting: True Resurrection",
+      "img": "icons/magic/life/ankh-gold-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.hJ2Bq6dbYnSznR8W",
+      "weight": 1,
+      "range": [
+        62,
+        62
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
       "_id": "segqU17MkbJdZzvC",
       "_key": "!tables.results!Pjl0dXAgJZzcQhxL.segqU17MkbJdZzvC",
       "type": "document",
@@ -727,8 +1015,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.2XKFJS5dzJwow18h",
       "weight": 1,
       "range": [
-        45,
-        45
+        63,
+        63
       ],
       "drawn": false,
       "description": "",

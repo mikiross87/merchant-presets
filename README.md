@@ -47,7 +47,7 @@ All three sit in a **Merchant Presets** compendium folder.
 
 - **Merchants** (Actor) — 51 statted shopkeepers in `Village` / `Town` / `City` folders.
 - **Shop Stock Tables** (RollTable) — one stock list per shop per size.
-- **Merchant Goods** (Item) — 96 goods no 2024 book ships as items.
+- **Merchant Goods** (Item) — 152 goods no 2024 book ships as items.
 
 ## Usage
 
@@ -100,7 +100,7 @@ stock does, so nothing here needs a book module either.
 
 ### Merchant Goods
 
-96 items the 2024 rules describe in their *Food, Drink, and Lodging*,
+152 items the 2024 rules describe in their *Food, Drink, and Lodging*,
 *Spellcasting Services* and *Mounts and Vehicles* tables, or in their spells'
 material components, but never publish as items — ale, bread, cheese, wine,
 meals, lodging, mounts, vehicles, saddles, stabling, feed, ship passage,
@@ -108,7 +108,7 @@ spellcasting services and spell components. Without them the Inn & Tavern,
 Stable and Dock would have almost nothing to sell.
 
 Prices and weights are the SRD's, verified line by line against those tables and
-that spell text, so 93 of them are marked `SRD 5.2 · CC-BY-4.0` even though this
+that spell text, so 149 of them are marked `SRD 5.2 · CC-BY-4.0` even though this
 module authors the item document — the content is the SRD's, and CC-BY asks to
 be told so.
 
@@ -137,6 +137,18 @@ stock, so they sell out and restock like the poisons and scrolls. A Holy Symbol,
 Holy Water and Ink are already on the shelves as SRD equipment, and components
 made to order — statuettes, Clone's vessel, Secret Chest's chest — are not
 stocked.
+
+Spellcasting is sold by level, and SRD 5.2 adds the cost of any expensive
+components on top. So the 56 spells with a priced component are also sold by
+name, with the component in the price: *Spellcasting: Revivify* is the level 3
+service's 300 GP plus the 300 GP diamond, 600 GP. A spell listed by name costs
+what it says. For any other spell, or if the buyer brings the component, the
+level price is the whole price. Each shop hires out the spells on its classes'
+SRD spell lists: the Arcane Store the sorcerer, warlock and wizard's, the
+Druidic Store the druid and ranger's, the Temple & Faith Store the cleric and
+paladin's. Each spell is available where its level is: levels 1–2 in a
+village, 3–5 in a town, 6–9 in a city. Astral Projection and Create Undead are
+priced for one target or corpse and say what each further one costs.
 
 To have a spell use up its component, give the spell's activity a Material
 consumption target: on the *Activation* tab, under *Consumption*, add a target

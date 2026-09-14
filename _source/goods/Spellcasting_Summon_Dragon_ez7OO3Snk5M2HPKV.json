@@ -1,0 +1,54 @@
+{
+  "_id": "ez7OO3Snk5M2HPKV",
+  "_key": "!items!ez7OO3Snk5M2HPKV",
+  "name": "Spellcasting: Summon Dragon",
+  "type": "loot",
+  "img": "icons/creatures/abilities/dragon-breath-purple.webp",
+  "folder": "LAxnBRt7IpLhtlhA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplSummonDrag]{Summon Dragon} on your behalf and provides its material component: an object with the image of a dragon engraved on it worth 500+ GP.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 2500,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "spellcasting",
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplSummonDrag"
+    }
+  }
+}

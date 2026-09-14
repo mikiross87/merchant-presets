@@ -1,0 +1,54 @@
+{
+  "_id": "4ErAqbhZ4I3NjVnT",
+  "_key": "!items!4ErAqbhZ4I3NjVnT",
+  "name": "Spellcasting: Magic Circle",
+  "type": "loot",
+  "img": "icons/magic/symbols/ring-circle-smoke-blue.webp",
+  "folder": "LAxnBRt7IpLhtlhA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplMagicCircl]{Magic Circle} on your behalf and provides its material component: salt and powdered silver worth 100+ GP, which the spell consumes.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 400,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "spellcasting",
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplMagicCircl"
+    }
+  }
+}

@@ -8,9 +8,16 @@ data/components.json; the facts (which spells name a component, what it is
 worth, whether the spell consumes it) are read from the spell text and checked
 against it, so a row that disagrees with the SRD stops the build.
 
+Spellcasting by name (#55): one service per spell with a costed component,
+priced at its level service plus that component, and hired out at each shop
+whose classes have the spell on their SRD spell list. Everything in it is
+derived: the prices from the spell text and the hand-made level services, the
+shops from the class lists in dnd5e.content24.
+
 Run before tools/build_srd.py, which embeds the goods in the merchants:
 
-  MP_SPELLS_DIR=/tmp/spells24 python3 tools/build_spell_goods.py [--check]
+  MP_SPELLS_DIR=/tmp/spells24 MP_CONTENT_DIR=/tmp/content24 \
+    python3 tools/build_spell_goods.py [--check]
 
 --check parses and validates without writing anything.
 """
@@ -214,12 +221,18 @@ def make_component(row, spells, parts):
         doc["flags"]["item-piles"] = {"item": {"customCategory": VALUABLES}}
     return doc
 
-def write_goods(docs):
-    """Replace every component good with `docs`, leaving the other goods alone."""
+def mp_flags(d):
+    return (d.get("flags") or {}).get("merchant-presets") or {}
+
+def load_goods():
+    return [json.load(open(f)) for f in glob.glob(os.path.join(GOODS_DIR, "*.json"))]
+
+def write_goods(docs, ours):
+    """Replace every good `ours` picks out with `docs`, leaving the others alone."""
     old = set()
     for f in glob.glob(os.path.join(GOODS_DIR, "*.json")):
         d = json.load(open(f))
-        if ((d.get("flags") or {}).get("merchant-presets") or {}).get("kind") == "component":
+        if ours(d):
             old.add(GOODS_UUID + d["_id"])
             os.remove(f)
     for doc in docs:
@@ -229,26 +242,150 @@ def write_goods(docs):
             out.write("\n")
     return old
 
-def write_recipe_lines(recipes, rows, old_uuids):
-    """Swap each shop's component lines for the generated ones, in place.
+def place_lines(recipes, lines_for, ours, default_at):
+    """Swap each shop's generated lines for `lines_for(shop)`, in place.
 
-    Lines go where the shop's first component line was, or at the end of its
-    stock. Limited, not services: a component is an item the buyer carries
-    away, sells out, and stays rolled in worlds on unlimited stock, like the
-    poisons and scrolls.
+    Lines go where the shop's first line among the uuids `ours` was, or at
+    `default_at(stock)` in a shop that had none.
     """
-    new_uuids = {GOODS_UUID + good_id(r) for r in rows}
     for shop in recipes["shops"]:
-        lines = [{"n": good_name(r), "t": r["tier"], "cat": COMPONENT_CAT, "limited": True,
-                  "uuid": GOODS_UUID + good_id(r)}
-                 for r in rows if shop["id"] in r["shops"]]
         stock = shop["stock"]
-        spots = [i for i, l in enumerate(stock) if l.get("uuid") in old_uuids | new_uuids]
-        at = spots[0] if spots else len(stock)
-        kept = [l for l in stock if l.get("uuid") not in old_uuids | new_uuids]
-        shop["stock"] = kept[:at] + lines + kept[at:]
-    with open(os.path.join(MOD, "data/recipes.json"), "w") as out:
-        out.write(json.dumps(recipes))
+        spots = [i for i, l in enumerate(stock) if l.get("uuid") in ours]
+        at = spots[0] if spots else default_at(stock)
+        kept = [l for l in stock if l.get("uuid") not in ours]
+        shop["stock"] = kept[:at] + lines_for(shop) + kept[at:]
+
+def component_lines(rows):
+    """A shop's component lines, at the end of its stock unless already placed.
+
+    Limited, not services: a component is an item the buyer carries away, sells
+    out, and stays rolled in worlds on unlimited stock, like the poisons and
+    scrolls.
+    """
+    return lambda shop: [{"n": good_name(r), "t": r["tier"], "cat": COMPONENT_CAT, "limited": True,
+                          "uuid": GOODS_UUID + good_id(r)}
+                         for r in rows if shop["id"] in r["shops"]]
+
+# ---------------------------------------------------------------- spellcasting
+
+# An unpacked copy of the system's dnd5e.content24 pack, for the SRD class spell
+# lists: its Spells journal carries one page per class, listing spells24 uuids.
+CONTENT = os.environ.get("MP_CONTENT_DIR", "")
+SPELL_JOURNAL = "phbSpells0000000"
+
+# Which shop hires out which classes' spells, by the spellcasting focus SRD 5.2
+# gives each class: an Arcane Focus for the sorcerer, warlock and wizard, a
+# Druidic Focus for the druid and ranger, a Holy Symbol for the cleric and
+# paladin. The bard plays an instrument, and no shop here sells a bard's services.
+SHOP_CLASSES = {"arcane-store": ("sorcerer", "warlock", "wizard"),
+                "druidic-store": ("druid", "ranger"),
+                "temple-faith": ("cleric", "paladin")}
+LEVEL_SERVICE = re.compile(r"Spellcasting: Level (\d)(?:-(\d))?")
+
+def load_class_lists(spells):
+    """class identifier -> the names of the spells on its SRD spell list."""
+    by_id = {d["_id"]: name for name, d in spells.items()}
+    journal = next((d for d in (json.load(open(f)) for f in glob.glob(os.path.join(CONTENT, "*.json")))
+                    if d.get("_id") == SPELL_JOURNAL), None)
+    if not journal:
+        raise SpellTextError(f"no Spells journal {SPELL_JOURNAL} in {CONTENT}")
+    lists = {}
+    for page in journal["pages"]:
+        sysd = page.get("system") or {}
+        if page.get("type") != "spells" or sysd.get("type") != "class":
+            continue
+        ids = [u.rsplit(".", 1)[-1] for u in sysd["spells"]]
+        unknown = [i for i in ids if i not in by_id]
+        if unknown:
+            raise SpellTextError(f"{page['name']} lists spells not in {SPELLS_PACK}: {unknown}")
+        lists[sysd["identifier"]] = {by_id[i] for i in ids}
+    missing = [c for cls in SHOP_CLASSES.values() for c in cls if c not in lists]
+    if missing:
+        raise SpellTextError(f"no class spell list for {missing}")
+    return lists
+
+def level_services(goods):
+    """spell level -> the hand-made level service good that prices it."""
+    out = {}
+    for d in goods:
+        m = LEVEL_SERVICE.fullmatch(d.get("name", ""))
+        if m and mp_flags(d).get("kind") == "spellcasting":
+            for level in range(int(m[1]), int(m[2] or m[1]) + 1):
+                out[level] = d
+    if sorted(out) != list(range(1, 10)):
+        raise SpellTextError(f"level services cover levels {sorted(out)}, not 1-9")
+    return out
+
+def service_id(spell):
+    return fid("spellcasting", spell["system"]["identifier"])
+
+def make_service(spell, parts, level_good):
+    """One spell hired out by name, its component in the price (#55)."""
+    link = f"@UUID[Compendium.{SPELLS_PACK}.Item.{spell['_id']}]{{{spell['name']}}}"
+    component = sum(p["gp"] * p["count"] for p in parts)
+    noun = "components" if len(parts) > 1 else "component"
+    desc = (f"<p>A spellcaster casts {link} on your behalf and provides its material {noun}: "
+            f"{spell['system']['materials']['value']}.</p>")
+    # Astral Projection and Create Undead need the component again for every
+    # target or corpse. Priced for one, as the bring-your-own buyer would be.
+    per = parts[0]["per"]
+    if per:
+        desc += f"<p>The price covers one {per}; each further {per} costs {component:,} GP more.</p>"
+    sid = service_id(spell)
+    return {
+        "_id": sid, "_key": f"!items!{sid}", "name": f"Spellcasting: {spell['name']}", "type": "loot",
+        "img": spell["img"], "folder": level_good["folder"], "sort": 0,
+        "system": {
+            "description": {"value": desc, "chat": ""},
+            "quantity": 1, "weight": {"value": 0, "units": "lb"},
+            "price": {"value": level_good["system"]["price"]["value"] + component, "denomination": "gp"},
+            "rarity": "", "identified": True, "container": None, "identifier": "",
+            "source": dict(SRD_SOURCE),
+            "type": {"value": "", "subtype": ""}, "properties": []},
+        "effects": [], "ownership": {"default": 0},
+        # `spell` marks the goods this script owns, apart from the level
+        # services, which are edited by hand.
+        "flags": {"item-piles": {"item": {"isService": True}},
+                  "merchant-presets": {"kind": "spellcasting",
+                                       "spell": f"Compendium.{SPELLS_PACK}.Item.{spell['_id']}"}}}
+
+def plan_services(spells, parts, lists, levels, recipes):
+    """shop id -> [(level, spell name)] it hires out by name, checked so that
+    every costed spell has a shop and every shop the level line for it."""
+    plan = {}
+    homeless = set(parts)
+    for shop in recipes["shops"]:
+        classes = SHOP_CLASSES.get(shop["id"], ())
+        names = sorted((spells[n]["system"]["level"], n) for n in parts
+                       if any(n in lists[c] for c in classes))
+        level_uuids = {GOODS_UUID + g["_id"] for g in levels.values()}
+        have = {l["uuid"] for l in shop["stock"] if l.get("uuid") in level_uuids}
+        for level, name in names:
+            if GOODS_UUID + levels[level]["_id"] not in have:
+                raise SpellTextError(f"{shop['id']} sells {name} by name but not its level {level} service")
+            homeless.discard(name)
+        plan[shop["id"]] = names
+    if homeless:
+        raise SpellTextError(f"no shop hires out {sorted(homeless)}")
+    return plan
+
+def service_lines(spells, plan, levels):
+    """A shop's named spellcasting lines, by level then name, each available
+    where the shop's level service for it is."""
+    def lines(shop):
+        tier = {l["uuid"]: l["t"] for l in shop["stock"] if l.get("uuid")}
+        return [{"n": f"Spellcasting: {spells[name]['name']}",
+                 "t": tier[GOODS_UUID + levels[level]["_id"]], "cat": "Services", "service": True,
+                 "uuid": GOODS_UUID + service_id(spells[name])}
+                for level, name in plan.get(shop["id"], [])]
+    return lines
+
+def after_level_services(levels):
+    uuids = {GOODS_UUID + g["_id"] for g in levels.values()}
+    def at(stock):
+        spots = [i for i, l in enumerate(stock) if l.get("uuid") in uuids]
+        return spots[-1] + 1 if spots else len(stock)
+    return at
 
 # ---------------------------------------------------------------- main
 
@@ -256,26 +393,43 @@ def main():
     check = "--check" in sys.argv
     if not SPELLS or not os.path.isdir(SPELLS):
         sys.exit("point MP_SPELLS_DIR at an unpacked dnd5e.spells24 directory")
+    if not CONTENT or not os.path.isdir(CONTENT):
+        sys.exit("point MP_CONTENT_DIR at an unpacked dnd5e.content24 directory")
     spells = load_spells()
     data = json.load(open(os.path.join(MOD, "data/components.json")))
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
     try:
         parts = costed(spells)
         validate_components(data, spells, parts, {s["id"] for s in recipes["shops"]})
+        levels = level_services(load_goods())
+        plan = plan_services(spells, parts, load_class_lists(spells), levels, recipes)
     except SpellTextError as e:
-        sys.exit(f"spell components: {e}")
+        sys.exit(f"spell goods: {e}")
 
     n_parts = sum(len(ps) for ps in parts.values())
     print(f"components: {len(data['components'])} rows, {len(parts)} costed spells, "
           f"{n_parts} costed parts, all accounted for")
+    print(f"spellcasting: {len(parts)} spells by name, "
+          + ", ".join(f"{shop} {len(names)}" for shop, names in plan.items() if names))
     if check:
         return
 
     docs = [make_component(row, spells, parts) for row in data["components"]]
-    old = write_goods(docs)
-    write_recipe_lines(recipes, data["components"], old)
+    old = write_goods(docs, lambda d: mp_flags(d).get("kind") == "component")
+    place_lines(recipes, component_lines(data["components"]),
+                old | {GOODS_UUID + d["_id"] for d in docs}, len)
+
+    services = [make_service(spells[n], parts[n], levels[spells[n]["system"]["level"]]) for n in parts]
+    old_services = write_goods(services, lambda d: bool(mp_flags(d).get("spell")))
+    place_lines(recipes, service_lines(spells, plan, levels),
+                old_services | {GOODS_UUID + d["_id"] for d in services}, after_level_services(levels))
+
+    with open(os.path.join(MOD, "data/recipes.json"), "w") as out:
+        out.write(json.dumps(recipes))
     print(f"  wrote {len(docs)} component goods, replacing {len(old)}; "
           f"component lines in {sum(1 for s in recipes['shops'] if any(l.get('cat') == COMPONENT_CAT for l in s['stock']))} shops")
+    print(f"  wrote {len(services)} spellcasting goods, replacing {len(old_services)}; "
+          f"{sum(len(n) for n in plan.values())} named spellcasting lines")
 
 if __name__ == "__main__":
     main()

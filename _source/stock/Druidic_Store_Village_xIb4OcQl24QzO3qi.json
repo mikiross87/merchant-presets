@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d39",
+  "formula": "1d42",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -633,6 +633,54 @@
       "range": [
         39,
         39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dn7KkL89iX7FpBcZ",
+      "_key": "!tables.results!xIb4OcQl24QzO3qi.dn7KkL89iX7FpBcZ",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wDNlwSkcLfKuJRoo",
+      "_key": "!tables.results!xIb4OcQl24QzO3qi.wDNlwSkcLfKuJRoo",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wzYZ924oxPKQVIPn",
+      "_key": "!tables.results!xIb4OcQl24QzO3qi.wzYZ924oxPKQVIPn",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        42,
+        42
       ],
       "drawn": false,
       "description": "",

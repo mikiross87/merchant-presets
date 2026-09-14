@@ -1,0 +1,54 @@
+{
+  "_id": "Eq6F5snSZ7Nvs4EV",
+  "_key": "!items!Eq6F5snSZ7Nvs4EV",
+  "name": "Spellcasting: Illusory Script",
+  "type": "loot",
+  "img": "icons/sundries/documents/document-letter-blue.webp",
+  "folder": "LAxnBRt7IpLhtlhA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplIllusorySc]{Illusory Script} on your behalf and provides its material component: ink worth 10+ GP, which the spell consumes.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 60,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true
+      }
+    },
+    "merchant-presets": {
+      "kind": "spellcasting",
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplIllusorySc"
+    }
+  }
+}
