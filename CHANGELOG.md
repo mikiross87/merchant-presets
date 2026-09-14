@@ -11,6 +11,15 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- Shops now open and close with the world clock once they are in the world.
+  Every merchant dragged out of the compendium had its trading hours set once,
+  at import, and then stayed open or shut however much time passed. Turning
+  *Shop stock is not carried* on or off now also reaches merchants already in
+  the world. Merchants you have already imported are fixed by reloading the
+  world; their stock is left as it is. (#56)
+
 ## [1.2.3] - 2026-09-13
 
 ### Changed
