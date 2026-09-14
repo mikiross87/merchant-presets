@@ -1,0 +1,48 @@
+{
+  "_id": "bkVDAhciDUhC001k",
+  "_key": "!items!bkVDAhciDUhC001k",
+  "name": "Powdered Diamond (200 GP)",
+  "type": "loot",
+  "img": "icons/commodities/materials/powder-grey.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Powdered diamond worth 200 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGlyphofWar]{Glyph of Warding}: consumed</li></ul>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 200,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "powdered-diamond-200",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "gem",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

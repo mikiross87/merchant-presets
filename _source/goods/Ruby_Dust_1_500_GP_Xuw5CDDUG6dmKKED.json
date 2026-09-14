@@ -1,0 +1,48 @@
+{
+  "_id": "Xuw5CDDUG6dmKKED",
+  "_key": "!items!Xuw5CDDUG6dmKKED",
+  "name": "Ruby Dust (1,500 GP)",
+  "type": "loot",
+  "img": "icons/commodities/materials/bowl-powder-pink.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Ruby dust worth 1,500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplForcecage0]{Forcecage}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplSimulacrum]{Simulacrum}: consumed</li></ul>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 1500,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "ruby-dust-1500",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "gem",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

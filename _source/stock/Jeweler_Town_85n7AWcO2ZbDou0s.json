@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-city.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d6",
+  "formula": "1d19",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -79,12 +79,12 @@
       "flags": {}
     },
     {
-      "_id": "IrRNuFPmTlmLNCeq",
-      "_key": "!tables.results!85n7AWcO2ZbDou0s.IrRNuFPmTlmLNCeq",
+      "_id": "5Bg5z8tCC6WiRJa2",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.5Bg5z8tCC6WiRJa2",
       "type": "document",
-      "name": "Spell Components (gems), 150 gp and below",
-      "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.HeRVCROhFBnqI3sU",
+      "name": "Diamond (50 GP)",
+      "img": "icons/commodities/gems/gem-faceted-round-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.clm7GsPQl6Ebe1lF",
       "weight": 1,
       "range": [
         5,
@@ -95,16 +95,224 @@
       "flags": {}
     },
     {
-      "_id": "UUc6r8HsaBvd7wYp",
-      "_key": "!tables.results!85n7AWcO2ZbDou0s.UUc6r8HsaBvd7wYp",
+      "_id": "dcoMrsQX5ZyY8CxJ",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.dcoMrsQX5ZyY8CxJ",
       "type": "document",
-      "name": "Spell Components (gems), 500 gp and below",
-      "img": "icons/commodities/gems/gem-faceted-navette-red.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.6ag3rqyy0kHW8h8a",
+      "name": "Diamond (300 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m",
       "weight": 1,
       "range": [
         6,
         6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DMbeg7q87alMD347",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.DMbeg7q87alMD347",
+      "type": "document",
+      "name": "Diamond (500 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wBkbbBZfzbS2PxRO",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.wBkbbBZfzbS2PxRO",
+      "type": "document",
+      "name": "Pearl (100 GP)",
+      "img": "icons/commodities/gems/pearl-natural.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.PD4kLIn34TZGx3g9",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZJdw97mdMfbUw88N",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.ZJdw97mdMfbUw88N",
+      "type": "document",
+      "name": "Black Onyx (150 GP)",
+      "img": "icons/commodities/gems/gem-faceted-round-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Qq7zdAuaJaaBmiyB",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QSEsAQmbHqv7wubA",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.QSEsAQmbHqv7wubA",
+      "type": "document",
+      "name": "Diamond Dust (25 GP)",
+      "img": "icons/commodities/gems/powder-raw-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cjvKU9FMEjjo3bi0",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r8Gwuqaa3fWfn0b9",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.r8Gwuqaa3fWfn0b9",
+      "type": "document",
+      "name": "Diamond Dust (100 GP)",
+      "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cVSlF5Z2p1kxctFy",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.cVSlF5Z2p1kxctFy",
+      "type": "document",
+      "name": "Powdered Diamond (200 GP)",
+      "img": "icons/commodities/materials/powder-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bkVDAhciDUhC001k",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PQupjSnlEK4oiKg4",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.PQupjSnlEK4oiKg4",
+      "type": "document",
+      "name": "Ruby Dust (50 GP)",
+      "img": "icons/commodities/gems/gem-fragments-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.SIlXEqnFb9dGYweI",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xUGWibeQmpUXbKbP",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.xUGWibeQmpUXbKbP",
+      "type": "document",
+      "name": "Jade Dust (10 GP)",
+      "img": "icons/commodities/gems/gem-fragments-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Ee8LJ2qD0OHMzFAE",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5czb9dx4DX7X2ZMC",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.5czb9dx4DX7X2ZMC",
+      "type": "document",
+      "name": "Jade Dust (25 GP)",
+      "img": "icons/commodities/materials/bowl-powder-teal.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.OJzblSg4QtNAvcuT",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7F5eEnMqNceNZFHB",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.7F5eEnMqNceNZFHB",
+      "type": "document",
+      "name": "Gold Dust (25 GP)",
+      "img": "icons/commodities/materials/bowl-powder-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.vetdtErdSySHDor1",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lOevHzTZX1P4vG5k",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.lOevHzTZX1P4vG5k",
+      "type": "document",
+      "name": "Black Pearl Powder (500 GP)",
+      "img": "icons/commodities/materials/powder-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.vW1uRzSx4PyBb9ku",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jgWFxTmLmrLNwHoR",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.jgWFxTmLmrLNwHoR",
+      "type": "document",
+      "name": "Platinum Rings, pair (100 GP)",
+      "img": "icons/equipment/finger/ring-band-engraved-scrolls-silver.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.TsKMZH8OUIMiuWAw",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "57jEnBjLeBsQL8tO",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.57jEnBjLeBsQL8tO",
+      "type": "document",
+      "name": "Silver Bar (100 GP)",
+      "img": "icons/commodities/metal/ingot-stamped-silver.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QhSHbCeaOMGDPzVp",
+      "weight": 1,
+      "range": [
+        19,
+        19
       ],
       "drawn": false,
       "description": "",

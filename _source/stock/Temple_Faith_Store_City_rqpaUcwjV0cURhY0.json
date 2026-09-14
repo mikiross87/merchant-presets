@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/church.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d31",
+  "formula": "1d42",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -505,6 +505,182 @@
       "range": [
         31,
         31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wjiKGEANU5fvqNs8",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.wjiKGEANU5fvqNs8",
+      "type": "document",
+      "name": "Diamond (300 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NPPnUUNIkTxoIZr4",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.NPPnUUNIkTxoIZr4",
+      "type": "document",
+      "name": "Diamond (500 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "K6JNk2BDvPVpAjFy",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.K6JNk2BDvPVpAjFy",
+      "type": "document",
+      "name": "Diamond (1,000 GP)",
+      "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MDDRvSKLqAF009ye",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ei7h6UcxqFmMMviA",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.Ei7h6UcxqFmMMviA",
+      "type": "document",
+      "name": "Diamond Dust (100 GP)",
+      "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "m6GMoixqNaLdhAWJ",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.m6GMoixqNaLdhAWJ",
+      "type": "document",
+      "name": "Incense (10 GP)",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1ARebH5jLqHKsSCg",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.1ARebH5jLqHKsSCg",
+      "type": "document",
+      "name": "Incense (25 GP)",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TGrqBrlEpWLGsNVU",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.TGrqBrlEpWLGsNVU",
+      "type": "document",
+      "name": "Incense (250 GP)",
+      "img": "icons/commodities/wood/kindling-stick-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "fEP7WCx86kAEowCL",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.fEP7WCx86kAEowCL",
+      "type": "document",
+      "name": "Incense (1,000 GP)",
+      "img": "icons/commodities/wood/kindling-stick-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.STybyfM3XVWwyU4O",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cYpItabyy27C4w7F",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.cYpItabyy27C4w7F",
+      "type": "document",
+      "name": "Divinatory Tokens (25 GP)",
+      "img": "icons/commodities/treasure/token-engraved-symbols-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "l6B0Aw95iOqt75fM",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.l6B0Aw95iOqt75fM",
+      "type": "document",
+      "name": "Divination Tools (100 GP)",
+      "img": "icons/sundries/gaming/rune-card.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ho0SI12XTQiJEYlP",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.ho0SI12XTQiJEYlP",
+      "type": "document",
+      "name": "Reliquary (1,000 GP)",
+      "img": "icons/commodities/treasure/case-red-silver.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.U28Am21JbNizuxGY",
+      "weight": 1,
+      "range": [
+        42,
+        42
       ],
       "drawn": false,
       "description": "",

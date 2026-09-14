@@ -4116,6 +4116,600 @@
       "_key": "!actors.items!8O5pvxug7VBAjahW.4zh4uFvM7xvVRcfS"
     },
     {
+      "name": "Diamond (300 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
+      "system": {
+        "description": {
+          "value": "<p>A diamond worth 300 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 300,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-300",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m"
+      },
+      "_id": "oULMEH8mIFSedgsO",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.oULMEH8mIFSedgsO"
+    },
+    {
+      "name": "Diamond (500 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A diamond worth 500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 500,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-500",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2"
+      },
+      "_id": "iKrWBmt0uFLucBhR",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.iKrWBmt0uFLucBhR"
+    },
+    {
+      "name": "Diamond (1,000 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+      "system": {
+        "description": {
+          "value": "<p>A diamond worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplResurrecti]{Resurrection}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplClone00000]{Clone}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-1000",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.MDDRvSKLqAF009ye"
+      },
+      "_id": "O1gb2CS9VSfYyF8G",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.O1gb2CS9VSfYyF8G"
+    },
+    {
+      "name": "Diamond Dust (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
+      "system": {
+        "description": {
+          "value": "<p>Diamond dust worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-dust-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7"
+      },
+      "_id": "OWJHKPw3ISYHIJBT",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.OWJHKPw3ISYHIJBT"
+    },
+    {
+      "name": "Incense (10 GP)",
+      "type": "loot",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 15,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-10",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz"
+      },
+      "_id": "abuo7zr9KCHqqm4w",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.abuo7zr9KCHqqm4w"
+    },
+    {
+      "name": "Incense (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 15,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8"
+      },
+      "_id": "HfdYg36jYTeDohzq",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.HfdYg36jYTeDohzq"
+    },
+    {
+      "name": "Incense (250 GP)",
+      "type": "loot",
+      "img": "icons/commodities/wood/kindling-stick-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 250 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplLegendLore]{Legend Lore}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 250,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-250",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO"
+      },
+      "_id": "NKlMvVSmG9ah3k0f",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.NKlMvVSmG9ah3k0f"
+    },
+    {
+      "name": "Incense (1,000 GP)",
+      "type": "loot",
+      "img": "icons/commodities/wood/kindling-stick-grey.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplHallow0000]{Hallow}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-1000",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.STybyfM3XVWwyU4O"
+      },
+      "_id": "NEByMMtnVbBiUj7R",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.NEByMMtnVbBiUj7R"
+    },
+    {
+      "name": "Divinatory Tokens (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/treasure/token-engraved-symbols-grey.webp",
+      "system": {
+        "description": {
+          "value": "<p>Specially marked sticks, bones, cards, or other divinatory tokens worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 10,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "divinatory-tokens-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE"
+      },
+      "_id": "xtyw08Dc4kq56Ih2",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.xtyw08Dc4kq56Ih2"
+    },
+    {
+      "name": "Divination Tools (100 GP)",
+      "type": "loot",
+      "img": "icons/sundries/gaming/rune-card.webp",
+      "system": {
+        "description": {
+          "value": "<p>A set of divination tools—such as cards or runes—worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindthePat]{Find the Path}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "divination-tools-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh"
+      },
+      "_id": "XoAROYOxMGVnCfX6",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.XoAROYOxMGVnCfX6"
+    },
+    {
+      "name": "Reliquary (1,000 GP)",
+      "type": "loot",
+      "img": "icons/commodities/treasure/case-red-silver.webp",
+      "system": {
+        "description": {
+          "value": "<p>A reliquary worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplHolyAura00]{Holy Aura}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "reliquary-1000",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "art",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.U28Am21JbNizuxGY"
+      },
+      "_id": "vBoQDXpTTBvJWOpt",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.vBoQDXpTTBvJWOpt"
+    },
+    {
       "name": "Mace",
       "system": {
         "description": {
@@ -7166,6 +7760,72 @@
           "keepOnMerchant": true,
           "isService": true,
           "cantBeSoldToMerchants": true
+        },
+        "Diamond (300 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diamond (500 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diamond (1,000 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diamond Dust (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Incense (10 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Incense (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Incense (250 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Incense (1,000 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Divinatory Tokens (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Divination Tools (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Reliquary (1,000 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -7198,7 +7858,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,component,travel,gear"
+            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -7240,7 +7900,18 @@
               "4b73H3fnlvSi9T95": "1",
               "XhvhLgrBvelB66Tu": "1",
               "ZQLBfTpSH3n5dT9G": "1",
-              "xrhREdthCM7iw5mx": "1"
+              "xrhREdthCM7iw5mx": "1",
+              "wjiKGEANU5fvqNs8": "1d3",
+              "NPPnUUNIkTxoIZr4": "1d3",
+              "K6JNk2BDvPVpAjFy": "1d2-1",
+              "Ei7h6UcxqFmMMviA": "1d4+2",
+              "m6GMoixqNaLdhAWJ": "2d6+4",
+              "1ARebH5jLqHKsSCg": "2d6+4",
+              "TGrqBrlEpWLGsNVU": "1d3",
+              "fEP7WCx86kAEowCL": "1d2-1",
+              "cYpItabyy27C4w7F": "2d6+4",
+              "l6B0Aw95iOqt75fM": "1d4+2",
+              "ho0SI12XTQiJEYlP": "1d2-1"
             }
           }
         ],

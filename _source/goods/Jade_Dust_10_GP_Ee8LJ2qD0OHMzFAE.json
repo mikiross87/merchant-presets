@@ -1,14 +1,14 @@
 {
-  "_id": "x0GrOSe5jyiDCTYJ",
-  "_key": "!items!x0GrOSe5jyiDCTYJ",
-  "name": "Spell Components (gems), 501 gp and above",
+  "_id": "Ee8LJ2qD0OHMzFAE",
+  "_key": "!items!Ee8LJ2qD0OHMzFAE",
+  "name": "Jade Dust (10 GP)",
   "type": "loot",
-  "img": "icons/commodities/gems/gem-faceted-round-white.webp",
+  "img": "icons/commodities/gems/gem-fragments-green.webp",
   "folder": "YCWErxQxP6JCSdKv",
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>Assorted gemstone spell components worth 501 gp or more.</p>",
+      "value": "<p>Jade dust worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMouth]{Magic Mouth}: consumed</li></ul>",
       "chat": ""
     },
     "quantity": 1,
@@ -17,20 +17,21 @@
       "units": "lb"
     },
     "price": {
-      "value": 1000,
+      "value": 10,
       "denomination": "gp"
     },
     "rarity": "",
     "identified": true,
     "container": null,
-    "identifier": "",
+    "identifier": "jade-dust-10",
     "source": {
-      "custom": "Merchant Presets",
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
       "rules": "2024",
       "revision": 1
     },
     "type": {
-      "value": "",
+      "value": "gem",
       "subtype": ""
     },
     "properties": []
@@ -40,11 +41,6 @@
     "default": 0
   },
   "flags": {
-    "item-piles": {
-      "item": {
-        "isService": true
-      }
-    },
     "merchant-presets": {
       "kind": "component"
     }

@@ -1,0 +1,48 @@
+{
+  "_id": "icnZiYxY9ZKHnvxZ",
+  "_key": "!items!icnZiYxY9ZKHnvxZ",
+  "name": "Gem Dust (5,000 GP)",
+  "type": "loot",
+  "img": "icons/commodities/gems/gem-fragments-purple.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Gem dust worth 5,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplSequester0]{Sequester}: consumed</li></ul>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 5000,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "gem-dust-5000",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "gem",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_id": "zfcbzaP4IN7s0E1d",
+  "_key": "!items!zfcbzaP4IN7s0E1d",
+  "name": "Jewel (1,000 GP)",
+  "type": "loot",
+  "img": "icons/commodities/gems/gem-faceted-cushion-teal.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A jewel worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplPlanarBind]{Planar Binding}: consumed</li></ul>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 1000,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "jewel-1000",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "gem",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

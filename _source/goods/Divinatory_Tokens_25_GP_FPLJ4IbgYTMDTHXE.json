@@ -1,0 +1,48 @@
+{
+  "_id": "FPLJ4IbgYTMDTHXE",
+  "_key": "!items!FPLJ4IbgYTMDTHXE",
+  "name": "Divinatory Tokens (25 GP)",
+  "type": "loot",
+  "img": "icons/commodities/treasure/token-engraved-symbols-grey.webp",
+  "folder": "YCWErxQxP6JCSdKv",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>Specially marked sticks, bones, cards, or other divinatory tokens worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury}: not consumed</li></ul>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 25,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "divinatory-tokens-25",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "material",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "kind": "component"
+    }
+  }
+}

@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/wizard-castle.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d30",
+  "formula": "1d38",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -489,6 +489,134 @@
       "range": [
         30,
         30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ISR9XNMzCUEGoqeg",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.ISR9XNMzCUEGoqeg",
+      "type": "document",
+      "name": "Incense (10 GP)",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "b9XRrU88y2lDVPjb",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.b9XRrU88y2lDVPjb",
+      "type": "document",
+      "name": "Incense (25 GP)",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "DXSF0AaGdypwgaHh",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.DXSF0AaGdypwgaHh",
+      "type": "document",
+      "name": "Incense (250 GP)",
+      "img": "icons/commodities/wood/kindling-stick-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jGJMSeI7XGeEMFY4",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.jGJMSeI7XGeEMFY4",
+      "type": "document",
+      "name": "Rare Inks (50 GP)",
+      "img": "icons/tools/scribal/ink-quill-pink.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.02VjN9rBSGvjgSb9",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "h33ERcLRtgUivmu6",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.h33ERcLRtgUivmu6",
+      "type": "document",
+      "name": "Salt and Powdered Silver (100 GP)",
+      "img": "icons/commodities/materials/bowl-liquid-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bhibfvXte400oYJs",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xZivtJqL9q0SxMxp",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.xZivtJqL9q0SxMxp",
+      "type": "document",
+      "name": "Silver Rod (10 GP)",
+      "img": "icons/commodities/metal/plating-metal-rod-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qGaQstEp2yZhlene",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0mUQqJuwOx3ndUCS",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.0mUQqJuwOx3ndUCS",
+      "type": "document",
+      "name": "Ivory Strips, set of four (200 GP)",
+      "img": "icons/commodities/bones/bones-stack-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ymreSaVSJoc4eUb7",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "tBZZeZA22ozJ9fuF",
+      "_key": "!tables.results!ks8T2c4K8WnHLiKl.tBZZeZA22ozJ9fuF",
+      "type": "document",
+      "name": "Jeweled Horn or Glass Eye (100 GP)",
+      "img": "icons/commodities/treasure/horn-carved-banded.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CRvPt3jtTNkUSZu8",
+      "weight": 1,
+      "range": [
+        38,
+        38
       ],
       "drawn": false,
       "description": "",

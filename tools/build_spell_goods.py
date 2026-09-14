@@ -17,7 +17,7 @@ Run before tools/build_srd.py, which embeds the goods in the merchants:
 import json, glob, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_srd import fid, norm
+from build_srd import fid, SRD_SOURCE
 
 MOD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # An unpacked copy of the system's dnd5e.spells24 pack, unpacked like the others:
@@ -159,6 +159,92 @@ def validate_components(data, spells, parts, shop_ids):
         raise SpellTextError("priced in the SRD but in neither components nor not_stocked: "
                              + "; ".join(f"{s}: {p}" for s, p in unclaimed))
 
+# ---------------------------------------------------------------- writing
+
+GOODS_DIR = os.path.join(MOD, "_source/goods")
+GOODS_UUID = "Compendium.merchant-presets.goods.Item."
+COMPONENT_FOLDER = "YCWErxQxP6JCSdKv"      # the goods pack's Spell Components folder
+COMPONENT_CAT = "Spell Components"
+
+def good_name(row):
+    # Five diamonds and four incenses share a shop, and the runtime keys a
+    # shop's item flags by name, so the price is part of it.
+    return f"{row['name']} ({row['price']:,} GP)"
+
+def good_id(row):
+    return fid("component", row["identifier"])
+
+def sentence(phrase):
+    text = phrase.replace("+ GP", " GP")
+    return text[0].upper() + text[1:] + "."
+
+def use_note(part):
+    each = {"target": "one for each target, ", "corpse": "one for each corpse, "}.get(part["per"], "")
+    return each + ("consumed" if part["consumed"] else "not consumed")
+
+def make_component(row, spells, parts):
+    """One component good, described from the spell text that prices it."""
+    uses = []
+    for use in row["spells"]:
+        spell = spells[use["spell"]]
+        part = claim(spells, parts, set(), use["spell"], use["phrase"])
+        link = f"@UUID[Compendium.{SPELLS_PACK}.Item.{spell['_id']}]{{{spell['name']}}}"
+        uses.append(f"<li>{link}: {use_note(part)}</li>")
+    desc = row.get("desc") or sentence(row["spells"][0]["phrase"])
+    gid = good_id(row)
+    return {
+        "_id": gid, "_key": f"!items!{gid}", "name": good_name(row), "type": "loot",
+        "img": row["img"], "folder": COMPONENT_FOLDER, "sort": 0,
+        "system": {
+            "description": {"value": f"<p>{desc}</p><p>Material component for:</p><ul>{''.join(uses)}</ul>",
+                            "chat": ""},
+            "quantity": 1, "weight": {"value": 0, "units": "lb"},
+            "price": {"value": row["price"], "denomination": "gp"},
+            "rarity": "", "identified": True, "container": None,
+            "identifier": row["identifier"],
+            # The name and the price are the SRD's, from its spell text, on
+            # the same footing as the meals and the spellcasting services.
+            "source": dict(SRD_SOURCE),
+            "type": {"value": row["kind"], "subtype": ""}, "properties": []},
+        "effects": [], "ownership": {"default": 0},
+        "flags": {"merchant-presets": {"kind": "component"}}}
+
+def write_goods(docs):
+    """Replace every component good with `docs`, leaving the other goods alone."""
+    old = set()
+    for f in glob.glob(os.path.join(GOODS_DIR, "*.json")):
+        d = json.load(open(f))
+        if ((d.get("flags") or {}).get("merchant-presets") or {}).get("kind") == "component":
+            old.add(GOODS_UUID + d["_id"])
+            os.remove(f)
+    for doc in docs:
+        safe = re.sub(r"[^A-Za-z0-9]+", "_", doc["name"]).strip("_")
+        with open(os.path.join(GOODS_DIR, f"{safe}_{doc['_id']}.json"), "w") as out:
+            json.dump(doc, out, indent=2, ensure_ascii=False)
+            out.write("\n")
+    return old
+
+def write_recipe_lines(recipes, rows, old_uuids):
+    """Swap each shop's component lines for the generated ones, in place.
+
+    Lines go where the shop's first component line was, or at the end of its
+    stock. Limited, not services: a component is an item the buyer carries
+    away, sells out, and stays rolled in worlds on unlimited stock, like the
+    poisons and scrolls.
+    """
+    new_uuids = {GOODS_UUID + good_id(r) for r in rows}
+    for shop in recipes["shops"]:
+        lines = [{"n": good_name(r), "t": r["tier"], "cat": COMPONENT_CAT, "limited": True,
+                  "uuid": GOODS_UUID + good_id(r)}
+                 for r in rows if shop["id"] in r["shops"]]
+        stock = shop["stock"]
+        spots = [i for i, l in enumerate(stock) if l.get("uuid") in old_uuids | new_uuids]
+        at = spots[0] if spots else len(stock)
+        kept = [l for l in stock if l.get("uuid") not in old_uuids | new_uuids]
+        shop["stock"] = kept[:at] + lines + kept[at:]
+    with open(os.path.join(MOD, "data/recipes.json"), "w") as out:
+        out.write(json.dumps(recipes))
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -177,6 +263,14 @@ def main():
     n_parts = sum(len(ps) for ps in parts.values())
     print(f"components: {len(data['components'])} rows, {len(parts)} costed spells, "
           f"{n_parts} costed parts, all accounted for")
+    if check:
+        return
+
+    docs = [make_component(row, spells, parts) for row in data["components"]]
+    old = write_goods(docs)
+    write_recipe_lines(recipes, data["components"], old)
+    print(f"  wrote {len(docs)} component goods, replacing {len(old)}; "
+          f"component lines in {sum(1 for s in recipes['shops'] if any(l.get('cat') == COMPONENT_CAT for l in s['stock']))} shops")
 
 if __name__ == "__main__":
     main()

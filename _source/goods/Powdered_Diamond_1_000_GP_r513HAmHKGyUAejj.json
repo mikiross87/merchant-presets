@@ -1,14 +1,14 @@
 {
-  "_id": "6ag3rqyy0kHW8h8a",
-  "_key": "!items!6ag3rqyy0kHW8h8a",
-  "name": "Spell Components (gems), 500 gp and below",
+  "_id": "r513HAmHKGyUAejj",
+  "_key": "!items!r513HAmHKGyUAejj",
+  "name": "Powdered Diamond (1,000 GP)",
   "type": "loot",
-  "img": "icons/commodities/gems/gem-faceted-navette-red.webp",
+  "img": "icons/commodities/materials/bowl-powder-grey.webp",
   "folder": "YCWErxQxP6JCSdKv",
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>Assorted gemstone spell components worth up to 500 gp.</p>",
+      "value": "<p>Powdered diamond worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplSymbol0000]{Symbol}: consumed</li></ul>",
       "chat": ""
     },
     "quantity": 1,
@@ -17,20 +17,21 @@
       "units": "lb"
     },
     "price": {
-      "value": 500,
+      "value": 1000,
       "denomination": "gp"
     },
     "rarity": "",
     "identified": true,
     "container": null,
-    "identifier": "",
+    "identifier": "powdered-diamond-1000",
     "source": {
-      "custom": "Merchant Presets",
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
       "rules": "2024",
       "revision": 1
     },
     "type": {
-      "value": "",
+      "value": "gem",
       "subtype": ""
     },
     "properties": []
@@ -40,11 +41,6 @@
     "default": 0
   },
   "flags": {
-    "item-piles": {
-      "item": {
-        "isService": true
-      }
-    },
     "merchant-presets": {
       "kind": "component"
     }

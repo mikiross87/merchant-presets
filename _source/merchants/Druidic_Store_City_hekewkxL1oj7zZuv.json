@@ -6713,6 +6713,60 @@
       "_key": "!actors.items!hekewkxL1oj7zZuv.kCT4PyWeYWn7YyEp"
     },
     {
+      "name": "Rare Oils (1,000 GP)",
+      "type": "loot",
+      "img": "icons/consumables/potions/bottle-round-label-cork-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>Rare oils worth 1,000 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplReincarnat]{Reincarnate}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 1000,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "rare-oils-1000",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.2XKFJS5dzJwow18h"
+      },
+      "_id": "w8mwnW0jBgEfPC1D",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.w8mwnW0jBgEfPC1D"
+    },
+    {
       "name": "Studded Leather Armor",
       "system": {
         "description": {
@@ -9777,6 +9831,12 @@
           "keepOnMerchant": true,
           "isService": true,
           "cantBeSoldToMerchants": true
+        },
+        "Rare Oils (1,000 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -9811,7 +9871,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,component,travel,gear"
+            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -9866,7 +9926,8 @@
               "0isAZPcexzr0kTOT": "1",
               "JJukhza8UQdb0Km7": "1",
               "h6iPgaShpt0ESGNP": "1",
-              "OLRPAFEIGHTJUTW1": "1"
+              "OLRPAFEIGHTJUTW1": "1",
+              "segqU17MkbJdZzvC": "1d2-1"
             }
           }
         ],

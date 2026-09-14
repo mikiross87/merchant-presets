@@ -951,15 +951,123 @@
       "_key": "!actors.items!qvDF1F8ozMgRrsxU.pjvUzcsngXjl27p4"
     },
     {
-      "name": "Spell Components (gems), 150 gp and below",
+      "name": "Diamond (50 GP)",
       "type": "loot",
-      "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+      "img": "icons/commodities/gems/gem-faceted-round-white.webp",
       "system": {
         "description": {
-          "value": "<p>Assorted gemstone spell components worth up to 150 gp.</p>",
+          "value": "<p>A diamond worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplChromaticO]{Chromatic Orb}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-50",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.clm7GsPQl6Ebe1lF"
+      },
+      "_id": "jHMrMy3A5FDVdzRS",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.jHMrMy3A5FDVdzRS"
+    },
+    {
+      "name": "Pearl (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/pearl-natural.webp",
+      "system": {
+        "description": {
+          "value": "<p>A pearl worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplIdentify00]{Identify}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "pearl-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.PD4kLIn34TZGx3g9"
+      },
+      "_id": "FcwIWDP7Bw0yqLeZ",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.FcwIWDP7Bw0yqLeZ"
+    },
+    {
+      "name": "Black Onyx (150 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-faceted-round-black.webp",
+      "system": {
+        "description": {
+          "value": "<p>A black onyx stone worth 150 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplCreateUnde]{Create Undead}: one for each corpse, not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -971,37 +1079,470 @@
         "rarity": "",
         "identified": true,
         "container": null,
-        "identifier": "",
+        "identifier": "black-onyx-150",
         "source": {
-          "custom": "Merchant Presets",
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
           "rules": "2024",
           "revision": 1
         },
         "type": {
-          "value": "",
+          "value": "gem",
           "subtype": ""
         },
         "properties": []
       },
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true
-          }
-        },
         "merchant-presets": {
           "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.HeRVCROhFBnqI3sU"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Qq7zdAuaJaaBmiyB"
       },
-      "_id": "h2vk2qRslXrx7naj",
-      "_key": "!actors.items!qvDF1F8ozMgRrsxU.h2vk2qRslXrx7naj"
+      "_id": "Y3YLiHDghGOq5ysc",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.Y3YLiHDghGOq5ysc"
+    },
+    {
+      "name": "Diamond Dust (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/powder-raw-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>A pinch of diamond dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplNondetecti]{Nondetection}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-dust-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.cjvKU9FMEjjo3bi0"
+      },
+      "_id": "yz0aquSL1nsx790i",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.yz0aquSL1nsx790i"
+    },
+    {
+      "name": "Diamond Dust (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
+      "system": {
+        "description": {
+          "value": "<p>Diamond dust worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "diamond-dust-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7"
+      },
+      "_id": "P8T3MtM5DIt4Cu0v",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.P8T3MtM5DIt4Cu0v"
+    },
+    {
+      "name": "Ruby Dust (50 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-fragments-red.webp",
+      "system": {
+        "description": {
+          "value": "<p>Ruby dust worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplContinualF]{Continual Flame}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "ruby-dust-50",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.SIlXEqnFb9dGYweI"
+      },
+      "_id": "Lx6zbEBVClq5MdjT",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.Lx6zbEBVClq5MdjT"
+    },
+    {
+      "name": "Jade Dust (10 GP)",
+      "type": "loot",
+      "img": "icons/commodities/gems/gem-fragments-green.webp",
+      "system": {
+        "description": {
+          "value": "<p>Jade dust worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMouth]{Magic Mouth}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "jade-dust-10",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Ee8LJ2qD0OHMzFAE"
+      },
+      "_id": "73sOG8w4xLTfRAQZ",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.73sOG8w4xLTfRAQZ"
+    },
+    {
+      "name": "Jade Dust (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/materials/bowl-powder-teal.webp",
+      "system": {
+        "description": {
+          "value": "<p>Jade dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplProgrammed]{Programmed Illusion}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "jade-dust-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "gem",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.OJzblSg4QtNAvcuT"
+      },
+      "_id": "KPoCAPlTlyLYUeSb",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.KPoCAPlTlyLYUeSb"
+    },
+    {
+      "name": "Gold Dust (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/materials/bowl-powder-gold.webp",
+      "system": {
+        "description": {
+          "value": "<p>Gold dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplArcaneLock]{Arcane Lock}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "gold-dust-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "trade",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.vetdtErdSySHDor1"
+      },
+      "_id": "WjO0HcIAUfWQvYDF",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.WjO0HcIAUfWQvYDF"
+    },
+    {
+      "name": "Platinum Rings, pair (100 GP)",
+      "type": "loot",
+      "img": "icons/equipment/finger/ring-band-engraved-scrolls-silver.webp",
+      "system": {
+        "description": {
+          "value": "<p>A pair of platinum rings worth 50 GP each.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "platinum-rings-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "art",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.TsKMZH8OUIMiuWAw"
+      },
+      "_id": "PYdRAP4jDBiysnnu",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.PYdRAP4jDBiysnnu"
+    },
+    {
+      "name": "Silver Bar (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/metal/ingot-stamped-silver.webp",
+      "system": {
+        "description": {
+          "value": "<p>A silver bar worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAstralProj]{Astral Projection}: one for each target, consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "silver-bar-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "trade",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.QhSHbCeaOMGDPzVp"
+      },
+      "_id": "OubJW97VMwpUfmrV",
+      "_key": "!actors.items!qvDF1F8ozMgRrsxU.OubJW97VMwpUfmrV"
     },
     {
       "name": "Club",
@@ -1298,11 +1839,71 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         },
-        "Spell Components (gems), 150 gp and below": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true
+        "Diamond (50 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Pearl (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Black Onyx (150 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diamond Dust (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Diamond Dust (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ruby Dust (50 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Jade Dust (10 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Jade Dust (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gold Dust (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Platinum Rings, pair (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Silver Bar (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {}
@@ -1349,7 +1950,17 @@
               "HrFqPidymSWTScaC": "1d4+1",
               "t8P5ofZTFNhgQBK7": "1d4+1",
               "VjcqtPalcav7oIpc": "1d4+1",
-              "wc86uyBImLuecVby": "1"
+              "j3XjiUBqNPMfgKBT": "1d2",
+              "zCZU3CmrgYtfFKsI": "1d2",
+              "eArFJ8TrvWj5FBbL": "1d2",
+              "5qFRy7XxW9WHpE9n": "1d4+1",
+              "4kle45C9Q9Rj4GzM": "1d2",
+              "p6mkgd7QDL6zOgQm": "1d2",
+              "RJ0U7DWGyy2Yiolq": "1d4+1",
+              "UPFoO0RHt03YVoTf": "1d4+1",
+              "uijX0hNUJEU1ygL2": "1d4+1",
+              "qcTlC42QxfK4JXBC": "1d2",
+              "DZN1lxKU3ZVgF6GH": "1d2"
             }
           }
         ],

@@ -2797,6 +2797,330 @@
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.A2hcWaN5JG5nnd3W"
     },
     {
+      "name": "Incense (10 GP)",
+      "type": "loot",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-10",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz"
+      },
+      "_id": "fTYAklpSvxjgiDNk",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.fTYAklpSvxjgiDNk"
+    },
+    {
+      "name": "Incense (25 GP)",
+      "type": "loot",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "system": {
+        "description": {
+          "value": "<p>Incense worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "incense-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8"
+      },
+      "_id": "8ffz17PwKnl2jhzP",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.8ffz17PwKnl2jhzP"
+    },
+    {
+      "name": "Rare Inks (50 GP)",
+      "type": "loot",
+      "img": "icons/tools/scribal/ink-quill-pink.webp",
+      "system": {
+        "description": {
+          "value": "<p>Rare inks worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTeleportat]{Teleportation Circle}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "rare-inks-50",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.02VjN9rBSGvjgSb9"
+      },
+      "_id": "cTAJ1NgfrNgxkM0n",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.cTAJ1NgfrNgxkM0n"
+    },
+    {
+      "name": "Salt and Powdered Silver (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/materials/bowl-liquid-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>Salt and powdered silver worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicCircl]{Magic Circle}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "salt-and-powdered-silver-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.bhibfvXte400oYJs"
+      },
+      "_id": "ngdAjZJRMli93Qpw",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.ngdAjZJRMli93Qpw"
+    },
+    {
+      "name": "Silver Rod (10 GP)",
+      "type": "loot",
+      "img": "icons/commodities/metal/plating-metal-rod-steel.webp",
+      "system": {
+        "description": {
+          "value": "<p>A silver rod worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGuardsandW]{Guards and Wards}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 10,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "silver-rod-10",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.qGaQstEp2yZhlene"
+      },
+      "_id": "D2TtJV9E0JS89nyg",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.D2TtJV9E0JS89nyg"
+    },
+    {
+      "name": "Jeweled Horn or Glass Eye (100 GP)",
+      "type": "loot",
+      "img": "icons/commodities/treasure/horn-carved-banded.webp",
+      "system": {
+        "description": {
+          "value": "<p>A focus worth 100 GP: a jeweled horn for hearing or a glass eye for seeing.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplClairvoyan]{Clairvoyance}: not consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "jeweled-horn-or-glass-eye-100",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.CRvPt3jtTNkUSZu8"
+      },
+      "_id": "gSy4CVHxbJZu1F8q",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.gSy4CVHxbJZu1F8q"
+    },
+    {
       "name": "Club",
       "system": {
         "description": {
@@ -3210,6 +3534,42 @@
           "keepOnMerchant": true,
           "isService": true,
           "cantBeSoldToMerchants": true
+        },
+        "Incense (10 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Incense (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rare Inks (50 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Salt and Powdered Silver (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Silver Rod (10 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Jeweled Horn or Glass Eye (100 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -3242,7 +3602,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,component,travel,gear"
+            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -3277,7 +3637,13 @@
               "HptysC3gagu5gl0i": "1d2",
               "ebheZbPYFMrSqoVT": "1",
               "3DxqSimCqhDdR3pM": "1",
-              "up268ePL682jPcq1": "1"
+              "up268ePL682jPcq1": "1",
+              "8rFA8c9u3YYQpSEg": "1d4+1",
+              "Pl7mg5b0xTmsCaWI": "1d4+1",
+              "iTKsaQxBSwjBXqSn": "1d2",
+              "5qfCUKaAwN2SR0K7": "1d2",
+              "T447mbWqq2pBqH4n": "1d4+1",
+              "7qjH9XKM9mFXoCBg": "1d2"
             }
           }
         ],
