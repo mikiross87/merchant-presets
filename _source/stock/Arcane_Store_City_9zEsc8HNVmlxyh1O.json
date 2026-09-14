@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/wizard-castle.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d88",
+  "formula": "1d68",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -607,38 +607,6 @@
       "flags": {}
     },
     {
-      "_id": "XTeLjhGAXrqrULer",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.XTeLjhGAXrqrULer",
-      "type": "document",
-      "name": "Spellcasting: Chromatic Orb",
-      "img": "icons/magic/light/explosion-star-small-teal-purple.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.zCuSRIJdpaYB5ZuG",
-      "weight": 1,
-      "range": [
-        38,
-        38
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "Vewj63gUjI3mZlec",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.Vewj63gUjI3mZlec",
-      "type": "document",
-      "name": "Spellcasting: Find Familiar",
-      "img": "icons/creatures/mammals/spirit-deer-herd-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.pjzjRqoh08p0fGql",
-      "weight": 1,
-      "range": [
-        39,
-        39
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "nn1fvVqB12FvUlAx",
       "_key": "!tables.results!9zEsc8HNVmlxyh1O.nn1fvVqB12FvUlAx",
       "type": "document",
@@ -647,8 +615,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Oj3FHypeR9tkE203",
       "weight": 1,
       "range": [
-        40,
-        40
+        38,
+        38
       ],
       "drawn": false,
       "description": "",
@@ -663,8 +631,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Eq6F5snSZ7Nvs4EV",
       "weight": 1,
       "range": [
-        41,
-        41
+        39,
+        39
       ],
       "drawn": false,
       "description": "",
@@ -679,8 +647,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
       "weight": 1,
       "range": [
-        42,
-        42
+        40,
+        40
       ],
       "drawn": false,
       "description": "",
@@ -695,24 +663,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.EDgBgZf7uo7AJnpx",
       "weight": 1,
       "range": [
-        43,
-        43
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "DC6oStjqkcu0W2C6",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.DC6oStjqkcu0W2C6",
-      "type": "document",
-      "name": "Spellcasting: Augury",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
-      "weight": 1,
-      "range": [
-        44,
-        44
+        41,
+        41
       ],
       "drawn": false,
       "description": "",
@@ -727,8 +679,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
       "weight": 1,
       "range": [
-        45,
-        45
+        42,
+        42
       ],
       "drawn": false,
       "description": "",
@@ -743,8 +695,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.3zn6J9LSZv93Jw95",
       "weight": 1,
       "range": [
-        46,
-        46
+        43,
+        43
       ],
       "drawn": false,
       "description": "",
@@ -759,8 +711,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fvRA9Q6fm2J4xBpC",
       "weight": 1,
       "range": [
-        47,
-        47
+        44,
+        44
       ],
       "drawn": false,
       "description": "",
@@ -775,8 +727,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.lPcQMkyeNrbcWmjI",
       "weight": 1,
       "range": [
-        48,
-        48
+        45,
+        45
       ],
       "drawn": false,
       "description": "",
@@ -791,8 +743,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.4ErAqbhZ4I3NjVnT",
       "weight": 1,
       "range": [
-        49,
-        49
+        46,
+        46
       ],
       "drawn": false,
       "description": "",
@@ -807,8 +759,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.P3rfzjfJhz6bJaJq",
       "weight": 1,
       "range": [
-        50,
-        50
+        47,
+        47
       ],
       "drawn": false,
       "description": "",
@@ -823,24 +775,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
       "weight": 1,
       "range": [
-        51,
-        51
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "utESa6h3tuBIkofb",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.utESa6h3tuBIkofb",
-      "type": "document",
-      "name": "Spellcasting: Secret Chest",
-      "img": "icons/containers/chest/chest-simple-box-gold-brown.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.yW0kNJwbjdDdMkgg",
-      "weight": 1,
-      "range": [
-        52,
-        52
+        48,
+        48
       ],
       "drawn": false,
       "description": "",
@@ -855,8 +791,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.czRnWIYeLA6pgce1",
       "weight": 1,
       "range": [
-        53,
-        53
+        49,
+        49
       ],
       "drawn": false,
       "description": "",
@@ -871,24 +807,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.2V4podU9BqxWyQ3B",
       "weight": 1,
       "range": [
-        54,
-        54
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "boMUWJwaWaw341iT",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.boMUWJwaWaw341iT",
-      "type": "document",
-      "name": "Spellcasting: Planar Binding",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
-      "weight": 1,
-      "range": [
-        55,
-        55
+        50,
+        50
       ],
       "drawn": false,
       "description": "",
@@ -903,24 +823,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
       "weight": 1,
       "range": [
-        56,
-        56
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "hkpuirQUypsQZG2l",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.hkpuirQUypsQZG2l",
-      "type": "document",
-      "name": "Spellcasting: Summon Dragon",
-      "img": "icons/creatures/abilities/dragon-breath-purple.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.ez7OO3Snk5M2HPKV",
-      "weight": 1,
-      "range": [
-        57,
-        57
+        51,
+        51
       ],
       "drawn": false,
       "description": "",
@@ -935,56 +839,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.hF2wWkTCw03NwCgR",
       "weight": 1,
       "range": [
-        58,
-        58
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "d1emxor7X8e7os3D",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.d1emxor7X8e7os3D",
-      "type": "document",
-      "name": "Spellcasting: Circle of Death",
-      "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.E9bYuU8UQ3bHAOTO",
-      "weight": 1,
-      "range": [
-        59,
-        59
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "2xiolUrF3REbcfwh",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.2xiolUrF3REbcfwh",
-      "type": "document",
-      "name": "Spellcasting: Contingency",
-      "img": "icons/magic/time/hourglass-tilted-glowing-gold.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.CagG3ucsLoiCFZnh",
-      "weight": 1,
-      "range": [
-        60,
-        60
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "Nds2VewEFpF3Tpr4",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.Nds2VewEFpF3Tpr4",
-      "type": "document",
-      "name": "Spellcasting: Create Undead",
-      "img": "icons/magic/death/skull-flames-white-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.EgwdiqdERTxQSvbw",
-      "weight": 1,
-      "range": [
-        61,
-        61
+        52,
+        52
       ],
       "drawn": false,
       "description": "",
@@ -999,40 +855,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.jgDBWd8NPF8d0g9R",
       "weight": 1,
       "range": [
-        62,
-        62
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "3TMkokO2oPzDPkHl",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.3TMkokO2oPzDPkHl",
-      "type": "document",
-      "name": "Spellcasting: Instant Summons",
-      "img": "icons/commodities/gems/gem-fragments-turquoise.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.vpZCYI4paz9TDn2J",
-      "weight": 1,
-      "range": [
-        63,
-        63
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "ZH6a3j6RktFGTzY1",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.ZH6a3j6RktFGTzY1",
-      "type": "document",
-      "name": "Spellcasting: Magic Jar",
-      "img": "icons/containers/kitchenware/jug-bottle-clay-brown-gold-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.wfaukp2ls4oFljZ6",
-      "weight": 1,
-      "range": [
-        64,
-        64
+        53,
+        53
       ],
       "drawn": false,
       "description": "",
@@ -1047,8 +871,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.y97CulRGFTAuNmNH",
       "weight": 1,
       "range": [
-        65,
-        65
+        54,
+        54
       ],
       "drawn": false,
       "description": "",
@@ -1063,88 +887,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.J2J46nkMLgnAa3k7",
       "weight": 1,
       "range": [
-        66,
-        66
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "9OQEjXROXp6kThEa",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.9OQEjXROXp6kThEa",
-      "type": "document",
-      "name": "Spellcasting: Arcane Sword",
-      "img": "icons/weapons/swords/sword-flanged-lightning.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.nL3GpzuBkknULS0p",
-      "weight": 1,
-      "range": [
-        67,
-        67
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "F9AUJNf0X2HwUGsr",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.F9AUJNf0X2HwUGsr",
-      "type": "document",
-      "name": "Spellcasting: Forcecage",
-      "img": "icons/magic/control/silhouette-hold-beam-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.kjSlLCRm6bGKJOaM",
-      "weight": 1,
-      "range": [
-        68,
-        68
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "QrsgONAQUi4IpIKf",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.QrsgONAQUi4IpIKf",
-      "type": "document",
-      "name": "Spellcasting: Magnificent Mansion",
-      "img": "icons/environment/settlement/house-manor.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.wOquzfuKeOYkzYYn",
-      "weight": 1,
-      "range": [
-        69,
-        69
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "wzyjALXhqrrurI2k",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.wzyjALXhqrrurI2k",
-      "type": "document",
-      "name": "Spellcasting: Plane Shift",
-      "img": "icons/skills/targeting/target-glowing-yellow.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR",
-      "weight": 1,
-      "range": [
-        70,
-        70
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "FWfe7vVydlS2E05w",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.FWfe7vVydlS2E05w",
-      "type": "document",
-      "name": "Spellcasting: Project Image",
-      "img": "icons/creatures/magical/construct-golem-stone-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.G2DA7w97VGZ4SJjF",
-      "weight": 1,
-      "range": [
-        71,
-        71
+        55,
+        55
       ],
       "drawn": false,
       "description": "",
@@ -1159,24 +903,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.yDur0I8l7aLuV9CC",
       "weight": 1,
       "range": [
-        72,
-        72
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "rIOjxDhKvTmKeo2E",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.rIOjxDhKvTmKeo2E",
-      "type": "document",
-      "name": "Spellcasting: Simulacrum",
-      "img": "icons/magic/water/ice-snowman.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.hHw7khu3bgOQMUFw",
-      "weight": 1,
-      "range": [
-        73,
-        73
+        56,
+        56
       ],
       "drawn": false,
       "description": "",
@@ -1191,8 +919,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.0qEsbRG0RIKAqfly",
       "weight": 1,
       "range": [
-        74,
-        74
+        57,
+        57
       ],
       "drawn": false,
       "description": "",
@@ -1207,24 +935,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.5qnnaq421aXgfqLW",
       "weight": 1,
       "range": [
-        75,
-        75
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "EX8PLovUwxE4N9no",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.EX8PLovUwxE4N9no",
-      "type": "document",
-      "name": "Spellcasting: Astral Projection",
-      "img": "icons/magic/light/orbs-hand-gray.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.ASNEQUZGdt5ejRUn",
-      "weight": 1,
-      "range": [
-        76,
-        76
+        58,
+        58
       ],
       "drawn": false,
       "description": "",
@@ -1239,40 +951,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.8yhm1wwayAIONgAT",
       "weight": 1,
       "range": [
-        77,
-        77
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "ZU9MXN3crjbNJxP8",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.ZU9MXN3crjbNJxP8",
-      "type": "document",
-      "name": "Spellcasting: Imprisonment",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-purple.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.LJpd88rSyduMu49z",
-      "weight": 1,
-      "range": [
-        78,
-        78
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "SSzXQlBi6FUmDJa2",
-      "_key": "!tables.results!9zEsc8HNVmlxyh1O.SSzXQlBi6FUmDJa2",
-      "type": "document",
-      "name": "Spellcasting: Shapechange",
-      "img": "icons/magic/unholy/hand-fire-skeleton-pink.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.DDTfOQrapsfrZsyY",
-      "weight": 1,
-      "range": [
-        79,
-        79
+        59,
+        59
       ],
       "drawn": false,
       "description": "",
@@ -1287,8 +967,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
       "weight": 1,
       "range": [
-        80,
-        80
+        60,
+        60
       ],
       "drawn": false,
       "description": "",
@@ -1303,8 +983,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
       "weight": 1,
       "range": [
-        81,
-        81
+        61,
+        61
       ],
       "drawn": false,
       "description": "",
@@ -1319,8 +999,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
       "weight": 1,
       "range": [
-        82,
-        82
+        62,
+        62
       ],
       "drawn": false,
       "description": "",
@@ -1335,8 +1015,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.02VjN9rBSGvjgSb9",
       "weight": 1,
       "range": [
-        83,
-        83
+        63,
+        63
       ],
       "drawn": false,
       "description": "",
@@ -1351,8 +1031,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bhibfvXte400oYJs",
       "weight": 1,
       "range": [
-        84,
-        84
+        64,
+        64
       ],
       "drawn": false,
       "description": "",
@@ -1367,8 +1047,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.qGaQstEp2yZhlene",
       "weight": 1,
       "range": [
-        85,
-        85
+        65,
+        65
       ],
       "drawn": false,
       "description": "",
@@ -1383,8 +1063,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ymreSaVSJoc4eUb7",
       "weight": 1,
       "range": [
-        86,
-        86
+        66,
+        66
       ],
       "drawn": false,
       "description": "",
@@ -1399,8 +1079,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.CRvPt3jtTNkUSZu8",
       "weight": 1,
       "range": [
-        87,
-        87
+        67,
+        67
       ],
       "drawn": false,
       "description": "",
@@ -1415,8 +1095,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.osgA7NflCgBqqjoB",
       "weight": 1,
       "range": [
-        88,
-        88
+        68,
+        68
       ],
       "drawn": false,
       "description": "",

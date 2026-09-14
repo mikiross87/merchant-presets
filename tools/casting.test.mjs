@@ -7,20 +7,20 @@ import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 // own trade card already says what was paid, so this message says what was
 // cast and for whom, and hands the GM the spell and its effects.
 
-const WARDING_BOND = "Compendium.dnd5e.spells24.Item.phbsplWardingBon";
+const GREATER_RESTORATION = "Compendium.dnd5e.spells24.Item.phbsplGreaterRes";
 const RAISE_DEAD = "Compendium.dnd5e.spells24.Item.phbsplRaiseDead0";
 
 test("a named service says which spell was cast, for whom, and links it", () => {
   const html = castingMessage({ shop: "Temple & Faith Store (Town)", buyer: "Aria", casts: [
-    { name: "Spellcasting: Warding Bond", quantity: 1, spell: WARDING_BOND, effects: [] }
+    { name: "Spellcasting: Greater Restoration", quantity: 1, spell: GREATER_RESTORATION, effects: [] }
   ] });
-  assert.equal(html, `<p><strong>Temple &amp; Faith Store (Town)</strong> casts @UUID[${WARDING_BOND}]{Warding Bond} `
+  assert.equal(html, `<p><strong>Temple &amp; Faith Store (Town)</strong> casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} `
     + "for <strong>Aria</strong>.</p>");
 });
 
 test("buying a spell more than once says how many times", () => {
   const cast = n => castingMessage({ shop: "Temple", buyer: "Aria", casts: [
-    { name: "Spellcasting: Warding Bond", quantity: n, spell: WARDING_BOND, effects: [] }] });
+    { name: "Spellcasting: Greater Restoration", quantity: n, spell: GREATER_RESTORATION, effects: [] }] });
   assert.ok(cast(2).includes("for <strong>Aria</strong> twice.</p>"));
   assert.ok(cast(3).includes("for <strong>Aria</strong> 3 times.</p>"));
 });
@@ -89,8 +89,8 @@ const temple = world.merchant("Temple_Faith_Store_Town_", { table: "RollTable.wi
 world.actors.push(temple);
 const aria = { id: "aria", uuid: "Actor.aria", name: "Aria", type: "character", flags: {} };
 world.actors.push(aria);
-world.compendium.set(WARDING_BOND, { uuid: WARDING_BOND, name: "Warding Bond", effects: [
-  { uuid: `${WARDING_BOND}.ActiveEffect.bonded`, name: "Bonded", type: "base" }] });
+world.compendium.set(RAISE_DEAD, { uuid: RAISE_DEAD, name: "Raise Dead", effects: [
+  { uuid: `${RAISE_DEAD}.ActiveEffect.etY0sDrXe6DcFEzc`, name: "Resurrection Sickness (Day 1)", type: "base" }] });
 
 const shelf = name => structuredClone(temple.items.find(i => i.name === name));
 const buy = (name, quantity = 1) => ({ buyerReceive: [{ quantity, item: shelf(name) }] });
@@ -101,17 +101,17 @@ const posted = async (...args) => {
 };
 
 test("buying a named spell posts one message, spoken by the shop, with the spell and its effects", async () => {
-  const [message, ...more] = await posted(temple, aria, buy("Spellcasting: Warding Bond"), "gm", "i1");
+  const [message, ...more] = await posted(temple, aria, buy("Spellcasting: Raise Dead"), "gm", "i1");
   assert.equal(more.length, 0);
   assert.equal(message.speaker.alias, "Temple & Faith Store (Town)");
-  assert.ok(message.content.includes(`casts @UUID[${WARDING_BOND}]{Warding Bond} for <strong>Aria</strong>.`), message.content);
-  assert.ok(message.content.includes(`@UUID[${WARDING_BOND}.ActiveEffect.bonded]{Bonded}`), message.content);
+  assert.ok(message.content.includes(`casts @UUID[${RAISE_DEAD}]{Raise Dead} for <strong>Aria</strong>.`), message.content);
+  assert.ok(message.content.includes(`@UUID[${RAISE_DEAD}.ActiveEffect.etY0sDrXe6DcFEzc]{Resurrection Sickness (Day 1)}`), message.content);
   assert.ok(!/GP/.test(message.content), "the price is Item Piles' trade card's to show");
 });
 
 test("a spell whose document cannot be fetched is still announced, without effects", async () => {
-  const [message] = await posted(temple, aria, buy("Spellcasting: Raise Dead"), "gm", "i2");
-  assert.ok(message.content.includes(`casts @UUID[${RAISE_DEAD}]{Raise Dead} for <strong>Aria</strong>.`), message.content);
+  const [message] = await posted(temple, aria, buy("Spellcasting: Greater Restoration"), "gm", "i2");
+  assert.ok(message.content.includes(`casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} for <strong>Aria</strong>.`), message.content);
   assert.ok(!message.content.includes("Effects"), message.content);
 });
 
@@ -121,7 +121,7 @@ test("buying a level service asks for the spell", async () => {
 });
 
 test("another user's trade is announced by that user's client, not this one", async () => {
-  assert.deepEqual(await posted(temple, aria, buy("Spellcasting: Warding Bond"), "someone-else", "i4"), []);
+  assert.deepEqual(await posted(temple, aria, buy("Spellcasting: Raise Dead"), "someone-else", "i4"), []);
 });
 
 test("goods that are not spellcasting post nothing", async () => {
@@ -137,7 +137,7 @@ test("the message follows Item Piles' chat visibility", async () => {
 
 test("with the setting off, nothing is posted", async () => {
   world.settings.spellcastingToChat = false;
-  const messages = await posted(temple, aria, buy("Spellcasting: Warding Bond"), "gm", "i7");
+  const messages = await posted(temple, aria, buy("Spellcasting: Raise Dead"), "gm", "i7");
   world.settings.spellcastingToChat = true;
   assert.deepEqual(messages, []);
 });

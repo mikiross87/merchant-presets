@@ -8,11 +8,13 @@ data/components.json; the facts (which spells name a component, what it is
 worth, whether the spell consumes it) are read from the spell text and checked
 against it, so a row that disagrees with the SRD stops the build.
 
-Spellcasting by name (#55): one service per spell with a costed component,
-priced at its level service plus that component, and hired out at each shop
-whose classes have the spell on their SRD spell list. Everything in it is
-derived: the prices from the spell text and the hand-made level services, the
-shops from the class lists in dnd5e.content24.
+Spellcasting by name (#55): one service per spell with a costed component
+that works without the caster, priced at its level service plus that
+component, and hired out at each shop whose classes have the spell on their
+SRD spell list. The prices come from the spell text and the hand-made level
+services, the shops from the class lists in dnd5e.content24. Which spells a
+buyer can't use without the caster along is editorial, in
+data/spellcasting.json.
 
 Run before tools/build_srd.py, which embeds the goods in the merchants:
 
@@ -309,6 +311,19 @@ def load_class_lists(spells):
         raise SpellTextError(f"no class spell list for {missing}")
     return lists
 
+def sold_by_name(parts, not_sold):
+    """The costed spells sold by name: every one not in data/spellcasting.json's
+    not_sold, which names the spells a buyer cannot use without the caster
+    along (#55). A listed spell must be a costed spell, listed once."""
+    names = [row["spell"] for row in not_sold]
+    for name in names:
+        if name not in parts:
+            raise SpellTextError(f"not_sold lists {name}, which has no costed material component")
+    twice = sorted({n for n in names if names.count(n) > 1})
+    if twice:
+        raise SpellTextError(f"not_sold lists {twice} more than once")
+    return {n: ps for n, ps in parts.items() if n not in names}
+
 def level_services(goods):
     """spell level -> the hand-made level service good that prices it."""
     out = {}
@@ -331,8 +346,9 @@ def make_service(spell, parts, level_good):
     noun = "components" if len(parts) > 1 else "component"
     desc = (f"<p>A spellcaster casts {link} on your behalf and provides its material {noun}: "
             f"{spell['system']['materials']['value']}.</p>")
-    # Astral Projection and Create Undead need the component again for every
-    # target or corpse. Priced for one, as the bring-your-own buyer would be.
+    # A component bought again for every target or corpse is priced for one,
+    # as the bring-your-own buyer would be. None of the spells sold today needs
+    # it; Astral Projection and Create Undead, which do, keep the caster.
     per = parts[0]["per"]
     if per:
         desc += f"<p>The price covers one {per}; each further {per} costs {component:,} GP more.</p>"
@@ -356,7 +372,7 @@ def make_service(spell, parts, level_good):
 
 def plan_services(spells, parts, lists, levels, recipes):
     """shop id -> [(level, spell name)] it hires out by name, checked so that
-    every costed spell has a shop and every shop the level line for it."""
+    every spell in `parts` has a shop and every shop the level line for it."""
     plan = {}
     homeless = set(parts)
     for shop in recipes["shops"]:
@@ -403,18 +419,20 @@ def main():
     spells = load_spells()
     data = json.load(open(os.path.join(MOD, "data/components.json")))
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
+    hired = json.load(open(os.path.join(MOD, "data/spellcasting.json")))
     try:
         parts = costed(spells)
         validate_components(data, spells, parts, {s["id"] for s in recipes["shops"]})
+        sold = sold_by_name(parts, hired["not_sold"])
         levels = level_services(load_goods())
-        plan = plan_services(spells, parts, load_class_lists(spells), levels, recipes)
+        plan = plan_services(spells, sold, load_class_lists(spells), levels, recipes)
     except SpellTextError as e:
         sys.exit(f"spell goods: {e}")
 
     n_parts = sum(len(ps) for ps in parts.values())
     print(f"components: {len(data['components'])} rows, {len(parts)} costed spells, "
           f"{n_parts} costed parts, all accounted for")
-    print(f"spellcasting: {len(parts)} spells by name, "
+    print(f"spellcasting: {len(sold)} spells by name, {len(parts) - len(sold)} not sold, "
           + ", ".join(f"{shop} {len(names)}" for shop, names in plan.items() if names))
     if check:
         return
@@ -424,7 +442,7 @@ def main():
     place_lines(recipes, component_lines(data["components"]),
                 old | {GOODS_UUID + d["_id"] for d in docs}, len)
 
-    services = [make_service(spells[n], parts[n], levels[spells[n]["system"]["level"]]) for n in parts]
+    services = [make_service(spells[n], sold[n], levels[spells[n]["system"]["level"]]) for n in sold]
     old_services = write_goods(services, lambda d: bool(mp_flags(d).get("spell")))
     place_lines(recipes, service_lines(spells, plan, levels),
                 old_services | {GOODS_UUID + d["_id"] for d in services}, after_level_services(levels))

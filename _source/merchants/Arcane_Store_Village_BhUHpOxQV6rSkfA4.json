@@ -2640,7 +2640,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2694,7 +2694,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2748,7 +2748,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2795,118 +2795,6 @@
       },
       "_id": "A2hcWaN5JG5nnd3W",
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.A2hcWaN5JG5nnd3W"
-    },
-    {
-      "name": "Spellcasting: Chromatic Orb",
-      "type": "loot",
-      "img": "icons/magic/light/explosion-star-small-teal-purple.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplChromaticO]{Chromatic Orb} on your behalf and provides its material component: a diamond worth 50+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 100,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplChromaticO"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.zCuSRIJdpaYB5ZuG"
-      },
-      "_id": "DSyHfQI6OlwM1l6Y",
-      "_key": "!actors.items!BhUHpOxQV6rSkfA4.DSyHfQI6OlwM1l6Y"
-    },
-    {
-      "name": "Spellcasting: Find Familiar",
-      "type": "loot",
-      "img": "icons/creatures/mammals/spirit-deer-herd-blue.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar} on your behalf and provides its material component: burning incense worth 10+ GP, which the spell consumes.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 60,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplFindFamili"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.pjzjRqoh08p0fGql"
-      },
-      "_id": "11BwDl2ybLz4XeSV",
-      "_key": "!actors.items!BhUHpOxQV6rSkfA4.11BwDl2ybLz4XeSV"
     },
     {
       "name": "Spellcasting: Identify",
@@ -3131,62 +3019,6 @@
       },
       "_id": "08ytxCvKt0I8H4Tq",
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.08ytxCvKt0I8H4Tq"
-    },
-    {
-      "name": "Spellcasting: Augury",
-      "type": "loot",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury} on your behalf and provides its material component: specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 225,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplAugury0000"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc"
-      },
-      "_id": "s9FMaxTpo1MbvJIt",
-      "_key": "!actors.items!BhUHpOxQV6rSkfA4.s9FMaxTpo1MbvJIt"
     },
     {
       "name": "Spellcasting: Continual Flame",
@@ -4039,20 +3871,6 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         },
-        "Spellcasting: Chromatic Orb": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Find Familiar": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Identify": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
@@ -4075,13 +3893,6 @@
           "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Arcane Lock": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Augury": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
@@ -4151,7 +3962,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components are listed by name, with the components in the price; any other spell, or one you bring the components for, costs its level's price.</em></p>",
+        "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/wizard-castle.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
@@ -4214,13 +4025,10 @@
               "ebheZbPYFMrSqoVT": "1",
               "3DxqSimCqhDdR3pM": "1",
               "up268ePL682jPcq1": "1",
-              "2bTQ6snwqYamC91P": "1",
-              "H4M6PIvzX76QUWae": "1",
               "WLIquD8OMtng7DAy": "1",
               "PaB4GDJXFpg3aH4Z": "1",
               "Tqjr4uyOparozcU1": "1",
               "Ja9f45U6kgVBJb3S": "1",
-              "XCzUcjTk6newXepc": "1",
               "FW2UrdfVMu8jxWu0": "1",
               "x5qGtu6GNxxHkBZJ": "1",
               "8rFA8c9u3YYQpSEg": "1d4+1",
