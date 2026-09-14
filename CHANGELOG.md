@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-09-14
+
 ### Fixed
 
 - Shops now open and close with the world clock once they are in the world.
@@ -24,7 +26,9 @@ than for the code. Reference the issue or PR it closes.
   on top, as the SRD's Spellcasting Services rule has it. Each service's
   description and the shop window both say so, and the service prices are
   unchanged: Revivify is the 300 GP level 3 service plus its 300 GP diamond.
-  (#52)
+  Merchants already in a world get the new service text on their next
+  restock; the note in the shop window needs a fresh merchant from the
+  compendium. (#52)
 
 ## [1.2.3] - 2026-09-13
 
@@ -127,7 +131,8 @@ than for the code. Reference the issue or PR it closes.
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/mikiross87/merchant-presets/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/mikiross87/merchant-presets/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/mikiross87/merchant-presets/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/mikiross87/merchant-presets/compare/v1.2.0...v1.2.1
