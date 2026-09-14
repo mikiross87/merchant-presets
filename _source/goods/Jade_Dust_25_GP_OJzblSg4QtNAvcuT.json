@@ -43,6 +43,11 @@
   "flags": {
     "merchant-presets": {
       "kind": "component"
+    },
+    "item-piles": {
+      "item": {
+        "customCategory": "Valuables"
+      }
     }
   }
 }

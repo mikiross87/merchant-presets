@@ -3735,7 +3735,8 @@
             "infiniteQuantity": "no",
             "keepOnMerchant": false,
             "isService": false,
-            "cantBeSoldToMerchants": false
+            "cantBeSoldToMerchants": false,
+            "customCategory": "Valuables"
           }
         }
       },
@@ -3789,7 +3790,8 @@
             "infiniteQuantity": "no",
             "keepOnMerchant": false,
             "isService": false,
-            "cantBeSoldToMerchants": false
+            "cantBeSoldToMerchants": false,
+            "customCategory": "Valuables"
           }
         }
       },
@@ -3843,7 +3845,8 @@
             "infiniteQuantity": "no",
             "keepOnMerchant": false,
             "isService": false,
-            "cantBeSoldToMerchants": false
+            "cantBeSoldToMerchants": false,
+            "customCategory": "Valuables"
           }
         }
       },
@@ -6577,19 +6580,22 @@
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
-          "cantBeSoldToMerchants": false
+          "cantBeSoldToMerchants": false,
+          "customCategory": "Valuables"
         },
         "Diamond (500 GP)": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
-          "cantBeSoldToMerchants": false
+          "cantBeSoldToMerchants": false,
+          "customCategory": "Valuables"
         },
         "Diamond Dust (100 GP)": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
-          "cantBeSoldToMerchants": false
+          "cantBeSoldToMerchants": false,
+          "customCategory": "Valuables"
         },
         "Incense (10 GP)": {
           "infiniteQuantity": "no",
@@ -6657,6 +6663,15 @@
         ],
         "buyPriceModifier": 1.0,
         "sellPriceModifier": 0.5,
+        "itemTypePriceModifiers": [
+          {
+            "type": "custom",
+            "category": "Valuables",
+            "override": true,
+            "buyPriceModifier": 1.0,
+            "sellPriceModifier": 1
+          }
+        ],
         "tablesForPopulate": [
           {
             "uuid": "Compendium.merchant-presets.stock.RollTable.V0owRgm1Sfhr8gm6",

@@ -152,6 +152,16 @@ Constraints worth knowing before changing the generator:
   consumes"), not from the spell's `materials.consumed`, which is one flag per
   spell and wrong on Sequester. An `identifier` is fixed once released: other
   modules and dnd5e's Material consumption find a component by it.
+- **Valuables sell back at full value** (SRD 5.2 *Equipment*). A good of type
+  `loot` whose `system.type.value` is `gem`, `art` or `trade` is filed under
+  the Item Piles custom category *Valuables*: on the good, on each shop's
+  copy, and in the shop's restock record. Every shop whose item filters let
+  one in carries an `itemTypePriceModifiers` entry that overrides its rate
+  for that category with 1. `is_valuable` in `build_srd.py` is the one
+  definition. It checks the item type because dnd5e also files artisan's tools
+  under `system.type.value: "art"`. Per-item `sellPriceModifier`s were
+  rejected: they multiply the buying shop's rate, and the player's copy
+  carries the factor of the shop it was bought at (#53).
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four

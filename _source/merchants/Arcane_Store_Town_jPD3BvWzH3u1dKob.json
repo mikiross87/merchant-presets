@@ -6340,6 +6340,15 @@
         ],
         "buyPriceModifier": 1.0,
         "sellPriceModifier": 0.5,
+        "itemTypePriceModifiers": [
+          {
+            "type": "custom",
+            "category": "Valuables",
+            "override": true,
+            "buyPriceModifier": 1.0,
+            "sellPriceModifier": 1
+          }
+        ],
         "tablesForPopulate": [
           {
             "uuid": "Compendium.merchant-presets.stock.RollTable.ks8T2c4K8WnHLiKl",

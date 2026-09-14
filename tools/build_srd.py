@@ -155,6 +155,33 @@ DND5E_ITEM_FILTERS = [
     {"path": "system.type.value", "filters": "natural"},
 ]
 
+def refuses(item_filters, item):
+    """Whether a merchant with these filters refuses `item`, as Item Piles'
+    isItemInvalid reads them."""
+    for f in item_filters:
+        value = item
+        for key in f["path"].split("."):
+            value = value.get(key) if isinstance(value, dict) else None
+        if value is not None and str(value) in f["filters"].split(","):
+            return True
+    return False
+
+# SRD 5.2 Equipment: equipment "fetches half its cost when sold", but "trade
+# goods and valuables—like gems and art objects—retain their full value". Item
+# Piles can only override a shop's rate for a custom item category, so every
+# valuable is filed under one, and each shop that buys them prices that
+# category at full value outright. An override, not a multiplier on the item:
+# the rate then holds at a shop with a different rate from the one it was
+# bought at, and at a shop that does not stock it (#53).
+#
+# Loot only. dnd5e files artisan's tools under system.type.value "art" too.
+VALUABLE_TYPES = ("gem", "art", "trade")
+VALUABLES = "Valuables"
+
+def is_valuable(item):
+    return (item.get("type") == "loot"
+            and ((item.get("system") or {}).get("type") or {}).get("value") in VALUABLE_TYPES)
+
 # Containers are stocked as separate documents, one each, so their count is the
 # number of rows in the merchant list. Keep it small deliberately: the price
 # bands would put forty pouches on a city shelf.
@@ -231,6 +258,8 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
                                     # You cannot sell a night's lodging back to
                                     # the innkeeper; this greys out the button.
                                     "cantBeSoldToMerchants": service}}
+    if is_valuable(it):
+        flags["item-piles"]["item"]["customCategory"] = VALUABLES
     if bundle > 1 and not is_container:
         flags["item-piles"]["system"] = {"quantityForPrice": bundle}
     it["_id"] = iid
@@ -347,6 +376,7 @@ def main():
     srd = load_srd(); goods = load_goods()
     actors = load_actors(); feats = load_feats()
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
+    valuables = [g for g in goods.values() if is_valuable(g)]
 
     actors_dir = os.path.join(MOD, "_source/merchants")
     tables_dir = os.path.join(MOD, "_source/stock")
@@ -434,6 +464,10 @@ def main():
             if refuse_kinds:
                 item_filters.append({"path": "flags.merchant-presets.kind",
                                      "filters": ",".join(refuse_kinds)})
+            price_modifiers = []
+            if any(not refuses(item_filters, g) for g in valuables):
+                price_modifiers.append({"type": "custom", "category": VALUABLES, "override": True,
+                                        "buyPriceModifier": shop["buy"], "sellPriceModifier": 1})
 
             by_uuid = {}
             for i in items:
@@ -505,6 +539,7 @@ def main():
                     "infiniteQuantity": False, "infiniteCurrencies": False, "keepZeroQuantity": True,
                     "overrideItemFilters": item_filters,
                     "buyPriceModifier": shop["buy"], "sellPriceModifier": shop["sell"],
+                    **({"itemTypePriceModifiers": price_modifiers} if price_modifiers else {}),
                     "tablesForPopulate": [{"uuid": f"Compendium.merchant-presets.stock.RollTable.{tid}",
                                            "addAll": True, "timesToRoll": "1", "customCategory": "",
                                            "items": per_result}],
