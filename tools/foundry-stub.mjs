@@ -36,7 +36,7 @@ const flagged = doc => Object.assign(doc, {
 
 /**
  * Install the globals and return the world they describe.
- * @returns {{hooks, actors, tables, compendium, calls, merchant, fire}}
+ * @returns {{hooks, actors, tables, compendium, calls, settings, merchant, fire}}
  */
 export function createWorld() {
   const hooks = { once: new Map(), on: new Map() };
@@ -44,10 +44,12 @@ export function createWorld() {
   const tables = [];
   const folders = [];
   const compendium = new Map();
-  const calls = { itemUpdates: [], tablesCreated: 0 };
+  const calls = { itemUpdates: [], tablesCreated: 0, messages: [] };
+  // This module's settings by key; another module's as "<module>.<key>".
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
-    ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true
+    ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
+    spellcastingToChat: true, "item-piles.outputToChat": 1
   };
 
   globalThis.Hooks = {
@@ -59,8 +61,13 @@ export function createWorld() {
       getProperty: get, setProperty: set,
       isEmpty: o => !o || !Object.keys(o).length,
       deepClone: o => structuredClone(o),
-      fromUuid: async uuid => compendium.get(uuid) ?? tables.find(t => t.uuid === uuid) ?? null
+      fromUuid: async uuid => compendium.get(uuid) ?? tables.find(t => t.uuid === uuid)
+        ?? actors.find(a => a.uuid === uuid) ?? null
     }
+  };
+  globalThis.ChatMessage = {
+    create: async data => { calls.messages.push(data); return data; },
+    getSpeaker: ({ actor } = {}) => ({ actor: actor?.id, alias: actor?.name })
   };
   globalThis.fromUuid = globalThis.foundry.utils.fromUuid;
   globalThis.ui = { notifications: { info() {}, warn() {}, error() {} } };
@@ -85,7 +92,7 @@ export function createWorld() {
   const user = { id: "gm", isGM: true };
   globalThis.game = {
     user,
-    users: { activeGM: user },
+    users: Object.assign([user], { activeGM: user }),
     actors,
     folders: { find: fn => folders.find(fn) },
     tables: {
@@ -95,9 +102,12 @@ export function createWorld() {
         results: src.results.map(r => ({ documentUuid: r.documentUuid, name: r.name }))
       })
     },
-    settings: { register() {}, get: (_scope, key) => settings[key] },
+    settings: { register() {}, get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`] },
     modules: new Map([["merchant-presets", { version: "1.3.0" }], ["item-piles", { active: true }]]),
-    itempiles: { API: { ITEM_QUANTITY_ATTRIBUTE: "system.quantity" } },
+    itempiles: { API: {
+      ITEM_QUANTITY_ATTRIBUTE: "system.quantity",
+      isItemPileMerchant: actor => actor?.flags?.["item-piles"]?.data?.type === "merchant"
+    } },
     time: { worldTime: 0, calendar: { name: "stub", days: { minutesPerHour: 60 } } }
   };
 
@@ -116,7 +126,7 @@ export function createWorld() {
     }
     if (table) doc.flags["item-piles"].data.tablesForPopulate[0].uuid = table;
     return flagged(Object.assign(doc, {
-      id: doc._id, pack: null, effects: [],
+      id: doc._id, uuid: `Actor.${doc._id}`, pack: null, effects: [],
       items: doc.items.map(i => ({ ...i, id: i._id })),
       async update(changes) { for (const [k, v] of Object.entries(changes)) set(this, k, v); },
       async updateEmbeddedDocuments(_type, updates) { calls.itemUpdates.push({ actor: this.id, updates }); },
@@ -130,7 +140,7 @@ export function createWorld() {
     await new Promise(resolve => setImmediate(resolve));
   }
 
-  return { hooks, actors, tables, compendium, calls, merchant, fire };
+  return { hooks, actors, tables, compendium, calls, settings, merchant, fire };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */
