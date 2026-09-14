@@ -205,9 +205,12 @@ async function applyStockMode(actor) {
 async function rewire(actor) {
   if (!isPreset(actor)) return false;
 
-  let changed = false;
-  changed = await wireTables(actor) || changed;
-  changed = await applyStockMode(actor) || changed;
+  // Stock is rolled once, in the call that wires the compendium table. A shop
+  // already wired keeps the shelf it has: rewireAll and a duplicated merchant
+  // reach here too, and must not re-roll it.
+  const wired = await wireTables(actor);
+  let changed = wired;
+  if (wired) changed = await applyStockMode(actor) || changed;
   changed = await syncStockWeight(actor) || changed;
   changed = await syncOpenState(actor) || changed;
   if (changed) log(`prepared "${actor.name}"`);
