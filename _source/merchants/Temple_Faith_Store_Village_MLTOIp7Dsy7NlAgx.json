@@ -2830,7 +2830,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -2885,7 +2886,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -2940,7 +2942,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -2995,7 +2998,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -3050,7 +3054,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -5741,31 +5746,36 @@
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Protection from Evil and Good": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Augury": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Continual Flame": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Warding Bond": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Diamond Dust (100 GP)": {
           "infiniteQuantity": "no",

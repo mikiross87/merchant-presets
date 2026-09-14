@@ -281,6 +281,11 @@ SHOP_CLASSES = {"arcane-store": ("sorcerer", "warlock", "wizard"),
                 "druidic-store": ("druid", "ranger"),
                 "temple-faith": ("cleric", "paladin")}
 LEVEL_SERVICE = re.compile(r"Spellcasting: Level (\d)(?:-(\d))?")
+# Item Piles lists a shop window's headings by label and the items under each by
+# name. Under one Service heading the level services sort in among the named
+# spells, so the named spells get a heading of their own, saying what sets them
+# apart. It sorts after the Service heading, whose label is its translation key.
+NAMED_HEADING = "Spells, Components Included"
 
 def load_class_lists(spells):
     """class identifier -> the names of the spells on its SRD spell list."""
@@ -345,7 +350,7 @@ def make_service(spell, parts, level_good):
         "effects": [], "ownership": {"default": 0},
         # `spell` marks the goods this script owns, apart from the level
         # services, which are edited by hand.
-        "flags": {"item-piles": {"item": {"isService": True}},
+        "flags": {"item-piles": {"item": {"isService": True, "customCategory": NAMED_HEADING}},
                   "merchant-presets": {"kind": "spellcasting",
                                        "spell": f"Compendium.{SPELLS_PACK}.Item.{spell['_id']}"}}}
 

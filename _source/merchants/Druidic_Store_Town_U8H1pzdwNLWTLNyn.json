@@ -6202,7 +6202,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6257,7 +6258,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6312,7 +6314,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6367,7 +6370,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6422,7 +6426,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6477,7 +6482,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6532,7 +6538,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6587,7 +6594,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6642,7 +6650,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6697,7 +6706,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6752,7 +6762,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -6807,7 +6818,8 @@
             "infiniteQuantity": "yes",
             "keepOnMerchant": true,
             "isService": true,
-            "cantBeSoldToMerchants": true
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
           }
         },
         "merchant-presets": {
@@ -9353,73 +9365,85 @@
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Augury": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Continual Flame": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Nondetection": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Revivify": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Divination": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Stoneskin": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Awaken": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Greater Restoration": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Planar Binding": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Reincarnate": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Scrying": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
-          "cantBeSoldToMerchants": true
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
         }
       },
       "containers": {

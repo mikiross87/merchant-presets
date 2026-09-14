@@ -43,7 +43,8 @@
   "flags": {
     "item-piles": {
       "item": {
-        "isService": true
+        "isService": true,
+        "customCategory": "Spells, Components Included"
       }
     },
     "merchant-presets": {

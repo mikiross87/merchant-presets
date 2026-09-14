@@ -166,7 +166,11 @@ Constraints worth knowing before changing the generator:
   level. The build stops if a spell lands in no shop, a class list names a
   spell not in `spells24`, or a shop would sell a named spell without its
   level service. Named services carry `flags.merchant-presets.spell`, which is
-  how the script tells its own goods from the hand-made level services.
+  how the script tells its own goods from the hand-made level services. They
+  also carry the Item Piles category *Spells, Components Included*. Item Piles
+  sorts the items under a heading by name, so without it the level services sort
+  in among them. `make_item` carries a good's own category onto each shop's
+  copy.
 - **Valuables sell back at full value** (SRD 5.2 *Equipment*). A good of type
   `loot` whose `system.type.value` is `gem`, `art` or `trade` is filed under
   the Item Piles custom category *Valuables*: on the good, on each shop's

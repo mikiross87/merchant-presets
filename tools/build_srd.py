@@ -258,8 +258,12 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
                                     # You cannot sell a night's lodging back to
                                     # the innkeeper; this greys out the button.
                                     "cantBeSoldToMerchants": service}}
-    if is_valuable(it):
-        flags["item-piles"]["item"]["customCategory"] = VALUABLES
+    # Its heading in the shop window. The flags above replace the good's own, so
+    # a category the good carries (the named spellcasting heading) comes across.
+    category = VALUABLES if is_valuable(it) else \
+        (((src.get("flags") or {}).get("item-piles") or {}).get("item") or {}).get("customCategory")
+    if category:
+        flags["item-piles"]["item"]["customCategory"] = category
     if bundle > 1 and not is_container:
         flags["item-piles"]["system"] = {"quantityForPrice": bundle}
     it["_id"] = iid
