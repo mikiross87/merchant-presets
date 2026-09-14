@@ -6340,7 +6340,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6394,7 +6394,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6448,7 +6448,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6502,7 +6502,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6556,7 +6556,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6610,7 +6610,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6664,7 +6664,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p>",
+          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -9793,7 +9793,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city.</em></p>",
+        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. A spell with expensive components costs those components on top.</em></p>",
         "merchantImage": "icons/environment/settlement/house-woods.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

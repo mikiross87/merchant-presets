@@ -11,6 +11,15 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- Spellcasting services at the Arcane Store, Druidic Store and Temple & Faith
+  Store now say that a spell with expensive components costs those components
+  on top, as the SRD's Spellcasting Services rule has it. Each service's
+  description and the shop window both say so, and the service prices are
+  unchanged: Revivify is the 300 GP level 3 service plus its 300 GP diamond.
+  (#52)
+
 ## [1.2.3] - 2026-09-13
 
 ### Changed
