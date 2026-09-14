@@ -1,14 +1,14 @@
 {
-  "_id": "HeRVCROhFBnqI3sU",
-  "_key": "!items!HeRVCROhFBnqI3sU",
-  "name": "Spell Components (gems), 150 gp and below",
+  "_id": "AySOPIwKMWjdHiD2",
+  "_key": "!items!AySOPIwKMWjdHiD2",
+  "name": "Diamond (500 GP)",
   "type": "loot",
-  "img": "icons/commodities/gems/gem-faceted-radiant-blue.webp",
+  "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
   "folder": "YCWErxQxP6JCSdKv",
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>Assorted gemstone spell components worth up to 150 gp.</p>",
+      "value": "<p>A diamond worth 500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
       "chat": ""
     },
     "quantity": 1,
@@ -17,20 +17,21 @@
       "units": "lb"
     },
     "price": {
-      "value": 150,
+      "value": 500,
       "denomination": "gp"
     },
     "rarity": "",
     "identified": true,
     "container": null,
-    "identifier": "",
+    "identifier": "diamond-500",
     "source": {
-      "custom": "Merchant Presets",
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
       "rules": "2024",
       "revision": 1
     },
     "type": {
-      "value": "",
+      "value": "gem",
       "subtype": ""
     },
     "properties": []
@@ -40,11 +41,6 @@
     "default": 0
   },
   "flags": {
-    "item-piles": {
-      "item": {
-        "isService": true
-      }
-    },
     "merchant-presets": {
       "kind": "component"
     }

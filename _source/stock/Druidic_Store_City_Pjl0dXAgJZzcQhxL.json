@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d44",
+  "formula": "1d45",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -713,6 +713,22 @@
       "range": [
         44,
         44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "segqU17MkbJdZzvC",
+      "_key": "!tables.results!Pjl0dXAgJZzcQhxL.segqU17MkbJdZzvC",
+      "type": "document",
+      "name": "Rare Oils (1,000 GP)",
+      "img": "icons/consumables/potions/bottle-round-label-cork-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.2XKFJS5dzJwow18h",
+      "weight": 1,
+      "range": [
+        45,
+        45
       ],
       "drawn": false,
       "description": "",

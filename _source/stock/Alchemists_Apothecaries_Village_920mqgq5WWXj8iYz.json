@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/winemaker-still-vintner.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d13",
+  "formula": "1d14",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -217,6 +217,22 @@
       "range": [
         13,
         13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hfU7MhSZnnjZbIwW",
+      "_key": "!tables.results!920mqgq5WWXj8iYz.hfU7MhSZnnjZbIwW",
+      "type": "document",
+      "name": "Mushroom Powder (25 GP)",
+      "img": "icons/consumables/mushrooms/umbonate-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.dRH6SxEtn5qUSS7h",
+      "weight": 1,
+      "range": [
+        14,
+        14
       ],
       "drawn": false,
       "description": "",

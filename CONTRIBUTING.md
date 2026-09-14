@@ -51,9 +51,9 @@ actionlint`, or the install script in rhysd/actionlint) along with ShellCheck.
 Without ShellCheck on your PATH actionlint drops that rule and still exits 0, so
 the inline bash goes unchecked rather than unreported.
 
-Neither `tools/build_srd.py` nor `tools/check_icons.sh` is linted. Both are
-maintainer scripts, run by hand and never shipped, and they fail visibly in
-front of the person who just changed them.
+`tools/build_srd.py`, `tools/build_spell_goods.py` and `tools/check_icons.sh`
+are not linted. They are maintainer scripts, run by hand and never shipped, and
+they fail visibly in front of the person who just changed them.
 
 > **Close the world before running `npm run pack`.** Foundry holds module packs
 > open while a world is loaded and flushes its own in-memory copy over anything
@@ -68,20 +68,29 @@ and which settlement sizes carry them — and `tools/build_srd.py` turns that in
 Shopkeeper tokens are neutral — a tradesperson is on nobody's side — unless the
 shop's recipe sets `disposition` (1 friendly, 0 neutral, -1 hostile, -2 secret).
 
-Regenerating is a separate, rarer step than packing, because it needs three of
+`data/components.json` holds the spell components, and
+`tools/build_spell_goods.py` turns it into their goods in `_source/goods` and
+their lines in `data/recipes.json`. Don't edit either by hand: the next run
+replaces every component good and line.
+
+Regenerating is a separate, rarer step than packing, because it needs four of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
-sell, the actors the shopkeepers are statted from, and the monster features
-those stat blocks reference:
+sell, the actors the shopkeepers are statted from, the monster features those
+stat blocks reference, and the spells whose material components the component
+goods come from:
 
 ```
-for p in equipment24 actors24 monsterfeatures24; do
+for p in equipment24 actors24 monsterfeatures24 spells24; do
   fvtt package unpack -n "$p" --id dnd5e --type System \
     --in <dnd5e>/packs --out "/tmp/$p"
 done
+MP_SPELLS_DIR=/tmp/spells24 python3 tools/build_spell_goods.py
 MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 \
   MP_FEATS_DIR=/tmp/monsterfeatures24 python3 tools/build_srd.py
 npm run pack
 ```
+
+`build_spell_goods.py --check` validates without writing anything.
 
 Document ids are content-derived hashes and the stock rolls are seeded per item,
 so regenerating reproduces the same packs rather than churning them. A stock line
@@ -129,6 +138,15 @@ Constraints worth knowing before changing the generator:
   world. The generator copies the whole goods document onto each merchant, so a
   flag set in `_source/goods` needs a regeneration to reach the shops that sell
   it.
+- **Spell components are checked against the spell text, both ways.** Each row
+  in `data/components.json` names the spells that use it and the exact text
+  naming the component, and `build_spell_goods.py` stops if that text is not in
+  the spell, prices it differently, or gives it a different tier. It also stops
+  if any priced component of any SRD spell is neither a row nor listed under
+  `not_stocked`. Consumption is read from the text ("which the spell
+  consumes"), not from the spell's `materials.consumed`, which is one flag per
+  spell and wrong on Sequester. An `identifier` is fixed once released: other
+  modules and dnd5e's Material consumption find a component by it.
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four

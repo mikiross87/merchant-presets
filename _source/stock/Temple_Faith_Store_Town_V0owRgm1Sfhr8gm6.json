@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/church.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d29",
+  "formula": "1d37",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -473,6 +473,134 @@
       "range": [
         29,
         29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cKv1Qwyo1hVh5Ejo",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.cKv1Qwyo1hVh5Ejo",
+      "type": "document",
+      "name": "Diamond (300 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SosKoefnmu2EaCvb",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.SosKoefnmu2EaCvb",
+      "type": "document",
+      "name": "Diamond (500 GP)",
+      "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sJ1pAT0W2tQjnVxF",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.sJ1pAT0W2tQjnVxF",
+      "type": "document",
+      "name": "Diamond Dust (100 GP)",
+      "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HKJ6aNt21v2VmeRu",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.HKJ6aNt21v2VmeRu",
+      "type": "document",
+      "name": "Incense (10 GP)",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "adwYeITRmZDOdYTT",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.adwYeITRmZDOdYTT",
+      "type": "document",
+      "name": "Incense (25 GP)",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NLNiQk1YggORbv5l",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.NLNiQk1YggORbv5l",
+      "type": "document",
+      "name": "Incense (250 GP)",
+      "img": "icons/commodities/wood/kindling-stick-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oWPe6K2UF3TQdOjH",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.oWPe6K2UF3TQdOjH",
+      "type": "document",
+      "name": "Divinatory Tokens (25 GP)",
+      "img": "icons/commodities/treasure/token-engraved-symbols-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3keRpat4Iqw8S5Sz",
+      "_key": "!tables.results!V0owRgm1Sfhr8gm6.3keRpat4Iqw8S5Sz",
+      "type": "document",
+      "name": "Divination Tools (100 GP)",
+      "img": "icons/sundries/gaming/rune-card.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh",
+      "weight": 1,
+      "range": [
+        37,
+        37
       ],
       "drawn": false,
       "description": "",

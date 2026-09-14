@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/wizard-castle.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d37",
+  "formula": "1d46",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -601,6 +601,150 @@
       "range": [
         37,
         37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OBDsL1E3XqXIYR31",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.OBDsL1E3XqXIYR31",
+      "type": "document",
+      "name": "Incense (10 GP)",
+      "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r5aXJQwJnv3BdogJ",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.r5aXJQwJnv3BdogJ",
+      "type": "document",
+      "name": "Incense (25 GP)",
+      "img": "icons/commodities/wood/kindling-stick-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Fkuo3z3fZHlR3FkA",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.Fkuo3z3fZHlR3FkA",
+      "type": "document",
+      "name": "Incense (250 GP)",
+      "img": "icons/commodities/wood/kindling-stick-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Eaiq2tgw1Ukj89vr",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.Eaiq2tgw1Ukj89vr",
+      "type": "document",
+      "name": "Rare Inks (50 GP)",
+      "img": "icons/tools/scribal/ink-quill-pink.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.02VjN9rBSGvjgSb9",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mbMe8p3yYtmPBZlX",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.mbMe8p3yYtmPBZlX",
+      "type": "document",
+      "name": "Salt and Powdered Silver (100 GP)",
+      "img": "icons/commodities/materials/bowl-liquid-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bhibfvXte400oYJs",
+      "weight": 1,
+      "range": [
+        42,
+        42
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xFVjdLp7GeRs6JIi",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.xFVjdLp7GeRs6JIi",
+      "type": "document",
+      "name": "Silver Rod (10 GP)",
+      "img": "icons/commodities/metal/plating-metal-rod-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qGaQstEp2yZhlene",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "y8ccoXhypm5FIaNH",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.y8ccoXhypm5FIaNH",
+      "type": "document",
+      "name": "Ivory Strips, set of four (200 GP)",
+      "img": "icons/commodities/bones/bones-stack-tan.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ymreSaVSJoc4eUb7",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KjF7swzyBgbRm46o",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.KjF7swzyBgbRm46o",
+      "type": "document",
+      "name": "Jeweled Horn or Glass Eye (100 GP)",
+      "img": "icons/commodities/treasure/horn-carved-banded.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CRvPt3jtTNkUSZu8",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MkTWFhcjLeZjW5GY",
+      "_key": "!tables.results!9zEsc8HNVmlxyh1O.MkTWFhcjLeZjW5GY",
+      "type": "document",
+      "name": "Scrying Focus (1,000 GP)",
+      "img": "icons/commodities/treasure/crystal-ball-blue-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.osgA7NflCgBqqjoB",
+      "weight": 1,
+      "range": [
+        46,
+        46
       ],
       "drawn": false,
       "description": "",

@@ -2868,6 +2868,60 @@
       "_key": "!actors.items!AJOSFf4SWAuYEJJJ.lbWMjInTF91NS2yN"
     },
     {
+      "name": "Mushroom Powder (25 GP)",
+      "type": "loot",
+      "img": "icons/consumables/mushrooms/umbonate-brown.webp",
+      "system": {
+        "description": {
+          "value": "<p>Mushroom powder worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTrueSeeing]{True Seeing}: consumed</li></ul>",
+          "chat": ""
+        },
+        "quantity": 5,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 25,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "mushroom-powder-25",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "material",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "kind": "component"
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.dRH6SxEtn5qUSS7h"
+      },
+      "_id": "D64VJzjjDfubM0qh",
+      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.D64VJzjjDfubM0qh"
+    },
+    {
       "name": "Mace",
       "system": {
         "description": {
@@ -5232,6 +5286,12 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Mushroom Powder (25 GP)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -5267,7 +5327,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,spellcasting,component,travel,gear"
+            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,spellcasting,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -5293,7 +5353,8 @@
               "v36eh7g8rg4thifZ": "1",
               "vYSTOyORFCvOl7Qf": "1d3+1",
               "hcEy63VPWWtImAFT": "1d6+2",
-              "JTzhqXXPLJKS2sjg": "2d6+4"
+              "JTzhqXXPLJKS2sjg": "2d6+4",
+              "kmaf1SKM6DcPoUk3": "1d6+2"
             }
           }
         ],
