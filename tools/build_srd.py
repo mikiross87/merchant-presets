@@ -541,4 +541,6 @@ def main():
         for n, shops in sorted(unresolved.items()):
             print(f"     {n}  —  {', '.join(sorted(shops))}")
 
-main()
+# tools/build_spell_goods.py imports fid and norm from here.
+if __name__ == "__main__":
+    main()
