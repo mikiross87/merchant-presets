@@ -29,6 +29,17 @@ than for the code. Reference the issue or PR it closes.
   else, incense and inks included, still sells at the shop's rate. The shop
   window lists them under their own *Valuables* heading. Merchants already in
   your world keep their old prices; drag in a fresh merchant to get this. (#53)
+- Spells with expensive components are hired out by name, with the component
+  in the price, so nobody has to work out the total at the table:
+  *Spellcasting: Revivify* costs 600 GP, the level 3 service plus its 300 GP
+  diamond. That's 56 spells, sold wherever their class lists and level allow:
+  the Arcane Store has 9 in a village, 21 in a town and 42 in a city; the
+  Druidic Store 3, 12 and 18; the Temple & Faith Store 5, 16 and 28. They're
+  listed under their own *Spells, Components Included* heading, below the
+  level services. The level services now say that their price is the whole
+  price for any other spell, or when you bring the components yourself.
+  Merchants already in your world keep their old stock list; drag in a fresh
+  merchant to get these. (#55)
 
 ### Removed
 

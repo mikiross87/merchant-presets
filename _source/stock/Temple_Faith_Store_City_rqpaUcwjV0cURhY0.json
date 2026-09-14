@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/church.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d42",
+  "formula": "1d70",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -511,6 +511,454 @@
       "flags": {}
     },
     {
+      "_id": "oxZQdsXm9FwJ6SO8",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.oxZQdsXm9FwJ6SO8",
+      "type": "document",
+      "name": "Spellcasting: Bless",
+      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "q8FlQJkwUYCyc9s1",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.q8FlQJkwUYCyc9s1",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "S0xmFrhYvWxzVZex",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.S0xmFrhYvWxzVZex",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0ENR3KtXKO89j2Ku",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.0ENR3KtXKO89j2Ku",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MtAJ5fL5cY7YdUiG",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.MtAJ5fL5cY7YdUiG",
+      "type": "document",
+      "name": "Spellcasting: Warding Bond",
+      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vdAh7X5BE7sNKH3M",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.vdAh7X5BE7sNKH3M",
+      "type": "document",
+      "name": "Spellcasting: Clairvoyance",
+      "img": "icons/magic/perception/third-eye-blue-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fvRA9Q6fm2J4xBpC",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "C6YHSFxcqhIIyTsB",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.C6YHSFxcqhIIyTsB",
+      "type": "document",
+      "name": "Spellcasting: Glyph of Warding",
+      "img": "icons/magic/symbols/triangle-glowing-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lPcQMkyeNrbcWmjI",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9CiinoLidrrTFUQ3",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.9CiinoLidrrTFUQ3",
+      "type": "document",
+      "name": "Spellcasting: Magic Circle",
+      "img": "icons/magic/symbols/ring-circle-smoke-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4ErAqbhZ4I3NjVnT",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GQ4JPwJIyNuqHUqq",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.GQ4JPwJIyNuqHUqq",
+      "type": "document",
+      "name": "Spellcasting: Revivify",
+      "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vkdiUDhQoMB4IpV9",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.vkdiUDhQoMB4IpV9",
+      "type": "document",
+      "name": "Spellcasting: Divination",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MkF3QO0g6bNP07Gx",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.MkF3QO0g6bNP07Gx",
+      "type": "document",
+      "name": "Spellcasting: Greater Restoration",
+      "img": "icons/magic/life/heart-hand-gold-green-light.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch",
+      "weight": 1,
+      "range": [
+        42,
+        42
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Z1XIgxOCeeXwp67u",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.Z1XIgxOCeeXwp67u",
+      "type": "document",
+      "name": "Spellcasting: Hallow",
+      "img": "icons/magic/symbols/star-inverted-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CpH0e07N1GHaaNkY",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Uzy6tuKuvNTK8UOt",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.Uzy6tuKuvNTK8UOt",
+      "type": "document",
+      "name": "Spellcasting: Legend Lore",
+      "img": "icons/sundries/books/book-red-exclamation.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.2V4podU9BqxWyQ3B",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NFuLdMIh5bQWcBCd",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.NFuLdMIh5bQWcBCd",
+      "type": "document",
+      "name": "Spellcasting: Planar Binding",
+      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ujpq6a2OZbsbSTAX",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.Ujpq6a2OZbsbSTAX",
+      "type": "document",
+      "name": "Spellcasting: Raise Dead",
+      "img": "icons/magic/death/skull-fire-white-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Tnu09aEApYt7UTNo",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pm72WKlRQEeIR7nA",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.pm72WKlRQEeIR7nA",
+      "type": "document",
+      "name": "Spellcasting: Scrying",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8lkNGehV9jHQyFuc",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.8lkNGehV9jHQyFuc",
+      "type": "document",
+      "name": "Spellcasting: Create Undead",
+      "img": "icons/magic/death/skull-flames-white-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.EgwdiqdERTxQSvbw",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oV8NYistR8rQ2FvP",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.oV8NYistR8rQ2FvP",
+      "type": "document",
+      "name": "Spellcasting: Find the Path",
+      "img": "icons/tools/navigation/spyglass-telescope-brass-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qS7CRt0IvLZacUHI",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "odpwPwKQHt4x1rXv",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.odpwPwKQHt4x1rXv",
+      "type": "document",
+      "name": "Spellcasting: Forbiddance",
+      "img": "icons/magic/symbols/squares-3d-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.YKycbOBKHxQ92OZN",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AmBCaM8OfyKzA5qh",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.AmBCaM8OfyKzA5qh",
+      "type": "document",
+      "name": "Spellcasting: Heroes' Feast",
+      "img": "icons/consumables/food/cooked-hock-glowing-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.dDIdElCAnVfXBcJ5",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bN8UkhL0KXCpuBvM",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.bN8UkhL0KXCpuBvM",
+      "type": "document",
+      "name": "Spellcasting: True Seeing",
+      "img": "icons/magic/perception/eye-slit-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.J2J46nkMLgnAa3k7",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "o70osIDV7VoL3rvG",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.o70osIDV7VoL3rvG",
+      "type": "document",
+      "name": "Spellcasting: Plane Shift",
+      "img": "icons/skills/targeting/target-glowing-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "StliQqzK4zBZPkLW",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.StliQqzK4zBZPkLW",
+      "type": "document",
+      "name": "Spellcasting: Resurrection",
+      "img": "icons/magic/death/skeleton-skull-soul-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.rcImXTwCNM5aDopJ",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hGwNDCGUFrgo2hoy",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.hGwNDCGUFrgo2hoy",
+      "type": "document",
+      "name": "Spellcasting: Symbol",
+      "img": "icons/magic/symbols/rune-sigil-green-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.0qEsbRG0RIKAqfly",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SKjQSQFzcRm5vgBb",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.SKjQSQFzcRm5vgBb",
+      "type": "document",
+      "name": "Spellcasting: Holy Aura",
+      "img": "icons/magic/life/ankh-shadow-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.geNwvxJwu7OYnLDL",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "eF62COA8gaaYJK6t",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.eF62COA8gaaYJK6t",
+      "type": "document",
+      "name": "Spellcasting: Astral Projection",
+      "img": "icons/magic/light/orbs-hand-gray.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ASNEQUZGdt5ejRUn",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5fB945cU1dODqKqy",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.5fB945cU1dODqKqy",
+      "type": "document",
+      "name": "Spellcasting: Gate",
+      "img": "icons/magic/symbols/circled-gem-pink.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.8yhm1wwayAIONgAT",
+      "weight": 1,
+      "range": [
+        58,
+        58
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UXiOLDb7pZCOptbl",
+      "_key": "!tables.results!rqpaUcwjV0cURhY0.UXiOLDb7pZCOptbl",
+      "type": "document",
+      "name": "Spellcasting: True Resurrection",
+      "img": "icons/magic/life/ankh-gold-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.hJ2Bq6dbYnSznR8W",
+      "weight": 1,
+      "range": [
+        59,
+        59
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
       "_id": "wjiKGEANU5fvqNs8",
       "_key": "!tables.results!rqpaUcwjV0cURhY0.wjiKGEANU5fvqNs8",
       "type": "document",
@@ -519,8 +967,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m",
       "weight": 1,
       "range": [
-        32,
-        32
+        60,
+        60
       ],
       "drawn": false,
       "description": "",
@@ -535,8 +983,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2",
       "weight": 1,
       "range": [
-        33,
-        33
+        61,
+        61
       ],
       "drawn": false,
       "description": "",
@@ -551,8 +999,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.MDDRvSKLqAF009ye",
       "weight": 1,
       "range": [
-        34,
-        34
+        62,
+        62
       ],
       "drawn": false,
       "description": "",
@@ -567,8 +1015,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
       "weight": 1,
       "range": [
-        35,
-        35
+        63,
+        63
       ],
       "drawn": false,
       "description": "",
@@ -583,8 +1031,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
       "weight": 1,
       "range": [
-        36,
-        36
+        64,
+        64
       ],
       "drawn": false,
       "description": "",
@@ -599,8 +1047,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
       "weight": 1,
       "range": [
-        37,
-        37
+        65,
+        65
       ],
       "drawn": false,
       "description": "",
@@ -615,8 +1063,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
       "weight": 1,
       "range": [
-        38,
-        38
+        66,
+        66
       ],
       "drawn": false,
       "description": "",
@@ -631,8 +1079,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.STybyfM3XVWwyU4O",
       "weight": 1,
       "range": [
-        39,
-        39
+        67,
+        67
       ],
       "drawn": false,
       "description": "",
@@ -647,8 +1095,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE",
       "weight": 1,
       "range": [
-        40,
-        40
+        68,
+        68
       ],
       "drawn": false,
       "description": "",
@@ -663,8 +1111,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh",
       "weight": 1,
       "range": [
-        41,
-        41
+        69,
+        69
       ],
       "drawn": false,
       "description": "",
@@ -679,8 +1127,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.U28Am21JbNizuxGY",
       "weight": 1,
       "range": [
-        42,
-        42
+        70,
+        70
       ],
       "drawn": false,
       "description": "",

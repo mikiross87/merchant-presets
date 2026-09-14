@@ -1,0 +1,55 @@
+{
+  "_id": "y97CulRGFTAuNmNH",
+  "_key": "!items!y97CulRGFTAuNmNH",
+  "name": "Spellcasting: Programmed Illusion",
+  "type": "loot",
+  "img": "icons/magic/symbols/cog-glowing-green.webp",
+  "folder": "LAxnBRt7IpLhtlhA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplProgrammed]{Programmed Illusion} on your behalf and provides its material component: jade dust worth 25+ GP.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 20025,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true,
+        "customCategory": "Spells, Components Included"
+      }
+    },
+    "merchant-presets": {
+      "kind": "spellcasting",
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplProgrammed"
+    }
+  }
+}

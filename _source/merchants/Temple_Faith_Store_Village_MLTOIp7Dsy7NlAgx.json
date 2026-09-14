@@ -2633,7 +2633,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2687,7 +2687,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2741,7 +2741,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>If the spell has expensive components, add the cost of those components to this price.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -2788,6 +2788,286 @@
       },
       "_id": "M4BJuDhPq0WhHDa4",
       "_key": "!actors.items!MLTOIp7Dsy7NlAgx.M4BJuDhPq0WhHDa4"
+    },
+    {
+      "name": "Spellcasting: Bless",
+      "type": "loot",
+      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplBless00000]{Bless} on your behalf and provides its material component: a Holy Symbol worth 5+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 55,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplBless00000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8"
+      },
+      "_id": "Xp0JrNibJuMWf788",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.Xp0JrNibJuMWf788"
+    },
+    {
+      "name": "Spellcasting: Protection from Evil and Good",
+      "type": "loot",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr]{Protection from Evil and Good} on your behalf and provides its material component: a flask of Holy Water worth 25+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 75,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI"
+      },
+      "_id": "gS14E673KzuqMCJi",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.gS14E673KzuqMCJi"
+    },
+    {
+      "name": "Spellcasting: Augury",
+      "type": "loot",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury} on your behalf and provides its material component: specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 225,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplAugury0000"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc"
+      },
+      "_id": "N6xvKm03wAIBkEik",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.N6xvKm03wAIBkEik"
+    },
+    {
+      "name": "Spellcasting: Continual Flame",
+      "type": "loot",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplContinualF]{Continual Flame} on your behalf and provides its material component: ruby dust worth 50+ GP, which the spell consumes.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 250,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV"
+      },
+      "_id": "o6LrFcjMb060pvpv",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.o6LrFcjMb060pvpv"
+    },
+    {
+      "name": "Spellcasting: Warding Bond",
+      "type": "loot",
+      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
+      "system": {
+        "description": {
+          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond} on your behalf and provides its material component: a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration.</p>",
+          "chat": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 300,
+          "denomination": "gp"
+        },
+        "rarity": "",
+        "identified": true,
+        "container": null,
+        "identifier": "",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "properties": []
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "yes",
+            "keepOnMerchant": true,
+            "isService": true,
+            "cantBeSoldToMerchants": true,
+            "customCategory": "Spells, Components Included"
+          }
+        },
+        "merchant-presets": {
+          "kind": "spellcasting",
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplWardingBon"
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT"
+      },
+      "_id": "CPXOWsCgCQleKeTW",
+      "_key": "!actors.items!MLTOIp7Dsy7NlAgx.CPXOWsCgCQleKeTW"
     },
     {
       "name": "Diamond Dust (100 GP)",
@@ -5462,6 +5742,41 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         },
+        "Spellcasting: Bless": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
+        },
+        "Spellcasting: Protection from Evil and Good": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
+        },
+        "Spellcasting: Augury": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
+        },
+        "Spellcasting: Continual Flame": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
+        },
+        "Spellcasting: Warding Bond": {
+          "infiniteQuantity": "yes",
+          "keepOnMerchant": true,
+          "isService": true,
+          "cantBeSoldToMerchants": true,
+          "customCategory": "Spells, Components Included"
+        },
         "Diamond Dust (100 GP)": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
@@ -5504,7 +5819,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. A spell with expensive components costs those components on top.</em></p>",
+        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components are listed by name, with the components in the price; any other spell, or one you bring the components for, costs its level's price.</em></p>",
         "merchantImage": "icons/environment/settlement/church.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
@@ -5564,6 +5879,11 @@
               "X2mODQah7cWzTt0R": "1",
               "BPiDS170mzO8NhU3": "1",
               "54wZ9t4SoySPfoma": "1",
+              "TcHNyRDXHFg77XpB": "1",
+              "cPeIWoweTmHYjii6": "1",
+              "2JD1hc0ofdiLcz0u": "1",
+              "8GxuGmIZPRVhmFXU": "1",
+              "n9D9I5pEThnUW2b5": "1",
               "sk0DRo3RZD5IXjfZ": "1d2",
               "XAhkL0lLR9rf4s0U": "1d4+1",
               "5P4qZaZdbJPBawEs": "1d4+1",

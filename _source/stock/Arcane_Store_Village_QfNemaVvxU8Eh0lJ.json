@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/wizard-castle.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d30",
+  "formula": "1d39",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -399,6 +399,150 @@
       "flags": {}
     },
     {
+      "_id": "2bTQ6snwqYamC91P",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.2bTQ6snwqYamC91P",
+      "type": "document",
+      "name": "Spellcasting: Chromatic Orb",
+      "img": "icons/magic/light/explosion-star-small-teal-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.zCuSRIJdpaYB5ZuG",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "H4M6PIvzX76QUWae",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.H4M6PIvzX76QUWae",
+      "type": "document",
+      "name": "Spellcasting: Find Familiar",
+      "img": "icons/creatures/mammals/spirit-deer-herd-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.pjzjRqoh08p0fGql",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WLIquD8OMtng7DAy",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.WLIquD8OMtng7DAy",
+      "type": "document",
+      "name": "Spellcasting: Identify",
+      "img": "icons/tools/scribal/magnifying-glass.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Oj3FHypeR9tkE203",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PaB4GDJXFpg3aH4Z",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.PaB4GDJXFpg3aH4Z",
+      "type": "document",
+      "name": "Spellcasting: Illusory Script",
+      "img": "icons/sundries/documents/document-letter-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Eq6F5snSZ7Nvs4EV",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Tqjr4uyOparozcU1",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.Tqjr4uyOparozcU1",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ja9f45U6kgVBJb3S",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.Ja9f45U6kgVBJb3S",
+      "type": "document",
+      "name": "Spellcasting: Arcane Lock",
+      "img": "icons/sundries/misc/lock-steel-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.EDgBgZf7uo7AJnpx",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XCzUcjTk6newXepc",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.XCzUcjTk6newXepc",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FW2UrdfVMu8jxWu0",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.FW2UrdfVMu8jxWu0",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "x5qGtu6GNxxHkBZJ",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.x5qGtu6GNxxHkBZJ",
+      "type": "document",
+      "name": "Spellcasting: Magic Mouth",
+      "img": "icons/creatures/abilities/mouth-teeth-tongue-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3zn6J9LSZv93Jw95",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
       "_id": "8rFA8c9u3YYQpSEg",
       "_key": "!tables.results!QfNemaVvxU8Eh0lJ.8rFA8c9u3YYQpSEg",
       "type": "document",
@@ -407,8 +551,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
       "weight": 1,
       "range": [
-        25,
-        25
+        34,
+        34
       ],
       "drawn": false,
       "description": "",
@@ -423,8 +567,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
       "weight": 1,
       "range": [
-        26,
-        26
+        35,
+        35
       ],
       "drawn": false,
       "description": "",
@@ -439,8 +583,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.02VjN9rBSGvjgSb9",
       "weight": 1,
       "range": [
-        27,
-        27
+        36,
+        36
       ],
       "drawn": false,
       "description": "",
@@ -455,8 +599,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bhibfvXte400oYJs",
       "weight": 1,
       "range": [
-        28,
-        28
+        37,
+        37
       ],
       "drawn": false,
       "description": "",
@@ -471,8 +615,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.qGaQstEp2yZhlene",
       "weight": 1,
       "range": [
-        29,
-        29
+        38,
+        38
       ],
       "drawn": false,
       "description": "",
@@ -487,8 +631,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.CRvPt3jtTNkUSZu8",
       "weight": 1,
       "range": [
-        30,
-        30
+        39,
+        39
       ],
       "drawn": false,
       "description": "",

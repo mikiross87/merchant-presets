@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d42",
+  "formula": "1d54",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -681,6 +681,198 @@
       "range": [
         42,
         42
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vMh7hY2ioWqCvpD0",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.vMh7hY2ioWqCvpD0",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cSYlmcFYkrcHAIBS",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.cSYlmcFYkrcHAIBS",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jeaJpOvRtIY4NztY",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.jeaJpOvRtIY4NztY",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LlXOdTUfliPFT8v0",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.LlXOdTUfliPFT8v0",
+      "type": "document",
+      "name": "Spellcasting: Nondetection",
+      "img": "icons/magic/perception/hand-eye-fire-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.P3rfzjfJhz6bJaJq",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "togR6cL3HuJaza0a",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.togR6cL3HuJaza0a",
+      "type": "document",
+      "name": "Spellcasting: Revivify",
+      "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "l4SfNC3t29HVzcod",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.l4SfNC3t29HVzcod",
+      "type": "document",
+      "name": "Spellcasting: Divination",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aJbrRO6ZwcAjF6zb",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.aJbrRO6ZwcAjF6zb",
+      "type": "document",
+      "name": "Spellcasting: Stoneskin",
+      "img": "icons/magic/defensive/armor-stone-skin.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.czRnWIYeLA6pgce1",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UPmXtNW6LTZfJH2V",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.UPmXtNW6LTZfJH2V",
+      "type": "document",
+      "name": "Spellcasting: Awaken",
+      "img": "icons/magic/nature/root-vines-face-glow-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.2rV3IH7sluLhenoa",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aqWGTcrz7Aub9br3",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.aqWGTcrz7Aub9br3",
+      "type": "document",
+      "name": "Spellcasting: Greater Restoration",
+      "img": "icons/magic/life/heart-hand-gold-green-light.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "U6ITGrI6U6eNhYSj",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.U6ITGrI6U6eNhYSj",
+      "type": "document",
+      "name": "Spellcasting: Planar Binding",
+      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1j8mNya1elM6E3Sq",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.1j8mNya1elM6E3Sq",
+      "type": "document",
+      "name": "Spellcasting: Reincarnate",
+      "img": "icons/creatures/magical/spirit-undead-horned-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.SG6UX7uGksVjnR5k",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ema3IO4SZscqwywu",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.Ema3IO4SZscqwywu",
+      "type": "document",
+      "name": "Spellcasting: Scrying",
+      "img": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
+      "weight": 1,
+      "range": [
+        54,
+        54
       ],
       "drawn": false,
       "description": "",

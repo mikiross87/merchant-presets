@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/church.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d26",
+  "formula": "1d31",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -351,6 +351,86 @@
       "flags": {}
     },
     {
+      "_id": "TcHNyRDXHFg77XpB",
+      "_key": "!tables.results!QxumSyYWPiRYNmN7.TcHNyRDXHFg77XpB",
+      "type": "document",
+      "name": "Spellcasting: Bless",
+      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cPeIWoweTmHYjii6",
+      "_key": "!tables.results!QxumSyYWPiRYNmN7.cPeIWoweTmHYjii6",
+      "type": "document",
+      "name": "Spellcasting: Protection from Evil and Good",
+      "img": "icons/magic/symbols/fleur-de-lis-yellow.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2JD1hc0ofdiLcz0u",
+      "_key": "!tables.results!QxumSyYWPiRYNmN7.2JD1hc0ofdiLcz0u",
+      "type": "document",
+      "name": "Spellcasting: Augury",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8GxuGmIZPRVhmFXU",
+      "_key": "!tables.results!QxumSyYWPiRYNmN7.8GxuGmIZPRVhmFXU",
+      "type": "document",
+      "name": "Spellcasting: Continual Flame",
+      "img": "icons/magic/light/torch-fire-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "n9D9I5pEThnUW2b5",
+      "_key": "!tables.results!QxumSyYWPiRYNmN7.n9D9I5pEThnUW2b5",
+      "type": "document",
+      "name": "Spellcasting: Warding Bond",
+      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
       "_id": "sk0DRo3RZD5IXjfZ",
       "_key": "!tables.results!QxumSyYWPiRYNmN7.sk0DRo3RZD5IXjfZ",
       "type": "document",
@@ -359,8 +439,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
       "weight": 1,
       "range": [
-        22,
-        22
+        27,
+        27
       ],
       "drawn": false,
       "description": "",
@@ -375,8 +455,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
       "weight": 1,
       "range": [
-        23,
-        23
+        28,
+        28
       ],
       "drawn": false,
       "description": "",
@@ -391,8 +471,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
       "weight": 1,
       "range": [
-        24,
-        24
+        29,
+        29
       ],
       "drawn": false,
       "description": "",
@@ -407,8 +487,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE",
       "weight": 1,
       "range": [
-        25,
-        25
+        30,
+        30
       ],
       "drawn": false,
       "description": "",
@@ -423,8 +503,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh",
       "weight": 1,
       "range": [
-        26,
-        26
+        31,
+        31
       ],
       "drawn": false,
       "description": "",

@@ -73,18 +73,24 @@ shop's recipe sets `disposition` (1 friendly, 0 neutral, -1 hostile, -2 secret).
 their lines in `data/recipes.json`. Don't edit either by hand: the next run
 replaces every component good and line.
 
-Regenerating is a separate, rarer step than packing, because it needs four of
+It also writes the spellcasting services sold by name (#55) and their lines.
+The seven level services (`Spellcasting: Cantrip` to `Level 9`) are edited by
+hand, and the named services take their prices from them.
+
+Regenerating is a separate, rarer step than packing, because it needs five of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
 sell, the actors the shopkeepers are statted from, the monster features those
-stat blocks reference, and the spells whose material components the component
-goods come from:
+stat blocks reference, the spells whose material components the component
+goods and named services come from, and the content pack whose class spell
+lists decide which shop hires out which spell:
 
 ```
-for p in equipment24 actors24 monsterfeatures24 spells24; do
+for p in equipment24 actors24 monsterfeatures24 spells24 content24; do
   fvtt package unpack -n "$p" --id dnd5e --type System \
     --in <dnd5e>/packs --out "/tmp/$p"
 done
-MP_SPELLS_DIR=/tmp/spells24 python3 tools/build_spell_goods.py
+MP_SPELLS_DIR=/tmp/spells24 MP_CONTENT_DIR=/tmp/content24 \
+  python3 tools/build_spell_goods.py
 MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 \
   MP_FEATS_DIR=/tmp/monsterfeatures24 python3 tools/build_srd.py
 npm run pack
@@ -152,6 +158,19 @@ Constraints worth knowing before changing the generator:
   consumes"), not from the spell's `materials.consumed`, which is one flag per
   spell and wrong on Sequester. An `identifier` is fixed once released: other
   modules and dnd5e's Material consumption find a component by it.
+- **Spells with a priced component are also sold by name** (#55). Every
+  costed spell becomes a service priced at its level service plus the sum of
+  its costed parts, each multiple counted. Shops are assigned from the
+  `dnd5e.content24` class spell lists, using the classes in `SHOP_CLASSES`.
+  Each line's size comes from the shop's own level-service line for that
+  level. The build stops if a spell lands in no shop, a class list names a
+  spell not in `spells24`, or a shop would sell a named spell without its
+  level service. Named services carry `flags.merchant-presets.spell`, which is
+  how the script tells its own goods from the hand-made level services. They
+  also carry the Item Piles category *Spells, Components Included*. Item Piles
+  sorts the items under a heading by name, so without it the level services sort
+  in among them. `make_item` carries a good's own category onto each shop's
+  copy.
 - **Valuables sell back at full value** (SRD 5.2 *Equipment*). A good of type
   `loot` whose `system.type.value` is `gem`, `art` or `trade` is filed under
   the Item Piles custom category *Valuables*: on the good, on each shop's

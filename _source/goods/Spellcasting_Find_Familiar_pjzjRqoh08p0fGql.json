@@ -1,0 +1,55 @@
+{
+  "_id": "pjzjRqoh08p0fGql",
+  "_key": "!items!pjzjRqoh08p0fGql",
+  "name": "Spellcasting: Find Familiar",
+  "type": "loot",
+  "img": "icons/creatures/mammals/spirit-deer-herd-blue.webp",
+  "folder": "LAxnBRt7IpLhtlhA",
+  "sort": 0,
+  "system": {
+    "description": {
+      "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar} on your behalf and provides its material component: burning incense worth 10+ GP, which the spell consumes.</p>",
+      "chat": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 60,
+      "denomination": "gp"
+    },
+    "rarity": "",
+    "identified": true,
+    "container": null,
+    "identifier": "",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "type": {
+      "value": "",
+      "subtype": ""
+    },
+    "properties": []
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "item-piles": {
+      "item": {
+        "isService": true,
+        "customCategory": "Spells, Components Included"
+      }
+    },
+    "merchant-presets": {
+      "kind": "spellcasting",
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplFindFamili"
+    }
+  }
+}

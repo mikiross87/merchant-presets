@@ -44,10 +44,10 @@ test("every valuable carries the Valuables category, on the good, the shelf and 
 });
 
 test("nothing else is filed under Valuables, artisan's tools included", () => {
-  for (const g of goods.filter(g => !isValuable(g))) assert.equal(category(g), undefined, g.name);
+  for (const g of goods.filter(g => !isValuable(g))) assert.notEqual(category(g), "Valuables", g.name);
   for (const m of merchants) {
     for (const item of m.items.filter(i => !isValuable(i))) {
-      assert.equal(category(item), undefined, `${m.name}: ${item.name}`);
+      assert.notEqual(category(item), "Valuables", `${m.name}: ${item.name}`);
     }
   }
   const tools = merchants.flatMap(stock).filter(i => i.type === "tool" && i.system.type.value === "art");
