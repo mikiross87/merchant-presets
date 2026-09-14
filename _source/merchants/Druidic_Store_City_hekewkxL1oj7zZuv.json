@@ -6340,7 +6340,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6394,7 +6394,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6448,7 +6448,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6502,7 +6502,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6556,7 +6556,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6610,7 +6610,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 6, 7 or 8 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6664,7 +6664,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 9 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -6767,62 +6767,6 @@
       },
       "_id": "k5tRvCeJuKztBGPc",
       "_key": "!actors.items!hekewkxL1oj7zZuv.k5tRvCeJuKztBGPc"
-    },
-    {
-      "name": "Spellcasting: Augury",
-      "type": "loot",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury} on your behalf and provides its material component: specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 225,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplAugury0000"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc"
-      },
-      "_id": "ExGRuTe4rEZQy8Qf",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.ExGRuTe4rEZQy8Qf"
     },
     {
       "name": "Spellcasting: Continual Flame",
@@ -7105,62 +7049,6 @@
       "_key": "!actors.items!hekewkxL1oj7zZuv.iMdndZG9suoXnY7s"
     },
     {
-      "name": "Spellcasting: Awaken",
-      "type": "loot",
-      "img": "icons/magic/nature/root-vines-face-glow-green.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAwaken0000]{Awaken} on your behalf and provides its material component: an agate worth 1,000+ GP, which the spell consumes.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 3000,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplAwaken0000"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.2rV3IH7sluLhenoa"
-      },
-      "_id": "E1z1B9OsdKa2SCbI",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.E1z1B9OsdKa2SCbI"
-    },
-    {
       "name": "Spellcasting: Greater Restoration",
       "type": "loot",
       "img": "icons/magic/life/heart-hand-gold-green-light.webp",
@@ -7215,62 +7103,6 @@
       },
       "_id": "Woea8KQe5XqO26Qq",
       "_key": "!actors.items!hekewkxL1oj7zZuv.Woea8KQe5XqO26Qq"
-    },
-    {
-      "name": "Spellcasting: Planar Binding",
-      "type": "loot",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplPlanarBind]{Planar Binding} on your behalf and provides its material component: a jewel worth 1,000+ GP, which the spell consumes.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 3000,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplPlanarBind"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY"
-      },
-      "_id": "G5bQlKuS8vuNv8SE",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.G5bQlKuS8vuNv8SE"
     },
     {
       "name": "Spellcasting: Reincarnate",
@@ -7385,62 +7217,6 @@
       "_key": "!actors.items!hekewkxL1oj7zZuv.QMkrCYuDtnurswP3"
     },
     {
-      "name": "Spellcasting: Find the Path",
-      "type": "loot",
-      "img": "icons/tools/navigation/spyglass-telescope-brass-blue.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplFindthePat]{Find the Path} on your behalf and provides its material component: a set of divination tools—such as cards or runes—worth 100+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 20100,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplFindthePat"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.qS7CRt0IvLZacUHI"
-      },
-      "_id": "86a56isfDTq0gxyb",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.86a56isfDTq0gxyb"
-    },
-    {
       "name": "Spellcasting: Heroes' Feast",
       "type": "loot",
       "img": "icons/consumables/food/cooked-hock-glowing-orange.webp",
@@ -7497,62 +7273,6 @@
       "_key": "!actors.items!hekewkxL1oj7zZuv.jmVhnmOEzJtpTRQD"
     },
     {
-      "name": "Spellcasting: Plane Shift",
-      "type": "loot",
-      "img": "icons/skills/targeting/target-glowing-yellow.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplPlaneShift]{Plane Shift} on your behalf and provides its material component: a forked, metal rod worth 250+ GP and attuned to a plane of existence.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 20250,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplPlaneShift"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR"
-      },
-      "_id": "rhwUdJjC2DausvdD",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.rhwUdJjC2DausvdD"
-    },
-    {
       "name": "Spellcasting: Symbol",
       "type": "loot",
       "img": "icons/magic/symbols/rune-sigil-green-purple.webp",
@@ -7607,62 +7327,6 @@
       },
       "_id": "IGkWXqpSJZqm4bWB",
       "_key": "!actors.items!hekewkxL1oj7zZuv.IGkWXqpSJZqm4bWB"
-    },
-    {
-      "name": "Spellcasting: Shapechange",
-      "type": "loot",
-      "img": "icons/magic/unholy/hand-fire-skeleton-pink.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplShapechang]{Shapechange} on your behalf and provides its material component: a jade circlet worth 1,500+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 101500,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplShapechang"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.DDTfOQrapsfrZsyY"
-      },
-      "_id": "YeEILPGPUBcrFo7p",
-      "_key": "!actors.items!hekewkxL1oj7zZuv.YeEILPGPUBcrFo7p"
     },
     {
       "name": "Spellcasting: True Resurrection",
@@ -10847,13 +10511,6 @@
           "cantBeSoldToMerchants": true,
           "customCategory": "Spells, Components Included"
         },
-        "Spellcasting: Augury": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Continual Flame": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
@@ -10889,21 +10546,7 @@
           "cantBeSoldToMerchants": true,
           "customCategory": "Spells, Components Included"
         },
-        "Spellcasting: Awaken": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Greater Restoration": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Planar Binding": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
@@ -10924,13 +10567,6 @@
           "cantBeSoldToMerchants": true,
           "customCategory": "Spells, Components Included"
         },
-        "Spellcasting: Find the Path": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Heroes' Feast": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
@@ -10938,21 +10574,7 @@
           "cantBeSoldToMerchants": true,
           "customCategory": "Spells, Components Included"
         },
-        "Spellcasting: Plane Shift": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Symbol": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Shapechange": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
@@ -10987,7 +10609,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components are listed by name, with the components in the price; any other spell, or one you bring the components for, costs its level's price.</em></p>",
+        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/house-woods.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
@@ -11071,22 +10693,16 @@
               "h6iPgaShpt0ESGNP": "1",
               "OLRPAFEIGHTJUTW1": "1",
               "kW8UXWfp0hQT4pfY": "1",
-              "DcZbppTkfBQjmbQx": "1",
               "1zQSIq0qAuQmjqhF": "1",
               "elccVHcpDXeVWXPw": "1",
               "mtOJkkE8RJMdQWdu": "1",
               "qvucsMNJLlVN0G1N": "1",
               "fRnyuHg4qVDZ9EOD": "1",
-              "6eqxONuoW3D05pl7": "1",
               "6m2TUBXwEntFseAc": "1",
-              "BY86aUTrQ4HJ03QS": "1",
               "zEVCI4FyQj0txOKA": "1",
               "h4D26JkY20NjQ0Qy": "1",
-              "IDQ16lHN9qTlx1Wp": "1",
               "peryWzrPmSpq6COY": "1",
-              "sAd2mtErl07K0ccq": "1",
               "ptekCddUvmnldATP": "1",
-              "WXDgDqBjyRSydHOn": "1",
               "0zXkVui9oO0h3Sn1": "1",
               "segqU17MkbJdZzvC": "1d2-1"
             }

@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/church.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d70",
+  "formula": "1d61",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -511,22 +511,6 @@
       "flags": {}
     },
     {
-      "_id": "oxZQdsXm9FwJ6SO8",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.oxZQdsXm9FwJ6SO8",
-      "type": "document",
-      "name": "Spellcasting: Bless",
-      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8",
-      "weight": 1,
-      "range": [
-        32,
-        32
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "q8FlQJkwUYCyc9s1",
       "_key": "!tables.results!rqpaUcwjV0cURhY0.q8FlQJkwUYCyc9s1",
       "type": "document",
@@ -535,24 +519,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.lGPweGYtmmSNtmNI",
       "weight": 1,
       "range": [
-        33,
-        33
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "S0xmFrhYvWxzVZex",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.S0xmFrhYvWxzVZex",
-      "type": "document",
-      "name": "Spellcasting: Augury",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
-      "weight": 1,
-      "range": [
-        34,
-        34
+        32,
+        32
       ],
       "drawn": false,
       "description": "",
@@ -567,24 +535,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
       "weight": 1,
       "range": [
-        35,
-        35
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "MtAJ5fL5cY7YdUiG",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.MtAJ5fL5cY7YdUiG",
-      "type": "document",
-      "name": "Spellcasting: Warding Bond",
-      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT",
-      "weight": 1,
-      "range": [
-        36,
-        36
+        33,
+        33
       ],
       "drawn": false,
       "description": "",
@@ -599,8 +551,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fvRA9Q6fm2J4xBpC",
       "weight": 1,
       "range": [
-        37,
-        37
+        34,
+        34
       ],
       "drawn": false,
       "description": "",
@@ -615,8 +567,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.lPcQMkyeNrbcWmjI",
       "weight": 1,
       "range": [
-        38,
-        38
+        35,
+        35
       ],
       "drawn": false,
       "description": "",
@@ -631,8 +583,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.4ErAqbhZ4I3NjVnT",
       "weight": 1,
       "range": [
-        39,
-        39
+        36,
+        36
       ],
       "drawn": false,
       "description": "",
@@ -647,8 +599,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM",
       "weight": 1,
       "range": [
-        40,
-        40
+        37,
+        37
       ],
       "drawn": false,
       "description": "",
@@ -663,8 +615,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
       "weight": 1,
       "range": [
-        41,
-        41
+        38,
+        38
       ],
       "drawn": false,
       "description": "",
@@ -679,8 +631,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch",
       "weight": 1,
       "range": [
-        42,
-        42
+        39,
+        39
       ],
       "drawn": false,
       "description": "",
@@ -695,8 +647,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.CpH0e07N1GHaaNkY",
       "weight": 1,
       "range": [
-        43,
-        43
+        40,
+        40
       ],
       "drawn": false,
       "description": "",
@@ -711,24 +663,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.2V4podU9BqxWyQ3B",
       "weight": 1,
       "range": [
-        44,
-        44
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "NFuLdMIh5bQWcBCd",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.NFuLdMIh5bQWcBCd",
-      "type": "document",
-      "name": "Spellcasting: Planar Binding",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
-      "weight": 1,
-      "range": [
-        45,
-        45
+        41,
+        41
       ],
       "drawn": false,
       "description": "",
@@ -743,8 +679,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Tnu09aEApYt7UTNo",
       "weight": 1,
       "range": [
-        46,
-        46
+        42,
+        42
       ],
       "drawn": false,
       "description": "",
@@ -759,40 +695,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
       "weight": 1,
       "range": [
-        47,
-        47
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "8lkNGehV9jHQyFuc",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.8lkNGehV9jHQyFuc",
-      "type": "document",
-      "name": "Spellcasting: Create Undead",
-      "img": "icons/magic/death/skull-flames-white-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.EgwdiqdERTxQSvbw",
-      "weight": 1,
-      "range": [
-        48,
-        48
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "oV8NYistR8rQ2FvP",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.oV8NYistR8rQ2FvP",
-      "type": "document",
-      "name": "Spellcasting: Find the Path",
-      "img": "icons/tools/navigation/spyglass-telescope-brass-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.qS7CRt0IvLZacUHI",
-      "weight": 1,
-      "range": [
-        49,
-        49
+        43,
+        43
       ],
       "drawn": false,
       "description": "",
@@ -807,8 +711,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.YKycbOBKHxQ92OZN",
       "weight": 1,
       "range": [
-        50,
-        50
+        44,
+        44
       ],
       "drawn": false,
       "description": "",
@@ -823,8 +727,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.dDIdElCAnVfXBcJ5",
       "weight": 1,
       "range": [
-        51,
-        51
+        45,
+        45
       ],
       "drawn": false,
       "description": "",
@@ -839,24 +743,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.J2J46nkMLgnAa3k7",
       "weight": 1,
       "range": [
-        52,
-        52
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "o70osIDV7VoL3rvG",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.o70osIDV7VoL3rvG",
-      "type": "document",
-      "name": "Spellcasting: Plane Shift",
-      "img": "icons/skills/targeting/target-glowing-yellow.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.A7HtMsRb4z0IWNqR",
-      "weight": 1,
-      "range": [
-        53,
-        53
+        46,
+        46
       ],
       "drawn": false,
       "description": "",
@@ -871,8 +759,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.rcImXTwCNM5aDopJ",
       "weight": 1,
       "range": [
-        54,
-        54
+        47,
+        47
       ],
       "drawn": false,
       "description": "",
@@ -887,40 +775,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.0qEsbRG0RIKAqfly",
       "weight": 1,
       "range": [
-        55,
-        55
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "SKjQSQFzcRm5vgBb",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.SKjQSQFzcRm5vgBb",
-      "type": "document",
-      "name": "Spellcasting: Holy Aura",
-      "img": "icons/magic/life/ankh-shadow-green.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.geNwvxJwu7OYnLDL",
-      "weight": 1,
-      "range": [
-        56,
-        56
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "eF62COA8gaaYJK6t",
-      "_key": "!tables.results!rqpaUcwjV0cURhY0.eF62COA8gaaYJK6t",
-      "type": "document",
-      "name": "Spellcasting: Astral Projection",
-      "img": "icons/magic/light/orbs-hand-gray.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.ASNEQUZGdt5ejRUn",
-      "weight": 1,
-      "range": [
-        57,
-        57
+        48,
+        48
       ],
       "drawn": false,
       "description": "",
@@ -935,8 +791,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.8yhm1wwayAIONgAT",
       "weight": 1,
       "range": [
-        58,
-        58
+        49,
+        49
       ],
       "drawn": false,
       "description": "",
@@ -951,8 +807,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.hJ2Bq6dbYnSznR8W",
       "weight": 1,
       "range": [
-        59,
-        59
+        50,
+        50
       ],
       "drawn": false,
       "description": "",
@@ -967,8 +823,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.puBYpsyVvpnhJa4m",
       "weight": 1,
       "range": [
-        60,
-        60
+        51,
+        51
       ],
       "drawn": false,
       "description": "",
@@ -983,8 +839,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.AySOPIwKMWjdHiD2",
       "weight": 1,
       "range": [
-        61,
-        61
+        52,
+        52
       ],
       "drawn": false,
       "description": "",
@@ -999,8 +855,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.MDDRvSKLqAF009ye",
       "weight": 1,
       "range": [
-        62,
-        62
+        53,
+        53
       ],
       "drawn": false,
       "description": "",
@@ -1015,8 +871,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.KyhvzZnUThDrHkR7",
       "weight": 1,
       "range": [
-        63,
-        63
+        54,
+        54
       ],
       "drawn": false,
       "description": "",
@@ -1031,8 +887,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fpEjJ5lcrsfhEbyz",
       "weight": 1,
       "range": [
-        64,
-        64
+        55,
+        55
       ],
       "drawn": false,
       "description": "",
@@ -1047,8 +903,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.R4g0yyOL9V2ffBx8",
       "weight": 1,
       "range": [
-        65,
-        65
+        56,
+        56
       ],
       "drawn": false,
       "description": "",
@@ -1063,8 +919,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ZKyISKEEuPFwVUFO",
       "weight": 1,
       "range": [
-        66,
-        66
+        57,
+        57
       ],
       "drawn": false,
       "description": "",
@@ -1079,8 +935,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.STybyfM3XVWwyU4O",
       "weight": 1,
       "range": [
-        67,
-        67
+        58,
+        58
       ],
       "drawn": false,
       "description": "",
@@ -1095,8 +951,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.FPLJ4IbgYTMDTHXE",
       "weight": 1,
       "range": [
-        68,
-        68
+        59,
+        59
       ],
       "drawn": false,
       "description": "",
@@ -1111,8 +967,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.VfHaUfmq7tKl8GNh",
       "weight": 1,
       "range": [
-        69,
-        69
+        60,
+        60
       ],
       "drawn": false,
       "description": "",
@@ -1127,8 +983,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.U28Am21JbNizuxGY",
       "weight": 1,
       "range": [
-        70,
-        70
+        61,
+        61
       ],
       "drawn": false,
       "description": "",

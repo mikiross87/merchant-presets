@@ -3427,7 +3427,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3481,7 +3481,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3535,7 +3535,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3589,7 +3589,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3643,7 +3643,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3690,62 +3690,6 @@
       },
       "_id": "JoOIywD8ERixCKIR",
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.JoOIywD8ERixCKIR"
-    },
-    {
-      "name": "Spellcasting: Bless",
-      "type": "loot",
-      "img": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplBless00000]{Bless} on your behalf and provides its material component: a Holy Symbol worth 5+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 55,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplBless00000"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.gtKzwKjYnUwWL2m8"
-      },
-      "_id": "pECuBgh3480l8GI7",
-      "_key": "!actors.items!v5K6ycEOTlSO5K4N.pECuBgh3480l8GI7"
     },
     {
       "name": "Spellcasting: Protection from Evil and Good",
@@ -3804,62 +3748,6 @@
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.lU5D81XUaW5o7ghr"
     },
     {
-      "name": "Spellcasting: Augury",
-      "type": "loot",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury} on your behalf and provides its material component: specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 225,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplAugury0000"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc"
-      },
-      "_id": "4qj0TF57xxrYbdIV",
-      "_key": "!actors.items!v5K6ycEOTlSO5K4N.4qj0TF57xxrYbdIV"
-    },
-    {
       "name": "Spellcasting: Continual Flame",
       "type": "loot",
       "img": "icons/magic/light/torch-fire-orange.webp",
@@ -3914,62 +3802,6 @@
       },
       "_id": "eY44h3Dvsp1I9Pju",
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.eY44h3Dvsp1I9Pju"
-    },
-    {
-      "name": "Spellcasting: Warding Bond",
-      "type": "loot",
-      "img": "icons/magic/movement/abstract-ribbons-red-orange.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond} on your behalf and provides its material component: a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 300,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplWardingBon"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.4GwGXZYz9CHFRaKT"
-      },
-      "_id": "BNcmXo5am6VJgfy5",
-      "_key": "!actors.items!v5K6ycEOTlSO5K4N.BNcmXo5am6VJgfy5"
     },
     {
       "name": "Spellcasting: Clairvoyance",
@@ -4418,62 +4250,6 @@
       },
       "_id": "sObChawxMQmNV58N",
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.sObChawxMQmNV58N"
-    },
-    {
-      "name": "Spellcasting: Planar Binding",
-      "type": "loot",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
-      "system": {
-        "description": {
-          "value": "<p>A spellcaster casts @UUID[Compendium.dnd5e.spells24.Item.phbsplPlanarBind]{Planar Binding} on your behalf and provides its material component: a jewel worth 1,000+ GP, which the spell consumes.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 3000,
-          "denomination": "gp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true,
-            "customCategory": "Spells, Components Included"
-          }
-        },
-        "merchant-presets": {
-          "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplPlanarBind"
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY"
-      },
-      "_id": "JubqCTKAidKohC9k",
-      "_key": "!actors.items!v5K6ycEOTlSO5K4N.JubqCTKAidKohC9k"
     },
     {
       "name": "Spellcasting: Raise Dead",
@@ -7472,13 +7248,6 @@
           "isService": true,
           "cantBeSoldToMerchants": true
         },
-        "Spellcasting: Bless": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Protection from Evil and Good": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
@@ -7486,21 +7255,7 @@
           "cantBeSoldToMerchants": true,
           "customCategory": "Spells, Components Included"
         },
-        "Spellcasting: Augury": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
         "Spellcasting: Continual Flame": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Warding Bond": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
@@ -7557,13 +7312,6 @@
           "customCategory": "Spells, Components Included"
         },
         "Spellcasting: Legend Lore": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true,
-          "customCategory": "Spells, Components Included"
-        },
-        "Spellcasting: Planar Binding": {
           "infiniteQuantity": "yes",
           "keepOnMerchant": true,
           "isService": true,
@@ -7648,7 +7396,7 @@
       "data": {
         "enabled": true,
         "type": "merchant",
-        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components are listed by name, with the components in the price; any other spell, or one you bring the components for, costs its level's price.</em></p>",
+        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/church.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
@@ -7716,11 +7464,8 @@
               "ntLdbq9HdtTS6LVq": "1",
               "wTGc7HORmXdonHhc": "1",
               "9yPE2aVOoM0lbQfY": "1",
-              "RLpxdporM4UifvEz": "1",
               "R1J26pn5eSCA8rEL": "1",
-              "rAK7mnpyyeU9B3jj": "1",
               "6QMAjjWVFe4tpuWi": "1",
-              "Kv16ruYIgbC3Leqe": "1",
               "wpfjP6btZfYVhRtT": "1",
               "iBWKhJIhvKB23tPJ": "1",
               "4bUU75GYu1U7PCgn": "1",
@@ -7729,7 +7474,6 @@
               "LhJFCYDaQyONNynW": "1",
               "PzVZglnm4Frmym4f": "1",
               "OszQS0SBy26z5zhe": "1",
-              "57VqniHjzL1Qaol1": "1",
               "o3X10furC1ThTtaT": "1",
               "uxY4t3eaU8xQKOjE": "1",
               "cKv1Qwyo1hVh5Ejo": "1d2",

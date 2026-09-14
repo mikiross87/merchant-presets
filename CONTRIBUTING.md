@@ -160,9 +160,13 @@ Constraints worth knowing before changing the generator:
   consumes"), not from the spell's `materials.consumed`, which is one flag per
   spell and wrong on Sequester. An `identifier` is fixed once released: other
   modules and dnd5e's Material consumption find a component by it.
-- **Spells with a priced component are also sold by name** (#55). Every
-  costed spell becomes a service priced at its level service plus the sum of
-  its costed parts, each multiple counted. Shops are assigned from the
+- **Spells with a priced component are also sold by name** (#55), if they work
+  without the caster. Every costed spell not under `not_sold` in
+  `data/spellcasting.json` becomes a service. Each `not_sold` entry says why a
+  buyer can't use that spell without the caster along, and the build stops if
+  one names a spell with no costed component. A service is priced at its level
+  service plus the sum of its costed parts, each multiple counted. Shops are
+  assigned from the
   `dnd5e.content24` class spell lists, using the classes in `SHOP_CLASSES`.
   Each line's size comes from the shop's own level-service line for that
   level. The build stops if a spell lands in no shop, a class list names a
