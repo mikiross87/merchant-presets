@@ -99,6 +99,32 @@ test("each caster shop sells the named spells of its lists, by settlement size (
   }
 });
 
+// Item Piles lists a shop window's headings by label and the items under each by
+// name (refreshItems, both localeCompare). Under one Service heading the level
+// services sorted in among the named spells, Cantrip after Bless. So the named
+// spells get a heading of their own. The default heading's label is its
+// translation key, which is what it sorts by.
+const SERVICE_HEADING = "ITEM-PILES.Merchant.Service";
+const NAMED_HEADING = "Spells, Components Included";
+const category = item => item.flags?.["item-piles"]?.item?.customCategory;
+
+test("the shop window lists the level services in level order, then the named spells under their own heading", () => {
+  assert.ok(SERVICE_HEADING.localeCompare(NAMED_HEADING) < 0);
+  assert.deepEqual(levels.map(s => s.name).sort((a, b) => a.localeCompare(b)), [
+    "Spellcasting: Cantrip", "Spellcasting: Level 1", "Spellcasting: Level 2", "Spellcasting: Level 3",
+    "Spellcasting: Level 4-5", "Spellcasting: Level 6-8", "Spellcasting: Level 9"
+  ]);
+  for (const s of levels) assert.equal(category(s), undefined, s.name);
+  for (const s of named) assert.equal(category(s), NAMED_HEADING, s.name);
+  for (const m of casters) {
+    for (const item of m.items.filter(isService)) {
+      const want = isLevel(item) ? undefined : NAMED_HEADING;
+      assert.equal(category(item), want, `${m.name}: ${item.name}`);
+      assert.equal(m.flags["merchant-presets"].itemFlags[item.name].customCategory, want, `${m.name}: ${item.name}`);
+    }
+  }
+});
+
 test("a named service is a service on the shelf too: never sold out, never bought back", () => {
   for (const m of casters) {
     for (const item of m.items.filter(isService)) {
