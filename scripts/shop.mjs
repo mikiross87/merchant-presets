@@ -25,3 +25,54 @@ export function isPreset(actor) {
   return (actor.flags?.["item-piles"]?.data?.tablesForPopulate ?? [])
     .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
 }
+
+/**
+ * A stock list's identity: what its results point at, in any order. FNV-1a
+ * over the sorted document UUIDs, short enough to keep on a flag.
+ *
+ * @param {Iterable<object>} results  A RollTable's results.
+ * @returns {string}
+ */
+function stockSignature(results) {
+  const text = Array.from(results, r => r.documentUuid ?? "").sort().join("\n");
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+/**
+ * Where importing a compendium stock table should land in the world.
+ *
+ * Every merchant of a shop shares one world copy of its stock table, but that
+ * copy is only right for the list it was made from. Matched by name alone, a
+ * merchant dragged in after an update that changed the shop's list rolled the
+ * old list at its first restock, and lines for goods since removed quietly
+ * rolled nothing (#63). So each copy is stamped with the compendium table and
+ * list it came from, and reused only while that still describes the shop.
+ * The stamp, not the copy's own results, is what matches: a GM who edits the
+ * table keeps it. Copies made before the stamp existed match by name and by
+ * their results, which is the best evidence they carry.
+ *
+ * A copy that no longer matches is left alone, along with the merchants using
+ * it. The new one takes the version in its name when the shop's name is taken,
+ * so the two can be told apart in the folder and on the Populate Items tab.
+ *
+ * @param {object[]} tables  The RollTables already in the Merchant Stock folder.
+ * @param {object} src       The compendium stock table being imported.
+ * @param {string} version   This module's version.
+ * @returns {{existing: object|undefined, name: string, stamp: {source: string, signature: string}}}
+ *   `existing` is the world table to reuse; otherwise create one named `name`.
+ *   Either way the table should carry `stamp` at `flags.merchant-presets.stock`.
+ */
+export function planWorldTable(tables, src, version) {
+  const stamp = { source: src.uuid, signature: stockSignature(src.results) };
+  const stampOf = table => table.flags?.["merchant-presets"]?.stock;
+  const existing =
+    tables.find(t => stampOf(t)?.source === stamp.source && stampOf(t)?.signature === stamp.signature)
+    ?? tables.find(t => !stampOf(t) && t.name === src.name && stockSignature(t.results) === stamp.signature);
+  const taken = tables.some(t => t.name === src.name);
+  return { existing, name: taken ? `${src.name} (v${version})` : src.name, stamp };
+}
