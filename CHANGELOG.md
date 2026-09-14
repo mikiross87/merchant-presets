@@ -11,6 +11,25 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Added
+
+- Shops sell the spell components SRD 5.2 spells put a price on, as real items
+  that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
+  Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler
+  carries the gems, art and trade goods; the Temple & Faith Store, Arcane
+  Store, Alchemists & Apothecaries and city Druidic Store carry the incense,
+  inks, powders, foci and oils their spellcasters use. Each component names
+  the spells that use it and says whether casting uses it up. They are limited
+  stock that sells out and restocks, and shops that sell no components won't
+  buy them. Merchants already in your world keep their old stock list; drag in
+  a fresh merchant from the compendium to get them. (#51)
+
+### Removed
+
+- The Jeweler's three *Spell Components (gems)* price bands. They were
+  services, so paying for one left nothing in the pack, and each charged the
+  top of its band. The named components above replace them. (#51)
+
 ## [1.2.4] - 2026-09-14
 
 ### Fixed

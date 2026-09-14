@@ -47,7 +47,7 @@ All three sit in a **Merchant Presets** compendium folder.
 
 - **Merchants** (Actor) — 51 statted shopkeepers in `Village` / `Town` / `City` folders.
 - **Shop Stock Tables** (RollTable) — one stock list per shop per size.
-- **Merchant Goods** (Item) — 56 goods no 2024 book ships as items.
+- **Merchant Goods** (Item) — 96 goods no 2024 book ships as items.
 
 ## Usage
 
@@ -99,15 +99,17 @@ stock does, so nothing here needs a book module either.
 
 ### Merchant Goods
 
-56 items the 2024 rules describe in their *Food, Drink, and Lodging*,
-*Spellcasting Services* and *Mounts and Vehicles* tables but never publish as
-items — ale, bread, cheese, wine, meals, lodging, mounts, vehicles, saddles,
-stabling, feed, ship passage and spellcasting services. Without them the Inn &
-Tavern, Stable and Dock would have almost nothing to sell.
+96 items the 2024 rules describe in their *Food, Drink, and Lodging*,
+*Spellcasting Services* and *Mounts and Vehicles* tables, or in their spells'
+material components, but never publish as items — ale, bread, cheese, wine,
+meals, lodging, mounts, vehicles, saddles, stabling, feed, ship passage,
+spellcasting services and spell components. Without them the Inn & Tavern,
+Stable and Dock would have almost nothing to sell.
 
-Prices and weights are the SRD's, verified line by line against those tables, so
-50 of them are marked `SRD 5.2 · CC-BY-4.0` even though this module authors the
-item document — the content is the SRD's, and CC-BY asks to be told so.
+Prices and weights are the SRD's, verified line by line against those tables and
+that spell text, so 93 of them are marked `SRD 5.2 · CC-BY-4.0` even though this
+module authors the item document — the content is the SRD's, and CC-BY asks to
+be told so.
 
 The eight animals are the one place the SRD does publish the thing itself — as a
 stat block in the system's own SRD actor compendium, not as an item. So with the
@@ -118,9 +120,31 @@ item in their pack becomes the bill of sale, linking to the creature. Nothing is
 placed on a scene; the GM drags it in from the sidebar. Selling the deed back to
 a stable is money only — the animal stays for the GM to remove or keep.
 
-Six carry no source at all, being neither in the SRD nor in the 2024 rules: the
+Three carry no source at all, being neither in the SRD nor in the 2024 rules: the
 two coach rides and the road toll, carried over from the 2014 *Services* table
-because the shop guide sells them, and the three spell-component price bands.
+because the shop guide sells them.
+
+The 43 spell components are the ones SRD 5.2 spells name with a price, one item
+per component and price, so a single Diamond Dust (100 GP) serves both
+Stoneskin and Greater Restoration. Each says which spells use it and whether
+casting uses it up. The Jeweler carries the gems, art and trade goods; the
+Temple & Faith Store incense, divination tools, a reliquary, and the diamonds
+and diamond dust its healing spells need; the Arcane Store incense, inks,
+ivory, silver and scrying foci; the Alchemist mushroom powder, and a city
+Druidic Store rare oils. They are limited
+stock, so they sell out and restock like the poisons and scrolls. A Holy Symbol,
+Holy Water and Ink are already on the shelves as SRD equipment, and components
+made to order — statuettes, Clone's vessel, Secret Chest's chest — are not
+stocked.
+
+To have a spell use up its component, give the spell's activity a Material
+consumption target: on the *Activation* tab, under *Consumption*, add a target
+of type *Material* and pick the component from the character's inventory. On a
+spell that is not on a character sheet yet, enter the component's identifier
+instead, such as `diamond-300`, and dnd5e links it to the matching item once the
+spell is on a sheet. Casting then offers to use the component, lowers its
+quantity, and refuses the cast without one. The module does not set this up
+itself.
 
 Ale, bread, cheese and wine are weighted consumables so Simple Nutrition 5e
 counts them as meals; their weights are chosen for that (nutrition equals weight
