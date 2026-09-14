@@ -87,7 +87,7 @@ Document ids are content-derived hashes and the stock rolls are seeded per item,
 so regenerating reproduces the same packs rather than churning them. A stock line
 naming an item that is not in the SRD is reported and skipped, not guessed at.
 
-Four constraints worth knowing before changing the generator:
+Constraints worth knowing before changing the generator:
 
 - Everything must resolve against **SRD 5.2** (`dnd5e.equipment24`,
   `dnd5e.actors24`, `dnd5e.monsterfeatures24`). CI fails the build if any
@@ -110,6 +110,13 @@ Four constraints worth knowing before changing the generator:
   `scripts/merchant-presets.mjs` skip it via `isGear`. Gear is appended *after*
   the item filters are computed — inside the loop its own types would otherwise
   read as stocked and let a chain shirt onto the shelf.
+- **`flags.merchant-presets.profile` is how the runtime recognises a merchant.**
+  Import repoints the merchant's stock table from the compendium to a world
+  copy, so the table only identifies a merchant until then; `profile` survives
+  the import and the runtime never writes it. Keep emitting it on every
+  merchant, or the trading-hours and stock-weight passes skip the world copies
+  (#56). Stock is rolled only in the `rewire` call that wires a compendium
+  table, so `rewireAll()` never re-rolls a shop already in the world.
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
   Item Piles' `tradeItems` hook: `flags.merchant-presets.actor` names the SRD
   stat block an animal good stands for, and buying it copies that actor into the

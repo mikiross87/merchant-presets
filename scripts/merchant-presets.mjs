@@ -19,10 +19,10 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { isPreset, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
-const STOCK_PREFIX = `Compendium.${MODULE}.stock.RollTable.`;
 const TABLE_FOLDER = "Merchant Stock";
 const FLAG_PATH = "flags.item-piles.data.tablesForPopulate";
 
@@ -66,13 +66,6 @@ const log = (...args) => console.log(`${MODULE} |`, ...args);
  */
 const rollStock = async formula =>
   Math.max(0, (await new Roll(formula).evaluate({ allowInteractive: false })).total);
-
-/** Whether this is one of our merchants, sitting in the world rather than a pack. */
-function isPreset(actor) {
-  if (!actor || actor.pack) return false;              // never touch compendium copies
-  return (foundry.utils.getProperty(actor, FLAG_PATH) ?? [])
-    .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
-}
 
 /**
  * Whether an item is the shopkeeper's own kit rather than stock.
@@ -212,9 +205,12 @@ async function applyStockMode(actor) {
 async function rewire(actor) {
   if (!isPreset(actor)) return false;
 
-  let changed = false;
-  changed = await wireTables(actor) || changed;
-  changed = await applyStockMode(actor) || changed;
+  // Stock is rolled once, in the call that wires the compendium table. A shop
+  // already wired keeps the shelf it has: rewireAll and a duplicated merchant
+  // reach here too, and must not re-roll it.
+  const wired = await wireTables(actor);
+  let changed = wired;
+  if (wired) changed = await applyStockMode(actor) || changed;
   changed = await syncStockWeight(actor) || changed;
   changed = await syncOpenState(actor) || changed;
   if (changed) log(`prepared "${actor.name}"`);
