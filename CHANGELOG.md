@@ -30,6 +30,16 @@ than for the code. Reference the issue or PR it closes.
   services, so paying for one left nothing in the pack, and each charged the
   top of its band. The named components above replace them. (#51)
 
+### Fixed
+
+- A merchant dragged in from the compendium after an update now stocks what
+  that update sells. Until now, a world that had imported the same shop before
+  restocked every later copy from the old stock list, so a change to what a
+  shop sells never reached it. Merchants already in your world keep the list
+  they have, along with any changes you made to it; drag in a fresh merchant
+  to get the new stock. Its table appears in *Merchant Stock* beside the old
+  one, with the version in its name, such as *Jeweler (Town) (v1.3.0)*. (#63)
+
 ## [1.2.4] - 2026-09-14
 
 ### Fixed

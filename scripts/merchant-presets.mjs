@@ -19,7 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
-import { isPreset, STOCK_PREFIX } from "./shop.mjs";
+import { isPreset, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
@@ -100,10 +100,18 @@ async function ensureWorldTable(src) {
   if (inFlight.has(src.uuid)) return inFlight.get(src.uuid);
   const promise = (async () => {
     const folder = await ensureFolder(TABLE_FOLDER, "RollTable");
-    const existing = game.tables.find(t => t.folder?.id === folder.id && t.name === src.name);
-    if (existing) return existing;
+    const inFolder = game.tables.filter(t => t.folder?.id === folder.id);
+    const plan = planWorldTable(inFolder, src, game.modules.get(MODULE).version);
+    if (plan.existing) {
+      // A copy made before copies were stamped matched on its own results.
+      // Stamp it now, so edits the GM makes to it later don't stop it matching.
+      if (!plan.existing.getFlag(MODULE, "stock")) await plan.existing.setFlag(MODULE, "stock", plan.stamp);
+      return plan.existing;
+    }
     const data = game.tables.fromCompendium(src, { clearFolder: true, clearOwnership: true });
     data.folder = folder.id;
+    data.name = plan.name;
+    foundry.utils.setProperty(data, `flags.${MODULE}.stock`, plan.stamp);
     return RollTable.implementation.create(data);
   })();
   inFlight.set(src.uuid, promise);

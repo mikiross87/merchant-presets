@@ -126,6 +126,12 @@ Constraints worth knowing before changing the generator:
   merchant, or the trading-hours and stock-weight passes skip the world copies
   (#56). Stock is rolled only in the `rewire` call that wires a compendium
   table, so `rewireAll()` never re-rolls a shop already in the world.
+- **World stock tables are stamped with the list they were copied from**
+  (`flags.merchant-presets.stock`). An import reuses a world table only while
+  its stamp still matches the compendium table, so changing a shop's stock
+  lines reaches merchants dragged in afterwards and leaves the ones already in
+  a world on their old list (#63). A recipe change that alters a shop's lines
+  therefore needs its CHANGELOG line to tell GMs to drag in a fresh merchant.
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
   Item Piles' `tradeItems` hook: `flags.merchant-presets.actor` names the SRD
   stat block an animal good stands for, and buying it copies that actor into the
