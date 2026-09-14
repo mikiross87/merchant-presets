@@ -19,7 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
-import { isPreset, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
+import { isPreset, needsWiring, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
@@ -122,9 +122,8 @@ async function ensureWorldTable(src) {
 
 /** Repoint the merchant's populate tables at world copies. */
 async function wireTables(actor) {
+  if (!needsWiring(actor)) return false;
   const tables = foundry.utils.getProperty(actor, FLAG_PATH);
-  if (!Array.isArray(tables) || !tables.length) return false;
-  if (!tables.some(t => typeof t?.uuid === "string" && t.uuid.startsWith(STOCK_PREFIX))) return false;
 
   const next = [];
   for (const entry of tables) {
