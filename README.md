@@ -65,8 +65,9 @@ On import the module does two things to the world copy: it repoints the
 merchant's populate configuration at a world copy of its stock table (created in
 a `Merchant Stock` RollTable folder), and it rolls the shop's stock. The first
 is necessary because Item Piles' *Populate Items* tab rebuilds its list from
-world tables only and discards compendium entries. To fix merchants imported
-before this module was enabled:
+world tables only and discards compendium entries. Dragging in a shop the world
+already holds asks whether to replace it or create a new actor; either works.
+To fix merchants imported before this module was enabled:
 
 ```js
 game.modules.get("merchant-presets").api.rewireAll()

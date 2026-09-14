@@ -39,6 +39,12 @@ than for the code. Reference the issue or PR it closes.
   they have, along with any changes you made to it; drag in a fresh merchant
   to get the new stock. Its table appears in *Merchant Stock* beside the old
   one, with the version in its name, such as *Jeweler (Town) (v1.3.0)*. (#63)
+- Dragging in a shop your world already has and choosing *Replace Actor*,
+  Foundry's default, now gives a working merchant. The replaced merchant was
+  left on the compendium's stock table: its stock was never rolled, and opening
+  its *Populate Items* tab removed the table for good. A merchant replaced this
+  way whose tab hasn't been opened is fixed when the world next loads; one
+  whose tab was opened needs replacing again. (#66)
 
 ## [1.2.4] - 2026-09-14
 

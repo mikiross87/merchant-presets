@@ -126,6 +126,11 @@ Constraints worth knowing before changing the generator:
   merchant, or the trading-hours and stock-weight passes skip the world copies
   (#56). Stock is rolled only in the `rewire` call that wires a compendium
   table, so `rewireAll()` never re-rolls a shop already in the world.
+  `rewire` runs on `createActor`, and on `updateActor` for a merchant still on
+  its compendium table: Foundry's *Replace Actor*, the default when the world
+  already holds that shop, imports as an update (#66). The `ready` pass wires
+  any such merchant left over. `rewire` handles one pass per merchant at a
+  time, since both hooks can arrive together.
 - **World stock tables are stamped with the list they were copied from**
   (`flags.merchant-presets.stock`). An import reuses a world table only while
   its stamp still matches the compendium table, so changing a shop's stock

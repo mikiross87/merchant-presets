@@ -44,12 +44,15 @@ test("a merchant replaced before the world loaded is wired when it loads (#66)",
   assert.equal(rolls(replacedEarlier), 1);
 });
 
-test("an ordinary update to a wired merchant rolls nothing again", async () => {
+test("an ordinary update leaves a wired merchant as it is", async () => {
   const wired = world.merchant("General_Store_Town_", { table: "RollTable.alreadyWired0001" });
+  // Closed by hand. With trading hours off, the open/closed pass would open it.
+  wired.flags["item-piles"].data.openTimes.status = "closed";
   world.actors.push(wired);
   await world.fire("updateActor", wired, { name: "Barthen's Provisions" }, {}, "gm");
   assert.equal(tableOf(wired), "RollTable.alreadyWired0001");
   assert.equal(rolls(wired), 0);
+  assert.equal(wired.flags["item-piles"].data.openTimes.status, "closed");
 });
 
 test("another user's update is left to the client that made it", async () => {
