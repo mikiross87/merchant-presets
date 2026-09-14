@@ -25,3 +25,15 @@ export function isPreset(actor) {
   return (actor.flags?.["item-piles"]?.data?.tablesForPopulate ?? [])
     .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
 }
+
+/**
+ * Where importing a compendium stock table should land in the world.
+ *
+ * @param {object[]} tables  The RollTables already in the Merchant Stock folder.
+ * @param {object} src       The compendium stock table being imported.
+ * @returns {{existing: object|undefined, name: string}}
+ *   `existing` is the world table to reuse; otherwise a new one named `name`.
+ */
+export function planWorldTable(tables, src) {
+  return { existing: tables.find(t => t.name === src.name), name: src.name };
+}

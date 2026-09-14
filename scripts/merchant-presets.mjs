@@ -19,7 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
-import { isPreset, STOCK_PREFIX } from "./shop.mjs";
+import { isPreset, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
@@ -100,10 +100,11 @@ async function ensureWorldTable(src) {
   if (inFlight.has(src.uuid)) return inFlight.get(src.uuid);
   const promise = (async () => {
     const folder = await ensureFolder(TABLE_FOLDER, "RollTable");
-    const existing = game.tables.find(t => t.folder?.id === folder.id && t.name === src.name);
-    if (existing) return existing;
+    const plan = planWorldTable(game.tables.filter(t => t.folder?.id === folder.id), src);
+    if (plan.existing) return plan.existing;
     const data = game.tables.fromCompendium(src, { clearFolder: true, clearOwnership: true });
     data.folder = folder.id;
+    data.name = plan.name;
     return RollTable.implementation.create(data);
   })();
   inFlight.set(src.uuid, promise);
