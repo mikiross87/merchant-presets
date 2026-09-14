@@ -19,6 +19,7 @@
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, needsWiring, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
@@ -915,6 +916,49 @@ function registerAnimals() {
   });
 }
 
+/* ------------------------------------------------------------- spellcasting */
+
+/**
+ * Say in chat which spell a bought spellcasting service casts, and for whom
+ * (#70). The message text, and why it carries no price, is scripts/casting.mjs.
+ *
+ * Posted by the client of the user who traded, like the meal prompt, so one
+ * trade makes one message and no GM has to be at the table. A named service
+ * links its spell, fetched here for the effects the GM may drag onto the
+ * target; a spell that cannot be fetched is still announced, linked, without
+ * them.
+ */
+async function announceSpellcasting(sellerRef, buyerRef, itemPrices, userId) {
+  if (userId !== game.user.id) return;
+  if (!game.settings.get(MODULE, "spellcastingToChat")) return;
+  const bought = castsIn(itemPrices);
+  if (!bought.length) return;
+  const seller = await fromUuid(uuidOf(sellerRef));
+  const buyer = await fromUuid(uuidOf(buyerRef));
+  if (!seller || !buyer || !game.itempiles?.API?.isItemPileMerchant?.(seller)) return;
+
+  const casts = [];
+  for (const { item, quantity } of bought) {
+    const spell = goodFlag(item, "spell") ?? null;
+    const doc = spell ? await fromUuid(spell).catch(() => null) : null;
+    casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
+  }
+
+  let mode = 1;
+  try { mode = Number(game.settings.get("item-piles", "outputToChat")) || 0; } catch { /* Item Piles' setting is not registered */ }
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor: seller }),
+    content: castingMessage({ shop: seller.name, buyer: buyer.name, casts }),
+    whisper: chatRecipients(mode, game.users.filter(u => u.isGM).map(u => u.id), userId)
+  });
+}
+
+function registerSpellcasting() {
+  Hooks.on("item-piles-tradeItems", (...args) => {
+    announceSpellcasting(...args).catch(err => console.error(`${MODULE} |`, err));
+  });
+}
+
 /* ----------------------------------------------------------------- settings */
 
 Hooks.once("init", () => {
@@ -1045,6 +1089,18 @@ Hooks.once("init", () => {
     type: Boolean,
     default: true
   });
+
+  game.settings.register(MODULE, "spellcastingToChat", {
+    name: "Bought spellcasting is announced in chat",
+    hint: "Buying a spellcasting service moves gold and nothing else. With this on, the shop says in "
+      + "chat which spell it casts and for whom, linking the spell and any effects to drag onto the "
+      + "creature it was cast on; for a service sold by level it asks the buyer to name the spell. "
+      + "Nothing is applied automatically. The message follows Item Piles' own chat visibility.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
 });
 
 Hooks.once("ready", () => {
@@ -1058,6 +1114,8 @@ Hooks.once("ready", () => {
   // The buyer's own client answers the meal prompt, so this is for players too.
   registerMeals();
   registerActivityMeals();
+  // So is the spellcasting announcement: whoever traded posts it.
+  registerSpellcasting();
 
   if (!game.user.isGM) return;
   warnOutdatedNutrition();

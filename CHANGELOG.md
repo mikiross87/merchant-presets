@@ -40,6 +40,13 @@ than for the code. Reference the issue or PR it closes.
   price for any other spell, or when you bring the components yourself.
   Merchants already in your world keep their old stock list; drag in a fresh
   merchant to get these. (#55)
+- Buying spellcasting now shows in chat: the shop says which spell it casts
+  and for whom, links the spell, and links any effects it puts on a creature,
+  such as Raise Dead's Resurrection Sickness, for the GM to drag onto whoever
+  it was cast on. A spell bought by level asks the buyer to tell the GM which
+  one. Nothing is applied automatically. The message follows Item Piles' chat
+  visibility, and the *Bought spellcasting is announced in chat* setting turns
+  it off. (#70)
 
 ### Removed
 

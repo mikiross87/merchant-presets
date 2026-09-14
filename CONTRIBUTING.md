@@ -146,9 +146,11 @@ Constraints worth knowing before changing the generator:
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
   Item Piles' `tradeItems` hook: `flags.merchant-presets.actor` names the SRD
   stat block an animal good stands for, and buying it copies that actor into the
-  world. The generator copies the whole goods document onto each merchant, so a
-  flag set in `_source/goods` needs a regeneration to reach the shops that sell
-  it.
+  world. A `kind` of `spellcasting` posts a chat message naming the spell. On a
+  named service, `flags.merchant-presets.spell` supplies the spell to link, and
+  its effects too, unless they are enchantments (#70). The generator copies the
+  whole goods document onto each merchant, so a flag set in `_source/goods`
+  needs a regeneration to reach the shops that sell it.
 - **Spell components are checked against the spell text, both ways.** Each row
   in `data/components.json` names the spells that use it and the exact text
   naming the component, and `build_spell_goods.py` stops if that text is not in
@@ -166,7 +168,8 @@ Constraints worth knowing before changing the generator:
   level. The build stops if a spell lands in no shop, a class list names a
   spell not in `spells24`, or a shop would sell a named spell without its
   level service. Named services carry `flags.merchant-presets.spell`, which is
-  how the script tells its own goods from the hand-made level services. They
+  how the script tells its own goods from the hand-made level services, and
+  what the purchase message links. They
   also carry the Item Piles category *Spells, Components Included*. Item Piles
   sorts the items under a heading by name, so without it the level services sort
   in among them. `make_item` carries a good's own category onto each shop's

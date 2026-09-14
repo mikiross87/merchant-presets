@@ -145,12 +145,22 @@ service's 300 GP plus the 300 GP diamond, 600 GP. A spell listed by name costs
 what it says. For any other spell, or if the buyer brings the component, the
 level price is the whole price. The shop window lists them under their own
 *Spells, Components Included* heading, below the level services. Each shop
-hires out the spells on its classes'
-SRD spell lists: the Arcane Store the sorcerer, warlock and wizard's, the
-Druidic Store the druid and ranger's, the Temple & Faith Store the cleric and
-paladin's. Each spell is available where its level is: levels 1–2 in a
-village, 3–5 in a town, 6–9 in a city. Astral Projection and Create Undead are
-priced for one target or corpse and say what each further one costs.
+hires out the spells on its classes' SRD spell lists: the Arcane Store the
+sorcerer, warlock and wizard's, the Druidic Store the druid and ranger's, the
+Temple & Faith Store the cleric and paladin's. Each spell is available where
+its level is: levels 1–2 in a village, 3–5 in a town, 6–9 in a city. Astral
+Projection and Create Undead are priced for one target or corpse and say what
+each further one costs.
+
+A service moves gold and nothing else, so with the *Bought spellcasting is
+announced in chat* setting on (it is by default) the shop says in chat which
+spell it casts and for whom: "Temple & Faith Store (Town) casts Raise Dead for
+Aria." The spell is linked. So are any effects it carries that go on a creature,
+such as Raise Dead's Resurrection Sickness, and the GM drags them onto whoever
+the spell was cast on. A service sold by level asks the buyer to tell the GM
+which spell. Nothing is applied automatically, since the buyer is often not the
+target. The message carries no price, because Item Piles' own trade card
+already shows it, and it follows that card's chat visibility.
 
 To have a spell use up its component, give the spell's activity a Material
 consumption target: on the *Activation* tab, under *Consumption*, add a target
