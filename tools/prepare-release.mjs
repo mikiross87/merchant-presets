@@ -11,8 +11,9 @@ import { execFileSync } from "node:child_process";
 import { rollChangelog } from "./changelog.mjs";
 
 const version = process.argv[2];
-if (!version || !/^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/.test(version)) {
-  console.error("usage: npm run release:prepare -- X.Y.Z[-prerelease]");
+if (!version || !/^\d+\.\d+\.\d+$/.test(version)) {
+  console.error("usage: npm run release:prepare -- X.Y.Z");
+  console.error("a prerelease is tagged straight on main, with nothing to stage — see RELEASING.md");
   process.exit(2);
 }
 

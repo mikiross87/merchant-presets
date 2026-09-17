@@ -18,9 +18,16 @@ export function changelogSection(text, version) {
 /**
  * Move everything under [Unreleased] into a new `## [version] - date`
  * section and repoint the footer compare links. Throws if there is nothing
- * to release or the version already has a section.
+ * to release, the version already has a section, or the version is a
+ * prerelease.
  */
 export function rollChangelog(text, version, date, repo) {
+  // A prerelease is a snapshot of main, not a release: it is tagged straight
+  // on main, takes its version from the tag and its notes from [Unreleased],
+  // which stays intact for the release that follows (RELEASING.md).
+  if (version.includes("-")) {
+    throw new Error(`${version} is a prerelease — tag main instead of staging a release`);
+  }
   if (changelogSection(text, version) !== null) {
     throw new Error(`CHANGELOG.md already has a [${version}] section`);
   }

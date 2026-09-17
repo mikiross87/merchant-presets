@@ -78,6 +78,29 @@ That setting is also why the release workflow creates a *prerelease* as a draft
 and publishes it once its assets are attached: an immutable release refuses
 uploads after publication.
 
+## Prereleases
+
+A prerelease is a snapshot of `main`, not a release: there is nothing to stage
+and nothing to merge, and `release:prepare` refuses one. Tag `main` directly:
+
+```sh
+git checkout main && git pull
+git tag -a v1.3.0-beta.1 -m "v1.3.0-beta.1"
+git push origin v1.3.0-beta.1
+```
+
+The workflow takes the version from the tag and writes it into the `module.json`
+it ships — `main`'s still reads the last release — and takes the release body
+from `[Unreleased]`, which is everything the beta is carrying. It marks the
+release a GitHub prerelease, skips the Foundry registry and leaves the milestone
+open. Testers install it from that tag's own pinned manifest URL, which existing
+installs never see (CONTRIBUTING.md).
+
+Because nothing was staged, `main` keeps the last released version and
+`[Unreleased]` keeps its entries. The plain `1.3.0` is then cut exactly as
+above, and its notes cover everything since `1.2.x` rather than only what came
+after the beta (#76).
+
 ## Versioning
 
 - **patch** (`1.2.1`) — fixes only; no new shops, settings or behaviour
@@ -86,8 +109,8 @@ uploads after publication.
 - **major** (`2.0.0`) — existing merchants in a world need migrating, or the
   minimum Foundry / dnd5e / Item Piles version rises
 
-Prereleases (`1.3.0-beta.1`) go through the same flow; CI marks them as
-GitHub prereleases, skips the Foundry registry, and leaves the milestone open.
+Prereleases (`1.3.0-beta.1`) are tagged straight on `main` — see
+[Prereleases](#prereleases).
 
 ## Hotfixes
 

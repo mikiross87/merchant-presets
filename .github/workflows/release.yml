@@ -32,35 +32,60 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify tag matches module.json version
-        run: |
-          MODULE_VERSION="$(jq -r .version module.json)"
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          if [ "$MODULE_VERSION" != "$TAG_VERSION" ]; then
-            echo "module.json version ($MODULE_VERSION) does not match tag ($TAG_VERSION)" >&2
-            exit 1
-          fi
-
       - name: Determine prerelease status
         id: prerelease
         run: |
+          set -euo pipefail
           # Standard semver prerelease convention: a hyphen after the patch
           # number, e.g. v1.1.0-beta.1. Such tags are marked as GitHub
           # prereleases and are not registered with the Foundry registry —
           # they're for testing via their own pinned manifest URL only.
           if [[ "${GITHUB_REF_NAME#v}" == *-* ]]; then
             echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+            # A prerelease is tagged straight on main rather than staged in a
+            # release PR, so it has no CHANGELOG section of its own: it ships
+            # whatever is under [Unreleased] when it is tagged (#76).
+            echo "section=Unreleased" >> "$GITHUB_OUTPUT"
           else
             echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "section=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Pin download URL to this release
+      - name: Check the tag against module.json
         run: |
+          set -euo pipefail
+          MODULE_VERSION="$(jq -r .version module.json)"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "${{ steps.prerelease.outputs.is_prerelease }}" != "true" ]; then
+            if [ "$MODULE_VERSION" != "$TAG_VERSION" ]; then
+              echo "module.json version ($MODULE_VERSION) does not match tag ($TAG_VERSION)" >&2
+              exit 1
+            fi
+          else
+            # main keeps the last released version, so a prerelease tag never
+            # matches it. Check the direction instead: what is being baked has
+            # to be ahead of what has already shipped.
+            TRIPLE="${TAG_VERSION%%-*}"
+            if [ "$TRIPLE" = "$MODULE_VERSION" ] ||
+               [ "$(printf '%s\n%s\n' "$TRIPLE" "$MODULE_VERSION" | sort -V | head -1)" = "$TRIPLE" ]; then
+              echo "prerelease $TAG_VERSION is not ahead of module.json ($MODULE_VERSION)" >&2
+              exit 1
+            fi
+          fi
+
+      - name: Pin the manifest to this release
+        run: |
+          set -euo pipefail
           # The manifest URL stays on releases/latest so Foundry's update
           # check finds new versions; the download URL is pinned so the
           # package registry can install this exact version.
+          #
+          # The version comes from the tag: for a release that is the one the
+          # step above matched, and for a prerelease it is the only place it
+          # exists, since main's manifest still reads the last release.
           jq --arg url "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/module.zip" \
-             '.download = $url' module.json > module.json.tmp
+             --arg version "${GITHUB_REF_NAME#v}" \
+             '.download = $url | .version = $version' module.json > module.json.tmp
           mv module.json.tmp module.json
 
       - name: Build the compendium packs
@@ -77,30 +102,37 @@ jobs:
             -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" -x "data/*" \
             -x "node_modules/*" -x "package*.json" -x "eslint.config.mjs"
 
-      - name: Require a CHANGELOG section for this version
+      - name: Require release notes for this version
         run: |
           set -euo pipefail
-          VERSION="${GITHUB_REF_NAME#v}"
-          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
-            echo "CHANGELOG.md has no [$VERSION] section — run 'npm run release:prepare -- $VERSION' and release via a PR" >&2
+          SECTION="${{ steps.prerelease.outputs.section }}"
+          # The body is the CHANGELOG section written alongside the changes,
+          # not a git log: commit subjects are for developers, release notes
+          # are for the GMs installing the module.
+          BODY="$(node -e '
+            import("./tools/changelog.mjs").then(({ changelogSection }) => {
+              const text = require("fs").readFileSync("CHANGELOG.md", "utf8");
+              process.stdout.write(changelogSection(text, process.argv[1]) ?? "");
+            });
+          ' "$SECTION")"
+          if [ -z "$BODY" ]; then
+            if [ "$SECTION" = "Unreleased" ]; then
+              echo "CHANGELOG.md's [Unreleased] section is empty — a prerelease ships what is under it" >&2
+            else
+              echo "CHANGELOG.md has no [$SECTION] section — run 'npm run release:prepare -- $SECTION' and release via a PR" >&2
+            fi
             exit 1
           fi
+          printf '%s\n' "$BODY" > notes-body.md
 
       - name: Build release notes
         run: |
           set -euo pipefail
-          VERSION="${GITHUB_REF_NAME#v}"
-          PREV="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          # A prerelease tag is not a previous release: the compare link spans
+          # from the last plain version, so it covers the whole release.
+          PREV="$(git describe --tags --abbrev=0 --match 'v*' --exclude '*-*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
           {
-            # The body is the CHANGELOG section written alongside the changes,
-            # not a git log: commit subjects are for developers, release notes
-            # are for the GMs installing the module.
-            node -e '
-              import("./tools/changelog.mjs").then(({ changelogSection }) => {
-                const text = require("fs").readFileSync("CHANGELOG.md", "utf8");
-                process.stdout.write(changelogSection(text, process.argv[1]) + "\n");
-              });
-            ' "$VERSION"
+            cat notes-body.md
             echo ""
             if [ -n "$PREV" ]; then
               echo "**Full changelog:** [\`$PREV...${GITHUB_REF_NAME}\`](https://github.com/${GITHUB_REPOSITORY}/compare/$PREV...${GITHUB_REF_NAME})"
