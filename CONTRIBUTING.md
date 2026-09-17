@@ -195,7 +195,8 @@ Constraints worth knowing before changing the generator:
   CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
   from source, and the paid-content check.
 - One logical change per PR, with commit subjects written as prose rather than
-  conventional-commit prefixes. Release notes come from `CHANGELOG.md`, not from
+  conventional-commit prefixes — `chore(release):`, which `release:prepare`
+  writes, is the one exception. Release notes come from `CHANGELOG.md`, not from
   commit subjects.
 - Open an issue first for anything beyond a typo, and put `Closes #N` in the PR
   body so merging closes it. Issues go through the forms; there are no blank
