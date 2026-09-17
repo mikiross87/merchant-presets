@@ -142,7 +142,7 @@ jobs:
         run: |
           set -euo pipefail
           # Inert until the secret is set, so a fork's tag never fails here.
-          if [ -z "$FOUNDRY_RELEASE_TOKEN" ]; then
+          if [ -z "${FOUNDRY_RELEASE_TOKEN:-}" ]; then
             echo "FOUNDRY_RELEASE_TOKEN not set - skipping registry publish."
             exit 0
           fi
