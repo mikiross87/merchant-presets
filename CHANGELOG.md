@@ -32,14 +32,16 @@ than for the code. Reference the issue or PR it closes.
 - Spells with expensive components are hired out by name, with the component
   in the price, so nobody has to work out the total at the table:
   *Spellcasting: Revivify* costs 600 GP, the level 3 service plus its 300 GP
-  diamond. That's 56 spells, sold wherever their class lists and level allow:
-  the Arcane Store has 9 in a village, 21 in a town and 42 in a city; the
-  Druidic Store 3, 12 and 18; the Temple & Faith Store 5, 16 and 28. They're
+  diamond. That's the 31 spells that work without the caster, sold wherever
+  their class lists and level allow: the Arcane Store has 6 in a village, 15
+  in a town and 22 in a city; the Druidic Store 2, 9 and 12; the Temple &
+  Faith Store 2, 12 and 19. Spells a buyer can't use without the caster along,
+  such as Warding Bond or Find Familiar, are still bought by level. They're
   listed under their own *Spells, Components Included* heading, below the
-  level services. The level services now say that their price is the whole
-  price for any other spell, or when you bring the components yourself.
-  Merchants already in your world keep their old stock list; drag in a fresh
-  merchant to get these. (#55)
+  level services. The level services now say to add the cost of any expensive
+  components you don't bring for a spell that isn't listed. Merchants already
+  in your world keep their old stock list; drag in a fresh merchant to get
+  these. (#55)
 - Buying spellcasting now shows in chat: the shop says which spell it casts
   and for whom, links the spell, and links any effects it puts on a creature,
   such as Raise Dead's Resurrection Sickness, for the GM to drag onto whoever

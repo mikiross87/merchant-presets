@@ -8,7 +8,7 @@
   "sort": 0,
   "system": {
     "description": {
-      "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components are also listed by name, with the components in the price. For any other spell, or if you bring the components yourself, this is the whole price.</p>",
+      "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
       "chat": ""
     },
     "quantity": 1,

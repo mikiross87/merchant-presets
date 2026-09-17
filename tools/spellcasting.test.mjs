@@ -4,12 +4,12 @@ import { readdirSync, readFileSync } from "node:fs";
 
 // SRD 5.2, Spellcasting Services: "If a spell has expensive components, add the
 // cost of those components to the cost listed in the Spellcasting Services table."
-// Those spells are sold by name with the component in the price (#55), so the
-// level services say when their price is the whole price.
-const SERVICE_RULE = "Spells with expensive components are also listed by name, with the components in the price. "
-  + "For any other spell, or if you bring the components yourself, this is the whole price.";
-const SHOP_RULE = "Spells with expensive components are listed by name, with the components in the price; "
-  + "any other spell, or one you bring the components for, costs its level's price.";
+// Those spells are sold by name with the component in the price (#55), if they
+// work without the caster; the level services say what to add for any other.
+const SERVICE_RULE = "Spells with expensive components that work without the caster are also listed by name, "
+  + "with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.";
+const SHOP_RULE = "Spells with expensive components that work without the caster are listed by name, with the "
+  + "components in the price; for any other spell, add the cost of any expensive components you don't bring.";
 
 const load = sub => {
   const dir = new URL(`../_source/${sub}/`, import.meta.url);
@@ -26,31 +26,38 @@ const merchants = load("merchants").filter(d => d._key.startsWith("!actors!"));
 const casters = merchants.filter(m => m.items.some(isService));
 
 // From #55's tables: the level's Spellcasting Services price plus every costed
-// part of the spell's material component, each multiple counted.
+// part of the spell's material component, each multiple counted. Only the 31
+// spells that work without the caster (#55, reopened).
 const PRICES = {
-  "Arcane Lock": 225, "Arcane Sword": 20250, "Astral Projection": 101100, "Augury": 225, "Awaken": 3000,
-  "Bless": 55, "Chromatic Orb": 100, "Circle of Death": 20500, "Clairvoyance": 400, "Clone": 23000,
-  "Contingency": 21500, "Continual Flame": 250, "Create Undead": 20150, "Divination": 2025,
-  "Find Familiar": 60, "Find the Path": 20100, "Forbiddance": 21000, "Forcecage": 21500, "Gate": 105000,
-  "Glyph of Warding": 500, "Greater Restoration": 2100, "Guards and Wards": 20010, "Hallow": 3000,
-  "Heroes' Feast": 21000, "Holy Aura": 21000, "Identify": 150, "Illusory Script": 60, "Imprisonment": 105000,
-  "Instant Summons": 21000, "Legend Lore": 2450, "Magic Circle": 400, "Magic Jar": 20500, "Magic Mouth": 210,
-  "Magnificent Mansion": 20015, "Nondetection": 325, "Planar Binding": 3000, "Plane Shift": 20250,
-  "Programmed Illusion": 20025, "Project Image": 20005, "Protection from Evil and Good": 75, "Raise Dead": 2500,
-  "Reincarnate": 3000, "Resurrection": 21000, "Revivify": 600, "Scrying": 3000, "Secret Chest": 7050,
-  "Sequester": 25000, "Shapechange": 101500, "Simulacrum": 21500, "Stoneskin": 2100, "Summon Dragon": 2500,
-  "Symbol": 21000, "Teleportation Circle": 2050, "True Resurrection": 125000, "True Seeing": 20025,
-  "Warding Bond": 300
+  "Arcane Lock": 225, "Clairvoyance": 400, "Clone": 23000, "Continual Flame": 250, "Divination": 2025,
+  "Forbiddance": 21000, "Gate": 105000, "Glyph of Warding": 500, "Greater Restoration": 2100,
+  "Guards and Wards": 20010, "Hallow": 3000, "Heroes' Feast": 21000, "Identify": 150, "Illusory Script": 60,
+  "Legend Lore": 2450, "Magic Circle": 400, "Magic Mouth": 210, "Nondetection": 325,
+  "Programmed Illusion": 20025, "Protection from Evil and Good": 75, "Raise Dead": 2500, "Reincarnate": 3000,
+  "Resurrection": 21000, "Revivify": 600, "Scrying": 3000, "Sequester": 25000, "Stoneskin": 2100,
+  "Symbol": 21000, "Teleportation Circle": 2050, "True Resurrection": 125000, "True Seeing": 20025
 };
+
+// Costly spells a hire cannot use: the caster keeps the benefit (Find Familiar),
+// has to come along (Warding Bond works within 60 feet of the caster), or holds
+// it some other way (Awaken's creature is charmed by the caster).
+const CASTER_BOUND = [
+  "Contingency", "Shapechange", "Magic Jar", "Project Image", "Find Familiar",
+  "Simulacrum", "Create Undead", "Instant Summons", "Secret Chest",
+  "Warding Bond", "Holy Aura", "Find the Path", "Astral Projection",
+  "Chromatic Orb", "Circle of Death", "Arcane Sword", "Forcecage", "Summon Dragon",
+  "Bless", "Augury", "Awaken", "Planar Binding",
+  "Magnificent Mansion", "Imprisonment", "Plane Shift"
+];
 
 // [Village, Town, City] named spells per shop, from #55. Everything else sells none.
 const EXPECTED = {
-  "Arcane Store": [9, 21, 42],
-  "Druidic Store": [3, 12, 18],
-  "Temple & Faith Store": [5, 16, 28]
+  "Arcane Store": [6, 15, 22],
+  "Druidic Store": [2, 9, 12],
+  "Temple & Faith Store": [2, 12, 19]
 };
 
-test("the seven level services say when their price is the whole price (#55)", () => {
+test("the seven level services say what to add for a spell not listed by name (#55)", () => {
   assert.equal(levels.length, 7);
   for (const s of levels) {
     assert.ok(s.system.description.value.includes(SERVICE_RULE), s.name);
@@ -85,10 +92,17 @@ test("a named service quotes the component it provides, from the spell text", ()
     + "and provides its material component: a diamond worth 300+ GP, which the spell consumes.</p>");
   assert.ok(byName.get("Spellcasting: Legend Lore").includes(
     "provides its material components: incense worth 250+ GP, which the spell consumes, and four ivory strips worth 50+ GP each."));
-  assert.ok(byName.get("Spellcasting: Astral Projection").includes(
-    "<p>The price covers one target; each further target costs 1,100 GP more.</p>"));
-  assert.ok(byName.get("Spellcasting: Create Undead").includes(
-    "<p>The price covers one corpse; each further corpse costs 150 GP more.</p>"));
+});
+
+test("a spell that only works with the caster is not sold by name", () => {
+  const sold = new Set(named.map(s => s.name));
+  assert.equal(CASTER_BOUND.length, 25);
+  for (const spell of CASTER_BOUND) assert.ok(!sold.has(`Spellcasting: ${spell}`), spell);
+  for (const m of merchants) {
+    for (const spell of CASTER_BOUND) {
+      assert.ok(!m.items.some(i => i.name === `Spellcasting: ${spell}`), `${m.name}: ${spell}`);
+    }
+  }
 });
 
 test("each caster shop sells the named spells of its lists, by settlement size (#55)", () => {
