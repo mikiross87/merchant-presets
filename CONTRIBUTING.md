@@ -192,8 +192,8 @@ Constraints worth knowing before changing the generator:
 ## Pull requests
 
 - Target `main`. CI must pass: both linters, unit tests, manifest validation,
-  JSON parse over `_source` and `data`, a full pack compile from source, and
-  the paid-content check.
+  CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
+  from source, and the paid-content check.
 - One logical change per PR, with commit subjects written as prose rather than
   conventional-commit prefixes. Release notes come from `CHANGELOG.md`, not from
   commit subjects.
@@ -230,4 +230,7 @@ prerelease differently:
 Install one with that tag's own pinned manifest URL:
 `https://github.com/mikiross87/merchant-presets/releases/download/vX.Y.Z-beta.N/module.json`.
 Once it checks out, release the plain version through a release PR as usual.
-That one registers normally.
+That one registers normally. Staging the prerelease emptied `[Unreleased]` into
+its own section, though, so until #76 is fixed, move those entries back under
+`[Unreleased]` first. Otherwise `release:prepare` either refuses outright or
+writes release notes covering only what changed since the prerelease.
