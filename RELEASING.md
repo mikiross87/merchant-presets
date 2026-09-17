@@ -67,8 +67,16 @@ changelog section as its body, publishes to the Foundry package registry, and
 closes the `v1.2.0` milestone (warning if issues are still open in it).
 
 Never `gh release create` by hand: it makes a lightweight tag, skips CI, and
-since GitHub made releases immutable the tag name can never be reused if it
-goes wrong. `gh release edit --notes` is fine for polishing the body afterwards.
+this repository has GitHub's **immutable releases** setting on, so a published
+release's tag and its `module.json` and `module.zip` are locked, and a tag name
+that goes wrong can never be reused. A bad release is replaced by the next
+patch version, never by a retag. `gh release edit --notes` is fine for polishing
+the body afterwards, since the title, the notes and the prerelease flag stay
+editable.
+
+That setting is also why the release workflow creates a *prerelease* as a draft
+and publishes it once its assets are attached: an immutable release refuses
+uploads after publication.
 
 ## Versioning
 

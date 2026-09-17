@@ -119,9 +119,20 @@ jobs:
         with:
           body_path: release-notes.md
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          # Releases here are immutable, which refuses any asset upload after
+          # publication. The action uploads a normal release's assets before it
+          # publishes, but publishes a prerelease first, so a prerelease has to
+          # stay a draft until its assets are attached.
+          draft: ${{ steps.prerelease.outputs.is_prerelease }}
           files: |
             module.json
             module.zip
+
+      - name: Publish the prerelease draft
+        if: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false
 
       - name: Publish to Foundry package registry
         if: ${{ env.FOUNDRY_RELEASE_TOKEN != '' && steps.prerelease.outputs.is_prerelease != 'true' }}
