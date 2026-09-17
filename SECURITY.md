@@ -21,8 +21,9 @@ In scope:
   a world with the module enabled. For example: a purchase or chat message that
   lets one user act for another, or that renders script from item or actor
   data.
-- The release workflow: anything that would let someone else publish a release
-  or read the Foundry package registry token.
+- `.github/workflows/`: anything that would let someone else publish a release,
+  read a repository secret, or run their own commands in a workflow — including
+  through the text of an issue, which the triage workflow parses.
 
 Report these upstream instead:
 
