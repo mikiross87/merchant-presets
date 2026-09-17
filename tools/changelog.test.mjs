@@ -45,6 +45,10 @@ test("refuses to release a version that already has a section", () => {
   assert.throws(() => rollChangelog(sample, "1.1.0", "2026-08-23", repo), /already has/);
 });
 
+test("refuses a prerelease, which is tagged on main rather than staged (#76)", () => {
+  assert.throws(() => rollChangelog(sample, "1.2.0-beta.1", "2026-08-23", repo), /prerelease/);
+});
+
 test("first release links to the tag when there is no previous version", () => {
   const first = `# Changelog\n\n## [Unreleased]\n\n- Initial\n`;
   const out = rollChangelog(first, "1.0.0", "2026-08-20", repo);
