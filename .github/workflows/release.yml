@@ -115,6 +115,7 @@ jobs:
           cat release-notes.md
 
       - name: Create release
+        id: release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           body_path: release-notes.md
@@ -132,7 +133,12 @@ jobs:
         if: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false
+          # By id, not by tag: a new release takes a moment to become findable
+          # by its tag, and the step above already knows which one it made.
+          RELEASE_ID: ${{ steps.release.outputs.id }}
+        run: |
+          set -euo pipefail
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" -F draft=false --jq '"published \(.tag_name) (draft=\(.draft), prerelease=\(.prerelease))"'
 
       - name: Publish to Foundry package registry
         if: ${{ env.FOUNDRY_RELEASE_TOKEN != '' && steps.prerelease.outputs.is_prerelease != 'true' }}
