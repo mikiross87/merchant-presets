@@ -36,6 +36,10 @@ jobs:
       # bash in these workflows gets, since it lives in YAML rather than in a
       # .sh file. The published image bundles shellcheck, so there is nothing
       # to install and no second version to keep in step.
+      # Dependabot does not update docker:// references, so this pin is bumped
+      # by hand: check https://github.com/rhysd/actionlint/releases and take the
+      # new tag's digest from
+      # `curl -s https://hub.docker.com/v2/repositories/rhysd/actionlint/tags/<tag> | jq -r .digest`.
       - name: Lint workflows
         uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
         with:
