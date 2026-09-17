@@ -192,10 +192,12 @@ Constraints worth knowing before changing the generator:
 ## Pull requests
 
 - Target `main`. CI must pass: both linters, unit tests, manifest validation,
-  JSON parse over `_source` and `data`, a full pack compile from source, and
-  the paid-content check.
-- One logical change per PR, with a subject line that would read well in release
-  notes — commit subjects become release-note bullets.
+  CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
+  from source, and the paid-content check.
+- One logical change per PR, with commit subjects written as prose rather than
+  conventional-commit prefixes — `chore(release):`, which `release:prepare`
+  writes, is the one exception. Release notes come from `CHANGELOG.md`, not from
+  commit subjects.
 - Open an issue first for anything beyond a typo, and put `Closes #N` in the PR
   body so merging closes it. Issues go through the forms; there are no blank
   issues.
@@ -207,41 +209,29 @@ Constraints worth knowing before changing the generator:
 
 ## Releases (maintainer)
 
-`main` is the only long-lived branch, and it carries unreleased work. There is
-no separate development branch, because what has been published is recorded by
-tags rather than by a branch: releases are cut from `vX.Y.Z` tags, and installs
-resolve a release asset, never a branch. `git log vX.Y.Z..main` is the
-unreleased set, and several merged pull requests routinely go out in one
-release.
-
-To cut one:
-
-1. Set `version` in `module.json` to the plain release version (drop the `-dev`
-   suffix), commit, tag `vX.Y.Z`, push the tag.
-2. Bump `version` to the next `-dev` (e.g. `1.2.0-dev`) and commit, so a clone
-   of `main` never reports itself as the released version — issue triage labels
-   a report `outdated` by comparing the version it names against the latest
-   release.
-
-Pushing the tag runs the CI validation against the tagged tree first; a release
-is only built if that passes. The release job then compiles the packs, builds
-the zip (excluding `_source`, `tools` and the npm files), publishes the GitHub
-release with notes drawn from the commit subjects since the previous tag, and
-registers the version with the Foundry package registry if
-`FOUNDRY_RELEASE_TOKEN` is set.
+[RELEASING.md](RELEASING.md) describes the whole process: issues and
+milestones, the release PR that `npm run release:prepare` stages, and the tag
+that publishes. `main` is the only long-lived branch. Its `module.json` keeps
+the last released version, and `git log vX.Y.Z..main` is the unreleased set.
+The release notes are that version's `CHANGELOG.md` section.
 
 ### Prereleases
 
-To let a change bake, use a semver prerelease version — e.g. `1.1.0-beta.1` in
-`module.json`, tagged `v1.1.0-beta.1`. CI detects the hyphen and treats it
-differently:
+To let a change bake, stage a semver prerelease the same way. For example, run
+`npm run release:prepare -- 1.3.0-beta.1`, merge the PR, and tag
+`v1.3.0-beta.1`. The release workflow detects the hyphen and handles the
+prerelease differently:
 
 - Marked as a GitHub **prerelease** (won't show as the repo's "Latest release").
-- **Not** registered with the Foundry package registry.
+- **Not** registered with the Foundry package registry, and the milestone stays
+  open.
 - **Not** picked up by the stable `releases/latest/download/module.json`
   manifest, so existing installs never auto-update to it.
 
 Install one with that tag's own pinned manifest URL:
 `https://github.com/mikiross87/merchant-presets/releases/download/vX.Y.Z-beta.N/module.json`.
-Once confirmed, cut the real release: bump to the plain version, commit, tag,
-push — that one does register normally.
+Once it checks out, release the plain version through a release PR as usual.
+That one registers normally. Staging the prerelease emptied `[Unreleased]` into
+its own section, though, so until #76 is fixed, move those entries back under
+`[Unreleased]` first. Otherwise `release:prepare` either refuses outright or
+writes release notes covering only what changed since the prerelease.
