@@ -695,6 +695,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -821,7 +833,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -948,7 +970,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1075,7 +1107,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1202,7 +1244,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1329,7 +1381,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1383,7 +1445,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1437,7 +1509,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1491,7 +1573,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1545,7 +1637,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1599,7 +1701,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1653,7 +1765,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1711,6 +1833,16 @@
           "nutrition": {
             "food": 0.25,
             "water": 0
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1769,6 +1901,16 @@
           "nutrition": {
             "food": 0.5,
             "water": 0.125
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1827,6 +1969,16 @@
           "nutrition": {
             "food": 1,
             "water": 0.125
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1885,6 +2037,16 @@
           "nutrition": {
             "food": 1,
             "water": 0.25
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1943,6 +2105,16 @@
           "nutrition": {
             "food": 2,
             "water": 0.5
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2001,6 +2173,16 @@
           "nutrition": {
             "food": 4,
             "water": 1
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2808,7 +2990,71 @@
           "cantBeSoldToMerchants": true
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "City",
+        "source": null,
+        "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.5,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 6,
+            "minute": 0
+          },
+          "close": {
+            "hour": 2,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.okPjfGrrREHWJrrQ",
+          "quantities": {
+            "63ikjOJWtGtKAG0h": "4d10+20",
+            "SkiQ7AEHSc8FYUyN": "4d10+20",
+            "nquEOqlu6CnK2Rwq": "4d10+20",
+            "Bi7O65ew5szAbXw3": "4d10+20",
+            "tmyrOa2TatzBHLzX": "4d10+20",
+            "MHNuKy6kBj1tGxHp": "2d6+4",
+            "JznjJUAf32GloPaz": "1",
+            "OkYKmlFO8Hp75Xe1": "1",
+            "22Rp9MLNr6j8zU0q": "1",
+            "8ju67w1CjGDoRXEm": "1",
+            "nYS29qG62Gch5LKz": "1",
+            "G1aRK2s8p9n5yJdq": "1",
+            "5uXnD0wRLXnlME6c": "1",
+            "aN5bInG0bWa2mrTH": "1",
+            "MLs3ctKbzct2q1W1": "1",
+            "KExSGlW61MqWD1Xb": "1",
+            "ZJqz3qeke0NDI8WH": "1",
+            "aKYeGH66UMjDa2Nh": "1"
+          },
+          "onOpen": true,
+          "every": 1,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "equipment",
+            "tool",
+            "container"
+          ],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "service",
+            "spellcasting",
+            "component",
+            "travel"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {

@@ -598,7 +598,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -652,7 +662,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -706,7 +726,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "tack"
+          "kind": "tack",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -760,7 +790,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "tack"
+          "kind": "tack",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -814,7 +854,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -868,7 +918,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -922,7 +982,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "service"
+          "kind": "service",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -976,7 +1046,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "service"
+          "kind": "service",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1031,7 +1111,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmCamel000000000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmCamel000000000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1086,7 +1176,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmDraftHorse0000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmDraftHorse0000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1141,7 +1241,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmRidingHorse000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmRidingHorse000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1196,7 +1306,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmMastiff0000000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmMastiff0000000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1251,7 +1371,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmMule0000000000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmMule0000000000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1306,7 +1436,17 @@
         },
         "merchant-presets": {
           "kind": "mount",
-          "actor": "Compendium.dnd5e.actors24.Actor.mmPony0000000000"
+          "actor": "Compendium.dnd5e.actors24.Actor.mmPony0000000000",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1359,7 +1499,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "travel"
+          "kind": "travel",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1412,7 +1562,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "travel"
+          "kind": "travel",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2154,7 +2314,68 @@
           "cantBeSoldToMerchants": true
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "Town",
+        "source": null,
+        "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.5,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 5,
+            "minute": 0
+          },
+          "close": {
+            "hour": 20,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.2lufn6IsplTh9UgL",
+          "quantities": {
+            "bBbTzFhrG41kfTBn": "1d3+1",
+            "7M9mdiIZIFMC78H6": "1d6+2",
+            "uAfEkuTxwdqgJJj4": "1d6+2",
+            "WHdkVnqhGU9Kw4DY": "1d6+2",
+            "JsOMwUrPfeNyOqGV": "1d6+2",
+            "eSuw8ab3AiKcjVyB": "1d6+2",
+            "rDHlqz7HAYgStQ0x": "1",
+            "rsU5obkZKNBzfmY0": "1",
+            "Rx3ZCuvErUtlVvHY": "1d3+1",
+            "EMY2c8lHXMV3Q30N": "1d3+1",
+            "Of3144Xc61i4oC9N": "1d3+1",
+            "XGvvhLAfDfyQgviP": "1d6+2",
+            "rc6SG4pTPJ1YmCpn": "2d6+4",
+            "oM3D9HIvGD79W1Ry": "1d6+2",
+            "WnqA8YM8mLurVpfC": "1",
+            "h6vA3oZtthlx3qPG": "1"
+          },
+          "onOpen": true,
+          "every": 7,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "equipment",
+            "consumable",
+            "tool",
+            "container"
+          ],
+          "kinds": [
+            "food-drink",
+            "meal",
+            "lodging",
+            "spellcasting",
+            "component"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {
