@@ -14,9 +14,15 @@
 
 export const SHOP_VERSION = 1;
 
+/** Freezes `obj` and everything inside it, so a stray write to the defaults throws. */
+function deepFreeze(obj) {
+  for (const v of Object.values(obj)) if (v && typeof v === "object") deepFreeze(v);
+  return Object.freeze(obj);
+}
+
 const TIERS = ["Village", "Town", "City"];
 
-export const SHOP_DEFAULTS = Object.freeze({
+export const SHOP_DEFAULTS = deepFreeze({
   version: SHOP_VERSION,
   tier: "Town",
   source: null,            // the shipped merchant an NPC was set up from (#57)
@@ -28,7 +34,7 @@ export const SHOP_DEFAULTS = Object.freeze({
   wontBuy: { types: [], kinds: [] }
 });
 
-export const STOCK_DEFAULTS = Object.freeze({
+export const STOCK_DEFAULTS = deepFreeze({
   infinite: null,          // null follows the world's stock setting
   keep: true,
   service: false,
@@ -58,26 +64,32 @@ const rate = min => check(v => typeof v === "number" && Number.isFinite(v) && (m
 const nullOr = inner => (v, path, errors) => { if (v !== null) inner(v, path, errors); };
 const oneOf = values => check(v => values.includes(v), `must be one of ${values.join(", ")}`);
 
-/** A plain object holding only `fields`; every field optional unless listed in `required`. */
+/**
+ * A plain object holding only `fields`; every field optional unless listed in
+ * `required`. A key set to `undefined` counts as missing, as it does in
+ * `shopFrom`. Own keys only: flag data is untrusted, and `constructor` or
+ * `__proto__` must read as unknown, not as something inherited.
+ */
 const shape = (fields, required = []) => (v, path, errors) => {
   if (!isObject(v)) return errors.push(`${path || "config"}: must be an object`);
   const at = key => (path ? `${path}.${key}` : key);
   for (const key of Object.keys(v)) {
-    if (!(key in fields)) errors.push(`${at(key)}: unknown key`);
-    else fields[key](v[key], at(key), errors);
+    if (!Object.hasOwn(fields, key)) errors.push(`${at(key)}: unknown key`);
+    else if (v[key] !== undefined) fields[key](v[key], at(key), errors);
   }
-  for (const key of required) if (!(key in v)) errors.push(`${at(key)}: missing`);
+  for (const key of required) if (!Object.hasOwn(v, key) || v[key] === undefined) errors.push(`${at(key)}: missing`);
 };
 
 /** An array of distinct entries; `key` picks what must be distinct. */
 const list = (inner, key = v => v) => (v, path, errors) => {
   if (!Array.isArray(v)) return errors.push(`${path}: must be a list`);
   const seen = new Set();
-  v.forEach((entry, i) => {
-    inner(entry, `${path}.${i}`, errors);
-    if (seen.has(key(entry))) errors.push(`${path}.${i}: duplicate`);
-    seen.add(key(entry));
-  });
+  for (let i = 0; i < v.length; i++) {   // not forEach, which skips holes
+    if (!(i in v)) { errors.push(`${path}.${i}: missing`); continue; }
+    inner(v[i], `${path}.${i}`, errors);
+    if (seen.has(key(v[i]))) errors.push(`${path}.${i}: duplicate`);
+    seen.add(key(v[i]));
+  }
 };
 
 const time = shape({
@@ -153,11 +165,16 @@ export const validateShop = shop => run(shopShape, shop);
  */
 export const validateStock = stock => run(stockShape, stock);
 
-/** `value` over `defaults`, key by key through plain objects; lists and null replace. */
+/**
+ * `value` over `defaults`, key by key through plain objects; lists and null
+ * replace, undefined doesn't. `__proto__` is dropped, never adopted.
+ */
 function merge(defaults, value) {
   if (!isObject(defaults) || !isObject(value)) return structuredClone(value === undefined ? defaults : value);
   const out = {};
-  for (const key of new Set([...Object.keys(defaults), ...Object.keys(value)])) out[key] = merge(defaults[key], value[key]);
+  for (const key of new Set([...Object.keys(defaults), ...Object.keys(value)])) {
+    if (key !== "__proto__") out[key] = merge(defaults[key], value[key]);
+  }
   return out;
 }
 

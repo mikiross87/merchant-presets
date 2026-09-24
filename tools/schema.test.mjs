@@ -223,3 +223,47 @@ test("stockFrom does not touch its input", () => {
   assert.deepEqual(stockFrom(input), { ...STOCK_DEFAULTS, ...frozen });
   assert.deepEqual(input, frozen);
 });
+
+/* ------------------------------------------------ untrusted flag data (#100) */
+
+test("keys inherited from Object.prototype are unknown keys, not a crash", () => {
+  for (const json of ['{"version":1,"__proto__":{"x":1}}', '{"version":1,"constructor":5}', '{"version":1,"toString":5}']) {
+    const r = validateShop(JSON.parse(json));
+    assert.equal(r.ok, false, json);
+    assert.match(errorsOf(r), /unknown key/);
+  }
+  assert.equal(validateStock({ hasOwnProperty: 1 }).ok, false);
+  assert.equal(validateShop(Object.create({ version: SHOP_VERSION })).ok, false);
+});
+
+test("shopFrom drops __proto__ instead of adopting it as the prototype", () => {
+  const shop = shopFrom(JSON.parse('{"__proto__":{"polluted":1},"tier":"City"}'));
+  assert.equal(shop.polluted, undefined);
+  assert.equal(Object.getPrototypeOf(shop), Object.prototype);
+  assert.equal(shop.tier, "City");
+});
+
+test("a key set to undefined counts as missing, in validation and in shopFrom alike", () => {
+  // A mapping from Item Piles data whose defaults were stripped yields undefined values.
+  assert.ok(validateShop({ version: SHOP_VERSION, tier: undefined }).ok);
+  assert.ok(validateStock({ keep: undefined, bundle: undefined }).ok);
+  assert.equal(shopFrom({ tier: undefined }).tier, SHOP_DEFAULTS.tier);
+});
+
+test("the defaults can't be changed by accident", () => {
+  assert.throws(() => { SHOP_DEFAULTS.terms.sellsAt = 9; }, TypeError);
+  assert.throws(() => { SHOP_DEFAULTS.terms.categories.push({}); }, TypeError);
+  assert.throws(() => { STOCK_DEFAULTS.keep = false; }, TypeError);
+  assert.equal(shopFrom({}).terms.sellsAt, 1);
+});
+
+test("lists with holes and non-finite numbers are errors", () => {
+  // eslint-disable-next-line no-sparse-arrays
+  assert.equal(validateShop({ version: SHOP_VERSION, wontBuy: { types: [, "weapon"] } }).ok, false);
+  assert.equal(validateShop({ version: SHOP_VERSION, wontBuy: { kinds: new Array(2) } }).ok, false);
+  for (const n of [NaN, Infinity]) {
+    assert.equal(validateShop({ version: SHOP_VERSION, terms: { sellsAt: n } }).ok, false, String(n));
+    assert.equal(validateShop({ version: SHOP_VERSION, terms: { buysAt: n } }).ok, false, String(n));
+  }
+  assert.equal(validateStock({ bundle: Infinity }).ok, false);
+});
