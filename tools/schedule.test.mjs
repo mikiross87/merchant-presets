@@ -89,10 +89,57 @@ test("fires the first time the shop opens on or after the due day", () => {
   const stillClosed = dueRestock(weekly, hours, state, at(7, 0, 0), at(7, 6, 0), calendar, noRoll);
   assert.equal(stillClosed.due, false);
 
-  // The doors open on the due day: fires, and schedules the next one from now.
+  // The doors open on the due day: fires at the opening itself, not at
+  // whatever later instant the caller happened to check, and schedules the
+  // next one from there.
   const opens = dueRestock(weekly, hours, state, at(7, 6, 0), at(7, 8, 0), calendar, noRoll);
   assert.equal(opens.due, true);
-  assert.deepEqual(opens.state, { lastRestock: at(7, 8, 0), dueAt: at(14) });
+  assert.equal(opens.at, at(7, 7, 0));
+  assert.deepEqual(opens.state, { lastRestock: at(7, 7, 0), dueAt: at(14) });
+});
+
+test("fires on a jump under a day where both ends happen to be open", () => {
+  // Due day 7, 07:00-19:00. 18:00 the evening before is open (that day's
+  // hours), and 08:00 the next morning is open too (this day's hours) — the
+  // shop closed at 19:00 and reopened at 07:00 somewhere in between, which a
+  // was-closed-now-open sample at the two ends alone would never see.
+  const state = { lastRestock: at(0), dueAt: at(7) };
+  const result = dueRestock(weekly, hours, state, at(6, 18, 0), at(7, 8, 0), calendar, noRoll);
+  assert.equal(result.due, true);
+  assert.equal(result.at, at(7, 7, 0));
+});
+
+test("fires on a jump under a day where both ends happen to be closed", () => {
+  // 06:00 and 20:00 on the due day are both outside 07:00-19:00, but the shop
+  // plainly opened (and closed again) in between.
+  const state = { lastRestock: at(0), dueAt: at(7) };
+  const result = dueRestock(weekly, hours, state, at(7, 6, 0), at(7, 20, 0), calendar, noRoll);
+  assert.equal(result.due, true);
+  assert.equal(result.at, at(7, 7, 0));
+});
+
+test("a full day or more elapsed doesn't fire before the due day's own opening", () => {
+  // Exactly one day passes, but it lands at 06:00 on the due day — an hour
+  // before the shop actually opens. The old "any day-long jump opens
+  // somewhere" shortcut fired here anyway, with the doors still shut.
+  const state = { lastRestock: at(0), dueAt: at(7) };
+  const result = dueRestock(weekly, hours, state, at(6, 6, 0), at(7, 6, 0), calendar, noRoll);
+  assert.equal(result.due, false);
+});
+
+test("an overnight shop (18:00-02:00) opens once a day, in the evening, even across the due midnight", () => {
+  const overnight = { open: { hour: 18, minute: 0 }, close: { hour: 2, minute: 0 } };
+  const state = { lastRestock: at(0), dueAt: at(5) };
+
+  // Still open from day 4's own 18:00 opening, carrying past midnight into
+  // day 5 — but day 5's due opening is its *own* 18:00, not the midnight it
+  // happens to already be open through.
+  const throughMidnight = dueRestock(weekly, overnight, state, at(4, 23, 0), at(5, 3, 0), calendar, noRoll);
+  assert.equal(throughMidnight.due, false);
+
+  const evening = dueRestock(weekly, overnight, state, at(5, 3, 0), at(5, 21, 0), calendar, noRoll);
+  assert.equal(evening.due, true);
+  assert.equal(evening.at, at(5, 18, 0));
 });
 
 test("a restock that itself lands late in the day doesn't push the next due day's opening back", () => {
@@ -123,11 +170,15 @@ test("a dice interval is rolled again after each restock, not before", () => {
 
 test("a week skipped in one jump gives one restock, not seven", () => {
   const daily = { every: 1, onOpen: true };
-  const state = { lastRestock: at(0, 8, 0), dueAt: at(1, 8, 0) };
-  const result = dueRestock(daily, hours, state, at(0, 8, 0), at(7, 8, 0), calendar, noRoll);
+  const state = { lastRestock: at(0), dueAt: at(1) };
+  const result = dueRestock(daily, hours, state, at(0), at(7, 8, 0), calendar, noRoll);
   assert.equal(result.due, true);
-  // Scheduled from the jump's landing time, not stacked up from the days it skipped.
-  assert.deepEqual(result.state, { lastRestock: at(7, 8, 0), dueAt: at(8) });
+  // Anchored at the *first* due opening (day 1's own 07:00), not "now" —
+  // day 1 is still owed a restock even though six more days went unseen, and
+  // the next one is scheduled from there, not stacked up from the days
+  // skipped, and not slid forward to whenever this happened to be checked.
+  assert.equal(result.at, at(1, 7, 0));
+  assert.deepEqual(result.state, { lastRestock: at(1, 7, 0), dueAt: at(2) });
 });
 
 test("rewinding the clock never fires, even past the due day", () => {
@@ -160,6 +211,7 @@ test("an always-open shop (hours null) restocks at the start of its due day", ()
   // Crosses midnight into day 1: opens, and the due day has arrived.
   const midnight = dueRestock(weekly, null, state, at(0, 23, 59), at(1, 0, 1), calendar, noRoll);
   assert.equal(midnight.due, true);
+  assert.equal(midnight.at, at(1));
 });
 
 /* --------------------------------------------------------------- planRestock */
@@ -239,34 +291,63 @@ test("reroll drops a line that rolls empty, rather than stocking it at zero", ()
   assert.deepEqual(plan.restocked, []);
 });
 
-test("topup refills a sold-out good in place, and tops up a short container, leaving the rest alone", () => {
-  const topupShop = { restock: { mode: "topup", quantities: { r1: "2d6+4", r2: "1" } } };
+// A keep: true good (#99) can sit on the shelf sold out at quantity 0 — a
+// keep: false good like Arrows can't; applyStockMode's precedent (and #105's
+// own item lifecycle) deletes it outright the moment it sells out. Topup has
+// to redraw both: a line still present at zero, and one gone entirely.
+const rationsStock = { infinite: false, keep: true, service: false, noBuyback: false,
+  category: "", bundle: 1, hidden: false, notForSale: false };
+const rationsDraw = { resultId: "r4", name: "Rations",
+  data: { type: "consumable", name: "Rations", system: { price: { value: 0.2, denomination: "gp" } }, flags: {} } };
+const topupContext = { ...context, stockFlags: { ...context.stockFlags, Rations: rationsStock } };
+
+test("topup redraws a sold-out line whether it's still on the shelf at zero or gone entirely, and leaves the rest alone", () => {
+  const topupShop = { restock: { mode: "topup", quantities: { r1: "2d6+4", r2: "1", r4: "1d6+2" } } };
   const items = [
-    drawn("i1", "Arrows", "consumable", 0),                       // sold out: refill
+    // Arrows (keep: false): sold out and deleted outright — no document at all.
     drawn("i2", "Spellcasting: Level 1", "loot", 1),               // still in stock: untouched
+    drawn("i5", "Rations", "consumable", 0),                       // keep: true — sold out, still there
     drawn("i3", "Backpack", "container", 1, { container: null }),  // short of its target (3)
     gmAdded,
     gear
   ];
-  const plan = planRestock(topupShop, items, draws, context, rollFor({ "2d6+4": 8 }));
+  const plan = planRestock(topupShop, items, [...draws, rationsDraw], topupContext,
+    rollFor({ "2d6+4": 8, "1d6+2": 5 }));
 
   assert.deepEqual(plan.deletes, []);
+
+  // Gone entirely: redrawn as a fresh create, not an update — there is
+  // nothing left to update.
+  const arrows = plan.creates.find(c => c.name === "Arrows");
+  assert.ok(arrows, "Arrows is redrawn even with no document left to refill");
+  assert.equal(arrows.system.quantity, 8);
+  assert.equal(arrows.flags["merchant-presets"].drawn, true);
+  assert.deepEqual(arrows.flags["merchant-presets"].stock, arrowsStock);
+
+  // Still there at zero: refilled in place, not replaced.
   assert.deepEqual(plan.updates, [
-    { _id: "i1", "system.quantity": 8, "flags.merchant-presets.stock": arrowsStock }
+    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock }
   ]);
-  assert.equal(plan.creates.length, 2);   // 1 existing Backpack, target 3: two more
-  for (const c of plan.creates) {
-    assert.equal(c.name, "Backpack");
-    assert.equal(c.system.quantity, 1);
-    assert.equal(c.system.container, null);
+
+  const backpacks = plan.creates.filter(c => c.name === "Backpack");
+  assert.equal(backpacks.length, 2);   // 1 existing, target 3: two more
+  for (const b of backpacks) {
+    assert.equal(b.system.quantity, 1);
+    assert.equal(b.system.container, null);
   }
-  assert.deepEqual(plan.restocked, ["Arrows", "Backpack"]);
+
+  assert.deepEqual([...plan.restocked].sort(), ["Arrows", "Backpack", "Rations"]);
+  // Still genuinely in stock, the GM's own good, and the shopkeeper's gear: none of them appear anywhere.
+  assert.equal(plan.creates.some(i => i.name === "Spellcasting: Level 1"), false);
+  assert.equal(plan.updates.some(u => u._id === "i2"), false);
 });
 
-test("topup leaves a good that rolls empty again sitting sold out, rather than forcing an update", () => {
-  const topupShop = { restock: { mode: "topup", quantities: { r1: "2d6+4" } } };
-  const items = [drawn("i1", "Arrows", "consumable", 0)];
-  const plan = planRestock(topupShop, items, [draws[0]], { ...context, containers: {} }, rollFor({ "2d6+4": 0 }));
+test("topup leaves a sold-out line alone when it rolls empty again, present at zero or gone entirely alike", () => {
+  const topupShop = { restock: { mode: "topup", quantities: { r1: "2d6+4", r4: "1d6+2" } } };
+  const items = [drawn("i5", "Rations", "consumable", 0)];   // Arrows: gone; Rations: present at 0
+  const plan = planRestock(topupShop, items, [draws[0], rationsDraw], { ...topupContext, containers: {} },
+    rollFor({ "2d6+4": 0, "1d6+2": 0 }));
+  assert.deepEqual(plan.creates, []);
   assert.deepEqual(plan.updates, []);
   assert.deepEqual(plan.restocked, []);
 });
