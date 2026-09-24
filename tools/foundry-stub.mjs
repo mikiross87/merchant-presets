@@ -44,7 +44,7 @@ export function createWorld() {
   const tables = [];
   const folders = [];
   const compendium = new Map();
-  const calls = { itemUpdates: [], tablesCreated: 0, messages: [] };
+  const calls = { itemUpdates: [], resultUpdates: [], tablesCreated: 0, messages: [] };
   // This module's settings by key; another module's as "<module>.<key>".
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
@@ -84,6 +84,7 @@ export function createWorld() {
     const table = flagged({ ...structuredClone(data), id, uuid: `RollTable.${id}`,
       folder: folders.find(f => f.id === data.folder) });
     table.results = table.results.map(r => ({ ...r, id: newId("R") }));
+    table.updateEmbeddedDocuments = async (_type, updates) => { calls.resultUpdates.push({ table: id, updates }); };
     tables.push(table);
     calls.tablesCreated++;
     return table;
