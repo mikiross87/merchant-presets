@@ -205,9 +205,11 @@ test("a shop's own wontBuy types and kinds are refused", () => {
   assert.equal(planTrade(sellRequest("IdentifySvc00001", 1), ctx).reason, "wont-buy");
 });
 
-test("noBuyback refuses a sale", () => {
-  const item = { ...dagger(), flags: { "merchant-presets": { stock: { ...dagger().flags["merchant-presets"].stock, noBuyback: true } } } };
-  const ctx = context({ buyer: { items: [item] } });
+test("noBuyback refuses a sale, read off the shop's own matching stock line", () => {
+  // The item being sold carries none of its own stock flags any more (they don't travel); the
+  // shop's current listing for the same good (by compendiumSource) is what noBuyback reads.
+  const listing = { ...dagger(), _id: "ShopDagger00001", flags: { "merchant-presets": { stock: { ...dagger().flags["merchant-presets"].stock, noBuyback: true } } } };
+  const ctx = context({ shop: { items: [listing] }, buyer: { items: [dagger()] } });
   const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
   assert.deepEqual(result, { ok: false, reason: "no-buyback", line: { itemId: "Dagger000000001", quantity: 1 } });
 });
@@ -220,11 +222,12 @@ test("an unidentified item is refused and never priced", () => {
   assert.equal("plan" in result, false);
 });
 
-test("a service can't be sold", () => {
+test("a service can't be sold, read off the shop's own matching stock line", () => {
   // The real fixture also sets noBuyback (the generator ties the two together), which would
-  // mask this reason; isolate service on its own to test this refusal specifically.
-  const item = { ...identifyService(), flags: { "merchant-presets": { kind: "spellcasting", stock: { ...identifyService().flags["merchant-presets"].stock, noBuyback: false } } } };
-  const ctx = context({ buyer: { items: [item] } });
+  // mask this reason; isolate service on its own to test this refusal specifically. The shop
+  // has no listing at all here — matched by name, since a service good has no compendiumSource.
+  const listing = { ...identifyService(), _id: "ShopIdentify0001", flags: { "merchant-presets": { kind: "spellcasting", stock: { ...identifyService().flags["merchant-presets"].stock, noBuyback: false } } } };
+  const ctx = context({ shop: { items: [listing] }, buyer: { items: [identifyService()] } });
   const result = planTrade(sellRequest("IdentifySvc00001", 1), ctx);
   assert.deepEqual(result, { ok: false, reason: "service", line: { itemId: "IdentifySvc00001", quantity: 1 } });
 });
@@ -312,8 +315,10 @@ test("a bundle prices per its own quantityForPrice, buy and sell", () => {
   assert.equal(buy.ok, true);
   assert.equal(buy.plan.hook.totalCp, 100);   // 1gp per 20, buying 20 = 100cp
 
+  // The bundle comes from the shop's own matching listing now, not the sold item itself.
+  const listing = { ...arrows(), _id: "ShopArrowsBundle1" };
   const owned = { ...arrows(), system: { ...arrows().system, quantity: 20 } };
-  const sell = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), context({ buyer: { items: [owned] } }));
+  const sell = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), context({ shop: { items: [listing] }, buyer: { items: [owned] } }));
   assert.equal(sell.ok, true);
   assert.equal(sell.plan.hook.totalCp, 50);   // buysAt 0.5 of the same 100cp
 });
@@ -389,6 +394,44 @@ test("the copy's system.container is dropped even if the stock line somehow had 
   assert.equal(result.ok, true);
   const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
   assert.equal(buyerUpdate.itemCreates[0].system.container, null);
+});
+
+/* ------------------------------------------------------------- shelf flags don't travel */
+
+/** A stock line drawn by #105's restock, and hidden — both shelf-only, neither should travel. */
+function drawnDagger(id) {
+  return { ...dagger(), _id: id, flags: { "merchant-presets": {
+    kind: "food-drink", drawn: true, stock: { ...dagger().flags["merchant-presets"].stock, hidden: false }
+  } } };
+}
+
+test("buying strips the shop's stock and drawn flags from the copy, keeping kind", () => {
+  const ctx = context({ shop: { items: [drawnDagger("Dagger000000001")] } });
+  const result = planTrade(buyRequest("Dagger000000001", 1), ctx);
+  assert.equal(result.ok, true);
+  const created = result.plan.updates.find(u => u.actorId === "Buyer000000001").itemCreates[0];
+  assert.equal(created.flags["merchant-presets"].kind, "food-drink");
+  assert.equal("stock" in created.flags["merchant-presets"], false);
+  assert.equal("drawn" in created.flags["merchant-presets"], false);
+});
+
+test("a drawn item bought then sold back carries no drawn tag onto the next shop", () => {
+  const buyCtx = context({ shop: { items: [drawnDagger("Dagger000000001")] } });
+  const bought = planTrade(buyRequest("Dagger000000001", 1), buyCtx);
+  assert.equal(bought.ok, true);
+  const boughtItem = bought.plan.updates.find(u => u.actorId === "Buyer000000001").itemCreates[0];
+  assert.equal("drawn" in boughtItem.flags["merchant-presets"], false);
+
+  // A real trade would give it a real _id on the way through; stand that in for the sell.
+  const owned = { ...boughtItem, _id: "Dagger000000001" };
+  const sellCtx = context({ buyer: { items: [owned] } });   // a different shop, no matching listing
+  const sold = planTrade(sellRequest("Dagger000000001", 1), sellCtx);
+  assert.equal(sold.ok, true);
+  const landed = sold.plan.updates.find(u => u.actorId === "Shop00000000001").itemCreates[0];
+  assert.equal("drawn" in landed.flags["merchant-presets"], false);
+  assert.equal("stock" in landed.flags["merchant-presets"], false);
+  // No matching listing at this shop, so it reads as STOCK_DEFAULTS once there (not hidden, not a service).
+  assert.equal(landed.flags["merchant-presets"].kind, "food-drink");
 });
 
 /* --------------------------------------------------------------------- writes shape */

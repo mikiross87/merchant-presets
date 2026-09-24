@@ -35,14 +35,16 @@
  *   consumables, so they already fall under "always a new document"; the
  *   `quantity`-1-each rule for them is enforced on top, in case that ever
  *   changes upstream.
- * - **Stock flags travel with a bought item.** The copy landing on the buyer
- *   (or, on a sale, back on the shop) keeps its `flags.merchant-presets.stock`
- *   as-is. Nothing on a player's own actor reads `hidden`/`notForSale`/etc.,
- *   but `noBuyback` and `service` still mean something if that same item is
- *   ever sold again, and dropping them would need a second, separate
- *   decision about what a "clean" item looks like that the issue doesn't ask
- *   for. `system.container` is the one field explicitly called out to drop
- *   (#89), so that's the one field this module clears.
+ * - **Shelf flags don't travel.** `copyOf` strips `flags.merchant-presets.stock`
+ *   and `.drawn` from the copy landing on the other side, both directions:
+ *   `hidden`/`infinite`/etc. describe a spot on a shelf, not a player's pack,
+ *   and a `drawn` item (#105's restock tag, `schedule.mjs`'s `isDrawn`)
+ *   carried to another shop would be swept up and deleted by *that* shop's
+ *   next reroll, which never drew it. `system.container` is dropped too
+ *   (#89). `kind` and the behaviour flags (`nutrition`/`actor`/`spell`) are
+ *   untouched — the runtime still needs those, on either side. An item that
+ *   lands on a shop this way reads as `STOCK_DEFAULTS` until a GM says
+ *   otherwise, or it matches an existing line (see `matchingStockLine`).
  * - **A sold item lands on the shop**, stacked the same way a bought item
  *   lands on the buyer. 1.x did this too (see the animal-deed comment at
  *   `merchant-presets.mjs:890-899`, which only makes sense if a sold item
@@ -63,11 +65,14 @@
  *   the item being sold, so it works whether or not that item ever came from
  *   this shop's stock — an ordinary item with no `kind` flag at all never
  *   matches anything here.
- * - **`noBuyback` and `service`** are read straight off the item being sold,
- *   not looked up against the shop's current shelf — see "stock flags
- *   travel", above. An item with neither flag (ordinary loot, never bought
- *   from any shop) is sellable and not a service, which is the sensible
- *   default either way.
+ * - **`noBuyback`, `service`, bundle and category, on a sale, come from a
+ *   matching line on the shop's own shelf**, not from the item being sold —
+ *   it no longer carries its own stock flags (see "shelf flags don't
+ *   travel"). `matchingStockLine` finds one by source (the same signal
+ *   `stacksOnto` uses) or, failing that, name. No match: `STOCK_DEFAULTS`,
+ *   so ordinary loot this shop has never stocked is sellable, not a service,
+ *   priced one at a time, and files under no category — the sensible
+ *   defaults either way.
  * - **Bundle pricing for `quantity` units, floored once.** pricing.mjs's
  *   `itemPriceCp` floors a single computation; calling it once per unit and
  *   summing would floor `quantity` times, and a bundle cheap enough to floor
@@ -135,6 +140,17 @@ function stacksOnto(existing, incoming) {
     && (existing.system?.container ?? null) === (incoming.system?.container ?? null);
 }
 
+/**
+ * The shop's own current stock line for `item`, if it has one — by source when `item` carries
+ * one (the same signal `stacksOnto` uses), else by name. Gear is never a match: it isn't stock.
+ * This is what a sale's `noBuyback`/`service`/bundle/category read, since the item being sold no
+ * longer carries its own stock flags (see `copyOf`).
+ */
+function matchingStockLine(item, shopItems) {
+  const source = sourceOf(item);
+  return shopItems.find(i => !isGear(i) && (source != null ? sourceOf(i) === source : i.name === item.name));
+}
+
 /** A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite". */
 function bottomlessTill(currencies) {
   return Object.fromEntries(Object.keys(currencies).map(d => [d, Number.MAX_SAFE_INTEGER]));
@@ -145,11 +161,24 @@ function lineTotalCp(item, rate, bundle, quantity, currencies) {
   return itemPriceCp(item.system.price, rate, bundle / quantity, currencies);
 }
 
-/** A copy of `item` fit to land on a new actor: `system.container` dropped, at `quantity`. */
+/**
+ * A copy of `item` fit to land on a new actor: `system.container` dropped, at `quantity`, and
+ * with `flags.merchant-presets.stock` and `.drawn` stripped — shelf metadata (hidden, infinite,
+ * ...) has no business following an item into a pack or another shop, and a drawn item (#105's
+ * restock tag) landing anywhere else would otherwise be deleted by that shop's next restock, not
+ * the one that actually drew it. The item then reads as `STOCK_DEFAULTS` until something (a GM,
+ * or landing back on a shop with a matching line) says otherwise. `kind` and the behaviour flags
+ * (nutrition/actor/spell) are untouched — the runtime still needs those.
+ */
 function copyOf(item, quantity) {
   const base = structuredClone(item);
   delete base._id;
   base.system = { ...base.system, container: null, quantity };
+  if (base.flags?.[MODULE]) {
+    base.flags[MODULE] = { ...base.flags[MODULE] };
+    delete base.flags[MODULE].stock;
+    delete base.flags[MODULE].drawn;
+  }
   return base;
 }
 
@@ -292,7 +321,10 @@ function planSell(request, context) {
     if (!item) return { ok: false, reason: "not-found", line: requested };
     if (!dealtIn(item, shopConfig)) return { ok: false, reason: "wont-buy", line: requested };
 
-    const stock = stockOf(item);
+    // The item being sold no longer carries its own stock flags once bought (see `copyOf`), so
+    // noBuyback/service/bundle/category come from a matching line on the shop's own shelf, if it
+    // has one — otherwise this is unfamiliar goods to this shop, and STOCK_DEFAULTS apply.
+    const stock = stockOf(matchingStockLine(item, shop.items) ?? {});
     if (stock.noBuyback) return { ok: false, reason: "no-buyback", line: requested };
     if (item.system?.identified === false) return { ok: false, reason: "unidentified", line: requested };
     if (stock.service) return { ok: false, reason: "service", line: requested };
