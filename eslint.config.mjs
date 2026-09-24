@@ -25,6 +25,7 @@ const foundryGlobals = {
   Item: "readonly",
   Roll: "readonly",
   RollTable: "readonly",
+  _replace: "readonly",
   foundry: "readonly",
   fromUuid: "readonly",
   game: "readonly",
