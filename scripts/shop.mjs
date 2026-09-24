@@ -14,7 +14,7 @@ export const STOCK_PREFIX = "Compendium.merchant-presets.stock.RollTable.";
  * looked like someone else's (#56). `profile` — the SRD stat block the
  * generator built the shopkeeper from — ships on every merchant, survives the
  * import, and is never written by the runtime, so it is what identifies one
- * afterwards.
+ * afterwards. An NPC set up as a shop carries `shop` instead (#57).
  *
  * @param {object|undefined} actor  An Actor document or its data.
  * @returns {boolean}
@@ -22,6 +22,7 @@ export const STOCK_PREFIX = "Compendium.merchant-presets.stock.RollTable.";
 export function isPreset(actor) {
   if (!actor || actor.pack) return false;              // never touch compendium copies
   if (actor.flags?.["merchant-presets"]?.profile) return true;
+  if (actor.flags?.["merchant-presets"]?.shop) return true;   // an NPC set up as a shop (#57)
   return (actor.flags?.["item-piles"]?.data?.tablesForPopulate ?? [])
     .some(t => t?.uuid?.startsWith(STOCK_PREFIX));
 }
@@ -89,4 +90,113 @@ export function planWorldTable(tables, src, version) {
     ?? tables.find(t => !stampOf(t) && t.name === src.name && stockSignature(t.results) === stamp.signature);
   const taken = tables.some(t => t.name === src.name);
   return { existing, name: taken ? `${src.name} (v${version})` : src.name, stamp };
+}
+
+/* -------------------------------------------------------- setting up a shop */
+
+/** Settlement sizes, in stock-band order. */
+export const TIERS = ["Village", "Town", "City"];
+
+/** Item types a shopkeeper carries, as opposed to features and spells. */
+export const PHYSICAL = new Set(["weapon", "equipment", "consumable", "tool", "loot", "container"]);
+
+const TIER_IN_NAME = /^(.*) \((Village|Town|City)\)$/;
+const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
+
+/**
+ * The shops a GM can choose from, read from the merchants compendium index.
+ *
+ * @param {Iterable<{name: string, uuid: string}>} index
+ * @returns {{name: string, tiers: Record<string, string>}[]}  By shop name; `tiers` maps a size to its merchant's uuid.
+ */
+export function listShops(index) {
+  const shops = new Map();
+  for (const entry of index) {
+    const [, name, tier] = entry.name?.match(TIER_IN_NAME) ?? [];
+    if (!name) continue;
+    if (!shops.has(name)) shops.set(name, { name, tiers: {} });
+    shops.get(name).tiers[tier] = entry.uuid;
+  }
+  return [...shops.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * The settlement size a shop's stock is rolled for. An NPC set up as a shop
+ * keeps its own name, so the marker comes first.
+ *
+ * @param {object} actor
+ * @returns {"Village"|"Town"|"City"}
+ */
+export function tierOf(actor) {
+  const marked = actor?.flags?.["merchant-presets"]?.shop?.tier;
+  if (TIERS.includes(marked)) return marked;
+  return actor?.name?.match(/\((Village|Town|City)\)/)?.[1] ?? "Town";
+}
+
+/**
+ * The items the setup dialog offers to keep as the NPC's own gear: every
+ * physical item, contents of containers included. On an actor that is already
+ * a shop the rest is stock, so only its gear is offered.
+ *
+ * @param {object} actor  Actor data, items included.
+ * @returns {object[]}
+ */
+export function keepableItems(actor) {
+  const shop = isPreset(actor);
+  return (actor.items ?? []).filter(i => PHYSICAL.has(i.type) && (!shop || isGearItem(i)));
+}
+
+/**
+ * What turning an NPC into one of the shops changes (#57).
+ *
+ * Everything the NPC does not keep goes: unticked physical items and, on an
+ * actor that is already a shop, its old stock, which would otherwise double
+ * the name-keyed limited-item flags and container counts. Everything it keeps
+ * is tagged as gear, which keeps it out of the shop window, the stock roll and
+ * a restock. The shop itself — Item Piles settings, purse, limited-item flags,
+ * container counts, coin and stock — comes from the chosen merchant, never its
+ * shopkeeper's gear or `profile`, which names the shipped stat block.
+ *
+ * @param {object} source          The chosen merchant's data, with its `uuid`.
+ * @param {object} actor           The NPC's data, items included.
+ * @param {Iterable<string>} keepIds  Ids of the physical items ticked to keep.
+ * @returns {{deletes: string[], updates: object[], pileData: object, moduleFlags: object,
+ *   currency: object, creates: object[]}}
+ */
+export function planShop(source, actor, keepIds) {
+  const keep = new Set(keepIds);
+  const shop = isPreset(actor);
+  const items = actor.items ?? [];
+
+  const deletes = items
+    .filter(i => (shop && !isGearItem(i)) || (PHYSICAL.has(i.type) && !keep.has(i._id)))
+    .map(i => i._id);
+  const gone = new Set(deletes);
+
+  const updates = [];
+  for (const item of items) {
+    if (gone.has(item._id)) continue;
+    const update = { _id: item._id };
+    if (!isGearItem(item)) update["flags.merchant-presets.kind"] = "gear";
+    if (item.system?.container && gone.has(item.system.container)) update["system.container"] = null;
+    if (Object.keys(update).length > 1) updates.push(update);
+  }
+
+  const from = source.flags?.["merchant-presets"] ?? {};
+  const pileData = { ...structuredClone(source.flags?.["item-piles"]?.data ?? {}), merchantImage: "" };
+  const moduleFlags = {
+    purse: from.purse ?? null,
+    itemFlags: structuredClone(from.itemFlags ?? null),
+    containers: structuredClone(from.containers ?? null),
+    shop: { source: source.uuid, tier: tierOf(source) }
+  };
+
+  return {
+    deletes,
+    updates,
+    pileData,
+    moduleFlags,
+    currency: structuredClone(source.system?.currency ?? {}),
+    creates: (source.items ?? []).filter(i => !isGearItem(i)).map(i => structuredClone(i))
+  };
 }
