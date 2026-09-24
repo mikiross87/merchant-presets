@@ -3,10 +3,12 @@
  * #98), kept free of Foundry so it can be tested with plain Node
  * (tools/migrate.test.mjs).
  *
- * 1.x stored everything under `flags.item-piles`; 2.0 reads that data once,
- * derives `flags.merchant-presets.shop` and each item's
- * `flags.merchant-presets.stock` from it, and switches Item Piles off on the
- * shop so it stops treating our NPCs as its own merchants (#97). Only this
+ * 1.x stored everything under `flags.item-piles`; 2.0 reads that data once
+ * and derives `flags.merchant-presets.shop` and each item's
+ * `flags.merchant-presets.stock` from it — safe on `next` at any time, since
+ * nothing there reads those flags yet. Switching Item Piles off on the shop,
+ * so it stops treating our NPCs as its own merchants (#97), is a second,
+ * separate half gated behind `NATIVE_SHOP`: see its own comment. Only this
  * module's shops are touched — `isShop` — so a world's other Item Piles
  * merchants, kept for loot or a GM's own trading, are left exactly as they
  * are.
@@ -38,6 +40,21 @@ import { SHOP_DEFAULTS, SHOP_VERSION } from "./schema.mjs";
  *  double-click, sidebar and token HUD open it with no patching. The sheet
  *  itself doesn't exist yet (#103); this id is the contract between the two. */
 export const SHOP_SHEET_ID = "merchant-presets.ShopSheet";
+
+/**
+ * Whether the cut-over to the native shop is live. `next` keeps trading,
+ * opening and restocking every shop through Item Piles until #102-#104 land
+ * (the #97 decision, "Order on next"): switching Item Piles off, or pointing
+ * `flags.core.sheetClass` at a window that doesn't exist yet, would break
+ * every shop the moment this migration ran. So while this is `false`, only
+ * the data half of the migration runs — `flags.merchant-presets.shop` and
+ * `.stock` are derived and written, safe beside the Item Piles flags Item
+ * Piles keeps reading — and the cut-over half (Item Piles disabled, the
+ * sheet, the ownership default) is skipped, not merely deferred: flip this
+ * to `true` once #104 makes the shop window the sheet, and `needsMigration`
+ * picks every already-data-migrated shop back up to finish the cut-over.
+ */
+export const NATIVE_SHOP = false;
 
 /**
  * Item Piles 3.3.4's `CONSTANTS.ITEM_DEFAULTS` — what a per-item
@@ -259,15 +276,21 @@ function hasCurrentShop(actor) {
 
 /**
  * Whether `actor` still needs migrating: one of our shops without a current
- * shop config, or one Item Piles still treats as its own merchant. Idempotent
- * once both are fixed — a second call on the migrated actor returns `false`.
+ * shop config (the data half — always due), or, once `nativeShop` is live,
+ * one Item Piles still treats as its own merchant (the cut-over half).
+ * Idempotent once both are fixed — a second call on the migrated actor
+ * returns `false` — and re-opens on its own once `nativeShop` flips: a shop
+ * already on a current config but still Item Piles' own merchant is picked
+ * up again to finish the cut-over, without needing a version bump.
  *
  * @param {object} actor
+ * @param {boolean} [nativeShop] Defaults to `NATIVE_SHOP`.
  * @returns {boolean}
  */
-export function needsMigration(actor) {
+export function needsMigration(actor, nativeShop = NATIVE_SHOP) {
   if (!isShop(actor)) return false;
   if (!hasCurrentShop(actor)) return true;
+  if (!nativeShop) return false;      // data half already done; the cut-over isn't live yet
   return actor.flags?.["item-piles"]?.data?.enabled === true;
 }
 
@@ -327,27 +350,37 @@ export function planOwnership(actor, hasTokenOnScene) {
  * The `Actor#update` payload to bring `actor` into 2.0, or `null` if it
  * needs nothing. Dotted-path keys, as the rest of the runtime writes them.
  *
+ * Always includes the data half — `flags.merchant-presets.shop`, once —
+ * regardless of `nativeShop`. The cut-over half — Item Piles switched off on
+ * the actor and its prototype token, `flags.core.sheetClass`, the ownership
+ * default — is included only while `nativeShop` is `true`; until then the
+ * shop keeps trading through Item Piles exactly as it did on 1.x.
+ *
  * @param {object} actor
  * @param {object} [options]
- * @param {object} [options.packShop]        See `deriveShop`.
+ * @param {object} [options.packShop]         See `deriveShop`.
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
+ * @param {boolean} [options.nativeShop]      Defaults to `NATIVE_SHOP`.
  * @returns {object|null}
  */
-export function planActorUpdate(actor, { packShop, hasTokenOnScene = false } = {}) {
-  if (!needsMigration(actor)) return null;
+export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP } = {}) {
+  if (!needsMigration(actor, nativeShop)) return null;
   const update = {};
 
   if (!hasCurrentShop(actor)) update["flags.merchant-presets.shop"] = deriveShop(actor, packShop);
-  if (actor.flags?.["item-piles"]?.data?.enabled !== false) update["flags.item-piles.data.enabled"] = false;
-  if (actor.prototypeToken?.flags?.["item-piles"]?.data?.enabled !== false) {
-    update["prototypeToken.flags.item-piles.data.enabled"] = false;
+
+  if (nativeShop) {
+    if (actor.flags?.["item-piles"]?.data?.enabled !== false) update["flags.item-piles.data.enabled"] = false;
+    if (actor.prototypeToken?.flags?.["item-piles"]?.data?.enabled !== false) {
+      update["prototypeToken.flags.item-piles.data.enabled"] = false;
+    }
+
+    const sheetClass = planSheetClass(actor);
+    if (sheetClass) update["flags.core.sheetClass"] = sheetClass;
+
+    const ownership = planOwnership(actor, hasTokenOnScene);
+    if (ownership !== null) update["ownership.default"] = ownership;
   }
-
-  const sheetClass = planSheetClass(actor);
-  if (sheetClass) update["flags.core.sheetClass"] = sheetClass;
-
-  const ownership = planOwnership(actor, hasTokenOnScene);
-  if (ownership !== null) update["ownership.default"] = ownership;
 
   return update;
 }
@@ -398,4 +431,20 @@ export function planTokenDisable(token) {
     changed = true;
   }
   return changed ? update : null;
+}
+
+/**
+ * The `Scene#updateEmbeddedDocuments("Token", …)` payload for one shop's
+ * tokens on one scene — `planTokenDisable` over each, dropping the `null`s —
+ * or `[]` while `nativeShop` is off. Token disabling is entirely the
+ * cut-over half: while Item Piles is still running the shop, its tokens must
+ * keep the flags it reads.
+ *
+ * @param {object[]} tokens        Token data for one actor on one scene.
+ * @param {boolean} [nativeShop]   Defaults to `NATIVE_SHOP`.
+ * @returns {object[]}
+ */
+export function planTokenUpdates(tokens, nativeShop = NATIVE_SHOP) {
+  if (!nativeShop) return [];
+  return tokens.map(planTokenDisable).filter(Boolean);
 }

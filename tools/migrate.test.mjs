@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { validateShop, validateStock } from "../scripts/schema.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, planActorUpdate, planAutoRestockDefault,
-  planItemUpdates, planOwnership, planTokenDisable, worldHasLegacyShops
+  planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, worldHasLegacyShops
 } from "../scripts/migrate.mjs";
 
 /** A shipped merchant, straight off `_source`, matched by filename prefix.
@@ -192,10 +192,21 @@ test("worldHasLegacyShops sees an unmigrated shop and ignores everything else", 
 
 /* ------------------------------------------------------------ planActorUpdate */
 
+test("nativeShop off (the default): only the data half is planned, Item Piles and the sheet untouched", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const update = planActorUpdate(store, { hasTokenOnScene: true });   // no nativeShop: the module default (off)
+  assert.ok(update);
+  assert.equal(update["flags.merchant-presets.shop"].version, 1);
+  // next still trades this shop through Item Piles (#97 "Order on next"): none of
+  // the cut-over keys are planned, even with a token placed (which would
+  // otherwise make ownership Limited) and Item Piles still fully enabled.
+  assert.deepEqual(Object.keys(update), ["flags.merchant-presets.shop"]);
+});
+
 test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet and (hidden) ownership", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store._id = "abcdefghijklmnop";
-  const update = planActorUpdate(store, { hasTokenOnScene: false });
+  const update = planActorUpdate(store, { hasTokenOnScene: false, nativeShop: true });
   assert.ok(update);
   assert.equal(update["flags.merchant-presets.shop"].version, 1);
   assert.equal(update["flags.item-piles.data.enabled"], false);
@@ -207,18 +218,18 @@ test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet 
 
 test("planActorUpdate makes a shop with a placed token visitable (Limited)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const update = planActorUpdate(store, { hasTokenOnScene: true });
+  const update = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
   assert.equal(update["ownership.default"], 1);
 });
 
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 3 };   // Owner, or any non-default value a GM set
-  const update = planActorUpdate(store, { hasTokenOnScene: true });
+  const update = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
   assert.ok(!("ownership.default" in update));
 });
 
-test("planActorUpdate is idempotent: applying its own plan leaves nothing to migrate", () => {
+test("planActorUpdate is idempotent (nativeShop off): applying its own plan leaves nothing to migrate", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const first = planActorUpdate(store, { hasTokenOnScene: true });
   const migrated = applied(store, first);
@@ -226,16 +237,44 @@ test("planActorUpdate is idempotent: applying its own plan leaves nothing to mig
   assert.equal(planActorUpdate(migrated, { hasTokenOnScene: true }), null);
 });
 
+test("planActorUpdate is idempotent (nativeShop on): applying its own plan leaves nothing to migrate", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const first = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
+  const migrated = applied(store, first);
+  assert.equal(needsMigration(migrated, true), false);
+  assert.equal(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: true }), null);
+});
+
 test("Item Piles left on but shop already current: only the switch-off is planned", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const first = planActorUpdate(store, {});
+  const first = planActorUpdate(store, { nativeShop: true });
   const migrated = applied(store, first);
   // Roll back just the Item Piles switch, as if #97's write had failed partway.
   migrated.flags["item-piles"].data.enabled = true;
-  const second = planActorUpdate(migrated, {});
+  const second = planActorUpdate(migrated, { nativeShop: true });
   assert.ok(second);
   assert.ok(!("flags.merchant-presets.shop" in second));   // the GM's already-migrated config is untouched
   assert.equal(second["flags.item-piles.data.enabled"], false);
+});
+
+test("a data-migrated shop is picked up again once nativeShop flips on", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const dataOnly = applied(store, planActorUpdate(store, {}));   // nativeShop off: data half only
+
+  // Not re-opened while the cut-over is still off, however many times it runs.
+  assert.equal(needsMigration(dataOnly), false);
+  assert.equal(needsMigration(dataOnly, false), false);
+  assert.equal(planActorUpdate(dataOnly, {}), null);
+
+  // Flip NATIVE_SHOP on (#104): the same shop, still Item Piles' own merchant
+  // underneath, is picked up again to finish the cut-over — no version bump,
+  // no re-deriving the shop config the GM may since have edited by hand.
+  assert.equal(needsMigration(dataOnly, true), true);
+  const second = planActorUpdate(dataOnly, { nativeShop: true });
+  assert.ok(second);
+  assert.ok(!("flags.merchant-presets.shop" in second));
+  assert.equal(second["flags.item-piles.data.enabled"], false);
+  assert.equal(second["flags.core.sheetClass"], SHOP_SHEET_ID);
 });
 
 /* ------------------------------------------------------------ planItemUpdates */
@@ -324,6 +363,23 @@ test("an already-disabled unlinked token plans nothing (idempotent)", () => {
     delta: { flags: { "item-piles": { data: { enabled: false } } } }
   };
   assert.equal(planTokenDisable(token), null);
+});
+
+test("planTokenUpdates plans nothing while nativeShop is off, however many tokens need it", () => {
+  const tokens = [
+    { _id: "t5", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } },
+    { _id: "t6", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } }
+  ];
+  assert.deepEqual(planTokenUpdates(tokens), []);            // the module default (off)
+  assert.deepEqual(planTokenUpdates(tokens, false), []);
+});
+
+test("planTokenUpdates disables every token that needs it once nativeShop is on", () => {
+  const linked = { _id: "t7", actorLink: true, flags: { "item-piles": { data: { enabled: true } } } };
+  const unlinked = { _id: "t8", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } };
+  const already = { _id: "t9", actorLink: false, flags: { "item-piles": { data: { enabled: false } } } };
+  assert.deepEqual(planTokenUpdates([linked, unlinked, already], true),
+    [{ _id: "t8", "flags.item-piles.data.enabled": false }]);
 });
 
 /* --------------------------------------------------------------- autoRestock */

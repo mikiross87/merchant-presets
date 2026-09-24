@@ -23,7 +23,7 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
   from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
-import { needsMigration, planActorUpdate, planAutoRestockDefault, planItemUpdates, planTokenDisable,
+import { NATIVE_SHOP, needsMigration, planActorUpdate, planAutoRestockDefault, planItemUpdates, planTokenUpdates,
   worldHasLegacyShops } from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
@@ -1022,35 +1022,38 @@ async function resolvePackShop(actorData) {
 }
 
 /**
- * Bring one 1.x merchant into its 2.0 shop config, and switch Item Piles off
- * on it everywhere it can still see it (#97, #100): the actor, its prototype
- * token, and every unlinked token — and its delta — on every scene. Reads
- * stored flags directly, so it works with Item Piles inactive or
- * uninstalled. Once `flags.merchant-presets.shop` is current, a GM's own
- * Item Piles retuning is never read again — our schema is the source of
- * truth from there on, same as everything else the runtime rebuilds from a
- * stored record rather than Item Piles' live state (see `reapplyItemFlags`).
+ * Bring one 1.x merchant into its 2.0 shop config (#100): always the data
+ * half — `flags.merchant-presets.shop` and each item's `.stock` — and, once
+ * `NATIVE_SHOP` is `true`, the cut-over half too: Item Piles switched off
+ * everywhere it can still see the shop (#97) — the actor, its prototype
+ * token, and every unlinked token, and its delta, on every scene — plus the
+ * 2.0 sheet and the ownership default. Until then `next` keeps trading,
+ * opening and restocking every shop through Item Piles, unchanged (the #97
+ * decision, "Order on next"). Reads stored flags directly, so it works with
+ * Item Piles inactive or uninstalled. Once `flags.merchant-presets.shop` is
+ * current, a GM's own Item Piles retuning is never read again — our schema
+ * is the source of truth from there on, same as everything else the runtime
+ * rebuilds from a stored record rather than Item Piles' live state (see
+ * `reapplyItemFlags`).
  *
  * @param {Actor} actor
  * @returns {Promise<boolean>} whether anything changed
  */
 async function migrateShop(actor) {
   const data = actor.toObject();
-  if (!needsMigration(data)) return false;
+  if (!needsMigration(data, NATIVE_SHOP)) return false;
 
   const packShop = await resolvePackShop(data);
   const hasTokenOnScene = game.scenes.some(s => s.tokens.some(t => t.actorId === actor.id));
-  const update = planActorUpdate(data, { packShop, hasTokenOnScene });
+  const update = planActorUpdate(data, { packShop, hasTokenOnScene, nativeShop: NATIVE_SHOP });
   if (update) await actor.update(update);
 
   const itemUpdates = planItemUpdates(data);
   if (itemUpdates.length) await actor.updateEmbeddedDocuments("Item", itemUpdates);
 
   for (const scene of game.scenes) {
-    const tokenUpdates = scene.tokens
-      .filter(t => t.actorId === actor.id)
-      .map(t => planTokenDisable(t.toObject()))
-      .filter(Boolean);
+    const tokens = scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject());
+    const tokenUpdates = planTokenUpdates(tokens, NATIVE_SHOP);
     if (tokenUpdates.length) await scene.updateEmbeddedDocuments("Token", tokenUpdates);
   }
 
