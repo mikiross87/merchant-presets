@@ -4,8 +4,23 @@
  *
  * Every function here takes the world clock's own numbers rather than
  * `game.time.calendar` itself, so the runtime can pass `game.time.calendar.days`
- * straight through: `{secondsPerMinute, minutesPerHour, hoursPerDay}`. A
- * minute-of-day is always a whole number in `[0, minutesPerHour*hoursPerDay)`.
+ * straight through: `{secondsPerMinute, minutesPerHour, hoursPerDay}`.
+ * `worldTime` itself is treated as possibly fractional throughout — Foundry's
+ * `game.time.advance` accepts fractions of a second — so nothing here assumes
+ * a whole-second grid.
+ *
+ * Nothing here rolls dice, on purpose. Foundry's own dice are asynchronous
+ * (`new Roll(formula).evaluate()`, exactly as `rollStock` already does for
+ * the existing engine — `merchant-presets.mjs:72`); `Roll#evaluateSync`
+ * refuses anything non-deterministic and throws. A pure, synchronous module
+ * cannot call an async roller, so nothing here is handed one — callers roll
+ * first and pass in an already-resolved number:
+ * - {@link intervalOf} sorts a shop's `restock.every` into what still needs
+ *   rolling.
+ * - {@link dueRestock} hands back `nextEvery` unresolved; the caller rolls it
+ *   (via `intervalOf`, if it turns out to be a formula) and calls
+ *   {@link scheduleNext} with the result.
+ * - {@link planRestock}'s `draws` carry their own already-rolled `quantity`.
  *
  * `dueRestock` and `planRestock` take the *raw* stored `flags.merchant-presets.shop`
  * — whatever partial shape a GM's world flag happens to be in, straight off
@@ -73,7 +88,7 @@ const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPe
  *
  * @returns {number}  The `worldTime` of `day`'s own opening (`day` counts
  *   whole days from the calendar's epoch, and may be fractional; see
- *   {@link firstOpeningAtOrAfter}).
+ *   {@link lastOpeningAtOrBefore}).
  */
 function openingOnDay(day, hours, calendar) {
   const offset = hours ? minutesOf(hours.open, calendar) * calendar.secondsPerMinute : 0;
@@ -95,8 +110,9 @@ function lastOpeningAtOrBefore(bound, hours, calendar) {
  * `previous` and `now`'s own open/closed state: an interval under a day long
  * can open *and* close inside it, leaving both ends closed (or, for an
  * overnight shop, both ends open) with no opening visible at either sample
- * point. `worldTime` is always a whole number of seconds, so `previous + 1`
- * is the first instant strictly after it.
+ * point. The single candidate — the latest opening at or before `now` — is
+ * tested against `previous` with a strict `>`, not `previous + 1`: `worldTime`
+ * may be fractional, so there is no smallest step to add.
  *
  * The *most recent* qualifying opening, not the first: a jump can cross
  * several due openings (a shop checked only once a session, say), and only
@@ -105,50 +121,82 @@ function lastOpeningAtOrBefore(bound, hours, calendar) {
  * very next tick even though the shop had, in world time, just restocked.
  */
 function nextOpening(hours, dueAt, previous, now, calendar) {
-  const bound = Math.max(previous + 1, dueAt);
   const at = lastOpeningAtOrBefore(now, hours, calendar);
-  return at >= bound ? at : null;
+  return at > previous && at >= dueAt ? at : null;
 }
 
 /**
- * The `worldTime` a restock is next due: midnight, `every` days after the
- * start of `from`'s own day. Midnight, not `from` itself, so a restock that
- * happens to run late in the day (a clock check that lands at 07:05, past a
- * 07:00 opening) still falls due at the following due day's *opening*, not
- * one whole day later than that — #105 fires "on the due day", not at the
- * anchor's exact time of day. A dice formula is rolled once, here, rather
- * than re-rolled on every check — so call this only when actually setting the
- * next due date: at setup, and again each time {@link dueRestock} fires. A
- * roll below 1 (e.g. "1d2-1") floors to 1 day: a restock cannot be due
- * before it starts.
+ * The `worldTime` a restock is next due: midnight, `days` after the start of
+ * `from`'s own day. Midnight, not `from` itself, so a restock that happens to
+ * run late in the day (a clock check that lands at 07:05, past a 07:00
+ * opening) still falls due at the following due day's *opening*, not one
+ * whole day later than that — #105 fires "on the due day", not at the
+ * anchor's exact time of day. `days` is floored and given a minimum of 1: a
+ * fractional roll (a formula like "1d6/2" landing on 1.5) still lands on a
+ * whole due day, at midnight, not partway through one; a restock cannot be
+ * due before it starts.
  *
- * @param {number|"never"} every
+ * @param {number} days  Already resolved — see the header on rolling
+ *   `restock.every` first, via {@link intervalOf}.
  * @param {number} from
  * @param {CalendarDays} calendar
- * @param {(formula: string) => number} roll  Only called for a dice `every`.
- * @returns {number|null}  null for "never".
+ * @returns {number}
  */
-export function nextDue(every, from, calendar, roll) {
-  if (every === "never") return null;
-  const days = Math.max(1, typeof every === "number" ? every : roll(every));
+export function nextDue(days, from, calendar) {
+  const whole = Math.max(1, Math.floor(days));
   const day = secondsPerDay(calendar);
-  return Math.floor(from / day) * day + days * day;
+  return Math.floor(from / day) * day + whole * day;
 }
 
 /**
- * Whether a shop's scheduled restock fires between `previous` and `now`, and
- * the {@link ScheduleState} to store either way.
+ * Sorts a shop's `restock.every` into what the caller still needs to do with
+ * it, since this module can't roll dice itself (see the header).
+ *
+ * @param {number|string} every  A whole number of days, a dice formula, or
+ *   the literal "never".
+ * @returns {{days: number}|{formula: string}|null}  `{days}` is ready for
+ *   {@link nextDue}/{@link scheduleNext} as it is; `{formula}` needs rolling
+ *   first; null means "never" — no schedule at all.
+ */
+export function intervalOf(every) {
+  if (every === "never") return null;
+  return typeof every === "number" ? { days: every } : { formula: every };
+}
+
+/**
+ * The {@link ScheduleState} after a restock fires at `at`, given the number
+ * of days until the next one is due — already resolved (rolled, if
+ * `restock.every` is a dice formula; see {@link intervalOf}).
+ *
+ * @param {ScheduleState} state  Not read directly: the new state is derived
+ *   entirely from `at` and `days`, but every "the new state after this"
+ *   computation goes through one call site, for whoever wires this in.
+ * @param {number} at  The `worldTime` {@link dueRestock} fired at.
+ * @param {number} days
+ * @param {CalendarDays} calendar
+ * @returns {ScheduleState}
+ */
+export function scheduleNext(state, at, days, calendar) {
+  return { lastRestock: at, dueAt: nextDue(days, at, calendar) };
+}
+
+/**
+ * Whether a shop's scheduled restock fires between `previous` and `now`.
  *
  * It fires at the most recent instant the shop opens on or after
  * `state.dueAt` (see {@link nextOpening}) — so a gap that skips several due
  * openings still gives exactly one restock, anchored at the *last* of them
- * rather than the first (or at `now`), and `nextDue`'s next due day counts
- * from there too — not from an opening already behind `now`, which would
- * leave the shop due again on the very next tick. Rewinding the clock (`now`
- * at or before `previous`) never fires, whatever `dueAt` says.
+ * rather than the first (or at `now`), and the following due day counts from
+ * there too — not from an opening already behind `now`, which would leave
+ * the shop due again on the very next tick. Rewinding the clock (`now` at or
+ * before `previous`) never fires, whatever `dueAt` says.
  * `restock.onOpen: false`, `restock.every: "never"`, or `restock.table: null`
  * (no stock table assigned — a fresh custom shop, say) never fire either;
  * those shops restock only by hand, if at all.
+ *
+ * Rolls nothing itself (see the header): on a fire, call {@link scheduleNext}
+ * with `nextEvery` resolved to a whole number of days — rolling it first, via
+ * {@link intervalOf}, if it's a dice formula — to get the state to store.
  *
  * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
  *   not — completed here via `shopFrom` before anything is read from it.
@@ -157,20 +205,19 @@ export function nextDue(every, from, calendar, roll) {
  * @param {number} previous
  * @param {number} now
  * @param {CalendarDays} calendar
- * @param {(formula: string) => number} roll
- * @returns {{due: boolean, at: number|null, state: ScheduleState}}  `at` is
- *   the `worldTime` it fired at — the same value stamped into `state` as the
- *   new `lastRestock` — or null when `due` is false.
+ * @returns {{due: boolean, at: number|null, nextEvery: number|string|null}}
+ *   `at` is the `worldTime` it fired at; `nextEvery` is `restock.every`,
+ *   unresolved, for {@link scheduleNext}. Both null when `due` is false.
  */
-export function dueRestock(shop, state, previous, now, calendar, roll) {
-  if (now <= previous) return { due: false, at: null, state };
+export function dueRestock(shop, state, previous, now, calendar) {
+  if (now <= previous) return { due: false, at: null, nextEvery: null };
   const { restock, hours } = shopFrom(shop);
   if (!restock.onOpen || restock.every === "never" || restock.table == null || state?.dueAt == null) {
-    return { due: false, at: null, state };
+    return { due: false, at: null, nextEvery: null };
   }
   const at = nextOpening(hours, state.dueAt, previous, now, calendar);
-  if (at == null) return { due: false, at: null, state };
-  return { due: true, at, state: { lastRestock: at, dueAt: nextDue(restock.every, at, calendar, roll) } };
+  if (at == null) return { due: false, at: null, nextEvery: null };
+  return { due: true, at, nextEvery: restock.every };
 }
 
 /* ------------------------------------------------------------------ restock plan (#105) */
@@ -183,17 +230,19 @@ export function dueRestock(shop, state, previous, now, calendar, roll) {
  * @property {{quantity?: number, container?: string|null}} system
  * @property {{"merchant-presets"?: {kind?: string, drawn?: boolean}}} flags
  *
- * @typedef {object} Draw  One of the shop's stock table results, already
- *   resolved by the caller — drawing the table is a Foundry operation this
- *   module has no part in.
- * @property {string} resultId  The TableResult's id, to look up its quantity
- *   formula in `shop.restock.quantities`.
- * @property {string} name      The compendium document's name — how a draw is
+ * @typedef {object} Draw  One of the shop's stock table results, resolved
+ *   and pre-rolled by the caller — drawing the table, and rolling its
+ *   quantity formula, are both Foundry operations (the second one async; see
+ *   the header) this module has no part in.
+ * @property {string} name  The compendium document's name — how a draw is
  *   matched to an existing shelf item, mirroring `itemFlags`/`containers`
  *   (#99), which are keyed by name for the same reason.
- * @property {object} data      The compendium document's own plain data
- *   (`type`, `system`, `img`, its own `flags`, …) to build the embedded copy
- *   from.
+ * @property {object} data  The compendium document's own plain data (`type`,
+ *   `system`, `img`, its own `flags`, …) to build the embedded copy from.
+ * @property {number} quantity  This restock's already-rolled quantity for a
+ *   fresh copy of this line — used as-is for a reroll, or for a topup line
+ *   that turns out to need drawing. Unused for a container, whose count comes
+ *   from `context.containers` instead of a roll.
  *
  * @typedef {object} RestockContext
  * @property {number} purse    `flags.merchant-presets.purse`: the shop's starting gp.
@@ -266,8 +315,9 @@ function dedupedByName(draws) {
 
 /**
  * What one restock changes on a shop's shelf — item deletes, creates and
- * updates, the till, and which lines it touched. The caller does the two
- * things this can't: draw the shop's stock table, and apply the plan.
+ * updates, the till, and which lines it touched. The caller does what this
+ * can't: draw the shop's stock table, roll each draw's quantity (see the
+ * header), and apply the plan.
  *
  * A restock only ever touches what it (or an earlier restock, or the build)
  * drew itself — every created item is stamped {@link isDrawn}. Anything the
@@ -298,12 +348,11 @@ function dedupedByName(draws) {
  * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
  *   not — completed here via `shopFrom` before anything is read from it.
  * @param {Item[]} items  The shop's current embedded items.
- * @param {Draw[]} draws  This restock's table draw.
+ * @param {Draw[]} draws  This restock's table draw, already rolled.
  * @param {RestockContext} context
- * @param {(formula: string) => number} roll
  * @returns {RestockPlan}
  */
-export function planRestock(shop, items, draws, context, roll) {
+export function planRestock(shop, items, draws, context) {
   const { restock } = shopFrom(shop);
   if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [] };
 
@@ -331,8 +380,8 @@ export function planRestock(shop, items, draws, context, roll) {
       }
       const existing = drawnNow.find(i => i.name === draw.name);
       if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
-      const quantity = Math.max(0, roll(restock.quantities[draw.resultId] ?? "1"));
-      if (quantity === 0) continue;   // rolled empty again: leave it sold out (or absent)
+      const quantity = Math.max(0, draw.quantity ?? 0);
+      if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       if (existing) {
         updates.push({ _id: existing._id, "system.quantity": quantity,
           "flags.merchant-presets.stock": context.stockFlags[draw.name] });
@@ -356,7 +405,7 @@ export function planRestock(shop, items, draws, context, roll) {
       for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
       continue;
     }
-    const quantity = Math.max(0, roll(restock.quantities[draw.resultId] ?? "1"));
+    const quantity = Math.max(0, draw.quantity ?? 0);
     if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }));   // 0: not in stock today
   }
   // One mention per line: a container's several copies share its one name.
