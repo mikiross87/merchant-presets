@@ -101,7 +101,9 @@ export const TIERS = ["Village", "Town", "City"];
 export const PHYSICAL = new Set(["weapon", "equipment", "consumable", "tool", "loot", "container"]);
 
 const TIER_IN_NAME = /^(.*) \((Village|Town|City)\)$/;
-const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
+/** Whether `item` is the shopkeeper's own kit rather than stock. Also used
+ *  by the 1.x → 2.0 migration (#100) to keep gear out of `flags.merchant-presets.stock`. */
+export const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
 
 /**
  * The shops a GM can choose from, read from the merchants compendium index.
@@ -138,11 +140,13 @@ export function tierOf(actor) {
  * an NPC set up as one (`shop`). Narrower than `isPreset`, which also counts a
  * bare pointer at our stock table — such an actor has no gear tagged yet, and
  * treating it as a shop would offer nothing to keep and delete everything.
+ * What the 1.x → 2.0 migration (#100) walks the world for, since `isPreset`'s
+ * bare pointer has no Item Piles data yet to migrate.
  *
  * @param {object} actor
  * @returns {boolean}
  */
-function isShop(actor) {
+export function isShop(actor) {
   const flags = actor?.flags?.["merchant-presets"];
   return Boolean(flags?.profile || flags?.shop);
 }

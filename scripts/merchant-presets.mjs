@@ -23,6 +23,8 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
   from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
+import { needsMigration, planActorUpdate, planAutoRestockDefault, planItemUpdates, planTokenDisable,
+  worldHasLegacyShops } from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
 const TABLE_FOLDER = "Merchant Stock";
@@ -999,6 +1001,94 @@ function registerSpellcasting() {
   });
 }
 
+/* ----------------------------------------------------------- 1.x migration */
+
+/**
+ * The shipped merchant's own `flags.merchant-presets.shop` (#99), for
+ * `restock.every` — the one field Item Piles never had. Resolved from the
+ * actor's compendium provenance, or the pre-migration #57 marker's `source`
+ * for an NPC set up as a shop. `undefined` when neither resolves (the source
+ * merchant has since been deleted, say), so the migration falls back to the
+ * schema default.
+ *
+ * @param {object} actorData  `actor.toObject()`.
+ * @returns {Promise<object|undefined>}
+ */
+async function resolvePackShop(actorData) {
+  const uuid = actorData._stats?.compendiumSource ?? actorData.flags?.["merchant-presets"]?.shop?.source;
+  if (!uuid) return undefined;
+  const doc = await foundry.utils.fromUuid(uuid).catch(() => null);
+  return doc?.flags?.["merchant-presets"]?.shop ?? undefined;
+}
+
+/**
+ * Bring one 1.x merchant into its 2.0 shop config, and switch Item Piles off
+ * on it everywhere it can still see it (#97, #100): the actor, its prototype
+ * token, and every unlinked token — and its delta — on every scene. Reads
+ * stored flags directly, so it works with Item Piles inactive or
+ * uninstalled. Once `flags.merchant-presets.shop` is current, a GM's own
+ * Item Piles retuning is never read again — our schema is the source of
+ * truth from there on, same as everything else the runtime rebuilds from a
+ * stored record rather than Item Piles' live state (see `reapplyItemFlags`).
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether anything changed
+ */
+async function migrateShop(actor) {
+  const data = actor.toObject();
+  if (!needsMigration(data)) return false;
+
+  const packShop = await resolvePackShop(data);
+  const hasTokenOnScene = game.scenes.some(s => s.tokens.some(t => t.actorId === actor.id));
+  const update = planActorUpdate(data, { packShop, hasTokenOnScene });
+  if (update) await actor.update(update);
+
+  const itemUpdates = planItemUpdates(data);
+  if (itemUpdates.length) await actor.updateEmbeddedDocuments("Item", itemUpdates);
+
+  for (const scene of game.scenes) {
+    const tokenUpdates = scene.tokens
+      .filter(t => t.actorId === actor.id)
+      .map(t => planTokenDisable(t.toObject()))
+      .filter(Boolean);
+    if (tokenUpdates.length) await scene.updateEmbeddedDocuments("Token", tokenUpdates);
+  }
+
+  log(`migrated "${actor.name}" to its 2.0 shop config`);
+  return true;
+}
+
+/**
+ * Migrate every one of our shops still on a pre-2.0 config, or still Item
+ * Piles' own merchant. Runs on `ready` and on `createActor`, not only once
+ * per version, so a shop arriving later from a world compendium or an
+ * Adventure — or a re-upgrade after a rollback — is caught too (#97).
+ *
+ * @returns {Promise<number>} how many shops changed
+ */
+async function migrateAll() {
+  if (game.users.activeGM !== game.user) return 0;   // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    try { if (await migrateShop(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not migrate "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/**
+ * Force `autoRestock` off on this world's first 2.0 load, if it's upgrading
+ * from 1.x and the GM never touched the setting (#105): the setting's
+ * default flips from off to on in 2.0, and leaving that unhandled would
+ * silently turn restocking on under every world that left it unset.
+ */
+function applyAutoRestockDefault() {
+  const key = `${MODULE}.autoRestock`;
+  const hasStoredValue = !!game.settings.storage.get("world").find(s => s.key === key);
+  const value = planAutoRestockDefault(hasStoredValue, worldHasLegacyShops(game.actors));
+  if (value !== null) game.settings.set(MODULE, "autoRestock", value);
+}
+
 /* -------------------------------------------------------- setting up a shop */
 
 /**
@@ -1272,7 +1362,7 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
     reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
-    syncOpenState, syncOpenStateAll, setUpShop };
+    syncOpenState, syncOpenStateAll, setUpShop, migrateShop, migrateAll };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.
@@ -1285,6 +1375,19 @@ Hooks.once("ready", () => {
 
   if (!game.user.isGM) return;
   warnOutdatedNutrition();
+
+  // The 1.x → 2.0 migration (#100) and the world's one-time autoRestock
+  // decision (#105) read stored flags directly, so both run whether or not
+  // Item Piles is active or even installed — unlike everything below, which
+  // needs it.
+  try { applyAutoRestockDefault(); }
+  catch (err) { console.error(`${MODULE} | could not apply the autoRestock default`, err); }
+  Hooks.on("createActor", (actor, _options, userId) => {
+    if (userId !== game.user.id) return;
+    migrateShop(actor).catch(err => console.error(`${MODULE} |`, err));
+  });
+  migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
+
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
     return;
