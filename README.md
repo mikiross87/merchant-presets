@@ -93,11 +93,16 @@ Setting her up again, with another shop or another size, keeps whatever gear
 she's already holding — the dialog only offers her gear this time round — and
 replaces the stock. The stock table she used before isn't deleted; it's left
 behind in the `Merchant Stock` folder, same as it is for a shipped merchant.
-There's no undo. If you decide she shouldn't be a shop after all, turn Item
-Piles off on her — that's what stops her being one.
+There's no undo. If you decide she shouldn't be a shop after all, turning Item
+Piles off on her stops the shop window and trading, but the module still
+recognises her by the `shop` marker — its stock-weight effect and
+trading-hours status keep applying, and with automatic restocking on it will
+try to restock her and log an error, same as for a shipped merchant with Item
+Piles turned off. There's no one-click way to undo the setup.
 
 The dialog is a thin wrapper around the module's API, so a macro can drive it
-too:
+too — physical items left out of `keepIds` are deleted, same as the dialog's
+unticked items, so an empty array strips all of a fresh NPC's gear:
 
 ```js
 game.modules.get("merchant-presets").api.setUpShop(actor, merchantUuid, keepIds)
