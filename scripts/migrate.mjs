@@ -99,6 +99,26 @@ const DND5E_ITEM_FILTERS = [
  *  it stays out of `wontBuy` too (tools/schema.test.mjs's `shopOf`). */
 const FIXED_KIND = "gear";
 
+/**
+ * `PHYSICAL_TYPES` and `GOODS_KINDS`, straight off tools/build_srd.py: the
+ * declared order a freshly-built shop's `wontBuy.types`/`.kinds` list its
+ * refusals in (`refuse_types`/`refuse_kinds` there both walk these lists in
+ * order). Matched here so a migrated shop's lists come out in the same
+ * order as one dragged fresh from the compendium, not merely the same set.
+ */
+const PHYSICAL_TYPES_ORDER = ["weapon", "equipment", "consumable", "tool", "loot", "container"];
+const GOODS_KINDS_ORDER = ["vehicle", "mount", "tack", "food-drink", "meal", "lodging", "service",
+  "spellcasting", "component", "travel", "gear"];
+
+/** `values` (a Set) ordered by `canonical`'s declared order first, then
+ *  anything `canonical` doesn't name — a GM's own item type or kind,
+ *  outside this module's fixed lists — alphabetically after. */
+function canonicalOrder(values, canonical) {
+  const known = canonical.filter(v => values.has(v));
+  const rest = [...values].filter(v => !canonical.includes(v)).sort();
+  return [...known, ...rest];
+}
+
 /** `flags.item-piles.data`, with every stripped key read back as Item Piles' own default. */
 function pileData(actor) {
   const raw = actor?.flags?.["item-piles"]?.data ?? {};
@@ -133,9 +153,11 @@ function valuesOn(filters, path) {
 function wontBuyFrom(filters) {
   if (!Array.isArray(filters)) return { types: [], kinds: [] };
   const fixedTypes = valuesOn(DND5E_ITEM_FILTERS, "type");
-  const types = [...valuesOn(filters, "type")].filter(t => !fixedTypes.has(t)).sort();
-  const kinds = [...valuesOn(filters, "flags.merchant-presets.kind")].filter(k => k !== FIXED_KIND).sort();
-  return { types, kinds };
+  const typeValues = valuesOn(filters, "type");
+  for (const t of fixedTypes) typeValues.delete(t);
+  const kindValues = valuesOn(filters, "flags.merchant-presets.kind");
+  kindValues.delete(FIXED_KIND);
+  return { types: canonicalOrder(typeValues, PHYSICAL_TYPES_ORDER), kinds: canonicalOrder(kindValues, GOODS_KINDS_ORDER) };
 }
 
 /**

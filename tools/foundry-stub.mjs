@@ -3,9 +3,11 @@
  * plain Node and drive it through its hooks. Not a test file itself.
  *
  * Only what merchant-presets.mjs touches on import, at `ready`, and on the way
- * through `rewire` is modelled; settings default to the module's own defaults
- * with trading hours, restocking and stock weight off so those passes stay out
- * of the way.
+ * through `rewire` and `migrateShop` (#100) is modelled; settings default to
+ * the module's own defaults with trading hours, restocking and stock weight
+ * off so those passes stay out of the way. `game.scenes` starts empty — no
+ * test here places a token — so `migrateShop`'s per-scene token pass always
+ * finds nothing to do.
  */
 import { readdirSync, readFileSync } from "node:fs";
 
@@ -34,15 +36,24 @@ const flagged = doc => Object.assign(doc, {
   async setFlag(scope, key, value) { set(this, `flags.${scope}.${key}`, value); }
 });
 
+/** `doc`'s own data, the way `Document#toObject()` strips a document back to
+ *  plain data — everything but its methods. */
+function plainData(doc) {
+  const out = {};
+  for (const [k, v] of Object.entries(doc)) if (typeof v !== "function") out[k] = structuredClone(v);
+  return out;
+}
+
 /**
  * Install the globals and return the world they describe.
- * @returns {{hooks, actors, tables, compendium, calls, settings, merchant, fire}}
+ * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire}}
  */
 export function createWorld() {
   const hooks = { once: new Map(), on: new Map() };
   const actors = [];
   const tables = [];
   const folders = [];
+  const scenes = [];
   const compendium = new Map();
   const calls = { itemUpdates: [], tablesCreated: 0, messages: [] };
   // This module's settings by key; another module's as "<module>.<key>".
@@ -51,6 +62,8 @@ export function createWorld() {
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
     spellcastingToChat: true, "item-piles.outputToChat": 1
   };
+  // No world ever has a stored value in the stub: every setting is at its default.
+  const storage = { get: () => ({ find: () => undefined }) };
 
   globalThis.Hooks = {
     once: (name, fn) => hooks.once.set(name, fn),
@@ -94,6 +107,7 @@ export function createWorld() {
     user,
     users: Object.assign([user], { activeGM: user }),
     actors,
+    scenes,
     folders: { find: fn => folders.find(fn) },
     tables: {
       find: fn => tables.find(fn), filter: fn => tables.filter(fn),
@@ -102,7 +116,12 @@ export function createWorld() {
         results: src.results.map(r => ({ documentUuid: r.documentUuid, name: r.name }))
       })
     },
-    settings: { register() {}, get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`] },
+    settings: {
+      register() {},
+      get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`],
+      set: (scope, key, value) => { settings[scope === "merchant-presets" ? key : `${scope}.${key}`] = value; },
+      storage
+    },
     modules: new Map([["merchant-presets", { version: "1.3.0" }], ["item-piles", { active: true }]]),
     itempiles: { API: {
       ITEM_QUANTITY_ATTRIBUTE: "system.quantity",
@@ -130,7 +149,8 @@ export function createWorld() {
       items: doc.items.map(i => ({ ...i, id: i._id })),
       async update(changes) { for (const [k, v] of Object.entries(changes)) set(this, k, v); },
       async updateEmbeddedDocuments(_type, updates) { calls.itemUpdates.push({ actor: this.id, updates }); },
-      async deleteEmbeddedDocuments() {}
+      async deleteEmbeddedDocuments() {},
+      toObject() { return plainData(this); }
     }));
   }
 
@@ -140,7 +160,7 @@ export function createWorld() {
     await new Promise(resolve => setImmediate(resolve));
   }
 
-  return { hooks, actors, tables, compendium, calls, settings, merchant, fire };
+  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */
