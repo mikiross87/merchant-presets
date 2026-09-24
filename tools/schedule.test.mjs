@@ -78,8 +78,7 @@ test("intervalOf sorts a fixed number, a dice formula, and \"never\" apart", () 
 /* --------------------------------------------------------------- scheduleNext */
 
 test("scheduleNext stamps lastRestock and the next due day from an already-resolved day count", () => {
-  const state = { lastRestock: at(0), dueAt: at(7) };
-  assert.deepEqual(scheduleNext(state, at(7, 7, 0), 7, calendar), { lastRestock: at(7, 7, 0), dueAt: at(14) });
+  assert.deepEqual(scheduleNext(at(7, 7, 0), 7, calendar), { lastRestock: at(7, 7, 0), dueAt: at(14) });
 });
 
 /* ---------------------------------------------------------------- dueRestock */
@@ -120,7 +119,7 @@ test("fires the first time the shop opens on or after the due day", () => {
   assert.equal(opens.due, true);
   assert.equal(opens.at, at(7, 7, 0));
   assert.equal(opens.nextEvery, 7);
-  assert.deepEqual(scheduleNext(state, opens.at, opens.nextEvery, calendar),
+  assert.deepEqual(scheduleNext(opens.at, opens.nextEvery, calendar),
     { lastRestock: at(7, 7, 0), dueAt: at(14) });
 });
 
@@ -204,7 +203,7 @@ test("a dice interval is rolled again after each restock, not before, by the cal
   assert.equal(result.nextEvery, "1d4+2");
 
   const secondRoll = 6;
-  const newState = scheduleNext(state, result.at, secondRoll, calendar);
+  const newState = scheduleNext(result.at, secondRoll, calendar);
   assert.equal(newState.dueAt, at(10));
 });
 
@@ -218,7 +217,7 @@ test("a gap that skips several due openings gives exactly one restock, anchored 
   // 7's, the first one it skipped past: the next due day counts from there,
   // at day 37, not day 14.
   assert.equal(result.at, at(30, 7, 0));
-  const newState = scheduleNext(state, result.at, result.nextEvery, calendar);
+  const newState = scheduleNext(result.at, result.nextEvery, calendar);
   assert.deepEqual(newState, { lastRestock: at(30, 7, 0), dueAt: at(37) });
 
   // The very next tick, a day later, is not due again. Anchoring on day 7
@@ -283,7 +282,7 @@ test("a restock missing every defaults to 7 days, not roll(undefined)", () => {
   const result = dueRestock(shopMissingEvery, state, at(7, 6, 0), at(7, 8, 0), calendar);
   assert.equal(result.due, true);
   assert.equal(result.nextEvery, 7);
-  assert.equal(scheduleNext(state, result.at, result.nextEvery, calendar).dueAt, at(14));
+  assert.equal(scheduleNext(result.at, result.nextEvery, calendar).dueAt, at(14));
 });
 
 test("a shop missing hours entirely gets the #98 default window, not always-open", () => {

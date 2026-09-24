@@ -168,15 +168,12 @@ export function intervalOf(every) {
  * of days until the next one is due — already resolved (rolled, if
  * `restock.every` is a dice formula; see {@link intervalOf}).
  *
- * @param {ScheduleState} state  Not read directly: the new state is derived
- *   entirely from `at` and `days`, but every "the new state after this"
- *   computation goes through one call site, for whoever wires this in.
  * @param {number} at  The `worldTime` {@link dueRestock} fired at.
  * @param {number} days
  * @param {CalendarDays} calendar
  * @returns {ScheduleState}
  */
-export function scheduleNext(state, at, days, calendar) {
+export function scheduleNext(at, days, calendar) {
   return { lastRestock: at, dueAt: nextDue(days, at, calendar) };
 }
 
