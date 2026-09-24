@@ -144,6 +144,19 @@ test("a purse holding only large coins pays with one and gets change back", () =
   assert.equal(totalCp(result.purse, DND5E_CURRENCIES), 90);   // the gold went in, 90cp of change came back
 });
 
+test("paying with small coins first doesn't force a needlessly big top-up on top", () => {
+  // A greedy single pass spends all 9 silver (90cp) reaching for the 95cp price, then still
+  // needs a coin for the last 5cp and has only gold left — handing over 190cp total and
+  // asking the till for 95cp change, when paying with the gold piece alone needs only 5cp.
+  const purse = { pp: 0, gp: 1, ep: 0, sp: 9, cp: 0 };
+  const till = { pp: 0, gp: 0, ep: 0, sp: 0, cp: 10 };   // can't cover 95cp change, only 5cp
+  const result = pay(purse, 95, till, DND5E_CURRENCIES);
+  assert.equal(result.ok, true);
+  assert.equal(result.changeCp, 5);
+  assert.equal(result.purse.gp, 0);
+  assert.equal(result.purse.sp, 9);   // the silver never had to move
+});
+
 test("change that needs electrum comes from breaking the till's coins as needed", () => {
   const purse = { pp: 0, gp: 1, ep: 0, sp: 0, cp: 0 };   // pays a 30cp price, wants 70cp change
   const till = { pp: 1, gp: 0, ep: 0, sp: 0, cp: 0 };    // only a platinum piece (1000cp) on hand

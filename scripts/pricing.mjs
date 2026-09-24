@@ -29,12 +29,12 @@
  * 1.15 is 1724.9999999999998 in float), and flooring that raw value would
  * knock a real price down by a full copper.
  *
- * **Payment, decided for #101:** pay from the buyer's actual coins, largest
- * value first without exceeding the price — that's what lands on an exact
- * price using the fewest, biggest coins. If that undershoots (a purse of
- * only large coins), the smallest coin that can finish the price in one go
- * tops it up, repeated until the price is met, so overpayment stays as small
- * as the purse allows. Change comes out of the till: both sides stay
+ * **Payment, decided for #101:** of every way the buyer's coins can cover the
+ * price, pick the one that overpays the least (see `selectPayment`) — a
+ * purse of {1gp, 9sp} paying a 95cp price hands over just the gold piece (5cp
+ * overpaid), not the gold *and* all nine silver (95cp overpaid) that a single
+ * greedy largest-first pass would have already spent by the time it needed a
+ * bigger coin to close the gap. Change comes out of the till: both sides stay
  * *literal* coins throughout, added or removed one denomination at a time —
  * neither purse is ever re-minted from its total, so an NPC's gold doesn't
  * turn into platinum just because a sale needed change. The till gives
@@ -168,10 +168,10 @@ export function effectiveRates(world, shop, category = null, deal = null) {
 /* -------------------------------------------------------------- payment */
 
 /** As much of `targetCp` as `available` coins can make without exceeding it: largest-value first. */
-function greedyTake(available, targetCp, currencies) {
+function greedyTake(available, targetCp, denominations) {
   const taken = {};
   let paid = 0;
-  for (const [denomination, value] of denominationsByValue(currencies)) {
+  for (const [denomination, value] of denominations) {
     const have = available[denomination] ?? 0;
     const need = Math.floor((targetCp - paid) / value);
     const take = Math.min(have, need);
@@ -183,21 +183,35 @@ function greedyTake(available, targetCp, currencies) {
   return { taken, paid };
 }
 
-/** The buyer's coins to hand over: largest-value first, then a top-up coin if that undershoots. */
+/**
+ * The buyer's coins to hand over, minimising overpayment: for every prefix of denominations
+ * (largest coin alone, largest two, and so on down to all of them), take as many of that
+ * prefix as fit without exceeding the price, then — if that's short — one more coin of the
+ * smallest denomination in the prefix, if the purse has one spare. Each prefix that reaches
+ * the price is a valid way to pay; this picks whichever overpays the least. A single greedy
+ * pass (just the last, full-denominations prefix) can already have spent every small coin
+ * before it discovers it needs a bigger one, forcing that bigger coin on top instead of in
+ * place of what's spent — trying every prefix considers paying with the bigger coin alone
+ * too. A candidate always exists: with every denomination in the prefix, greedy-without-
+ * exceeding spends the purse's entire supply of any denomination it doesn't have enough of
+ * to meet the price alone, so whichever denomination first has enough left over (there must
+ * be one once the purse's total covers the price) either lands exactly on the price or has
+ * a spare coin ready to close the last, sub-one-coin gap.
+ */
 function selectPayment(purse, priceCp, currencies) {
   const byValue = denominationsByValue(currencies);
-  const { taken, paid: takenPaid } = greedyTake(purse, priceCp, currencies);
-  let paid = takenPaid;
-  const leftOf = denomination => (purse[denomination] ?? 0) - (taken[denomination] ?? 0);
-  while (paid < priceCp) {
-    const remaining = priceCp - paid;
-    const available = [...byValue].reverse().filter(([d]) => leftOf(d) > 0);   // smallest first
-    const [denomination, value] = available.find(([, v]) => v >= remaining)
-      ?? available[available.length - 1];   // no single coin covers it: take the largest there is
-    taken[denomination] = (taken[denomination] ?? 0) + 1;
-    paid += value;
+  let best = null;
+  for (let i = 0; i < byValue.length; i++) {
+    const prefix = byValue.slice(0, i + 1);
+    const { taken, paid } = greedyTake(purse, priceCp, prefix);
+    const [smallest, smallestValue] = prefix[prefix.length - 1];
+    const spent = taken[smallest] ?? 0;
+    const candidate = paid === priceCp ? { taken, paid }
+      : (purse[smallest] ?? 0) > spent ? { taken: { ...taken, [smallest]: spent + 1 }, paid: paid + smallestValue }
+      : null;
+    if (candidate && (!best || candidate.paid - priceCp < best.paid - priceCp)) best = candidate;
   }
-  return { taken, paid };
+  return best;
 }
 
 /**
@@ -210,20 +224,21 @@ function selectPayment(purse, priceCp, currencies) {
  * and breaking only ever increases how finely the total can be split.
  */
 function makeChange(holdings, amountCp, currencies) {
+  const byValue = denominationsByValue(currencies);
   const available = { ...holdings };
   for (;;) {
-    const { taken, paid } = greedyTake(available, amountCp, currencies);
+    const { taken, paid } = greedyTake(available, amountCp, byValue);
     if (paid === amountCp) {
       const remaining = { ...available };
       for (const [denomination, count] of Object.entries(taken)) remaining[denomination] -= count;
       return { given: taken, remaining };
     }
     const shortfall = amountCp - paid;
-    const breakable = denominationsByValue(currencies)
+    const breakable = byValue
       .filter(([d, v]) => v > shortfall && (available[d] ?? 0) - (taken[d] ?? 0) > 0);
     const [breakDenomination, breakValue] = breakable[breakable.length - 1];   // the smallest still too big
     available[breakDenomination] -= 1;
-    const smaller = denominationsByValue(currencies).filter(([, v]) => v < breakValue);
+    const smaller = byValue.filter(([, v]) => v < breakValue);
     for (const [denomination, count] of Object.entries(breakIntoCoins(breakValue, smaller))) {
       available[denomination] = (available[denomination] ?? 0) + count;
     }
