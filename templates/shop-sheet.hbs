@@ -1,0 +1,209 @@
+{{!-- The shop window (#103). One root template: every tab's markup is always in the DOM (see
+      shop-sheet.mjs's _prepareContext comment), and core's native changeTab() toggles which
+      .tab[data-tab] section is visible. --}}
+
+{{!-- Reused wherever a price or a purse shows coins: `this` is a coinBreakdown() array. --}}
+{{#*inline "coins"}}
+  {{#each this}}
+    <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
+      <img src="{{icon}}" alt="" />
+      <b>{{count}}</b>
+    </span>
+  {{else}}
+    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
+  {{/each}}
+{{/inline}}
+
+<header class="shop-header">
+  <img class="shop-portrait" src="{{header.img}}" alt="" />
+  <div class="shop-heading">
+    <h1 class="shop-title">{{header.title}}</h1>
+    <p class="shop-description">{{header.description}}</p>
+    <div class="shop-chips">
+      <span class="chip chip-open {{#if header.open}}is-open{{else}}is-closed{{/if}}">
+        <i class="fa-solid fa-circle" aria-hidden="true"></i> {{header.openLabel}}
+      </span>
+      <span class="chip chip-tier"><i class="fa-solid fa-map-pin" aria-hidden="true"></i> {{header.tier}}</span>
+      <button type="button" class="chip chip-terms" popovertarget="{{appId}}-terms-popover">
+        <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{header.termsChip}}
+      </button>
+    </div>
+  </div>
+  <div class="buying-as">
+    <span class="buying-as-label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
+    <button type="button" class="buying-as-toggle" popovertarget="{{appId}}-buyer-picker">
+      {{#if buyer}}<img class="buying-as-avatar" src="{{buyer.img}}" alt="" />{{/if}}
+      <span class="buying-as-name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
+      <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+    </button>
+    {{#if buyer}}
+      <div class="purse">{{> coins buyerPurse}}</div>
+    {{/if}}
+  </div>
+</header>
+
+<div id="{{appId}}-terms-popover" popover class="shop-popover terms-popover">
+  <h2><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Terms.Title"}}</h2>
+  <p class="term-line"><i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
+    {{localize "MERCHANT_PRESETS.Shop.Terms.SellsAt"}} <b>{{header.terms.sellsAtLabel}}</b>
+  </p>
+  <p class="term-note">A 15 gp item sells here for {{> coins header.terms.exampleSell}}.</p>
+  <p class="term-line"><i class="fa-solid fa-arrow-down-left" aria-hidden="true"></i>
+    {{localize "MERCHANT_PRESETS.Shop.Terms.BuysAt"}} <b>{{header.terms.buysAtLabel}}</b>
+  </p>
+  <p class="term-note">A 15 gp item buys back here for {{> coins header.terms.exampleBuy}}.</p>
+  {{#if header.terms.hasWontBuy}}
+    <p class="term-line"><i class="fa-solid fa-ban" aria-hidden="true"></i>
+      {{localize "MERCHANT_PRESETS.Shop.Terms.WontBuy"}}
+      <b>{{#each header.terms.wontBuyTypes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{#each header.terms.wontBuyKinds}}{{#if @first}}{{#if ../header.terms.wontBuyTypes.length}}, {{/if}}{{/if}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</b>
+    </p>
+  {{/if}}
+  {{#each header.terms.categories}}
+    <p class="term-line term-line-category"><i class="fa-solid fa-tags" aria-hidden="true"></i>
+      {{this.category}}: {{this.sellsAt}}× / {{this.buysAt}}×
+    </p>
+  {{/each}}
+  <p class="term-footnote">{{localize "MERCHANT_PRESETS.Shop.Terms.Note"}}</p>
+</div>
+
+<div id="{{appId}}-buyer-picker" popover class="shop-popover buyer-picker">
+  {{#if buyerPicker.gm}}
+    <p class="picker-hint">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.GmHint"}}</p>
+    <input type="search" class="buyer-search" placeholder="{{localize 'MERCHANT_PRESETS.Shop.BuyerPicker.Search'}}" />
+    {{#if buyerPicker.characters.length}}
+      <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerCharacters"}}</h3>
+      {{#each buyerPicker.characters}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+    {{/if}}
+    {{#if buyerPicker.others.length}}
+      <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.OtherActors"}}</h3>
+      {{#each buyerPicker.others}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+    {{/if}}
+  {{else}}
+    <p class="picker-hint">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerHint"}}</p>
+    {{#each buyerPicker.actors}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+  {{/if}}
+</div>
+
+<nav class="sheet-tabs tabs" data-group="primary">
+  {{#each tabs}}
+    <button type="button" class="tab-link {{cssClass}}" data-action="tab" data-group="primary" data-tab="{{id}}">
+      <i class="{{icon}}" aria-hidden="true"></i> {{localize label}}
+      {{#if gm}}<span class="badge-gm">GM</span>{{/if}}
+    </button>
+  {{/each}}
+</nav>
+
+<section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}}" data-group="primary" data-tab="buy">
+  <nav class="shop-categories">
+    {{#each buy.categories}}
+      <button type="button" class="category-link {{#if active}}active{{/if}}" data-action="selectCategory" data-category="{{id}}">
+        {{#if (eq id "all")}}{{localize "MERCHANT_PRESETS.Shop.Category.All"}}{{else}}{{label}}{{/if}}
+        <span class="category-count">{{count}}</span>
+      </button>
+    {{/each}}
+  </nav>
+  <div class="shop-stock">
+    {{#each buy.sections}}
+      <h2 class="stock-section-header">{{category}}</h2>
+      {{#each rows}}
+        <div class="item-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#unless ../../open}}is-dimmed{{/unless}} {{#if inBasket}}in-basket{{/if}}">
+          <img class="item-art" src="{{img}}" alt="" />
+          <div class="item-info">
+            <span class="item-name">{{name}}{{#if isNew}}<span class="badge-new">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span>{{/if}}</span>
+            <span class="item-meta">{{category}}</span>
+          </div>
+          <span class="item-stock {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#if (eq stock.state 'last')}}is-last{{/if}}">
+            {{#if (eq stock.state "count")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Left" count=stock.count}}
+            {{else if (eq stock.state "last")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Last"}}
+            {{else if (eq stock.state "soldOut")}}{{localize "MERCHANT_PRESETS.Shop.Stock.SoldOut"}}
+            {{else}}{{localize "MERCHANT_PRESETS.Shop.Stock.Always"}}{{/if}}
+          </span>
+          <div class="item-price">
+            {{#if unpriced}}
+              <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
+            {{else}}
+              {{#if tag.text}}<span class="price-tag tag-{{tag.kind}}">{{tag.text}}</span>{{/if}}
+              {{#if (eq tag.kind "full")}}<span class="price-tag tag-full">{{localize "MERCHANT_PRESETS.Shop.Tag.Full"}}</span>{{/if}}
+              {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
+              <span class="price-coins">{{> coins priceCoins}}</span>
+            {{/if}}
+          </div>
+          <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
+            aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
+            {{#if unpriced}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}} {{#if (eq stock.state 'soldOut')}}disabled{{/if}}>
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+      {{/each}}
+    {{else}}
+      <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Buy.Empty"}}</p>
+    {{/each}}
+  </div>
+  {{#if closed}}
+    {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}
+  {{else}}
+    {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" buy}}
+  {{/if}}
+</section>
+
+<section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}}" data-group="primary" data-tab="sell">
+  <aside class="sell-side-card">
+    <p class="sell-ratio-label">{{localize "MERCHANT_PRESETS.Shop.Sell.BuysAt"}}</p>
+    <p class="sell-ratio">{{sell.ratioLabel}} <span class="sell-ratio-of">{{localize "MERCHANT_PRESETS.Shop.Sell.OfValue"}}</span></p>
+    <p class="sell-till-note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillHolds" amount=sell.tillText}}</p>
+  </aside>
+  <div class="sell-rows">
+    {{#if sell.willBuy.length}}
+      <h2 class="stock-section-header">{{localize "MERCHANT_PRESETS.Shop.Sell.WillBuy"}}</h2>
+      {{#each sell.willBuy}}
+        <div class="item-row {{#unless ../sell.open}}is-dimmed{{/unless}}">
+          <img class="item-art" src="{{img}}" alt="" />
+          <div class="item-info">
+            <span class="item-name">{{name}}{{#if equipped}}<i class="fa-solid fa-shield-halved item-equipped" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Sell.Equipped'}}"></i>{{/if}}</span>
+            <span class="item-meta">×{{owned}}</span>
+          </div>
+          <span class="price-tag tag-neutral">{{ratio}}</span>
+          <span class="price-coins">{{> coins priceCoins}}</span>
+          <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
+            aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}" {{#unless ../sell.open}}disabled{{/unless}}>
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+      {{/each}}
+    {{/if}}
+    {{#if sell.wontBuy.length}}
+      <h2 class="stock-section-header">{{localize "MERCHANT_PRESETS.Shop.Sell.WontBuy"}}</h2>
+      {{#each sell.wontBuy}}
+        <div class="item-row is-refused">
+          <img class="item-art" src="{{img}}" alt="" />
+          <div class="item-info">
+            <span class="item-name">{{name}}</span>
+            {{#if (eq refusal "Unidentified")}}
+              <span class="item-meta">{{localize "MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote"}}</span>
+            {{/if}}
+          </div>
+          <span class="refusal-reason refusal-{{refusal}}">
+            {{localize (concat "MERCHANT_PRESETS.Shop.Sell.Reason." refusal)}}
+          </span>
+        </div>
+      {{/each}}
+    {{/if}}
+    {{#unless sell.willBuy.length}}{{#unless sell.wontBuy.length}}
+      <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Buy.Empty"}}</p>
+    {{/unless}}{{/unless}}
+  </div>
+  {{#if closed}}
+    {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}
+  {{else}}
+    {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" sell}}
+  {{/if}}
+</section>
+
+{{#if settings}}
+  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}}" data-group="primary" data-tab="settings">
+    <div class="settings-placeholder">
+      <i class="fa-solid fa-gear" aria-hidden="true"></i>
+      <p>{{localize "MERCHANT_PRESETS.Shop.Settings.ComingSoon"}}</p>
+    </div>
+  </section>
+{{/if}}

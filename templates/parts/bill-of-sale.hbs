@@ -1,0 +1,74 @@
+{{!-- The Bill of Sale (design/README.md), in every Trade State the board shows. `this` is the
+      active tab's own context (buy or sell): {kind, shopTitle, basket, seal, open, tillText?}. --}}
+{{#*inline "coins"}}
+  {{#each this}}
+    <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
+      <img src="{{icon}}" alt="" /><b>{{count}}</b>
+    </span>
+  {{else}}
+    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
+  {{/each}}
+{{/inline}}
+<aside class="bill-of-sale trade-state-{{seal.state}}">
+  <header class="bill-header">
+    <p class="bill-kicker">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleSell"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleBuy"}}{{/if}}</p>
+    <h2 class="bill-shop-name">{{shopTitle}}</h2>
+    <p class="bill-date">{{basket.dateLabel}}</p>
+  </header>
+
+  {{#if basket.hasLines}}
+    <div class="bill-lines {{#if (eq seal.state "sealing")}}is-dimmed{{/if}} {{#if (eq seal.state "sealed")}}is-dimmed{{/if}}">
+      {{#each basket.lines}}
+        <div class="bill-line {{#if this.struck}}is-struck{{/if}}">
+          <div class="bill-line-top">
+            <span class="bill-line-name">{{this.quantity}} × {{this.name}}</span>
+            <span class="bill-line-total">{{> coins this.lineTotalCoins}}</span>
+          </div>
+          <div class="bill-line-bottom">
+            <span class="bill-line-unit">{{> coins this.unitCoins}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}</span>
+            {{#if (or (eq ../seal.state "idle") (eq ../seal.state "stock-changed") (eq ../seal.state "cant-afford") (eq ../seal.state "till-short") (eq ../seal.state "closed"))}}
+              <span class="bill-stepper">
+                <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+                <span class="bill-stepper-count">{{this.quantity}}</span>
+                <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.More'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+              </span>
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    {{#if (eq seal.state "sealed")}}
+      <div class="bill-seal-stamp"><span>{{localize "MERCHANT_PRESETS.Shop.Seal.Sealed"}}</span><small>{{basket.dateLabel}}</small></div>
+    {{/if}}
+
+    <div class="bill-sum-row">
+      <span>{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.YouReceive"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.SumOwed"}}{{/if}}</span>
+      <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}">{{> coins basket.sumCoins}}</span>
+    </div>
+
+    {{#if (eq seal.state "cant-afford")}}
+      <p class="bill-notice is-danger">{{localize "MERCHANT_PRESETS.Shop.Bill.ShortBy" name=basket.buyerName amount=basket.shortfallText}}</p>
+    {{else if (eq seal.state "till-short")}}
+      <p class="bill-notice is-danger">{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortNotice" amount=tillText}}</p>
+    {{else}}
+      {{#if (eq seal.state "no-gm")}}
+        <p class="bill-notice is-warning"><i class="fa-solid fa-user-slash" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.NoGmNotice"}}</p>
+      {{else if (eq seal.state "stock-changed")}}
+        <p class="bill-notice is-warning"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.StockChangedNotice"}}</p>
+      {{/if}}
+      <p class="bill-purse-after">{{localize "MERCHANT_PRESETS.Shop.Bill.PurseAfter" name=basket.buyerName}}</p>
+      <div class="bill-purse">{{> coins basket.afterCoins}}</div>
+    {{/if}}
+
+    {{#if (eq seal.state "sealed")}}
+      <button type="button" class="seal-button" data-action="keepShopping"><i class="fa-solid fa-store" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping"}}</button>
+    {{else}}
+      <button type="button" class="seal-button" data-action="seal" {{#if seal.disabled}}disabled{{/if}}>
+        <i class="{{seal.icon}}" aria-hidden="true"></i> {{seal.label}}
+      </button>
+    {{/if}}
+  {{else}}
+    <p class="bill-empty">{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}</p>
+  {{/if}}
+</aside>

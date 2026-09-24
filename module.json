@@ -93,6 +93,16 @@
   "esmodules": [
     "scripts/merchant-presets.mjs"
   ],
+  "styles": [
+    "styles/shop.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
   "flags": {
     "hotReload": false
   }

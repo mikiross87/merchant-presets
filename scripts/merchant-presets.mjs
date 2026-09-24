@@ -23,6 +23,7 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
   from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
+import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 
 const MODULE = "merchant-presets";
 const TABLE_FOLDER = "Merchant Stock";

@@ -1,0 +1,15 @@
+{{!-- The Bill of Sale's stand-in when the shop is closed (design/README.md, "Trade states":
+      "Closed: the stock stays visible but dimmed, with no add buttons. The slip becomes a
+      'Shutters are down' card"). `this` is the sheet's `closed` context. --}}
+<aside class="bill-of-sale closed-card">
+  <div class="closed-icon"><i class="fa-solid fa-moon" aria-hidden="true"></i></div>
+  <h2>{{localize "MERCHANT_PRESETS.Shop.Closed.Title"}}</h2>
+  <p class="closed-opens-in">{{localize "MERCHANT_PRESETS.Shop.Closed.OpensIn" time=opensAtLabel duration=duration}}</p>
+  <p class="closed-body">{{localize "MERCHANT_PRESETS.Shop.Closed.Body"}}</p>
+  {{#if openLabel}}
+    <table class="closed-hours">
+      <tr><td>{{localize "MERCHANT_PRESETS.Shop.Closed.Open"}}</td><td>{{openLabel}}</td></tr>
+      <tr><td>{{localize "MERCHANT_PRESETS.Shop.Closed.Close"}}</td><td>{{closeLabel}}</td></tr>
+    </table>
+  {{/if}}
+</aside>

@@ -13,6 +13,15 @@ than for the code. Reference the issue or PR it closes.
 
 ### Added
 
+- 2.0: each shop's own window — its portrait, hours, tier and terms of trade
+  up top, a Buy tab with categories and stock, a Sell tab that shows what the
+  shop deals in and what it won't touch, and a running Bill of Sale that
+  totals the basket and what's left in the buyer's purse. Players pick which
+  of their own characters (or other owned actors) they're buying as; GMs can
+  buy or sell as anyone, and get a Settings tab (more of it lands with #110)
+  and a button back to the NPC's own stat sheet. It opens like any other
+  actor sheet — double-click the shop's token — but sealing a bargain isn't
+  wired up yet, so every trade currently waits on a GM. (#103)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler
