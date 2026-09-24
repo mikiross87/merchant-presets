@@ -134,7 +134,8 @@ function idSequence(prefix = "NewId") {
 
 const context = (over = {}) => ({
   shop: shop(over.shop), buyer: buyer(over.buyer), worldSettings: over.worldSettings ?? WORLD,
-  currencies: CURRENCIES, deal: over.deal ?? null, now: over.now ?? OPEN, newId: over.newId ?? idSequence()
+  currencies: CURRENCIES, deal: over.deal ?? null, now: over.now ?? OPEN, newId: over.newId ?? idSequence(),
+  bundleOf: over.bundleOf
 });
 
 /* --------------------------------------------------------------- every refusal reason */
@@ -388,6 +389,32 @@ test("matchingStockLine falls back to matching by name when the source doesn't m
   const ctx = context({ shop: { items: [listing] }, buyer: { items: [differentSource] } });
   const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
   assert.deepEqual(result, { ok: false, reason: "no-buyback", line: { itemId: "Dagger000000001", quantity: 1 } });
+});
+
+test("a sale with no matching line and no bundle flag falls back to context.bundleOf", () => {
+  // Starting gear straight from a class kit, never bought from any shop: no matching line, no
+  // flags.merchant-presets.bundle. context.bundleOf is the runtime's last resort, resolved from
+  // the item's compendium source — a stub here stands in for that lookup.
+  const startingArrows = { ...arrows(), system: { ...arrows().system, quantity: 20 }, flags: {} };
+  const ctx = context({
+    buyer: { items: [startingArrows] },
+    bundleOf: item => (item._stats?.compendiumSource === arrows()._stats.compendiumSource ? 20 : undefined)
+  });
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 50);   // 1gp bundle-of-20 at buysAt 0.5, not 20 * (1gp * 0.5)
+});
+
+test("bundleOf is never consulted when a matching line or a carried bundle flag already answers", () => {
+  const explodes = () => { throw new Error("bundleOf should not have been called"); };
+  const listing = { ...arrows(), _id: "ShopArrowsBundle2" };
+  const owned = { ...arrows(), system: { ...arrows().system, quantity: 20 } };
+  const matched = context({ shop: { items: [listing] }, buyer: { items: [owned] }, bundleOf: explodes });
+  assert.equal(planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), matched).ok, true);
+
+  const carriedFlag = { ...arrows(), system: { ...arrows().system, quantity: 20 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const flagged = context({ buyer: { items: [carriedFlag] }, bundleOf: explodes });
+  assert.equal(planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), flagged).ok, true);
 });
 
 /* -------------------------------------------------------------------- stacking */

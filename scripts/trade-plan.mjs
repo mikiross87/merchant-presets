@@ -30,6 +30,18 @@
  *   `system.container` at, ahead of the actual `createEmbeddedDocuments`
  *   call the runtime makes with `keepId: true`. Deterministic in tests; the
  *   runtime passes `foundry.utils.randomID`.
+ * - `bundleOf`: `(item: object) => number | undefined`, optional. The last
+ *   resolver in a sale's bundle chain (see "bundled quantities") — only
+ *   called, and only needed, for a good that never carried a bundle flag at
+ *   all: starting gear from a class kit, say, never bought from any shop.
+ *   The runtime resolves it from `item._stats.compendiumSource`: the source
+ *   document's own `system.quantity`, when that's more than 1 and the
+ *   source is a dnd5e SRD equipment pack — the same fact `system.quantity:
+ *   20, system.price.value: 1` on the SRD's own Arrows means "1gp buys a
+ *   bundle of 20" even with no `quantityForPrice`-style flag anywhere.
+ *   Undefined (no source, not an SRD pack, or a quantity of 1) falls
+ *   through to the chain's plain default of 1, same as if `bundleOf` were
+ *   never passed at all.
  *
  * **Decisions, each made once and documented here:**
  *
@@ -201,6 +213,14 @@
  *   floors same as ever; but if that floor lands on 0 for an item that
  *   isn't actually free (`item.system.price.value` above 0), that's not a
  *   trade, so it's refused `"worthless"` rather than paid for nothing.
+ *   A sale's own bundle, in order: the matched shop line's own `bundle`;
+ *   failing that, the item's carried-over `flags.merchant-presets.bundle`
+ *   (see `copyOf`'s "Kept: bundle"); failing that, `context.bundleOf(item)`
+ *   — for a good that was never bought from any shop at all, so never had
+ *   either (starting gear from a class kit is the common case: dnd5e's own
+ *   SRD prices a stack of 20 arrows at 1gp with no bundle flag of ours
+ *   anywhere, and selling them back with no matching shop line would
+ *   otherwise price each of the 20 individually, 20x over); failing that, 1.
  */
 
 import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
@@ -623,10 +643,11 @@ function planSell(request, context) {
     if (owned < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
 
     // Bundle is the one field kept off the matched line: a matching shop listing's own bundle
-    // wins (it's the shop's rate for this good), but with no match the item's own carried-over
-    // bundle flag applies (see copyOf's "Kept: bundle") rather than silently assuming 1 — a
-    // bundle of 20 arrows priced as 20 individual purchases would pay 20x too much.
-    const bundle = matched ? stock.bundle : (item.flags?.[MODULE]?.bundle ?? 1);
+    // wins (it's the shop's rate for this good), then the item's own carried-over bundle flag
+    // (see copyOf's "Kept: bundle"), then context.bundleOf — for a good that never passed
+    // through a shop at all (starting gear, say) and so never had either — rather than silently
+    // assuming 1: a bundle of 20 arrows priced as 20 individual purchases would pay 20x too much.
+    const bundle = matched ? stock.bundle : (item.flags?.[MODULE]?.bundle ?? context.bundleOf?.(item) ?? 1);
     const category = stock.category || null;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
