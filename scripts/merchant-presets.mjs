@@ -227,6 +227,7 @@ async function rewire(actor) {
     const wired = await wireTables(actor);
     let changed = wired;
     if (wired) changed = await applyStockMode(actor) || changed;
+    changed = await releaseStrays(actor) > 0 || changed;
     changed = await syncStockWeight(actor) || changed;
     changed = await syncOpenState(actor) || changed;
     if (changed) log(`prepared "${actor.name}"`);
@@ -477,6 +478,43 @@ async function replenishPurse(actor) {
 }
 
 /**
+ * Let go of goods that name a container the merchant does not hold.
+ *
+ * The SRD kits ship their contents as items of their own, each carrying the
+ * kit's id in `system.container`, and earlier builds stocked Rope, Tinderbox
+ * and nine more goods from those copies. dnd5e lists such an item as loose,
+ * but Item Piles counts it as contained and hides it from the shop window
+ * (#89). A world table imported from one of those builds still points at the
+ * kit copies, so every restock brings the id back.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<number>} how many items were let go
+ */
+async function releaseStrays(actor) {
+  const held = new Set(actor.items.map(i => i.id));
+  const updates = actor.items
+    .filter(i => i.system?.container && !held.has(i.system.container))
+    .map(i => ({ _id: i.id, "system.container": null }));
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  return updates.length;
+}
+
+/**
+ * Let go of stray kit ids across every merchant already in the world.
+ * @returns {Promise<number>} how many merchants changed
+ */
+async function releaseStraysAll() {
+  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    if (!isPreset(actor)) continue;
+    try { if (await releaseStrays(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not release strays on "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/**
  * Restock one merchant: rebuild the shelf, then put back what the rebuild lost.
  *
  * @param {Actor} actor
@@ -484,6 +522,7 @@ async function replenishPurse(actor) {
  */
 async function restock(actor) {
   await game.itempiles.API.refreshMerchantInventory(actor);
+  await releaseStrays(actor);
   await reapplyItemFlags(actor);
   await reconcileContainers(actor);
   await replenishPurse(actor);
@@ -1105,7 +1144,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
-    reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
+    releaseStrays, reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
     syncOpenState, syncOpenStateAll };
 
   // Every client evaluates its own nutrition candidates, so this must run for
@@ -1145,6 +1184,7 @@ Hooks.once("ready", () => {
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
   wireReplacedAll().then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); });
+  releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
 
   log("ready");
 });
