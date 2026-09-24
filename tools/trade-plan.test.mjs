@@ -126,9 +126,15 @@ const buyRequest = (itemId, quantity, extra = {}) =>
 const sellRequest = (itemId, quantity, extra = {}) =>
   ({ tradeId: "trade-1", kind: "sell", lines: [{ itemId, quantity, ...extra }] });
 
+/** A deterministic newId(), so a test can predict a bought container's fresh id. */
+function idSequence(prefix = "NewId") {
+  let n = 0;
+  return () => `${prefix}${n++}`;
+}
+
 const context = (over = {}) => ({
   shop: shop(over.shop), buyer: buyer(over.buyer), worldSettings: over.worldSettings ?? WORLD,
-  currencies: CURRENCIES, deal: over.deal ?? null, now: over.now ?? OPEN
+  currencies: CURRENCIES, deal: over.deal ?? null, now: over.now ?? OPEN, newId: over.newId ?? idSequence()
 });
 
 /* --------------------------------------------------------------- every refusal reason */
@@ -222,6 +228,27 @@ test("an unidentified item is refused and never priced", () => {
   assert.equal("bundlePriceCp" in result.line, false);
   assert.equal("lineTotalCp" in result.line, false);
   assert.equal("plan" in result, false);
+});
+
+test("an item missing a price is refused as unpriced, buy or sell, never thrown", () => {
+  const noPrice = { ...dagger(), system: { ...dagger().system, price: undefined } };
+  assert.deepEqual(planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [noPrice] } })),
+    { ok: false, reason: "unpriced", line: { itemId: "Dagger000000001", quantity: 1 } });
+  assert.deepEqual(planTrade(sellRequest("Dagger000000001", 1), context({ buyer: { items: [noPrice] } })),
+    { ok: false, reason: "unpriced", line: { itemId: "Dagger000000001", quantity: 1 } });
+});
+
+test("an item priced in a denomination the currency config doesn't have is refused as unpriced", () => {
+  const badDenomination = { ...dagger(), system: { ...dagger().system, price: { value: 2, denomination: "doubloon" } } };
+  const result = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [badDenomination] } }));
+  assert.deepEqual(result, { ok: false, reason: "unpriced", line: { itemId: "Dagger000000001", quantity: 1 } });
+});
+
+test("a price of 0 is valid and free, not unpriced", () => {
+  const free = { ...dagger(), system: { ...dagger().system, price: { value: 0, denomination: "gp" } } };
+  const result = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [free] } }));
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 0);
 });
 
 test("a service can't be sold, read off the shop's own matching stock line", () => {
@@ -409,6 +436,103 @@ test("the copy's system.container is dropped even if the stock line somehow had 
   assert.equal(result.ok, true);
   const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
   assert.equal(buyerUpdate.itemCreates[0].system.container, null);
+});
+
+/* --------------------------------------------------------------- kit contents (#89-safe) */
+
+/** A torch, or anything else, sitting inside `containerId` on whichever actor holds it. */
+function torchIn(id, containerId, quantity = 1) {
+  return {
+    _id: id, name: "Torch", type: "consumable",
+    system: { price: { value: 1, denomination: "cp" }, identified: true, container: containerId, quantity, type: { value: "torch", subtype: "" } },
+    flags: {}, _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.phbagTorch00000" }
+  };
+}
+
+test("buying a container brings its contents along, pointed at the new container's id", () => {
+  const pack = backpack("Backpack0000003");
+  const torch = torchIn("Torch000000001", "Backpack0000003", 3);
+  const ctx = context({ shop: { items: [pack, torch] } });
+  const result = planTrade(buyRequest("Backpack0000003", 1), ctx);
+  assert.equal(result.ok, true);
+
+  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
+  assert.equal(buyerUpdate.itemCreates.length, 2);
+  const newPack = buyerUpdate.itemCreates.find(c => c.name === "Backpack");
+  const newTorch = buyerUpdate.itemCreates.find(c => c.name === "Torch");
+  assert.equal(newPack._id, "NewId0");            // the injected, deterministic newId()
+  assert.equal(newTorch.system.container, "NewId0");
+  assert.equal(newTorch.system.quantity, 3);
+
+  // The shop loses the torches outright — free, not priced or decremented separately. The pack
+  // itself follows its own stock rule (keep: true, the default): it stays at quantity 0.
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemDeletes, ["Torch000000001"]);
+  assert.deepEqual(shopUpdate.itemUpdates, [{ _id: "Backpack0000003", "system.quantity": 0 }]);
+  assert.equal(result.plan.hook.totalCp, 200);   // just the 2gp backpack; the torch was never priced
+});
+
+test("a nested container's own contents come along too, recursively", () => {
+  const pack = backpack("Backpack0000004");
+  const pouch = { ...backpack("Pouch00000001"), name: "Pouch", system: { ...backpack("x").system, container: "Backpack0000004" } };
+  const coin = torchIn("Trinket0000001", "Pouch00000001", 1);
+  const ctx = context({ shop: { items: [pack, pouch, coin] } });
+  const result = planTrade(buyRequest("Backpack0000004", 1), ctx);
+  assert.equal(result.ok, true);
+
+  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
+  assert.equal(buyerUpdate.itemCreates.length, 3);
+  const newPouch = buyerUpdate.itemCreates.find(c => c.name === "Pouch");
+  const newTrinket = buyerUpdate.itemCreates.find(c => c.name === "Torch");
+  assert.equal(newPouch.system.container, "NewId0");        // inside the new backpack
+  assert.equal(newTrinket.system.container, newPouch._id);  // inside the new pouch, not the backpack directly
+
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemDeletes.sort(), ["Pouch00000001", "Trinket0000001"]);
+  assert.deepEqual(shopUpdate.itemUpdates, [{ _id: "Backpack0000004", "system.quantity": 0 }]);
+});
+
+test("an empty container still buys the ordinary way, no newId needed", () => {
+  const ctx = context({ shop: { items: [backpack("Backpack0000005")] }, newId: () => { throw new Error("should not be called"); } });
+  const result = planTrade(buyRequest("Backpack0000005", 1), ctx);
+  assert.equal(result.ok, true);
+  const created = result.plan.updates.find(u => u.actorId === "Buyer000000001").itemCreates[0];
+  assert.equal("_id" in created, false);   // left for Foundry to assign, as before
+});
+
+test("a keep: false container that sells out with contents doesn't orphan them on the shop", () => {
+  const pack = { ...backpack("Backpack0000006"), flags: { "merchant-presets": { stock: { ...backpack("x").flags["merchant-presets"].stock, keep: false } } } };
+  const torch = torchIn("Torch000000002", "Backpack0000006", 1);
+  const ctx = context({ shop: { items: [pack, torch] } });
+  const result = planTrade(buyRequest("Backpack0000006", 1), ctx);
+  assert.equal(result.ok, true);
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  // Both gone outright — the depleted, keep: false container line is deleted like any other,
+  // and the torch went with it as the container's contents, not left dangling.
+  assert.deepEqual(shopUpdate.itemUpdates, []);
+  assert.deepEqual(shopUpdate.itemDeletes.sort(), ["Backpack0000006", "Torch000000002"]);
+});
+
+test("selling a container with something in it is refused", () => {
+  const pack = backpack("Backpack0000007");
+  const torch = torchIn("Torch000000003", "Backpack0000007", 1);
+  const ctx = context({ buyer: { items: [pack, torch] } });
+  const result = planTrade(sellRequest("Backpack0000007", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "container-not-empty", line: { itemId: "Backpack0000007", quantity: 1 } });
+});
+
+test("selling a container empty of direct contents but not of nested ones is still refused", () => {
+  const pack = backpack("Backpack0000008");
+  const pouch = { ...backpack("Pouch00000002"), name: "Pouch", system: { ...backpack("x").system, container: "Backpack0000008" } };
+  const coin = torchIn("Trinket0000002", "Pouch00000002", 1);   // nested two deep, not a direct child
+  const ctx = context({ buyer: { items: [pack, pouch, coin] } });
+  assert.equal(planTrade(sellRequest("Backpack0000008", 1), ctx).reason, "container-not-empty");
+});
+
+test("an empty container sells normally", () => {
+  const ctx = context({ buyer: { items: [backpack("Backpack0000009")] } });
+  const result = planTrade(sellRequest("Backpack0000009", 1), ctx);
+  assert.equal(result.ok, true);
 });
 
 /* ------------------------------------------------------------- shelf flags don't travel */

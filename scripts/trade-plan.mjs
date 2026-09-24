@@ -24,6 +24,12 @@
  *   assumes).
  * - `now`: `{ isOpen }`. The runtime computes this from the shop's hours and
  *   the world clock; this module only ever sees the boolean.
+ * - `newId`: `() => string`, a fresh Foundry-style id. Only called, and only
+ *   needed, when a bought container turns out to hold something (see "kit
+ *   contents" below) — its contents need a real id to point
+ *   `system.container` at, ahead of the actual `createEmbeddedDocuments`
+ *   call the runtime makes with `keepId: true`. Deterministic in tests; the
+ *   runtime passes `foundry.utils.randomID`.
  *
  * **Decisions, each made once and documented here:**
  *
@@ -97,8 +103,9 @@
  *   `out-of-stock` doing double duty for a sale that asks for more of an
  *   item than the seller actually owns (the same "not enough of this to
  *   trade" idea, from the other side); `invalid-request` (the request's own
- *   shape doesn't hold up — see "the request is untrusted") and
- *   `shop-misconfigured` (see "config never throws").
+ *   shape doesn't hold up — see "the request is untrusted"),
+ *   `shop-misconfigured` (see "config never throws"), `unpriced` (see
+ *   "an unpriceable item"), and `container-not-empty` (see "kit contents").
  * - **The request is untrusted client input**, validated before anything
  *   else runs: `tradeId` a non-empty string, `kind` `"buy"` or `"sell"`,
  *   `lines` a non-empty array of at most `MAX_LINES`, each line an `itemId`
@@ -132,6 +139,40 @@
  *   over a big coin and expecting the seller to make change back. The
  *   seller's purse only ever grows on a sale; `"till-short"` means the
  *   shop's own total came up short, never the player's.
+ * - **An unpriceable item** — `system.price` missing or naming a
+ *   denomination `currencies` doesn't have — refuses just that line with
+ *   `"unpriced"`, caught around the same call that would otherwise throw.
+ *   A price of 0 is not this: it's a valid, free item, and keeps trading
+ *   normally (`itemPriceCp` never throws for that, only floors to 0).
+ * - **Kit contents.** Checked directly in `_source/merchants`: not one of
+ *   the 51 shipped merchants' 2,000-odd items has a non-empty
+ *   `system.container` — every container on every shelf is empty, which
+ *   checks out against #89 (`load_srd` was changed to prefer a good's
+ *   standalone SRD copy over one sitting inside a pack precisely so a
+ *   shop's copy never points at a container id the shop doesn't also
+ *   carry) and `reconcileContainers` (`merchant-presets.mjs:362-379`, which
+ *   only ever restores a missing container as an empty clone of an existing
+ *   one — it has no contents-handling of its own to restore). A shop's kit
+ *   (Explorer's Pack, say) is priced and stocked as a container on its own;
+ *   whatever it would notionally hold ships as its own separate stock line
+ *   at the SRD's own price for that good, not bundled in or discounted.
+ *   Given that, this module still handles contents generically rather than
+ *   assuming a shop container is always empty, since nothing stops a GM
+ *   nesting an item into one by hand on the actor sheet, and the plan
+ *   should still do the right thing: buying a container brings along
+ *   whatever (recursively) sits inside it on the shop, at no extra charge —
+ *   the container's own price already covers it, so contents are never
+ *   priced or validated on their own (`landContainer`/`landContentsOf`).
+ *   Selling one is refused as `"container-not-empty"` unless it (and, down
+ *   the chain, anything inside anything inside it) is empty first —
+ *   `contentsOf` — so a sale can never orphan a `system.container` pointing
+ *   at an id the shop never receives (repeating #89) or the seller silently
+ *   loses items the request never named. The same reasoning is why a bought
+ *   container's contents are removed from the shop outright, never
+ *   decremented: they don't have an independent price to account for
+ *   separately, and a `keep: false` container line being deleted once fully
+ *   sold can't orphan contents that were already stripped from the shop in
+ *   that same purchase.
  */
 
 import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
@@ -219,18 +260,20 @@ function lineTotalCp(item, rate, bundle, quantity, currencies) {
 }
 
 /**
- * A copy of `item` fit to land on a new actor: `system.container` dropped, at `quantity`, and
- * with `flags.merchant-presets.stock` and `.drawn` stripped — shelf metadata (hidden, infinite,
- * ...) has no business following an item into a pack or another shop, and a drawn item (#105's
- * restock tag) landing anywhere else would otherwise be deleted by that shop's next restock, not
- * the one that actually drew it. The item then reads as `STOCK_DEFAULTS` until something (a GM,
- * or landing back on a shop with a matching line) says otherwise. `kind` and the behaviour flags
- * (nutrition/actor/spell) are untouched — the runtime still needs those.
+ * A copy of `item` fit to land on a new actor: at `quantity`, `system.container` set to
+ * `containerId` (top-level, `null`, unless the copy is landing *inside* a container a container
+ * purchase just created — see `landContainer`), and with `flags.merchant-presets.stock` and
+ * `.drawn` stripped — shelf metadata (hidden, infinite, ...) has no business following an item
+ * into a pack or another shop, and a drawn item (#105's restock tag) landing anywhere else would
+ * otherwise be deleted by that shop's next restock, not the one that actually drew it. The item
+ * then reads as `STOCK_DEFAULTS` until something (a GM, or landing back on a shop with a matching
+ * line) says otherwise. `kind` and the behaviour flags (nutrition/actor/spell) are untouched —
+ * the runtime still needs those.
  */
-function copyOf(item, quantity) {
+function copyOf(item, quantity, containerId = null) {
   const base = structuredClone(item);
   delete base._id;
-  base.system = { ...base.system, container: null, quantity };
+  base.system = { ...base.system, container: containerId, quantity };
   if (base.flags?.[MODULE]) {
     base.flags[MODULE] = { ...base.flags[MODULE] };
     delete base.flags[MODULE].stock;
@@ -250,7 +293,8 @@ function copyOf(item, quantity) {
  *   to stack onto — every item, by default (landing on a buyer). Landing on a shop passes a
  *   stricter check: only a visible stock line, never shopkeeper gear or a hidden/delisted one,
  *   so a sold item can't disappear into the merchant's own kit.
- * @returns {{land(item: object, quantity: number): void, result(): {itemUpdates: object[], itemCreates: object[]}}}
+ * @returns {{land(item: object, quantity: number): void, landExact(itemData: object): void,
+ *   result(): {itemUpdates: object[], itemCreates: object[]}}}
  */
 function lander(existingItems, isValidTarget = () => true) {
   const updateQuantities = new Map();   // real item id -> its new total quantity
@@ -272,6 +316,11 @@ function lander(existingItems, isValidTarget = () => true) {
       }
       pendingCreates.push(copyOf(item, quantity));
     },
+    // A create that never attempts to stack: a container's contents (see `landContainer`), which
+    // dnd5e itself never merges into an unrelated top-level stack just because the names match.
+    landExact(itemData) {
+      pendingCreates.push(itemData);
+    },
     result() {
       return {
         itemUpdates: [...updateQuantities].map(([_id, quantity]) => ({ _id, "system.quantity": quantity })),
@@ -279,6 +328,47 @@ function lander(existingItems, isValidTarget = () => true) {
       };
     }
   };
+}
+
+/**
+ * Lands one instance of `container` (already confirmed a container type) on `targetLander`, with
+ * whatever of `shopItems` is still (recursively) inside it — a nested container's own contents
+ * come along too. Each landed container gets a fresh id from `newId`, since its contents need a
+ * real one to point `system.container` at; a container with nothing inside keeps the ordinary
+ * auto-assigned id (`landExact` doesn't need one to work). Every transferred item's original id
+ * is added to `removedIds`, so a second instance in the same line (only possible for an infinite
+ * container) doesn't claim contents an earlier instance already took, and so the caller knows
+ * what to remove from the shop — the container's price already covers them; they aren't priced
+ * or charged separately.
+ */
+function landContainer(container, shopItems, removedIds, newId, targetLander) {
+  const hasContents = shopItems.some(i => !removedIds.has(idOf(i)) && (i.system?.container ?? null) === idOf(container));
+  const copy = copyOf(container, 1);
+  if (hasContents) copy._id = newId();
+  targetLander.landExact(copy);
+  if (hasContents) landContentsOf(idOf(container), copy._id, shopItems, removedIds, newId, targetLander);
+}
+
+/** The recursive half of `landContainer`: `sourceId`'s own contents, landing inside `destId`. */
+function landContentsOf(sourceId, destId, shopItems, removedIds, newId, targetLander) {
+  for (const content of shopItems) {
+    if (removedIds.has(idOf(content)) || (content.system?.container ?? null) !== sourceId) continue;
+    removedIds.add(idOf(content));
+    const contentCopy = copyOf(content, content.system?.quantity ?? 1, destId);
+    if (content.type === "container") {
+      contentCopy._id = newId();
+      targetLander.landExact(contentCopy);
+      landContentsOf(idOf(content), contentCopy._id, shopItems, removedIds, newId, targetLander);
+    } else {
+      targetLander.landExact(contentCopy);
+    }
+  }
+}
+
+/** Every item on `buyer`, directly or indirectly, whose `system.container` chain reaches `containerId`. */
+function contentsOf(containerId, items) {
+  const direct = items.filter(i => (i.system?.container ?? null) === containerId);
+  return direct.flatMap(i => [i, ...contentsOf(idOf(i), items)]);
 }
 
 /**
@@ -358,8 +448,13 @@ function planBuy(request, context) {
 
     const category = stock.category || null;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
-    const bundleCp = bundlePriceCp(item, sellsAt.rate, currencies);
-    const totalLineCp = lineTotalCp(item, sellsAt.rate, stock.bundle, requested.quantity, currencies);
+    let bundleCp, totalLineCp;
+    try {
+      bundleCp = bundlePriceCp(item, sellsAt.rate, currencies);
+      totalLineCp = lineTotalCp(item, sellsAt.rate, stock.bundle, requested.quantity, currencies);
+    } catch {
+      return { ok: false, reason: "unpriced", line: requested };
+    }
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: sellsAt.layer });
 
     const infinite = stock.service || (stock.infinite ?? worldSettings.infiniteStock);
@@ -379,16 +474,25 @@ function planBuy(request, context) {
 
   const buyerLander = lander(buyer.items);
   const shopRemaining = new Map();   // real stock item id -> its new quantity, accumulated across lines
+  const shopContentsRemoved = new Set();   // ids of shop items given away, free, as a bought container's contents
 
   for (const line of lines) {
-    if (!line.stock.service) buyerLander.land(line.item, line.quantity);
+    if (!line.stock.service) {
+      if (line.item.type === "container") {
+        for (let i = 0; i < line.quantity; i++) {
+          landContainer(line.item, shop.items, shopContentsRemoved, context.newId, buyerLander);
+        }
+      } else {
+        buyerLander.land(line.item, line.quantity);
+      }
+    }
     if (line.infinite) continue;
     const id = idOf(line.item);
     const current = shopRemaining.get(id) ?? line.item.system?.quantity ?? 0;
     shopRemaining.set(id, current - line.quantity);
   }
   const shopItemUpdates = [];
-  const shopItemDeletes = [];
+  const shopItemDeletes = [...shopContentsRemoved];
   for (const [id, remaining] of shopRemaining) {
     const keep = lines.find(l => idOf(l.item) === id).stock.keep;
     if (remaining > 0 || keep) shopItemUpdates.push({ _id: id, "system.quantity": Math.max(remaining, 0) });
@@ -417,6 +521,12 @@ function planSell(request, context) {
   for (const requested of request.lines) {
     const item = findById(buyer.items, requested.itemId);
     if (!item) return { ok: false, reason: "not-found", line: requested };
+    // Selling a container sells only what's in the seller's hands, not what's inside it — an
+    // empty one first (checked recursively: contents of contents count too, since any of them
+    // being there at all proves this one isn't empty).
+    if (item.type === "container" && contentsOf(idOf(item), buyer.items).length) {
+      return { ok: false, reason: "container-not-empty", line: requested };
+    }
     if (!dealtIn(item, shopConfig)) return { ok: false, reason: "wont-buy", line: requested };
 
     // The item being sold no longer carries its own stock flags once bought (see `copyOf`), so
@@ -435,8 +545,13 @@ function planSell(request, context) {
 
     const category = stock.category || null;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
-    const bundleCp = bundlePriceCp(item, buysAt.rate, currencies);
-    const totalLineCp = lineTotalCp(item, buysAt.rate, stock.bundle, requested.quantity, currencies);
+    let bundleCp, totalLineCp;
+    try {
+      bundleCp = bundlePriceCp(item, buysAt.rate, currencies);
+      totalLineCp = lineTotalCp(item, buysAt.rate, stock.bundle, requested.quantity, currencies);
+    } catch {
+      return { ok: false, reason: "unpriced", line: requested };
+    }
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
     totalCp += totalLineCp;
