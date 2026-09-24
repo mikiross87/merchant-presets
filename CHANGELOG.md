@@ -85,10 +85,8 @@ than for the code. Reference the issue or PR it closes.
   still said it was inside its pack. The merchant's sheet listed them, but the
   shop window hid them, so players couldn't buy them. 36 of the 51 shops were
   affected, the General Stores worst. Merchants already in your world are
-  repaired when the world loads, and their stock tables in *Merchant Stock*
-  now roll the standalone items, so neither a restock nor *Roll All Tables*
-  hides them again. A merchant dragged in fresh gets a new stock table with
-  the version in its name. (#89)
+  repaired when the world loads. A merchant dragged in fresh gets a new stock
+  table with the version in its name. (#89)
 
 ## [1.2.4] - 2026-09-14
 
