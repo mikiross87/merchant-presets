@@ -203,6 +203,12 @@ test("the fixed exclusions are refused however a shop's own wontBuy reads", () =
   assert.equal(planTrade(sellRequest("Background000001", 1), ctx).reason, "wont-buy");
 });
 
+test("the fixed exclusions apply on a buy too, not just gear", () => {
+  const ctx = context({ shop: { items: [naturalBite(), backgroundFeature()] } });
+  assert.equal(planTrade(buyRequest("Bite0000000001", 1), ctx).reason, "not-visible");
+  assert.equal(planTrade(buyRequest("Background000001", 1), ctx).reason, "not-visible");
+});
+
 test("a shop's own wontBuy types and kinds are refused", () => {
   const ctx = context({
     shop: { wontBuy: { types: ["weapon"], kinds: ["spellcasting"] } },
@@ -365,6 +371,25 @@ test("a bundle prices per its own quantityForPrice, buy and sell", () => {
   assert.equal(sell.plan.hook.totalCp, 50);   // buysAt 0.5 of the same 100cp
 });
 
+test("selling a bundled good to a shop with no matching line still prices by its own carried bundle", () => {
+  // Simulates an item that was originally bought from a shop stocking it at bundle: 20 (so it
+  // carries flags.merchant-presets.bundle, per copyOf), then resold somewhere that's never
+  // stocked it at all. Bundle 1 would price 20 arrows at 20x too much (10gp instead of 0.5gp).
+  const carriedBundle = { ...arrows(), system: { ...arrows().system, quantity: 20 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const ctx = context({ buyer: { items: [carriedBundle] } });   // no shop stock at all: no matching line
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 50);
+});
+
+test("matchingStockLine falls back to matching by name when the source doesn't match anything", () => {
+  const differentSource = { ...dagger(), _stats: { compendiumSource: "Compendium.other.item.SomeOtherId" } };
+  const listing = { ...dagger(), _id: "ShopDagger00002", flags: { "merchant-presets": { stock: { noBuyback: true } } } };
+  const ctx = context({ shop: { items: [listing] }, buyer: { items: [differentSource] } });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "no-buyback", line: { itemId: "Dagger000000001", quantity: 1 } });
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
@@ -429,13 +454,13 @@ test("buying several containers at once creates one document each, not one at qu
   assert.ok(buyerUpdate.itemCreates.every(c => c.system.quantity === 1));
 });
 
-test("the copy's system.container is dropped even if the stock line somehow had one", () => {
+test("a stock item already sitting inside a container isn't individually buyable", () => {
+  // Whatever it's inside is what's for sale; buying the loose item directly would hand it out
+  // twice over once its container is bought too (see the "kit contents" tests, below).
   const inACrate = { ...backpack("Backpack0000002"), system: { ...backpack("x").system, container: "Crate000000001" } };
   const ctx = context({ shop: { items: [inACrate] } });
   const result = planTrade(buyRequest("Backpack0000002", 1), ctx);
-  assert.equal(result.ok, true);
-  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
-  assert.equal(buyerUpdate.itemCreates[0].system.container, null);
+  assert.equal(result.reason, "not-visible");
 });
 
 /* --------------------------------------------------------------- kit contents (#89-safe) */
@@ -533,6 +558,36 @@ test("an empty container sells normally", () => {
   const ctx = context({ buyer: { items: [backpack("Backpack0000009")] } });
   const result = planTrade(sellRequest("Backpack0000009", 1), ctx);
   assert.equal(result.ok, true);
+});
+
+test("a container's contents can't also be bought as their own line in the same basket", () => {
+  // Requesting both the bag and the rope inside it would otherwise hand the rope out twice
+  // (once loose, once as the bag's contents) and write conflicting updates for the same shop
+  // item. The rope line refuses outright: it's not individually visible once it's inside something.
+  const pack = backpack("Backpack0000010");
+  const rope = torchIn("Rope0000000001", "Backpack0000010", 5);
+  const ctx = context({ shop: { items: [pack, rope] } });
+  const result = planTrade({
+    tradeId: "t", kind: "buy",
+    lines: [{ itemId: "Rope0000000001", quantity: 5 }, { itemId: "Backpack0000010", quantity: 1 }]
+  }, ctx);
+  assert.deepEqual(result, { ok: false, reason: "not-visible", line: { itemId: "Rope0000000001", quantity: 5 } });
+});
+
+test("a container holding shopkeeper gear can't be bought at all", () => {
+  const pack = backpack("Backpack0000011");
+  const dagger = { ...torchIn("GearItem0000001", "Backpack0000011", 1), flags: { "merchant-presets": { kind: "gear" } } };
+  const ctx = context({ shop: { items: [pack, dagger] } });
+  const result = planTrade(buyRequest("Backpack0000011", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "not-visible", line: { itemId: "Backpack0000011", quantity: 1 } });
+});
+
+test("a container holding a hidden or delisted line can't be bought at all", () => {
+  const pack = backpack("Backpack0000012");
+  const hiddenItem = { ...torchIn("HiddenItem0001", "Backpack0000012", 1), flags: { "merchant-presets": { stock: { hidden: true } } } };
+  const ctx = context({ shop: { items: [pack, hiddenItem] } });
+  const result = planTrade(buyRequest("Backpack0000012", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "not-visible", line: { itemId: "Backpack0000012", quantity: 1 } });
 });
 
 /* ------------------------------------------------------------- shelf flags don't travel */
@@ -648,6 +703,40 @@ test("a basket over the line cap is refused", () => {
   assert.deepEqual(planTrade({ tradeId: "t", kind: "buy", lines }, ctx), { ok: false, reason: "invalid-request" });
 });
 
+test("a buy quantity that isn't a whole multiple of the bundle is invalid", () => {
+  const ctx = context({ shop: { items: [arrows()] } });   // bundle 20
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), ctx);
+  assert.deepEqual(result, { ok: false, reason: "invalid-request", line: { itemId: "5BtSFZjMcs6csxDO", quantity: 5 } });
+});
+
+test("buying a single unit of a cheap bundle is refused, not given away for 0cp", () => {
+  // 4cp per 20 (Item Piles' own quantityForPrice contract): one unit alone floors to 0cp, so
+  // the quantity must be a whole bundle instead of trading for free.
+  const bullets = { ...arrows(), _id: "Bullets0000001", name: "Bullets", system: { ...arrows().system, price: { value: 4, denomination: "cp" } } };
+  const ctx = context({ shop: { items: [bullets] } });
+  assert.equal(planTrade(buyRequest("Bullets0000001", 1), ctx).reason, "invalid-request");
+  const wholeBundle = planTrade(buyRequest("Bullets0000001", 20), ctx);
+  assert.equal(wholeBundle.ok, true);
+  assert.equal(wholeBundle.plan.hook.totalCp, 4);
+});
+
+test("a sell whose payout floors to 0cp for a real item is refused as worthless", () => {
+  // 4cp per 20 bundle, selling just 1 at buysAt 0.5: floors to 0, but the item is genuinely
+  // worth something (price 4cp) — refused, not traded away for nothing.
+  const bullets = { ...arrows(), name: "Bullets", system: { ...arrows().system, price: { value: 4, denomination: "cp" }, quantity: 1 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const ctx = context({ buyer: { items: [bullets] } });
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "worthless", line: { itemId: "5BtSFZjMcs6csxDO", quantity: 1 } });
+});
+
+test("a genuinely free item still sells for 0cp, not refused as worthless", () => {
+  const free = { ...dagger(), system: { ...dagger().system, price: { value: 0, denomination: "gp" } } };
+  const ctx = context({ buyer: { items: [free] } });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 0);
+});
+
 test("duplicate itemIds in one basket are merged, not double-refused or double-charged", () => {
   const ctx = context({ shop: { items: [dagger()] } });   // 5 on the shelf
   const result = planTrade({
@@ -690,17 +779,19 @@ test("an item with an invalid stock config is refused as misconfigured, not thro
 
 /* -------------------------------------------------------------------------- stacking edge cases */
 
-test("an item from inside a container still stacks onto a top-level one once landed", () => {
-  // The stock line happens to carry a leftover container id; the landed copy is always top-level
-  // (copyOf clears it), so it should stack onto the buyer's existing top-level arrows regardless.
-  const fromAContainer = { ...arrows(), system: { ...arrows().system, container: "SomeQuiver0001" } };
-  const owned = { ...arrows(), _id: "OwnedArrows0002", system: { ...arrows().system, quantity: 40 } };
-  const ctx = context({ shop: { items: [fromAContainer] }, buyer: { items: [owned] } });
-  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 20), ctx);
+test("a sold item with a leftover container id still stacks onto the shop's top-level one once landed", () => {
+  // Selling has no "already contained" restriction (that's a buy-side, shelf-visibility rule),
+  // so an item that happens to carry a stray container value can still be sold; the landed copy
+  // is always top-level (copyOf clears it), so it should stack onto the shop's existing
+  // top-level arrows regardless of what it says it was in.
+  const withStrayContainer = { ...arrows(), system: { ...arrows().system, container: "SomeOldQuiver01", quantity: 20 } };
+  const shopOwned = { ...arrows(), _id: "ShopArrows0002", system: { ...arrows().system, quantity: 60 } };
+  const ctx = context({ shop: { items: [shopOwned] }, buyer: { items: [withStrayContainer] } });
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
   assert.equal(result.ok, true);
-  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
-  assert.deepEqual(buyerUpdate.itemCreates, []);
-  assert.deepEqual(buyerUpdate.itemUpdates, [{ _id: "OwnedArrows0002", "system.quantity": 60 }]);
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemCreates, []);
+  assert.deepEqual(shopUpdate.itemUpdates, [{ _id: "ShopArrows0002", "system.quantity": 80 }]);
 });
 
 test("a sold item never stacks onto shopkeeper gear, even if it looks identical", () => {

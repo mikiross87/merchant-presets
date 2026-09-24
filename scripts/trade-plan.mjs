@@ -103,9 +103,10 @@
  *   `out-of-stock` doing double duty for a sale that asks for more of an
  *   item than the seller actually owns (the same "not enough of this to
  *   trade" idea, from the other side); `invalid-request` (the request's own
- *   shape doesn't hold up — see "the request is untrusted"),
- *   `shop-misconfigured` (see "config never throws"), `unpriced` (see
- *   "an unpriceable item"), and `container-not-empty` (see "kit contents").
+ *   shape doesn't hold up — see "the request is untrusted" and "bundled
+ *   quantities"), `shop-misconfigured` (see "config never throws"),
+ *   `unpriced` (see "an unpriceable item"), `container-not-empty` (see "kit
+ *   contents"), and `worthless` (see "bundled quantities").
  * - **The request is untrusted client input**, validated before anything
  *   else runs: `tradeId` a non-empty string, `kind` `"buy"` or `"sell"`,
  *   `lines` a non-empty array of at most `MAX_LINES`, each line an `itemId`
@@ -173,6 +174,33 @@
  *   separately, and a `keep: false` container line being deleted once fully
  *   sold can't orphan contents that were already stripped from the shop in
  *   that same purchase.
+ *
+ *   Two more `isVisible` needed, once a container's contents could actually
+ *   move: an item already inside a shop container is never individually
+ *   buyable (it's `"not-visible"`, same as gear) — the container is what's
+ *   for sale, buying its contents separately would hand them out twice
+ *   over, once loose and once inside the container. And a container whose
+ *   contents, recursively, include anything the shop wouldn't otherwise
+ *   hand over (shopkeeper gear, a hidden or delisted line) is itself
+ *   `"not-visible"`: there's no request line for "the bag, minus what's not
+ *   for sale", so the whole line refuses rather than quietly leaving
+ *   something out (`hasUngivableContents`).
+ * - **The fixed exclusions apply on a buy too.** `isVisible` used to only
+ *   check for shopkeeper gear, so a natural weapon or one of the
+ *   never-tradeable types (background, class, ...) could be bought if a GM
+ *   ever left one sitting in a shop's items. `isFixedExcluded` is now
+ *   shared between `isVisible` and `dealtIn`, so both directions refuse the
+ *   same things.
+ * - **Bundled quantities.** Item Piles only ever sold `quantityForPrice` in
+ *   whole bundles, and this keeps that: a buy quantity that isn't a whole
+ *   multiple of the stock line's `bundle` is `"invalid-request"` (the
+ *   quantity stepper is meant to step by the bundle size, so this is a
+ *   malformed request, not a normal refusal) — which also closes off buying
+ *   a single unit of a cheap bundle for a price that floors to 0. A sale
+ *   has no shelf to bundle by, so any quantity is allowed and the price
+ *   floors same as ever; but if that floor lands on 0 for an item that
+ *   isn't actually free (`item.system.price.value` above 0), that's not a
+ *   trade, so it's refused `"worthless"` rather than paid for nothing.
  */
 
 import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
@@ -199,16 +227,40 @@ const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sour
 const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
 const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
 
-/** Not a real stock line a player can see: shopkeeper gear, or the GM has hidden or delisted it. */
+/** Never traded, either direction, by any shop — the fixed exclusions shared by both `isVisible` and `dealtIn`. */
+function isFixedExcluded(item) {
+  return FIXED_EXCLUDED_TYPES.includes(item.type) || item.system?.type?.value === "natural" || isGear(item);
+}
+
+/** Whether a stock line would refuse to hand `item` over at all, on its own: shopkeeper gear, hidden, or delisted. */
+function isShelfHidden(item, stock) {
+  return isFixedExcluded(item) || stock.hidden || stock.notForSale;
+}
+
+/**
+ * Not a real stock line a player can pick directly: shopkeeper gear, one of the fixed exclusions
+ * (background/class/... and natural weapons — buy and sell refuse the same things), the GM has
+ * hidden or delisted it, or it's sitting inside a container already on the shelf (its container
+ * is the thing to buy; buying it separately would hand it out twice over — see `landContainer`).
+ */
 function isVisible(item, stock) {
-  return !isGear(item) && !stock.hidden && !stock.notForSale;
+  return !isShelfHidden(item, stock) && (item.system?.container ?? null) === null;
+}
+
+/**
+ * Whether `container`'s own contents, recursively, include anything `shop` wouldn't otherwise
+ * hand over on its own: shopkeeper gear or a hidden/delisted line. A container holding one is
+ * refused whole (`planBuy`) rather than handing over only the rest — there's no request line
+ * asking for "everything in the bag except the smith's own dagger".
+ */
+function hasUngivableContents(containerId, shopItems) {
+  return shopItems.some(i => (i.system?.container ?? null) === containerId
+    && (isShelfHidden(i, safeStockOf(i) ?? stockFrom({})) || hasUngivableContents(idOf(i), shopItems)));
 }
 
 /** Whether `shop` deals in `item` at all — the fixed exclusions, then its own `wontBuy`. */
 function dealtIn(item, shop) {
-  if (FIXED_EXCLUDED_TYPES.includes(item.type)) return false;
-  if (item.system?.type?.value === "natural") return false;
-  if (isGear(item)) return false;
+  if (isFixedExcluded(item)) return false;
   if (shop.wontBuy.types.includes(item.type)) return false;
   const kind = kindOf(item);
   return !(kind && shop.wontBuy.kinds.includes(kind));
@@ -229,14 +281,17 @@ function stacksOnto(existing, incoming) {
 }
 
 /**
- * The shop's own current stock line for `item`, if it has one — by source when `item` carries
- * one (the same signal `stacksOnto` uses), else by name. Gear is never a match: it isn't stock.
- * This is what a sale's `noBuyback`/`service`/bundle/category read, since the item being sold no
- * longer carries its own stock flags (see `copyOf`).
+ * The shop's own current stock line for `item`, if it has one — by source (the same signal
+ * `stacksOnto` uses) when that finds a match, falling back to name either way: when `item`
+ * carries no source at all, or when it does but nothing on the shelf shares it. Gear is never a
+ * match: it isn't stock. This is what a sale's `noBuyback`/`service`/category read (bundle is
+ * its own fallback — see "kept: bundle", below), since the item being sold no longer carries its
+ * own stock flags (see `copyOf`).
  */
 function matchingStockLine(item, shopItems) {
   const source = sourceOf(item);
-  return shopItems.find(i => !isGear(i) && (source != null ? sourceOf(i) === source : i.name === item.name));
+  const bySource = source != null ? shopItems.find(i => !isGear(i) && sourceOf(i) === source) : null;
+  return bySource ?? shopItems.find(i => !isGear(i) && i.name === item.name);
 }
 
 /** A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite". */
@@ -269,16 +324,24 @@ function lineTotalCp(item, rate, bundle, quantity, currencies) {
  * then reads as `STOCK_DEFAULTS` until something (a GM, or landing back on a shop with a matching
  * line) says otherwise. `kind` and the behaviour flags (nutrition/actor/spell) are untouched —
  * the runtime still needs those.
+ *
+ * **Kept: `bundle`.** Unlike the rest of `stock`, a bundle size is a property of the good
+ * itself (20 arrows *are* a bundle of 20, wherever they end up), not the shelf they came from —
+ * so it survives as its own flag, `flags.merchant-presets.bundle`, when it's more than 1. A sale
+ * with no matching shop line reads it from here instead of assuming a bundle of 1 (which priced
+ * 20 arrows as 20 individual purchases at the bundle's own rate — 20x too much).
  */
 function copyOf(item, quantity, containerId = null) {
   const base = structuredClone(item);
   delete base._id;
   base.system = { ...base.system, container: containerId, quantity };
+  const bundle = item.flags?.[MODULE]?.stock?.bundle;
   if (base.flags?.[MODULE]) {
     base.flags[MODULE] = { ...base.flags[MODULE] };
     delete base.flags[MODULE].stock;
     delete base.flags[MODULE].drawn;
   }
+  if (bundle > 1) base.flags = { ...base.flags, [MODULE]: { ...base.flags?.[MODULE], bundle } };
   return base;
 }
 
@@ -349,10 +412,16 @@ function landContainer(container, shopItems, removedIds, newId, targetLander) {
   if (hasContents) landContentsOf(idOf(container), copy._id, shopItems, removedIds, newId, targetLander);
 }
 
-/** The recursive half of `landContainer`: `sourceId`'s own contents, landing inside `destId`. */
+/**
+ * The recursive half of `landContainer`: `sourceId`'s own contents, landing inside `destId`.
+ * Skips anything the shop wouldn't hand over on its own (gear, hidden, delisted) — belt and
+ * braces: `planBuy` already refuses the whole container first if any of its contents,
+ * recursively, would hit this (`hasUngivableContents`), so this should never actually trigger.
+ */
 function landContentsOf(sourceId, destId, shopItems, removedIds, newId, targetLander) {
   for (const content of shopItems) {
     if (removedIds.has(idOf(content)) || (content.system?.container ?? null) !== sourceId) continue;
+    if (isShelfHidden(content, safeStockOf(content) ?? stockFrom({}))) continue;
     removedIds.add(idOf(content));
     const contentCopy = copyOf(content, content.system?.quantity ?? 1, destId);
     if (content.type === "container") {
@@ -445,6 +514,15 @@ function planBuy(request, context) {
     const stock = safeStockOf(item);
     if (!stock) return { ok: false, reason: "shop-misconfigured", line: requested };
     if (!isVisible(item, stock)) return { ok: false, reason: "not-visible", line: requested };
+    // A container holding something the shop wouldn't hand over on its own (gear, hidden,
+    // delisted) can't be bought at all — there's no way to ask for "everything but that".
+    if (item.type === "container" && hasUngivableContents(idOf(item), shop.items)) {
+      return { ok: false, reason: "not-visible", line: requested };
+    }
+    // Sold in whole bundles only, matching Item Piles' own quantityForPrice contract; the UI
+    // steps a bundled good's quantity by its bundle size, so this is a malformed request, not a
+    // normal refusal a player should see.
+    if (requested.quantity % stock.bundle !== 0) return { ok: false, reason: "invalid-request", line: requested };
 
     const category = stock.category || null;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
@@ -530,9 +608,10 @@ function planSell(request, context) {
     if (!dealtIn(item, shopConfig)) return { ok: false, reason: "wont-buy", line: requested };
 
     // The item being sold no longer carries its own stock flags once bought (see `copyOf`), so
-    // noBuyback/service/bundle/category come from a matching line on the shop's own shelf, if it
-    // has one — otherwise this is unfamiliar goods to this shop, and STOCK_DEFAULTS apply.
-    const stock = safeStockOf(matchingStockLine(item, shop.items) ?? {});
+    // noBuyback/service/category come from a matching line on the shop's own shelf, if it has
+    // one — otherwise this is unfamiliar goods to this shop, and STOCK_DEFAULTS apply.
+    const matched = matchingStockLine(item, shop.items);
+    const stock = safeStockOf(matched ?? {});
     if (!stock) return { ok: false, reason: "shop-misconfigured", line: requested };
     if (stock.noBuyback) return { ok: false, reason: "no-buyback", line: requested };
     if (item.system?.identified === false) return { ok: false, reason: "unidentified", line: requested };
@@ -543,15 +622,26 @@ function planSell(request, context) {
     const owned = item.system?.quantity ?? 0;
     if (owned < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
 
+    // Bundle is the one field kept off the matched line: a matching shop listing's own bundle
+    // wins (it's the shop's rate for this good), but with no match the item's own carried-over
+    // bundle flag applies (see copyOf's "Kept: bundle") rather than silently assuming 1 — a
+    // bundle of 20 arrows priced as 20 individual purchases would pay 20x too much.
+    const bundle = matched ? stock.bundle : (item.flags?.[MODULE]?.bundle ?? 1);
     const category = stock.category || null;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
       bundleCp = bundlePriceCp(item, buysAt.rate, currencies);
-      totalLineCp = lineTotalCp(item, buysAt.rate, stock.bundle, requested.quantity, currencies);
+      totalLineCp = lineTotalCp(item, buysAt.rate, bundle, requested.quantity, currencies);
     } catch {
       return { ok: false, reason: "unpriced", line: requested };
     }
+    // Unlike a buy, a sell quantity doesn't have to be a whole bundle (the shop is happy to take
+    // fewer, at a proportionally floored price) — but flooring all the way to nothing isn't a
+    // trade for an item that actually has a price, so refuse rather than pay 0 for something
+    // real. A genuinely free item (system.price.value itself 0) is unaffected — that's a real,
+    // if uninteresting, 0cp trade, the same as it always was.
+    if (totalLineCp === 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
     totalCp += totalLineCp;
