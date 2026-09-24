@@ -771,7 +771,7 @@
       "name": "Bedroll",
       "system": {
         "description": {
-          "value": "<p>A Bedroll sleeps one Small or Medium creature. While in a Bedroll, you automatically succeed on saving throws against extreme cold (see @UUID[Compendium.dnd5e.content24.JournalEntry.dmgDmsToolbox000.JournalEntryPage.xgLA30rErlkjIPAK]{Gameplay Toolbox}).</p>",
+          "value": "<p>A Bedroll sleeps one Small or Medium creature. While in a Bedroll, you automatically succeed on saving throws against extreme cold (see @UUID[Compendium.dnd5e.content24.JournalEntry.dmgDmsToolbox000]{Gameplay Toolbox}).</p>",
           "chat": ""
         },
         "price": {
@@ -788,8 +788,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 22,
+        "container": null,
+        "quantity": 18,
         "weight": {
           "value": 7,
           "units": "lb"
@@ -816,10 +816,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.ABjsMdpDnWlkjbMq"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBedroll0000"
       },
-      "_id": "RoSa9BzYr5qbQFMX",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.RoSa9BzYr5qbQFMX"
+      "_id": "28SMpz4ZoJiiPVvw",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.28SMpz4ZoJiiPVvw"
     },
     {
       "name": "Blanket",
@@ -842,8 +842,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagPriestsPack",
-        "quantity": 40,
+        "container": null,
+        "quantity": 56,
         "weight": {
           "value": 3,
           "units": "lb"
@@ -870,10 +870,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.1NwTdI5LHEH5WThq"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBlanket0000"
       },
-      "_id": "fhgN5rPpouirsSSN",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.fhgN5rPpouirsSSN"
+      "_id": "lBA71r6wN0yTtxsm",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.lBA71r6wN0yTtxsm"
     },
     {
       "name": "Block and Tackle",
@@ -2343,8 +2343,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
-        "quantity": 30,
+        "container": null,
+        "quantity": 29,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -2371,10 +2371,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.QjcMSfmrMwjPoWKn"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCrowbar0000"
       },
-      "_id": "3TLKIrFsROB732UY",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.3TLKIrFsROB732UY"
+      "_id": "2WrqF06A1HCeEC2l",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.2WrqF06A1HCeEC2l"
     },
     {
       "name": "Dungeoneer's Pack",
@@ -3355,8 +3355,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDiplomatsPa",
-        "quantity": 11,
+        "container": null,
+        "quantity": 10,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -3413,10 +3413,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.vi0j4PYnO596a2L1"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagInk00000000"
       },
-      "_id": "uesvnoyYEiS5wlTU",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.uesvnoyYEiS5wlTU"
+      "_id": "7VAkQZiaYnH123LS",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.7VAkQZiaYnH123LS"
     },
     {
       "name": "Ink Pen",
@@ -3439,8 +3439,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagScholarsPac",
-        "quantity": 44,
+        "container": null,
+        "quantity": 43,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -3499,10 +3499,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.x9BzTUcsOj6K6OJE"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagInkPen00000"
       },
-      "_id": "YsDmbRQdedK6XAMr",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.YsDmbRQdedK6XAMr"
+      "_id": "aqGWhJXsIfJQ6zMY",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.aqGWhJXsIfJQ6zMY"
     },
     {
       "name": "Ladder",
@@ -4890,8 +4890,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 26,
+        "container": null,
+        "quantity": 23,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -4993,7 +4993,9 @@
                 "formula": "10"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "rYGOWDRcT5jBKvzq": {
             "type": "check",
@@ -5055,7 +5057,9 @@
                 "formula": "20"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "5q6tX1T7ONDvgJiA": {
             "type": "check",
@@ -5117,7 +5121,9 @@
                 "formula": "15"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "rope"
@@ -5142,10 +5148,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagRope0000000"
       },
-      "_id": "JlrKJlvLgLld2wQO",
-      "_key": "!actors.items!bzURsHrQ4iwtPo4G.JlrKJlvLgLld2wQO"
+      "_id": "DMFDWASEAIihe6eZ",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.DMFDWASEAIihe6eZ"
     },
     {
       "name": "Greatsword",
@@ -6195,8 +6201,8 @@
             "items": {
               "KDZN27yW6QNch4OM": "(3d8+8)*20",
               "oYDtCuRwXo5oHfvM": "1",
-              "Ap39QffWOCrYPUg6": "3d8+8",
-              "ZUWeCB45UxXTo88s": "4d10+20",
+              "SOQspnVY8SsqXJBz": "3d8+8",
+              "1hK0cC2pokYPkKeA": "4d10+20",
               "eCqNK4OorKFzjSyU": "3d8+8",
               "xGvEOwNBid9NGCSf": "(3d8+8)*50",
               "JDnNQYZ69MB0gbo9": "1",
@@ -6209,15 +6215,15 @@
               "440IDafDR2JCFI7w": "2d6+4",
               "qHRi35IleNThojIb": "3d8+8",
               "kvVPjXW3egew17nM": "(3d8+8)*20",
-              "5n0mFbYbwblkwYQ6": "3d8+8",
+              "drkLdWXI880a2W8W": "3d8+8",
               "fCxR548OrAwZ9vHA": "1",
               "KnIfD4kzljbuomDi": "1",
               "edJHiSKXT0Jh0QPz": "1",
               "OxHPFcz0Wy4Vi4lI": "3d8+8",
               "4Qn78bpiknW1G5MZ": "3d8+8",
               "kADYNLPA2T3uSxjS": "3d8+8",
-              "3qo8w59Eu4U3kR9A": "2d6+4",
-              "oNOSyqrciCEBTQ9P": "4d10+20",
+              "4CwGmo3FBrIb23jI": "2d6+4",
+              "VOnImiR9WyjCQWCW": "4d10+20",
               "y1IiXPn3A9HFwM2p": "4d10+20",
               "jbPKukq37oJnDIzE": "2d6+4",
               "wrO0ZPMqhWfWSfC5": "3d8+8",
@@ -6230,7 +6236,7 @@
               "tv7vHFO0Aq1yJv3k": "1",
               "jzIJkw53RNNEeDI4": "1",
               "EqzZYDdRsnVy5rfr": "4d10+20",
-              "Yg6dmjpT7w02nUnq": "3d8+8"
+              "qyUdFgHMehgqVENV": "3d8+8"
             }
           }
         ],

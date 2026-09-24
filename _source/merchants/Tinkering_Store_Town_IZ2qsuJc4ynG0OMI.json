@@ -1118,8 +1118,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
-        "quantity": 13,
+        "container": null,
+        "quantity": 9,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -1167,8 +1167,7 @@
                 {
                   "type": "itemUses",
                   "value": "1",
-                  "target": "",
-                  "scaling": {}
+                  "target": ""
                 }
               ],
               "scaling": {
@@ -1219,7 +1218,7 @@
               "override": false
             },
             "damage": {
-              "onSave": "half",
+              "onSave": "none",
               "parts": [
                 {
                   "custom": {
@@ -1231,10 +1230,7 @@
                   "bonus": "",
                   "types": [
                     "piercing"
-                  ],
-                  "scaling": {
-                    "number": 1
-                  }
+                  ]
                 }
               ]
             },
@@ -1252,7 +1248,11 @@
             },
             "sort": 0,
             "_id": "G8upRnZw22jGWKWy",
-            "name": ""
+            "name": "",
+            "img": "",
+            "appliedEffects": [
+              "HsbtDDdiWhk4d7WB"
+            ]
           }
         },
         "identifier": "caltrops"
@@ -1265,7 +1265,7 @@
           "img": "icons/weapons/thrown/bomb-spiked-purple.webp",
           "origin": null,
           "transfer": false,
-          "_id": "pyMu39C5RNW01xrs",
+          "_id": "Sqd0XEJlEEjWf0Ct",
           "type": "base",
           "system": {
             "changes": [
@@ -1275,7 +1275,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "2UQTBIeB7tb8cVtS"
+                "_id": "qphYRabXBpZY0rVU"
               },
               {
                 "key": "system.attributes.movement.fly",
@@ -1283,7 +1283,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "yRngdJ50SMnRXj7p"
+                "_id": "L2hhgHMaJr52dfys"
               },
               {
                 "key": "system.attributes.movement.swim",
@@ -1291,7 +1291,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "qFO1XsU8o5HMZ05g"
+                "_id": "9HGoDBUOH7DsxqTV"
               },
               {
                 "key": "system.attributes.movement.climb",
@@ -1299,7 +1299,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "mO7n6WLWfdwK2ZHx"
+                "_id": "y5f3HJiB5hhb7jk7"
               },
               {
                 "key": "system.attributes.movement.burrow",
@@ -1307,7 +1307,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "D7kNNb43BF3UBz2R"
+                "_id": "7OelyaGga1RDn1JA"
               }
             ]
           },
@@ -1329,24 +1329,18 @@
             "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "6.0.0",
-            "createdTime": 1783544099821,
-            "modifiedTime": 1783544099821,
+            "createdTime": 1725848497965,
+            "modifiedTime": 1783544099859,
             "lastModifiedBy": "dnd5ebuilder0000",
             "exportSource": null
           },
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!actors.items.effects!IZ2qsuJc4ynG0OMI.5UluyPM5XXcFBaPt.pyMu39C5RNW01xrs"
+          "_key": "!actors.items.effects!IZ2qsuJc4ynG0OMI.fBr5jZzAZKKuwmtU.Sqd0XEJlEEjWf0Ct"
         }
       ],
       "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
         "item-piles": {
           "item": {
             "infiniteQuantity": "default",
@@ -1357,10 +1351,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.iYwrPPLmuVD9eqfa"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaltrops000"
       },
-      "_id": "5UluyPM5XXcFBaPt",
-      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.5UluyPM5XXcFBaPt"
+      "_id": "fBr5jZzAZKKuwmtU",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.fBr5jZzAZKKuwmtU"
     },
     {
       "name": "Flask",
@@ -1572,8 +1566,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDiplomatsPa",
-        "quantity": 8,
+        "container": null,
+        "quantity": 6,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -1630,10 +1624,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.vi0j4PYnO596a2L1"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagInk00000000"
       },
-      "_id": "j54dkhZ9WGVdxXnV",
-      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.j54dkhZ9WGVdxXnV"
+      "_id": "07kvh97OehgbolAe",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.07kvh97OehgbolAe"
     },
     {
       "name": "Lamp",
@@ -2496,8 +2490,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 16,
+        "container": null,
+        "quantity": 10,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -2599,7 +2593,9 @@
                 "formula": "10"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "rYGOWDRcT5jBKvzq": {
             "type": "check",
@@ -2661,7 +2657,9 @@
                 "formula": "20"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "5q6tX1T7ONDvgJiA": {
             "type": "check",
@@ -2723,7 +2721,9 @@
                 "formula": "15"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "rope"
@@ -2748,10 +2748,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagRope0000000"
       },
-      "_id": "xrnO2u1QCDuGlS0w",
-      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.xrnO2u1QCDuGlS0w"
+      "_id": "KE1FFIS29LtxIFiJ",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.KE1FFIS29LtxIFiJ"
     },
     {
       "name": "Signal Whistle",
@@ -2976,8 +2976,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 22,
+        "container": null,
+        "quantity": 17,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -3070,7 +3070,9 @@
               "visible": false,
               "name": "",
               "formula": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "tinderbox"
@@ -3095,10 +3097,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.367bsHMaHI1II4k9"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagTinderbox00"
       },
-      "_id": "9Vwov9nBRowVQLL7",
-      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.9Vwov9nBRowVQLL7"
+      "_id": "TAeoQaH6ApRSVeel",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.TAeoQaH6ApRSVeel"
     },
     {
       "name": "Vial",
@@ -5330,9 +5332,9 @@
               "X0PYL2XTjHugyrRp": "1d6+2",
               "qfdFA1Ltfcg51Sf6": "2d6+4",
               "t5f68tpRpH3g1JhW": "(2d6+4)*10",
-              "J2f1xuYR0AcfEuMT": "2d6+4",
+              "n6ke3PLyWFtCYGnl": "2d6+4",
               "ub9W0MNXLfH2gWR2": "1",
-              "NzMIzsX2MD9u4GCd": "1d6+2",
+              "s9AMZJVLGwZXCsgv": "1d6+2",
               "ApE7IeJyti5ZwBKn": "3d6+8",
               "yk4DQHCilWLmndT4": "2d6+4",
               "HLdURYzIZv3mb846": "1d6+2",
@@ -5341,10 +5343,10 @@
               "TwkXsuyCJJcPuCon": "3d6+8",
               "EOl4BnN2Utxg5P3b": "3d6+8",
               "Rs9r05QjTX4BuJez": "3d6+8",
-              "lNFOx7cFoPZHKxDh": "2d6+4",
+              "GlqshAJJBMfLxnUo": "2d6+4",
               "1xFweZD1r7ASU2hM": "3d6+8",
               "Y9nxv6t0wSDpaqvL": "3d6+8",
-              "3JydGW0uoNmTV4pF": "3d6+8",
+              "h2j7Ma3PfxqkgbR4": "3d6+8",
               "vFSaHhkRJ7itc7fP": "1",
               "AvjtcXsuVAWnThYi": "1d3+1",
               "YUi5w5o9t9GqlfWj": "1d6+2",

@@ -64,8 +64,14 @@ def load_srd():
         # of being reported missing as this generator promises.
         if d.get("_key", "").startswith("!folders!"):
             continue
-        k = norm(d["name"])
         sysd = d.get("system") or {}
+        # The kits ship their contents as items of their own, each carrying the
+        # kit's id in system.container. A merchant holds no such kit, and Item
+        # Piles hides anything with a container id from the shop window (#89),
+        # so only ever index the standalone document.
+        if sysd.get("container"):
+            continue
+        k = norm(d["name"])
         qty = sysd.get("quantity") or 1
         ammo = (sysd.get("type") or {}).get("value") == "ammo"
         cur = best.get(k)
@@ -217,6 +223,9 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
     sysd = it.setdefault("system", {})
     for k in ("equipped", "proficient", "prepared"):
         sysd.pop(k, None)
+    # A container id names a kit the merchant does not hold (#89).
+    if sysd.get("container"):
+        sysd["container"] = None
     if "attunement" in sysd or "attuned" in sysd:
         sysd.setdefault("attunement", ""); sysd["attuned"] = False
     if line.get("price") is not None:

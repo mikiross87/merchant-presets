@@ -1236,8 +1236,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 23,
+        "container": null,
+        "quantity": 22,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -1339,7 +1339,9 @@
                 "formula": "10"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "rYGOWDRcT5jBKvzq": {
             "type": "check",
@@ -1401,7 +1403,9 @@
                 "formula": "20"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "5q6tX1T7ONDvgJiA": {
             "type": "check",
@@ -1463,7 +1467,9 @@
                 "formula": "15"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "rope"
@@ -1488,10 +1494,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagRope0000000"
       },
-      "_id": "y5I4bqp97bYN7TkJ",
-      "_key": "!actors.items!zlyiXsGcSIYxDJfA.y5I4bqp97bYN7TkJ"
+      "_id": "uOG8KtX0vgXRa7he",
+      "_key": "!actors.items!zlyiXsGcSIYxDJfA.uOG8KtX0vgXRa7he"
     },
     {
       "name": "Weaver's Tools",
@@ -4853,7 +4859,7 @@
               "1LaUyXKfx3obURZf": "(3d8+8)*50",
               "AYEPD8qNOds8vKFI": "1",
               "owZqI04rmQ55EGIi": "1",
-              "n4VFNlFx6ca9E9E3": "3d8+8",
+              "8z9yHRGk9kS9KG5R": "3d8+8",
               "gpWMhSbehTmmt85y": "3d8+8",
               "pYw2S3cdbYw7w3p5": "3d8+8",
               "mdVgb7wv2DKaGlk7": "3d8+8",

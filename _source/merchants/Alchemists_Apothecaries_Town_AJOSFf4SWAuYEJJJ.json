@@ -1605,8 +1605,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDiplomatsPa",
-        "quantity": 15,
+        "container": null,
+        "quantity": 12,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -1633,10 +1633,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.yoRKNd2QddQp1XuX"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagPerfume0000"
       },
-      "_id": "nvsaJwNWDGIpNr5C",
-      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.nvsaJwNWDGIpNr5C"
+      "_id": "XAqU3U0EBOAlYFnJ",
+      "_key": "!actors.items!AJOSFf4SWAuYEJJJ.XAqU3U0EBOAlYFnJ"
     },
     {
       "name": "Poison, Basic",
@@ -5354,7 +5354,7 @@
               "bHhExZQObdx848Rz": "1",
               "mZvw1anzwW1gfq53": "1",
               "leEHtERpt30ShgoH": "3d6+8",
-              "B4LuaGeObiCWwkm2": "2d6+4",
+              "yJSPlqgovqUiWIVo": "2d6+4",
               "frexhx1UALqaCAtw": "1d3+1",
               "9BAEOgTDcrElt5Sf": "1d3+1",
               "GgWi44JkDBGlXPAW": "1d3+1",

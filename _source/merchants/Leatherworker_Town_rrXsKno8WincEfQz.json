@@ -575,7 +575,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -611,10 +611,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "gwkmwZ1FohowkUYu",
-      "_key": "!actors.items!rrXsKno8WincEfQz.gwkmwZ1FohowkUYu"
+      "_id": "NFiwr7c2hC3wEuA9",
+      "_key": "!actors.items!rrXsKno8WincEfQz.NFiwr7c2hC3wEuA9"
     },
     {
       "name": "Waterskin",
@@ -638,7 +638,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -674,10 +674,73 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "yjcxnhiHuWDCPteW",
-      "_key": "!actors.items!rrXsKno8WincEfQz.yjcxnhiHuWDCPteW"
+      "_id": "Y6CPPIfWIHFEsHML",
+      "_key": "!actors.items!rrXsKno8WincEfQz.Y6CPPIfWIHFEsHML"
+    },
+    {
+      "name": "Waterskin",
+      "system": {
+        "description": {
+          "value": "<p>A Waterskin holds up to 4 pints. If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 2,
+          "denomination": "sp"
+        },
+        "quantity": 1,
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [],
+        "capacity": {
+          "type": "weight",
+          "value": 4
+        },
+        "identifier": "waterskin"
+      },
+      "type": "container",
+      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": true,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
+      },
+      "_id": "LAltmynrjn6xamgU",
+      "_key": "!actors.items!rrXsKno8WincEfQz.LAltmynrjn6xamgU"
     },
     {
       "name": "Shield",
@@ -2848,7 +2911,7 @@
         }
       },
       "containers": {
-        "Waterskin": 2
+        "Waterskin": 3
       }
     },
     "item-piles": {
@@ -2889,7 +2952,7 @@
             "timesToRoll": "1",
             "customCategory": "",
             "items": {
-              "cgL0sqxB6RR83aL9": "1",
+              "XcrbFS6UQIEVG7M3": "1",
               "OXWUXO2gxysoT9Q7": "1d6+2",
               "9e90cdSB7QCjV2Xs": "2d6+4",
               "JEszyEJNNjBuUjH3": "1d6+2",
