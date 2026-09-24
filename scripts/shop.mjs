@@ -134,6 +134,20 @@ export function tierOf(actor) {
 }
 
 /**
+ * Whether an actor already carries a shop: a shipped merchant (`profile`) or
+ * an NPC set up as one (`shop`). Narrower than `isPreset`, which also counts a
+ * bare pointer at our stock table — such an actor has no gear tagged yet, and
+ * treating it as a shop would offer nothing to keep and delete everything.
+ *
+ * @param {object} actor
+ * @returns {boolean}
+ */
+function isShop(actor) {
+  const flags = actor?.flags?.["merchant-presets"];
+  return Boolean(flags?.profile || flags?.shop);
+}
+
+/**
  * The items the setup dialog offers to keep as the NPC's own gear: every
  * physical item, contents of containers included. On an actor that is already
  * a shop the rest is stock, so only its gear is offered.
@@ -142,7 +156,7 @@ export function tierOf(actor) {
  * @returns {object[]}
  */
 export function keepableItems(actor) {
-  const shop = isPreset(actor);
+  const shop = isShop(actor);
   return (actor.items ?? []).filter(i => PHYSICAL.has(i.type) && (!shop || isGearItem(i)));
 }
 
@@ -165,7 +179,7 @@ export function keepableItems(actor) {
  */
 export function planShop(source, actor, keepIds) {
   const keep = new Set(keepIds);
-  const shop = isPreset(actor);
+  const shop = isShop(actor);
   const items = actor.items ?? [];
 
   const deletes = items
