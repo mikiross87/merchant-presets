@@ -96,16 +96,54 @@
  *   malformed request, not a real refusal a player should see) and
  *   `out-of-stock` doing double duty for a sale that asks for more of an
  *   item than the seller actually owns (the same "not enough of this to
- *   trade" idea, from the other side).
+ *   trade" idea, from the other side); `invalid-request` (the request's own
+ *   shape doesn't hold up — see "the request is untrusted") and
+ *   `shop-misconfigured` (see "config never throws").
+ * - **The request is untrusted client input**, validated before anything
+ *   else runs: `tradeId` a non-empty string, `kind` `"buy"` or `"sell"`,
+ *   `lines` a non-empty array of at most `MAX_LINES`, each line an `itemId`
+ *   string and an integer `quantity` of at least 1. A negative or zero
+ *   quantity would otherwise turn into a negative price, stock rising on a
+ *   purchase, or a bundle division by zero. Anything that fails is
+ *   `"invalid-request"`, with the offending `line` when there is one.
+ *   Duplicate `itemId`s across lines are merged into one (their quantities
+ *   summed) rather than rejected — kinder to a client that split a basket
+ *   oddly, and it also means every later check only ever sees one line per
+ *   item, so "sold more than owned" can't slip through by asking for it
+ *   across two lines instead of one.
+ * - **`bundlePriceCp` and `lineTotalCp` are two different numbers, both
+ *   returned.** `bundlePriceCp` is what a row shows as the item's price —
+ *   one whole bundle, at the shop's rate (the design's "per 10" tag sits
+ *   next to this number, not the line total). `lineTotalCp` is what the
+ *   whole line costs at the requested `quantity`, floored once (see "bundle
+ *   pricing", above). A request line's `expectedBundlePriceCp` is checked
+ *   against the fresh `bundlePriceCp` for `"stock-changed"` — the sticker
+ *   price, not the total, so it stays valid across a quantity the player
+ *   changes without a fresh price coming from the server. This is the
+ *   contract #103's client code should follow.
+ * - **Config never throws.** `schema.mjs`'s `shopFrom`/`stockFrom` throw on
+ *   data that doesn't validate, which is right for code writing that data —
+ *   but a trade only ever reads it, and must never throw on a shop or item
+ *   some other bug already left invalid. `safeShopOf`/`safeStockOf` catch
+ *   and turn that into `"shop-misconfigured"` instead.
+ * - **On a sale, the shop pays exactly** (`payExact`, added to pricing.mjs
+ *   for this): the till is a money-changer both ways (#101), so when it's
+ *   the one paying, it breaks its own coins to the cent rather than handing
+ *   over a big coin and expecting the seller to make change back. The
+ *   seller's purse only ever grows on a sale; `"till-short"` means the
+ *   shop's own total came up short, never the player's.
  */
 
-import { effectiveRates, itemPriceCp, pay } from "./pricing.mjs";
+import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 
 const MODULE = "merchant-presets";
 
 /** Never traded, buy or sell, by any shop: not physical inventory (schema.mjs's header). */
 const FIXED_EXCLUDED_TYPES = ["background", "class", "facility", "feat", "race", "spell", "subclass"];
+
+const VALID_KINDS = ["buy", "sell"];
+const MAX_LINES = 100;
 
 const idOf = doc => doc._id ?? doc.id;
 const findById = (docs, id) => docs.find(d => idOf(d) === id);
@@ -115,6 +153,10 @@ const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
 const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
 const isGear = item => kindOf(item) === "gear";
 const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
+
+/** `shopOf`/`stockOf`, but never throwing: a trade only reads config, and must survive data some other bug already left invalid. */
+const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
+const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
 
 /** Not a real stock line a player can see: shopkeeper gear, or the GM has hidden or delisted it. */
 function isVisible(item, stock) {
@@ -131,13 +173,18 @@ function dealtIn(item, shop) {
   return !(kind && shop.wontBuy.kinds.includes(kind));
 }
 
-/** dnd5e stacks only a dropped consumable onto an existing one sharing source, name and container. */
+/**
+ * dnd5e stacks only a dropped consumable onto an existing, top-level one sharing source and
+ * name. `incoming` is compared as it will land — top-level, `system.container` already dropped
+ * by `copyOf` — never against whatever container it happened to start in (inside a quiver, say);
+ * an item that starts in a container never stacks onto one that didn't, or vice versa.
+ */
 function stacksOnto(existing, incoming) {
   const source = sourceOf(incoming);
   return incoming.type === "consumable" && source != null
     && sourceOf(existing) === source
     && existing.name === incoming.name
-    && (existing.system?.container ?? null) === (incoming.system?.container ?? null);
+    && (existing.system?.container ?? null) === null;
 }
 
 /**
@@ -154,6 +201,16 @@ function matchingStockLine(item, shopItems) {
 /** A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite". */
 function bottomlessTill(currencies) {
   return Object.fromEntries(Object.keys(currencies).map(d => [d, Number.MAX_SAFE_INTEGER]));
+}
+
+/**
+ * `item`'s sticker price at `rate` — what a row shows, and what the "per 10" tag sits beside.
+ * `item.system.price` already prices one whole bundle (dnd5e's own quantityForPrice contract:
+ * 1gp *is* the cost of the 20 arrows it buys), so this only ever applies the rate, never divides
+ * by the bundle size — that division is `lineTotalCp`'s job, for a specific `quantity` traded.
+ */
+function bundlePriceCp(item, rate, currencies) {
+  return itemPriceCp(item.system.price, rate, 1, currencies);
 }
 
 /** `item`'s price for one of the `quantity` being traded, at `rate`, floored once for the lot. */
@@ -189,9 +246,13 @@ function copyOf(item, quantity) {
  * always create, one document per unit, per the quantity-1-each invariant.
  *
  * @param {object[]} existingItems  the destination actor's current items
+ * @param {(item: object) => boolean} [isValidTarget]  whether an existing item is even eligible
+ *   to stack onto — every item, by default (landing on a buyer). Landing on a shop passes a
+ *   stricter check: only a visible stock line, never shopkeeper gear or a hidden/delisted one,
+ *   so a sold item can't disappear into the merchant's own kit.
  * @returns {{land(item: object, quantity: number): void, result(): {itemUpdates: object[], itemCreates: object[]}}}
  */
-function lander(existingItems) {
+function lander(existingItems, isValidTarget = () => true) {
   const updateQuantities = new Map();   // real item id -> its new total quantity
   const pendingCreates = [];            // this basket's own new items, not yet given a real id
 
@@ -203,7 +264,7 @@ function lander(existingItems) {
       }
       const pending = pendingCreates.find(d => stacksOnto(d, item));
       if (pending) { pending.system.quantity += quantity; return; }
-      const existing = existingItems.find(d => stacksOnto(d, item));
+      const existing = existingItems.find(d => isValidTarget(d) && stacksOnto(d, item));
       if (existing) {
         const id = idOf(existing);
         updateQuantities.set(id, (updateQuantities.get(id) ?? existing.system?.quantity ?? 0) + quantity);
@@ -221,12 +282,41 @@ function lander(existingItems) {
 }
 
 /**
- * Whether the buyer's or seller's request line still matches what a fresh look says — the price
- * only, since a quantity mismatch either still works (nothing to flag) or is caught by
- * `out-of-stock`, which is the more useful message.
+ * Whether the buyer's or seller's request line still matches what a fresh look says — the
+ * bundle's sticker price only (see the module header): a quantity mismatch either still works
+ * (nothing to flag) or is caught by `out-of-stock`, which is the more useful message.
  */
 function staleLines(requested, fresh) {
-  return requested.some((line, i) => line.expectedUnitPriceCp != null && line.expectedUnitPriceCp !== fresh[i].unitPriceCp);
+  return requested.some((line, i) => line.expectedBundlePriceCp != null && line.expectedBundlePriceCp !== fresh[i].bundlePriceCp);
+}
+
+/**
+ * Rejects a request whose own shape can't be trusted — untrusted client input, never thrown on.
+ * A bad `tradeId`/`kind`/basket size is a request-level problem (no `line` to blame); a bad
+ * `itemId` or `quantity` names the line that broke it.
+ */
+function validateRequest(request) {
+  if (typeof request?.tradeId !== "string" || !request.tradeId) return { ok: false, reason: "invalid-request" };
+  if (!VALID_KINDS.includes(request.kind)) return { ok: false, reason: "invalid-request" };
+  if (!Array.isArray(request.lines) || request.lines.length === 0 || request.lines.length > MAX_LINES) {
+    return { ok: false, reason: "invalid-request" };
+  }
+  for (const line of request.lines) {
+    if (typeof line?.itemId !== "string" || !line.itemId) return { ok: false, reason: "invalid-request", line };
+    if (!Number.isInteger(line.quantity) || line.quantity < 1) return { ok: false, reason: "invalid-request", line };
+  }
+  return { ok: true };
+}
+
+/** `request`, with lines naming the same item combined into one (quantities summed). */
+function mergeLines(request) {
+  const merged = new Map();
+  for (const line of request.lines) {
+    const existing = merged.get(line.itemId);
+    if (existing) existing.quantity += line.quantity;
+    else merged.set(line.itemId, { ...line });
+  }
+  return { ...request, lines: [...merged.values()] };
 }
 
 /**
@@ -236,18 +326,22 @@ function staleLines(requested, fresh) {
  * basket as it now stands.
  *
  * @param {{tradeId: string, kind: "buy"|"sell",
- *   lines: {itemId: string, quantity: number, expectedUnitPriceCp?: number}[]}} request
+ *   lines: {itemId: string, quantity: number, expectedBundlePriceCp?: number}[]}} request
  * @param {object} context  see the module header
  * @returns {{ok: true, plan: object} | {ok: false, reason: string, line?: object, lines?: object[]}}
  */
 export function planTrade(request, context) {
   if (!context.now.isOpen) return { ok: false, reason: "closed" };
-  return request.kind === "buy" ? planBuy(request, context) : planSell(request, context);
+  const validity = validateRequest(request);
+  if (!validity.ok) return validity;
+  const merged = mergeLines(request);
+  return merged.kind === "buy" ? planBuy(merged, context) : planSell(merged, context);
 }
 
 function planBuy(request, context) {
   const { shop, buyer, worldSettings, currencies, deal } = context;
-  const shopConfig = shopOf(shop);
+  const shopConfig = safeShopOf(shop);
+  if (!shopConfig) return { ok: false, reason: "shop-misconfigured" };
   const world = worldSettings.rates;
 
   const stockRemaining = new Map(shop.items.map(item => [idOf(item), item.system?.quantity ?? 0]));
@@ -257,21 +351,24 @@ function planBuy(request, context) {
 
   for (const requested of request.lines) {
     const item = findById(shop.items, requested.itemId);
-    const stock = item ? stockOf(item) : null;
-    if (!item || !isVisible(item, stock)) return { ok: false, reason: "not-visible", line: requested };
+    if (!item) return { ok: false, reason: "not-visible", line: requested };
+    const stock = safeStockOf(item);
+    if (!stock) return { ok: false, reason: "shop-misconfigured", line: requested };
+    if (!isVisible(item, stock)) return { ok: false, reason: "not-visible", line: requested };
 
     const category = stock.category || null;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
-    const unitPriceCp = lineTotalCp(item, sellsAt.rate, stock.bundle, requested.quantity, currencies);
-    fresh.push({ itemId: requested.itemId, quantity: requested.quantity, unitPriceCp, layer: sellsAt.layer });
+    const bundleCp = bundlePriceCp(item, sellsAt.rate, currencies);
+    const totalLineCp = lineTotalCp(item, sellsAt.rate, stock.bundle, requested.quantity, currencies);
+    fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: sellsAt.layer });
 
     const infinite = stock.service || (stock.infinite ?? worldSettings.infiniteStock);
     const available = stockRemaining.get(requested.itemId) ?? 0;
     if (!infinite && available < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
     if (!infinite) stockRemaining.set(requested.itemId, available - requested.quantity);
 
-    totalCp += unitPriceCp;
-    lines.push({ item, stock, quantity: requested.quantity, unitPriceCp, category, layer: sellsAt.layer, infinite });
+    totalCp += totalLineCp;
+    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: sellsAt.layer, infinite });
   }
 
   if (staleLines(request.lines, fresh)) return { ok: false, reason: "stock-changed", lines: fresh };
@@ -309,7 +406,8 @@ function planBuy(request, context) {
 
 function planSell(request, context) {
   const { shop, buyer, worldSettings, currencies, deal } = context;
-  const shopConfig = shopOf(shop);
+  const shopConfig = safeShopOf(shop);
+  if (!shopConfig) return { ok: false, reason: "shop-misconfigured" };
   const world = worldSettings.rates;
 
   const fresh = [];
@@ -324,30 +422,44 @@ function planSell(request, context) {
     // The item being sold no longer carries its own stock flags once bought (see `copyOf`), so
     // noBuyback/service/bundle/category come from a matching line on the shop's own shelf, if it
     // has one — otherwise this is unfamiliar goods to this shop, and STOCK_DEFAULTS apply.
-    const stock = stockOf(matchingStockLine(item, shop.items) ?? {});
+    const stock = safeStockOf(matchingStockLine(item, shop.items) ?? {});
+    if (!stock) return { ok: false, reason: "shop-misconfigured", line: requested };
     if (stock.noBuyback) return { ok: false, reason: "no-buyback", line: requested };
     if (item.system?.identified === false) return { ok: false, reason: "unidentified", line: requested };
     if (stock.service) return { ok: false, reason: "service", line: requested };
 
+    // request.lines has already been merged (see mergeLines), so `owned` here is checked once
+    // against this line's full combined quantity, not double-counted across duplicate lines.
     const owned = item.system?.quantity ?? 0;
     if (owned < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
 
     const category = stock.category || null;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
-    const unitPriceCp = lineTotalCp(item, buysAt.rate, stock.bundle, requested.quantity, currencies);
-    fresh.push({ itemId: requested.itemId, quantity: requested.quantity, unitPriceCp, layer: buysAt.layer });
+    const bundleCp = bundlePriceCp(item, buysAt.rate, currencies);
+    const totalLineCp = lineTotalCp(item, buysAt.rate, stock.bundle, requested.quantity, currencies);
+    fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
-    totalCp += unitPriceCp;
-    lines.push({ item, stock, quantity: requested.quantity, unitPriceCp, category, layer: buysAt.layer, owned });
+    totalCp += totalLineCp;
+    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, owned });
   }
 
   if (staleLines(request.lines, fresh)) return { ok: false, reason: "stock-changed", lines: fresh };
 
+  // The shop pays exactly, breaking its own coins (#101's money-changer, applied to the payer
+  // this time): the seller never gives change back, so "till-short" only ever means the shop's
+  // own total came up short.
   const shopPurse = worldSettings.infinitePurse ? bottomlessTill(currencies) : shop.system.currency;
-  const payment = pay(shopPurse, totalCp, buyer.system.currency, currencies);
-  if (!payment.ok) return { ok: false, reason: "till-short" };
+  const paid = payExact(shopPurse, totalCp, currencies);
+  if (!paid.ok) return { ok: false, reason: "till-short" };
+  const buyerCurrency = { ...buyer.system.currency };
+  for (const [denomination, count] of Object.entries(paid.given)) {
+    buyerCurrency[denomination] = (buyerCurrency[denomination] ?? 0) + count;
+  }
+  const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0 };
 
-  const shopLander = lander(shop.items);
+  // Never stacks onto shopkeeper gear or a hidden/delisted line: a sold item lands on a real,
+  // visible stock line or becomes a new one, never disappears into the merchant's own kit.
+  const shopLander = lander(shop.items, candidate => isVisible(candidate, safeStockOf(candidate) ?? stockFrom({})));
   const buyerRemaining = new Map();   // real owned item id -> its new quantity, accumulated across lines
 
   for (const line of lines) {
@@ -375,7 +487,8 @@ function planSell(request, context) {
 /** The plan's shared tail: the writes plus the hook payload and chat-card data both directions build the same way. */
 function buildPlan(request, kind, shop, buyer, lines, totalCp, payment, updates) {
   const hookLines = lines.map(l => ({
-    itemId: idOf(l.item), item: l.item, quantity: l.quantity, unitPriceCp: l.unitPriceCp, category: l.category, layer: l.layer
+    itemId: idOf(l.item), item: l.item, quantity: l.quantity,
+    bundlePriceCp: l.bundlePriceCp, lineTotalCp: l.lineTotalCp, category: l.category, layer: l.layer
   }));
   return {
     tradeId: request.tradeId,
@@ -387,7 +500,7 @@ function buildPlan(request, kind, shop, buyer, lines, totalCp, payment, updates)
       shopName: shop.name,
       shopImg: shop.img,
       buyerName: buyer.name,
-      lines: hookLines.map(l => ({ icon: l.item.img, label: l.item.name, quantity: l.quantity, lineTotalCp: l.unitPriceCp * l.quantity })),
+      lines: hookLines.map(l => ({ icon: l.item.img, label: l.item.name, quantity: l.quantity, lineTotalCp: l.lineTotalCp })),
       totalCp,
       direction: kind === "buy" ? "Paid" : "Received",
       footnote: { changeCp: payment.changeCp, exact: payment.changeCp === 0 }

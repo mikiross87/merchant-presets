@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { planTrade } from "../scripts/trade-plan.mjs";
+import { totalCp } from "../scripts/pricing.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape (same fixture as tools/pricing.test.mjs). */
 const CURRENCIES = {
@@ -218,7 +219,8 @@ test("an unidentified item is refused and never priced", () => {
   const ctx = context({ buyer: { items: [unidentifiedRing()] } });
   const result = planTrade(sellRequest("Ring0000000001", 1), ctx);
   assert.deepEqual(result, { ok: false, reason: "unidentified", line: { itemId: "Ring0000000001", quantity: 1 } });
-  assert.equal("unitPriceCp" in result.line, false);
+  assert.equal("bundlePriceCp" in result.line, false);
+  assert.equal("lineTotalCp" in result.line, false);
   assert.equal("plan" in result, false);
 });
 
@@ -238,19 +240,32 @@ test("a request naming an item that isn't there is refused, not thrown", () => {
 });
 
 test("a stale price is refused as stock-changed, with a fresh line for the whole basket", () => {
+  // expectedBundlePriceCp is the sticker price the client saw — one whole bundle, not the line
+  // total. The arrows line checks the price of one 20-arrow bundle (100cp), regardless of quantity.
   const ctx = context({ shop: { items: [dagger(), arrows()] } });
   const result = planTrade({
     tradeId: "t", kind: "buy",
     lines: [
-      { itemId: "Dagger000000001", quantity: 1, expectedUnitPriceCp: 999 },   // stale: real price is 200cp
-      { itemId: "5BtSFZjMcs6csxDO", quantity: 20, expectedUnitPriceCp: 100 }  // this one's still right
+      { itemId: "Dagger000000001", quantity: 1, expectedBundlePriceCp: 999 },   // stale: real price is 200cp
+      { itemId: "5BtSFZjMcs6csxDO", quantity: 20, expectedBundlePriceCp: 100 }  // this one's still right
     ]
   }, ctx);
   assert.equal(result.ok, false);
   assert.equal(result.reason, "stock-changed");
   assert.equal(result.lines.length, 2);
-  assert.equal(result.lines[0].unitPriceCp, 200);
-  assert.equal(result.lines[1].unitPriceCp, 100);
+  assert.equal(result.lines[0].bundlePriceCp, 200);
+  assert.equal(result.lines[0].lineTotalCp, 200);
+  assert.equal(result.lines[1].bundlePriceCp, 100);
+  assert.equal(result.lines[1].lineTotalCp, 100);
+});
+
+test("expectedBundlePriceCp stays valid across a quantity change (bundle price, not the line total)", () => {
+  // Buying 40 arrows (two bundles of 20): the line totals 200cp, but the bundle sticker price
+  // the client remembers is still 100cp for one bundle of 20 — that's what must match, not 200.
+  const ctx = context({ shop: { items: [arrows()] } });
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 40, { expectedBundlePriceCp: 100 }), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 200);
 });
 
 /* ------------------------------------------------------------ per stock flag, buy and sell */
@@ -453,8 +468,11 @@ test("a plain buy: currency both ways, one item create, the hook and chat card f
 
   assert.equal(plan.hook.totalCp, 200);
   assert.equal(plan.hook.changeCp, 0);
+  assert.equal(plan.hook.lines[0].bundlePriceCp, 200);
+  assert.equal(plan.hook.lines[0].lineTotalCp, 200);
   assert.equal(plan.chatCard.direction, "Paid");
   assert.equal(plan.chatCard.lines[0].label, "Dagger");
+  assert.equal(plan.chatCard.lines[0].lineTotalCp, 200);   // not lineTotalCp * quantity again
   assert.equal(plan.chatCard.totalCp, 200);
 });
 
@@ -463,4 +481,146 @@ test("an infinite purse leaves the shop's own currency out of the plan", () => {
   const result = planTrade(buyRequest("Dagger000000001", 1), ctx);
   const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
   assert.equal(shopUpdate.currency, undefined);
+});
+
+test("the chat card's line total isn't multiplied twice for a bundle", () => {
+  // 20 arrows, bundle 20: the line total is 100cp. bundlePriceCp * quantity would wrongly give 2000cp.
+  const ctx = context({ shop: { items: [arrows()] } });
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.chatCard.lines[0].lineTotalCp, 100);
+  assert.equal(result.plan.hook.lines[0].bundlePriceCp, 100);
+});
+
+/* ------------------------------------------------------------------ invalid requests */
+
+test("a negative or zero quantity is refused, never a negative price or reversed stock", () => {
+  const ctx = context({ shop: { items: [dagger()] } });
+  for (const quantity of [-1, 0, 1.5, NaN, "3"]) {
+    const result = planTrade(buyRequest("Dagger000000001", quantity), ctx);
+    assert.deepEqual(result, { ok: false, reason: "invalid-request", line: { itemId: "Dagger000000001", quantity } });
+  }
+});
+
+test("a non-string itemId is refused", () => {
+  const ctx = context({ shop: { items: [dagger()] } });
+  const result = planTrade(buyRequest(42, 1), ctx);
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, "invalid-request");
+});
+
+test("a bad kind or tradeId is refused at the request level, with no line to blame", () => {
+  const ctx = context({ shop: { items: [dagger()] } });
+  assert.deepEqual(planTrade({ tradeId: "t", kind: "trade", lines: [{ itemId: "Dagger000000001", quantity: 1 }] }, ctx),
+    { ok: false, reason: "invalid-request" });
+  assert.deepEqual(planTrade({ tradeId: "", kind: "buy", lines: [{ itemId: "Dagger000000001", quantity: 1 }] }, ctx),
+    { ok: false, reason: "invalid-request" });
+  assert.deepEqual(planTrade({ tradeId: "t", kind: "buy", lines: [] }, ctx), { ok: false, reason: "invalid-request" });
+});
+
+test("a basket over the line cap is refused", () => {
+  const ctx = context({ shop: { items: [dagger()] } });
+  const lines = Array.from({ length: 101 }, () => ({ itemId: "Dagger000000001", quantity: 1 }));
+  assert.deepEqual(planTrade({ tradeId: "t", kind: "buy", lines }, ctx), { ok: false, reason: "invalid-request" });
+});
+
+test("duplicate itemIds in one basket are merged, not double-refused or double-charged", () => {
+  const ctx = context({ shop: { items: [dagger()] } });   // 5 on the shelf
+  const result = planTrade({
+    tradeId: "t", kind: "buy",
+    lines: [{ itemId: "Dagger000000001", quantity: 2 }, { itemId: "Dagger000000001", quantity: 1 }]
+  }, ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 600);   // 3 daggers total, not 2 separate lines of pricing
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemUpdates, [{ _id: "Dagger000000001", "system.quantity": 2 }]);   // 5 - 3
+});
+
+test("selling the same item across two lines can't sell more than owned by splitting the ask", () => {
+  // Two lines of 5 for an item with 5 owned: merged into one line of 10, correctly refused.
+  const owned = { ...dagger(), system: { ...dagger().system, quantity: 5 } };
+  const ctx = context({ buyer: { items: [owned] } });
+  const result = planTrade({
+    tradeId: "t", kind: "sell",
+    lines: [{ itemId: "Dagger000000001", quantity: 5 }, { itemId: "Dagger000000001", quantity: 5 }]
+  }, ctx);
+  assert.equal(result.reason, "out-of-stock");
+});
+
+/* -------------------------------------------------------------- config never throws */
+
+test("a shop with no shop config at all is refused as misconfigured, not thrown", () => {
+  const brokenShop = { ...shop({ items: [dagger()] }), flags: {} };   // no merchant-presets.shop flag
+  const ctx = { ...context(), shop: brokenShop };
+  assert.deepEqual(planTrade(buyRequest("Dagger000000001", 1), ctx), { ok: false, reason: "shop-misconfigured" });
+  assert.deepEqual(planTrade(sellRequest("Dagger000000001", 1), { ...ctx, buyer: { items: [dagger()] } }),
+    { ok: false, reason: "shop-misconfigured" });
+});
+
+test("an item with an invalid stock config is refused as misconfigured, not thrown", () => {
+  const broken = { ...dagger(), flags: { "merchant-presets": { stock: { bundle: -1 } } } };
+  const ctx = context({ shop: { items: [broken] } });
+  const result = planTrade(buyRequest("Dagger000000001", 1), ctx);
+  assert.deepEqual(result, { ok: false, reason: "shop-misconfigured", line: { itemId: "Dagger000000001", quantity: 1 } });
+});
+
+/* -------------------------------------------------------------------------- stacking edge cases */
+
+test("an item from inside a container still stacks onto a top-level one once landed", () => {
+  // The stock line happens to carry a leftover container id; the landed copy is always top-level
+  // (copyOf clears it), so it should stack onto the buyer's existing top-level arrows regardless.
+  const fromAContainer = { ...arrows(), system: { ...arrows().system, container: "SomeQuiver0001" } };
+  const owned = { ...arrows(), _id: "OwnedArrows0002", system: { ...arrows().system, quantity: 40 } };
+  const ctx = context({ shop: { items: [fromAContainer] }, buyer: { items: [owned] } });
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
+  assert.deepEqual(buyerUpdate.itemCreates, []);
+  assert.deepEqual(buyerUpdate.itemUpdates, [{ _id: "OwnedArrows0002", "system.quantity": 60 }]);
+});
+
+test("a sold item never stacks onto shopkeeper gear, even if it looks identical", () => {
+  const gearArrows = { ...arrows(), _id: "GearArrows0001", flags: { "merchant-presets": { kind: "gear" } } };
+  const sold = { ...arrows(), system: { ...arrows().system, quantity: 20 } };
+  const ctx = context({ shop: { items: [gearArrows] }, buyer: { items: [sold] } });
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemUpdates, []);      // the gear item's quantity is untouched
+  assert.equal(shopUpdate.itemCreates.length, 1);    // a new document instead
+});
+
+test("a sold item never stacks onto a hidden or delisted stock line", () => {
+  const hidden = { ...arrows(), _id: "HiddenArrows001", flags: { "merchant-presets": { stock: { ...arrows().flags["merchant-presets"].stock, hidden: true } } } };
+  const sold = { ...arrows(), system: { ...arrows().system, quantity: 20 } };
+  const ctx = context({ shop: { items: [hidden] }, buyer: { items: [sold] } });
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
+  assert.equal(result.ok, true);
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  assert.deepEqual(shopUpdate.itemUpdates, []);
+  assert.equal(shopUpdate.itemCreates.length, 1);
+});
+
+/* --------------------------------------------------------------- the till pays exactly on a sale */
+
+test("the shop pays exactly on a sale, breaking its own coins, even from an empty player purse", () => {
+  const sold = { ...dagger(), system: { ...dagger().system, quantity: 1 } };   // sells for 100cp
+  const ctx = context({
+    shop: { items: [], currency: { pp: 1, gp: 0, ep: 0, sp: 0, cp: 0 } },   // only a platinum piece (1000cp)
+    buyer: { items: [sold], currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0 } }   // empty purse
+  });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
+  assert.equal(result.ok, true);
+  const buyerUpdate = result.plan.updates.find(u => u.actorId === "Buyer000000001");
+  assert.equal(totalCp(buyerUpdate.currency, CURRENCIES), 100);   // exactly what the item is worth
+  assert.equal(result.plan.hook.changeCp, 0);   // no change concept on a sale any more
+});
+
+test("a sale is till-short only when the shop's own total is short, never the player's", () => {
+  const sold = { ...dagger(), system: { ...dagger().system, quantity: 1 } };   // sells for 100cp
+  const ctx = context({
+    shop: { items: [], currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 99 } },   // 1cp short
+    buyer: { items: [sold], currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0 } }
+  });
+  assert.deepEqual(planTrade(sellRequest("Dagger000000001", 1), ctx), { ok: false, reason: "till-short" });
 });

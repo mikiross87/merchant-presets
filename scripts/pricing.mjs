@@ -246,6 +246,22 @@ function makeChange(holdings, amountCp, currencies) {
 }
 
 /**
+ * Pays `amountCp` exactly out of `holdings`, breaking its own coins as needed — the money-changer
+ * side of the #101 decision, applied to the payer rather than the payee: a payer with varied
+ * coinage pays precisely, so whoever it's paying never has to give anything back. Refused only
+ * when `holdings`' total is short of `amountCp`. Never mutates `holdings`.
+ *
+ * @param {Record<string, number>} holdings  the payer's coins by denomination
+ * @param {number} amountCp                  the amount to pay, in the finest coin
+ * @param {Record<string, {conversion: number}>} currencies
+ * @returns {{ok: true, given: Record<string, number>, remaining: Record<string, number>} | {ok: false}}
+ */
+export function payExact(holdings, amountCp, currencies) {
+  if (totalCp(holdings, currencies) < amountCp) return { ok: false };
+  return { ok: true, ...makeChange(holdings, amountCp, currencies) };
+}
+
+/**
  * Pays `priceCp` out of `purse`, breaking coins from `till` for change.
  * Never mutates `purse` or `till`.
  *
