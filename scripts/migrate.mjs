@@ -357,25 +357,39 @@ function itemsNeedStock(actor) {
   return (actor?.items ?? []).some(i => !isGearItem(i) && !i.flags?.["merchant-presets"]?.stock);
 }
 
+/** Whether any of `tokens` — this actor's own, already gathered by the
+ *  caller — still needs Item Piles switched off: `planTokenDisable`'s own
+ *  criterion, reused so `needsMigration` reopens the cut-over for a token
+ *  left over on a scene even once the actor's and every item's own writes
+ *  have already landed (#100 review). */
+function tokensNeedDisable(tokens) {
+  return (tokens ?? []).some(t => planTokenDisable(t) !== null);
+}
+
 /**
  * Whether `actor` still needs migrating: one of our shops without a current
  * shop config or with any stock line still unmigrated (the data half —
  * always due), or, once `nativeShop` is live, one Item Piles still treats as
- * its own merchant (the cut-over half). Idempotent once all three are fixed
- * — a second call on the migrated actor returns `false` — and re-opens on
- * its own once `nativeShop` flips: a shop already on a current config but
- * still Item Piles' own merchant is picked up again to finish the cut-over,
- * without needing a version bump.
+ * its own merchant — on the actor itself, or on any of `tokens` (the
+ * cut-over half). Idempotent once all are fixed — a second call on the
+ * migrated actor returns `false` — and re-opens on its own once `nativeShop`
+ * flips: a shop already on a current config but still Item Piles' own
+ * merchant is picked up again to finish the cut-over, without needing a
+ * version bump.
  *
  * @param {object} actor
  * @param {boolean} [nativeShop] Defaults to `NATIVE_SHOP`.
+ * @param {object[]} [tokens] This actor's own tokens, across every scene —
+ *   omit when the caller has none to hand (the actor-level check alone still
+ *   applies).
  * @returns {boolean}
  */
-export function needsMigration(actor, nativeShop = NATIVE_SHOP) {
+export function needsMigration(actor, nativeShop = NATIVE_SHOP, tokens = []) {
   if (!isShop(actor)) return false;
   if (!hasCurrentShop(actor) || itemsNeedStock(actor)) return true;
   if (!nativeShop) return false;      // data half already done; the cut-over isn't live yet
-  return actor.flags?.["item-piles"]?.data?.enabled === true;
+  if (actor.flags?.["item-piles"]?.data?.enabled === true) return true;
+  return tokensNeedDisable(tokens);
 }
 
 /**

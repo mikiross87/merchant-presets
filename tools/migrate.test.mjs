@@ -353,6 +353,31 @@ test("needsMigration is false only once both the shop and every item are migrate
   assert.equal(needsMigration(migrated), false);
 });
 
+test("needsMigration reopens the cut-over for a leftover unlinked token still Item Piles-enabled (#100 review)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const { update } = planActorUpdate(store, { nativeShop: true });
+  const fullyMigrated = withItemsMigrated(applied(store, update));
+  // Actor and every item done, nativeShop on, Item Piles off on the actor
+  // itself: nothing left when there are no tokens to check.
+  assert.equal(needsMigration(fullyMigrated, true), false);
+  assert.equal(needsMigration(fullyMigrated, true, []), false);
+
+  const staleToken = { _id: "t1", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } };
+  assert.equal(needsMigration(fullyMigrated, true, [staleToken]), true);
+
+  const disabledToken = { _id: "t2", actorLink: false, flags: { "item-piles": { data: { enabled: false } } } };
+  assert.equal(needsMigration(fullyMigrated, true, [disabledToken]), false);
+
+  // A linked token has no Item Piles data of its own — it follows the actor,
+  // already disabled — so it's never a reason to reopen the cut-over.
+  const linkedToken = { _id: "t3", actorLink: true, flags: { "item-piles": { data: { enabled: true } } } };
+  assert.equal(needsMigration(fullyMigrated, true, [linkedToken]), false);
+
+  // While nativeShop is off, a token's state is irrelevant: the cut-over
+  // hasn't started, so there's nothing for it to leave unfinished.
+  assert.equal(needsMigration(fullyMigrated, false, [staleToken]), false);
+});
+
 /* ------------------------------------------------------------ planActorUpdate */
 
 test("nativeShop off (the default): only the data half is planned, Item Piles and the sheet untouched", () => {

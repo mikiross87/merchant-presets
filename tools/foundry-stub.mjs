@@ -83,6 +83,10 @@ export function createWorld() {
     getSpeaker: ({ actor } = {}) => ({ actor: actor?.id, alias: actor?.name })
   };
   globalThis.fromUuid = globalThis.foundry.utils.fromUuid;
+  // The real _replace forces mergeObject to overwrite a nested object wholesale
+  // instead of merging into it; `set` below already overwrites a leaf value
+  // outright with no merge step to force past, so unwrapping is a no-op here.
+  globalThis._replace = v => v;
   globalThis.ui = { notifications: { info() {}, warn() {}, error() {} } };
   globalThis.CONFIG = {};
   globalThis.CONST = {};

@@ -160,7 +160,13 @@ async function wireTables(actor) {
 
     if (restock?.table === entry.uuid) {
       update["flags.merchant-presets.shop.restock.table"] = world.uuid;
-      update["flags.merchant-presets.shop.restock.quantities"] = remapQuantities(src.results, world.results, restock.quantities);
+      // A plain object merges into what's already stored, so the stale
+      // compendium result ids would survive alongside the new world ones
+      // (and again on every later Replace Actor); _replace overwrites the
+      // whole map instead, the same way setUpShop already has to (#100
+      // review).
+      update["flags.merchant-presets.shop.restock.quantities"] =
+        _replace(remapQuantities(src.results, world.results, restock.quantities));
     }
   }
   if (!next.length) return false;
@@ -1066,12 +1072,19 @@ async function resolvePackShop(actorData) {
 async function migrateShop(actor) {
   if (!migrationGateOpen) return false;
   const data = actor.toObject();
-  if (!needsMigration(data, NATIVE_SHOP)) return false;
+  // Gathered once, up front: needsMigration must see every scene's tokens too
+  // — a leftover unlinked token still Item Piles-enabled has to reopen the
+  // cut-over even once the actor's and every item's own writes have already
+  // landed (#100 review) — and the same per-scene grouping is reused below.
+  const scenes = game.scenes.map(scene => ({
+    scene, tokens: scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject())
+  }));
+  const tokens = scenes.flatMap(s => s.tokens);
+  if (!needsMigration(data, NATIVE_SHOP, tokens)) return false;
   let changed = false;
 
   const packShop = await resolvePackShop(data);
-  const hasTokenOnScene = game.scenes.some(s => s.tokens.some(t => t.actorId === actor.id));
-  const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene, nativeShop: NATIVE_SHOP });
+  const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
   if (update) { await actor.update(update); changed = true; }
   if (shopError) console.error(`${MODULE} | ${shopError}`);
 
@@ -1081,9 +1094,8 @@ async function migrateShop(actor) {
     console.error(`${MODULE} | invalid migrated stock config for "${item}" on "${actor.name}": ${errors.join("; ")}`);
   }
 
-  for (const scene of game.scenes) {
-    const tokens = scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject());
-    const tokenUpdates = planTokenUpdates(tokens, NATIVE_SHOP);
+  for (const { scene, tokens: sceneTokens } of scenes) {
+    const tokenUpdates = planTokenUpdates(sceneTokens, NATIVE_SHOP);
     if (tokenUpdates.length) { await scene.updateEmbeddedDocuments("Token", tokenUpdates); changed = true; }
   }
 
