@@ -91,7 +91,9 @@ restock, exactly like a shipped shopkeeper's own weapon and armour.
 
 Setting her up again, with another shop or another size, keeps whatever gear
 she's already holding — the dialog only offers her gear this time round — and
-replaces the stock. The stock table she used before isn't deleted; it's left
+replaces the stock. Anything added to her since the last setup, spells and
+features included, goes with the old stock: she comes back as she was set up.
+The stock table she used before isn't deleted; it's left
 behind in the `Merchant Stock` folder, same as it is for a shipped merchant.
 There's no undo. If you decide she shouldn't be a shop after all, turning Item
 Piles off on her stops the shop window and trading, but the module still
