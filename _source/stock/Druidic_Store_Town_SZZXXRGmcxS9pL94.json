@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d54",
+  "formula": "1d51",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -703,22 +703,6 @@
       "flags": {}
     },
     {
-      "_id": "cSYlmcFYkrcHAIBS",
-      "_key": "!tables.results!SZZXXRGmcxS9pL94.cSYlmcFYkrcHAIBS",
-      "type": "document",
-      "name": "Spellcasting: Augury",
-      "img": "icons/sundries/gaming/playing-cards-black.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.S66roYpk68RM51pc",
-      "weight": 1,
-      "range": [
-        44,
-        44
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "jeaJpOvRtIY4NztY",
       "_key": "!tables.results!SZZXXRGmcxS9pL94.jeaJpOvRtIY4NztY",
       "type": "document",
@@ -727,8 +711,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Sf37lvTOODnL9LdV",
       "weight": 1,
       "range": [
-        45,
-        45
+        44,
+        44
       ],
       "drawn": false,
       "description": "",
@@ -743,8 +727,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.P3rfzjfJhz6bJaJq",
       "weight": 1,
       "range": [
-        46,
-        46
+        45,
+        45
       ],
       "drawn": false,
       "description": "",
@@ -759,8 +743,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.llTiwdUvr4EFQskM",
       "weight": 1,
       "range": [
-        47,
-        47
+        46,
+        46
       ],
       "drawn": false,
       "description": "",
@@ -775,8 +759,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.QQbGEkuLvJvdPmc9",
       "weight": 1,
       "range": [
-        48,
-        48
+        47,
+        47
       ],
       "drawn": false,
       "description": "",
@@ -791,24 +775,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.czRnWIYeLA6pgce1",
       "weight": 1,
       "range": [
-        49,
-        49
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "UPmXtNW6LTZfJH2V",
-      "_key": "!tables.results!SZZXXRGmcxS9pL94.UPmXtNW6LTZfJH2V",
-      "type": "document",
-      "name": "Spellcasting: Awaken",
-      "img": "icons/magic/nature/root-vines-face-glow-green.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.2rV3IH7sluLhenoa",
-      "weight": 1,
-      "range": [
-        50,
-        50
+        48,
+        48
       ],
       "drawn": false,
       "description": "",
@@ -823,24 +791,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.UNhlAsq7zWYhI3Ch",
       "weight": 1,
       "range": [
-        51,
-        51
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "U6ITGrI6U6eNhYSj",
-      "_key": "!tables.results!SZZXXRGmcxS9pL94.U6ITGrI6U6eNhYSj",
-      "type": "document",
-      "name": "Spellcasting: Planar Binding",
-      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.iddgf7AqTwrmA0rY",
-      "weight": 1,
-      "range": [
-        52,
-        52
+        49,
+        49
       ],
       "drawn": false,
       "description": "",
@@ -855,8 +807,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.SG6UX7uGksVjnR5k",
       "weight": 1,
       "range": [
-        53,
-        53
+        50,
+        50
       ],
       "drawn": false,
       "description": "",
@@ -871,8 +823,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.un8tvhOgVKUbL0SV",
       "weight": 1,
       "range": [
-        54,
-        54
+        51,
+        51
       ],
       "drawn": false,
       "description": "",
