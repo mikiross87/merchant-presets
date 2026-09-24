@@ -76,12 +76,19 @@ test("a roll below 1 day floors to 1: a restock can't be due before it starts", 
 
 /* ---------------------------------------------------------------- dueRestock */
 
-// dueRestock takes the raw stored flags.merchant-presets.shop, incomplete or
-// not, and completes it itself via schema.mjs's shopFrom — so a fixture only
-// ever states what a test actually cares about. Omitting `hours` gets the
-// #98 default window (07:00-19:00); `hours: null` is the real "always open"
-// value, and the two must not be confused with each other.
-const rawShop = over => ({ version: SHOP_VERSION, ...over });
+// dueRestock and planRestock take the raw stored flags.merchant-presets.shop,
+// incomplete or not, and complete it themselves via schema.mjs's shopFrom —
+// so a fixture only ever states what a test actually cares about. Omitting
+// `hours` gets the #98 default window (07:00-19:00); `hours: null` is the
+// real "always open" value, and the two must not be confused with each
+// other. A fixture is "wired" (a real stock table) by default, since that's
+// every shipped shop's actual state; restock.table: null is its own case
+// (below), not the default one.
+const rawShop = (over = {}) => ({
+  version: SHOP_VERSION,
+  ...over,
+  restock: { table: "Compendium.merchant-presets.stock.RollTable.test", ...over.restock }
+});
 const weeklyShop = rawShop({ restock: { every: 7, onOpen: true } });   // default hours: 07:00-19:00
 
 test("fires the first time the shop opens on or after the due day", () => {
@@ -175,17 +182,23 @@ test("a dice interval is rolled again after each restock, not before", () => {
   assert.equal(rolls.length, 0);
 });
 
-test("a week skipped in one jump gives one restock, not seven", () => {
-  const dailyShop = rawShop({ restock: { every: 1, onOpen: true } });
-  const state = { lastRestock: at(0), dueAt: at(1) };
-  const result = dueRestock(dailyShop, state, at(0), at(7, 8, 0), calendar, noRoll);
+test("a gap that skips several due openings gives exactly one restock, anchored at the most recent of them", () => {
+  // Weekly shop, due day 7. The world isn't checked again until day 30 — six
+  // due days go unseen in one jump.
+  const state = { lastRestock: at(0), dueAt: at(7) };
+  const result = dueRestock(weeklyShop, state, at(6), at(30, 8, 0), calendar, noRoll);
   assert.equal(result.due, true);
-  // Anchored at the *first* due opening (day 1's own 07:00), not "now" —
-  // day 1 is still owed a restock even though six more days went unseen, and
-  // the next one is scheduled from there, not stacked up from the days
-  // skipped, and not slid forward to whenever this happened to be checked.
-  assert.equal(result.at, at(1, 7, 0));
-  assert.deepEqual(result.state, { lastRestock: at(1, 7, 0), dueAt: at(2) });
+  // Anchored at day 30's own opening — the *most recent* due one — not day
+  // 7's, the first one it skipped past: the next due day counts from there,
+  // at day 37, not day 14.
+  assert.equal(result.at, at(30, 7, 0));
+  assert.deepEqual(result.state, { lastRestock: at(30, 7, 0), dueAt: at(37) });
+
+  // The very next tick, a day later, is not due again. Anchoring on day 7
+  // instead would have left dueAt at day 14 — already behind `now` — firing
+  // a second time here for the same gap.
+  const followUp = dueRestock(weeklyShop, result.state, at(30, 8, 0), at(31, 8, 0), calendar, noRoll);
+  assert.equal(followUp.due, false);
 });
 
 test("rewinding the clock never fires, even past the due day", () => {
@@ -253,6 +266,16 @@ test("a shop missing hours entirely gets the #98 default window, not always-open
   // a missing `hours` as falsy (always open) would fire here; the default
   // hours correctly wait for 07:00 instead.
   const result = dueRestock(shopMissingHours, state, at(7, 1, 0), at(7, 2, 0), calendar, noRoll);
+  assert.equal(result.due, false);
+});
+
+test("a shop with no stock table assigned never fires, whatever the schedule says", () => {
+  // The schema's own default restock.table is null (a fresh custom shop, set
+  // up but never given a stock table); rawShop's own default (below) is what
+  // every other test overrides away from.
+  const untabledShop = rawShop({ restock: { table: null } });
+  const state = { lastRestock: at(0), dueAt: at(7) };
+  const result = dueRestock(untabledShop, state, at(7, 6, 0), at(7, 8, 0), calendar, noRoll);
   assert.equal(result.due, false);
 });
 
@@ -422,4 +445,39 @@ test("topup with no quantities configured falls back to \"1\" per line, not a th
   assert.deepEqual(plan.updates, [
     { _id: "i1", "system.quantity": 3, "flags.merchant-presets.stock": arrowsStock }
   ]);
+});
+
+test("a shop with no stock table assigned plans nothing at all", () => {
+  const untabledShop = rawShop({ restock: { mode: "reroll", quantities: { r1: "2d6+4" }, table: null } });
+  const items = [drawn("i1", "Arrows", "consumable", 40), gmAdded];
+  const plan = planRestock(untabledShop, items, draws, { ...context, currentGp: 0 }, noRoll);
+  assert.deepEqual(plan, { deletes: [], creates: [], updates: [], currency: null, restocked: [] });
+});
+
+test("draws sharing a name collapse to the first, in both modes", () => {
+  const duplicateName = { resultId: "r1b", name: "Arrows",
+    data: { type: "consumable", name: "Arrows", system: { price: { value: 1, denomination: "gp" } }, flags: {} } };
+
+  const rerollPlan = planRestock(shop, [], [draws[0], duplicateName], { ...context, containers: {} },
+    rollFor({ "2d6+4": 10 }));
+  assert.equal(rerollPlan.creates.length, 1);   // not two Arrows stacks
+  assert.equal(rerollPlan.creates[0].system.quantity, 10);
+
+  const topupShop = rawShop({ restock: { mode: "topup", quantities: { r1: "2d6+4" } } });
+  const soldOut = [drawn("i1", "Arrows", "consumable", 0)];
+  const topupPlan = planRestock(topupShop, soldOut, [draws[0], duplicateName], { ...context, containers: {} },
+    rollFor({ "2d6+4": 10 }));
+  assert.equal(topupPlan.updates.length, 1);   // not updated twice
+});
+
+test("a missing or invalid purse leaves the till untouched, rather than writing NaN", () => {
+  const missing = planRestock(shop, [], [], { ...context, purse: undefined, currentGp: 100 }, noRoll);
+  assert.equal(missing.currency, null);
+  const invalid = planRestock(shop, [], [], { ...context, purse: NaN, currentGp: 100 }, noRoll);
+  assert.equal(invalid.currency, null);
+});
+
+test("a missing currentGp reads as an empty till, not as already full", () => {
+  const plan = planRestock(shop, [], [], { ...context, currentGp: undefined }, noRoll);
+  assert.equal(plan.currency, context.purse);
 });

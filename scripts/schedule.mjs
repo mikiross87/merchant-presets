@@ -80,28 +80,34 @@ function openingOnDay(day, hours, calendar) {
   return day * secondsPerDay(calendar) + offset;
 }
 
-/** The earliest of `hours`'s daily openings at or after `bound`. */
-function firstOpeningAtOrAfter(bound, hours, calendar) {
+/** The latest of `hours`'s daily openings at or before `bound`. */
+function lastOpeningAtOrBefore(bound, hours, calendar) {
   const day = secondsPerDay(calendar);
   const offset = hours ? minutesOf(hours.open, calendar) * calendar.secondsPerMinute : 0;
-  return openingOnDay(Math.ceil((bound - offset) / day), hours, calendar);
+  return openingOnDay(Math.floor((bound - offset) / day), hours, calendar);
 }
 
 /**
- * The first instant a shop with `hours` opens in `(previous, now]`, on or
- * after `dueAt` — or null if there isn't one.
+ * The most recent instant a shop with `hours` opens in `(previous, now]`, on
+ * or after `dueAt` — or null if there isn't one.
  *
  * Computed straight from the daily opening instant, not by sampling
  * `previous` and `now`'s own open/closed state: an interval under a day long
  * can open *and* close inside it, leaving both ends closed (or, for an
  * overnight shop, both ends open) with no opening visible at either sample
- * point, and a jump of a day or more can carry an opening that arrives
- * before `dueAt` and so doesn't count. `worldTime` is always a whole number
- * of seconds, so `previous + 1` is the first instant strictly after it.
+ * point. `worldTime` is always a whole number of seconds, so `previous + 1`
+ * is the first instant strictly after it.
+ *
+ * The *most recent* qualifying opening, not the first: a jump can cross
+ * several due openings (a shop checked only once a session, say), and only
+ * one restock ever fires for it — anchoring on an early one it has already
+ * passed would leave the *next* due day in the past too, firing again on the
+ * very next tick even though the shop had, in world time, just restocked.
  */
 function nextOpening(hours, dueAt, previous, now, calendar) {
-  const at = firstOpeningAtOrAfter(Math.max(previous + 1, dueAt), hours, calendar);
-  return at <= now ? at : null;
+  const bound = Math.max(previous + 1, dueAt);
+  const at = lastOpeningAtOrBefore(now, hours, calendar);
+  return at >= bound ? at : null;
 }
 
 /**
@@ -133,13 +139,16 @@ export function nextDue(every, from, calendar, roll) {
  * Whether a shop's scheduled restock fires between `previous` and `now`, and
  * the {@link ScheduleState} to store either way.
  *
- * It fires at the first instant the shop opens on or after `state.dueAt` (see
- * {@link nextOpening}) — so a skipped week still gives exactly one restock,
- * anchored at that first opening rather than at `now`, and `nextDue`'s next
- * due day counts from there too. Rewinding the clock (`now` at or before
- * `previous`) never fires, whatever `dueAt` says. `restock.onOpen: false` or
- * `restock.every: "never"` never fires either — those shops restock only by
- * hand.
+ * It fires at the most recent instant the shop opens on or after
+ * `state.dueAt` (see {@link nextOpening}) — so a gap that skips several due
+ * openings still gives exactly one restock, anchored at the *last* of them
+ * rather than the first (or at `now`), and `nextDue`'s next due day counts
+ * from there too — not from an opening already behind `now`, which would
+ * leave the shop due again on the very next tick. Rewinding the clock (`now`
+ * at or before `previous`) never fires, whatever `dueAt` says.
+ * `restock.onOpen: false`, `restock.every: "never"`, or `restock.table: null`
+ * (no stock table assigned — a fresh custom shop, say) never fire either;
+ * those shops restock only by hand, if at all.
  *
  * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
  *   not — completed here via `shopFrom` before anything is read from it.
@@ -156,7 +165,9 @@ export function nextDue(every, from, calendar, roll) {
 export function dueRestock(shop, state, previous, now, calendar, roll) {
   if (now <= previous) return { due: false, at: null, state };
   const { restock, hours } = shopFrom(shop);
-  if (!restock.onOpen || restock.every === "never" || state?.dueAt == null) return { due: false, at: null, state };
+  if (!restock.onOpen || restock.every === "never" || restock.table == null || state?.dueAt == null) {
+    return { due: false, at: null, state };
+  }
   const at = nextOpening(hours, state.dueAt, previous, now, calendar);
   if (at == null) return { due: false, at: null, state };
   return { due: true, at, state: { lastRestock: at, dueAt: nextDue(restock.every, at, calendar, roll) } };
@@ -232,11 +243,25 @@ function drawnItem(draw, context, system) {
 /**
  * The till's new gp — never below the shop's starting purse, but a surplus
  * (say, from a big trade-in) is left alone: "refills to the starting purse"
- * reads as a floor, not a reset back down. `null` when it's already there.
+ * reads as a floor, not a reset back down. `null` when it's already there, or
+ * when there's nothing to refill *to*: a missing or invalid `context.purse`
+ * leaves the till untouched rather than writing `NaN`. A missing
+ * `context.currentGp` reads as an empty till (0), not as "already full".
  */
 function refilledPurse(context) {
-  const gp = Math.max(context.currentGp, context.purse);
-  return gp === context.currentGp ? null : gp;
+  if (!Number.isFinite(context.purse)) return null;
+  const current = Number.isFinite(context.currentGp) ? context.currentGp : 0;
+  const gp = Math.max(current, context.purse);
+  return gp === current ? null : gp;
+}
+
+/** Draws that share a name collapse to the first — one line, one item, even
+ * if the table names it twice; the caller's own draw list decides which
+ * copy that is. */
+function dedupedByName(draws) {
+  const seen = new Map();
+  for (const draw of draws) if (!seen.has(draw.name)) seen.set(draw.name, draw);
+  return [...seen.values()];
 }
 
 /**
@@ -264,6 +289,12 @@ function refilledPurse(context) {
  *   short of its target count — dnd5e pins its quantity to exactly 1, so a
  *   sold one is gone outright, never sitting at zero to update.
  *
+ * `restock.table: null` (no stock table assigned) is a no-op: an empty plan,
+ * nothing deleted, refilled or drawn.
+ *
+ * A `draws` line with a name shared by an earlier line collapses to that
+ * earlier one, in both modes: one line, one item.
+ *
  * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
  *   not — completed here via `shopFrom` before anything is read from it.
  * @param {Item[]} items  The shop's current embedded items.
@@ -274,6 +305,9 @@ function refilledPurse(context) {
  */
 export function planRestock(shop, items, draws, context, roll) {
   const { restock } = shopFrom(shop);
+  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [] };
+
+  const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i));
   const currency = refilledPurse(context);
 
@@ -287,7 +321,7 @@ export function planRestock(shop, items, draws, context, roll) {
     // be gone entirely (keep: false deletes it outright when it sells out —
     // and so does a line that simply rolled 0 last time). Either way it's
     // due; only a line still genuinely in stock is skipped.
-    for (const draw of draws) {
+    for (const draw of uniqueDraws) {
       if (draw.data.type === "container") {
         const have = drawnNow.filter(i => i.name === draw.name).length;
         const want = context.containers?.[draw.name] ?? 1;
@@ -316,7 +350,7 @@ export function planRestock(shop, items, draws, context, roll) {
 
   // reroll: the whole drawn shelf comes back fresh.
   const creates = [];
-  for (const draw of draws) {
+  for (const draw of uniqueDraws) {
     if (draw.data.type === "container") {
       const count = context.containers?.[draw.name] ?? 1;
       for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
