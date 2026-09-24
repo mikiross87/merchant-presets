@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { validateShop, validateStock } from "../scripts/schema.mjs";
 import {
-  SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, planActorUpdate, planAutoRestockDefault,
-  planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, worldHasLegacyShops
+  SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, packShopCandidates, planActorUpdate,
+  planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, worldHasLegacyShops
 } from "../scripts/migrate.mjs";
 
 /** A shipped merchant, straight off `_source`, matched by filename prefix.
@@ -45,6 +45,18 @@ function applied(obj, update) {
     let at = out;
     for (const k of keys) at = (at[k] ??= {});
     at[last] = value;
+  }
+  return out;
+}
+
+/** `actor`, with every pending `planItemUpdates` entry applied — the items
+ *  half of a migration, done. */
+function withItemsMigrated(actor) {
+  const out = structuredClone(actor);
+  for (const u of planItemUpdates(out)) {
+    const item = out.items.find(i => i._id === u._id);
+    item.flags["merchant-presets"] ??= {};
+    item.flags["merchant-presets"].stock = u["flags.merchant-presets.stock"];
   }
   return out;
 }
@@ -136,6 +148,81 @@ test("stripped shop-level keys read as Item Piles' own defaults, not ours", () =
   assert.equal(shop.hours, null);                // openTimes.enabled defaults false
 });
 
+/* -------------------------------------------------------- packShopCandidates */
+
+test("packShopCandidates prefers the #57 marker's source over the actor's own compendium provenance", () => {
+  const actor = {
+    // The SRD stat block the NPC was instantiated from — not a shop.
+    _stats: { compendiumSource: "Compendium.dnd5e.actors24.Actor.commoner0000000" },
+    flags: { "merchant-presets": { shop: { source: "Compendium.merchant-presets.merchants.Actor.generalstore" } } }
+  };
+  assert.deepEqual(packShopCandidates(actor),
+    ["Compendium.merchant-presets.merchants.Actor.generalstore", "Compendium.dnd5e.actors24.Actor.commoner0000000"]);
+});
+
+test("packShopCandidates falls back to the actor's own compendium provenance alone", () => {
+  const actor = { _stats: { compendiumSource: "Compendium.merchant-presets.merchants.Actor.generalstore" } };
+  assert.deepEqual(packShopCandidates(actor), ["Compendium.merchant-presets.merchants.Actor.generalstore"]);
+});
+
+test("packShopCandidates is empty when neither is set", () => {
+  assert.deepEqual(packShopCandidates({}), []);
+});
+
+/* ------------------------------------------------------------- tier fallback */
+
+test("a renamed shipped merchant recovers its tier from the pack, not the name-parse default (#100 review)", () => {
+  const store = legacy(shipped("General_Store_Village_"));   // tier "Village", read off its name suffix
+  store.name = "Grumm's Trading Post";                       // GM renamed it: no (Village|Town|City) suffix left
+  const packShop = { tier: "Village", restock: { every: 3 } };
+  assert.equal(deriveShop(store, packShop).tier, "Village");
+});
+
+test("with no marker and no pack, tier still falls back to name-parsing, then Town", () => {
+  const bare = {
+    name: "Grumm",
+    flags: { "merchant-presets": { profile: "Commoner" }, "item-piles": { data: { enabled: true, type: "merchant" } } }
+  };
+  assert.equal(deriveShop(bare).tier, "Town");
+});
+
+/* --------------------------------------------------- shop validation & repair */
+
+test("an invalid rate (sellsAt <= 0) repairs to null (follow the world default), not written broken", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["item-piles"].data.buyPriceModifier = 0;   // invalid: sellsAt must be > 0
+  const update = planActorUpdate(store, {});
+  assert.ok(update);
+  const shop = update["flags.merchant-presets.shop"];
+  assert.equal(shop.terms.sellsAt, null);
+  assert.ok(validateShop(shop).ok, validateShop(shop).errors.join(" | "));
+});
+
+test("a duplicate category override collapses to the last one, as Item Piles' own save would", () => {
+  const store = legacy(shipped("Alchemists_Apothecaries_Village_"));
+  const mods = store.flags["item-piles"].data.itemTypePriceModifiers;
+  mods.push({ ...mods[0], buyPriceModifier: 2 });   // a second, later "Valuables" override
+  const shop = deriveShop(store);
+  assert.deepEqual(shop.terms.categories, [{ category: "Valuables", sellsAt: 2, buysAt: 1 }]);
+  assert.ok(validateShop(shop).ok);
+});
+
+test("open == close hours repairs to null (always open) — the schema can't encode Item Piles' own reading of it", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["item-piles"].data.openTimes.close = { ...store.flags["item-piles"].data.openTimes.open };
+  const update = planActorUpdate(store, {});
+  assert.ok(update);
+  assert.equal(update["flags.merchant-presets.shop"].hours, null);
+});
+
+test("a shop config still invalid after repair is not written or stamped, and throws with the errors", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  // Unrepairable: 0 is neither "never" nor an integer >= 1 nor a dice formula,
+  // and restock.every isn't one of repairShop's rules.
+  const packShop = { restock: { every: 0 } };
+  assert.throws(() => planActorUpdate(store, { packShop }), /restock\.every/);
+});
+
 /* ------------------------------------------------------------- deriveStock */
 
 test("per-item hidden and notForSale carry across — the dangerous keys (#97)", () => {
@@ -190,6 +277,24 @@ test("worldHasLegacyShops sees an unmigrated shop and ignores everything else", 
   assert.equal(worldHasLegacyShops([migrated, notOurs, legacy]), true);
 });
 
+test("needsMigration stays true when the shop half landed but items still lack .stock (#100 review)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const shopOnly = applied(store, { "flags.merchant-presets.shop": deriveShop(store) });
+  // Shop half done, as if updateEmbeddedDocuments("Item", …) had then thrown.
+  assert.equal(needsMigration(shopOnly), true);
+  // Nothing left for the actor-level update — the shop's current, nativeShop's
+  // off — but planItemUpdates independently still has work, and migrateShop
+  // (scripts/merchant-presets.mjs) calls it regardless of planActorUpdate's result.
+  assert.equal(planActorUpdate(shopOnly, {}), null);
+  assert.ok(planItemUpdates(shopOnly).length > 0);
+});
+
+test("needsMigration is false only once both the shop and every item are migrated", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const migrated = withItemsMigrated(applied(store, { "flags.merchant-presets.shop": deriveShop(store) }));
+  assert.equal(needsMigration(migrated), false);
+});
+
 /* ------------------------------------------------------------ planActorUpdate */
 
 test("nativeShop off (the default): only the data half is planned, Item Piles and the sheet untouched", () => {
@@ -232,7 +337,7 @@ test("planActorUpdate respects a GM's own ownership choice (not 0) and never ove
 test("planActorUpdate is idempotent (nativeShop off): applying its own plan leaves nothing to migrate", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const first = planActorUpdate(store, { hasTokenOnScene: true });
-  const migrated = applied(store, first);
+  const migrated = withItemsMigrated(applied(store, first));
   assert.equal(needsMigration(migrated), false);
   assert.equal(planActorUpdate(migrated, { hasTokenOnScene: true }), null);
 });
@@ -240,7 +345,7 @@ test("planActorUpdate is idempotent (nativeShop off): applying its own plan leav
 test("planActorUpdate is idempotent (nativeShop on): applying its own plan leaves nothing to migrate", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const first = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
-  const migrated = applied(store, first);
+  const migrated = withItemsMigrated(applied(store, first));
   assert.equal(needsMigration(migrated, true), false);
   assert.equal(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: true }), null);
 });
@@ -259,7 +364,8 @@ test("Item Piles left on but shop already current: only the switch-off is planne
 
 test("a data-migrated shop is picked up again once nativeShop flips on", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const dataOnly = applied(store, planActorUpdate(store, {}));   // nativeShop off: data half only
+  // nativeShop off: data half only, both actor- and item-level.
+  const dataOnly = withItemsMigrated(applied(store, planActorUpdate(store, {})));
 
   // Not re-opened while the cut-over is still off, however many times it runs.
   assert.equal(needsMigration(dataOnly), false);
@@ -319,6 +425,41 @@ test("an item never in itemFlags — a GM's own addition — is read from its li
   const update = planItemUpdates(store).find(u => u._id === "gmAddedItem0001");
   assert.equal(update["flags.merchant-presets.stock"].infinite, false);
   assert.equal(update["flags.merchant-presets.stock"].hidden, true);
+});
+
+test("a GM-hidden shipped item stays hidden after migration (#100 review: live wins for hidden/notForSale)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  bell.flags["item-piles"].item.hidden = true;      // the GM hid it directly on the live item
+  bell.flags["item-piles"].item.notForSale = true;
+  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].hidden, true);
+  assert.equal(update["flags.merchant-presets.stock"].notForSale, true);
+});
+
+test("a GM's live re-categorization wins over the shipped record", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  assert.equal(store.flags["merchant-presets"].itemFlags.Bell.customCategory, undefined);   // shipped with none
+  bell.flags["item-piles"].item.customCategory = "Curiosities";   // the GM gave it one directly
+  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].category, "Curiosities");
+});
+
+test("bookkeeping keys still come from the record, not a live edit a restock would overwrite anyway", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  const recorded = { ...store.flags["merchant-presets"].itemFlags.Bell };
+  // As if a restock's own applyStockMode/reapplyItemFlags pass had briefly
+  // left the live flags different from the record, mid-refresh.
+  Object.assign(bell.flags["item-piles"].item,
+    { infiniteQuantity: "no", keepOnMerchant: false, isService: true, cantBeSoldToMerchants: true });
+  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  const stock = update["flags.merchant-presets.stock"];
+  assert.equal(stock.infinite, { yes: true, no: false, default: null }[recorded.infiniteQuantity]);
+  assert.equal(stock.keep, recorded.keepOnMerchant);
+  assert.equal(stock.service, recorded.isService);
+  assert.equal(stock.noBuyback, recorded.cantBeSoldToMerchants);
 });
 
 /* ---------------------------------------------------------------- ownership */

@@ -23,8 +23,8 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
   from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
-import { NATIVE_SHOP, needsMigration, planActorUpdate, planAutoRestockDefault, planItemUpdates, planTokenUpdates,
-  worldHasLegacyShops } from "./migrate.mjs";
+import { NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate, planAutoRestockDefault, planItemUpdates,
+  planTokenUpdates, worldHasLegacyShops } from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
 const TABLE_FOLDER = "Merchant Stock";
@@ -1005,20 +1005,24 @@ function registerSpellcasting() {
 
 /**
  * The shipped merchant's own `flags.merchant-presets.shop` (#99), for
- * `restock.every` — the one field Item Piles never had. Resolved from the
- * actor's compendium provenance, or the pre-migration #57 marker's `source`
- * for an NPC set up as a shop. `undefined` when neither resolves (the source
- * merchant has since been deleted, say), so the migration falls back to the
- * schema default.
+ * `restock.every` — the one field Item Piles never had. Resolved from
+ * `packShopCandidates`, in preference order, returning the first that
+ * actually names a shop (a #57 NPC's own compendium provenance points at
+ * the SRD stat block it was instantiated from, not a shop, so that
+ * candidate must be skipped rather than trusted outright — #100 review).
+ * `undefined` when nothing resolves (a #57 source since deleted, say), so
+ * the migration falls back to the schema default.
  *
  * @param {object} actorData  `actor.toObject()`.
  * @returns {Promise<object|undefined>}
  */
 async function resolvePackShop(actorData) {
-  const uuid = actorData._stats?.compendiumSource ?? actorData.flags?.["merchant-presets"]?.shop?.source;
-  if (!uuid) return undefined;
-  const doc = await foundry.utils.fromUuid(uuid).catch(() => null);
-  return doc?.flags?.["merchant-presets"]?.shop ?? undefined;
+  for (const uuid of packShopCandidates(actorData)) {
+    const doc = await foundry.utils.fromUuid(uuid).catch(() => null);
+    const shop = doc?.flags?.["merchant-presets"]?.shop;
+    if (shop) return shop;
+  }
+  return undefined;
 }
 
 /**
@@ -1385,21 +1389,22 @@ Hooks.once("ready", () => {
   // needs it.
   try { applyAutoRestockDefault(); }
   catch (err) { console.error(`${MODULE} | could not apply the autoRestock default`, err); }
+
+  // One handler, not two: wiring a fresh merchant to a world stock table
+  // has to finish before the migration reads restock.table/.quantities off
+  // it, or it captures the compendium table's ids, which don't survive the
+  // import (#100 review). `onCreateActor` sequences the two.
   Hooks.on("createActor", (actor, _options, userId) => {
     if (userId !== game.user.id) return;
-    migrateShop(actor).catch(err => console.error(`${MODULE} |`, err));
+    onCreateActor(actor).catch(err => console.error(`${MODULE} |`, err));
   });
-  migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
 
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
+    migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
     return;
   }
 
-  Hooks.on("createActor", (actor, _options, userId) => {
-    if (userId !== game.user.id) return;
-    rewire(actor).catch(err => console.error(`${MODULE} |`, err));
-  });
   // Dragging in a shop the world already holds offers Replace Actor, and that
   // is the default: Foundry keeps the compendium id on import, then writes the
   // compendium data over the existing actor as an update (#66). Only a
@@ -1416,8 +1421,30 @@ Hooks.once("ready", () => {
   // Time moves while a world is closed, so put the shops on the right side of
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
-  wireReplacedAll().then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); });
+  // wireReplacedAll before migrateAll, same reason as onCreateActor: a
+  // merchant still on its compendium stock table from earlier in the
+  // world's life must be repointed at the world copy before the migration
+  // reads it (#100 review).
+  wireReplacedAll()
+    .then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); })
+    .then(() => migrateAll())
+    .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
 
   log("ready");
 });
+
+/**
+ * One merchant just created — dragged from the compendium, or set up as one
+ * via #57. Wired to a world stock table first, while Item Piles can still do
+ * that, so the migration that follows sees the table it will actually
+ * keep — reading `restock.table`/`.quantities` off the actor before wiring
+ * repoints it would capture the compendium table's ids, which the import
+ * doesn't carry over (#100 review).
+ *
+ * @param {Actor} actor
+ */
+async function onCreateActor(actor) {
+  if (game.modules.get("item-piles")?.active) await rewire(actor);
+  await migrateShop(actor);
+}

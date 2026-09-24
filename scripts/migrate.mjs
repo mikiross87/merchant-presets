@@ -32,8 +32,8 @@
  * since deleted, say).
  */
 
-import { isGearItem, isShop, tierOf } from "./shop.mjs";
-import { SHOP_DEFAULTS, SHOP_VERSION } from "./schema.mjs";
+import { isGearItem, isShop, TIERS, tierOf } from "./shop.mjs";
+import { SHOP_DEFAULTS, SHOP_VERSION, validateShop } from "./schema.mjs";
 
 /** The 2.0 shop sheet's id, registered with `DocumentSheetConfig` (#104) and
  *  written to every migrated shop's `flags.core.sheetClass` so core's own
@@ -136,6 +136,44 @@ function canonicalOrder(values, canonical) {
   return [...known, ...rest];
 }
 
+/**
+ * The tier a migrated shop should carry: the actor's own #57 marker when it
+ * names one; else `packShop`'s own tier; else `tierOf(actor)`'s last resort
+ * (parsing the actor's name, then "Town"). `packShop` comes before the
+ * name-parse because a shipped merchant's own name is the only thing that
+ * parse can read — a GM who renamed "General Store (Village)" to something
+ * of their own loses the "(Village)" suffix, and `tierOf` would silently
+ * default such a shop to Town. The shipped merchant's *own* document, kept
+ * at `packShop`, still carries its original name and tier (#100 review).
+ *
+ * @param {object} actor
+ * @param {object} [packShop]
+ * @returns {"Village"|"Town"|"City"}
+ */
+function tierFrom(actor, packShop) {
+  const marked = actor?.flags?.["merchant-presets"]?.shop?.tier;
+  if (TIERS.includes(marked)) return marked;
+  if (TIERS.includes(packShop?.tier)) return packShop.tier;
+  return tierOf(actor);
+}
+
+/**
+ * The merchant document(s) `packShop` (`deriveShop`'s pack fallback) might be
+ * resolved from, most authoritative first: the actor's own #57 marker
+ * (`flags.merchant-presets.shop.source`) — the shipped merchant an NPC was
+ * set up *as* — before the actor's own compendium provenance
+ * (`_stats.compendiumSource`), which for a #57 NPC points at the SRD stat
+ * block it was *instantiated from*, not a shop at all (#100 review). An
+ * ordinary shipped merchant has no #57 marker, so its own provenance is the
+ * only candidate.
+ *
+ * @param {object} actor
+ * @returns {string[]}
+ */
+export function packShopCandidates(actor) {
+  return [actor?.flags?.["merchant-presets"]?.shop?.source, actor?._stats?.compendiumSource].filter(Boolean);
+}
+
 /** `flags.item-piles.data`, with every stripped key read back as Item Piles' own default. */
 function pileData(actor) {
   const raw = actor?.flags?.["item-piles"]?.data ?? {};
@@ -151,11 +189,22 @@ function pileData(actor) {
   };
 }
 
-/** `terms.categories` from `itemTypePriceModifiers`' custom-category overrides (Valuables, or a GM's own). */
+/**
+ * `terms.categories` from `itemTypePriceModifiers`' custom-category
+ * overrides (Valuables, or a GM's own). The schema rejects two entries
+ * naming the same category, but Item Piles enforces no such thing; if a
+ * GM's data ever carries a repeat, the later entry wins, the way saving
+ * Item Piles' own settings form — which always writes the whole array —
+ * would leave only its latest edit standing (#100 review).
+ */
 function categoriesFrom(modifiers) {
-  return (modifiers ?? [])
-    .filter(m => m?.type === "custom" && m.override && m.category)
-    .map(m => ({ category: m.category, sellsAt: m.buyPriceModifier, buysAt: m.sellPriceModifier }));
+  const byCategory = new Map();
+  for (const m of modifiers ?? []) {
+    if (m?.type === "custom" && m.override && m.category) {
+      byCategory.set(m.category, { category: m.category, sellsAt: m.buyPriceModifier, buysAt: m.sellPriceModifier });
+    }
+  }
+  return [...byCategory.values()];
 }
 
 /** The values on `filters`' entries at `path`, as a Set, comma-split. */
@@ -198,7 +247,7 @@ export function deriveShop(actor, packShop) {
   return {
     ...base,
     version: SHOP_VERSION,
-    tier: tierOf(actor),
+    tier: tierFrom(actor, packShop),
     source: actor?.flags?.["merchant-presets"]?.shop?.source ?? null,
     description: ip.description,
     terms: {
@@ -246,27 +295,47 @@ export function deriveStock(flags) {
 }
 
 /**
- * The Item Piles flags to migrate `item` from, flattened to `deriveStock`'s
- * shape.
+ * Keys a restock overwrites on the *live* item as bookkeeping, so the live
+ * flag is not this module's own current truth for them —
+ * `flags.merchant-presets.itemFlags`'s record is:
  *
- * `flags.merchant-presets.itemFlags` — this shop's own record of what each
- * stock line should be, restored after every restock (CONTRIBUTING.md) — is
- * preferred when it names the item: a stock-mode pass (`applyStockMode`) can
- * already have overwritten the item's *live* `infiniteQuantity` to `"no"` as
- * bookkeeping once a count is rolled, which `itemFlags` is exactly there to
- * survive. An item never in that record — one a GM added to the shelf by
- * hand, never part of the shipped stock list — is read from its own live
- * flags instead.
+ * - `infiniteQuantity`: `applyStockMode` sets it to `"no"` on every item a
+ *   count gets rolled for, import or restock, whatever it shipped as.
+ * - `keepOnMerchant`, `isService`, `cantBeSoldToMerchants`, and
+ *   `quantityForPrice`: `reapplyItemFlags` writes all four straight back
+ *   from the record after every restock (Item Piles rebuilds the shelf from
+ *   the compendium, which carries none of this module's flags at all).
+ *
+ * `hidden`, `notForSale` and `customCategory` are untouched by either, so a
+ * GM's live edit to one of those — hiding a shipped item, say (#97) — is
+ * durable and outlives a restock; the record was only ever a snapshot of
+ * what the item shipped with, and doesn't even carry `hidden`/`notForSale`
+ * at all (#100 review).
+ */
+const RECORD_WINS = new Set(["infiniteQuantity", "keepOnMerchant", "isService", "cantBeSoldToMerchants",
+  "quantityForPrice"]);
+
+/**
+ * The Item Piles flags to migrate `item` from, flattened to `deriveStock`'s
+ * shape: the item's own live flags, with `RECORD_WINS`' keys overridden from
+ * `flags.merchant-presets.itemFlags` when it names the item — this shop's
+ * own record of what each stock line should be, restored after every
+ * restock (CONTRIBUTING.md). An item never in that record — one a GM added
+ * to the shelf by hand, never part of the shipped stock list — is read
+ * entirely from its own live flags.
  *
  * @param {object} actor
  * @param {object} item
  * @returns {object}
  */
 function sourceFlagsOf(actor, item) {
-  const recorded = actor?.flags?.["merchant-presets"]?.itemFlags?.[item.name];
-  if (recorded) return recorded;
   const ip = item.flags?.["item-piles"] ?? {};
-  return { ...ip.item, quantityForPrice: ip.system?.quantityForPrice };
+  const live = { ...ip.item, quantityForPrice: ip.system?.quantityForPrice };
+  const recorded = actor?.flags?.["merchant-presets"]?.itemFlags?.[item.name];
+  if (!recorded) return live;
+  const merged = { ...live };
+  for (const key of RECORD_WINS) if (key in recorded) merged[key] = recorded[key];
+  return merged;
 }
 
 /** Whether `actor`'s own `flags.merchant-presets.shop` is already this version's. */
@@ -274,14 +343,24 @@ function hasCurrentShop(actor) {
   return actor?.flags?.["merchant-presets"]?.shop?.version === SHOP_VERSION;
 }
 
+/** Whether any of `actor`'s own stock lines (the shopkeeper's own kit
+ *  aside) still lack `flags.merchant-presets.stock` — the item half of the
+ *  migration, tracked apart from the shop half: `Actor#update` and
+ *  `Actor#updateEmbeddedDocuments` are two separate writes, and either can
+ *  land while the other throws (#100 review). */
+function itemsNeedStock(actor) {
+  return (actor?.items ?? []).some(i => !isGearItem(i) && !i.flags?.["merchant-presets"]?.stock);
+}
+
 /**
  * Whether `actor` still needs migrating: one of our shops without a current
- * shop config (the data half — always due), or, once `nativeShop` is live,
- * one Item Piles still treats as its own merchant (the cut-over half).
- * Idempotent once both are fixed — a second call on the migrated actor
- * returns `false` — and re-opens on its own once `nativeShop` flips: a shop
- * already on a current config but still Item Piles' own merchant is picked
- * up again to finish the cut-over, without needing a version bump.
+ * shop config or with any stock line still unmigrated (the data half —
+ * always due), or, once `nativeShop` is live, one Item Piles still treats as
+ * its own merchant (the cut-over half). Idempotent once all three are fixed
+ * — a second call on the migrated actor returns `false` — and re-opens on
+ * its own once `nativeShop` flips: a shop already on a current config but
+ * still Item Piles' own merchant is picked up again to finish the cut-over,
+ * without needing a version bump.
  *
  * @param {object} actor
  * @param {boolean} [nativeShop] Defaults to `NATIVE_SHOP`.
@@ -289,7 +368,7 @@ function hasCurrentShop(actor) {
  */
 export function needsMigration(actor, nativeShop = NATIVE_SHOP) {
   if (!isShop(actor)) return false;
-  if (!hasCurrentShop(actor)) return true;
+  if (!hasCurrentShop(actor) || itemsNeedStock(actor)) return true;
   if (!nativeShop) return false;      // data half already done; the cut-over isn't live yet
   return actor.flags?.["item-piles"]?.data?.enabled === true;
 }
@@ -321,6 +400,48 @@ export function worldHasLegacyShops(actors) {
 export function planAutoRestockDefault(hasStoredValue, worldHasLegacyShops) {
   if (hasStoredValue) return null;
   return worldHasLegacyShops ? false : null;
+}
+
+/**
+ * `shop` (a `deriveShop` result), repaired by rule if it fails
+ * `validateShop`. Item Piles enforces none of this schema's invariants, so a
+ * GM's raw data can violate them even though Item Piles itself never
+ * complained — and unrepaired, an invalid config would still get written
+ * and stamped current (`hasCurrentShop` reads only the version), so
+ * `shopFrom` throws on every later read of it, forever (#100 review).
+ *
+ * - `terms.sellsAt`/`.buysAt`, or a `terms.categories` entry's own, invalid
+ *   (a rate must be positive; a category's must both be present) → the
+ *   top-level rate becomes `null`, the schema's own "follow the world
+ *   default" (#110) and the closest a migration can get to a value Item
+ *   Piles allowed but this schema doesn't; an unfixable category entry is
+ *   dropped rather than kept with a rate it can't validly carry.
+ * - A `terms.categories` entry naming the same category as an earlier one
+ *   can't reach here — `categoriesFrom` already collapses those.
+ * - `hours` invalid (open == close, or an out-of-range hour/minute) →
+ *   `null` ("always open"). Item Piles' own `isMerchantClosed` treats
+ *   open == close as closed all but the one minute they coincide on
+ *   (item-piles.js:~36219), not always open — but the schema has no way to
+ *   encode that degenerate state at all, and leaving a shop permanently
+ *   open is the safer failure than leaving it permanently unmigrated.
+ *
+ * @param {object} shop
+ * @returns {{shop: object, ok: boolean, errors: string[]}} `ok`: whether
+ *   `shop` (repaired or not) now validates.
+ */
+function repairShop(shop) {
+  let { ok, errors } = validateShop(shop);
+  if (ok) return { shop, ok, errors };
+
+  const repaired = structuredClone(shop);
+  if (errors.some(e => e.startsWith("terms.sellsAt"))) repaired.terms.sellsAt = null;
+  if (errors.some(e => e.startsWith("terms.buysAt"))) repaired.terms.buysAt = null;
+  repaired.terms.categories = repaired.terms.categories.filter((c, i) =>
+    !errors.some(e => e.startsWith(`terms.categories.${i}`)));
+  if (errors.some(e => e.startsWith("hours"))) repaired.hours = null;
+
+  ({ ok, errors } = validateShop(repaired));
+  return { shop: repaired, ok, errors };
 }
 
 /** `flags.core.sheetClass`, or `null` if it's already ours. */
@@ -362,12 +483,20 @@ export function planOwnership(actor, hasTokenOnScene) {
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
  * @param {boolean} [options.nativeShop]      Defaults to `NATIVE_SHOP`.
  * @returns {object|null}
+ * @throws {TypeError} listing every error, when the derived shop config is
+ *   still invalid after `repairShop` — nothing is written for `actor` at
+ *   all, so it's retried, unrepaired, on every later pass rather than
+ *   silently stuck on a broken config; the caller logs it.
  */
 export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP } = {}) {
   if (!needsMigration(actor, nativeShop)) return null;
   const update = {};
 
-  if (!hasCurrentShop(actor)) update["flags.merchant-presets.shop"] = deriveShop(actor, packShop);
+  if (!hasCurrentShop(actor)) {
+    const { shop, ok, errors } = repairShop(deriveShop(actor, packShop));
+    if (!ok) throw new TypeError(`Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`);
+    update["flags.merchant-presets.shop"] = shop;
+  }
 
   if (nativeShop) {
     if (actor.flags?.["item-piles"]?.data?.enabled !== false) update["flags.item-piles.data.enabled"] = false;
@@ -382,7 +511,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (ownership !== null) update["ownership.default"] = ownership;
   }
 
-  return update;
+  return Object.keys(update).length ? update : null;
 }
 
 /**
