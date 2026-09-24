@@ -100,7 +100,8 @@ jobs:
           # data/ is the generator's input for _source; the runtime never reads it.
           zip -r module.zip . \
             -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" -x "data/*" \
-            -x "node_modules/*" -x "package*.json" -x "eslint.config.mjs"
+            -x "node_modules/*" -x "package*.json" -x "eslint.config.mjs" \
+            -x "design/*" -x "docs/*"
 
       - name: Require release notes for this version
         run: |
