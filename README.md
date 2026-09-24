@@ -34,7 +34,7 @@ https://github.com/mikiross87/merchant-presets/releases/latest/download/module.j
 
 | | |
 |---|---|
-| System | `dnd5e` 5.0.0+ |
+| System | `dnd5e` 5.3.0+ |
 | Required | `item-piles` 3.2.7+, `itempilesdnd5e` |
 | Optional | `simple-nutrition-5e` 1.0+, for meals and food that feed characters |
 

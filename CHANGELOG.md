@@ -57,6 +57,10 @@ than for the code. Reference the issue or PR it closes.
   record their spell level the way dnd5e 6.0.5's own do. A restock already
   drew its scrolls from dnd5e's own compendium, so this only changes the first
   stock of a merchant dragged in fresh. (#91)
+- Verified on dnd5e 6.0.5. The oldest dnd5e it supports is now 5.3.0, the
+  first 5.x release made for Foundry 14, where it has been tested; it used to
+  say 5.0.0, which had never been tested. Nothing here needs dnd5e 6.
+  (#86, #93)
 
 ### Removed
 
