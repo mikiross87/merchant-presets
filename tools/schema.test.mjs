@@ -30,7 +30,6 @@ function shopOf(merchant) {
     tier: merchant.name.match(/\((Village|Town|City)\)/)[1],
     source: null,
     description: d.description,
-    image: d.merchantImage,
     terms: {
       sellsAt: d.buyPriceModifier,
       buysAt: d.sellPriceModifier,
@@ -100,7 +99,7 @@ test("the same real data with one key misspelt fails (negative control)", () => 
 /* ---------------------------------------------------------------- shop */
 
 test("an empty shop takes every default, and the defaults validate", () => {
-  assert.deepEqual(shopFrom({}), SHOP_DEFAULTS);
+  assert.deepEqual(shopFrom({ version: SHOP_VERSION }), SHOP_DEFAULTS);
   assert.ok(validateShop(SHOP_DEFAULTS).ok, errorsOf(validateShop(SHOP_DEFAULTS)));
   assert.equal(SHOP_DEFAULTS.version, SHOP_VERSION);
 });
@@ -118,7 +117,7 @@ test("unknown keys are rejected at every level, by path", () => {
     [{ terms: { sellAt: 1 } }, /terms\.sellAt/],
     [{ terms: { categories: [{ category: "Valuables", sellsAt: 1, buysAt: 1, note: "" }] } }, /terms\.categories\.0\.note/],
     [{ hours: { open: { hour: 7, minute: 0, second: 0 }, close: { hour: 19, minute: 0 } } }, /hours\.open\.second/],
-    [{ restock: { table: null, every: 7 } }, /restock\.every/],
+    [{ restock: { table: null, days: 7 } }, /restock\.days/],
     [{ wontBuy: { items: [] } }, /wontBuy\.items/]
   ];
   for (const [shop, message] of cases) {
@@ -180,7 +179,7 @@ test("shopFrom fills what is missing, deeply, without touching its input or the 
   shop.wontBuy.kinds.push("meal");
   assert.deepEqual(SHOP_DEFAULTS.terms.categories, []);
   assert.deepEqual(SHOP_DEFAULTS.wontBuy.kinds, []);
-  assert.deepEqual(shopFrom({}).wontBuy.kinds, []);
+  assert.deepEqual(shopFrom({ version: SHOP_VERSION }).wontBuy.kinds, []);
 });
 
 test("shopFrom keeps null hours rather than restoring the default window", () => {
@@ -236,25 +235,23 @@ test("keys inherited from Object.prototype are unknown keys, not a crash", () =>
   assert.equal(validateShop(Object.create({ version: SHOP_VERSION })).ok, false);
 });
 
-test("shopFrom drops __proto__ instead of adopting it as the prototype", () => {
-  const shop = shopFrom(JSON.parse('{"__proto__":{"polluted":1},"tier":"City"}'));
-  assert.equal(shop.polluted, undefined);
-  assert.equal(Object.getPrototypeOf(shop), Object.prototype);
-  assert.equal(shop.tier, "City");
+test("shopFrom refuses __proto__ instead of adopting it as the prototype", () => {
+  assert.throws(() => shopFrom(JSON.parse('{"version":1,"__proto__":{"polluted":1}}')), /__proto__: unknown key/);
+  assert.equal({}.polluted, undefined);
 });
 
 test("a key set to undefined counts as missing, in validation and in shopFrom alike", () => {
   // A mapping from Item Piles data whose defaults were stripped yields undefined values.
   assert.ok(validateShop({ version: SHOP_VERSION, tier: undefined }).ok);
   assert.ok(validateStock({ keep: undefined, bundle: undefined }).ok);
-  assert.equal(shopFrom({ tier: undefined }).tier, SHOP_DEFAULTS.tier);
+  assert.equal(shopFrom({ version: SHOP_VERSION, tier: undefined }).tier, SHOP_DEFAULTS.tier);
 });
 
 test("the defaults can't be changed by accident", () => {
   assert.throws(() => { SHOP_DEFAULTS.terms.sellsAt = 9; }, TypeError);
   assert.throws(() => { SHOP_DEFAULTS.terms.categories.push({}); }, TypeError);
   assert.throws(() => { STOCK_DEFAULTS.keep = false; }, TypeError);
-  assert.equal(shopFrom({}).terms.sellsAt, 1);
+  assert.equal(shopFrom({ version: SHOP_VERSION }).terms.sellsAt, null);
 });
 
 test("lists with holes and non-finite numbers are errors", () => {
@@ -266,4 +263,58 @@ test("lists with holes and non-finite numbers are errors", () => {
     assert.equal(validateShop({ version: SHOP_VERSION, terms: { buysAt: n } }).ok, false, String(n));
   }
   assert.equal(validateStock({ bundle: Infinity }).ok, false);
+});
+
+/* ------------------------------------------- later decisions on #98 (#105, #110) */
+
+test("rates may be null, meaning the world default (#110)", () => {
+  assert.ok(validateShop({ version: SHOP_VERSION, terms: { sellsAt: null, buysAt: null } }).ok);
+  assert.equal(SHOP_DEFAULTS.terms.sellsAt, null);
+  assert.equal(SHOP_DEFAULTS.terms.buysAt, null);
+  // A category rule is a rule: it always states its own rates.
+  const rule = { category: "Valuables", sellsAt: null, buysAt: 1 };
+  assert.equal(validateShop({ version: SHOP_VERSION, terms: { categories: [rule] } }).ok, false);
+});
+
+test("the shop's portrait is the actor's image, so there is no image field", () => {
+  assert.equal("image" in SHOP_DEFAULTS, false);
+  assert.match(errorsOf(validateShop({ version: SHOP_VERSION, image: "a.webp" })), /image: unknown key/);
+});
+
+test("restock runs every N days, on a dice formula, or never, and re-rolls or tops up (#105)", () => {
+  for (const every of [1, 7, 14, "1d4+2", "2d6", "never"]) {
+    assert.ok(validateShop({ version: SHOP_VERSION, restock: { every } }).ok, String(every));
+  }
+  for (const every of [0, -1, 2.5, "", "weekly", "Never", null]) {
+    assert.equal(validateShop({ version: SHOP_VERSION, restock: { every } }).ok, false, String(every));
+  }
+  for (const mode of ["reroll", "topup"]) assert.ok(validateShop({ version: SHOP_VERSION, restock: { mode } }).ok);
+  assert.equal(validateShop({ version: SHOP_VERSION, restock: { mode: "refill" } }).ok, false);
+  assert.equal(SHOP_DEFAULTS.restock.mode, "reroll");
+});
+
+test("restock quantities are dice formulas", () => {
+  assert.ok(validateShop({ version: SHOP_VERSION, restock: { quantities: { a: "1", b: "2d6+4", c: "1d2-1", d: "(2d6+4)*20" } } }).ok);
+  assert.equal(validateShop({ version: SHOP_VERSION, restock: { quantities: { a: "lots" } } }).ok, false);
+});
+
+/* ------------------------------------------------- merging needs valid input */
+
+test("shopFrom and stockFrom refuse invalid input rather than guess", () => {
+  assert.throws(() => shopFrom(null), TypeError);
+  assert.throws(() => stockFrom(null), TypeError);
+  // No version: an old config must not come back stamped as the current one.
+  assert.throws(() => shopFrom({}), /version: missing/);
+  assert.throws(() => shopFrom({ tier: "City" }), /version: missing/);
+  // Half-set hours must not be completed with a window the GM never set.
+  assert.throws(() => shopFrom({ version: SHOP_VERSION, hours: { open: { hour: 20, minute: 0 } } }), /hours\.close: missing/);
+  assert.throws(() => stockFrom({ bundle: 0 }), /bundle/);
+});
+
+test("a category rule without a name is missing its name, not a duplicate", () => {
+  const rule = { sellsAt: 1, buysAt: 1 };
+  const r = validateShop({ version: SHOP_VERSION, terms: { categories: [rule, rule] } });
+  assert.equal(r.ok, false);
+  assert.match(errorsOf(r), /category: missing/);
+  assert.doesNotMatch(errorsOf(r), /duplicate/);
 });
