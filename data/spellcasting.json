@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_doc": "Spellcasting sold by name (#55). Edited by hand. tools/build_spell_goods.py sells every SRD 5.2 spell with a costed material component by name, with the component in the price, unless it is listed under not_sold, and stops if a listed spell has no costed component. A spell is sold by name only if it works without the caster: a buyer walks out of the shop with it. The ones listed here stay available through the level services, with their components added.",
+  "_doc": "Spellcasting sold by name (#55). Edited by hand. tools/build_spell_goods.py sells every SRD 5.2 spell with a costed material component by name, with the component in the price, unless it is listed under not_sold, and stops if a listed spell has no costed component. A spell is sold by name only if it works without the caster: a buyer walks out of the shop with it. A spell that tells the caster something counts, since the caster passes on what they learned, unless the answer is about the caster's own plans or the caster has to stay with the buyer to use it. The ones listed here stay available through the level services, with their components added.",
   "not_sold": [
     {"spell": "Contingency", "reason": "range Self: it can only ever take effect on the caster"},
     {"spell": "Shapechange", "reason": "the caster is the one who changes shape"},
@@ -13,7 +13,7 @@
     {"spell": "Secret Chest", "reason": "only the caster can recall the chest"},
     {"spell": "Warding Bond", "reason": "it works only within 60 feet of the caster, who takes the same damage"},
     {"spell": "Holy Aura", "reason": "an aura that emanates from the caster"},
-    {"spell": "Find the Path", "reason": "the caster is the one who senses the route"},
+    {"spell": "Find the Path", "reason": "the caster must travel with the group to guide it"},
     {"spell": "Astral Projection", "reason": "the caster projects along with the group"},
     {"spell": "Chromatic Orb", "reason": "an attack the caster makes"},
     {"spell": "Circle of Death", "reason": "an attack the caster makes"},
@@ -21,7 +21,7 @@
     {"spell": "Forcecage", "reason": "a prison the caster conjures and holds"},
     {"spell": "Summon Dragon", "reason": "the dragon spirit obeys the caster"},
     {"spell": "Bless", "reason": "it lasts 1 minute, on the caster's concentration"},
-    {"spell": "Augury", "reason": "the omen is about a course of action the caster plans"},
+    {"spell": "Augury", "reason": "the omen is about the caster's own planned action"},
     {"spell": "Awaken", "reason": "the awakened creature is charmed by the caster"},
     {"spell": "Planar Binding", "reason": "the creature is bound to serve the caster"},
     {"spell": "Magnificent Mansion", "reason": "only the caster can open and close the door"},
