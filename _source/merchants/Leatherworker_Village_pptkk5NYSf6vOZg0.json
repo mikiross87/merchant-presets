@@ -572,7 +572,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -608,10 +608,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "6jzdry4aKFvqeEyz",
-      "_key": "!actors.items!pptkk5NYSf6vOZg0.6jzdry4aKFvqeEyz"
+      "_id": "Ypvy44eG8nolxtsE",
+      "_key": "!actors.items!pptkk5NYSf6vOZg0.Ypvy44eG8nolxtsE"
     },
     {
       "name": "Shield",
@@ -2366,7 +2366,7 @@
             "timesToRoll": "1",
             "customCategory": "",
             "items": {
-              "ujn4h3ceS883EHow": "1",
+              "ovfzFEmjfjb84wSJ": "1",
               "ayYVdmkYgYaO30vc": "1d4+1",
               "9U2kyiHvA5HHZGr9": "1d6+2",
               "eTOvj408E3GryJde": "1d4+1",

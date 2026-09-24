@@ -984,8 +984,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagPriestsPack",
-        "quantity": 44,
+        "container": null,
+        "quantity": 53,
         "weight": {
           "value": 3,
           "units": "lb"
@@ -1012,10 +1012,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.1NwTdI5LHEH5WThq"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBlanket0000"
       },
-      "_id": "wz0yMfwmMR30AogM",
-      "_key": "!actors.items!obRqh3VbEiefEINw.wz0yMfwmMR30AogM"
+      "_id": "I7pDD5Xay0QrZtjT",
+      "_key": "!actors.items!obRqh3VbEiefEINw.I7pDD5Xay0QrZtjT"
     },
     {
       "name": "Candle",
@@ -1379,8 +1379,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDiplomatsPa",
-        "quantity": 11,
+        "container": null,
+        "quantity": 8,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -1437,10 +1437,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.vi0j4PYnO596a2L1"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagInk00000000"
       },
-      "_id": "mxUKtuO0JDihaB8N",
-      "_key": "!actors.items!obRqh3VbEiefEINw.mxUKtuO0JDihaB8N"
+      "_id": "KIjfDZJy3rqDZYbY",
+      "_key": "!actors.items!obRqh3VbEiefEINw.KIjfDZJy3rqDZYbY"
     },
     {
       "name": "Ink Pen",
@@ -1463,8 +1463,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagScholarsPac",
-        "quantity": 36,
+        "container": null,
+        "quantity": 40,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -1523,10 +1523,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.x9BzTUcsOj6K6OJE"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagInkPen00000"
       },
-      "_id": "MkB7cSf3gKQnauWb",
-      "_key": "!actors.items!obRqh3VbEiefEINw.MkB7cSf3gKQnauWb"
+      "_id": "Dpd7fJzzcJl5MQoY",
+      "_key": "!actors.items!obRqh3VbEiefEINw.Dpd7fJzzcJl5MQoY"
     },
     {
       "name": "Oil",
@@ -1904,7 +1904,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -1940,10 +1940,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "FWix4sONE1YZ3GMw",
-      "_key": "!actors.items!obRqh3VbEiefEINw.FWix4sONE1YZ3GMw"
+      "_id": "1zWVnvk3Q1gET8FE",
+      "_key": "!actors.items!obRqh3VbEiefEINw.1zWVnvk3Q1gET8FE"
     },
     {
       "name": "Waterskin",
@@ -1967,7 +1967,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -2003,10 +2003,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "kYWLzKwDBkIftbtB",
-      "_key": "!actors.items!obRqh3VbEiefEINw.kYWLzKwDBkIftbtB"
+      "_id": "anAWxzGrRhBhUOwk",
+      "_key": "!actors.items!obRqh3VbEiefEINw.anAWxzGrRhBhUOwk"
     },
     {
       "name": "Waterskin",
@@ -2030,7 +2030,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
+        "container": null,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -2066,73 +2066,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagWaterskin00"
       },
-      "_id": "c3ZcKWerQOCBslKU",
-      "_key": "!actors.items!obRqh3VbEiefEINw.c3ZcKWerQOCBslKU"
-    },
-    {
-      "name": "Waterskin",
-      "system": {
-        "description": {
-          "value": "<p>A Waterskin holds up to 4 pints. If you don't drink sufficient water, you risk &amp;Reference[dehydration].</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 2,
-          "denomination": "sp"
-        },
-        "quantity": 1,
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "container": "phbagDungeoneers",
-        "weight": {
-          "value": 1,
-          "units": "lb"
-        },
-        "rarity": "",
-        "attunement": "",
-        "attuned": false,
-        "currency": {
-          "pp": 0,
-          "gp": 0,
-          "ep": 0,
-          "sp": 0,
-          "cp": 0
-        },
-        "properties": [],
-        "capacity": {
-          "type": "weight",
-          "value": 4
-        },
-        "identifier": "waterskin"
-      },
-      "type": "container",
-      "img": "icons/sundries/survival/waterskin-leather-brown.webp",
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": true,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5tEPJK0TLcjPvPNF"
-      },
-      "_id": "9NuOWZWc70NSz9Et",
-      "_key": "!actors.items!obRqh3VbEiefEINw.9NuOWZWc70NSz9Et"
+      "_id": "3jNFpBxus3OzXyCz",
+      "_key": "!actors.items!obRqh3VbEiefEINw.3jNFpBxus3OzXyCz"
     },
     {
       "name": "Rope",
@@ -2155,8 +2092,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 16,
+        "container": null,
+        "quantity": 18,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -2258,7 +2195,9 @@
                 "formula": "10"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "rYGOWDRcT5jBKvzq": {
             "type": "check",
@@ -2320,7 +2259,9 @@
                 "formula": "20"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           },
           "5q6tX1T7ONDvgJiA": {
             "type": "check",
@@ -2382,7 +2323,9 @@
                 "formula": "15"
               },
               "ability": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "rope"
@@ -2407,10 +2350,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagRope0000000"
       },
-      "_id": "Jmx6d40zdnvqD0lj",
-      "_key": "!actors.items!obRqh3VbEiefEINw.Jmx6d40zdnvqD0lj"
+      "_id": "Q8SGXozXvvVDid7E",
+      "_key": "!actors.items!obRqh3VbEiefEINw.Q8SGXozXvvVDid7E"
     },
     {
       "name": "Lock",
@@ -3037,7 +2980,7 @@
       "name": "Bedroll",
       "system": {
         "description": {
-          "value": "<p>A Bedroll sleeps one Small or Medium creature. While in a Bedroll, you automatically succeed on saving throws against extreme cold (see @UUID[Compendium.dnd5e.content24.JournalEntry.dmgDmsToolbox000.JournalEntryPage.xgLA30rErlkjIPAK]{Gameplay Toolbox}).</p>",
+          "value": "<p>A Bedroll sleeps one Small or Medium creature. While in a Bedroll, you automatically succeed on saving throws against extreme cold (see @UUID[Compendium.dnd5e.content24.JournalEntry.dmgDmsToolbox000]{Gameplay Toolbox}).</p>",
           "chat": ""
         },
         "price": {
@@ -3054,8 +2997,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 26,
+        "container": null,
+        "quantity": 19,
         "weight": {
           "value": 7,
           "units": "lb"
@@ -3082,10 +3025,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.ABjsMdpDnWlkjbMq"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagBedroll0000"
       },
-      "_id": "mGFs9MrapkQ4qAS1",
-      "_key": "!actors.items!obRqh3VbEiefEINw.mGFs9MrapkQ4qAS1"
+      "_id": "63uBGZ6vumvY9S7v",
+      "_key": "!actors.items!obRqh3VbEiefEINw.63uBGZ6vumvY9S7v"
     },
     {
       "name": "Bottle, Glass",
@@ -4940,8 +4883,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagExplorersPa",
-        "quantity": 42,
+        "container": null,
+        "quantity": 45,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -5034,7 +4977,9 @@
               "visible": false,
               "name": "",
               "formula": ""
-            }
+            },
+            "img": "",
+            "appliedEffects": []
           }
         },
         "identifier": "tinderbox"
@@ -5059,10 +5004,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.367bsHMaHI1II4k9"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagTinderbox00"
       },
-      "_id": "8RuNoDBgczevuvwX",
-      "_key": "!actors.items!obRqh3VbEiefEINw.8RuNoDBgczevuvwX"
+      "_id": "aBlYRM06UehrCB5F",
+      "_key": "!actors.items!obRqh3VbEiefEINw.aBlYRM06UehrCB5F"
     },
     {
       "name": "Torch",
@@ -8165,7 +8110,7 @@
       },
       "containers": {
         "Flask": 3,
-        "Waterskin": 4,
+        "Waterskin": 3,
         "Pot, Iron": 2,
         "Barrel": 3,
         "Basket": 4,
@@ -8218,21 +8163,21 @@
               "hD6pVMb4oUwYD9bW": "3d8+8",
               "1wZVhShMJjEbB78f": "4d10+20",
               "UclJ1f1mFF8y6zcQ": "3d8+8",
-              "p4HMvZkeOlECkBJQ": "4d10+20",
+              "KBpJCHwpk1QPzjsw": "4d10+20",
               "2iiMQ71p1ylX2y7U": "4d10+20",
               "KRBwWitQ8QPblemR": "1",
-              "4NrKIILh7gE2k9G3": "2d6+4",
-              "Wsw8P4jibzdDtFdg": "4d10+20",
+              "xgN4brxAVbMHcAlh": "2d6+4",
+              "tQlEll7YohkTmJAi": "4d10+20",
               "DeTrk1Wl8RVVQcbf": "4d10+20",
               "yHN2sLOR1lIEO3Mp": "4d10+20",
               "VEAuU3XRW7I7lnvS": "4d10+20",
-              "QIXhvJTUi73LZB5L": "1",
-              "zYT1jT7iHGNzWUUS": "3d8+8",
+              "Ovqd5cIZOu6E9eG5": "1",
+              "hWjVEDRrJArTh7uo": "3d8+8",
               "88ORrPEYyn2tnIMf": "2d6+4",
               "E5D4xGQOjEqnFNVM": "1",
               "dmOjsWudZwzIn7Rn": "1",
               "4517skm6f6zS9eMx": "1",
-              "hqhGJwwSUAveC5u0": "3d8+8",
+              "Krygpv9uYhYmt2Kg": "3d8+8",
               "L8G611tgs4JQSgAi": "1",
               "WfpHuyuC8NpZaSNb": "1",
               "62Gb3duYo4Je0nBj": "1",
@@ -8247,7 +8192,7 @@
               "7fkqZWzjhlShMKvN": "3d8+8",
               "yZrTwVJxHSJSFUUP": "4d10+20",
               "Ry30UyJVDxIjQn3d": "3d8+8",
-              "tAPT5ClLL0gCJq58": "4d10+20",
+              "NL4xgIuS64ukNXqq": "4d10+20",
               "QiCtxCQpn2eMfPFM": "4d10+20",
               "VIrc6AXYK9eSX952": "3d8+8",
               "24TEvNVZmWPY0X6z": "3d8+8",

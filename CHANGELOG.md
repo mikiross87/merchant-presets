@@ -79,6 +79,14 @@ than for the code. Reference the issue or PR it closes.
   its *Populate Items* tab removed the table for good. A merchant replaced this
   way whose tab hasn't been opened is fixed when the world next loads; one
   whose tab was opened needs replacing again. (#66)
+- Rope, Robe, Ink, Ink Pen, Bedroll, Blanket, Tinderbox, Caltrops, Crowbar,
+  Waterskin and Perfume show up in the shop window again. Every release so far
+  stocked them as copies taken out of the SRD's equipment packs, and each copy
+  still said it was inside its pack. The merchant's sheet listed them, but the
+  shop window hid them, so players couldn't buy them. 36 of the 51 shops were
+  affected, the General Stores worst. Merchants already in your world are
+  repaired when the world loads. A merchant dragged in fresh gets a new stock
+  table with the version in its name. (#89)
 
 ## [1.2.4] - 2026-09-14
 

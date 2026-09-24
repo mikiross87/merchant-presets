@@ -993,8 +993,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
-        "quantity": 3,
+        "container": null,
+        "quantity": 8,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -1042,8 +1042,7 @@
                 {
                   "type": "itemUses",
                   "value": "1",
-                  "target": "",
-                  "scaling": {}
+                  "target": ""
                 }
               ],
               "scaling": {
@@ -1094,7 +1093,7 @@
               "override": false
             },
             "damage": {
-              "onSave": "half",
+              "onSave": "none",
               "parts": [
                 {
                   "custom": {
@@ -1106,10 +1105,7 @@
                   "bonus": "",
                   "types": [
                     "piercing"
-                  ],
-                  "scaling": {
-                    "number": 1
-                  }
+                  ]
                 }
               ]
             },
@@ -1127,7 +1123,11 @@
             },
             "sort": 0,
             "_id": "G8upRnZw22jGWKWy",
-            "name": ""
+            "name": "",
+            "img": "",
+            "appliedEffects": [
+              "HsbtDDdiWhk4d7WB"
+            ]
           }
         },
         "identifier": "caltrops"
@@ -1140,7 +1140,7 @@
           "img": "icons/weapons/thrown/bomb-spiked-purple.webp",
           "origin": null,
           "transfer": false,
-          "_id": "I7sL1i4jyeO4rYlg",
+          "_id": "X3I6dvil1iiUhXGB",
           "type": "base",
           "system": {
             "changes": [
@@ -1150,7 +1150,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "2UQTBIeB7tb8cVtS"
+                "_id": "qphYRabXBpZY0rVU"
               },
               {
                 "key": "system.attributes.movement.fly",
@@ -1158,7 +1158,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "yRngdJ50SMnRXj7p"
+                "_id": "L2hhgHMaJr52dfys"
               },
               {
                 "key": "system.attributes.movement.swim",
@@ -1166,7 +1166,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "qFO1XsU8o5HMZ05g"
+                "_id": "9HGoDBUOH7DsxqTV"
               },
               {
                 "key": "system.attributes.movement.climb",
@@ -1174,7 +1174,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "mO7n6WLWfdwK2ZHx"
+                "_id": "y5f3HJiB5hhb7jk7"
               },
               {
                 "key": "system.attributes.movement.burrow",
@@ -1182,7 +1182,7 @@
                 "priority": null,
                 "type": "override",
                 "phase": "initial",
-                "_id": "D7kNNb43BF3UBz2R"
+                "_id": "7OelyaGga1RDn1JA"
               }
             ]
           },
@@ -1204,24 +1204,18 @@
             "coreVersion": "14.364",
             "systemId": "dnd5e",
             "systemVersion": "6.0.0",
-            "createdTime": 1783544099821,
-            "modifiedTime": 1783544099821,
+            "createdTime": 1725848497965,
+            "modifiedTime": 1783544099859,
             "lastModifiedBy": "dnd5ebuilder0000",
             "exportSource": null
           },
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!actors.items.effects!tr2tgfSP4zq5vXk8.FtDOKw5oHtkERK6M.I7sL1i4jyeO4rYlg"
+          "_key": "!actors.items.effects!tr2tgfSP4zq5vXk8.61ZD8ieOuSFFjEfy.X3I6dvil1iiUhXGB"
         }
       ],
       "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
         "item-piles": {
           "item": {
             "infiniteQuantity": "default",
@@ -1232,10 +1226,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.iYwrPPLmuVD9eqfa"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCaltrops000"
       },
-      "_id": "FtDOKw5oHtkERK6M",
-      "_key": "!actors.items!tr2tgfSP4zq5vXk8.FtDOKw5oHtkERK6M"
+      "_id": "61ZD8ieOuSFFjEfy",
+      "_key": "!actors.items!tr2tgfSP4zq5vXk8.61ZD8ieOuSFFjEfy"
     },
     {
       "name": "Chain",
@@ -1562,8 +1556,8 @@
         "unidentified": {
           "description": ""
         },
-        "container": "phbagDungeoneers",
-        "quantity": 4,
+        "container": null,
+        "quantity": 5,
         "weight": {
           "value": 5,
           "units": "lb"
@@ -1590,10 +1584,10 @@
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.QjcMSfmrMwjPoWKn"
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.phbagCrowbar0000"
       },
-      "_id": "k7OlW4QLKZvXpUgq",
-      "_key": "!actors.items!tr2tgfSP4zq5vXk8.k7OlW4QLKZvXpUgq"
+      "_id": "fMLzLlnTUJ3pFEcL",
+      "_key": "!actors.items!tr2tgfSP4zq5vXk8.fMLzLlnTUJ3pFEcL"
     },
     {
       "name": "Hunting Trap",
@@ -7638,9 +7632,9 @@
               "rDIj5JYBcTgcM6cR": "1d6+2",
               "WN3qpdef5X4x8DCu": "1d6+2",
               "UF5GpogHQYO5MqI8": "1d6+2",
-              "czNSdbbjRWFwpDlT": "1d6+2",
+              "CZ7RPNBVr2IlgMMu": "1d6+2",
               "knpqwzL6enJW9DB5": "1d6+2",
-              "NtKmeROXZTl2ce9Y": "1d6+2",
+              "rCgS2uJNGIpRQyB6": "1d6+2",
               "DKmCWekqf0yGjV6s": "1d6+2",
               "PPIQEB7qZNA3zCpU": "2d6+4",
               "viwYPlXKcVQrzicK": "1d6+2",
