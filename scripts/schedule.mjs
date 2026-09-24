@@ -7,12 +7,23 @@
  * straight through: `{secondsPerMinute, minutesPerHour, hoursPerDay}`. A
  * minute-of-day is always a whole number in `[0, minutesPerHour*hoursPerDay)`.
  *
+ * `dueRestock` and `planRestock` take the *raw* stored `flags.merchant-presets.shop`
+ * — whatever partial shape a GM's world flag happens to be in, straight off
+ * the actor — and complete it themselves through schema.mjs's `shopFrom`
+ * before reading anything out of it. The #98 schema allows every key but
+ * `version` to be missing, defaults filled in on read; reading `restock.mode`
+ * or `.onOpen` straight off an incomplete flag would throw on a shop with no
+ * `restock` at all, or misread a missing `onOpen` as `false` rather than its
+ * default `true`. `shopFrom` also throws on a genuinely invalid flag, which
+ * is exactly the point: better a loud error than a half-guessed schedule.
+ *
  * @typedef {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} CalendarDays
  * @typedef {{hour: number, minute: number}} Time
- * @typedef {{open: Time, close: Time}|null} Hours  A #98 shop config's `hours`; null is always open.
- * @typedef {{every: number|string, onOpen: boolean}} Restock  A #98 shop config's `restock` (the parts this module reads).
+ * @typedef {{open: Time, close: Time}|null} Hours  A completed #98 shop config's `hours`; null is always open.
  * @typedef {{lastRestock: number, dueAt: number|null}} ScheduleState  What a shop needs stored between checks.
  */
+
+import { shopFrom } from "./schema.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
 
@@ -130,8 +141,8 @@ export function nextDue(every, from, calendar, roll) {
  * `restock.every: "never"` never fires either — those shops restock only by
  * hand.
  *
- * @param {Restock} restock
- * @param {Hours} hours
+ * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
+ *   not — completed here via `shopFrom` before anything is read from it.
  * @param {ScheduleState} state  `state.dueAt` must already be set (by
  *   {@link nextDue}, at setup) for a restock to ever fire.
  * @param {number} previous
@@ -142,9 +153,10 @@ export function nextDue(every, from, calendar, roll) {
  *   the `worldTime` it fired at — the same value stamped into `state` as the
  *   new `lastRestock` — or null when `due` is false.
  */
-export function dueRestock(restock, hours, state, previous, now, calendar, roll) {
+export function dueRestock(shop, state, previous, now, calendar, roll) {
   if (now <= previous) return { due: false, at: null, state };
-  if (!restock?.onOpen || restock.every === "never" || state?.dueAt == null) return { due: false, at: null, state };
+  const { restock, hours } = shopFrom(shop);
+  if (!restock.onOpen || restock.every === "never" || state?.dueAt == null) return { due: false, at: null, state };
   const at = nextOpening(hours, state.dueAt, previous, now, calendar);
   if (at == null) return { due: false, at: null, state };
   return { due: true, at, state: { lastRestock: at, dueAt: nextDue(restock.every, at, calendar, roll) } };
@@ -252,7 +264,8 @@ function refilledPurse(context) {
  *   short of its target count — dnd5e pins its quantity to exactly 1, so a
  *   sold one is gone outright, never sitting at zero to update.
  *
- * @param {object} shop  The merchant's #98 `flags.merchant-presets.shop`.
+ * @param {object} shop  The stored `flags.merchant-presets.shop`, complete or
+ *   not — completed here via `shopFrom` before anything is read from it.
  * @param {Item[]} items  The shop's current embedded items.
  * @param {Draw[]} draws  This restock's table draw.
  * @param {RestockContext} context
@@ -260,10 +273,11 @@ function refilledPurse(context) {
  * @returns {RestockPlan}
  */
 export function planRestock(shop, items, draws, context, roll) {
+  const { restock } = shopFrom(shop);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i));
   const currency = refilledPurse(context);
 
-  if (shop.restock.mode === "topup") {
+  if (restock.mode === "topup") {
     const updates = [];
     const creates = [];
     const restocked = [];
@@ -283,7 +297,7 @@ export function planRestock(shop, items, draws, context, roll) {
       }
       const existing = drawnNow.find(i => i.name === draw.name);
       if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
-      const quantity = Math.max(0, roll(shop.restock.quantities[draw.resultId] ?? "1"));
+      const quantity = Math.max(0, roll(restock.quantities[draw.resultId] ?? "1"));
       if (quantity === 0) continue;   // rolled empty again: leave it sold out (or absent)
       if (existing) {
         updates.push({ _id: existing._id, "system.quantity": quantity,
@@ -294,7 +308,10 @@ export function planRestock(shop, items, draws, context, roll) {
       restocked.push(draw.name);
     }
 
-    return { deletes: [], creates, updates, currency, restocked };
+    // A container can push its own name once per copy created; every other
+    // line pushes at most once already. Same rule either way: one mention
+    // per line, in the order it was first touched.
+    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)] };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
@@ -305,8 +322,10 @@ export function planRestock(shop, items, draws, context, roll) {
       for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
       continue;
     }
-    const quantity = Math.max(0, roll(shop.restock.quantities[draw.resultId] ?? "1"));
+    const quantity = Math.max(0, roll(restock.quantities[draw.resultId] ?? "1"));
     if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }));   // 0: not in stock today
   }
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked: creates.map(c => c.name) };
+  // One mention per line: a container's several copies share its one name.
+  const restocked = [...new Set(creates.map(c => c.name))];
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
 }
