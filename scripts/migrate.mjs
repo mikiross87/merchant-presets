@@ -33,7 +33,7 @@
  */
 
 import { isGearItem, isShop, TIERS, tierOf } from "./shop.mjs";
-import { SHOP_DEFAULTS, SHOP_VERSION, validateShop } from "./schema.mjs";
+import { SHOP_DEFAULTS, SHOP_VERSION, STOCK_DEFAULTS, validateShop, validateStock } from "./schema.mjs";
 
 /** The 2.0 shop sheet's id, registered with `DocumentSheetConfig` (#104) and
  *  written to every migrated shop's `flags.core.sheetClass` so core's own
@@ -207,11 +207,16 @@ function categoriesFrom(modifiers) {
   return [...byCategory.values()];
 }
 
-/** The values on `filters`' entries at `path`, as a Set, comma-split. */
+/** The values on `filters`' entries at `path`, as a Set, comma-split and
+ *  trimmed — Item Piles' own filter editor doesn't strip spaces after a
+ *  comma, so "weapon, equipment" splits to "weapon" and " equipment"
+ *  untrimmed, and " equipment" would neither match a fixed refusal meant to
+ *  exclude it nor read back the same on a later migration (#100 review).
+ *  A blank segment (a stray comma) is dropped, before or after trimming. */
 function valuesOn(filters, path) {
   const values = (filters ?? [])
     .filter(f => f?.path === path)
-    .flatMap(f => String(f.filters ?? "").split(",").filter(Boolean));
+    .flatMap(f => String(f.filters ?? "").split(",").map(v => v.trim()).filter(Boolean));
   return new Set(values);
 }
 
@@ -403,6 +408,23 @@ export function planAutoRestockDefault(hasStoredValue, worldHasLegacyShops) {
 }
 
 /**
+ * Whether any of `errors` is scoped to exactly `path` — one of its own
+ * sub-fields (`"path.field: …"`) or a bare check on `path` itself
+ * (`"path: …"`). A plain string-prefix test would also match a sibling
+ * whose index merely starts the same way — `"terms.categories.1"` is a
+ * prefix of `"terms.categories.10"` — so `path` must be followed by `.` or
+ * `: ` (schema.mjs's own separator), never another index digit (#100
+ * review).
+ *
+ * @param {string[]} errors
+ * @param {string} path
+ * @returns {boolean}
+ */
+function errorsAt(errors, path) {
+  return errors.some(e => e.startsWith(`${path}.`) || e.startsWith(`${path}: `));
+}
+
+/**
  * `shop` (a `deriveShop` result), repaired by rule if it fails
  * `validateShop`. Item Piles enforces none of this schema's invariants, so a
  * GM's raw data can violate them even though Item Piles itself never
@@ -434,14 +456,57 @@ function repairShop(shop) {
   if (ok) return { shop, ok, errors };
 
   const repaired = structuredClone(shop);
-  if (errors.some(e => e.startsWith("terms.sellsAt"))) repaired.terms.sellsAt = null;
-  if (errors.some(e => e.startsWith("terms.buysAt"))) repaired.terms.buysAt = null;
+  if (errorsAt(errors, "terms.sellsAt")) repaired.terms.sellsAt = null;
+  if (errorsAt(errors, "terms.buysAt")) repaired.terms.buysAt = null;
   repaired.terms.categories = repaired.terms.categories.filter((c, i) =>
-    !errors.some(e => e.startsWith(`terms.categories.${i}`)));
-  if (errors.some(e => e.startsWith("hours"))) repaired.hours = null;
+    !errorsAt(errors, `terms.categories.${i}`));
+  if (errorsAt(errors, "hours")) repaired.hours = null;
 
   ({ ok, errors } = validateShop(repaired));
   return { shop: repaired, ok, errors };
+}
+
+/** `v` as a boolean when it's an unambiguous stand-in for one —
+ *  `"true"`/`"false"`, `1`/`0` — or `fallback` otherwise. Guessing at
+ *  anything less clear-cut risks silently un-hiding a good or unlocking its
+ *  buyback, so a value that isn't obviously one or the other takes the safe
+ *  default rather than a guess. */
+function coerceBool(v, fallback) {
+  if (v === "true" || v === 1) return true;
+  if (v === "false" || v === 0) return false;
+  return fallback;
+}
+
+/**
+ * `stock` (a `deriveStock` result), repaired by rule if it fails
+ * `validateStock` — mirrors `repairShop`, for the same reason: Item Piles
+ * enforces none of this schema's invariants either, so a raw item flag can
+ * carry a value the schema rejects outright.
+ *
+ * - `bundle` not a whole number 1 or more (a negative or fractional
+ *   `quantityForPrice`, say) → `STOCK_DEFAULTS.bundle` (1).
+ * - `category` not a string → `STOCK_DEFAULTS.category` ("").
+ * - A boolean field holding something else is `coerceBool`d against its own
+ *   `STOCK_DEFAULTS`. `infinite` can't actually reach here invalid —
+ *   `deriveStock` only ever produces `true`, `false` or `null` for it — so
+ *   it's left out.
+ *
+ * @param {object} stock
+ * @returns {{stock: object, ok: boolean, errors: string[]}}
+ */
+function repairStock(stock) {
+  let { ok, errors } = validateStock(stock);
+  if (ok) return { stock, ok, errors };
+
+  const repaired = { ...stock };
+  if (errorsAt(errors, "bundle")) repaired.bundle = STOCK_DEFAULTS.bundle;
+  if (errorsAt(errors, "category")) repaired.category = STOCK_DEFAULTS.category;
+  for (const field of ["keep", "service", "noBuyback", "hidden", "notForSale"]) {
+    if (errorsAt(errors, field)) repaired[field] = coerceBool(stock[field], STOCK_DEFAULTS[field]);
+  }
+
+  ({ ok, errors } = validateStock(repaired));
+  return { stock: repaired, ok, errors };
 }
 
 /** `flags.core.sheetClass`, or `null` if it's already ours. */
@@ -521,18 +586,26 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
  * source of truth, not Item Piles. The shopkeeper's own kit is never stock
  * (`isGearItem`) and is skipped, same as everywhere else in the runtime.
  *
+ * An item whose derived stock is still invalid after `repairStock` is left
+ * out of `updates` — not written, not stamped — rather than block every
+ * other item on the same shop; `needsMigration`'s `itemsNeedStock` keeps
+ * asking for it on every later pass, so it's retried, not silently given up
+ * on. `errors` names each one, for the caller to log.
+ *
  * @param {object} actor
- * @returns {object[]}
+ * @returns {{updates: object[], errors: {item: string, errors: string[]}[]}}
  */
 export function planItemUpdates(actor) {
-  if (!isShop(actor)) return [];
+  if (!isShop(actor)) return { updates: [], errors: [] };
   const updates = [];
+  const errors = [];
   for (const item of actor.items ?? []) {
     if (isGearItem(item) || item.flags?.["merchant-presets"]?.stock) continue;
-    const stock = deriveStock(sourceFlagsOf(actor, item));
-    updates.push({ _id: item._id, "flags.merchant-presets.stock": stock });
+    const repaired = repairStock(deriveStock(sourceFlagsOf(actor, item)));
+    if (!repaired.ok) { errors.push({ item: item.name, errors: repaired.errors }); continue; }
+    updates.push({ _id: item._id, "flags.merchant-presets.stock": repaired.stock });
   }
-  return updates;
+  return { updates, errors };
 }
 
 /**

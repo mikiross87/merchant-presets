@@ -92,6 +92,29 @@ export function planWorldTable(tables, src, version) {
   return { existing, name: taken ? `${src.name} (v${version})` : src.name, stamp };
 }
 
+/**
+ * A per-result quantity map (`{resultId: formula}`, as both Item Piles'
+ * `tablesForPopulate[0].items` and a shop's own `restock.quantities` (#98)
+ * are shaped), re-keyed from `from`'s result ids to `to`'s — a fresh import
+ * gives a RollTable's embedded results new ids, so a map keyed by the old
+ * ones is stale the moment wiring repoints the table at its world copy.
+ * Matched by what each result points at (`documentUuid`), not position or
+ * order. A result `to` has that `from` doesn't (the table changed since,
+ * say) gets the same "1" a stock roll defaults an unrecognised result to.
+ *
+ * @param {Iterable<{id: string, documentUuid: string}>} from
+ * @param {Iterable<{id: string, documentUuid: string}>} to
+ * @param {Record<string, string>} [quantities]  Keyed by `from`'s ids.
+ * @returns {Record<string, string>} Keyed by `to`'s ids.
+ */
+export function remapQuantities(from, to, quantities) {
+  const byTarget = new Map();
+  for (const r of from) byTarget.set(r.documentUuid, quantities?.[r.id] ?? "1");
+  const out = {};
+  for (const r of to) out[r.id] = byTarget.get(r.documentUuid) ?? "1";
+  return out;
+}
+
 /* -------------------------------------------------------- setting up a shop */
 
 /** Settlement sizes, in stock-band order. */

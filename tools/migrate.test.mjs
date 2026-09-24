@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { validateShop, validateStock } from "../scripts/schema.mjs";
+import { STOCK_DEFAULTS, validateShop, validateStock } from "../scripts/schema.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, worldHasLegacyShops
@@ -53,7 +53,7 @@ function applied(obj, update) {
  *  half of a migration, done. */
 function withItemsMigrated(actor) {
   const out = structuredClone(actor);
-  for (const u of planItemUpdates(out)) {
+  for (const u of planItemUpdates(out).updates) {
     const item = out.items.find(i => i._id === u._id);
     item.flags["merchant-presets"] ??= {};
     item.flags["merchant-presets"].stock = u["flags.merchant-presets.stock"];
@@ -88,6 +88,37 @@ test("a shop with a Valuables override maps its category both ways", () => {
   const shop = deriveShop(legacy(shipped("Alchemists_Apothecaries_Village_")));
   assert.deepEqual(shop.terms.categories, [{ category: "Valuables", sellsAt: 1, buysAt: 1 }]);
   assert.deepEqual(shop.wontBuy.types.sort(), ["equipment", "weapon"]);
+});
+
+test("filter values are trimmed, and a blank segment dropped (#100 review)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["item-piles"].data.overrideItemFilters = [
+    { path: "type", filters: " weapon, equipment ,,tool" },
+    { path: "flags.merchant-presets.kind", filters: "service, spellcasting " }
+  ];
+  const shop = deriveShop(store);
+  assert.deepEqual(shop.wontBuy.types, ["weapon", "equipment", "tool"]);
+  assert.deepEqual(shop.wontBuy.kinds, ["service", "spellcasting"]);
+});
+
+test("an invalid category at index 11 doesn't also drop index 1 (#100 review)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  // 20 override entries, all valid except index 11's rate. A plain
+  // string-prefix match on "terms.categories.1" would also catch
+  // "terms.categories.11…" and wrongly drop index 1 (and 10, 12-19) too.
+  const mods = Array.from({ length: 20 }, (_, i) => ({
+    type: "custom", category: `Category ${i}`, override: true, buyPriceModifier: 1, sellPriceModifier: 1
+  }));
+  mods[11].buyPriceModifier = 0;   // invalid: only this one entry should be dropped
+  store.flags["item-piles"].data.itemTypePriceModifiers = mods;
+  const update = planActorUpdate(store, {});
+  const categories = update["flags.merchant-presets.shop"].terms.categories;
+  assert.equal(categories.length, 19);
+  assert.ok(!categories.some(c => c.category === "Category 11"));
+  for (let i = 0; i < 20; i++) {
+    if (i === 11) continue;
+    assert.ok(categories.some(c => c.category === `Category ${i}`), `Category ${i} missing`);
+  }
 });
 
 test("hand-retuned Item Piles values win over the pack (#100)", () => {
@@ -266,7 +297,7 @@ test("a non-module Item Piles merchant is left alone", () => {
   const theirs = { flags: { "item-piles": { data: { enabled: true, type: "merchant" } } } };
   assert.equal(needsMigration(theirs), false);
   assert.equal(planActorUpdate(theirs), null);
-  assert.deepEqual(planItemUpdates(theirs), []);
+  assert.deepEqual(planItemUpdates(theirs), { updates: [], errors: [] });
 });
 
 test("worldHasLegacyShops sees an unmigrated shop and ignores everything else", () => {
@@ -286,7 +317,7 @@ test("needsMigration stays true when the shop half landed but items still lack .
   // off — but planItemUpdates independently still has work, and migrateShop
   // (scripts/merchant-presets.mjs) calls it regardless of planActorUpdate's result.
   assert.equal(planActorUpdate(shopOnly, {}), null);
-  assert.ok(planItemUpdates(shopOnly).length > 0);
+  assert.ok(planItemUpdates(shopOnly).updates.length > 0);
 });
 
 test("needsMigration is false only once both the shop and every item are migrated", () => {
@@ -389,16 +420,17 @@ test("planItemUpdates migrates every stock line once, then leaves them alone", (
   const store = legacy(shipped("General_Store_Village_"));
   const first = planItemUpdates(store);
   const stockable = store.items.filter(i => i.flags?.["merchant-presets"]?.kind !== "gear");
-  assert.equal(first.length, stockable.length);
-  for (const u of first) assert.ok(validateStock(u["flags.merchant-presets.stock"]).ok);
+  assert.equal(first.updates.length, stockable.length);
+  assert.deepEqual(first.errors, []);
+  for (const u of first.updates) assert.ok(validateStock(u["flags.merchant-presets.stock"]).ok);
 
   // Apply, then run again: idempotent.
-  for (const u of first) {
+  for (const u of first.updates) {
     const item = store.items.find(i => i._id === u._id);
     item.flags["merchant-presets"] ??= {};
     item.flags["merchant-presets"].stock = u["flags.merchant-presets.stock"];
   }
-  assert.deepEqual(planItemUpdates(store), []);
+  assert.deepEqual(planItemUpdates(store), { updates: [], errors: [] });
 });
 
 test("a rolled item's recorded itemFlags win over its live, stock-mode-mutated flag", () => {
@@ -411,7 +443,7 @@ test("a rolled item's recorded itemFlags win over its live, stock-mode-mutated f
   assert.equal(store.flags["merchant-presets"].itemFlags.Bell.infiniteQuantity, "default");
   bell.flags["item-piles"].item.infiniteQuantity = "no";
 
-  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  const update = planItemUpdates(store).updates.find(u => u._id === bell._id);
   assert.equal(update["flags.merchant-presets.stock"].infinite, null);
 });
 
@@ -422,7 +454,7 @@ test("an item never in itemFlags — a GM's own addition — is read from its li
     flags: { "item-piles": { item: { infiniteQuantity: "no", keepOnMerchant: true, isService: false,
       cantBeSoldToMerchants: false, hidden: true, notForSale: false } } }
   });
-  const update = planItemUpdates(store).find(u => u._id === "gmAddedItem0001");
+  const update = planItemUpdates(store).updates.find(u => u._id === "gmAddedItem0001");
   assert.equal(update["flags.merchant-presets.stock"].infinite, false);
   assert.equal(update["flags.merchant-presets.stock"].hidden, true);
 });
@@ -432,7 +464,7 @@ test("a GM-hidden shipped item stays hidden after migration (#100 review: live w
   const bell = store.items.find(i => i.name === "Bell");
   bell.flags["item-piles"].item.hidden = true;      // the GM hid it directly on the live item
   bell.flags["item-piles"].item.notForSale = true;
-  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  const update = planItemUpdates(store).updates.find(u => u._id === bell._id);
   assert.equal(update["flags.merchant-presets.stock"].hidden, true);
   assert.equal(update["flags.merchant-presets.stock"].notForSale, true);
 });
@@ -442,7 +474,7 @@ test("a GM's live re-categorization wins over the shipped record", () => {
   const bell = store.items.find(i => i.name === "Bell");
   assert.equal(store.flags["merchant-presets"].itemFlags.Bell.customCategory, undefined);   // shipped with none
   bell.flags["item-piles"].item.customCategory = "Curiosities";   // the GM gave it one directly
-  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  const update = planItemUpdates(store).updates.find(u => u._id === bell._id);
   assert.equal(update["flags.merchant-presets.stock"].category, "Curiosities");
 });
 
@@ -454,12 +486,49 @@ test("bookkeeping keys still come from the record, not a live edit a restock wou
   // left the live flags different from the record, mid-refresh.
   Object.assign(bell.flags["item-piles"].item,
     { infiniteQuantity: "no", keepOnMerchant: false, isService: true, cantBeSoldToMerchants: true });
-  const update = planItemUpdates(store).find(u => u._id === bell._id);
+  const update = planItemUpdates(store).updates.find(u => u._id === bell._id);
   const stock = update["flags.merchant-presets.stock"];
   assert.equal(stock.infinite, { yes: true, no: false, default: null }[recorded.infiniteQuantity]);
   assert.equal(stock.keep, recorded.keepOnMerchant);
   assert.equal(stock.service, recorded.isService);
   assert.equal(stock.noBuyback, recorded.cantBeSoldToMerchants);
+});
+
+test("an invalid bundle (a negative or fractional quantityForPrice) repairs to 1", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  delete store.flags["merchant-presets"].itemFlags.Bell.quantityForPrice;
+  bell.flags["item-piles"].system = { quantityForPrice: -5 };
+  let update = planItemUpdates(store).updates.find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].bundle, 1);
+
+  bell.flags["item-piles"].system.quantityForPrice = 2.5;
+  update = planItemUpdates(store).updates.find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].bundle, 1);
+});
+
+test("a non-string customCategory repairs to \"\" (STOCK_DEFAULTS.category)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  delete store.flags["merchant-presets"].itemFlags.Bell.customCategory;
+  bell.flags["item-piles"].item.customCategory = 42;   // garbage from a corrupted flag
+  assert.equal(validateStock(deriveStock({ customCategory: 42 })).ok, false);   // deriveStock alone: invalid
+  const update = planItemUpdates(store).updates.find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].category, "");
+});
+
+test("an unambiguous boolean stand-in coerces; an ambiguous one falls back to STOCK_DEFAULTS", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const bell = store.items.find(i => i.name === "Bell");
+  delete store.flags["merchant-presets"].itemFlags.Bell.cantBeSoldToMerchants;
+
+  bell.flags["item-piles"].item.cantBeSoldToMerchants = "true";
+  let update = planItemUpdates(store).updates.find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].noBuyback, true);
+
+  bell.flags["item-piles"].item.cantBeSoldToMerchants = "maybe";
+  update = planItemUpdates(store).updates.find(u => u._id === bell._id);
+  assert.equal(update["flags.merchant-presets.stock"].noBuyback, STOCK_DEFAULTS.noBuyback);
 });
 
 /* ---------------------------------------------------------------- ownership */
@@ -563,7 +632,8 @@ test("deriveShop reproduces every shipped merchant's own committed shop config (
 test("planItemUpdates reproduces every shipped stock line's own committed config (#99)", () => {
   let checked = 0;
   for (const doc of allShipped()) {
-    const updates = planItemUpdates(legacy(doc));
+    const { updates, errors } = planItemUpdates(legacy(doc));
+    assert.deepEqual(errors, [], doc.name);   // every shipped stock line is valid as shipped
     for (const item of doc.items) {
       const committed = item.flags?.["merchant-presets"]?.stock;
       if (!committed) continue;   // the shopkeeper's own kit carries no stock config

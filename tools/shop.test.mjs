@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, tierOf } from "../scripts/shop.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities, tierOf }
+  from "../scripts/shop.mjs";
 
 /** A real shipped document, as the generator writes it. */
 function source(sub, prefix) {
@@ -106,6 +107,39 @@ test("a stamped copy of another shop's identical list is not reused", () => {
   const { name, stamp } = planWorldTable([], village, "1.3.0");
   const other = worldTable(name, before.results, stamp);
   assert.equal(planWorldTable([other], before, "1.3.0").existing, undefined);
+});
+
+/* ------------------------------------------------------- remapQuantities */
+
+// The Jeweler (Town) table's own real results, as the compendium and a
+// freshly-imported world copy would each carry them: same documentUuids,
+// different ids (a fresh import always assigns new ones).
+const compendiumResults = jeweler.results.map(r => ({ id: r._id, documentUuid: r.documentUuid }));
+const worldResults = jeweler.results.map((r, i) => ({ id: `world${String(i).padStart(4, "0")}`, documentUuid: r.documentUuid }));
+
+test("remapQuantities carries every real formula across to the world table's own result ids", () => {
+  const quantities = Object.fromEntries(compendiumResults.map(r => [r.id, "2d6+4"]));
+  const remapped = remapQuantities(compendiumResults, worldResults, quantities);
+  assert.equal(Object.keys(remapped).length, worldResults.length);
+  for (const r of worldResults) assert.equal(remapped[r.id], "2d6+4");
+});
+
+test("remapQuantities matches by what a result points at, not its position", () => {
+  const shuffled = worldResults.toReversed();
+  const quantities = { [compendiumResults[0].id]: "1d4+1" };
+  const remapped = remapQuantities(compendiumResults, shuffled, quantities);
+  const moved = shuffled.find(r => r.documentUuid === compendiumResults[0].documentUuid);
+  assert.equal(remapped[moved.id], "1d4+1");
+});
+
+test("remapQuantities defaults to \"1\": no map at all, a result missing from it, or one `from` never had", () => {
+  assert.ok(Object.values(remapQuantities(compendiumResults, worldResults)).every(f => f === "1"));
+  assert.ok(Object.values(remapQuantities(compendiumResults, worldResults, {})).every(f => f === "1"));
+
+  const extra = { id: "worldExtra0001", documentUuid: "Compendium.merchant-presets.goods.Item.notInCompendium000" };
+  const quantities = Object.fromEntries(compendiumResults.map(r => [r.id, "3d6"]));
+  const remapped = remapQuantities(compendiumResults, [...worldResults, extra], quantities);
+  assert.equal(remapped[extra.id], "1");
 });
 
 /* ---------------------------------------------------------- needs wiring */
