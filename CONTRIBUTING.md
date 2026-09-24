@@ -125,18 +125,28 @@ Constraints worth knowing before changing the generator:
   `scripts/merchant-presets.mjs` skip it via `isGear`. Gear is appended *after*
   the item filters are computed — inside the loop its own types would otherwise
   read as stocked and let a chain shirt onto the shelf.
-- **`flags.merchant-presets.profile` is how the runtime recognises a merchant.**
-  Import repoints the merchant's stock table from the compendium to a world
-  copy, so the table only identifies a merchant until then; `profile` survives
-  the import and the runtime never writes it. Keep emitting it on every
-  merchant, or the trading-hours and stock-weight passes skip the world copies
-  (#56). Stock is rolled only in the `rewire` call that wires a compendium
-  table, so `rewireAll()` never re-rolls a shop already in the world.
-  `rewire` runs on `createActor`, and on `updateActor` for a merchant still on
-  its compendium table: Foundry's *Replace Actor*, the default when the world
-  already holds that shop, imports as an update (#66). The `ready` pass wires
-  any such merchant left over. `rewire` handles one pass per merchant at a
-  time, since both hooks can arrive together.
+- **`flags.merchant-presets.profile` or `.shop` is how the runtime recognises
+  a merchant.** Import repoints the merchant's stock table from the
+  compendium to a world copy, so the table only identifies a merchant until
+  then; `profile` survives the import and the runtime never writes it. Keep
+  emitting it on every merchant, or the trading-hours and stock-weight passes
+  skip the world copies (#56). Stock is rolled only in the `rewire` call that
+  wires a compendium table, so `rewireAll()` never re-rolls a shop already in
+  the world. `rewire` runs on `createActor`, and on `updateActor` for a
+  merchant still on its compendium table: Foundry's *Replace Actor*, the
+  default when the world already holds that shop, imports as an update (#66).
+  The `ready` pass wires any such merchant left over. `rewire` handles one
+  pass per merchant at a time, since both hooks can arrive together.
+- **An NPC set up as a shop is a first-class merchant, not a stand-in.**
+  `setUpShop` tags everything the NPC keeps with
+  `flags.merchant-presets.kind: "gear"` and stamps
+  `flags.merchant-presets.shop: {source, tier}` in place of `profile`, which
+  names a shipped stat block the NPC never had (#57). Both are load-bearing:
+  `isPreset` in `scripts/shop.mjs` treats the `shop` marker exactly like
+  `profile`, so a shop set up this way gets the same wiring, trading hours and
+  restocks as one dragged from the compendium, and `tierOf` reads the
+  marker's `tier` before falling back to parsing the name, since the NPC's
+  own name carries no `(Village|Town|City)` suffix to parse.
 - **World stock tables are stamped with the list they were copied from**
   (`flags.merchant-presets.stock`). An import reuses a world table only while
   its stamp still matches the compendium table, so changing a shop's stock

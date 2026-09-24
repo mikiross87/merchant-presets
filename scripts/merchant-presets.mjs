@@ -20,7 +20,8 @@
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, needsWiring, planWorldTable, STOCK_PREFIX } from "./shop.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
+  from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 
 const MODULE = "merchant-presets";
@@ -165,7 +166,7 @@ async function wireTables(actor) {
  */
 async function applyStockMode(actor) {
   const finite = game.settings.get(MODULE, "stockMode") === "finite";
-  const tierIndex = TIER_INDEX[actor.name.match(/\((Village|Town|City)\)/)?.[1]] ?? 1;
+  const tierIndex = TIER_INDEX[tierOf(actor)];
   const quantityPath = game.itempiles.API.ITEM_QUANTITY_ATTRIBUTE;
   const flagPath = "flags.item-piles.item.infiniteQuantity";
 
@@ -998,6 +999,130 @@ function registerSpellcasting() {
   });
 }
 
+/* -------------------------------------------------------- setting up a shop */
+
+/**
+ * Turn any NPC into one of the shops (#57).
+ *
+ * A GM's own shopkeeper — Sister Garaele in Phandelver, say — keeps its name,
+ * portrait, stat block and token and becomes the chosen merchant: stock,
+ * buying rules, prices, purse and trading hours. The decisions are
+ * scripts/shop.mjs's `planShop`; this carries them out, then runs the same
+ * import path a merchant dragged out of the compendium does. The source's
+ * stock table is still the compendium's at that point, so it is wired and
+ * stock is rolled once, for the settlement size on the marker.
+ *
+ * @param {Actor} actor
+ * @param {string} sourceUuid  The chosen merchant in this module's compendium.
+ * @param {Iterable<string>} keepIds  Physical items to keep as the NPC's gear.
+ * @returns {Promise<number>} how many stock lines the shop holds
+ */
+async function setUpShop(actor, sourceUuid, keepIds) {
+  const source = await foundry.utils.fromUuid(sourceUuid);
+  if (!source) throw new Error(`merchant ${sourceUuid} not found`);
+  const plan = planShop({ ...source.toObject(), uuid: source.uuid }, actor.toObject(), keepIds);
+
+  // Hold the merchant while it is half built: the flag update below puts it on
+  // a compendium table, and the updateActor hook would otherwise wire it and
+  // roll a shelf the stock has not reached yet.
+  rewiring.add(actor.id);
+  try {
+    // Out of their containers before the containers go, since dnd5e may take
+    // a container's contents with it.
+    if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
+    if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
+    await actor.update({
+      "flags.item-piles.data": _replace(plan.pileData),
+      [`flags.${MODULE}.purse`]: plan.moduleFlags.purse,
+      [`flags.${MODULE}.itemFlags`]: plan.moduleFlags.itemFlags ? _replace(plan.moduleFlags.itemFlags) : null,
+      [`flags.${MODULE}.containers`]: plan.moduleFlags.containers ? _replace(plan.moduleFlags.containers) : null,
+      [`flags.${MODULE}.shop`]: _replace(plan.moduleFlags.shop),
+      "system.currency": plan.currency
+    });
+    if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
+  } finally {
+    rewiring.delete(actor.id);
+  }
+  await rewire(actor);
+  return actor.items.filter(i => !isGear(i)).length;
+}
+
+/** Ask which shop an NPC should become, then make it so. */
+async function shopDialog(actor) {
+  const pack = game.packs.get(`${MODULE}.merchants`);
+  const shops = listShops(await pack.getIndex());
+  const marker = actor.getFlag(MODULE, "shop");
+  // A shipped merchant's own name preselects it, so an NPC that was never set
+  // up as a shop before still opens on a sensible guess.
+  const strippedName = actor.name.match(/^(.*) \((?:Village|Town|City)\)$/)?.[1];
+  const current = shops.find(s => Object.values(s.tiers).includes(marker?.source))?.name
+    ?? shops.find(s => s.name === strippedName)?.name;
+  const tier = tierOf(actor);
+  const esc = foundry.utils.escapeHTML;
+  const name = esc(actor.name);
+
+  const option = (value, label, selected) =>
+    `<option value="${esc(value)}"${selected ? " selected" : ""}>${esc(label)}</option>`;
+  const gear = keepableItems(actor.toObject()).map(i =>
+    `<label class="checkbox"><input type="checkbox" name="keep.${i._id}" checked> ${esc(i.name)}</label>`).join("");
+
+  const content = `
+    <div class="form-group"><label>Shop</label>
+      <select name="shop">${shops.map(s => option(s.name, s.name, s.name === current)).join("")}</select></div>
+    <div class="form-group"><label>Settlement</label>
+      <select name="tier">${TIERS.map(t => option(t, t, t === tier)).join("")}</select></div>
+    ${gear ? `<fieldset><legend>Keep as ${name}'s own gear</legend>${gear}</fieldset>` : ""}
+    <p class="notes">Replaces ${name}'s merchant settings, coin and stock. ${name}'s portrait, name,
+      stat block and token are unchanged. Unticked items are deleted and can't be restored.</p>`;
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: `Set up ${actor.name} as a shop` },
+    content,
+    buttons: [
+      { action: "apply", label: "Set up shop", icon: "fa-solid fa-store", default: true,
+        callback: (_event, button) => foundry.utils.expandObject(
+          new foundry.applications.ux.FormDataExtended(button.form).object) },
+      { action: "cancel", label: "Cancel" }
+    ],
+    rejectClose: false
+  });
+  if (!result || result === "cancel") return;
+
+  const shop = shops.find(s => s.name === result.shop);
+  const uuid = shop?.tiers[result.tier];
+  if (!uuid) {
+    ui.notifications.error(`There is no ${result.shop} (${result.tier}) in the Merchants compendium.`);
+    return;
+  }
+  const keepIds = Object.entries(result.keep ?? {}).filter(([, on]) => on).map(([id]) => id);
+  const lines = await setUpShop(actor, uuid, keepIds);
+  ui.notifications.info(`${actor.name} is now a ${shop.name} (${result.tier}): ${lines} stock lines.`);
+}
+
+/** The Actors sidebar entry. Registered at init, before the sidebar first renders. */
+function registerShopSetup() {
+  Hooks.on("getActorContextOptions", (app, options) => {
+    // Compendium extends DocumentDirectory too, so an Actor compendium fires
+    // this hook as well — and an imported actor keeps its compendium id, so
+    // resolving it against game.actors would act on the world copy from a
+    // right-click in the pack. World directory only.
+    if (app.collection !== game.actors) return;
+    const actorOf = li => game.actors.get(li.closest("[data-entry-id]")?.dataset.entryId);
+    options.push({
+      label: "Set up as shop…",
+      icon: "fa-solid fa-store",
+      visible: li => game.user.isGM && !!game.modules.get("item-piles")?.active && actorOf(li)?.type === "npc",
+      onClick: (_event, li) => {
+        const actor = actorOf(li);
+        if (actor) shopDialog(actor).catch(err => {
+          console.error(`${MODULE} | could not set up "${actor.name}" as a shop`, err);
+          ui.notifications.error(`Could not set up ${actor.name} as a shop: ${err.message}`);
+        });
+      }
+    });
+  });
+}
+
 /* ----------------------------------------------------------------- settings */
 
 Hooks.once("init", () => {
@@ -1140,12 +1265,14 @@ Hooks.once("init", () => {
     type: Boolean,
     default: true
   });
+
+  registerShopSetup();
 });
 
 Hooks.once("ready", () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
     reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
-    syncOpenState, syncOpenStateAll };
+    syncOpenState, syncOpenStateAll, setUpShop };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.

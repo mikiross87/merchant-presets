@@ -49,6 +49,13 @@ than for the code. Reference the issue or PR it closes.
   one. Nothing is applied automatically. The message follows Item Piles' chat
   visibility, and the *Bought spellcasting is announced in chat* setting turns
   it off. (#70)
+- Turn any NPC into one of the shops: right-click it in the Actors sidebar,
+  choose *Set up as shop…*, pick a shop and a settlement size, and tick the
+  items it keeps as its own. It becomes that merchant, with the stock, buying
+  rules, prices, purse and trading hours, and keeps its own name, portrait,
+  stat block and token. Handy for the shopkeepers a published adventure
+  already gives you. Setting it up again with another shop or size keeps its
+  gear and replaces the stock. (#57)
 
 ### Changed
 
