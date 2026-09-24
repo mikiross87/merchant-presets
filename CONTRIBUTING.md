@@ -205,7 +205,7 @@ Constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Target `main`. CI must pass: both linters, unit tests, manifest validation,
+- Target `main`, or `next` for 2.0 work (see below). CI must pass: both linters, unit tests, manifest validation,
   CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
   from source, and the paid-content check.
 - One logical change per PR, with commit subjects written as prose rather than
@@ -225,9 +225,28 @@ Constraints worth knowing before changing the generator:
 
 [RELEASING.md](RELEASING.md) describes the whole process: issues and
 milestones, the release PR that `npm run release:prepare` stages, and the tag
-that publishes. `main` is the only long-lived branch. Its `module.json` keeps
-the last released version, and `git log vX.Y.Z..main` is the unreleased set.
-The release notes are that version's `CHANGELOG.md` section.
+that publishes. `main` is the release branch. Its `module.json` keeps the last
+released version, and `git log vX.Y.Z..main` is the unreleased set. The release
+notes are that version's `CHANGELOG.md` section.
+
+### The `next` branch (2.0)
+
+2.0 (#108) replaces Item Piles and changes the shop data format. It lands in
+stages that would leave `main` unreleasable, so it lives on a long-lived `next`
+branch, and `main` keeps shipping 1.x.
+
+- **2.0 PRs target `next`.** CI and branch protection are the same as `main`'s.
+- **Merge `main` into `next` regularly**, and always after a 1.x release, so 2.0
+  carries every 1.x fix. `CHANGELOG.md` conflicts resolve by keeping both:
+  released 1.x entries move under their version, and 2.0's stay under
+  `[Unreleased]`.
+- **`Closes #N` doesn't close issues** when a PR merges into a non-default
+  branch. Close the issue by hand once its PR is on `next`, or leave it for the
+  final merge.
+- **2.0 betas are tagged on `next`** (e.g. `v2.0.0-beta.1`). The release
+  workflow treats them like any prerelease, as described below.
+- **At release,** `next` merges into `main` through the normal release PR, and
+  `next` is deleted.
 
 ### Prereleases
 
