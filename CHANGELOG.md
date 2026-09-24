@@ -50,6 +50,14 @@ than for the code. Reference the issue or PR it closes.
   visibility, and the *Bought spellcasting is announced in chat* setting turns
   it off. (#70)
 
+### Changed
+
+- The Arcane Store's *Spell Scroll, Level 1* shows as Common on dnd5e 6, as
+  the SRD has it, where it showed no rarity before. Its spell scrolls also
+  record their spell level the way dnd5e 6.0.5's own do. A restock already
+  drew its scrolls from dnd5e's own compendium, so this only changes the first
+  stock of a merchant dragged in fresh. (#91)
+
 ### Removed
 
 - The Jeweler's three *Spell Components (gems)* price bands. They were

@@ -2575,7 +2575,9 @@
           "value": 0,
           "units": "lb"
         },
-        "rarity": "",
+        "rarities": [
+          "common"
+        ],
         "attunement": "",
         "attuned": false,
         "uses": {
@@ -2617,6 +2619,10 @@
           "riders": {
             "activity": [],
             "effect": []
+          },
+          "spellLevel": {
+            "base": 1,
+            "value": 1
           }
         },
         "item-piles": {
