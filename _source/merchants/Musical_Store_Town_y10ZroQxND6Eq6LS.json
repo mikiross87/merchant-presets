@@ -599,6 +599,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -810,6 +822,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1023,6 +1047,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1234,6 +1270,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1447,6 +1495,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1658,6 +1718,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1871,6 +1943,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2082,6 +2166,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2295,6 +2391,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2506,6 +2614,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2999,7 +3119,66 @@
           "cantBeSoldToMerchants": false
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "Town",
+        "source": null,
+        "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.5,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 10,
+            "minute": 0
+          },
+          "close": {
+            "hour": 20,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.qiDg3A5qn3vnQs8g",
+          "quantities": {
+            "nykwLj3kl9gsG39h": "1d6+2",
+            "vZ61wbnDbMnZE2Ms": "2d6+4",
+            "wZVLLPr6kppqNPem": "1d6+2",
+            "DmQs7mgXqZkAal06": "2d6+4",
+            "JxA4G59NHOQ73Ypo": "2d6+4",
+            "jSI1RezyBz75nsIe": "1d6+2",
+            "QnjkytdDnHBbvlSl": "1d6+2",
+            "2sntXsNfd0nzHh9h": "1d6+2",
+            "DuqqYagxKKCHKesu": "2d6+4",
+            "0INu5W9YFM3BZezp": "1d6+2"
+          },
+          "onOpen": true,
+          "every": 14,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "equipment",
+            "consumable",
+            "container"
+          ],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "food-drink",
+            "meal",
+            "lodging",
+            "service",
+            "spellcasting",
+            "component",
+            "travel"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {

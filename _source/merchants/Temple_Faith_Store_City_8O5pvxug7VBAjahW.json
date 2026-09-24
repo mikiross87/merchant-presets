@@ -634,6 +634,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -795,6 +807,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -958,6 +982,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1011,6 +1047,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1164,6 +1212,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1225,6 +1285,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1288,6 +1360,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1349,6 +1433,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1413,6 +1509,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1475,6 +1583,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1539,6 +1659,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1601,6 +1733,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1665,6 +1809,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1727,6 +1883,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1791,6 +1959,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1853,6 +2033,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2007,6 +2199,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2092,6 +2296,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2179,6 +2395,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2264,6 +2492,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2430,6 +2670,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2514,6 +2766,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2567,6 +2831,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2622,6 +2898,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2675,6 +2963,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2840,6 +3140,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2902,6 +3214,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2966,6 +3290,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3028,6 +3364,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3115,6 +3463,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3178,6 +3538,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3240,6 +3612,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3383,6 +3767,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3524,6 +3920,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3729,6 +4137,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3782,7 +4202,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3836,7 +4266,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3890,7 +4330,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3944,7 +4394,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3998,7 +4458,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4052,7 +4522,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4106,7 +4586,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4162,7 +4652,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr"
+          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4218,7 +4718,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4274,7 +4784,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplClairvoyan"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplClairvoyan",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4330,7 +4850,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplGlyphofWar"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGlyphofWar",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4386,7 +4916,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplMagicCircl"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplMagicCircl",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4442,7 +4982,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplRevivify00"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplRevivify00",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4498,7 +5048,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplDivination"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplDivination",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4554,7 +5114,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4610,7 +5180,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplHallow0000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHallow0000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4666,7 +5246,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplLegendLore"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplLegendLore",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4722,7 +5312,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplRaiseDead0"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplRaiseDead0",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4778,7 +5378,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplScrying000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplScrying000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4834,7 +5444,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplForbiddanc"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplForbiddanc",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4890,7 +5510,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplHeroesFeas"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHeroesFeas",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4946,7 +5576,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueSeeing"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueSeeing",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5002,7 +5642,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplResurrecti"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplResurrecti",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5058,7 +5708,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplSymbol0000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplSymbol0000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5114,7 +5774,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplGate000000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGate000000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5170,7 +5840,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueResurr"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueResurr",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5216,7 +5896,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5271,7 +5961,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5326,7 +6026,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5381,7 +6091,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5436,7 +6156,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5490,7 +6220,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5544,7 +6284,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5598,7 +6348,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5652,7 +6412,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5706,7 +6476,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -5760,7 +6540,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -9041,6 +9831,115 @@
         "Flask": 4,
         "Priest's Pack": 3,
         "Vial": 2
+      },
+      "shop": {
+        "version": 1,
+        "tier": "City",
+        "source": null,
+        "description": "<p>Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry.</p><p><em>Spellcasting here draws on the divine lists. How much the temple will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.5,
+          "categories": [
+            {
+              "category": "Valuables",
+              "sellsAt": 1.0,
+              "buysAt": 1
+            }
+          ]
+        },
+        "hours": {
+          "open": {
+            "hour": 6,
+            "minute": 0
+          },
+          "close": {
+            "hour": 20,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.rqpaUcwjV0cURhY0",
+          "quantities": {
+            "8jkmDgKfHo294iOI": "3d8+8",
+            "ULa6nmvicZBhZZdF": "4d10+20",
+            "sLsbGbm8nG1rFb9Y": "3d8+8",
+            "E2ZAwDSUEmCRsUcj": "2d6+4",
+            "WE5NhsyVAGjQcPX5": "4d10+20",
+            "j2W6L04aQU5LFCoB": "1",
+            "xFAAKSEgo8qC0Wd1": "1",
+            "0G9lzGJuAK6Y495A": "1",
+            "x5theoCUlyJfaoED": "3d8+8",
+            "VITKEllUesEl51SE": "3d8+8",
+            "7jmb31Wf98M5eyYJ": "3d8+8",
+            "YuRV9yRxovJY0PEs": "3d8+8",
+            "5Pd8Vx35fffm87FT": "2d6+4",
+            "9FU1GEkmYT0sMcn9": "2d6+4",
+            "11ps29Pj4M034PUQ": "4d10+20",
+            "EHEjeGM83WkEernB": "4d10+20",
+            "Pq3f0jQHSPBAZbbZ": "3d8+8",
+            "53dWM0cjhUpKS2H2": "1d4+2",
+            "n38iqbnzDWy9YmL5": "1",
+            "MDvCK9HcA1INcR5p": "3d8+8",
+            "vD9TmV2qPLWaahfY": "1",
+            "h2NoJK4jMen74Ll8": "2d6+4",
+            "gcI5aagNrIZNRQEM": "3d8+8",
+            "GjbniyLUQN4ffXvP": "4d10+20",
+            "mKPhqEJp3b2v4FdD": "1",
+            "Cyug5oQAp3SwicDt": "1",
+            "O9ilnnoo2Xcn0K10": "1",
+            "4b73H3fnlvSi9T95": "1",
+            "XhvhLgrBvelB66Tu": "1",
+            "ZQLBfTpSH3n5dT9G": "1",
+            "xrhREdthCM7iw5mx": "1",
+            "q8FlQJkwUYCyc9s1": "1",
+            "0ENR3KtXKO89j2Ku": "1",
+            "vdAh7X5BE7sNKH3M": "1",
+            "C6YHSFxcqhIIyTsB": "1",
+            "9CiinoLidrrTFUQ3": "1",
+            "GQ4JPwJIyNuqHUqq": "1",
+            "vkdiUDhQoMB4IpV9": "1",
+            "MkF3QO0g6bNP07Gx": "1",
+            "Z1XIgxOCeeXwp67u": "1",
+            "Uzy6tuKuvNTK8UOt": "1",
+            "Ujpq6a2OZbsbSTAX": "1",
+            "pm72WKlRQEeIR7nA": "1",
+            "odpwPwKQHt4x1rXv": "1",
+            "AmBCaM8OfyKzA5qh": "1",
+            "bN8UkhL0KXCpuBvM": "1",
+            "StliQqzK4zBZPkLW": "1",
+            "hGwNDCGUFrgo2hoy": "1",
+            "5fB945cU1dODqKqy": "1",
+            "UXiOLDb7pZCOptbl": "1",
+            "wjiKGEANU5fvqNs8": "1d3",
+            "NPPnUUNIkTxoIZr4": "1d3",
+            "K6JNk2BDvPVpAjFy": "1d2-1",
+            "Ei7h6UcxqFmMMviA": "1d4+2",
+            "m6GMoixqNaLdhAWJ": "2d6+4",
+            "1ARebH5jLqHKsSCg": "2d6+4",
+            "TGrqBrlEpWLGsNVU": "1d3",
+            "fEP7WCx86kAEowCL": "1d2-1",
+            "cYpItabyy27C4w7F": "2d6+4",
+            "l6B0Aw95iOqt75fM": "1d4+2",
+            "ho0SI12XTQiJEYlP": "1d2-1"
+          },
+          "onOpen": true,
+          "every": 7,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "food-drink",
+            "meal",
+            "lodging",
+            "service",
+            "travel"
+          ]
+        }
       }
     },
     "item-piles": {

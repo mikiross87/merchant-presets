@@ -631,6 +631,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -717,6 +729,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -802,6 +826,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -945,6 +981,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -990,7 +1038,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1045,7 +1103,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1100,7 +1168,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1155,7 +1233,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1210,7 +1298,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1265,7 +1363,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1320,7 +1428,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1375,7 +1493,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1430,7 +1558,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1485,7 +1623,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1540,7 +1688,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1595,7 +1753,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1650,7 +1818,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1705,7 +1883,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -1760,7 +1948,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "Valuables",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -2331,7 +2529,79 @@
           "customCategory": "Valuables"
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "Town",
+        "source": null,
+        "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.6,
+          "categories": [
+            {
+              "category": "Valuables",
+              "sellsAt": 1.0,
+              "buysAt": 1
+            }
+          ]
+        },
+        "hours": {
+          "open": {
+            "hour": 9,
+            "minute": 0
+          },
+          "close": {
+            "hour": 17,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.85n7AWcO2ZbDou0s",
+          "quantities": {
+            "rtUqCXYStOVEE3FW": "2d6+4",
+            "z2qZ2047UmxDOBvV": "1d6+2",
+            "yH6xbFiJbKbiWuWU": "1d6+2",
+            "LJC9YJ47rZDW2RHY": "1d6+2",
+            "5Bg5z8tCC6WiRJa2": "1d3+1",
+            "dcoMrsQX5ZyY8CxJ": "1d2",
+            "DMbeg7q87alMD347": "1d2",
+            "wBkbbBZfzbS2PxRO": "1d3+1",
+            "ZJdw97mdMfbUw88N": "1d3+1",
+            "QSEsAQmbHqv7wubA": "1d6+2",
+            "r8Gwuqaa3fWfn0b9": "1d3+1",
+            "cVSlF5Z2p1kxctFy": "1d3+1",
+            "PQupjSnlEK4oiKg4": "1d3+1",
+            "xUGWibeQmpUXbKbP": "1d6+2",
+            "5czb9dx4DX7X2ZMC": "1d6+2",
+            "7F5eEnMqNceNZFHB": "1d6+2",
+            "lOevHzTZX1P4vG5k": "1d2",
+            "jgWFxTmLmrLNwHoR": "1d3+1",
+            "57jEnBjLeBsQL8tO": "1d3+1"
+          },
+          "onOpen": true,
+          "every": 14,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "consumable",
+            "container"
+          ],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "food-drink",
+            "meal",
+            "lodging",
+            "service",
+            "spellcasting",
+            "travel"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {

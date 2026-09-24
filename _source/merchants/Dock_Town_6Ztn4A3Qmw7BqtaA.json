@@ -598,7 +598,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -652,7 +662,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -706,7 +726,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -760,7 +790,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "vehicle"
+          "kind": "vehicle",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -814,7 +854,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "travel"
+          "kind": "travel",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1457,7 +1507,60 @@
           "cantBeSoldToMerchants": true
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "Town",
+        "source": null,
+        "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
+        "terms": {
+          "sellsAt": 1.0,
+          "buysAt": 0.5,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 5,
+            "minute": 0
+          },
+          "close": {
+            "hour": 19,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.c6C412BJN9BgYIA7",
+          "quantities": {
+            "bHP83l2gsBJ61dXH": "1d2-1",
+            "EI1KIKBGVa9g8lOJ": "1d2-1",
+            "GlbPaSQyZTEq3PXn": "1d3+1",
+            "KgSIUpHXObeevVQa": "1d2-1",
+            "Z5vT80yuydp0WqEa": "1"
+          },
+          "onOpen": true,
+          "every": 3,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "equipment",
+            "consumable",
+            "tool",
+            "container"
+          ],
+          "kinds": [
+            "mount",
+            "tack",
+            "food-drink",
+            "meal",
+            "lodging",
+            "service",
+            "spellcasting",
+            "component"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {

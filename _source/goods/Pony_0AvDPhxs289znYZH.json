@@ -48,7 +48,17 @@
     },
     "merchant-presets": {
       "kind": "mount",
-      "actor": "Compendium.dnd5e.actors24.Actor.mmPony0000000000"
+      "actor": "Compendium.dnd5e.actors24.Actor.mmPony0000000000",
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": false,
+        "noBuyback": false,
+        "category": "",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
+      }
     }
   }
 }
