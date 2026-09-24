@@ -40,7 +40,9 @@ issue ──► milestone ──► branch + PR (Closes #N) ──► main ─�
 4. **`main` is always last release + merged work.** `module.json` carries the
    version of the last release until the release PR bumps it; the unreleased
    work is visible in `CHANGELOG.md` and the open milestone, not in a
-   pre-release version string that Foundry would show to players.
+   pre-release version string that Foundry would show to players. 2.0 work is
+   the exception: it lands on `next` until 2.0 ships (see CONTRIBUTING.md,
+   "The `next` branch").
 
 ## Cutting a release
 
