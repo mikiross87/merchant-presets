@@ -220,6 +220,7 @@ test("the shop window shows the NPC's portrait and the marker is written", () =>
   assert.equal(plan.pileData.merchantImage, "");
   assert.deepEqual(plan.moduleFlags.shop, { source: templeUuid, tier: "Town" });
   assert.equal(plan.moduleFlags.purse, shipped.flags["merchant-presets"].purse);
+  assert.deepEqual(plan.moduleFlags.itemFlags, shipped.flags["merchant-presets"].itemFlags);
   assert.deepEqual(plan.moduleFlags.containers, shipped.flags["merchant-presets"].containers);
   assert.deepEqual(plan.currency, shipped.system.currency);
   assert.equal(plan.pileData.tablesForPopulate[0].uuid, shipped.flags["item-piles"].data.tablesForPopulate[0].uuid);
@@ -248,6 +249,20 @@ test("re-applying keeps the gear and replaces the stock", () => {
   assert.ok(!again.deletes.includes("spell00000000001"));
   assert.equal(again.moduleFlags.shop.tier, "City");
   assert.ok(again.creates.every(i => kind(i) !== "gear"));
+});
+
+test("re-applying deletes old stock even when a caller asks to keep it", () => {
+  // Garaele as a Temple (Town) after a first setup: gear tagged, stock created.
+  const first = planShop(temple(), garaele(), ["longsword0000001"]);
+  const shop = garaele();
+  shop.items = shop.items.filter(i => !first.deletes.includes(i._id));
+  for (const i of shop.items) i.flags = { "merchant-presets": { kind: "gear" } };
+  shop.items.push(...structuredClone(first.creates));
+  shop.flags["merchant-presets"] = first.moduleFlags;
+
+  const oldStockId = first.creates[0]._id;
+  const again = planShop(armourer(), shop, ["longsword0000001", oldStockId]);
+  assert.ok(again.deletes.includes(oldStockId));
 });
 
 test("re-applying drops gear the GM unticks", () => {
