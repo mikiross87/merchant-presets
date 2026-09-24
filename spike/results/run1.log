@@ -1,0 +1,239 @@
+
+=== Q1 Limited player's view of the merchant
+{
+  "permission": 1,
+  "limited": true,
+  "canWrite": false,
+  "items": 57,
+  "forSale": 55,
+  "currency": {
+    "pp": 0,
+    "gp": 250,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "flagKeys": [
+    "merchant-presets",
+    "item-piles"
+  ],
+  "dealNotes": "GM ONLY: C1 gets 10% off",
+  "itemPilesData": 20,
+  "directWrite": "refused: User P1 lacks permission to update Actor [57oHVmTqHdn2T8iW]"
+}
+
+=== buy: before
+{
+  "bellStock": 11,
+  "till": {
+    "pp": 0,
+    "gp": 250,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== buy: P1 buys one Bell
+{
+  "ok": {
+    "at": 1790262153685,
+    "by": "P1",
+    "item": "Bell",
+    "cost": 100,
+    "stockBefore": 11
+  },
+  "ms": 1764
+}
+
+=== buy: after (GM view)
+{
+  "bellStock": 10,
+  "till": {
+    "pp": 0,
+    "gp": 251,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 19,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 1
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== buy: after (P1 view)
+{
+  "bellStock": 10,
+  "till": {
+    "pp": 0,
+    "gp": 251,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 19,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 1
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== Q2 last Bell, both at once, serialize=false
+{
+  "before": {
+    "bellStock": 1,
+    "till": {
+      "pp": 0,
+      "gp": 251,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 19,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 1
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "P1": {
+    "ok": {
+      "at": 1790262157165,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 1991
+  },
+  "P2": {
+    "error": "Not for sale",
+    "ms": 16609
+  },
+  "after": {
+    "bellStock": 0,
+    "till": {
+      "pp": 0,
+      "gp": 252,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 18,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 2
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "handlerRuns": [
+    {
+      "at": 1790262153685,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 11
+    },
+    {
+      "at": 1790262157165,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    }
+  ]
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: TypeError: Cannot read properties of undefined (reading 'update')
+    at eval (eval at evaluate (:311:30), <anonymous>:1:62)
+    at async <anonymous>:337:30
+    at ev (/private/tmp/claude-501/-Users-miguelross-Developer-merchant-presets/69154f2c-ea11-4e9c-bf4d-0d063de77f37/scratchpad/wt/spike/harness.mjs:20:43)
+    at setBells (/private/tmp/claude-501/-Users-miguelross-Developer-merchant-presets/69154f2c-ea11-4e9c-bf4d-0d063de77f37/scratchpad/wt/spike/run.mjs:21:29)
+    at /private/tmp/claude-501/-Users-miguelross-Developer-merchant-presets/69154f2c-ea11-4e9c-bf4d-0d063de77f37/scratchpad/wt/spike/run.mjs:49:9 {
+  log: []
+}
+
+Node.js v26.9.0

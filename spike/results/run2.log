@@ -1,0 +1,505 @@
+
+=== Q1 Limited player's view of the merchant
+{
+  "permission": 1,
+  "limited": true,
+  "canWrite": false,
+  "items": 56,
+  "forSale": 54,
+  "currency": {
+    "pp": 0,
+    "gp": 252,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "flagKeys": [
+    "merchant-presets",
+    "item-piles"
+  ],
+  "dealNotes": "GM ONLY: C1 gets 10% off",
+  "itemPilesData": 20,
+  "directWrite": "refused: User P1 lacks permission to update Actor [57oHVmTqHdn2T8iW]"
+}
+
+=== buy: before
+{
+  "bellStock": 0,
+  "till": {
+    "pp": 0,
+    "gp": 252,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 18,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 2
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== buy: P1 buys one Bell
+{
+  "error": "Cannot read properties of undefined (reading 'id')",
+  "ms": 1
+}
+
+=== buy: after (GM view)
+{
+  "bellStock": 0,
+  "till": {
+    "pp": 0,
+    "gp": 252,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 18,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 2
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== buy: after (P1 view)
+{
+  "bellStock": 0,
+  "till": {
+    "pp": 0,
+    "gp": 252,
+    "ep": 0,
+    "sp": 0,
+    "cp": 0
+  },
+  "C1": {
+    "gp": {
+      "pp": 0,
+      "gp": 18,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 2
+  },
+  "C2": {
+    "gp": {
+      "pp": 0,
+      "gp": 20,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "bells": 0
+  }
+}
+
+=== Q2 last Bell, both at once, serialize=false
+{
+  "before": {
+    "bellStock": 1,
+    "till": {
+      "pp": 0,
+      "gp": 252,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 18,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 2
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "P1": {
+    "ok": {
+      "received": 1790262227680,
+      "started": 1790262227680,
+      "done": 1790262232433,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 4962
+  },
+  "P2": {
+    "error": "Cannot read properties of undefined (reading 'id')",
+    "ms": 0
+  },
+  "after": {
+    "bellStock": 0,
+    "till": {
+      "pp": 0,
+      "gp": 253,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 17,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 3
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "handlerRuns": [
+    {
+      "received": 1790262227680,
+      "started": 1790262227680,
+      "done": 1790262232433,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    }
+  ]
+}
+
+=== Q2 last Bell, both at once, serialize=true
+{
+  "before": {
+    "bellStock": 1,
+    "till": {
+      "pp": 0,
+      "gp": 253,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 17,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 3
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "P1": {
+    "ok": {
+      "received": 1790262235508,
+      "started": 1790262235508,
+      "done": 1790262240341,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 5208
+  },
+  "P2": {
+    "error": "Cannot read properties of undefined (reading 'id')",
+    "ms": 1
+  },
+  "after": {
+    "bellStock": 0,
+    "till": {
+      "pp": 0,
+      "gp": 254,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 16,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 4
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "handlerRuns": [
+    {
+      "received": 1790262235508,
+      "started": 1790262235508,
+      "done": 1790262240341,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    }
+  ]
+}
+
+=== Q2b two GM tabs, P1 buys one Bell
+{
+  "before": {
+    "bellStock": 5,
+    "till": {
+      "pp": 0,
+      "gp": 254,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 16,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 4
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "P1": {
+    "ok": {
+      "received": 1790262271092,
+      "started": 1790262271092,
+      "done": 1790262273275,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 5
+    },
+    "ms": 2542
+  },
+  "after": {
+    "bellStock": 4,
+    "till": {
+      "pp": 0,
+      "gp": 255,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 15,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 5
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "runsTab1": [
+    {
+      "received": 1790262271092,
+      "started": 1790262271092,
+      "done": 1790262273275,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 5
+    }
+  ],
+  "runsTab2": []
+}
+
+=== Q4 timeout 1 s, handler 3 s
+{
+  "before": {
+    "bellStock": 5,
+    "till": {
+      "pp": 0,
+      "gp": 255,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 15,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 5
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "P1": {
+    "error": "operation has timed out",
+    "ms": 1074
+  },
+  "atReply": {
+    "bellStock": 5,
+    "till": {
+      "pp": 0,
+      "gp": 255,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 15,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 5
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "after3s": {
+    "bellStock": 4,
+    "till": {
+      "pp": 0,
+      "gp": 255,
+      "ep": 0,
+      "sp": 0,
+      "cp": 0
+    },
+    "C1": {
+      "gp": {
+        "pp": 0,
+        "gp": 14,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 6
+    },
+    "C2": {
+      "gp": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+      "bells": 0
+    }
+  },
+  "handlerRuns": []
+}
+
+=== Q3b GM disconnects mid-trade, no timeout
+"STILL PENDING after 15 s"
+
+=== Q3 no GM connected
+{
+  "activeGM": null,
+  "gmActive": false,
+  "direct": "User [zimaX4yRXgWGiCaG] is not active",
+  "viaActiveGM": "Cannot read properties of null (reading 'query')"
+}

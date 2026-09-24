@@ -1,0 +1,103 @@
+
+=== Q2 last Bell, serialize=false
+{
+  "before": {
+    "bellStock": 1,
+    "tillGp": 256,
+    "C1": [
+      14,
+      6
+    ],
+    "C2": [
+      20,
+      0
+    ]
+  },
+  "P1": {
+    "ok": {
+      "received": 1790263845334,
+      "started": 1790263845334,
+      "done": 1790263849650,
+      "by": "P1",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 4961
+  },
+  "P2": {
+    "ok": {
+      "received": 1790263845014,
+      "started": 1790263845015,
+      "done": 1790263849336,
+      "by": "P2",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 4958
+  },
+  "after": {
+    "bellStock": 0,
+    "tillGp": 257,
+    "C1": [
+      13,
+      7
+    ],
+    "C2": [
+      19,
+      1
+    ]
+  },
+  "runs": [
+    "P2 stockBefore=1",
+    "P1 stockBefore=1"
+  ]
+}
+
+=== Q2 last Bell, serialize=true
+{
+  "before": {
+    "bellStock": 1,
+    "tillGp": 257,
+    "C1": [
+      13,
+      7
+    ],
+    "C2": [
+      19,
+      1
+    ]
+  },
+  "P1": {
+    "error": "Only 0 Bell left",
+    "ms": 3611
+  },
+  "P2": {
+    "ok": {
+      "received": 1790263854552,
+      "started": 1790263854552,
+      "done": 1790263857850,
+      "by": "P2",
+      "item": "Bell",
+      "cost": 100,
+      "stockBefore": 1
+    },
+    "ms": 3622
+  },
+  "after": {
+    "bellStock": 0,
+    "tillGp": 258,
+    "C1": [
+      13,
+      7
+    ],
+    "C2": [
+      18,
+      2
+    ]
+  },
+  "runs": [
+    "P2 stockBefore=1"
+  ]
+}

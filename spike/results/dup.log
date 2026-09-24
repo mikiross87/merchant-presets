@@ -1,0 +1,26 @@
+
+=== sequential, same tab
+[
+  {
+    "r": "ChatMessage5e RO8LBsHILJqamkqE content=first",
+    "errs": [],
+    "count": 1
+  },
+  {
+    "r": "ChatMessage5e RO8LBsHILJqamkqE content=second",
+    "errs": [],
+    "count": 1
+  }
+]
+
+=== concurrent, two tabs
+[
+  "tab1",
+  "tab2"
+]
+
+=== stored
+[
+  "second",
+  "tab1"
+]

@@ -1,0 +1,18 @@
+
+=== Q2b two GM tabs, settled
+{
+  "before": {
+    "bellStock": 5,
+    "tillGp": 258,
+    "C1gp": 13
+  },
+  "P1": "P1",
+  "after": {
+    "bellStock": 4,
+    "tillGp": 259,
+    "C1gp": 12
+  },
+  "tab1": 1,
+  "tab2": 1,
+  "tab2ready": true
+}
