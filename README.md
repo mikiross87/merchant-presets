@@ -73,6 +73,36 @@ To fix merchants imported before this module was enabled:
 game.modules.get("merchant-presets").api.rewireAll()
 ```
 
+### Your own NPCs as shops
+
+Already have a shopkeeper — Sister Garaele in Phandelver, say? Right-click her
+in the Actors sidebar and choose **Set up as shop…**. Item Piles doesn't need
+to be enabled on her first; the module turns it on as part of the setup. Pick
+one of the shops and a settlement size, tick the items she should keep as her
+own gear, and confirm. Everything physical left unticked — weapons, armour,
+equipment, consumables, tools, loot, containers and what's in them — is
+deleted for good, so read the dialog's warning before you click through.
+
+She becomes that merchant: stock rolled for the size you chose, its buying
+rules, prices, purse and trading hours, restocking included. Her name,
+portrait, stat block (spells and features included) and token don't change,
+and the gear she kept never shows up in the shop window and survives a
+restock, exactly like a shipped shopkeeper's own weapon and armour.
+
+Setting her up again, with another shop or another size, keeps whatever gear
+she's already holding — the dialog only offers her gear this time round — and
+replaces the stock. The stock table she used before isn't deleted; it's left
+behind in the `Merchant Stock` folder, same as it is for a shipped merchant.
+There's no undo. If you decide she shouldn't be a shop after all, turn Item
+Piles off on her — that's what stops her being one.
+
+The dialog is a thin wrapper around the module's API, so a macro can drive it
+too:
+
+```js
+game.modules.get("merchant-presets").api.setUpShop(actor, merchantUuid, keepIds)
+```
+
 ### The shops
 
 Adventurers' Store · Alchemists & Apothecaries · Arcane Store · Armourer &
