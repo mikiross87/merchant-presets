@@ -446,6 +446,16 @@ function errorsAt(errors, path) {
  *   (item-piles.js:~36219), not always open — but the schema has no way to
  *   encode that degenerate state at all, and leaving a shop permanently
  *   open is the safer failure than leaving it permanently unmigrated.
+ * - `restock.table` invalid (Item Piles enforces no shape on a `RollTable`
+ *   reference at all) → `null`.
+ * - A `restock.quantities` entry invalid — a GM's own per-result formula in
+ *   Item Piles' Populate Items tab can use syntax this schema doesn't (keep
+ *   dice like `"2d4kh1"`, exploding dice, a roll-data reference like
+ *   `"@level"`) — is coerced to its plain string form when it's actually a
+ *   finite positive whole number (Item Piles itself accepts a bare number
+ *   there); anything still invalid is dropped outright, the same as a
+ *   result this shop's own table never had — a missing entry reads as `"1"`
+ *   at roll time, not zero.
  *
  * @param {object} shop
  * @returns {{shop: object, ok: boolean, errors: string[]}} `ok`: whether
@@ -461,6 +471,13 @@ function repairShop(shop) {
   repaired.terms.categories = repaired.terms.categories.filter((c, i) =>
     !errorsAt(errors, `terms.categories.${i}`));
   if (errorsAt(errors, "hours")) repaired.hours = null;
+  if (errorsAt(errors, "restock.table")) repaired.restock.table = null;
+  for (const id of Object.keys(repaired.restock.quantities)) {
+    if (!errorsAt(errors, `restock.quantities.${id}`)) continue;
+    const v = repaired.restock.quantities[id];
+    if (typeof v === "number" && Number.isInteger(v) && v > 0) repaired.restock.quantities[id] = String(v);
+    else delete repaired.restock.quantities[id];
+  }
 
   ({ ok, errors } = validateShop(repaired));
   return { shop: repaired, ok, errors };
@@ -533,34 +550,43 @@ export function planOwnership(actor, hasTokenOnScene) {
 }
 
 /**
- * The `Actor#update` payload to bring `actor` into 2.0, or `null` if it
- * needs nothing. Dotted-path keys, as the rest of the runtime writes them.
+ * The `Actor#update` payload to bring `actor` into 2.0, and whether the
+ * shop config could be derived at all. Dotted-path keys, as the rest of the
+ * runtime writes them.
  *
- * Always includes the data half — `flags.merchant-presets.shop`, once —
+ * Always attempts the data half — `flags.merchant-presets.shop`, once —
  * regardless of `nativeShop`. The cut-over half — Item Piles switched off on
  * the actor and its prototype token, `flags.core.sheetClass`, the ownership
  * default — is included only while `nativeShop` is `true`; until then the
- * shop keeps trading through Item Piles exactly as it did on 1.x.
+ * shop keeps trading through Item Piles exactly as it did on 1.x. Neither
+ * half depends on the other succeeding: a shop still invalid after
+ * `repairShop` leaves `shopError` set and the shop key out of `update`, but
+ * the cut-over fields (when `nativeShop` is on) are still planned, and — the
+ * caller's job, since it's a separate write — so is the items half
+ * (`planItemUpdates`), which has nothing to do with the shop's own config
+ * (#100 review).
  *
  * @param {object} actor
  * @param {object} [options]
  * @param {object} [options.packShop]         See `deriveShop`.
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
  * @param {boolean} [options.nativeShop]      Defaults to `NATIVE_SHOP`.
- * @returns {object|null}
- * @throws {TypeError} listing every error, when the derived shop config is
- *   still invalid after `repairShop` — nothing is written for `actor` at
- *   all, so it's retried, unrepaired, on every later pass rather than
- *   silently stuck on a broken config; the caller logs it.
+ * @returns {{update: object|null, shopError: string|null}} `update`: `null`
+ *   if there's nothing to write. `shopError`: set, and the shop key left out
+ *   of `update`, when the derived shop config is still invalid after
+ *   `repairShop` — nothing is stamped current, so it's retried, unrepaired,
+ *   on every later pass rather than silently stuck on a broken config; the
+ *   caller logs it.
  */
 export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP } = {}) {
-  if (!needsMigration(actor, nativeShop)) return null;
+  if (!needsMigration(actor, nativeShop)) return { update: null, shopError: null };
   const update = {};
+  let shopError = null;
 
   if (!hasCurrentShop(actor)) {
     const { shop, ok, errors } = repairShop(deriveShop(actor, packShop));
-    if (!ok) throw new TypeError(`Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`);
-    update["flags.merchant-presets.shop"] = shop;
+    if (ok) update["flags.merchant-presets.shop"] = shop;
+    else shopError = `Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`;
   }
 
   if (nativeShop) {
@@ -576,7 +602,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (ownership !== null) update["ownership.default"] = ownership;
   }
 
-  return Object.keys(update).length ? update : null;
+  return { update: Object.keys(update).length ? update : null, shopError };
 }
 
 /**

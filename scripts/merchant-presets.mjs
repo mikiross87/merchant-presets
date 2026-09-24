@@ -1055,23 +1055,28 @@ async function resolvePackShop(actorData) {
  * rebuilds from a stored record rather than Item Piles' live state (see
  * `reapplyItemFlags`).
  *
- * Does nothing while `migrationGateOpen` is closed (#100 review).
+ * Does nothing while `migrationGateOpen` is closed (#100 review). The shop
+ * and item halves are independent writes: a shop config still invalid after
+ * repair (`planActorUpdate`'s `shopError`) is logged but doesn't stop the
+ * item half, which has nothing to do with it (#100 review).
  *
  * @param {Actor} actor
- * @returns {Promise<boolean>} whether anything changed
+ * @returns {Promise<boolean>} whether anything was actually written
  */
 async function migrateShop(actor) {
   if (!migrationGateOpen) return false;
   const data = actor.toObject();
   if (!needsMigration(data, NATIVE_SHOP)) return false;
+  let changed = false;
 
   const packShop = await resolvePackShop(data);
   const hasTokenOnScene = game.scenes.some(s => s.tokens.some(t => t.actorId === actor.id));
-  const update = planActorUpdate(data, { packShop, hasTokenOnScene, nativeShop: NATIVE_SHOP });
-  if (update) await actor.update(update);
+  const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene, nativeShop: NATIVE_SHOP });
+  if (update) { await actor.update(update); changed = true; }
+  if (shopError) console.error(`${MODULE} | ${shopError}`);
 
   const { updates: itemUpdates, errors: itemErrors } = planItemUpdates(data);
-  if (itemUpdates.length) await actor.updateEmbeddedDocuments("Item", itemUpdates);
+  if (itemUpdates.length) { await actor.updateEmbeddedDocuments("Item", itemUpdates); changed = true; }
   for (const { item, errors } of itemErrors) {
     console.error(`${MODULE} | invalid migrated stock config for "${item}" on "${actor.name}": ${errors.join("; ")}`);
   }
@@ -1079,11 +1084,11 @@ async function migrateShop(actor) {
   for (const scene of game.scenes) {
     const tokens = scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject());
     const tokenUpdates = planTokenUpdates(tokens, NATIVE_SHOP);
-    if (tokenUpdates.length) await scene.updateEmbeddedDocuments("Token", tokenUpdates);
+    if (tokenUpdates.length) { await scene.updateEmbeddedDocuments("Token", tokenUpdates); changed = true; }
   }
 
-  log(`migrated "${actor.name}" to its 2.0 shop config`);
-  return true;
+  if (changed) log(`migrated "${actor.name}" to its 2.0 shop config`);
+  return changed;
 }
 
 /**
