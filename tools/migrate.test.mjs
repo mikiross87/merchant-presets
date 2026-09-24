@@ -4,7 +4,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { STOCK_DEFAULTS, validateShop, validateStock } from "../scripts/schema.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, worldHasLegacyShops
+  planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, shouldForceAutoRestockOff,
+  worldHasLegacyShops
 } from "../scripts/migrate.mjs";
 
 /** A shipped merchant, straight off `_source`, matched by filename prefix.
@@ -658,6 +659,16 @@ test("autoRestock: no stored value, a fresh 2.0 world — the new default (on) s
 test("autoRestock: a GM's own stored value is never touched, 1.x world or not", () => {
   assert.equal(planAutoRestockDefault(true, true), null);
   assert.equal(planAutoRestockDefault(true, false), null);
+});
+
+test("shouldForceAutoRestockOff fires only when this pass derived a shop's data half and autoRestock is unset", () => {
+  const dataHalf = { "flags.merchant-presets.shop": { version: 1 } };
+  assert.equal(shouldForceAutoRestockOff(dataHalf, false), true);
+  assert.equal(shouldForceAutoRestockOff(dataHalf, true), false);   // a GM's own choice stands
+  // Cut-over-only fields (an already-current shop): no shop data derived here.
+  const cutOverOnly = { "flags.item-piles.data.enabled": false, "flags.core.sheetClass": SHOP_SHEET_ID };
+  assert.equal(shouldForceAutoRestockOff(cutOverOnly, false), false);
+  assert.equal(shouldForceAutoRestockOff(null, false), false);
 });
 
 /* --------------------------------------------------- cross-check vs #99's pack */

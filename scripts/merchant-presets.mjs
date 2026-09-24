@@ -20,11 +20,11 @@
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities, STOCK_PREFIX,
-  TIERS, tierOf } from "./shop.mjs";
+import { isPreset, isShop, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
+  STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 import { NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate, planAutoRestockDefault, planItemUpdates,
-  planTokenUpdates, worldHasLegacyShops } from "./migrate.mjs";
+  planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops } from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
 const TABLE_FOLDER = "Merchant Stock";
@@ -1070,23 +1070,41 @@ async function resolvePackShop(actorData) {
  * @returns {Promise<boolean>} whether anything was actually written
  */
 async function migrateShop(actor) {
-  if (!migrationGateOpen) return false;
+  if (!migrationGateOpen || !isShop(actor)) return false;
   const data = actor.toObject();
-  // Gathered once, up front: needsMigration must see every scene's tokens too
-  // — a leftover unlinked token still Item Piles-enabled has to reopen the
-  // cut-over even once the actor's and every item's own writes have already
-  // landed (#100 review) — and the same per-scene grouping is reused below.
+
+  // needsMigration can usually decide without scanning every scene's
+  // tokens — the expensive part across a whole world's actors — so check
+  // without them first. Only once the cut-over (NATIVE_SHOP) is live and
+  // this shop would otherwise look fully done can a stray token still
+  // change the answer, the one case tokens have to be gathered just to
+  // find out (#100 review).
+  const definitelyNeedsMigration = needsMigration(data, NATIVE_SHOP);
+  if (!definitelyNeedsMigration && !NATIVE_SHOP) return false;
+
   const scenes = game.scenes.map(scene => ({
     scene, tokens: scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject())
   }));
   const tokens = scenes.flatMap(s => s.tokens);
-  if (!needsMigration(data, NATIVE_SHOP, tokens)) return false;
+  if (!definitelyNeedsMigration && !needsMigration(data, NATIVE_SHOP, tokens)) return false;
   let changed = false;
 
   const packShop = await resolvePackShop(data);
   const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
   if (update) { await actor.update(update); changed = true; }
   if (shopError) console.error(`${MODULE} | ${shopError}`);
+
+  // A 1.x merchant sitting in a world compendium or an Adventure only
+  // proves "this world is upgrading from 1.x" once it's actually migrated,
+  // which can be well after applyAutoRestockDefault's own first-load check
+  // already found nothing (#100 review).
+  if (shouldForceAutoRestockOff(update, hasStoredAutoRestock())) {
+    try { await game.settings.set(MODULE, "autoRestock", false); }
+    catch (err) {
+      migrationGateOpen = false;
+      console.error(`${MODULE} | could not force the autoRestock default off; migration deferred to next load`, err);
+    }
+  }
 
   const { updates: itemUpdates, errors: itemErrors } = planItemUpdates(data);
   if (itemUpdates.length) { await actor.updateEmbeddedDocuments("Item", itemUpdates); changed = true; }
@@ -1121,6 +1139,15 @@ async function migrateAll() {
   return n;
 }
 
+/** Whether the world's settings storage already holds a value for
+ *  `autoRestock` — a GM's own choice, on 1.x or 2.0, never overwritten by
+ *  either the first-load default decision or `migrateShop`'s own (#100
+ *  review). */
+function hasStoredAutoRestock() {
+  const key = `${MODULE}.autoRestock`;
+  return !!game.settings.storage.get("world").find(s => s.key === key);
+}
+
 /**
  * Force `autoRestock` off on this world's first 2.0 load, if it's upgrading
  * from 1.x and the GM never touched the setting (#105): the setting's
@@ -1138,9 +1165,7 @@ async function migrateAll() {
  */
 async function applyAutoRestockDefault() {
   if (game.settings.get(MODULE, "autoRestockDecided")) return;
-  const key = `${MODULE}.autoRestock`;
-  const hasStoredValue = !!game.settings.storage.get("world").find(s => s.key === key);
-  const value = planAutoRestockDefault(hasStoredValue, worldHasLegacyShops(game.actors));
+  const value = planAutoRestockDefault(hasStoredAutoRestock(), worldHasLegacyShops(game.actors));
   if (value !== null) await game.settings.set(MODULE, "autoRestock", value);
   await game.settings.set(MODULE, "autoRestockDecided", true);
 }

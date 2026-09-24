@@ -422,6 +422,28 @@ export function planAutoRestockDefault(hasStoredValue, worldHasLegacyShops) {
 }
 
 /**
+ * Whether migrating `actor`'s data — this pass's own `planActorUpdate`
+ * `update` — should force the world's `autoRestock` setting off right now,
+ * outside `applyAutoRestockDefault`'s usual first-load check (#105, #100
+ * review). A 1.x merchant sitting in a world compendium or an Adventure
+ * only proves "this world is upgrading from 1.x" once a GM actually imports
+ * it — which can be long after the world's first 2.0 load already looked at
+ * `game.actors` and found nothing. `update` carries
+ * `flags.merchant-presets.shop` only the *first* time a shop's data half is
+ * derived from raw Item Piles flags, never on one already current, so its
+ * presence alone is the signal: no need to re-scan every actor in the world
+ * the way `worldHasLegacyShops` does.
+ *
+ * @param {object|null} update      `planActorUpdate`'s own `update` for this actor.
+ * @param {boolean} hasStoredValue  Whether `autoRestock` already has a
+ *   value — a GM's own choice, on 1.x or 2.0, is never overwritten.
+ * @returns {boolean} whether to write `autoRestock: false` now.
+ */
+export function shouldForceAutoRestockOff(update, hasStoredValue) {
+  return !hasStoredValue && !!update?.["flags.merchant-presets.shop"];
+}
+
+/**
  * Whether any of `errors` is scoped to exactly `path` — one of its own
  * sub-fields (`"path.field: …"`) or a bare check on `path` itself
  * (`"path: …"`). A plain string-prefix test would also match a sibling
