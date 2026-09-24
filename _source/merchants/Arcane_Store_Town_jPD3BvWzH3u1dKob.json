@@ -2781,7 +2781,9 @@
           "value": 0,
           "units": "lb"
         },
-        "rarity": "",
+        "rarities": [
+          "common"
+        ],
         "attunement": "",
         "attuned": false,
         "uses": {
@@ -2823,6 +2825,10 @@
           "riders": {
             "activity": [],
             "effect": []
+          },
+          "spellLevel": {
+            "base": 1,
+            "value": 1
           }
         },
         "item-piles": {
@@ -2909,6 +2915,10 @@
           "riders": {
             "activity": [],
             "effect": []
+          },
+          "spellLevel": {
+            "base": 2,
+            "value": 2
           }
         },
         "item-piles": {
@@ -2995,6 +3005,10 @@
           "riders": {
             "activity": [],
             "effect": []
+          },
+          "spellLevel": {
+            "base": 3,
+            "value": 3
           }
         },
         "item-piles": {
@@ -3081,6 +3095,10 @@
           "riders": {
             "activity": [],
             "effect": []
+          },
+          "spellLevel": {
+            "base": 4,
+            "value": 4
           }
         },
         "item-piles": {
