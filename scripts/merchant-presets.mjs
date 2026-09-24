@@ -500,6 +500,50 @@ async function releaseStrays(actor) {
 }
 
 /**
+ * The SRD kit copies earlier builds stocked, each with the standalone item it
+ * stands in for (#89). World stock tables imported from those builds still
+ * roll the copies, so any roll of them brings the kit's id back — a restock,
+ * or Roll All Tables on the Populate Items tab, which never passes through
+ * this module.
+ */
+const KIT_COPIES = Object.fromEntries([
+  ["ABjsMdpDnWlkjbMq", "phbagBedroll0000"],
+  ["1NwTdI5LHEH5WThq", "phbagBlanket0000"],
+  ["iYwrPPLmuVD9eqfa", "phbagCaltrops000"],
+  ["QjcMSfmrMwjPoWKn", "phbagCrowbar0000"],
+  ["vi0j4PYnO596a2L1", "phbagInk00000000"],
+  ["x9BzTUcsOj6K6OJE", "phbagInkPen00000"],
+  ["yoRKNd2QddQp1XuX", "phbagPerfume0000"],
+  ["jLcAY4Oph8ZEniG2", "phbagRobe0000000"],
+  ["5KMKEV07I25SVth0", "phbagRope0000000"],
+  ["367bsHMaHI1II4k9", "phbagTinderbox00"],
+  ["5tEPJK0TLcjPvPNF", "phbagWaterskin00"]
+].map(ids => ids.map(id => `Compendium.dnd5e.equipment24.Item.${id}`)));
+
+/**
+ * Point this module's world stock tables at the standalone goods.
+ *
+ * Only the module's own tables: stamped, or in its folder. A GM's own table
+ * that rolls a kit copy is theirs to keep.
+ *
+ * @returns {Promise<number>} how many tables changed
+ */
+async function repointKitCopiesAll() {
+  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
+  let n = 0;
+  const ours = game.tables.filter(t => t.getFlag(MODULE, "stock") || t.folder?.name === TABLE_FOLDER);
+  for (const table of ours) {
+    const updates = table.results
+      .filter(r => KIT_COPIES[r.documentUuid])
+      .map(r => ({ _id: r.id, documentUuid: KIT_COPIES[r.documentUuid] }));
+    if (!updates.length) continue;
+    try { await table.updateEmbeddedDocuments("TableResult", updates); n++; }
+    catch (err) { console.error(`${MODULE} | could not repoint "${table.name}"`, err); }
+  }
+  return n;
+}
+
+/**
  * Let go of stray kit ids across every merchant already in the world.
  * @returns {Promise<number>} how many merchants changed
  */
@@ -1184,6 +1228,7 @@ Hooks.once("ready", () => {
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
   wireReplacedAll().then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); });
+  repointKitCopiesAll().then(n => { if (n) log(`pointed ${n} stock table(s) at the standalone goods`); });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
 
   log("ready");

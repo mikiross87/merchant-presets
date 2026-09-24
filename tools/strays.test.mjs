@@ -31,12 +31,12 @@ const released = actor => world.calls.itemUpdates
 const ROPE_IN_KIT = "Compendium.dnd5e.equipment24.Item.5KMKEV07I25SVth0";
 const ROPE = "Compendium.dnd5e.equipment24.Item.phbagRope0000000";
 const ARROWS = "Compendium.dnd5e.equipment24.Item.phbamoArrows0000";
-const folder = await Folder.implementation.create({ name: "Merchant Stock", type: "RollTable" });
+const folder = await globalThis.Folder.implementation.create({ name: "Merchant Stock", type: "RollTable" });
 const results = () => [{ name: "Rope", documentUuid: ROPE_IN_KIT }, { name: "Arrows", documentUuid: ARROWS }];
-const inFolder = await RollTable.implementation.create({ name: "General Store (Town)", folder: folder.id, results: results() });
-const stamped = await RollTable.implementation.create({ name: "Moved", results: results(),
+const inFolder = await globalThis.RollTable.implementation.create({ name: "General Store (Town)", folder: folder.id, results: results() });
+const stamped = await globalThis.RollTable.implementation.create({ name: "Moved", results: results(),
   flags: { "merchant-presets": { stock: { source: "x", signature: "y" } } } });
-const theirs = await RollTable.implementation.create({ name: "Loot", results: results() });
+const theirs = await globalThis.RollTable.implementation.create({ name: "Loot", results: results() });
 
 // Already in the world, and already wired, when the world loads.
 const loaded = strayed("General_Store_Town_", "RollTable.wired");
