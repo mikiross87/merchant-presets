@@ -13,7 +13,7 @@
  * but no GM happened to be connected (design/README.md, "Trade states").
  */
 
-import { effectiveRates, totalCp } from "./pricing.mjs";
+import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import {
@@ -36,6 +36,17 @@ const PLACEHOLDER_WORLD_INFINITE_STOCK = false;
 /** `coinBreakdown`'s own array, read back as plain text — "30 gp", "1 gp 9 sp 2 cp" — for the button labels and notices #101/#98's coin data doesn't otherwise have a string form for. */
 function coinsText(coins) {
   return coins.length ? coins.map(c => `${c.count} ${c.abbreviation}`).join(" ") : "0";
+}
+
+/**
+ * The header chip and Terms of Trade popover read the two common rates in words, per
+ * design/README.md ("Sells at list price", "Buys at half value"); `rateFraction` (shop-view.mjs)
+ * is for a row's own tag, a different vocabulary ("½"). Anything else falls back to a percentage.
+ */
+function termsWord(rate, kind) {
+  if (kind === "sell" && rate === 1) return game.i18n.localize("MERCHANT_PRESETS.Shop.Terms.ListPrice");
+  if (kind === "buy" && rate === 0.5) return game.i18n.localize("MERCHANT_PRESETS.Shop.Terms.HalfValue");
+  return `${Math.round(rate * 100)}%`;
 }
 
 /** A character's short subtitle in the buyer picker — a class and level when dnd5e's own `classes` getter has one, else the actor's type label. */
@@ -62,7 +73,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 ) {
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ["merchant-presets", "shop-sheet"],
+    // "dnd5e2" isn't decorative: dnd5e.css scopes every --dnd5e-* custom property this
+    // stylesheet builds on to `@scope (.theme-light/.theme-dark) { .dnd5e2 { ... } }` — without
+    // this class none of those variables resolve, design/README.md's token table included.
+    classes: ["merchant-presets", "shop-sheet", "dnd5e2"],
     position: { width: 920, height: 680 },
     window: {
       resizable: true,
@@ -138,9 +152,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 
-    const calendar = game.time.calendar;
-    const minute = this.#minuteOfDay(calendar);
-    const open = isOpen(config.hours, minute, calendar);
+    // schedule.mjs's own convention (its header): every function there takes the world clock's
+    // *plain numbers* — `{secondsPerMinute, minutesPerHour, hoursPerDay}` — not `game.time.calendar`
+    // itself, so `.days` is what's passed through here, not the calendar object that owns it.
+    const calendarDays = game.time.calendar.days;
+    const minute = this.#minuteOfDay();
+    const open = isOpen(config.hours, minute, calendarDays);
     const buyer = this.#resolveBuyer();
     const kind = this.tabGroups.primary;
 
@@ -156,7 +173,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       actor,
       config,
       open,
-      header: this.#headerContext(actor, title, tier, config, open, minute, calendar, chipSellsAt, chipBuysAt, currencies),
+      header: this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies),
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
       buyerPurse: buyer ? coinBreakdown(totalCp(buyer.system.currency ?? {}, currencies), currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
@@ -169,18 +186,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       buy: this.#buyContext(actor, config, rates, currencies, buyer, open),
       sell: this.#sellContext(actor, config, rates, currencies, buyer, open),
       settings: game.user.isGM ? {} : null,
-      closed: !open ? this.#closedContext(config, minute, calendar) : null
+      closed: !open ? this.#closedContext(config, minute, calendarDays) : null
     });
     return context;
   }
 
   /** Minutes since local midnight on the world clock — see schedule.mjs's own convention. */
-  #minuteOfDay(calendar) {
+  #minuteOfDay() {
+    const calendar = game.time.calendar;
     const c = calendar.timeToComponents(game.time.worldTime);
     return c.hour * calendar.days.minutesPerHour + c.minute;
   }
 
-  #headerContext(actor, title, tier, config, open, minute, calendar, chipSellsAt, chipBuysAt, currencies) {
+  #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies) {
     const closesAt = config.hours ? this.#formatTime(config.hours.close) : null;
     const opensAt = config.hours ? this.#formatTime(config.hours.open) : null;
     return {
@@ -192,24 +210,36 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       openLabel: open
         ? (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntil", { time: closesAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.AlwaysOpen"))
         : (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.ClosedOpensAt", { time: opensAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.Closed")),
-      termsChip: game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: rateFraction(chipSellsAt), buys: rateFraction(chipBuysAt) }),
+      // design/README.md's own mockup ("Sells at list · Buys at ½"): the chip reads sellsAt in
+      // words but buysAt as the row-tag fraction glyph — an asymmetry the mockup draws on
+      // purpose, unlike the Terms popover below, which spells both out in words.
+      termsChip: game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) }),
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
     };
   }
 
   /** The Terms of Trade popover's worked example: a 15 gp longsword, at the shop's own chip rates. */
   #termsContext(config, chipSellsAt, chipBuysAt, currencies) {
-    const exampleCp = 15 * (currencies.gp?.conversion ?? 1);
-    const sellCp = Math.floor(exampleCp * chipSellsAt);
-    const buyCp = Math.floor(exampleCp * chipBuysAt);
+    // "gp" is a fixed reference point for the worked example, per design/README.md; a homebrew
+    // currency config that dropped it entirely (unlikely, but itemPriceCp does throw on it)
+    // just shows no worked example rather than breaking the whole popover.
+    const example = { value: 15, denomination: "gp" };
+    let sellCp = 0, buyCp = 0;
+    try {
+      sellCp = itemPriceCp(example, chipSellsAt, 1, currencies);
+      buyCp = itemPriceCp(example, chipBuysAt, 1, currencies);
+    } catch { /* no "gp" in this world's currencies */ }
     return {
-      sellsAtLabel: rateFraction(chipSellsAt),
-      buysAtLabel: rateFraction(chipBuysAt),
+      sellsAtLabel: termsWord(chipSellsAt, "sell"),
+      buysAtLabel: termsWord(chipBuysAt, "buy"),
       exampleSell: coinBreakdown(sellCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       exampleBuy: coinBreakdown(buyCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       categories: config.terms.categories,
-      wontBuyTypes: config.wontBuy.types,
-      wontBuyKinds: config.wontBuy.kinds,
+      // "food-drink" etc reads as a real word, not the generator's own hyphenated token
+      // (tools/build_srd.py's GOODS_KINDS, per trade-plan.mjs's header) — item types
+      // (CONFIG.Item.typeLabels) are already localized words with no hyphen to fix.
+      wontBuyTypes: config.wontBuy.types.map(t => game.i18n.localize(CONFIG.Item.typeLabels?.[t] ?? t)),
+      wontBuyKinds: config.wontBuy.kinds.map(k => k.replace(/-/g, " ")),
       hasWontBuy: config.wontBuy.types.length > 0 || config.wontBuy.kinds.length > 0
     };
   }
@@ -218,9 +248,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return `${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`;
   }
 
-  #closedContext(config, minute, calendar) {
-    const { opensAt, inMinutes } = nextOpen(config.hours, minute, calendar);
-    const perHour = calendar.days.minutesPerHour;
+  #closedContext(config, minute, calendarDays) {
+    const { opensAt, inMinutes } = nextOpen(config.hours, minute, calendarDays);
+    const perHour = calendarDays.minutesPerHour;
     const hours = perHour ? Math.floor(opensAt / perHour) : 0;
     const mins = perHour ? opensAt % perHour : 0;
     const untilHours = perHour ? Math.floor(inMinutes / perHour) : 0;
@@ -289,32 +319,43 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         const row = buyRow(data, stock, rates, null, currencies, PLACEHOLDER_WORLD_INFINITE_STOCK);
         return {
           ...row,
+          // A category the GM named is shown as they wrote it; buyRow's own fallback to
+          // item.type (schema.mjs: "" files it under its item type") is a dnd5e type key like
+          // "weapon", so it reads through CONFIG.Item.typeLabels for a real word instead.
+          categoryLabel: stock.category || game.i18n.localize(CONFIG.Item.typeLabels?.[row.category] ?? row.category),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
           priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : []
         };
       });
-    const categories = groupCategories(rows).map(c => ({ ...c, active: c.id === this._activeCategory }));
+    const categories = groupCategories(rows).map(c => ({
+      ...c,
+      active: c.id === this._activeCategory,
+      label: rows.find(r => r.category === c.id)?.categoryLabel ?? c.label
+    }));
     const visibleRows = this._activeCategory === "all" ? rows : rows.filter(r => r.category === this._activeCategory);
     const sections = [];
     for (const row of visibleRows) {
       let section = sections.find(s => s.category === row.category);
-      if (!section) { section = { category: row.category, rows: [] }; sections.push(section); }
+      if (!section) { section = { category: row.category, categoryLabel: row.categoryLabel, rows: [] }; sections.push(section); }
       section.rows.push(row);
     }
-    const basket = this.#basketLines("buy", id => actor.items.get(id)?.toObject());
+    const lines = this.#pricedLines("buy", id => actor.items.get(id)?.toObject(), currencies);
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
-    const totals = basketTotals(basket.lines, purseCp, "buy");
-    const state = !open ? "closed" : this._tradeState.buy;
-    const seal = sealState(state, basket.lines.length > 0);
+    const totals = basketTotals(lines, purseCp, "buy");
+    // A basket the purse can't cover reads as "cant-afford" the moment it goes over, the same
+    // way the Sell tab derives "till-short" below — not only after a round trip to the GM
+    // confirms it (#102 will refuse it too, but the client already has enough to say so first).
+    const state = !open ? "closed" : (totals.shortfallCp > 0 ? "cant-afford" : this._tradeState.buy);
+    const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
       kind: "buy",
       shopTitle: titleParts(actor.name).title,
       sections,
       categories,
-      basket: this.#billOfSale(basket.lines, totals, currencies, "buy", buyer),
+      basket: this.#billOfSale(lines, totals, currencies, buyer),
       seal: {
         ...seal,
         state,
@@ -364,11 +405,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
-    const basket = this.#basketLines("sell", id => buyer?.items?.get(id)?.toObject());
+    const lines = this.#pricedLines("sell", id => buyer?.items?.get(id)?.toObject(), currencies);
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
-    const totals = basketTotals(basket.lines, tillCp, "sell");
+    const totals = basketTotals(lines, tillCp, "sell");
     const state = !open ? "closed" : (totals.sumCp > tillCp ? "till-short" : this._tradeState.sell);
-    const seal = sealState(state, basket.lines.length > 0);
+    const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
       kind: "sell",
@@ -378,7 +419,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tillCp,
       tillCoins: coinBreakdown(tillCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
-      basket: this.#billOfSale(basket.lines, totals, currencies, "sell", buyer),
+      basket: this.#billOfSale(lines, totals, currencies, buyer),
       seal: {
         ...seal,
         state,
@@ -392,21 +433,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /* -------------------------------------------------------------- basket / bill of sale */
 
-  #basketLines(kind, resolveItem) {
+  /**
+   * The basket's own lines, already priced — `quantity`, the sticker price for one bundle
+   * (`unitCoins`) and the whole line's cost (`lineTotalCp`/`lineTotalCoins`), floored once over
+   * the full quantity rather than per bundle and multiplied (trade-plan.mjs's header, "Bundle
+   * pricing for quantity units, floored once" — the same rule #102 prices a trade by). Basket
+   * totals (`basketTotals`, shop-view.mjs) are computed from *these* lines, never the raw
+   * itemId/quantity pairs `this._baskets` holds — those carry no price at all on their own.
+   */
+  #pricedLines(kind, resolveItem, currencies) {
+    const world = PLACEHOLDER_WORLD_RATES;
+    const config = shopFrom(this.document.flags?.[MODULE]?.shop ?? {});
+    const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
     const lines = [];
     for (const [itemId, quantity] of this._baskets[kind]) {
       const item = resolveItem(itemId);
       if (!item || quantity <= 0) continue;
-      lines.push({ itemId, item, quantity });
-    }
-    return { lines };
-  }
-
-  #billOfSale(rawLines, totals, currencies, kind, buyer) {
-    const world = PLACEHOLDER_WORLD_RATES;
-    const config = shopFrom(this.document.flags?.[MODULE]?.shop ?? {});
-    const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
-    const lines = rawLines.map(({ itemId, item, quantity }) => {
       // A shop item carries its own #98 stock flag; an item on the buyer's side (a sale) never
       // does (see trade-plan.mjs's `copyOf`), so its line reads the shop's matching shelf line
       // instead — the same rule #102 prices a sale by.
@@ -416,15 +458,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const rate = kind === "buy"
         ? effectiveRates(world, config.terms, stock.category || item.type).sellsAt.rate
         : effectiveRates(world, config.terms, stock.category || null).buysAt.rate;
-      const unit = Math.floor((item.system?.price?.value ?? 0) * (currencies[item.system?.price?.denomination]?.conversion ?? 1) * rate / (stock.bundle || 1));
-      const lineTotalCp = unit * quantity;
-      return {
-        itemId, name: item.name, img: item.img, quantity,
-        unitCoins: coinBreakdown(unit, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-        lineTotalCoins: coinBreakdown(lineTotalCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-        lineTotalCp
-      };
-    });
+      const bundle = stock.bundle || 1;
+      let unitCp = 0, lineTotalCp = 0;
+      try {
+        unitCp = itemPriceCp(item.system.price, rate, bundle, currencies);
+        lineTotalCp = itemPriceCp(item.system.price, rate, bundle / quantity, currencies);
+      } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
+      lines.push({
+        itemId, name: item.name, img: item.img, quantity, lineTotalCp,
+        unitCoins: coinBreakdown(unitCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        lineTotalCoins: coinBreakdown(lineTotalCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+      });
+    }
+    return lines;
+  }
+
+  #billOfSale(lines, totals, currencies, buyer) {
     const sumCoins = coinBreakdown(totals.sumCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
     const afterCoins = coinBreakdown(totals.afterCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
     const shortfallCoins = coinBreakdown(totals.shortfallCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));

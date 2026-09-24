@@ -21,6 +21,14 @@
   overflow: hidden;
 }
 
+/* dnd5e.css's own ".dnd5e2" headings and nav text run uppercase by default (its own house
+   style); the design draws this window's headers, tabs, categories and chips in normal case, so
+   that's overridden here rather than left to whatever ".dnd5e2" happens to carry. */
+.shop-sheet h1, .shop-sheet h2, .shop-sheet h3,
+.shop-sheet .tab-link, .shop-sheet .category-link, .shop-sheet .chip, .shop-sheet .item-name {
+  text-transform: none;
+}
+
 .shop-sheet h1, .shop-sheet h2, .shop-sheet h3 {
   font-family: var(--dnd5e-font-modesto);
   font-weight: 700;
@@ -59,6 +67,8 @@
   opacity: 0.85;
   max-width: 60ch;
 }
+
+.shop-description p { margin: 0; }
 
 .shop-chips {
   display: flex;
@@ -368,6 +378,8 @@ button.chip {
 
 .sell-side-card {
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 0.2rem;
   cursor: default;
 }

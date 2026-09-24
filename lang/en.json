@@ -31,7 +31,8 @@
       "Tag": {
         "Full": "Full value",
         "Bundle": "per {bundle}",
-        "New": "New"
+        "New": "New",
+        "Service": "Service"
       },
       "Worthless": "Worthless",
       "Buy": {
@@ -44,6 +45,7 @@
         "BuysAt": "Buys at",
         "OfValue": "of value",
         "Equipped": "Equipped",
+        "Empty": "Nothing in your pack this shop has an opinion on yet.",
         "TillHolds": "The till holds {amount}, so no sale today can bring in more.",
         "Filter": {
           "Everything": "Everything",

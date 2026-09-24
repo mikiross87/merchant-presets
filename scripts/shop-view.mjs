@@ -307,6 +307,7 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
     category,
     stock: stockLabel(stock, item.system?.quantity ?? 0, worldInfiniteStock),
     isNew: item.flags?.["merchant-presets"]?.new === true,
+    service: stock.service,
     bundlePriceCp: bundleCp,
     unpriced,
     bundle: stock.bundle,

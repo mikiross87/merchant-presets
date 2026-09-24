@@ -18,7 +18,9 @@
   <img class="shop-portrait" src="{{header.img}}" alt="" />
   <div class="shop-heading">
     <h1 class="shop-title">{{header.title}}</h1>
-    <p class="shop-description">{{header.description}}</p>
+    {{!-- The shop's own #98 description; shipped shops carry it as enriched HTML (a <p> of its
+          own), so this renders raw rather than double-wrapping or escaping it. --}}
+    <div class="shop-description">{{{header.description}}}</div>
     <div class="shop-chips">
       <span class="chip chip-open {{#if header.open}}is-open{{else}}is-closed{{/if}}">
         <i class="fa-solid fa-circle" aria-hidden="true"></i> {{header.openLabel}}
@@ -104,13 +106,13 @@
   </nav>
   <div class="shop-stock">
     {{#each buy.sections}}
-      <h2 class="stock-section-header">{{category}}</h2>
+      <h2 class="stock-section-header">{{categoryLabel}}</h2>
       {{#each rows}}
         <div class="item-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#unless ../../open}}is-dimmed{{/unless}} {{#if inBasket}}in-basket{{/if}}">
           <img class="item-art" src="{{img}}" alt="" />
           <div class="item-info">
             <span class="item-name">{{name}}{{#if isNew}}<span class="badge-new">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span>{{/if}}</span>
-            <span class="item-meta">{{category}}</span>
+            <span class="item-meta">{{categoryLabel}}</span>
           </div>
           <span class="item-stock {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#if (eq stock.state 'last')}}is-last{{/if}}">
             {{#if (eq stock.state "count")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Left" count=stock.count}}
@@ -122,6 +124,7 @@
             {{#if unpriced}}
               <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
             {{else}}
+              {{#if service}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Service"}}</span>{{/if}}
               {{#if tag.text}}<span class="price-tag tag-{{tag.kind}}">{{tag.text}}</span>{{/if}}
               {{#if (eq tag.kind "full")}}<span class="price-tag tag-full">{{localize "MERCHANT_PRESETS.Shop.Tag.Full"}}</span>{{/if}}
               {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
@@ -189,7 +192,7 @@
       {{/each}}
     {{/if}}
     {{#unless sell.willBuy.length}}{{#unless sell.wontBuy.length}}
-      <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Buy.Empty"}}</p>
+      <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Sell.Empty"}}</p>
     {{/unless}}{{/unless}}
   </div>
   {{#if closed}}
