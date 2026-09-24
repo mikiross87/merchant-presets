@@ -343,8 +343,12 @@ function sourceFlagsOf(actor, item) {
   return merged;
 }
 
-/** Whether `actor`'s own `flags.merchant-presets.shop` is already this version's. */
-function hasCurrentShop(actor) {
+/** Whether `actor`'s own `flags.merchant-presets.shop` is already this
+ *  version's. Also what `setUpShop` (merchant-presets.mjs) uses to decide
+ *  whether a chosen merchant's own shop config is safe to copy wholesale,
+ *  rather than the pre-#98 `{source, tier}` marker it might still carry
+ *  (#119 fix 3, folded into #100). */
+export function hasCurrentShop(actor) {
   return actor?.flags?.["merchant-presets"]?.shop?.version === SHOP_VERSION;
 }
 

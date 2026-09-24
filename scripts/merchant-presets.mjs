@@ -23,8 +23,9 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, isShop, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
   STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
-import { NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate, planAutoRestockDefault, planItemUpdates,
-  planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops } from "./migrate.mjs";
+import { deriveShop, hasCurrentShop, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+  planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops }
+  from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
 const TABLE_FOLDER = "Merchant Stock";
@@ -1087,24 +1088,30 @@ async function migrateShop(actor) {
   }));
   const tokens = scenes.flatMap(s => s.tokens);
   if (!definitelyNeedsMigration && !needsMigration(data, NATIVE_SHOP, tokens)) return false;
-  let changed = false;
 
   const packShop = await resolvePackShop(data);
   const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
-  if (update) { await actor.update(update); changed = true; }
   if (shopError) console.error(`${MODULE} | ${shopError}`);
 
   // A 1.x merchant sitting in a world compendium or an Adventure only
   // proves "this world is upgrading from 1.x" once it's actually migrated,
   // which can be well after applyAutoRestockDefault's own first-load check
-  // already found nothing (#100 review).
+  // already found nothing (#100 review). Written before the actor's own
+  // update below: if it fails, nothing is written for this actor at all —
+  // the world's only evidence of it stays exactly as unmigrated as it was,
+  // for a retry on the next load, rather than the actor's own write erasing
+  // it a moment before the setting that depended on it could land.
   if (shouldForceAutoRestockOff(update, hasStoredAutoRestock())) {
     try { await game.settings.set(MODULE, "autoRestock", false); }
     catch (err) {
       migrationGateOpen = false;
       console.error(`${MODULE} | could not force the autoRestock default off; migration deferred to next load`, err);
+      return false;
     }
   }
+
+  let changed = false;
+  if (update) { await actor.update(update); changed = true; }
 
   const { updates: itemUpdates, errors: itemErrors } = planItemUpdates(data);
   if (itemUpdates.length) { await actor.updateEmbeddedDocuments("Item", itemUpdates); changed = true; }
@@ -1191,7 +1198,15 @@ async function applyAutoRestockDefault() {
 async function setUpShop(actor, sourceUuid, keepIds) {
   const source = await foundry.utils.fromUuid(sourceUuid);
   if (!source) throw new Error(`merchant ${sourceUuid} not found`);
-  const plan = planShop({ ...source.toObject(), uuid: source.uuid }, actor.toObject(), keepIds);
+  const sourceData = source.toObject();
+  // Every 2.0 pack merchant carries its own current flags.merchant-presets.shop
+  // (#99); copy it wholesale rather than writing a bare {source, tier}
+  // marker, which used to wipe the chosen merchant's terms, hours, restock
+  // and won't-buy outright (#119 fix 3). Deriving it from the source's own
+  // Item Piles data is a defensive fallback for a source that somehow still
+  // lacks one.
+  const sourceShop = hasCurrentShop(sourceData) ? sourceData.flags["merchant-presets"].shop : deriveShop(sourceData);
+  const plan = planShop({ ...sourceData, uuid: source.uuid }, actor.toObject(), keepIds, sourceShop);
 
   // Hold the merchant while it is half built: the flag update below puts it on
   // a compendium table, and the updateActor hook would otherwise wire it and

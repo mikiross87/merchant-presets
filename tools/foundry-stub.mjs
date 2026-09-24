@@ -46,7 +46,7 @@ function plainData(doc) {
 
 /**
  * Install the globals and return the world they describe.
- * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire}}
+ * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting}}
  */
 export function createWorld() {
   const hooks = { once: new Map(), on: new Map() };
@@ -55,7 +55,10 @@ export function createWorld() {
   const folders = [];
   const scenes = [];
   const compendium = new Map();
-  const calls = { itemUpdates: [], tablesCreated: 0, messages: [] };
+  // `writes` is every settings.set and actor#update call, in the order they
+  // actually happened — the only way to test a write-ordering guarantee
+  // (#100 review: the autoRestock write must land before the actor's own).
+  const calls = { itemUpdates: [], tablesCreated: 0, messages: [], writes: [] };
   // This module's settings by key; another module's as "<module>.<key>".
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
@@ -64,6 +67,8 @@ export function createWorld() {
   };
   // No world ever has a stored value in the stub: every setting is at its default.
   const storage = { get: () => ({ find: () => undefined }) };
+  // Keys a test has asked settings.set to fail for, once — see `failSetting`.
+  const failingSettings = new Set();
 
   globalThis.Hooks = {
     once: (name, fn) => hooks.once.set(name, fn),
@@ -123,7 +128,12 @@ export function createWorld() {
     settings: {
       register() {},
       get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`],
-      set: (scope, key, value) => { settings[scope === "merchant-presets" ? key : `${scope}.${key}`] = value; },
+      async set(scope, key, value) {
+        const full = scope === "merchant-presets" ? key : `${scope}.${key}`;
+        if (failingSettings.delete(full)) throw new Error(`stub: ${full} write failed`);
+        settings[full] = value;
+        calls.writes.push({ type: "setting", key: full, value });
+      },
       storage
     },
     modules: new Map([["merchant-presets", { version: "1.3.0" }], ["item-piles", { active: true }]]),
@@ -151,7 +161,10 @@ export function createWorld() {
     return flagged(Object.assign(doc, {
       id: doc._id, uuid: `Actor.${doc._id}`, pack: null, effects: [],
       items: doc.items.map(i => ({ ...i, id: i._id })),
-      async update(changes) { for (const [k, v] of Object.entries(changes)) set(this, k, v); },
+      async update(changes) {
+        for (const [k, v] of Object.entries(changes)) set(this, k, v);
+        calls.writes.push({ type: "actorUpdate", actor: this.id, changes });
+      },
       async updateEmbeddedDocuments(_type, updates) { calls.itemUpdates.push({ actor: this.id, updates }); },
       async deleteEmbeddedDocuments() {},
       toObject() { return plainData(this); }
@@ -164,7 +177,12 @@ export function createWorld() {
     await new Promise(resolve => setImmediate(resolve));
   }
 
-  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire };
+  /** Make the next `game.settings.set(scope, key, …)` for this key throw,
+   *  once — to test that a failed settings write stops whatever depended on
+   *  it landing first, rather than being silently skipped over. */
+  const failSetting = (scope, key) => failingSettings.add(scope === "merchant-presets" ? key : `${scope}.${key}`);
+
+  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */

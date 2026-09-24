@@ -166,6 +166,10 @@ const armourer = () => ({
   ...structuredClone(armourerDoc),
   uuid: `Compendium.merchant-presets.merchants.Actor.${armourerDoc._id}`
 });
+// Every shipped merchant carries its own current shop config (#98, #99);
+// planShop's caller (setUpShop) always resolves one and passes it in.
+const templeShop = shipped.flags["merchant-presets"].shop;
+const armourerShop = armourerDoc.flags["merchant-presets"].shop;
 
 /** Sister Garaele, as a GM's own NPC: a stat block with gear and a spell. */
 function garaele() {
@@ -242,7 +246,7 @@ test("kept contents of a deleted container are moved out of it", () => {
 });
 
 test("the source's gear and profile are never copied", () => {
-  const plan = planShop(temple(), garaele(), []);
+  const plan = planShop(temple(), garaele(), [], templeShop);
   assert.ok(plan.creates.length > 0);
   assert.ok(plan.creates.every(i => kind(i) !== "gear"));
   assert.ok(!plan.creates.some(i => i.name === "Mace"));
@@ -250,9 +254,8 @@ test("the source's gear and profile are never copied", () => {
 });
 
 test("the shop window shows the NPC's portrait and the marker is written", () => {
-  const plan = planShop(temple(), garaele(), []);
+  const plan = planShop(temple(), garaele(), [], templeShop);
   assert.equal(plan.pileData.merchantImage, "");
-  assert.deepEqual(plan.moduleFlags.shop, { source: templeUuid, tier: "Town" });
   assert.equal(plan.moduleFlags.purse, shipped.flags["merchant-presets"].purse);
   assert.deepEqual(plan.moduleFlags.itemFlags, shipped.flags["merchant-presets"].itemFlags);
   assert.deepEqual(plan.moduleFlags.containers, shipped.flags["merchant-presets"].containers);
@@ -260,23 +263,28 @@ test("the shop window shows the NPC's portrait and the marker is written", () =>
   assert.equal(plan.pileData.tablesForPopulate[0].uuid, shipped.flags["item-piles"].data.tablesForPopulate[0].uuid);
 });
 
+test("the marker copies the chosen merchant's full shop config, only source and tier overridden (#119 fix 3)", () => {
+  const plan = planShop(temple(), garaele(), [], templeShop);
+  assert.deepEqual(plan.moduleFlags.shop, { ...templeShop, source: templeUuid, tier: "Town" });
+});
+
 test("the plan does not alter the source document", () => {
   const src = temple();
   const before = JSON.stringify(src);
-  planShop(src, garaele(), []);
+  planShop(src, garaele(), [], templeShop);
   assert.equal(JSON.stringify(src), before);
 });
 
 test("re-applying keeps the gear and replaces the stock", () => {
   // Garaele as a Temple (Town) after a first setup: gear tagged, stock created.
-  const first = planShop(temple(), garaele(), ["longsword0000001"]);
+  const first = planShop(temple(), garaele(), ["longsword0000001"], templeShop);
   const shop = garaele();
   shop.items = shop.items.filter(i => !first.deletes.includes(i._id));
   for (const i of shop.items) i.flags = { "merchant-presets": { kind: "gear" } };
   shop.items.push(...structuredClone(first.creates));
   shop.flags["merchant-presets"] = first.moduleFlags;
 
-  const again = planShop(armourer(), shop, ["longsword0000001"]);
+  const again = planShop(armourer(), shop, ["longsword0000001"], armourerShop);
   const stockIds = first.creates.map(i => i._id);
   assert.deepEqual(again.deletes.toSorted(), stockIds.toSorted());
   assert.ok(!again.deletes.includes("longsword0000001"));
@@ -287,7 +295,7 @@ test("re-applying keeps the gear and replaces the stock", () => {
 
 test("re-applying deletes old stock even when a caller asks to keep it", () => {
   // Garaele as a Temple (Town) after a first setup: gear tagged, stock created.
-  const first = planShop(temple(), garaele(), ["longsword0000001"]);
+  const first = planShop(temple(), garaele(), ["longsword0000001"], templeShop);
   const shop = garaele();
   shop.items = shop.items.filter(i => !first.deletes.includes(i._id));
   for (const i of shop.items) i.flags = { "merchant-presets": { kind: "gear" } };
@@ -295,15 +303,15 @@ test("re-applying deletes old stock even when a caller asks to keep it", () => {
   shop.flags["merchant-presets"] = first.moduleFlags;
 
   const oldStockId = first.creates[0]._id;
-  const again = planShop(armourer(), shop, ["longsword0000001", oldStockId]);
+  const again = planShop(armourer(), shop, ["longsword0000001", oldStockId], armourerShop);
   assert.ok(again.deletes.includes(oldStockId));
 });
 
 test("re-applying drops gear the GM unticks", () => {
   const shop = garaele();
   for (const i of shop.items) i.flags = { "merchant-presets": { kind: "gear" } };
-  shop.flags["merchant-presets"] = { shop: { source: templeUuid, tier: "Town" } };
-  const plan = planShop(temple(), shop, ["potion0000000001"]);
+  shop.flags["merchant-presets"] = { shop: { ...templeShop, source: templeUuid, tier: "Town" } };
+  const plan = planShop(temple(), shop, ["potion0000000001"], templeShop);
   assert.ok(plan.deletes.includes("longsword0000001"));
   assert.ok(!plan.deletes.includes("potion0000000001"));
 });
@@ -315,7 +323,7 @@ test("an NPC pointed at a stock table but never set up is treated as new", () =>
   assert.equal(isPreset(npc), true, "precondition: the table alone makes it ours");
   assert.deepEqual(keepableItems(npc).map(i => i.name),
     ["Longsword", "Backpack", "Rope", "Potion of Healing"]);
-  const plan = planShop(temple(), npc, ["longsword0000001"]);
+  const plan = planShop(temple(), npc, ["longsword0000001"], templeShop);
   assert.ok(!plan.deletes.includes("spell00000000001") && !plan.deletes.includes("feat000000000001"));
   assert.ok(!plan.deletes.includes("longsword0000001"));
 });

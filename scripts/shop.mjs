@@ -201,10 +201,17 @@ export function keepableItems(actor) {
  * @param {object} source          The chosen merchant's data, with its `uuid`.
  * @param {object} actor           The NPC's data, items included.
  * @param {Iterable<string>} keepIds  Ids of the physical items ticked to keep.
+ * @param {object} sourceShop      The chosen merchant's own resolved
+ *   `flags.merchant-presets.shop` (#98) — its own current config when it has
+ *   one (every 2.0 pack merchant, after #99), or a caller-derived fallback
+ *   otherwise (`deriveShop`, #100 — kept out of this Foundry-free module to
+ *   avoid a circular import with migrate.mjs). Copied wholesale, with only
+ *   `source` and `tier` overridden: a shop set up this way is the chosen
+ *   merchant in every other respect (#119 fix 3).
  * @returns {{deletes: string[], updates: object[], pileData: object, moduleFlags: object,
  *   currency: object, creates: object[]}}
  */
-export function planShop(source, actor, keepIds) {
+export function planShop(source, actor, keepIds, sourceShop) {
   const keep = new Set(keepIds);
   const shop = isShop(actor);
   const items = actor.items ?? [];
@@ -229,7 +236,7 @@ export function planShop(source, actor, keepIds) {
     purse: from.purse ?? null,
     itemFlags: structuredClone(from.itemFlags ?? null),
     containers: structuredClone(from.containers ?? null),
-    shop: { source: source.uuid, tier: tierOf(source) }
+    shop: { ...structuredClone(sourceShop), source: source.uuid, tier: tierOf(source) }
   };
 
   return {

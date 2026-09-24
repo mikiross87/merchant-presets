@@ -2,8 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { STOCK_DEFAULTS, validateShop, validateStock } from "../scripts/schema.mjs";
+import { planShop } from "../scripts/shop.mjs";
 import {
-  SHOP_SHEET_ID, deriveShop, deriveStock, needsMigration, packShopCandidates, planActorUpdate,
+  SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, shouldForceAutoRestockOff,
   worldHasLegacyShops
 } from "../scripts/migrate.mjs";
@@ -669,6 +670,42 @@ test("shouldForceAutoRestockOff fires only when this pass derived a shop's data 
   const cutOverOnly = { "flags.item-piles.data.enabled": false, "flags.core.sheetClass": SHOP_SHEET_ID };
   assert.equal(shouldForceAutoRestockOff(cutOverOnly, false), false);
   assert.equal(shouldForceAutoRestockOff(null, false), false);
+});
+
+/* -------------------------------------------- #119 fix 3: 2.0 "Set up as shop" */
+
+test("a 2.0 'Set up as shop' NPC is never treated as a 1.x shop needing migration", () => {
+  const source = shipped("General_Store_Village_");
+  const sourceShop = source.flags["merchant-presets"].shop;
+  assert.equal(sourceShop.version, 1);   // sanity: the fixture really has a current one
+
+  const plan = planShop({ ...source, uuid: "Actor.sourceuuid0000000000000" },
+    { name: "Grumm", items: [], flags: {} }, [], sourceShop);
+  const npc = {
+    name: "Grumm", items: [],
+    flags: { "merchant-presets": { shop: plan.moduleFlags.shop }, "item-piles": { data: plan.pileData } }
+  };
+
+  assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
+  assert.equal(needsMigration(npc), false);
+  assert.deepEqual(planActorUpdate(npc, {}), { update: null, shopError: null });
+  // The consequence that actually matters: since planActorUpdate never
+  // derives a shop key for this actor, migrateShop's autoRestock check
+  // never fires for it either — nothing here would flip a fresh 2.0 world's
+  // default off (#100 review).
+  assert.equal(shouldForceAutoRestockOff(planActorUpdate(npc, {}).update, false), false);
+});
+
+test("planShop still produces a valid, current config when the source's own had to be derived (defensive fallback)", () => {
+  const bareSource = legacy(shipped("General_Store_Village_"));   // no current .shop on the source itself
+  assert.equal(hasCurrentShop(bareSource), false);
+  const derived = deriveShop(bareSource);
+
+  const plan = planShop({ ...bareSource, uuid: "Actor.baresource000000000000" },
+    { name: "Grumm", items: [], flags: {} }, [], derived);
+  assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
+  assert.equal(plan.moduleFlags.shop.version, 1);
+  assert.equal(plan.moduleFlags.shop.source, "Actor.baresource000000000000");
 });
 
 /* --------------------------------------------------- cross-check vs #99's pack */
