@@ -273,3 +273,15 @@ test("re-applying drops gear the GM unticks", () => {
   assert.ok(plan.deletes.includes("longsword0000001"));
   assert.ok(!plan.deletes.includes("potion0000000001"));
 });
+
+test("an NPC pointed at a stock table but never set up is treated as new", () => {
+  // A GM's own merchant pointed at our compendium table, with neither marker.
+  const npc = garaele();
+  npc.flags["item-piles"] = { data: { tablesForPopulate: structuredClone(shipped.flags["item-piles"].data.tablesForPopulate) } };
+  assert.equal(isPreset(npc), true, "precondition: the table alone makes it ours");
+  assert.deepEqual(keepableItems(npc).map(i => i.name),
+    ["Longsword", "Backpack", "Rope", "Potion of Healing"]);
+  const plan = planShop(temple(), npc, ["longsword0000001"]);
+  assert.ok(!plan.deletes.includes("spell00000000001") && !plan.deletes.includes("feat000000000001"));
+  assert.ok(!plan.deletes.includes("longsword0000001"));
+});
