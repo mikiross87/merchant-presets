@@ -1052,8 +1052,12 @@ async function shopDialog(actor) {
   const pack = game.packs.get(`${MODULE}.merchants`);
   const shops = listShops(await pack.getIndex());
   const marker = actor.getFlag(MODULE, "shop");
-  const current = shops.find(s => Object.values(s.tiers).includes(marker?.source))?.name;
-  const tier = marker?.tier ?? "Town";
+  // A shipped merchant's own name preselects it, so an NPC that was never set
+  // up as a shop before still opens on a sensible guess.
+  const strippedName = actor.name.match(/^(.*) \((?:Village|Town|City)\)$/)?.[1];
+  const current = shops.find(s => Object.values(s.tiers).includes(marker?.source))?.name
+    ?? shops.find(s => s.name === strippedName)?.name;
+  const tier = tierOf(actor);
   const esc = foundry.utils.escapeHTML;
   const name = esc(actor.name);
 
@@ -1098,6 +1102,11 @@ async function shopDialog(actor) {
 /** The Actors sidebar entry. Registered at init, before the sidebar first renders. */
 function registerShopSetup() {
   Hooks.on("getActorContextOptions", (app, options) => {
+    // Compendium extends DocumentDirectory too, so an Actor compendium fires
+    // this hook as well — and an imported actor keeps its compendium id, so
+    // resolving it against game.actors would act on the world copy from a
+    // right-click in the pack. World directory only.
+    if (app.collection !== game.actors) return;
     const actorOf = li => game.actors.get(li.closest("[data-entry-id]")?.dataset.entryId);
     options.push({
       label: "Set up as shop…",
