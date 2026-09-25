@@ -76,3 +76,14 @@ test("forcing autoRestock off after the first load tells the GM, not just the lo
   assert.equal(told.length, 1);
   assert.match(told[0], /restock/i);
 });
+
+test("several 1.x merchants arriving together warn about restocking once (#120 review)", async () => {
+  const world = createWorld();
+  await loadRuntime(world);
+  const told = [];
+  globalThis.ui.notifications.warn = message => told.push(message);
+  const shops = ["General_Store_Village_", "General_Store_Town_"].map(p => legacyMerchant(world, p));
+  world.actors.push(...shops);
+  await Promise.all(shops.map(s => world.fire("createActor", s, {}, "gm")));
+  assert.equal(told.filter(m => /restock/i.test(m)).length, 1);
+});

@@ -821,3 +821,11 @@ test("a shop derived for setUpShop is repaired like a migrated one (#120 review)
   assert.equal(shop.terms.sellsAt, null);   // repaired to the world rate, never written invalid
   assert.ok(validateShop(shop).ok);
 });
+
+test("a second Item Piles stock table is warned about, not dropped silently (#120 review)", () => {
+  const actor = legacy(shipped("Adventurers_Store_Town"));
+  const tables = actor.flags["item-piles"].data.tablesForPopulate;
+  tables.push({ ...tables[0], uuid: "RollTable.GMsOwnExtras" });
+  const { warnings } = planActorUpdate(actor);
+  assert.ok(warnings.some(w => w.includes("RollTable.GMsOwnExtras")), warnings.join(" | "));
+});
