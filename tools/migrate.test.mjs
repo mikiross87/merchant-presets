@@ -849,7 +849,9 @@ function restocked(actor) {
 }
 
 test("a restock puts every shipped merchant's stock config back as it shipped (#119)", () => {
-  const names = readdirSync(merchantsDir).map(f => f.replace(/\.json$/, ""));
+  // Folder documents live beside the merchants in _source/merchants; only actors carry items.
+  const names = readdirSync(merchantsDir).filter(f => !f.startsWith("!") && JSON.parse(readFileSync(new URL(f, merchantsDir), "utf8")).items)
+    .map(f => f.replace(/\.json$/, ""));
   let checked = 0;
   for (const name of names) {
     const shippedActor = shipped(name);
@@ -869,7 +871,8 @@ test("a restock puts every shipped merchant's stock config back as it shipped (#
 });
 
 test("a restock leaves lines the record doesn't name, and stock already right, alone", () => {
-  const actor = shipped(readdirSync(merchantsDir)[0].replace(/\.json$/, ""));
+  const first = readdirSync(merchantsDir).find(f => JSON.parse(readFileSync(new URL(f, merchantsDir), "utf8")).items);
+  const actor = shipped(first.replace(/\.json$/, ""));
   assert.deepEqual(planRestockStock(actor).updates, [], "a shelf as shipped needs nothing");
   const byHand = { _id: "handAdded000001", name: "A GM's own find", type: "loot", system: {}, flags: {} };
   actor.items.push(byHand);

@@ -25,7 +25,8 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTab
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops }
+  planAutoRestockDefault, planItemUpdates, planRestockStock, planTokenUpdates, shouldForceAutoRestockOff,
+  worldHasLegacyShops }
   from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
@@ -372,6 +373,23 @@ async function reapplyItemFlags(actor) {
 }
 
 /**
+ * Put back each recorded line's stock config (#119): the restock rebuilt it
+ * from the compendium, which carries none (an SRD item) or only a good's own
+ * goods-level stamp. `planRestockStock` derives it exactly as the migration does.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<number>} how many items were corrected
+ */
+async function reapplyStock(actor) {
+  const { updates, errors } = planRestockStock(actor);
+  for (const { item, errors: why } of errors) {
+    console.warn(`${MODULE} | "${actor.name}": could not restore the stock config of "${item}"`, why);
+  }
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  return updates.length;
+}
+
+/**
  * Put the shop's containers back to their proper number.
  *
  * A container cannot carry a quantity — dnd5e's ContainerData declares
@@ -551,6 +569,7 @@ async function releaseStraysAll() {
 async function restock(actor) {
   await game.itempiles.API.refreshMerchantInventory(actor);
   await reapplyItemFlags(actor);
+  await reapplyStock(actor);
   await reconcileContainers(actor);
   await replenishPurse(actor);
   await syncStockWeight(actor);        // last: the shelf and the till have both just moved
