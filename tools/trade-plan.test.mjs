@@ -919,10 +919,11 @@ test("a sold item never stacks onto shopkeeper gear, even if it looks identical"
   assert.equal(shopUpdate.itemCreates.length, 1);    // a new document instead
 });
 
-test("a sold item never stacks onto a hidden or delisted stock line", () => {
-  const hidden = { ...arrows(), _id: "HiddenArrows001", flags: { "merchant-presets": { stock: { ...arrows().flags["merchant-presets"].stock, hidden: true } } } };
+test("a sold item never stacks onto shopkeeper gear", () => {
+  // Hidden and delisted lines are stack targets since #102's 2026-09-25 decision; gear never is.
+  const gearArrows = { ...arrows(), _id: "GearArrows00001", flags: { "merchant-presets": { kind: "gear" } } };
   const sold = { ...arrows(), system: { ...arrows().system, quantity: 20 } };
-  const ctx = context({ shop: { items: [hidden] }, buyer: { items: [sold] } });
+  const ctx = context({ shop: { items: [gearArrows] }, buyer: { items: [sold] } });
   const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), ctx);
   assert.equal(result.ok, true);
   const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");

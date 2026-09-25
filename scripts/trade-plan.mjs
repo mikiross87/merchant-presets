@@ -208,15 +208,16 @@
  *   shared between `isVisible` and `dealtIn`, so both directions refuse the
  *   same things.
  * - **Bundled quantities.** Item Piles only ever sold `quantityForPrice` in
- *   whole bundles, and this keeps that: a buy quantity that isn't a whole
- *   multiple of the stock line's `bundle` is `"invalid-request"` (the
- *   quantity stepper is meant to step by the bundle size, so this is a
- *   malformed request, not a normal refusal) — which also closes off buying
- *   a single unit of a cheap bundle for a price that floors to 0. A sale
- *   has no shelf to bundle by, so any quantity is allowed and the price
- *   floors same as ever; but if that floor lands on 0 for an item that
- *   isn't actually free (`item.system.price.value` above 0), that's not a
- *   trade, so it's refused `"worthless"` rather than paid for nothing.
+ *   whole bundles, and this keeps that: a buy quantity must be a whole
+ *   multiple of the line's `bundle`, or that plus the part-bundle a sale
+ *   left on a finite line (`available % bundle`, #102 2026-09-25) — so a
+ *   single unit of a full bundle can't be bought for a price that floors to
+ *   0. Anything else is `"invalid-request"` (the stepper steps by the
+ *   bundle, so it's a malformed request, not a normal refusal). A sale has
+ *   no shelf to bundle by, so any quantity is allowed. Either way, a line
+ *   that floors to 0 for an item that isn't actually free
+ *   (`item.system.price.value` above 0) isn't a trade, so it's refused
+ *   `"worthless"` rather than traded for nothing.
  *   The bundle, in order: on a sale, the matched shop line's stated
  *   `bundle` (on a buy, the line being bought's); failing that, the item's carried-over `flags.merchant-presets.bundle`
  *   (see `copyOf`'s "Kept: bundle"); failing that, `context.bundleOf(item)`
@@ -395,9 +396,12 @@ function copyOf(item, quantity, containerId = null) {
  * @param {object[]} existingItems  the destination actor's current items
  * @param {(item: object) => boolean} [isValidTarget]  whether an existing item is even eligible
  *   to stack onto — every item, by default (landing on a buyer). Landing on a shop passes a
- *   stricter check: only a visible stock line, never shopkeeper gear or a hidden/delisted one,
- *   so a sold item can't disappear into the merchant's own kit.
- * @returns {{land(item: object, quantity: number): void, landExact(itemData: object): void,
+ *   stricter check: never shopkeeper gear, so a sold item can't disappear into the merchant's
+ *   own kit.
+ * `land`'s `shelf`, when given, is written as the `stock` flag of a copy it creates (never one it
+ * stacks): how a sale keeps a hidden or delisted line's choice on a copy that can't stack onto it.
+ *
+ * @returns {{land(item: object, quantity: number, shelf?: object): void, landExact(itemData: object): void,
  *   result(): {itemUpdates: object[], itemCreates: object[]}}}
  */
 function lander(existingItems, isValidTarget = () => true) {
@@ -405,7 +409,7 @@ function lander(existingItems, isValidTarget = () => true) {
   const pendingCreates = [];            // this basket's own new items, not yet given a real id
 
   return {
-    land(item, quantity) {
+    land(item, quantity, shelf = null) {
       if (item.type === "container") {
         for (let i = 0; i < quantity; i++) pendingCreates.push(copyOf(item, 1));
         return;
@@ -418,7 +422,10 @@ function lander(existingItems, isValidTarget = () => true) {
         updateQuantities.set(id, (updateQuantities.get(id) ?? existing.system?.quantity ?? 0) + quantity);
         return;
       }
-      pendingCreates.push(copyOf(item, quantity));
+      const created = copyOf(item, quantity);
+      // Only the fields given: a full STOCK_DEFAULTS here would state bundle 1 over the carried flag.
+      if (shelf) created.flags = { ...created.flags, [MODULE]: { ...created.flags?.[MODULE], stock: { ...shelf } } };
+      pendingCreates.push(created);
     },
     // A create that never attempts to stack: a container's contents (see `landContainer`), which
     // dnd5e itself never merges into an unrelated top-level stack just because the names match.
@@ -563,11 +570,16 @@ function planBuy(request, context) {
     if (item.type === "container" && hasUngivableContents(idOf(item), shop.items)) {
       return { ok: false, reason: "not-visible", line: requested };
     }
-    // Sold in whole bundles only, matching Item Piles' own quantityForPrice contract; the UI
-    // steps a bundled good's quantity by its bundle size, so this is a malformed request, not a
-    // normal refusal a player should see.
+    // Sold in whole bundles, matching Item Piles' own quantityForPrice contract, plus the odd
+    // part-bundle a sale left on a finite line (5 arrows sold back onto 300): that remainder is
+    // buyable too, or it would sit on the shelf for good (#102, 2026-09-25). The UI steps by the
+    // bundle, so anything else is a malformed request, not a refusal a player should see.
     const bundle = statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
-    if (requested.quantity % bundle !== 0) return { ok: false, reason: "invalid-request", line: requested };
+    const infinite = stock.service || (stock.infinite ?? worldSettings.infiniteStock);
+    const available = stockRemaining.get(requested.itemId) ?? 0;
+    const remainder = infinite ? 0 : available % bundle;
+    const odd = requested.quantity % bundle;
+    if (odd !== 0 && odd !== remainder) return { ok: false, reason: "invalid-request", line: requested };
 
     const category = stock.category || item.type;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
@@ -578,10 +590,10 @@ function planBuy(request, context) {
     } catch {
       return { ok: false, reason: "unpriced", line: requested };
     }
+    // In practice only a remainder floors to 0: a whole bundle prices at least the bundle's own.
+    if (totalLineCp === 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: sellsAt.layer });
 
-    const infinite = stock.service || (stock.infinite ?? worldSettings.infiniteStock);
-    const available = stockRemaining.get(requested.itemId) ?? 0;
     if (!infinite && available < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
     if (!infinite) stockRemaining.set(requested.itemId, available - requested.quantity);
 
@@ -692,7 +704,8 @@ function planSell(request, context) {
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
     totalCp += totalLineCp;
-    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, owned });
+    const shelf = matched && (stock.hidden || stock.notForSale) ? { hidden: stock.hidden, notForSale: stock.notForSale } : null;
+    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, owned, shelf });
   }
 
   if (staleLines(request.lines, fresh)) return { ok: false, reason: "stock-changed", lines: fresh };
@@ -709,13 +722,14 @@ function planSell(request, context) {
   }
   const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0 };
 
-  // Never stacks onto shopkeeper gear or a hidden/delisted line: a sold item lands on a real,
-  // visible stock line or becomes a new one, never disappears into the merchant's own kit.
-  const shopLander = lander(shop.items, candidate => isVisible(candidate, safeStockOf(candidate) ?? stockFrom({})));
+  // Never stacks onto shopkeeper gear, so a sold item can't disappear into the merchant's own kit.
+  // A hidden or delisted line is a target, though: the GM's choice holds for what joins it, and
+  // a copy that can't stack still lands hidden or delisted (#102, 2026-09-25).
+  const shopLander = lander(shop.items, candidate => !isGear(candidate));
   const buyerRemaining = new Map();   // real owned item id -> its new quantity, accumulated across lines
 
   for (const line of lines) {
-    shopLander.land(line.item, line.quantity);
+    shopLander.land(line.item, line.quantity, line.shelf);
     const id = idOf(line.item);
     const current = buyerRemaining.get(id) ?? line.owned;
     buyerRemaining.set(id, current - line.quantity);
