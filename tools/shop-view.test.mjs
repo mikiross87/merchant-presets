@@ -430,3 +430,12 @@ test("a buy row whose whole shelf floors to nothing is worthless, as the engine 
   const row = buyRow(candle, { category: "", hidden: false, notForSale: false, infinite: false, service: false }, rates, null, CURRENCIES5E, false);
   assert.equal(row.worthless, true);
 });
+
+test("a shelf holding only a part-bundle can still be bought, the remainder at its own price", () => {
+  const arrows = { _id: "a1", img: "", name: "Arrows", type: "consumable", system: { price: { value: 1, denomination: "gp" }, quantity: 5 },
+    flags: { "merchant-presets": { stock: { bundle: 20 } } } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 1 };
+  const row = buyRow(arrows, { category: "", hidden: false, notForSale: false, infinite: false, service: false, bundle: 20 }, rates, null, CURRENCIES5E, false);
+  assert.equal(row.worthless, false);
+  assert.equal(row.minQuantity, 5);
+});

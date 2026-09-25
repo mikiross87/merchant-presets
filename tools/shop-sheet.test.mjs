@@ -718,3 +718,24 @@ test("on an endless line, a buy starts at the fewest worth a coin rather than dr
   act(sheet, "addLine", { itemId: "candle" });
   assert.equal(sheet._baskets.buy.get("candle"), 2);
 });
+
+test("a bundled line's bill shows the bundle's price, not a unit price floored to nothing", async () => {
+  const bullets = item("bullets", { quantity: 40, price: { value: 4, denomination: "cp" }, flags: { "merchant-presets": { stock: { bundle: 20 } } } });
+  const { sheet } = openShop({ shopItems: [bullets] });
+  act(sheet, "addLine", { itemId: "bullets" });
+  const { buy } = await sheet._prepareContext({});
+  const [line] = buy.basket.lines;
+  assert.deepEqual(coins(line.unitCoins), [["cp", 4]]);
+  assert.equal(line.bundle, 20);
+});
+
+test("under unlimited merchant coin the Sell tab doesn't say the till caps a sale", async () => {
+  globalThis.game.settings.values.merchantPurse = "unlimited";
+  try {
+    const { sheet } = openShop();
+    const { sell } = await sheet._prepareContext({});
+    assert.equal(sell.tillCapsSales, false);
+  } finally {
+    globalThis.game.settings.values.merchantPurse = "finite";
+  }
+});
