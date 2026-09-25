@@ -35,6 +35,9 @@ const CURRENCIES = {
 
 globalThis.Actor = class {};
 globalThis.CONFIG = { DND5E: { currencies: CURRENCIES }, Item: { typeLabels: {} }, Actor: {} };
+/** How the stubbed confirmation dialog answers. */
+const dialog = { answer: true, asked: 0 };
+
 /** The world clock's hour; noon unless a test moves it. */
 const clock = { hour: 12 };
 /** Hook handlers the window registers, by event name. */
@@ -45,7 +48,11 @@ const fire = (name, ...args) => (hooks[name] ?? []).forEach(fn => fn(...args));
 globalThis.foundry = {
   applications: {
     sheets: { ActorSheetV2 },
-    api: { HandlebarsApplicationMixin: Base => Base },
+    api: {
+      HandlebarsApplicationMixin: Base => Base,
+      // Answers every confirmation with `dialog.answer`, and counts the asks.
+      DialogV2: { confirm: async () => { dialog.asked++; return dialog.answer; } }
+    },
     apps: { DocumentSheetConfig: { registerSheet() {} } },
     instances: new Map()
   },
@@ -592,4 +599,32 @@ test("a sale matching a broken shelf line reads as refused, as the engine refuse
   const { sell } = await sheet._prepareContext({});
   assert.deepEqual(sell.willBuy.map(r => r.id), []);
   assert.deepEqual(sell.wontBuy.map(r => r.id), ["gem"]);
+});
+
+test("selling an equipped or packed item asks first, and a no leaves it off the bill", async () => {
+  const worn = item("armour");
+  worn.system.equipped = true;
+  const packed = item("potion");
+  packed.system.container = "bag";
+  const { sheet } = openShop({ buyerItems: [worn, packed, item("gem")] });
+  sheet.tabGroups.primary = "sell";
+  dialog.asked = 0;
+  dialog.answer = false;
+  await act(sheet, "addLine", { itemId: "armour" });
+  await act(sheet, "addLine", { itemId: "potion" });
+  await act(sheet, "addLine", { itemId: "gem" });
+  assert.equal(dialog.asked, 2);
+  assert.deepEqual([...sheet._baskets.sell.keys()], ["gem"]);
+  dialog.answer = true;
+  await act(sheet, "addLine", { itemId: "armour" });
+  await act(sheet, "addLine", { itemId: "armour" });
+  assert.equal(dialog.asked, 3, "asked once, not again for the next step");
+  assert.equal(sheet._baskets.sell.has("armour"), true);
+});
+
+test("the header purse shows the coins the character holds, not a re-split", async () => {
+  const { sheet, buyer } = openShop();
+  buyer.system.currency = { pp: 0, gp: 150, ep: 0, sp: 30, cp: 0 };
+  const { buyerPurse } = await sheet._prepareContext({});
+  assert.deepEqual(coins(buyerPurse), [["gp", 150], ["sp", 30]]);
 });
