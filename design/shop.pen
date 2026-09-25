@@ -949,6 +949,710 @@
     },
     {
       "type": "frame",
+      "id": "GZx14",
+      "x": 760,
+      "y": -553,
+      "name": "00 Window Parts",
+      "theme": {
+        "mode": "light"
+      },
+      "width": 1000,
+      "fill": "$surface-app",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "iboQk",
+          "name": "Window parts title",
+          "fill": "$text-title",
+          "content": "Window parts",
+          "fontFamily": "$font-title",
+          "fontSize": 28,
+          "fontWeight": "700"
+        },
+        {
+          "type": "frame",
+          "id": "m382Vk",
+          "name": "Window Bar",
+          "reusable": true,
+          "width": "fill_container",
+          "height": 30,
+          "fill": "#191813",
+          "padding": [
+            0,
+            12
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "GYd90",
+              "name": "Window Title",
+              "fill": "$text-on-dark-muted",
+              "content": "Armourer & Blacksmith",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "AA1RL",
+              "name": "Bar right",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ntuq8",
+                  "name": "NPC sheet button",
+                  "cornerRadius": 3,
+                  "stroke": "#c9c7b866",
+                  "strokeWidth": 1,
+                  "gap": 5,
+                  "padding": [
+                    2,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "i5HHdd",
+                      "name": "NPC sheet icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "user-round",
+                      "library": "lucide",
+                      "fill": "$text-on-dark-muted"
+                    },
+                    {
+                      "type": "text",
+                      "id": "xaDB0",
+                      "name": "NPC sheet label",
+                      "fill": "$text-on-dark-muted",
+                      "content": "NPC sheet",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "QfrQo",
+                  "name": "Close",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "x",
+                  "library": "lucide",
+                  "fill": "$text-on-dark-muted"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "UiMqw",
+          "name": "Hero",
+          "reusable": true,
+          "width": "fill_container",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "$header-1",
+                "position": 0
+              },
+              {
+                "color": "$header-2",
+                "position": 1
+              }
+            ]
+          },
+          "gap": 18,
+          "padding": [
+            20,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "gRWBt",
+              "name": "Merchant Portrait",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "assets/items/blacksmith.webp",
+                "mode": "fill"
+              },
+              "width": 76,
+              "height": 76,
+              "stroke": "$accent-gold",
+              "strokeWidth": 2
+            },
+            {
+              "type": "frame",
+              "id": "lJJs0",
+              "name": "Identity",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "x9OKc",
+                  "name": "Title line",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v4bjn",
+                      "name": "Shop Name",
+                      "fill": "$text-on-dark",
+                      "content": "Armourer & Blacksmith",
+                      "fontFamily": "$font-title",
+                      "fontSize": 30,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uYCYY",
+                      "name": "Fresh Chip",
+                      "fill": "#e3ce9e33",
+                      "cornerRadius": 999,
+                      "stroke": "#e3ce9e80",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "amGqh",
+                          "name": "Fresh icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "K7PByz",
+                          "name": "Fresh label",
+                          "fill": "$text-on-dark",
+                          "content": "Fresh stock today",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Cx08R",
+                  "name": "Shop Description",
+                  "fill": "$text-on-dark-soft",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "k0gnM",
+                  "name": "Chips",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "PG7N6",
+                      "name": "Open Chip",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "stroke": "#26b23180",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "XXw9g",
+                          "name": "Dot",
+                          "fill": "$success",
+                          "width": 7,
+                          "height": 7
+                        },
+                        {
+                          "type": "text",
+                          "id": "xlRXV",
+                          "name": "Open Label",
+                          "fill": "$text-on-dark",
+                          "content": "Open · closes at 19:00",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v9wZe",
+                      "name": "Kind Chip",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "W5e1pg",
+                          "name": "Kind icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hammer",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "JPjFy",
+                          "name": "Kind Label",
+                          "fill": "$text-on-dark",
+                          "content": "Town",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ke7Eh",
+                      "name": "Terms Chip",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "stroke": "#e3ce9e66",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "PmOUn",
+                          "name": "Terms icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "scale",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RetMP",
+                          "name": "Terms Label",
+                          "fill": "$text-on-dark",
+                          "content": "Sells at list · Buys at ½",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "niVUh",
+                          "name": "Terms chevron",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "chevron-down",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "I9iGQ",
+              "name": "Purse",
+              "fill": "#00000047",
+              "cornerRadius": 6,
+              "stroke": "#9f927566",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                10,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "r8aoct",
+                  "name": "Purse Label",
+                  "fill": "$accent-on-dark",
+                  "content": "BUYING AS",
+                  "fontFamily": "$font-compact",
+                  "fontSize": 11,
+                  "fontWeight": "700",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "rWKik",
+                  "name": "Buyer row",
+                  "fill": "#00000033",
+                  "cornerRadius": 999,
+                  "stroke": "#e3ce9e55",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "padding": [
+                    2,
+                    6,
+                    2,
+                    2
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ixs6m",
+                      "name": "Buyer avatar",
+                      "width": 20,
+                      "height": 20,
+                      "fill": "#e3ce9e",
+                      "cornerRadius": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "BU9xO",
+                          "name": "Buyer initial",
+                          "fill": "#401f25",
+                          "content": "A",
+                          "fontFamily": "$font-title",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "S7Gg3",
+                      "name": "Buyer name",
+                      "fill": "$text-on-dark",
+                      "content": "Aria",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "CtAxe",
+                      "name": "Buyer chevron",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "chevron-down",
+                      "library": "lucide",
+                      "fill": "$accent-on-dark"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vKyj4",
+                  "name": "Purse Coins",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "jcUQJ",
+                      "type": "ref",
+                      "ref": "uJ3dp",
+                      "name": "platinum",
+                      "descendants": {
+                        "e1b2b": {
+                          "content": "3",
+                          "fill": "#ffffff"
+                        },
+                        "B6r81": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "assets/platinum.webp",
+                            "mode": "fill"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "id": "M14jey",
+                      "type": "ref",
+                      "ref": "uJ3dp",
+                      "name": "gold",
+                      "descendants": {
+                        "e1b2b": {
+                          "content": "47",
+                          "fill": "#ffffff"
+                        },
+                        "B6r81": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "assets/gold.webp",
+                            "mode": "fill"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "id": "Ky1pp",
+                      "type": "ref",
+                      "ref": "uJ3dp",
+                      "name": "silver",
+                      "descendants": {
+                        "e1b2b": {
+                          "content": "12",
+                          "fill": "#ffffff"
+                        },
+                        "B6r81": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "assets/silver.webp",
+                            "mode": "fill"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "id": "dfey9",
+                      "type": "ref",
+                      "ref": "uJ3dp",
+                      "name": "copper",
+                      "descendants": {
+                        "e1b2b": {
+                          "content": "30",
+                          "fill": "#ffffff"
+                        },
+                        "B6r81": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "assets/copper.webp",
+                            "mode": "fill"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZwEAx",
+          "name": "Tabs",
+          "reusable": true,
+          "width": "fill_container",
+          "height": 40,
+          "fill": "$surface-card",
+          "stroke": "$border-faint",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 24,
+          "padding": [
+            0,
+            24
+          ],
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "gJ7DQ",
+              "name": "Tab Buy",
+              "stroke": "$accent-strong",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                10,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Kwsll",
+                  "name": "Buy icon",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "shopping-bag",
+                  "library": "lucide",
+                  "fill": "$accent-strong"
+                },
+                {
+                  "type": "text",
+                  "id": "JEMqJ",
+                  "name": "Buy label",
+                  "fill": "$text-primary",
+                  "content": "Buy",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dX3T8",
+              "name": "Tab Sell",
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                10,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "mGJ08",
+                  "name": "Sell icon",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "hand-coins",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "GGVYy",
+                  "name": "Sell label",
+                  "fill": "$text-secondary",
+                  "content": "Sell",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "K2bP5",
+              "name": "Tab Settings",
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                10,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "vAzyi",
+                  "name": "Settings icon",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "settings-2",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "gFtDe",
+                  "name": "Settings label",
+                  "fill": "$text-secondary",
+                  "content": "Settings",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "aQQvZ",
+                  "name": "GM badge",
+                  "fill": "$accent-strong",
+                  "cornerRadius": 3,
+                  "padding": [
+                    1,
+                    5
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r9s81Y",
+                      "name": "GM badge text",
+                      "fill": "$text-on-dark",
+                      "content": "GM",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 9,
+                      "fontWeight": "700",
+                      "letterSpacing": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
       "id": "y6iNf",
       "x": 800,
       "y": 0,
@@ -16418,705 +17122,54 @@
     },
     {
       "type": "frame",
-      "id": "GZx14",
-      "x": 760,
-      "y": -553,
-      "name": "00 Window Parts",
+      "id": "XIBJK",
+      "x": 4800,
+      "y": -369,
+      "name": "X Explore",
       "theme": {
         "mode": "light"
       },
-      "width": 1000,
+      "width": 920,
       "fill": "$surface-app",
       "layout": "vertical",
-      "gap": 32,
+      "gap": 12,
       "padding": 40,
       "children": [
         {
           "type": "text",
-          "id": "iboQk",
-          "name": "Window parts title",
+          "id": "Y33RI",
+          "name": "Explore title",
           "fill": "$text-title",
-          "content": "Window parts",
+          "content": "Explore",
           "fontFamily": "$font-title",
           "fontSize": 28,
           "fontWeight": "700"
         },
         {
-          "type": "frame",
-          "id": "m382Vk",
-          "name": "Window Bar",
-          "reusable": true,
+          "type": "text",
+          "id": "j9f4p",
+          "name": "Explore lead",
+          "fill": "$text-primary",
+          "textGrowth": "fixed-width",
           "width": "fill_container",
-          "height": 30,
-          "fill": "#191813",
-          "padding": [
-            0,
-            12
-          ],
-          "justifyContent": "space_between",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "text",
-              "id": "GYd90",
-              "name": "Window Title",
-              "fill": "$text-on-dark-muted",
-              "content": "Armourer & Blacksmith",
-              "fontFamily": "$font-body",
-              "fontSize": 12,
-              "fontWeight": "normal"
-            },
-            {
-              "type": "frame",
-              "id": "AA1RL",
-              "name": "Bar right",
-              "gap": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "ntuq8",
-                  "name": "NPC sheet button",
-                  "cornerRadius": 3,
-                  "stroke": "#c9c7b866",
-                  "strokeWidth": 1,
-                  "gap": 5,
-                  "padding": [
-                    2,
-                    8
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "i5HHdd",
-                      "name": "NPC sheet icon",
-                      "width": 12,
-                      "height": 12,
-                      "icon": "user-round",
-                      "library": "lucide",
-                      "fill": "$text-on-dark-muted"
-                    },
-                    {
-                      "type": "text",
-                      "id": "xaDB0",
-                      "name": "NPC sheet label",
-                      "fill": "$text-on-dark-muted",
-                      "content": "NPC sheet",
-                      "fontFamily": "$font-body",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "QfrQo",
-                  "name": "Close",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "x",
-                  "library": "lucide",
-                  "fill": "$text-on-dark-muted"
-                }
-              ]
-            }
-          ]
+          "content": "Ideas and rough mocks. Nothing in this lane is agreed design, and #103 doesn't build from it.",
+          "lineHeight": 1.5,
+          "fontFamily": "$font-body",
+          "fontSize": 15,
+          "fontWeight": "normal"
         },
         {
-          "type": "frame",
-          "id": "UiMqw",
-          "name": "Hero",
-          "reusable": true,
+          "type": "text",
+          "id": "vVU6k",
+          "name": "Explore rules",
+          "fill": "$text-secondary",
+          "textGrowth": "fixed-width",
           "width": "fill_container",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 90,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "$header-1",
-                "position": 0
-              },
-              {
-                "color": "$header-2",
-                "position": 1
-              }
-            ]
-          },
-          "gap": 18,
-          "padding": [
-            20,
-            24
-          ],
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "ellipse",
-              "id": "gRWBt",
-              "name": "Merchant Portrait",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "assets/items/blacksmith.webp",
-                "mode": "fill"
-              },
-              "width": 76,
-              "height": 76,
-              "stroke": "$accent-gold",
-              "strokeWidth": 2
-            },
-            {
-              "type": "frame",
-              "id": "lJJs0",
-              "name": "Identity",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "x9OKc",
-                  "name": "Title line",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "v4bjn",
-                      "name": "Shop Name",
-                      "fill": "$text-on-dark",
-                      "content": "Armourer & Blacksmith",
-                      "fontFamily": "$font-title",
-                      "fontSize": 30,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "uYCYY",
-                      "name": "Fresh Chip",
-                      "fill": "#e3ce9e33",
-                      "cornerRadius": 999,
-                      "stroke": "#e3ce9e80",
-                      "strokeWidth": 1,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "amGqh",
-                          "name": "Fresh icon",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "sparkles",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        },
-                        {
-                          "type": "text",
-                          "id": "K7PByz",
-                          "name": "Fresh label",
-                          "fill": "$text-on-dark",
-                          "content": "Fresh stock today",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "text",
-                  "id": "Cx08R",
-                  "name": "Shop Description",
-                  "fill": "$text-on-dark-soft",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.",
-                  "lineHeight": 1.4,
-                  "fontFamily": "$font-body",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "frame",
-                  "id": "k0gnM",
-                  "name": "Chips",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "PG7N6",
-                      "name": "Open Chip",
-                      "fill": "#00000040",
-                      "cornerRadius": 999,
-                      "stroke": "#26b23180",
-                      "strokeWidth": 1,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "ellipse",
-                          "id": "XXw9g",
-                          "name": "Dot",
-                          "fill": "$success",
-                          "width": 7,
-                          "height": 7
-                        },
-                        {
-                          "type": "text",
-                          "id": "xlRXV",
-                          "name": "Open Label",
-                          "fill": "$text-on-dark",
-                          "content": "Open · closes at 19:00",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "v9wZe",
-                      "name": "Kind Chip",
-                      "fill": "#00000040",
-                      "cornerRadius": 999,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "W5e1pg",
-                          "name": "Kind icon",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "hammer",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        },
-                        {
-                          "type": "text",
-                          "id": "JPjFy",
-                          "name": "Kind Label",
-                          "fill": "$text-on-dark",
-                          "content": "Town",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ke7Eh",
-                      "name": "Terms Chip",
-                      "fill": "#00000040",
-                      "cornerRadius": 999,
-                      "stroke": "#e3ce9e66",
-                      "strokeWidth": 1,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "PmOUn",
-                          "name": "Terms icon",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "scale",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        },
-                        {
-                          "type": "text",
-                          "id": "RetMP",
-                          "name": "Terms Label",
-                          "fill": "$text-on-dark",
-                          "content": "Sells at list · Buys at ½",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "icon",
-                          "id": "niVUh",
-                          "name": "Terms chevron",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "chevron-down",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "I9iGQ",
-              "name": "Purse",
-              "fill": "#00000047",
-              "cornerRadius": 6,
-              "stroke": "#9f927566",
-              "strokeWidth": 1,
-              "layout": "vertical",
-              "gap": 6,
-              "padding": [
-                10,
-                14
-              ],
-              "children": [
-                {
-                  "type": "text",
-                  "id": "r8aoct",
-                  "name": "Purse Label",
-                  "fill": "$accent-on-dark",
-                  "content": "BUYING AS",
-                  "fontFamily": "$font-compact",
-                  "fontSize": 11,
-                  "fontWeight": "700",
-                  "letterSpacing": 1
-                },
-                {
-                  "type": "frame",
-                  "id": "rWKik",
-                  "name": "Buyer row",
-                  "fill": "#00000033",
-                  "cornerRadius": 999,
-                  "stroke": "#e3ce9e55",
-                  "strokeWidth": 1,
-                  "gap": 6,
-                  "padding": [
-                    2,
-                    6,
-                    2,
-                    2
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "ixs6m",
-                      "name": "Buyer avatar",
-                      "width": 20,
-                      "height": 20,
-                      "fill": "#e3ce9e",
-                      "cornerRadius": 10,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "BU9xO",
-                          "name": "Buyer initial",
-                          "fill": "#401f25",
-                          "content": "A",
-                          "fontFamily": "$font-title",
-                          "fontSize": 12,
-                          "fontWeight": "700"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "S7Gg3",
-                      "name": "Buyer name",
-                      "fill": "$text-on-dark",
-                      "content": "Aria",
-                      "fontFamily": "$font-body",
-                      "fontSize": 13,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "CtAxe",
-                      "name": "Buyer chevron",
-                      "width": 13,
-                      "height": 13,
-                      "icon": "chevron-down",
-                      "library": "lucide",
-                      "fill": "$accent-on-dark"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "vKyj4",
-                  "name": "Purse Coins",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "jcUQJ",
-                      "type": "ref",
-                      "ref": "uJ3dp",
-                      "name": "platinum",
-                      "descendants": {
-                        "e1b2b": {
-                          "content": "3",
-                          "fill": "#ffffff"
-                        },
-                        "B6r81": {
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "assets/platinum.webp",
-                            "mode": "fill"
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "id": "M14jey",
-                      "type": "ref",
-                      "ref": "uJ3dp",
-                      "name": "gold",
-                      "descendants": {
-                        "e1b2b": {
-                          "content": "47",
-                          "fill": "#ffffff"
-                        },
-                        "B6r81": {
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "assets/gold.webp",
-                            "mode": "fill"
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "id": "Ky1pp",
-                      "type": "ref",
-                      "ref": "uJ3dp",
-                      "name": "silver",
-                      "descendants": {
-                        "e1b2b": {
-                          "content": "12",
-                          "fill": "#ffffff"
-                        },
-                        "B6r81": {
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "assets/silver.webp",
-                            "mode": "fill"
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "id": "dfey9",
-                      "type": "ref",
-                      "ref": "uJ3dp",
-                      "name": "copper",
-                      "descendants": {
-                        "e1b2b": {
-                          "content": "30",
-                          "fill": "#ffffff"
-                        },
-                        "B6r81": {
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "assets/copper.webp",
-                            "mode": "fill"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "ZwEAx",
-          "name": "Tabs",
-          "reusable": true,
-          "width": "fill_container",
-          "height": 40,
-          "fill": "$surface-card",
-          "stroke": "$border-faint",
-          "strokeWidth": {
-            "bottom": 1
-          },
-          "gap": 24,
-          "padding": [
-            0,
-            24
-          ],
-          "alignItems": "end",
-          "children": [
-            {
-              "type": "frame",
-              "id": "gJ7DQ",
-              "name": "Tab Buy",
-              "stroke": "$accent-strong",
-              "strokeWidth": {
-                "bottom": 2
-              },
-              "gap": 6,
-              "padding": [
-                0,
-                2,
-                10,
-                2
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "Kwsll",
-                  "name": "Buy icon",
-                  "width": 15,
-                  "height": 15,
-                  "icon": "shopping-bag",
-                  "library": "lucide",
-                  "fill": "$accent-strong"
-                },
-                {
-                  "type": "text",
-                  "id": "JEMqJ",
-                  "name": "Buy label",
-                  "fill": "$text-primary",
-                  "content": "Buy",
-                  "fontFamily": "$font-body",
-                  "fontSize": 14,
-                  "fontWeight": "700"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "dX3T8",
-              "name": "Tab Sell",
-              "stroke": "#00000000",
-              "strokeWidth": {
-                "bottom": 2
-              },
-              "gap": 6,
-              "padding": [
-                0,
-                2,
-                10,
-                2
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "mGJ08",
-                  "name": "Sell icon",
-                  "width": 15,
-                  "height": 15,
-                  "icon": "hand-coins",
-                  "library": "lucide",
-                  "fill": "$text-secondary"
-                },
-                {
-                  "type": "text",
-                  "id": "GGVYy",
-                  "name": "Sell label",
-                  "fill": "$text-secondary",
-                  "content": "Sell",
-                  "fontFamily": "$font-body",
-                  "fontSize": 14,
-                  "fontWeight": "500"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "K2bP5",
-              "name": "Tab Settings",
-              "stroke": "#00000000",
-              "strokeWidth": {
-                "bottom": 2
-              },
-              "gap": 6,
-              "padding": [
-                0,
-                2,
-                10,
-                2
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "vAzyi",
-                  "name": "Settings icon",
-                  "width": 15,
-                  "height": 15,
-                  "icon": "settings-2",
-                  "library": "lucide",
-                  "fill": "$text-secondary"
-                },
-                {
-                  "type": "text",
-                  "id": "gFtDe",
-                  "name": "Settings label",
-                  "fill": "$text-secondary",
-                  "content": "Settings",
-                  "fontFamily": "$font-body",
-                  "fontSize": 14,
-                  "fontWeight": "500"
-                },
-                {
-                  "type": "frame",
-                  "id": "aQQvZ",
-                  "name": "GM badge",
-                  "fill": "$accent-strong",
-                  "cornerRadius": 3,
-                  "padding": [
-                    1,
-                    5
-                  ],
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "r9s81Y",
-                      "name": "GM badge text",
-                      "fill": "$text-on-dark",
-                      "content": "GM",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 9,
-                      "fontWeight": "700",
-                      "letterSpacing": 1
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+          "content": "Place each idea level with the band it explores, named X<band> <Screen> · <idea> (#issue), e.g. X02 Sell · Haggle (#112). Light only, not reusable: start from a detached copy of the master so you can add and remove nodes.\nAccepted: move it into its band, make it a reusable master with a dark instance, and write the decision in design/README.md.\nRejected: delete it, and record why in the README.",
+          "lineHeight": 1.5,
+          "fontFamily": "$font-body",
+          "fontSize": 14,
+          "fontWeight": "normal"
         }
       ]
     }
