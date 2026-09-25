@@ -167,9 +167,12 @@
             <span class="item-meta">×{{owned}}</span>
           </div>
           <span class="price-tag tag-neutral">{{ratio}}</span>
-          {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
-          {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
-              <span class="price-coins">{{> coins priceCoins}}</span>
+          {{!-- One grid cell, as on the Buy row: the row's grid has five columns whatever tags show. --}}
+          <div class="item-price">
+            {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
+            {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
+            <span class="price-coins">{{> coins priceCoins}}</span>
+          </div>
           <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
             aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}" {{#unless ../sell.open}}disabled{{/unless}}>
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
