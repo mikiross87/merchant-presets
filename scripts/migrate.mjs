@@ -682,6 +682,10 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (subtypes.size) {
       warnings.push(`"${actor.name}": Item Piles refusal by item subtype not carried over: ${[...subtypes].join(", ")}`);
     }
+    // restock.table holds one table; deriveShop reads the first.
+    for (const extra of pileData(actor).tablesForPopulate.slice(1)) {
+      warnings.push(`"${actor.name}": Item Piles stock table not carried over (only the first is): ${extra?.uuid ?? "unknown"}`);
+    }
   }
 
   if (nativeShop) {

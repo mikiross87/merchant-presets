@@ -65,6 +65,7 @@ const rewiring = new Set();
  *  that write is unconfirmed would erase the "world holds 1.x merchants"
  *  signal before a retry on the next load could read it (#100 review). */
 let migrationGateOpen = true;
+let autoRestockNoticeShown = false;
 
 const log = (...args) => console.log(`${MODULE} |`, ...args);
 
@@ -1116,8 +1117,13 @@ async function migrateShop(actor) {
       console.error(`${MODULE} | could not force the autoRestock default off; migration deferred to next load`, err);
       return false;
     }
-    ui.notifications.warn(`Merchant Presets: "${actor.name}" is a 1.x merchant, so automatic restocking `
-      + "has been turned off to keep 1.x behaviour. Turn it back on in the module settings if you want it.");
+    // Several merchants imported together each see no stored value before the
+    // first write returns; the setting lands the same, but tell the GM once.
+    if (!autoRestockNoticeShown) {
+      autoRestockNoticeShown = true;
+      ui.notifications.warn(`Merchant Presets: "${actor.name}" is a 1.x merchant, so automatic restocking `
+        + "has been turned off to keep 1.x behaviour. Turn it back on in the module settings if you want it.");
+    }
   }
 
   let changed = false;
