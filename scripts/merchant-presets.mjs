@@ -1071,7 +1071,9 @@ async function resolvePackShop(actorData) {
  * @returns {Promise<boolean>} whether anything was actually written
  */
 async function migrateShop(actor) {
-  if (!migrationGateOpen || !isMigratable(actor)) return false;
+  // Never a compendium copy (same rule as isPreset): it proves nothing about
+  // this world until it's imported, and createActor fires inside packs too.
+  if (!migrationGateOpen || actor.pack || !isMigratable(actor)) return false;
   const data = actor.toObject();
 
   // needsMigration can usually decide without scanning every scene's
