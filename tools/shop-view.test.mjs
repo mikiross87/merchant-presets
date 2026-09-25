@@ -140,6 +140,18 @@ test("an idle basket with lines reads as ready to seal", () => {
     { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: false, icon: "fa-solid fa-stamp" });
 });
 
+test("out-of-stock says there aren't that many left, and waits for the bill to change", () => {
+  assert.deepEqual(sealState("out-of-stock", true),
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" });
+});
+
+test("a refusal the window has no words for still reads as one, not as ready to seal", () => {
+  for (const reason of ["not-visible", "shop-misconfigured", "wont-buy", "no-buyback", "unidentified"]) {
+    assert.deepEqual(sealState(reason, true),
+      { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" }, reason);
+  }
+});
+
 test("an idle, empty basket disables the seal without a refusal reason", () => {
   assert.equal(sealState("idle", false).disabled, true);
 });

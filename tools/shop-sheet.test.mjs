@@ -88,13 +88,15 @@ function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 }
     id, uuid: `Actor.${id}`, name: id, type: "npc", flags: { "merchant-presets": { shop: structuredClone(SHOP_DEFAULTS) } },
     system: { currency },
     items: collection(items),
-    testUserPermission: (_user, level) => permission >= level
+    // Foundry takes a level's number or its name ("OWNER").
+    testUserPermission: (_user, level) => permission >= (OWNERSHIP[level] ?? level)
   };
 }
 
-/** A window on a shop selling `shopItems`, opened by a player who owns `buyer` and has `permission` on the shop. */
 /** A buyer's purse, as the bill reads it: [denomination, count] pairs. */
 const coins = list => list.map(c => [c.denomination, c.count]);
+
+/** A window on a shop selling `shopItems`, opened by a player who owns `buyer` and has `permission` on the shop. */
 
 function openShop({ shopItems = [item("rope")], buyerItems = [], permission = OWNERSHIP.LIMITED } = {}) {
   const shop = actor("shop", shopItems, { permission });
@@ -388,4 +390,46 @@ test("the NPC sheet button brings an open dnd5e sheet forward rather than openin
   act(sheet, "npcSheet");
   assert.equal(built, 1);
   assert.equal(rendered, 2);
+});
+
+test("with trading hours off the header reads always open, not the shop's hours", async () => {
+  globalThis.game.settings.values.tradingHours = false;
+  try {
+    const { sheet } = openShop();
+    const { header } = await sheet._prepareContext({});
+    assert.equal(header.openLabel, "MERCHANT_PRESETS.Shop.AlwaysOpen");
+  } finally {
+    globalThis.game.settings.values.tradingHours = true;
+  }
+});
+
+test("a category that empties falls back to all goods rather than an empty tab", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  sheet._activeCategory = "potion";
+  const { buy } = await sheet._prepareContext({});
+  assert.deepEqual(buy.sections.flatMap(s => s.rows.map(r => r.id)), ["rope"]);
+  assert.equal(sheet._activeCategory, "all");
+});
+
+test("a buyer that drops out of reach clears the last buyer's unanswered trade", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const other = actor("borin", []);
+  globalThis.game.actors.push(other);
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "unconfirmed" });
+  await act(sheet, "seal");
+  assert.notEqual(sheet._tradeId.buy, null);
+  globalThis.game.actors.splice(globalThis.game.actors.indexOf(buyer), 1);
+  globalThis.game.user.character = null;
+  await sheet._prepareContext({});
+  assert.equal(sheet._buyerUuid, other.uuid);
+  assert.equal(sheet._tradeId.buy, null);
+});
+
+test("a basket asking for more than is left is cut to what's left", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("torch", { quantity: 6 })] });
+  for (let i = 0; i < 5; i++) act(sheet, "addLine", { itemId: "torch" });
+  shop.items.get("torch").system.quantity = 1;
+  await sheet._prepareContext({});
+  assert.equal(sheet._baskets.buy.get("torch"), 1);
 });
