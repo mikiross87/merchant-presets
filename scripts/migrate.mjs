@@ -734,6 +734,43 @@ export function planItemUpdates(actor) {
 }
 
 /**
+ * The stock config to put back after an Item Piles restock (#119), as an
+ * `Actor#updateEmbeddedDocuments("Item", …)` payload. A restock rebuilds every
+ * line the shop's own record (`flags.merchant-presets.itemFlags`) names from
+ * the compendium: an SRD item comes back with no stock config at all, one of
+ * our goods with only its goods-level stamp (a service's `infinite` null
+ * where the shop's copy said `true`). Each such line gets its stock derived
+ * again exactly as the migration derives it, and written where it differs.
+ *
+ * Unlike `planItemUpdates` this rewrites a line that already has a stock
+ * config, since after a restock that config is the compendium's, not the
+ * shop's. A line the record doesn't name (a GM's own addition) and the
+ * shopkeeper's kit are left alone, and so is a line whose derived config is
+ * still invalid after `repairStock` (named in `errors`, for the caller to log).
+ *
+ * @param {object} actor
+ * @returns {{updates: object[], errors: {item: string, errors: string[]}[]}}
+ */
+export function planRestockStock(actor) {
+  const record = actor?.flags?.["merchant-presets"]?.itemFlags ?? {};
+  const updates = [];
+  const errors = [];
+  for (const item of actor?.items ?? []) {
+    if (isGearItem(item) || !record[item.name]) continue;
+    const repaired = repairStock(deriveStock(sourceFlagsOf(actor, item)));
+    if (!repaired.ok) { errors.push({ item: item.name, errors: repaired.errors }); continue; }
+    if (sameStock(item.flags?.["merchant-presets"]?.stock, repaired.stock)) continue;
+    updates.push({ _id: item._id ?? item.id, "flags.merchant-presets.stock": repaired.stock });
+  }
+  return { updates, errors };
+}
+
+/** Whether a live stock config already holds exactly `want`'s values (key order aside). */
+function sameStock(have, want) {
+  return !!have && Object.keys(STOCK_DEFAULTS).every(k => have[k] === want[k]);
+}
+
+/**
  * The `Scene#updateEmbeddedDocuments("Token", …)` entry to switch Item Piles
  * off on one token, or `null` if there's nothing to do.
  *

@@ -5,7 +5,8 @@ import { STOCK_DEFAULTS, validateShop, validateStock } from "../scripts/schema.m
 import { planShop } from "../scripts/shop.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, shouldForceAutoRestockOff,
+  planAutoRestockDefault, planItemUpdates, planOwnership, planRestockStock, planTokenDisable, planTokenUpdates,
+  shouldForceAutoRestockOff,
   worldHasLegacyShops, derivedShop
 } from "../scripts/migrate.mjs";
 
@@ -828,4 +829,52 @@ test("a second Item Piles stock table is warned about, not dropped silently (#12
   tables.push({ ...tables[0], uuid: "RollTable.GMsOwnExtras" });
   const { warnings } = planActorUpdate(actor);
   assert.ok(warnings.some(w => w.includes("RollTable.GMsOwnExtras")), warnings.join(" | "));
+});
+
+/* -------------------------------------------------------------- restock (#119) */
+
+/** `actor` as an Item Piles restock leaves it: every line the shop's record names rebuilt from the
+ *  compendium, so an SRD item has no stock config at all and one of our goods has only its
+ *  goods-level stamp (a service's `infinite` still null). */
+function restocked(actor) {
+  const record = actor.flags["merchant-presets"].itemFlags ?? {};
+  const out = structuredClone(actor);
+  for (const item of out.items) {
+    if (!record[item.name] || item.flags?.["merchant-presets"]?.kind === "gear") continue;
+    const stock = item.flags["merchant-presets"]?.stock;
+    if (stock?.service) stock.infinite = null;
+    else if (item.flags["merchant-presets"]) delete item.flags["merchant-presets"].stock;
+  }
+  return out;
+}
+
+test("a restock puts every shipped merchant's stock config back as it shipped (#119)", () => {
+  // Folder documents live beside the merchants in _source/merchants; only actors carry items.
+  const names = readdirSync(merchantsDir).filter(f => !f.startsWith("!") && JSON.parse(readFileSync(new URL(f, merchantsDir), "utf8")).items)
+    .map(f => f.replace(/\.json$/, ""));
+  let checked = 0;
+  for (const name of names) {
+    const shippedActor = shipped(name);
+    const after = restocked(shippedActor);
+    for (const u of planRestockStock(after).updates) {
+      const item = after.items.find(i => i._id === u._id);
+      item.flags["merchant-presets"] ??= {};
+      item.flags["merchant-presets"].stock = u["flags.merchant-presets.stock"];
+    }
+    for (const item of after.items) {
+      const want = shippedActor.items.find(i => i._id === item._id).flags?.["merchant-presets"]?.stock;
+      assert.deepEqual(item.flags?.["merchant-presets"]?.stock, want, `${name}: ${item.name}`);
+      checked++;
+    }
+  }
+  assert.ok(checked > 0);
+});
+
+test("a restock leaves lines the record doesn't name, and stock already right, alone", () => {
+  const first = readdirSync(merchantsDir).find(f => JSON.parse(readFileSync(new URL(f, merchantsDir), "utf8")).items);
+  const actor = shipped(first.replace(/\.json$/, ""));
+  assert.deepEqual(planRestockStock(actor).updates, [], "a shelf as shipped needs nothing");
+  const byHand = { _id: "handAdded000001", name: "A GM's own find", type: "loot", system: {}, flags: {} };
+  actor.items.push(byHand);
+  assert.deepEqual(planRestockStock(actor).updates, []);
 });

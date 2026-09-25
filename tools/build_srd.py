@@ -223,9 +223,13 @@ def sync_goods_stock():
     for f in sorted(glob.glob(os.path.join(MOD, "_source/goods/*.json"))):
         doc = json.load(open(f))
         ip_item = ((doc.get("flags") or {}).get("item-piles") or {}).get("item")
-        if not ip_item:
+        mp_flags = (doc.get("flags") or {}).get("merchant-presets") or {}
+        # No Item Piles flags to derive from: leave a good that never had a stock config alone,
+        # but re-derive one that has, from the defaults, so a customCategory (or any other
+        # setting) removed from the Item Piles flags doesn't live on in a stale stock (#119).
+        if not ip_item and "stock" not in mp_flags:
             continue
-        stock = stock_flags(ip_item)
+        stock = stock_flags(ip_item or {})
         mp = doc.setdefault("flags", {}).setdefault("merchant-presets", {})
         if mp.get("stock") == stock:
             continue

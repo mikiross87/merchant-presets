@@ -121,8 +121,9 @@ Constraints worth knowing before changing the generator:
 - **Shopkeeper gear is not stock.** `PROFILES` maps each shop and size to an SRD
   stat block, whose items ride along on the merchant tagged
   `flags.merchant-presets.kind: "gear"`. That kind is in every shop's refuse
-  list, so it never reaches the shop window, and the three restock helpers in
-  `scripts/merchant-presets.mjs` skip it via `isGear`. Gear is appended *after*
+  list, so it never reaches the shop window, and the restock helpers in
+  `scripts/merchant-presets.mjs` skip it (via `isGear`, and `planRestockStock`
+  in `scripts/migrate.mjs` via `isGearItem`). Gear is appended *after*
   the item filters are computed — inside the loop its own types would otherwise
   read as stocked and let a chain shirt onto the shelf.
 - **`flags.merchant-presets.profile` or `.shop` is how the runtime recognises
