@@ -6,7 +6,7 @@ import { planShop } from "../scripts/shop.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planTokenDisable, planTokenUpdates, shouldForceAutoRestockOff,
-  worldHasLegacyShops
+  worldHasLegacyShops, derivedShop
 } from "../scripts/migrate.mjs";
 
 /** A shipped merchant, straight off `_source`, matched by filename prefix.
@@ -813,4 +813,11 @@ test("planItemUpdates reproduces every shipped stock line's own committed config
     }
   }
   assert.equal(checked, 1551);   // every stock line schema.test.mjs counts, none silently skipped
+});
+
+test("a shop derived for setUpShop is repaired like a migrated one (#120 review)", () => {
+  const { shop, ok } = derivedShop(retuned({ buyPriceModifier: 0 }));
+  assert.equal(ok, true);
+  assert.equal(shop.terms.sellsAt, null);   // repaired to the world rate, never written invalid
+  assert.ok(validateShop(shop).ok);
 });
