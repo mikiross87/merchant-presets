@@ -433,7 +433,7 @@ test("buying back a sold-in line prices and steps by its carried bundle", () => 
   const result = planTrade(buyRequest("SoldInArrows001", 20), ctx);
   assert.equal(result.ok, true);
   assert.equal(result.plan.hook.totalCp, 100);   // 1gp for the bundle of 20, not 20gp
-  assert.equal(planTrade(buyRequest("SoldInArrows001", 7), ctx).reason, "invalid-request");
+  assert.equal(planTrade(buyRequest("SoldInArrows001", 7), ctx).reason, "out-of-stock");
 });
 
 test("an unidentified item on the shelf is refused to buy, never priced", () => {
@@ -469,7 +469,7 @@ test("a buy may take a line's odd part-bundle remainder, on top of whole bundles
   assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), ctx).plan.hook.totalCp, 25);     // 1gp x 5/20
   assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 25), ctx).plan.hook.totalCp, 125);
   assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 305), ctx).plan.hook.totalCp, 1525);
-  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 7), ctx).reason, "invalid-request");
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 7), ctx).reason, "out-of-stock");
 
   const soldIn = { ...arrows(), _id: "SoldInArrows002", system: { ...arrows().system, quantity: 5 }, flags: { "merchant-presets": { bundle: 20 } } };
   assert.equal(planTrade(buyRequest("SoldInArrows002", 5), context({ shop: { items: [soldIn] } })).ok, true);
@@ -864,10 +864,11 @@ test("a basket over the line cap is refused", () => {
   assert.deepEqual(planTrade({ tradeId: "t", kind: "buy", lines }, ctx), { ok: false, reason: "invalid-request" });
 });
 
-test("a buy quantity that isn't a whole multiple of the bundle is invalid", () => {
-  const ctx = context({ shop: { items: [arrows()] } });   // bundle 20
+test("a buy quantity that isn't a whole multiple of the bundle is refused", () => {
+  // Finite line with no part-bundle: out of stock (may be stale, so the client refreshes).
+  const ctx = context({ shop: { items: [arrows()] } });   // bundle 20, 300 on the shelf
   const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), ctx);
-  assert.deepEqual(result, { ok: false, reason: "invalid-request", line: { itemId: "5BtSFZjMcs6csxDO", quantity: 5 } });
+  assert.deepEqual(result, { ok: false, reason: "out-of-stock", line: { itemId: "5BtSFZjMcs6csxDO", quantity: 5 } });
 });
 
 test("buying a single unit of a cheap bundle is refused, not given away for 0cp", () => {
@@ -875,7 +876,7 @@ test("buying a single unit of a cheap bundle is refused, not given away for 0cp"
   // the quantity must be a whole bundle instead of trading for free.
   const bullets = { ...arrows(), _id: "Bullets0000001", name: "Bullets", system: { ...arrows().system, price: { value: 4, denomination: "cp" } } };
   const ctx = context({ shop: { items: [bullets] } });
-  assert.equal(planTrade(buyRequest("Bullets0000001", 1), ctx).reason, "invalid-request");
+  assert.equal(planTrade(buyRequest("Bullets0000001", 1), ctx).reason, "out-of-stock");
   const wholeBundle = planTrade(buyRequest("Bullets0000001", 20), ctx);
   assert.equal(wholeBundle.ok, true);
   assert.equal(wholeBundle.plan.hook.totalCp, 4);

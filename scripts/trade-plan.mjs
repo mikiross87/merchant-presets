@@ -215,12 +215,15 @@
  *   multiple of the line's `bundle`, or that plus the part-bundle a sale
  *   left on a finite line (`available % bundle`, #102 2026-09-25) — so a
  *   single unit of a full bundle can't be bought for a price that floors to
- *   0. Anything else is `"invalid-request"` (the stepper steps by the
+ *   0. Anything else is `"out-of-stock"` on a finite line (the part-bundle
+ *   may have gone in flight, so the client refreshes) and
+ *   `"invalid-request"` on an infinite one (the stepper steps by the
  *   bundle, so it's a malformed request, not a normal refusal). A sale has
  *   no shelf to bundle by, so any quantity is allowed. Either way, a line
  *   that floors to 0 for an item that isn't actually free
  *   (`item.system.price.value` above 0) isn't a trade, so it's refused
- *   `"worthless"` rather than traded for nothing.
+ *   `"worthless"` rather than traded for nothing — unless the rate itself
+ *   is 0: a shop set to pay nothing (`buysAt: 0`) trades for 0cp.
  *   The bundle, in order: on a sale, the matched shop line's stated
  *   `bundle` (on a buy, the line being bought's); failing that, the item's carried-over `flags.merchant-presets.bundle`
  *   (see `copyOf`'s "Kept: bundle"); failing that, `context.bundleOf(item)`
@@ -598,7 +601,10 @@ function planBuy(request, context) {
     const available = stockRemaining.get(requested.itemId) ?? 0;
     const remainder = infinite ? 0 : available % bundle;
     const odd = requested.quantity % bundle;
-    if (odd !== 0 && odd !== remainder) return { ok: false, reason: "invalid-request", line: requested };
+    // On a finite line a wrong part-bundle is most likely stale (someone else took or sold back
+    // the odd few in flight), so it refreshes like any other stock change; on an infinite line
+    // there's no remainder to be stale about.
+    if (odd !== 0 && odd !== remainder) return { ok: false, reason: infinite ? "invalid-request" : "out-of-stock", line: requested };
 
     const category = stock.category || item.type;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
@@ -610,7 +616,7 @@ function planBuy(request, context) {
       return { ok: false, reason: "unpriced", line: requested };
     }
     // Usually a part-bundle remainder; a whole bundle floors to 0 only at a tiny price and rate.
-    if (totalLineCp === 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
+    if (totalLineCp === 0 && sellsAt.rate > 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: sellsAt.layer });
 
     if (!infinite && available < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
@@ -719,7 +725,7 @@ function planSell(request, context) {
     // trade for an item that actually has a price, so refuse rather than pay 0 for something
     // real. A genuinely free item (system.price.value itself 0) is unaffected — that's a real,
     // if uninteresting, 0cp trade, the same as it always was.
-    if (totalLineCp === 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
+    if (totalLineCp === 0 && buysAt.rate > 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
     totalCp += totalLineCp;
