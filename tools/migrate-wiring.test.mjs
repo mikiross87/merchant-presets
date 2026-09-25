@@ -54,3 +54,13 @@ test("a failed autoRestock write leaves the shop unmigrated, not partially writt
   assert.equal(shop.flags["merchant-presets"].shop, undefined);
   assert.deepEqual(shopWrites(world, shop.id), []);
 });
+
+test("a 1.x merchant created inside a compendium is never migrated there (#120 review)", async () => {
+  const world = createWorld();
+  await loadRuntime(world);
+  const shop = legacyMerchant(world, "General_Store_Village_");
+  shop.pack = "world.my-merchants";   // an unlocked world compendium, or an Adventure being built
+  await world.fire("createActor", shop, {}, "gm");
+  assert.deepEqual(shopWrites(world, shop.id), []);
+  assert.equal(world.calls.writes.some(w => w.type === "setting" && w.key === "autoRestock"), false);
+});
