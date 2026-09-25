@@ -350,6 +350,36 @@ test("a v1.0.0 merchant, which predates the profile flag, is still migrated (#12
   assert.equal(validateShop(update["flags.merchant-presets.shop"]).ok, true);
 });
 
+/** The Town store as a 1.x world held it, with `data` merged over its Item Piles pile data. */
+function retuned(data) {
+  const actor = legacy(shipped("Adventurers_Store_Town"));
+  Object.assign(actor.flags["item-piles"].data, data);
+  return actor;
+}
+
+test("an Item Piles price modifier by item type becomes that type's category rule (#120 review)", () => {
+  const actor = retuned({ itemTypePriceModifiers: [
+    { type: "weapon", category: "", override: true, buyPriceModifier: 1.2, sellPriceModifier: 0.3 },
+    { type: "tool", category: "", override: false, buyPriceModifier: 9, sellPriceModifier: 9 }
+  ] });
+  const categories = deriveShop(actor).terms.categories;
+  assert.deepEqual(categories.find(c => c.category === "weapon"), { category: "weapon", sellsAt: 1.2, buysAt: 0.3 });
+  assert.equal(categories.some(c => c.category === "tool"), false);   // not overridden: Item Piles ignored it too
+});
+
+test("what the migration can't carry over is warned about, not dropped silently (#120 review)", () => {
+  const actor = retuned({
+    buyPriceModifier: 0,
+    overrideItemFilters: [{ path: "type", filters: "spell" }, { path: "system.type.value", filters: "natural, simpleM" }]
+  });
+  const { update, warnings } = planActorUpdate(actor);
+  assert.equal(update["flags.merchant-presets.shop"].terms.sellsAt, null);
+  assert.ok(warnings.some(w => w.includes("terms.sellsAt")), warnings.join(" | "));
+  assert.ok(warnings.some(w => w.includes("simpleM")), warnings.join(" | "));
+  assert.equal(warnings.some(w => w.includes("natural")), false);   // a fixed refusal: nothing lost
+  assert.deepEqual(planActorUpdate(legacy(shipped("Adventurers_Store_Town"))).warnings, []);
+});
+
 test("needsMigration stays true when the shop half landed but items still lack .stock (#100 review)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const shopOnly = applied(store, { "flags.merchant-presets.shop": deriveShop(store) });
