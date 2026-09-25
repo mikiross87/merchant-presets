@@ -161,6 +161,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._struck = { buy: new Set(), sell: new Set() };
     /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): every seal resends it until one is answered (sealed or refused) or the buyer changes, so the GM's side can't carry it out twice. */
     this._tradeId = { buy: null, sell: null };
+    /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
+    this._sent = { buy: new Map(), sell: new Map() };
     this._activeCategory = "all";
     /** The fewest of each sellable item worth a coin (`sellRow`'s `minQuantity`), from the last render. */
     this._sellMin = new Map();
@@ -364,6 +366,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   #resolveBuyer() {
     const candidates = this.#candidateBuyers();
     let buyer = candidates.find(a => a.uuid === this._buyerUuid);
+    // A seal that's out is settled by its answer; the buyer (and the reset a new one brings) waits for it.
+    if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return buyer ?? null;
     if (!buyer) buyer = game.user.character ?? candidates[0] ?? null;
     const previous = this._buyerUuid;
     this._buyerUuid = buyer?.uuid ?? null;
@@ -375,6 +379,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** A new buyer: the sell basket held the old one's own items, and an unanswered trade id is the old one's trade. */
   #buyerChanged() {
     this._tradeId.buy = this._tradeId.sell = null;
+    this._sent.buy.clear();
+    this._sent.sell.clear();
     this._baskets.sell.clear();
     this.#basketChanged("buy");
     this.#basketChanged("sell");
@@ -710,6 +716,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       lines: lines.map(({ itemId, quantity, bundlePriceCp }) =>
         ({ itemId, quantity, ...(bundlePriceCp != null && { expectedBundlePriceCp: bundlePriceCp }) }))
     };
+    for (const line of lines) this._sent[kind].set(line.itemId, line);
     const api = game.modules.get(MODULE).api;
 
     if (!api?.trade) {
@@ -720,11 +727,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     try {
       const result = await api.trade(request);
       // Sealed or refused, this trade is settled; only an unanswered one keeps its id for a retry.
-      if (result.status === "sealed" || result.status === "refused") this._tradeId[kind] = null;
+      const sent = this._sent[kind];
+      if (result.status === "sealed" || result.status === "refused") {
+        this._tradeId[kind] = null;
+        this._sent[kind] = new Map();
+      }
       if (result.status === "sealed") {
+        // A resent id is answered with the first outcome (#102), which can differ from this
+        // request's lines: the stamp shows what the GM reports it carried out, and only those
+        // lines leave the basket.
+        const carried = Array.isArray(result.lines) ? this.#carriedLines(result.lines, sent) : lines;
         this._tradeState[kind] = "sealed";
-        this._sealed[kind] = { lines, sumCp: basketTotals(lines, 0, kind).sumCp, receipt: result.receipt ?? null };
-        this._baskets[kind].clear();
+        this._sealed[kind] = { lines: carried, sumCp: basketTotals(carried, 0, kind).sumCp, receipt: result.receipt ?? null };
+        for (const line of carried) this._baskets[kind].delete(line.itemId);
       } else if (result.status === "refused") {
         this._tradeState[kind] = result.reason;
         // The bill re-prices from the live shop on the render below; strike what moved so the
@@ -745,6 +760,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       this._tradeState[kind] = "no-gm";
     }
     this.render({ parts: ["body"] });
+  }
+
+  /** The bill lines for what a sealed answer says was traded, named from the lines sent under its id. */
+  #carriedLines(resultLines, sent) {
+    const currencies = CONFIG.DND5E.currencies;
+    return resultLines.map(({ itemId, quantity, lineTotalCp: totalCp }) => {
+      const known = sent.get(itemId);
+      const total = totalCp ?? known?.lineTotalCp ?? 0;
+      return {
+        ...known, itemId, quantity, lineTotalCp: total, name: known?.name ?? itemId, img: known?.img ?? "",
+        unitCoins: known?.unitCoins ?? [], struck: false,
+        lineTotalCoins: coinBreakdown(total, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+      };
+    });
   }
 
   static #onKeepShopping(_event, _target) {
