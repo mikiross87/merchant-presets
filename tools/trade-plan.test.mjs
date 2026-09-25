@@ -550,6 +550,20 @@ test("a shop that pays nothing trades for 0cp rather than refusing everything wo
   assert.equal(result.plan.hook.totalCp, 0);
 });
 
+test("a large line total is exact to the copper, not a float division 1cp short", () => {
+  // Each case was 1cp low when lineTotalCp divided by the fraction bundle / quantity.
+  for (const [value, sellsAt, bundle, quantity, exact] of [
+    [15, 1, 1, 3459, 5188500], [15, 1.5, 3, 9999, 7499250], [99, 1, 3, 9999, 32996700]
+  ]) {
+    const item = { ...dagger(), system: { ...dagger().system, quantity: 10_000, price: { value, denomination: "gp" } }, flags: { "merchant-presets": { stock: { bundle } } } };
+    const ctx = context({
+      shop: { items: [item], terms: { sellsAt, buysAt: null, categories: [] } },
+      buyer: { currency: { pp: 0, gp: 1e6, ep: 0, sp: 0, cp: 0 } }
+    });
+    assert.equal(planTrade(buyRequest("Dagger000000001", quantity), ctx).plan.hook.totalCp, exact, `${quantity} x ${value}gp / ${bundle} @ ${sellsAt}`);
+  }
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
