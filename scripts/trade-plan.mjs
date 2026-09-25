@@ -31,7 +31,7 @@
  *   call the runtime makes with `keepId: true`. Deterministic in tests; the
  *   runtime passes `foundry.utils.randomID`.
  * - `bundleOf`: `(item: object) => number | undefined`, optional. The last
- *   resolver in a sale's bundle chain (see "bundled quantities") — only
+ *   resolver in the bundle chain (see "bundled quantities") — only
  *   called, and only needed, for a good that never carried a bundle flag at
  *   all: starting gear from a class kit, say, never bought from any shop.
  *   The runtime resolves it from `item._stats.compendiumSource`: the source
@@ -97,8 +97,8 @@
  *   to 0 per unit would then be free in any amount. Passing `bundle /
  *   quantity` as the bundle argument is algebraically the same as pricing
  *   `quantity` units and flooring once — see `lineTotalCp`.
- * - **Prices are never computed for an unidentified item.** The check runs
- *   before any call into pricing.mjs, so a refused line never has a rate or
+ * - **Prices are never computed for an unidentified item**, bought or sold
+ *   (#102 refuses both). The check runs before any call into pricing.mjs, so a refused line never has a rate or
  *   a price attached to it, matching #102's decision.
  * - **A trade is a basket, priced and paid as one.** Each line is validated
  *   on its own (visibility, stock, what the shop deals in), but "can the
@@ -122,7 +122,8 @@
  * - **The request is untrusted client input**, validated before anything
  *   else runs: `tradeId` a non-empty string, `kind` `"buy"` or `"sell"`,
  *   `lines` a non-empty array of at most `MAX_LINES`, each line an `itemId`
- *   string and an integer `quantity` of at least 1. A negative or zero
+ *   string and an integer `quantity` of at least 1 (and, once duplicate
+ *   lines merge, at most `MAX_QUANTITY` per item). A negative or zero
  *   quantity would otherwise turn into a negative price, stock rising on a
  *   purchase, or a bundle division by zero. Anything that fails is
  *   `"invalid-request"`, with the offending `line` when there is one.
@@ -213,14 +214,17 @@
  *   floors same as ever; but if that floor lands on 0 for an item that
  *   isn't actually free (`item.system.price.value` above 0), that's not a
  *   trade, so it's refused `"worthless"` rather than paid for nothing.
- *   A sale's own bundle, in order: the matched shop line's own `bundle`;
- *   failing that, the item's carried-over `flags.merchant-presets.bundle`
+ *   The bundle, in order: on a sale, the matched shop line's stated
+ *   `bundle` (on a buy, the line being bought's); failing that, the item's carried-over `flags.merchant-presets.bundle`
  *   (see `copyOf`'s "Kept: bundle"); failing that, `context.bundleOf(item)`
  *   — for a good that was never bought from any shop at all, so never had
  *   either (starting gear from a class kit is the common case: dnd5e's own
  *   SRD prices a stack of 20 arrows at 1gp with no bundle flag of ours
  *   anywhere, and selling them back with no matching shop line would
  *   otherwise price each of the 20 individually, 20x over); failing that, 1.
+ *   A "stated" bundle is an explicit `stock.bundle` or the carried flag —
+ *   never `stock`'s default of 1 (see `statedBundle`), because a line an
+ *   earlier sale created carries only the flag.
  */
 
 import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
@@ -233,6 +237,9 @@ const FIXED_EXCLUDED_TYPES = ["background", "class", "facility", "feat", "race",
 
 const VALID_KINDS = ["buy", "sell"];
 const MAX_LINES = 100;
+// Per item, after duplicate lines merge. Far past any real purchase, and low enough that a free
+// container on an infinite line can't make landContainer loop the GM's tab out of memory.
+const MAX_QUANTITY = 10_000;
 
 const idOf = doc => doc._id ?? doc.id;
 const findById = (docs, id) => docs.find(d => idOf(d) === id);
@@ -312,6 +319,17 @@ function matchingStockLine(item, shopItems) {
   const source = sourceOf(item);
   const bySource = source != null ? shopItems.find(i => !isGear(i) && sourceOf(i) === source) : null;
   return bySource ?? shopItems.find(i => !isGear(i) && i.name === item.name);
+}
+
+/**
+ * The bundle size `item` states for itself, if any: an explicit `stock.bundle` on a shop line, or
+ * the `bundle` flag `copyOf` carries over. `undefined` when neither says, which is not the same
+ * as STOCK_DEFAULTS' 1: a line an earlier sale created has no `stock` flags, only the carried
+ * bundle, and reading the default there priced its 20 arrows as 20 bundles.
+ */
+function statedBundle(item) {
+  const flags = item?.flags?.[MODULE];
+  return flags?.stock?.bundle ?? flags?.bundle;
 }
 
 /** A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite". */
@@ -514,6 +532,8 @@ export function planTrade(request, context) {
   const validity = validateRequest(request);
   if (!validity.ok) return validity;
   const merged = mergeLines(request);
+  const tooMany = merged.lines.find(line => line.quantity > MAX_QUANTITY);
+  if (tooMany) return { ok: false, reason: "invalid-request", line: tooMany };
   return merged.kind === "buy" ? planBuy(merged, context) : planSell(merged, context);
 }
 
@@ -534,6 +554,7 @@ function planBuy(request, context) {
     const stock = safeStockOf(item);
     if (!stock) return { ok: false, reason: "shop-misconfigured", line: requested };
     if (!isVisible(item, stock)) return { ok: false, reason: "not-visible", line: requested };
+    if (item.system?.identified === false) return { ok: false, reason: "unidentified", line: requested };
     // A container holding something the shop wouldn't hand over on its own (gear, hidden,
     // delisted) can't be bought at all — there's no way to ask for "everything but that".
     if (item.type === "container" && hasUngivableContents(idOf(item), shop.items)) {
@@ -542,14 +563,15 @@ function planBuy(request, context) {
     // Sold in whole bundles only, matching Item Piles' own quantityForPrice contract; the UI
     // steps a bundled good's quantity by its bundle size, so this is a malformed request, not a
     // normal refusal a player should see.
-    if (requested.quantity % stock.bundle !== 0) return { ok: false, reason: "invalid-request", line: requested };
+    const bundle = statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
+    if (requested.quantity % bundle !== 0) return { ok: false, reason: "invalid-request", line: requested };
 
     const category = stock.category || null;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
       bundleCp = bundlePriceCp(item, sellsAt.rate, currencies);
-      totalLineCp = lineTotalCp(item, sellsAt.rate, stock.bundle, requested.quantity, currencies);
+      totalLineCp = lineTotalCp(item, sellsAt.rate, bundle, requested.quantity, currencies);
     } catch {
       return { ok: false, reason: "unpriced", line: requested };
     }
@@ -642,12 +664,13 @@ function planSell(request, context) {
     const owned = item.system?.quantity ?? 0;
     if (owned < requested.quantity) return { ok: false, reason: "out-of-stock", line: requested };
 
-    // Bundle is the one field kept off the matched line: a matching shop listing's own bundle
-    // wins (it's the shop's rate for this good), then the item's own carried-over bundle flag
-    // (see copyOf's "Kept: bundle"), then context.bundleOf — for a good that never passed
-    // through a shop at all (starting gear, say) and so never had either — rather than silently
-    // assuming 1: a bundle of 20 arrows priced as 20 individual purchases would pay 20x too much.
-    const bundle = matched ? stock.bundle : (item.flags?.[MODULE]?.bundle ?? context.bundleOf?.(item) ?? 1);
+    // Bundle is the one field not read off `stock` (whose default of 1 would hide a missing
+    // answer): the matched line's stated bundle wins (it's the shop's rate for this good), then
+    // the item's own carried-over bundle flag (see copyOf's "Kept: bundle"), then
+    // context.bundleOf — for a good that never passed through a shop at all (starting gear, say)
+    // — rather than silently assuming 1: a bundle of 20 arrows priced as 20 individual
+    // purchases would pay 20x too much.
+    const bundle = statedBundle(matched) ?? statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
     const category = stock.category || null;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
