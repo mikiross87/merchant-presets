@@ -56,7 +56,7 @@ const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
   modules: { get: () => ({ api }) },
-  settings: { values: { merchantPurse: "finite", tradingHours: true }, get(_module, key) { return this.values[key]; } },
+  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite" }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -319,4 +319,73 @@ test("the window re-renders when the clock moves or its buyer's purse changes, n
   fire("updateActor", buyer);
   fire("updateActor", stranger);
   assert.equal(sheet.renders - before, 2);
+});
+
+test("the window re-renders when its buyer's items change, not another actor's", () => {
+  const { sheet, buyer } = openShop();
+  const stranger = actor("stranger", []);
+  const before = sheet.renders;
+  fire("createItem", { parent: buyer });
+  fire("updateItem", { parent: buyer });
+  fire("deleteItem", { parent: buyer });
+  fire("createItem", { parent: stranger });
+  assert.equal(sheet.renders - before, 3);
+});
+
+test("a shelf line with broken stock flags is left off the Buy tab instead of breaking the window", async () => {
+  const broken = item("broken", { flags: { "merchant-presets": { stock: { bundle: 0 } } } });
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 }), broken] });
+  const { buy } = await sheet._prepareContext({});
+  assert.deepEqual(buy.sections.flatMap(s => s.rows.map(r => r.id)), ["rope"]);
+});
+
+test("a shop whose own config is broken still opens", async () => {
+  const { sheet } = openShop();
+  sheet.document.flags["merchant-presets"].shop = { version: "nope" };
+  await assert.doesNotReject(sheet._prepareContext({}));
+});
+
+test("the Buy tab can say what the till holds, for a buy the till can't make change for", async () => {
+  const { sheet } = openShop();
+  sheet.document.system.currency = { gp: 3 };
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.tillText, "3 gp");
+});
+
+test("with no character to trade as, the seal says so instead of blaming the purse", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  globalThis.game.user.character = null;
+  globalThis.game.actors = [sheet.document];
+  sheet._buyerUuid = null;
+  act(sheet, "addLine", { itemId: "rope" });
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "no-buyer");
+  assert.equal(buy.seal.disabled, true);
+});
+
+test("under the world's unlimited stock mode a line without its own setting never runs out", () => {
+  globalThis.game.settings.values.stockMode = "unlimited";
+  try {
+    const { sheet } = openShop({ shopItems: [item("rope", { quantity: 1 })] });
+    act(sheet, "addLine", { itemId: "rope" });
+    act(sheet, "addLine", { itemId: "rope" });
+    assert.equal(sheet._baskets.buy.get("rope"), 2);
+  } finally {
+    globalThis.game.settings.values.stockMode = "finite";
+  }
+});
+
+test("the NPC sheet button brings an open dnd5e sheet forward rather than opening a second", () => {
+  const { sheet, shop } = openShop();
+  shop.apps = {};
+  let built = 0, rendered = 0;
+  class NPCSheet {
+    constructor({ document }) { built++; this.id = "npc-sheet"; document.apps[this.id] = this; }
+    render() { rendered++; }
+  }
+  globalThis.CONFIG.Actor.sheetClasses = { npc: { "dnd5e.NPCActorSheet": { id: "dnd5e.NPCActorSheet", cls: NPCSheet } } };
+  act(sheet, "npcSheet");
+  act(sheet, "npcSheet");
+  assert.equal(built, 1);
+  assert.equal(rendered, 2);
 });
