@@ -10,7 +10,7 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 
 | Band | Frames |
 |---|---|
-| 00 | Components: the reusable parts and the price states |
+| 00 | Components: the reusable parts and the price states. Window Parts sits above the light column (x 760), over the screens that use it |
 | 01 | Storefront — Light / Dark / Player (Light); Terms of Trade popover, light and dark |
 | 02 | Sell — Light / Dark |
 | 03 | Settings (GM) — Light / Dark; Settings (GM) · Restock — Light / Dark |
@@ -23,6 +23,8 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 Every mockup except **01 Storefront — Player (Light)** draws the GM's window: three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
 **Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
+
+The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
 
 ## Source of truth
 
@@ -46,9 +48,17 @@ The shop sits beside dnd5e's own sheets, so its tokens are dnd5e's, measured fro
 | `success` | `#26b231` | `#26b231` | `--color-level-success` |
 | `warning` | `#ee9b3a` | `#ee9b3a` | `--color-level-warning` |
 | `danger` | `#ce0707` | `#ce0707` | `--color-level-error` |
+| `text-on-dark` | `#ffffff` | `#ffffff` | `--color-text-light-0` |
+| `text-on-dark-muted` | `#c9c7b8` | `#c9c7b8` | `--color-text-light-heading` |
+| `accent-on-dark` | `#e3ce9e` | `#e3ce9e` | `--dnd5e-color-gold` under `.dnd5e-flag-high-contrast` only |
+| `text-on-dark-soft` | `#efe6d8` | `#efe6d8` | `--color-light-2` |
+| `seal-mark` | `#e7d1b1` | `#e7d1b1` | `--color-light-3` |
 
 Notes:
 
+- The three `on-dark` tokens colour text and icons on fills that are dark in both themes: the maroon header and its chips, the chat card's strip, the primary and seal buttons, the `GM` badge, and selected pills and rows. Shapes and translucent tints still carry their hex values.
+- dnd5e only defines `#e3ce9e` in its high-contrast sheet, so the build needs a module variable for `accent-on-dark`.
+- `text-on-dark-soft` (the shop description) and `seal-mark` (the wax seal's mark) were drawn as `#e8dcd6` and `#f3dcb0`, which have no source. Decided 2026-09-25 (#125): snap both to the nearest Foundry colour. Foundry's sci-fi theme overrides `--color-light-2/3` with blues. The standard light and dark themes don't.
 - The light app background is a paper texture over parchment, and the dark one is a denim texture over `#0d0b0b`. Both textures are transparent overlays, so the mockups use the base colours. The build uses the variable, which brings the texture with it.
 - `surface-row-alt` in dark is `color-mix(in oklab, #252830, black 10%)`, rounded.
 
@@ -59,6 +69,9 @@ Notes:
 | Titles, shop name, section headers | Modesto Condensed (Foundry core ships it; dnd5e's fallback is Palatino) | `--dnd5e-font-modesto` |
 | Body, item names | Roboto | `--dnd5e-font-roboto` |
 | Prices, quantities, compact labels | Roboto Condensed | `--dnd5e-font-roboto-condensed` |
+| The ledger hand (`font-slip`): the Bill of Sale's lines and date, footnotes, and plain readings such as "½ of value" | Crimson Pro, italic | A module `@font-face`: the module bundles it |
+
+Neither Foundry nor dnd5e ships Crimson Pro. Decided 2026-09-25 (#125): the module bundles it (SIL OFL 1.1, so the licence ships with the font files) rather than substituting. Foundry's Amiri has no italic, and dnd5e's Roboto Slab is upright, so either would lose the ledger hand.
 
 Pencil only offers Google Fonts, so the mockups draw titles in **Alegreya SC Bold**. It was picked by comparison with a render of Foundry's own `modesto-condensed-bold.woff2`. It's wider than Modesto, so allow for the build's titles to come out narrower than the mockups.
 
@@ -207,8 +220,15 @@ Reusable in `shop.pen` (the Components frame):
 - Button Secondary
 - Quantity Stepper
 - Item Row: art, name, meta, stock, a price block with an optional struck list price, a terms tag and a second coin, and an add button
+- Slip Head: the Bill of Sale's kicker, title and date
 
-The window's parts (hero, tabs, category nav, Bill of Sale, notices, Terms popover, Settings form, chat card) are built from these and the tokens above.
+Reusable in the Window Parts frame:
+
+- Window Bar: title, the NPC sheet button and close
+- Hero: portrait, name with the "Fresh stock today" chip, description, the chips row, and the purse panel
+- Tabs: Buy, Sell and Settings with its `GM` badge; Buy active
+
+The rest of the window (category nav, the Bill of Sale's lines, notices, the Terms popover, the Settings form, the chat card) is built from these and the tokens above.
 
 ## Motion
 
