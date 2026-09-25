@@ -364,7 +364,26 @@ test("an Item Piles price modifier by item type becomes that type's category rul
   ] });
   const categories = deriveShop(actor).terms.categories;
   assert.deepEqual(categories.find(c => c.category === "weapon"), { category: "weapon", sellsAt: 1.2, buysAt: 0.3 });
-  assert.equal(categories.some(c => c.category === "tool"), false);   // not overridden: Item Piles ignored it too
+});
+
+test("a relative Item Piles modifier (override off) carries over multiplied by the shop's rate (#120 review)", () => {
+  // item-piles.js getMerchantModifiersForActor: override ? the entry's rate : the shop's rate x the entry's.
+  const actor = retuned({ buyPriceModifier: 1.2, sellPriceModifier: 0.5, itemTypePriceModifiers: [
+    { type: "tool", category: "", override: false, buyPriceModifier: 1.5, sellPriceModifier: 0.8 }
+  ] });
+  assert.deepEqual(deriveShop(actor).terms.categories, [{ category: "tool", sellsAt: 1.8, buysAt: 0.4 }]);
+});
+
+test("repeated Item Piles entries keep the one Item Piles matches: custom first, then the first (#120 review)", () => {
+  const actor = retuned({ itemTypePriceModifiers: [
+    { type: "weapon", category: "", override: true, buyPriceModifier: 1.2, sellPriceModifier: 0.3 },
+    { type: "weapon", category: "", override: true, buyPriceModifier: 2, sellPriceModifier: 0.1 },
+    { type: "loot", category: "", override: true, buyPriceModifier: 3, sellPriceModifier: 0.1 },
+    { type: "custom", category: "loot", override: true, buyPriceModifier: 1.1, sellPriceModifier: 0.2 }
+  ] });
+  const categories = deriveShop(actor).terms.categories;
+  assert.deepEqual(categories.find(c => c.category === "weapon"), { category: "weapon", sellsAt: 1.2, buysAt: 0.3 });
+  assert.deepEqual(categories.find(c => c.category === "loot"), { category: "loot", sellsAt: 1.1, buysAt: 0.2 });
 });
 
 test("what the migration can't carry over is warned about, not dropped silently (#120 review)", () => {
