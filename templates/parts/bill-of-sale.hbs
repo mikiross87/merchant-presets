@@ -50,15 +50,17 @@
     {{#if (eq seal.state "cant-afford")}}
       <p class="bill-notice is-danger">{{localize "MERCHANT_PRESETS.Shop.Bill.ShortBy" name=basket.buyerName amount=basket.shortfallText}}</p>
     {{else if (eq seal.state "till-short")}}
-      <p class="bill-notice is-danger">{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortNotice" amount=tillText}}</p>
+      <p class="bill-notice is-danger">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortNotice" amount=tillText}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortBuyNotice" amount=tillText}}{{/if}}</p>
     {{else}}
       {{#if (eq seal.state "no-gm")}}
         <p class="bill-notice is-warning"><i class="fa-solid fa-user-slash" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.NoGmNotice"}}</p>
       {{else if (eq seal.state "stock-changed")}}
         <p class="bill-notice is-warning"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.StockChangedNotice"}}</p>
       {{/if}}
-      <p class="bill-purse-after">{{localize "MERCHANT_PRESETS.Shop.Bill.PurseAfter" name=basket.buyerName}}</p>
-      <div class="bill-purse">{{> coins basket.afterCoins}}</div>
+      {{#if basket.buyerName}}
+        <p class="bill-purse-after">{{localize "MERCHANT_PRESETS.Shop.Bill.PurseAfter" name=basket.buyerName}}</p>
+        <div class="bill-purse">{{> coins basket.afterCoins}}</div>
+      {{/if}}
     {{/if}}
 
     {{#if (eq seal.state "sealed")}}

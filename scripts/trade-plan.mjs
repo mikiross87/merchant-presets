@@ -262,8 +262,8 @@ export const isGear = item => kindOf(item) === "gear";
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
 /** `shopOf`/`stockOf`, but never throwing: a trade only reads config, and must survive data some other bug already left invalid. */
-const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
-const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
+export const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
+export const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
 
 /** Never traded, either direction, by any shop — the fixed exclusions shared by both `isVisible` and `dealtIn`. */
 function isFixedExcluded(item) {

@@ -14,9 +14,9 @@
  */
 
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
-import { shopFrom, stockFrom } from "./schema.mjs";
+import { SHOP_DEFAULTS, STOCK_DEFAULTS } from "./schema.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, lineTotalCp } from "./trade-plan.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isGearItem, isVisibleStock,
   matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
@@ -31,8 +31,17 @@ const TEMPLATES = `modules/${MODULE}/templates`;
  * sensibly; #110 replaces this with a read of the real setting.
  */
 const PLACEHOLDER_WORLD_RATES = Object.freeze({ sellsAt: 1, buysAt: 0.5 });
-/** #110 hasn't shipped a world stock-mode setting for the 2.0 window either; finite is the safer placeholder — a shop that looks unlimited by accident is a bigger surprise than one that looks limited. */
-const PLACEHOLDER_WORLD_INFINITE_STOCK = false;
+/** The world's stock mode: whether a line with no `stock.infinite` of its own never runs out. */
+const worldInfiniteStock = () => game.settings.get(MODULE, "stockMode") === "unlimited";
+
+/*
+ * Flags are read the trade engine's way (`safeShopOf`/`safeStockOf`): data some other bug or a
+ * hand edit left invalid mustn't stop the window opening. A broken shop config shows the
+ * defaults (the engine refuses its trades as shop-misconfigured); a broken shelf line isn't
+ * listed (the engine refuses it too).
+ */
+const shopConfigOf = actor => safeShopOf(actor) ?? SHOP_DEFAULTS;
+const stockConfigOf = item => (item ? safeStockOf(item) : null) ?? STOCK_DEFAULTS;
 
 /**
  * Refusals that rest on live data (the hours, the purse, the till). A GM refusal for one stays on
@@ -154,6 +163,23 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   _toggleDisabled() {}
 
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
+    // form, which has nothing to save.
+    const search = this.element?.querySelector(".buyer-search");
+    if (!search) return;
+    search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
+    search.addEventListener("input", () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      for (const entry of this.element.querySelectorAll(".buyer-picker .buyer-entry")) {
+        const name = entry.querySelector(".buyer-entry-name")?.textContent.toLocaleLowerCase() ?? "";
+        entry.hidden = !!query && !name.includes(query);
+      }
+    });
+  }
+
   /* -------------------------------------------------------------- tabs */
 
   /** @override */
@@ -174,7 +200,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const context = await super._prepareContext(options);
     const actor = this.document;
     const currencies = CONFIG.DND5E.currencies;
-    const config = shopFrom(actor.flags?.[MODULE]?.shop ?? {});
+    const config = shopConfigOf(actor);
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 
@@ -350,10 +376,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   #buyContext(actor, config, rates, currencies, buyer, open) {
     const shopItems = actor.items.map(i => i.toObject());
     const rows = shopItems
-      .map(data => ({ data, stock: stockFrom(data.flags?.[MODULE]?.stock ?? {}) }))
-      .filter(({ data, stock }) => isVisibleStock(data, stock, shopItems))
+      .map(data => ({ data, stock: safeStockOf(data) }))
+      .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems))
       .map(({ data, stock }) => {
-        const row = buyRow(data, stock, rates, null, currencies, PLACEHOLDER_WORLD_INFINITE_STOCK);
+        const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock());
         return {
           ...row,
           // A category the GM named is shown as they wrote it; buyRow's own fallback to
@@ -384,7 +410,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // way the Sell tab derives "till-short" below — not only after a round trip to the GM
     // confirms it (#102 will refuse it too, but the client already has enough to say so first).
     const traded = this._tradeState.buy;
-    const state = isSettled(traded) ? traded : !open ? "closed" : (totals.shortfallCp > 0 ? "cant-afford" : traded);
+    const state = isSettled(traded) ? traded : !open ? "closed" : !buyer ? "no-buyer"
+      : (totals.shortfallCp > 0 ? "cant-afford" : traded);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
@@ -392,6 +419,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shopTitle: titleParts(actor.name).title,
       sections,
       categories,
+      // For a buy refused as till-short: the till couldn't make change.
+      tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
       basket: this.#billOfSale(lines, totals, currencies, buyer),
       seal: {
         ...seal,
@@ -467,11 +496,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (kind === "sell") return { bundle: 1, available: this.#itemOf("sell", itemId)?.system?.quantity ?? 0, infinite: false };
     const item = this.#itemOf("buy", itemId);
     if (!item) return { bundle: 1, available: 0, infinite: false };
-    const stock = stockFrom(item.flags?.[MODULE]?.stock ?? {});
+    const stock = stockConfigOf(item);
     return {
       bundle: bundleFor(item, item),
       available: item.system?.quantity ?? 0,
-      infinite: stock.service || (stock.infinite ?? PLACEHOLDER_WORLD_INFINITE_STOCK)
+      infinite: stock.service || (stock.infinite ?? worldInfiniteStock())
     };
   }
 
@@ -482,7 +511,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isGearItem(i));
     const rows = items.map(item => {
       const line = matchingStockLine(item, shopItems);
-      const matched = stockFrom(line?.flags?.[MODULE]?.stock ?? {});
+      const matched = stockConfigOf(line);
       const hasContents = item.type === "container" && items.some(i => i.system?.container === item._id);
       const row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
       return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
@@ -496,7 +525,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const { lines, totals } = this.#bill("sell", purseCp, currencies);
     const tillShort = game.settings.get(MODULE, "merchantPurse") !== "unlimited" && totals.sumCp > tillCp;
     const traded = this._tradeState.sell;
-    const state = isSettled(traded) ? traded : !open ? "closed" : (tillShort ? "till-short" : traded);
+    const state = isSettled(traded) ? traded : !open ? "closed" : !buyer ? "no-buyer"
+      : (tillShort ? "till-short" : traded);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
@@ -543,7 +573,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   #pricedLines(kind, currencies) {
     const world = PLACEHOLDER_WORLD_RATES;
-    const config = shopFrom(this.document.flags?.[MODULE]?.shop ?? {});
+    const config = shopConfigOf(this.document);
     const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
     const lines = [];
     for (const [itemId, quantity] of this._baskets[kind]) {
@@ -553,7 +583,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // does (see trade-plan.mjs's `copyOf`), so its line reads the shop's matching shelf line
       // instead — the same rule #102 prices a sale by.
       const line = kind === "buy" ? item : matchingStockLine(item, shopItems);
-      const stock = stockFrom(line?.flags?.[MODULE]?.stock ?? {});
+      const stock = stockConfigOf(line);
       const rates = effectiveRates(world, config.terms, categoryFor(item, stock));
       const rate = kind === "buy" ? rates.sellsAt.rate : rates.buysAt.rate;
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
@@ -669,7 +699,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const SheetClass = Object.values(CONFIG.Actor.sheetClasses?.[this.document.type] ?? {})
       .find(s => s.id?.startsWith("dnd5e."))?.cls;
     if (!SheetClass) { ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.NoNpcSheet")); return; }
-    new SheetClass({ document: this.document }).render(true);
+    // An open copy is brought forward: a new one would share its id and open a duplicate window.
+    const open = Object.values(this.document.apps ?? {}).find(app => app instanceof SheetClass);
+    (open ?? new SheetClass({ document: this.document })).render(true);
   }
 
   /* -------------------------------------------------------------- registration */
@@ -685,6 +717,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // core's own re-render on a document update doesn't cover them.
     Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
     Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
+    // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
+    for (const hook of ["createItem", "updateItem", "deleteItem"]) {
+      Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));
+    }
   }
 
   /** Re-renders each open shop window `affected` picks, dropping a live refusal the change may have cleared. */
