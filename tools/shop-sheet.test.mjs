@@ -559,3 +559,31 @@ test("a GM with no character of their own buys as a player character, not the fi
   sheet._buyerUuid = null;
   return sheet._prepareContext({}).then(() => assert.equal(sheet._buyerUuid, pc.uuid));
 });
+
+test("a line the GM hides after it went on the bill leaves the bill too", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5 }), item("lamp", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  act(sheet, "addLine", { itemId: "lamp" });
+  shop.items.get("lamp").flags = { "merchant-presets": { stock: { hidden: true } } };
+  const { buy } = await sheet._prepareContext({});
+  assert.deepEqual([...sheet._baskets.buy.keys()], ["rope"]);
+  assert.deepEqual(buy.basket.lines.map(l => l.itemId), ["rope"]);
+});
+
+test("a sale the shop has stopped taking leaves the bill", async () => {
+  const { sheet } = openShop({ buyerItems: [item("gem"), item("bread", { type: "consumable" })] });
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  act(sheet, "addLine", { itemId: "bread" });
+  sheet.document.flags["merchant-presets"].shop.wontBuy.types = ["consumable"];
+  await sheet._prepareContext({});
+  assert.deepEqual([...sheet._baskets.sell.keys()], ["gem"]);
+});
+
+test("a sale matching a broken shelf line reads as refused, as the engine refuses it", async () => {
+  const broken = item("gem", { flags: { "merchant-presets": { stock: { bundle: 0 } } } });
+  const { sheet } = openShop({ shopItems: [broken], buyerItems: [item("gem")] });
+  const { sell } = await sheet._prepareContext({});
+  assert.deepEqual(sell.willBuy.map(r => r.id), []);
+  assert.deepEqual(sell.wontBuy.map(r => r.id), ["gem"]);
+});
