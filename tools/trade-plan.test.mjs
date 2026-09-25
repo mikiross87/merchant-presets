@@ -452,6 +452,17 @@ test("a quantity past the per-line cap is an invalid request, before anything is
   assert.equal(planTrade(split, ctx).reason, "invalid-request");
 });
 
+test("a line on the default category is priced by its item type's category rule, both ways", () => {
+  // schema.mjs: category "" files an item under its item type.
+  const terms = { sellsAt: null, buysAt: null, categories: [{ category: "weapon", sellsAt: 1.5, buysAt: 0.25 }] };
+  const bought = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [dagger()], terms } }));
+  assert.equal(bought.plan.hook.totalCp, 300);   // 2gp x 1.5
+  assert.equal(bought.plan.hook.lines[0].layer, "category");
+  const owned = { ...dagger(), flags: {} };
+  const sold = planTrade(sellRequest("Dagger000000001", 1), context({ shop: { terms }, buyer: { items: [owned] } }));
+  assert.equal(sold.plan.hook.totalCp, 50);      // 2gp x 0.25, a weapon the shop never stocked
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
