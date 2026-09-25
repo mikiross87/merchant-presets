@@ -769,3 +769,15 @@ test("the stamp keeps the date the trade sealed, not the clock's latest", async 
     globalThis.game.time.worldTime = 0;
   }
 });
+
+test("the stamp stays when a shelf change trims a line the sealed trade didn't carry", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5 }), item("shield", { quantity: 3 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  for (let i = 0; i < 3; i++) act(sheet, "addLine", { itemId: "shield" });
+  api.trade = async () => ({ status: "sealed", lines: [{ itemId: "rope", quantity: 1, lineTotalCp: 100 }] });
+  await act(sheet, "seal");
+  shop.items.get("shield").system.quantity = 1;
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "sealed");
+  assert.deepEqual(buy.basket.lines.map(l => l.itemId), ["rope"]);
+});
