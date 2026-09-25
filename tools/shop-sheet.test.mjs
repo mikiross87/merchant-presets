@@ -149,3 +149,18 @@ test("stock-changed strikes the lines whose price moved", async () => {
   assert.equal(sheet._tradeState.buy, "stock-changed");
   assert.deepEqual([...sheet._struck.buy], ["lamp"]);
 });
+
+test("a retry after an unconfirmed trade resends the same tradeId, so it can't land twice", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  const ids = [];
+  let n = 0;
+  globalThis.foundry.utils.randomID = () => `trade${String(++n).padStart(11, "0")}`;
+  api.trade = async request => { ids.push(request.tradeId); return { status: "unconfirmed" }; };
+  await act(sheet, "seal");
+  await act(sheet, "seal");
+  act(sheet, "stepLine", { itemId: "rope", delta: "1" });
+  await act(sheet, "seal");
+  assert.equal(ids[0], ids[1]);
+  assert.notEqual(ids[1], ids[2]);
+});
