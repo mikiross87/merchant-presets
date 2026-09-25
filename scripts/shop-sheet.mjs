@@ -34,6 +34,16 @@ const PLACEHOLDER_WORLD_RATES = Object.freeze({ sellsAt: 1, buysAt: 0.5 });
 /** #110 hasn't shipped a world stock-mode setting for the 2.0 window either; finite is the safer placeholder — a shop that looks unlimited by accident is a bigger surprise than one that looks limited. */
 const PLACEHOLDER_WORLD_INFINITE_STOCK = false;
 
+/**
+ * Refusals the window works out for itself from live data (the hours, the purse, the till). A GM
+ * refusal for one of these isn't kept as the bill's state: the next render shows it while it
+ * holds, and drops it once the cause has gone (the shop reopens, the buyer is given coin).
+ */
+const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
+
+/** Whether a seal is out or its bill is stamped: either way the live checks no longer apply. */
+const isSettled = state => state === "sealing" || state === "sealed";
+
 /** `coinBreakdown`'s own array, read back as plain text — "30 gp", "1 gp 9 sp 2 cp" — for the button labels and notices #101/#98's coin data doesn't otherwise have a string form for. */
 function coinsText(coins) {
   return coins.length ? coins.map(c => `${c.count} ${c.abbreviation}`).join(" ") : "0";
@@ -124,7 +134,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._baskets = { buy: new Map(), sell: new Map() };
     /** One state per kind, so a Buy refusal never bleeds into the Sell tab's own seal button: "idle" | "sealing" | "sealed" | a `planTrade` refusal reason. */
     this._tradeState = { buy: "idle", sell: "idle" };
-    this._lastReceipt = { buy: null, sell: null };
+    /** Per kind, the bill a trade sealed (its priced lines, sum and receipt): shown under the stamp until the next edit, whatever the trade did to the live items and purses. */
+    this._sealed = { buy: null, sell: null };
     /** Per kind, the item ids a `stock-changed` refusal re-priced, struck on the bill until the basket changes. */
     this._struck = { buy: new Set(), sell: new Set() };
     /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): a retry of the same basket resends it, so the GM's side can't carry it out twice. */
@@ -319,6 +330,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static #onPickBuyer(_event, target) {
+    if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return;
     const previous = this._buyerUuid;
     this._buyerUuid = target.dataset.actorUuid;
     if (this._buyerUuid !== previous) {
@@ -364,13 +376,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (!section) { section = { category: row.category, categoryLabel: row.categoryLabel, rows: [] }; sections.push(section); }
       section.rows.push(row);
     }
-    const lines = this.#pricedLines("buy", currencies);
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
-    const totals = basketTotals(lines, purseCp, "buy");
+    const { lines, totals } = this.#bill("buy", purseCp, currencies);
     // A basket the purse can't cover reads as "cant-afford" the moment it goes over, the same
     // way the Sell tab derives "till-short" below — not only after a round trip to the GM
     // confirms it (#102 will refuse it too, but the client already has enough to say so first).
-    const state = !open ? "closed" : (totals.shortfallCp > 0 ? "cant-afford" : this._tradeState.buy);
+    const traded = this._tradeState.buy;
+    const state = isSettled(traded) ? traded : !open ? "closed" : (totals.shortfallCp > 0 ? "cant-afford" : traded);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
@@ -397,8 +409,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static #onAddLine(_event, target) {
     const kind = this.tabGroups.primary;
+    // The bill that's out is the one the answer settles; changing it mid-flight would stamp a
+    // different bill, or lose the id a retry needs.
+    if (this._tradeState[kind] === "sealing") return;
     const itemId = target.dataset.itemId;
-    const basket = this.#openBasket(kind);
+    const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
     const next = stepQuantity(current, 1, this.#shelfOf(kind, itemId));
     if (next > 0) basket.set(itemId, next);
@@ -410,7 +425,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     const itemId = target.dataset.itemId;
     const delta = Number(target.dataset.delta);
-    const basket = this.#openBasket(kind);
+    if (this._tradeState[kind] === "sealing") return;
+    const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
     // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts; a
     // sale steps one at a time, up to what the seller owns.
@@ -421,18 +437,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
-  /** The basket to edit: a sealed bill's lines are already traded, so an edit starts a new bill. */
-  #openBasket(kind) {
-    if (this._tradeState[kind] === "sealed") {
-      this._baskets[kind].clear();
-      this._lastReceipt[kind] = null;
-    }
-    return this._baskets[kind];
-  }
-
-  /** A basket edit clears the last trade's outcome, and the lines it struck with it. */
+  /** A basket edit starts a new bill: it clears the last trade's outcome, its stamped bill and the lines it struck. */
   #basketChanged(kind) {
     this._tradeState[kind] = "idle";
+    this._sealed[kind] = null;
     this._struck[kind].clear();
     this._tradeId[kind] = null;
   }
@@ -479,12 +487,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
-    const lines = this.#pricedLines("sell", currencies);
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
-    // Purse-after is the seller's own purse plus the sale; the till only decides till-short.
+    // Purse-after is the seller's own purse plus the sale; the till only decides till-short, and
+    // not at all under unlimited merchant coin (the trade engine's bottomless till).
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
-    const totals = basketTotals(lines, purseCp, "sell");
-    const state = !open ? "closed" : (totals.sumCp > tillCp ? "till-short" : this._tradeState.sell);
+    const { lines, totals } = this.#bill("sell", purseCp, currencies);
+    const tillShort = game.settings.get(MODULE, "merchantPurse") !== "unlimited" && totals.sumCp > tillCp;
+    const traded = this._tradeState.sell;
+    const state = isSettled(traded) ? traded : !open ? "closed" : (tillShort ? "till-short" : traded);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     return {
@@ -508,6 +518,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   /* -------------------------------------------------------------- basket / bill of sale */
+
+  /**
+   * The bill a tab shows, and its totals against `purseCp` (the buyer's or seller's own purse):
+   * the stamped bill after a seal, since the trade has already moved its items and coin (the
+   * purse shown is then simply what's in it now), else the live basket.
+   */
+  #bill(kind, purseCp, currencies) {
+    const sealed = this._sealed[kind];
+    if (sealed) return { lines: sealed.lines, totals: { sumCp: sealed.sumCp, afterCp: purseCp, shortfallCp: 0 } };
+    const lines = this.#pricedLines(kind, currencies);
+    return { lines, totals: basketTotals(lines, purseCp, kind) };
+  }
 
   /**
    * The basket's own lines, already priced — `quantity`, the sticker price for one bundle
@@ -605,7 +627,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (result.status === "sealed" || result.status === "refused") this._tradeId[kind] = null;
       if (result.status === "sealed") {
         this._tradeState[kind] = "sealed";
-        this._lastReceipt[kind] = result.receipt ?? null;
+        this._sealed[kind] = { lines, sumCp: basketTotals(lines, 0, kind).sumCp, receipt: result.receipt ?? null };
+        this._baskets[kind].clear();
+      } else if (result.status === "refused" && LIVE_REFUSALS.includes(result.reason)) {
+        this._tradeState[kind] = "idle";
+        ui.notifications.warn(game.i18n.localize(sealState(result.reason, true).labelKey));
       } else if (result.status === "refused") {
         this._tradeState[kind] = result.reason;
         // The bill re-prices from the live shop on the render below; strike what moved so the
@@ -632,7 +658,6 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     this._baskets[kind].clear();
     this.#basketChanged(kind);
-    this._lastReceipt[kind] = null;
     this.render({ parts: ["body"] });
   }
 
