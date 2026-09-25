@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { effectiveRates, itemPriceCp, pay, totalCp } from "../scripts/pricing.mjs";
+import { effectiveRates, itemPriceCp, pay, payExact, totalCp } from "../scripts/pricing.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape: conversion is coins per reference unit (gp). */
 const DND5E_CURRENCIES = {
@@ -228,4 +228,20 @@ test("a homebrew currency purse pays and makes change off its own config", () =>
   assert.equal(result.ok, true);
   assert.equal(result.changeCp, 5);
   assert.equal(result.purse.shard, 5);
+});
+
+/* ---------------------------------------------------------------------- payExact */
+
+test("payExact pays precisely by breaking its own coins, no help needed from the payee", () => {
+  const purse = { pp: 0, gp: 1, ep: 0, sp: 0, cp: 0 };   // only a gold piece, owes 95cp
+  const result = payExact(purse, 95, DND5E_CURRENCIES);
+  assert.equal(result.ok, true);
+  assert.equal(totalCp(result.given, DND5E_CURRENCIES), 95);   // exact, no overpay
+  assert.equal(totalCp(result.remaining, DND5E_CURRENCIES), 5);   // 100 - 95, kept as the leftover
+});
+
+test("payExact refuses only when its own total is short", () => {
+  const purse = { pp: 0, gp: 0, ep: 0, sp: 9, cp: 0 };   // 90cp
+  assert.deepEqual(payExact(purse, 91, DND5E_CURRENCIES), { ok: false });
+  assert.equal(payExact(purse, 90, DND5E_CURRENCIES).ok, true);
 });
