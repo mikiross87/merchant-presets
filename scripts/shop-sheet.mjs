@@ -458,11 +458,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
-          priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : []
+          priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : []
         };
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
-    this.#keepOffered("buy", new Set(rows.map(r => r.id)));
+    this.#keepOffered("buy", new Map(rows.filter(r => !r.unpriced && !r.worthless).map(r => [r.id, r.minQuantity])));
     if (this._activeCategory !== "all" && !rows.some(r => r.category === this._activeCategory)) this._activeCategory = "all";
     const categories = groupCategories(rows).map(c => ({
       ...c,
@@ -552,13 +552,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /**
    * Drops basket lines the tab no longer offers: the GM hid or delisted one, or the shop stopped
-   * buying it. The engine would refuse them anyway, and a hidden item's name shouldn't stay on the
-   * player's bill. Left alone while a seal is out or its stamp is showing.
+   * buying it, or a trim left it below the fewest worth a coin (`offered` maps each line still on
+   * offer to that minimum). The engine would refuse them anyway, and a hidden item's name shouldn't
+   * stay on the player's bill. Left alone while a seal is out or its stamp is showing.
    */
   #keepOffered(kind, offered) {
     if (isSettled(this._tradeState[kind])) return;
     const basket = this._baskets[kind];
-    const gone = [...basket.keys()].filter(id => !offered.has(id));
+    const gone = [...basket].filter(([id, quantity]) => !(quantity >= offered.get(id))).map(([id]) => id);
     for (const id of gone) basket.delete(id);
     if (gone.length) this.#shelfChanged(kind);
   }
@@ -672,11 +673,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
-      return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
+      return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
-    this.#keepOffered("sell", new Set(willBuy.map(r => r.id)));
+    this.#keepOffered("sell", new Map(willBuy.map(r => [r.id, r.minQuantity ?? 1])));
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
     // Purse-after is the seller's own purse plus the sale; the till only decides till-short, and
     // not at all under unlimited merchant coin (the trade engine's bottomless till).
@@ -763,6 +764,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
         bundle,
         unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        // A bundle that floors to nothing has no sticker worth showing beside a real line total.
+        showUnit: (bundleCp ?? 0) > 0 || lineTotal === 0,
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
     }

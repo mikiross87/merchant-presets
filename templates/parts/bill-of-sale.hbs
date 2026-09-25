@@ -25,7 +25,7 @@
             <span class="bill-line-total">{{> coins this.lineTotalCoins}}</span>
           </div>
           <div class="bill-line-bottom">
-            <span class="bill-line-unit">{{> coins this.unitCoins}} {{#if (gt this.bundle 1)}}{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}</span>
+            <span class="bill-line-unit">{{#if this.showUnit}}{{> coins this.unitCoins}} {{#if (gt this.bundle 1)}}{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}</span>
             {{#unless (or (eq ../seal.state "sealing") (eq ../seal.state "sealed"))}}
               <span class="bill-stepper">
                 <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>

@@ -77,6 +77,16 @@ function* buyableQuantities(bundle, remainder, most) {
   }
 }
 
+/**
+ * A row's price when one bundle floors to nothing but `minQuantity` of it doesn't: "2 for 1 cp",
+ * rather than a sticker that reads Free. `{priceFor: null, priceForCp: null}` otherwise.
+ */
+function cheapestLot(item, rate, bundle, bundleCp, minQuantity, currencies) {
+  if (bundleCp !== 0 || !minQuantity) return { priceFor: null, priceForCp: null };
+  const cp = lineTotalCp(item, rate, bundle, minQuantity, currencies);
+  return cp > 0 ? { priceFor: minQuantity, priceForCp: cp } : { priceFor: null, priceForCp: null };
+}
+
 /** How many bundles a buy row counts up to while looking for the fewest worth a coin. */
 const MAX_BUNDLES_TO_A_COIN = 1000;
 
@@ -302,6 +312,7 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
     if (worth) minQuantity = worth;
     else worthless = true;
   }
+  const priceFor = cheapestLot(item, sellsAt.rate, bundle, bundleCp, worthless ? null : minQuantity, currencies);
   return {
     id: item._id ?? item.id,
     img: item.img,
@@ -314,6 +325,7 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
     unpriced,
     worthless,
     minQuantity,
+    ...priceFor,
     bundle,
     tag: unpriced ? { kind: null, text: null } : rateTag(sellsAt, rates.chipSellsAt)
   };
@@ -382,7 +394,10 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies,
   let minQuantity = 1;
   const lineBundle = bundle ?? (matchedStock.bundle || 1);
   while (priced && minQuantity < base.owned && lineTotalCp(item, buysAt.rate, lineBundle, minQuantity, currencies) === 0) minQuantity++;
-  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity, bundle: lineBundle };
+  return {
+    ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity, bundle: lineBundle,
+    ...cheapestLot(item, buysAt.rate, lineBundle, bundleCp, minQuantity, currencies)
+  };
 }
 
 /* -------------------------------------------------------------- the buy stepper */
