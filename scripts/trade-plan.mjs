@@ -336,9 +336,17 @@ function statedBundle(item) {
   return flags?.stock?.bundle ?? flags?.bundle;
 }
 
-/** A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite". */
+/**
+ * A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite".
+ * Endless in gold, silver and copper only — paying largest-first from endless electrum and
+ * platinum would hand a player 1pp 1gp 1ep for 11.5gp. Any other currency config keeps every
+ * denomination.
+ */
 function bottomlessTill(currencies) {
-  return Object.fromEntries(Object.keys(currencies).map(d => [d, Number.MAX_SAFE_INTEGER]));
+  const all = Object.keys(currencies);
+  const everyday = all.filter(d => ["gp", "sp", "cp"].includes(d));
+  const endless = everyday.length ? everyday : all;
+  return Object.fromEntries(all.map(d => [d, endless.includes(d) ? Number.MAX_SAFE_INTEGER : 0]));
 }
 
 /**
@@ -482,10 +490,14 @@ function landContentsOf(sourceId, destId, shopItems, removedIds, newId, targetLa
   }
 }
 
-/** Every item on `buyer`, directly or indirectly, whose `system.container` chain reaches `containerId`. */
-function contentsOf(containerId, items) {
-  const direct = items.filter(i => (i.system?.container ?? null) === containerId);
-  return direct.flatMap(i => [i, ...contentsOf(idOf(i), items)]);
+/**
+ * Every item on `buyer`, directly or indirectly, whose `system.container` chain reaches
+ * `containerId`. `seen` stops a cycle (containers holding each other: bad data, never a throw).
+ */
+function contentsOf(containerId, items, seen = new Set([containerId])) {
+  const direct = items.filter(i => (i.system?.container ?? null) === containerId && !seen.has(idOf(i)));
+  for (const i of direct) seen.add(idOf(i));
+  return direct.flatMap(i => [i, ...contentsOf(idOf(i), items, seen)]);
 }
 
 /**
