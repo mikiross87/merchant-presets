@@ -6,7 +6,7 @@
       <img src="{{icon}}" alt="" /><b>{{count}}</b>
     </span>
   {{else}}
-    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
+    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
   {{/each}}
 {{/inline}}
 <aside class="bill-of-sale trade-state-{{seal.state}}">
@@ -57,7 +57,7 @@
       {{else if (eq seal.state "stock-changed")}}
         <p class="bill-notice is-warning"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.StockChangedNotice"}}</p>
       {{/if}}
-      {{#if basket.buyerName}}
+      {{#if (and basket.buyerName (not seal.disabled))}}
         <p class="bill-purse-after">{{localize "MERCHANT_PRESETS.Shop.Bill.PurseAfter" name=basket.buyerName}}</p>
         <div class="bill-purse">{{> coins basket.afterCoins}}</div>
       {{/if}}

@@ -10,7 +10,7 @@
       <b>{{count}}</b>
     </span>
   {{else}}
-    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
+    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
   {{/each}}
 {{/inline}}
 
@@ -49,11 +49,11 @@
   <p class="term-line"><i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
     {{localize "MERCHANT_PRESETS.Shop.Terms.SellsAt"}} <b>{{header.terms.sellsAtLabel}}</b>
   </p>
-  <p class="term-note">A 15 gp item sells here for {{> coins header.terms.exampleSell}}.</p>
+  <p class="term-note">{{localize "MERCHANT_PRESETS.Shop.Terms.ExampleSells"}} {{> coins header.terms.exampleSell}}.</p>
   <p class="term-line"><i class="fa-solid fa-arrow-down-left" aria-hidden="true"></i>
     {{localize "MERCHANT_PRESETS.Shop.Terms.BuysAt"}} <b>{{header.terms.buysAtLabel}}</b>
   </p>
-  <p class="term-note">A 15 gp item buys back here for {{> coins header.terms.exampleBuy}}.</p>
+  <p class="term-note">{{localize "MERCHANT_PRESETS.Shop.Terms.ExampleBuys"}} {{> coins header.terms.exampleBuy}}.</p>
   {{#if header.terms.hasWontBuy}}
     <p class="term-line"><i class="fa-solid fa-ban" aria-hidden="true"></i>
       {{localize "MERCHANT_PRESETS.Shop.Terms.WontBuy"}}
@@ -90,7 +90,7 @@
   {{#each tabs}}
     <button type="button" class="tab-link {{cssClass}}" data-action="tab" data-group="primary" data-tab="{{id}}">
       <i class="{{icon}}" aria-hidden="true"></i> {{localize label}}
-      {{#if gm}}<span class="badge-gm">GM</span>{{/if}}
+      {{#if gm}}<span class="badge-gm">{{localize "MERCHANT_PRESETS.Shop.Tabs.GmBadge"}}</span>{{/if}}
     </button>
   {{/each}}
 </nav>

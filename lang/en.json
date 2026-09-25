@@ -28,6 +28,7 @@
       "NoPurse": "no purse",
       "Tabs": {
         "buy": "Buy",
+        "GmBadge": "GM",
         "sell": "Sell",
         "settings": "Settings"
       },
@@ -47,6 +48,7 @@
         "Service": "Service"
       },
       "Worthless": "Worthless",
+      "Free": "Free",
       "Buy": {
         "AddToBill": "Add to the bill of sale",
         "Empty": "This shop has nothing left to show here."
@@ -120,6 +122,8 @@
         "HalfValue": "half value",
         "SellExample": "A {price} item sells here for {sellPrice}",
         "BuyExample": "and buys back for {buyPrice}.",
+        "ExampleSells": "A 15 gp item sells here for",
+        "ExampleBuys": "A 15 gp item buys back here for",
         "WontBuy": "Won't buy",
         "Note": "Set by the GM on the shop. Prices below already include these terms."
       },

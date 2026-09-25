@@ -157,7 +157,7 @@
 
 .shop-sheet .coin img { width: 16px; height: 16px; }
 .shop-sheet .coin b { font-size: 0.95rem; }
-.shop-sheet .coin-free { font-style: italic; opacity: 0.75; font-family: var(--dnd5e-font-roboto); }
+.shop-sheet .coin-free { font-style: italic; color: var(--mp-success); font-family: var(--dnd5e-font-roboto); }
 
 /* -------------------------------------------------------------- popovers */
 

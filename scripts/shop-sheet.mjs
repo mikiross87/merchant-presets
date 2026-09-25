@@ -65,6 +65,17 @@ function purseCoins(amountCp, currencies) {
   return coins.map(c => ({ ...c, aria: coinAriaLabel(c) }));
 }
 
+/**
+ * The coins a character actually holds, denomination by denomination as their sheet shows them,
+ * not the total re-split largest-first (150 gp and 30 sp is not "15 pp 3 gp"). Empty reads as 0.
+ */
+function heldCoins(currency, currencies) {
+  const coins = Object.entries(currencies)
+    .filter(([denomination]) => (currency?.[denomination] ?? 0) > 0)
+    .map(([denomination, c]) => ({ denomination, count: currency[denomination], abbreviation: c.abbreviation ?? denomination, icon: c.icon, label: c.label }));
+  return coins.length ? coins.map(c => ({ ...c, aria: coinAriaLabel(c) })) : purseCoins(0, currencies);
+}
+
 /** `coinBreakdown`'s own array, read back as plain text — "30 gp", "1 gp 9 sp 2 cp" — for the button labels and notices #101/#98's coin data doesn't otherwise have a string form for. */
 function coinsText(coins) {
   return coins.length ? coins.map(c => `${c.count} ${c.abbreviation}`).join(" ") : "0";
@@ -269,7 +280,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       header: this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies),
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
-      buyerPurse: buyer ? purseCoins(totalCp(buyer.system.currency ?? {}, currencies), currencies) : [],
+      buyerPurse: buyer ? heldCoins(buyer.system.currency, currencies) : [],
       currencies,
       kind,
       // Every tab's content is built on every render, not only the active one: core's own
@@ -403,7 +414,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       name: actor.name,
       img: actor.img,
       subtitle: actorSubtitle(actor),
-      purse: coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+      purse: heldCoins(actor.system.currency, currencies),
       hasPurse: totalCp(actor.system.currency ?? {}, currencies) > 0,
       current: actor.uuid === buyer?.uuid
     });
@@ -491,7 +502,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
-  static #onAddLine(_event, target) {
+  static async #onAddLine(_event, target) {
     const kind = this.tabGroups.primary;
     // The bill that's out is the one the answer settles; changing it mid-flight would stamp a
     // different bill, or lose the id a retry needs.
@@ -499,6 +510,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const itemId = target.dataset.itemId;
     const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
+    // #103: selling something worn or packed away asks first, once, as it goes on the bill.
+    const question = kind === "sell" && !current ? this.#saleQuestion(itemId) : null;
+    if (question && !(await this.#confirm(question))) return;
     const next = this.#nextQuantity(kind, itemId, current, 1);
     // A line already at its most changes nothing, so the bill (and its stamp or strikes) stands.
     if (next === current) return;
@@ -535,6 +549,23 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const gone = [...basket.keys()].filter(id => !offered.has(id));
     for (const id of gone) basket.delete(id);
     if (gone.length) this.#basketChanged(kind);
+  }
+
+  /** What to ask before selling `itemId`: only an equipped or contained item needs asking; otherwise null. */
+  #saleQuestion(itemId) {
+    const item = this.#itemOf("sell", itemId);
+    const key = item?.system?.equipped ? "ConfirmEquipped" : item?.system?.container ? "ConfirmContained" : null;
+    if (!key) return null;
+    const name = foundry.utils.escapeHTML?.(item.name) ?? item.name;
+    return game.i18n.localize(`MERCHANT_PRESETS.Shop.Sell.${key}`, { name });
+  }
+
+  /** Asks the seller `question`; resolves true for yes. */
+  #confirm(question) {
+    return foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.ConfirmTitle") },
+      content: `<p>${question}</p>`
+    });
   }
 
   /** A line's quantity after one step; a sale also skips below the fewest worth a coin, both ways. */
