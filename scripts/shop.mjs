@@ -92,6 +92,29 @@ export function planWorldTable(tables, src, version) {
   return { existing, name: taken ? `${src.name} (v${version})` : src.name, stamp };
 }
 
+/**
+ * A per-result quantity map (`{resultId: formula}`, as both Item Piles'
+ * `tablesForPopulate[0].items` and a shop's own `restock.quantities` (#98)
+ * are shaped), re-keyed from `from`'s result ids to `to`'s — a fresh import
+ * gives a RollTable's embedded results new ids, so a map keyed by the old
+ * ones is stale the moment wiring repoints the table at its world copy.
+ * Matched by what each result points at (`documentUuid`), not position or
+ * order. A result `to` has that `from` doesn't (the table changed since,
+ * say) gets the same "1" a stock roll defaults an unrecognised result to.
+ *
+ * @param {Iterable<{id: string, documentUuid: string}>} from
+ * @param {Iterable<{id: string, documentUuid: string}>} to
+ * @param {Record<string, string>} [quantities]  Keyed by `from`'s ids.
+ * @returns {Record<string, string>} Keyed by `to`'s ids.
+ */
+export function remapQuantities(from, to, quantities) {
+  const byTarget = new Map();
+  for (const r of from) byTarget.set(r.documentUuid, quantities?.[r.id] ?? "1");
+  const out = {};
+  for (const r of to) out[r.id] = byTarget.get(r.documentUuid) ?? "1";
+  return out;
+}
+
 /* -------------------------------------------------------- setting up a shop */
 
 /** Settlement sizes, in stock-band order. */
@@ -101,7 +124,9 @@ export const TIERS = ["Village", "Town", "City"];
 export const PHYSICAL = new Set(["weapon", "equipment", "consumable", "tool", "loot", "container"]);
 
 const TIER_IN_NAME = /^(.*) \((Village|Town|City)\)$/;
-const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
+/** Whether `item` is the shopkeeper's own kit rather than stock. Also used
+ *  by the 1.x → 2.0 migration (#100) to keep gear out of `flags.merchant-presets.stock`. */
+export const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
 
 /**
  * The shops a GM can choose from, read from the merchants compendium index.
@@ -138,11 +163,13 @@ export function tierOf(actor) {
  * an NPC set up as one (`shop`). Narrower than `isPreset`, which also counts a
  * bare pointer at our stock table — such an actor has no gear tagged yet, and
  * treating it as a shop would offer nothing to keep and delete everything.
+ * What the 1.x → 2.0 migration (#100) walks the world for, since `isPreset`'s
+ * bare pointer has no Item Piles data yet to migrate.
  *
  * @param {object} actor
  * @returns {boolean}
  */
-function isShop(actor) {
+export function isShop(actor) {
   const flags = actor?.flags?.["merchant-presets"];
   return Boolean(flags?.profile || flags?.shop);
 }
@@ -174,10 +201,17 @@ export function keepableItems(actor) {
  * @param {object} source          The chosen merchant's data, with its `uuid`.
  * @param {object} actor           The NPC's data, items included.
  * @param {Iterable<string>} keepIds  Ids of the physical items ticked to keep.
+ * @param {object} sourceShop      The chosen merchant's own resolved
+ *   `flags.merchant-presets.shop` (#98) — its own current config when it has
+ *   one (every 2.0 pack merchant, after #99), or a caller-derived fallback
+ *   otherwise (`deriveShop`, #100 — kept out of this Foundry-free module to
+ *   avoid a circular import with migrate.mjs). Copied wholesale, with only
+ *   `source` and `tier` overridden: a shop set up this way is the chosen
+ *   merchant in every other respect (#119 fix 3).
  * @returns {{deletes: string[], updates: object[], pileData: object, moduleFlags: object,
  *   currency: object, creates: object[]}}
  */
-export function planShop(source, actor, keepIds) {
+export function planShop(source, actor, keepIds, sourceShop) {
   const keep = new Set(keepIds);
   const shop = isShop(actor);
   const items = actor.items ?? [];
@@ -202,7 +236,7 @@ export function planShop(source, actor, keepIds) {
     purse: from.purse ?? null,
     itemFlags: structuredClone(from.itemFlags ?? null),
     containers: structuredClone(from.containers ?? null),
-    shop: { source: source.uuid, tier: tierOf(source) }
+    shop: { ...structuredClone(sourceShop), source: source.uuid, tier: tierOf(source) }
   };
 
   return {
