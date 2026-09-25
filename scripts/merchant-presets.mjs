@@ -1090,8 +1090,9 @@ async function migrateShop(actor) {
   if (!definitelyNeedsMigration && !needsMigration(data, NATIVE_SHOP, tokens)) return false;
 
   const packShop = await resolvePackShop(data);
-  const { update, shopError } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
+  const { update, shopError, warnings } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
+  for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
   // A 1.x merchant sitting in a world compendium or an Adventure only
   // proves "this world is upgrading from 1.x" once it's actually migrated,

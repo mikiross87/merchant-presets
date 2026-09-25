@@ -205,8 +205,11 @@ function pileData(actor) {
 }
 
 /**
- * `terms.categories` from `itemTypePriceModifiers`' custom-category
- * overrides (Valuables, or a GM's own). The schema rejects two entries
+ * `terms.categories` from `itemTypePriceModifiers`' overrides: a custom
+ * category's (Valuables, or a GM's own) under its own name, and an item
+ * type's under the type, which is where a stock line on the default
+ * category files (schema.mjs: `""` files it under its item type). An entry
+ * without `override` set never applied in Item Piles either. The schema rejects two entries
  * naming the same category, but Item Piles enforces no such thing; if a
  * GM's data ever carries a repeat, the later entry wins, the way saving
  * Item Piles' own settings form — which always writes the whole array —
@@ -215,8 +218,9 @@ function pileData(actor) {
 function categoriesFrom(modifiers) {
   const byCategory = new Map();
   for (const m of modifiers ?? []) {
-    if (m?.type === "custom" && m.override && m.category) {
-      byCategory.set(m.category, { category: m.category, sellsAt: m.buyPriceModifier, buysAt: m.sellPriceModifier });
+    const category = m?.type === "custom" ? m.category : m?.type;
+    if (m?.override && category) {
+      byCategory.set(category, { category, sellsAt: m.buyPriceModifier, buysAt: m.sellPriceModifier });
     }
   }
   return [...byCategory.values()];
@@ -513,12 +517,15 @@ function errorsAt(errors, path) {
  *   at roll time, not zero.
  *
  * @param {object} shop
- * @returns {{shop: object, ok: boolean, errors: string[]}} `ok`: whether
- *   `shop` (repaired or not) now validates.
+ * @returns {{shop: object, ok: boolean, errors: string[], repaired: string[]}}
+ *   `ok`: whether `shop` (repaired or not) now validates. `repaired`: the
+ *   first pass's errors — what was replaced or dropped — for the caller to
+ *   warn about.
  */
 function repairShop(shop) {
   let { ok, errors } = validateShop(shop);
-  if (ok) return { shop, ok, errors };
+  if (ok) return { shop, ok, errors, repaired: [] };
+  const firstPass = errors;
 
   const repaired = structuredClone(shop);
   if (errorsAt(errors, "terms.sellsAt")) repaired.terms.sellsAt = null;
@@ -535,7 +542,7 @@ function repairShop(shop) {
   }
 
   ({ ok, errors } = validateShop(repaired));
-  return { shop: repaired, ok, errors };
+  return { shop: repaired, ok, errors, repaired: firstPass };
 }
 
 /** `v` as a boolean when it's an unambiguous stand-in for one —
@@ -626,22 +633,32 @@ export function planOwnership(actor, hasTokenOnScene) {
  * @param {object} [options.packShop]         See `deriveShop`.
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
  * @param {boolean} [options.nativeShop]      Defaults to `NATIVE_SHOP`.
- * @returns {{update: object|null, shopError: string|null}} `update`: `null`
+ * @returns {{update: object|null, shopError: string|null, warnings: string[]}} `update`: `null`
  *   if there's nothing to write. `shopError`: set, and the shop key left out
  *   of `update`, when the derived shop config is still invalid after
  *   `repairShop` — nothing is stamped current, so it's retried, unrepaired,
  *   on every later pass rather than silently stuck on a broken config; the
- *   caller logs it.
+ *   caller logs it. `warnings`: Item Piles settings the shop config can't
+ *   carry — a value `repairShop` replaced, a `system.type.value` refusal
+ *   other than the fixed `natural` — for the caller to warn about, since
+ *   once the shop is current its Item Piles data is never read again.
  */
 export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP } = {}) {
-  if (!needsMigration(actor, nativeShop)) return { update: null, shopError: null };
+  if (!needsMigration(actor, nativeShop)) return { update: null, shopError: null, warnings: [] };
   const update = {};
   let shopError = null;
+  const warnings = [];
 
   if (!hasCurrentShop(actor)) {
-    const { shop, ok, errors } = repairShop(deriveShop(actor, packShop));
+    const { shop, ok, errors, repaired } = repairShop(deriveShop(actor, packShop));
     if (ok) update["flags.merchant-presets.shop"] = shop;
     else shopError = `Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`;
+    for (const e of repaired) warnings.push(`"${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
+    const subtypes = valuesOn(pileData(actor).overrideItemFilters, "system.type.value");
+    for (const t of valuesOn(DND5E_ITEM_FILTERS, "system.type.value")) subtypes.delete(t);
+    if (subtypes.size) {
+      warnings.push(`"${actor.name}": Item Piles refusal by item subtype not carried over: ${[...subtypes].join(", ")}`);
+    }
   }
 
   if (nativeShop) {
@@ -657,7 +674,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (ownership !== null) update["ownership.default"] = ownership;
   }
 
-  return { update: Object.keys(update).length ? update : null, shopError };
+  return { update: Object.keys(update).length ? update : null, shopError, warnings };
 }
 
 /**

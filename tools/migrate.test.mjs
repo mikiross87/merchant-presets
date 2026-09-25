@@ -325,7 +325,7 @@ test("every real stock line on a shipped merchant migrates to a valid stock conf
 test("a non-module Item Piles merchant is left alone", () => {
   const theirs = { flags: { "item-piles": { data: { enabled: true, type: "merchant" } } } };
   assert.equal(needsMigration(theirs), false);
-  assert.deepEqual(planActorUpdate(theirs), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(theirs), { update: null, shopError: null, warnings: [] });
   assert.deepEqual(planItemUpdates(theirs), { updates: [], errors: [] });
 });
 
@@ -388,7 +388,7 @@ test("needsMigration stays true when the shop half landed but items still lack .
   // Nothing left for the actor-level update — the shop's current, nativeShop's
   // off — but planItemUpdates independently still has work, and migrateShop
   // (scripts/merchant-presets.mjs) calls it regardless of planActorUpdate's result.
-  assert.deepEqual(planActorUpdate(shopOnly, {}), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(shopOnly, {}), { update: null, shopError: null, warnings: [] });
   assert.ok(planItemUpdates(shopOnly).updates.length > 0);
 });
 
@@ -468,7 +468,7 @@ test("planActorUpdate is idempotent (nativeShop off): applying its own plan leav
   const { update: first } = planActorUpdate(store, { hasTokenOnScene: true });
   const migrated = withItemsMigrated(applied(store, first));
   assert.equal(needsMigration(migrated), false);
-  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true }), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true }), { update: null, shopError: null, warnings: [] });
 });
 
 test("planActorUpdate is idempotent (nativeShop on): applying its own plan leaves nothing to migrate", () => {
@@ -476,7 +476,7 @@ test("planActorUpdate is idempotent (nativeShop on): applying its own plan leave
   const { update: first } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
   const migrated = withItemsMigrated(applied(store, first));
   assert.equal(needsMigration(migrated, true), false);
-  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: true }), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: true }), { update: null, shopError: null, warnings: [] });
 });
 
 test("Item Piles left on but shop already current: only the switch-off is planned", () => {
@@ -499,7 +499,7 @@ test("a data-migrated shop is picked up again once nativeShop flips on", () => {
   // Not re-opened while the cut-over is still off, however many times it runs.
   assert.equal(needsMigration(dataOnly), false);
   assert.equal(needsMigration(dataOnly, false), false);
-  assert.deepEqual(planActorUpdate(dataOnly, {}), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(dataOnly, {}), { update: null, shopError: null, warnings: [] });
 
   // Flip NATIVE_SHOP on (#104): the same shop, still Item Piles' own merchant
   // underneath, is picked up again to finish the cut-over — no version bump,
@@ -731,7 +731,7 @@ test("a 2.0 'Set up as shop' NPC is never treated as a 1.x shop needing migratio
 
   assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
   assert.equal(needsMigration(npc), false);
-  assert.deepEqual(planActorUpdate(npc, {}), { update: null, shopError: null });
+  assert.deepEqual(planActorUpdate(npc, {}), { update: null, shopError: null, warnings: [] });
   // The consequence that actually matters: since planActorUpdate never
   // derives a shop key for this actor, migrateShop's autoRestock check
   // never fires for it either — nothing here would flip a fresh 2.0 world's
