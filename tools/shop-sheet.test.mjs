@@ -489,3 +489,37 @@ test("an unanswered trade that landed and moved the shelf keeps its id through t
   assert.equal(sheet._tradeId.buy, id);
   assert.equal(buy.seal.state, "no-gm");
 });
+
+test("a sealed answer to a resent trade stamps what the GM carried out, not the edited bill", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("arrows", { quantity: 10 }), item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "arrows" });
+  api.trade = async () => {
+    shop.items.splice(shop.items.findIndex(i => i.id === "arrows"), 1);
+    return { status: "unconfirmed" };
+  };
+  await act(sheet, "seal");
+  await sheet._prepareContext({});
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed", lines: [{ itemId: "arrows", quantity: 1, lineTotalCp: 100 }] });
+  await act(sheet, "seal");
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "sealed");
+  assert.deepEqual(buy.basket.lines.map(l => [l.itemId, l.name, l.quantity]), [["arrows", "arrows", 1]]);
+  assert.deepEqual([...sheet._baskets.buy.keys()], ["rope"]);
+});
+
+test("a buyer lost while a seal is out leaves the bill alone until the answer", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  globalThis.game.actors.push(actor("borin", []));
+  act(sheet, "addLine", { itemId: "rope" });
+  let finish;
+  api.trade = () => new Promise(resolve => { finish = resolve; });
+  const sealing = act(sheet, "seal");
+  await new Promise(setImmediate);
+  globalThis.game.actors.splice(globalThis.game.actors.indexOf(buyer), 1);
+  globalThis.game.user.character = null;
+  await sheet._prepareContext({});
+  assert.equal(sheet._tradeState.buy, "sealing");
+  finish({ status: "sealed" });
+  await sealing;
+});
