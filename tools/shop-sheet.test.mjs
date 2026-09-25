@@ -781,3 +781,35 @@ test("the stamp stays when a shelf change trims a line the sealed trade didn't c
   assert.equal(buy.seal.state, "sealed");
   assert.deepEqual(buy.basket.lines.map(l => l.itemId), ["rope"]);
 });
+
+test("a used-up item (quantity 0) isn't offered for sale", async () => {
+  const { sheet } = openShop({ buyerItems: [item("potion", { quantity: 0 }), item("gem")] });
+  const { sell } = await sheet._prepareContext({});
+  assert.deepEqual([...sell.willBuy, ...sell.wontBuy].map(r => r.id), ["gem"]);
+});
+
+test("a basket the shelf emptied drops the unanswered trade id, so a new bill isn't taken for it", async () => {
+  const { sheet, buyer } = openShop({ buyerItems: [item("gem"), item("ring")] });
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  api.trade = async () => {
+    buyer.items.splice(buyer.items.findIndex(i => i.id === "gem"), 1);
+    return { status: "unconfirmed" };
+  };
+  await act(sheet, "seal");
+  await sheet._prepareContext({});
+  assert.equal(sheet._baskets.sell.size, 0);
+  assert.equal(sheet._tradeId.sell, null);
+  assert.equal(sheet._tradeState.sell, "idle");
+});
+
+test("a basket the player empties by hand keeps the unanswered trade id", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "unconfirmed" });
+  await act(sheet, "seal");
+  const id = sheet._tradeId.buy;
+  act(sheet, "stepLine", { itemId: "rope", delta: "-1" });
+  await sheet._prepareContext({});
+  assert.equal(sheet._tradeId.buy, id);
+});

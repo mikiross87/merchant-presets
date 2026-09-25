@@ -447,3 +447,7 @@ test("a sold-out line kept on the shelf shows its price, not worthless", () => {
   assert.equal(row.worthless, false);
   assert.equal(row.bundlePriceCp, 100);
 });
+
+test("a rate tag against a zero chip rate is no tag, not an infinite percentage", () => {
+  assert.deepEqual(rateTag({ rate: 0.5, layer: "category" }, 0), { kind: null, text: null });
+});
