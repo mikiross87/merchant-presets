@@ -138,9 +138,9 @@ export function rateFraction(rate) {
  * @returns {RateTag}
  */
 export function rateTag(effective, chipRate) {
-  if (effective.layer === "category" && Math.abs(effective.rate - 1) < 1e-9) return { kind: "full", text: null };
   const diff = effective.rate - chipRate;
   if (Math.abs(diff) < 1e-9) return { kind: null, text: null };
+  if (effective.layer === "category" && Math.abs(effective.rate - 1) < 1e-9) return { kind: "full", text: null };
   const pct = Math.round(Math.abs(diff / chipRate) * 100);
   return diff > 0 ? { kind: "markup", text: `+${pct}%` } : { kind: "discount", text: `-${pct}%` };
 }

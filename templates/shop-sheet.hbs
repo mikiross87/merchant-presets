@@ -74,15 +74,15 @@
     <input type="search" class="buyer-search" placeholder="{{localize 'MERCHANT_PRESETS.Shop.BuyerPicker.Search'}}" />
     {{#if buyerPicker.characters.length}}
       <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerCharacters"}}</h3>
-      {{#each buyerPicker.characters}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+      {{#each buyerPicker.characters}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this appId=@root.appId}}{{/each}}
     {{/if}}
     {{#if buyerPicker.others.length}}
       <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.OtherActors"}}</h3>
-      {{#each buyerPicker.others}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+      {{#each buyerPicker.others}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this appId=@root.appId}}{{/each}}
     {{/if}}
   {{else}}
     <p class="picker-hint">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerHint"}}</p>
-    {{#each buyerPicker.actors}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
+    {{#each buyerPicker.actors}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this appId=@root.appId}}{{/each}}
   {{/if}}
 </div>
 

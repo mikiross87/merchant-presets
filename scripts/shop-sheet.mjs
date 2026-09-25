@@ -35,9 +35,10 @@ const PLACEHOLDER_WORLD_RATES = Object.freeze({ sellsAt: 1, buysAt: 0.5 });
 const PLACEHOLDER_WORLD_INFINITE_STOCK = false;
 
 /**
- * Refusals the window works out for itself from live data (the hours, the purse, the till). A GM
- * refusal for one of these isn't kept as the bill's state: the next render shows it while it
- * holds, and drops it once the cause has gone (the shop reopens, the buyer is given coin).
+ * Refusals that rest on live data (the hours, the purse, the till). A GM refusal for one stays on
+ * the bill, since the GM can know more than the window does (whether the till can make change),
+ * until that data changes: the clock moves, or the shop or the buyer updates. Then it's dropped
+ * and the window's own checks decide again.
  */
 const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
 
@@ -182,7 +183,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // itself, so `.days` is what's passed through here, not the calendar object that owns it.
     const calendarDays = game.time.calendar.days;
     const minute = this.#minuteOfDay();
-    const open = isOpen(config.hours, minute, calendarDays);
+    // Trading hours off means every shop is open around the clock (the setting's own promise).
+    const open = !game.settings.get(MODULE, "tradingHours") || isOpen(config.hours, minute, calendarDays);
     const buyer = this.#resolveBuyer();
     const kind = this.tabGroups.primary;
     this.#pruneBaskets();
@@ -629,9 +631,6 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         this._tradeState[kind] = "sealed";
         this._sealed[kind] = { lines, sumCp: basketTotals(lines, 0, kind).sumCp, receipt: result.receipt ?? null };
         this._baskets[kind].clear();
-      } else if (result.status === "refused" && LIVE_REFUSALS.includes(result.reason)) {
-        this._tradeState[kind] = "idle";
-        ui.notifications.warn(game.i18n.localize(sealState(result.reason, true).labelKey));
       } else if (result.status === "refused") {
         this._tradeState[kind] = result.reason;
         // The bill re-prices from the live shop on the render below; strike what moved so the
@@ -682,6 +681,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       makeDefault: false,
       label: "MERCHANT_PRESETS.Shop.SheetLabel"
     });
+    // The bill reads the clock and the buyer, neither of which is this sheet's own document, so
+    // core's own re-render on a document update doesn't cover them.
+    Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
+    Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
+  }
+
+  /** Re-renders each open shop window `affected` picks, dropping a live refusal the change may have cleared. */
+  static #liveDataChanged(affected) {
+    for (const app of foundry.applications.instances.values()) {
+      if (!(app instanceof ShopSheet) || !affected(app)) continue;
+      for (const kind of ["buy", "sell"]) {
+        if (LIVE_REFUSALS.includes(app._tradeState[kind])) app._tradeState[kind] = "idle";
+      }
+      app.render({ parts: ["body"] });
+    }
   }
 } : null;
 

@@ -26,13 +26,13 @@
           </div>
           <div class="bill-line-bottom">
             <span class="bill-line-unit">{{> coins this.unitCoins}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}</span>
-            {{#if (or (eq ../seal.state "idle") (eq ../seal.state "stock-changed") (eq ../seal.state "cant-afford") (eq ../seal.state "till-short") (eq ../seal.state "closed") (eq ../seal.state "no-gm"))}}
+            {{#unless (or (eq ../seal.state "sealing") (eq ../seal.state "sealed"))}}
               <span class="bill-stepper">
                 <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
                 <span class="bill-stepper-count">{{this.quantity}}</span>
                 <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.More'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
               </span>
-            {{/if}}
+            {{/unless}}
           </div>
         </div>
       {{/each}}
