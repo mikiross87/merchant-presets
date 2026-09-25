@@ -1104,6 +1104,11 @@ async function migrateShop(actor) {
   // the world's only evidence of it stays exactly as unmigrated as it was,
   // for a retry on the next load, rather than the actor's own write erasing
   // it a moment before the setting that depended on it could land.
+  //
+  // A fresh 2.0 world importing old 1.x content lands here too, and there's
+  // no telling it from an upgrade (#120 review). Off is the safe guess: on
+  // would reroll a GM's curated stock, off only leaves shops unrestocked.
+  // So the GM is told, since they may want it back on.
   if (shouldForceAutoRestockOff(update, hasStoredAutoRestock())) {
     try { await game.settings.set(MODULE, "autoRestock", false); }
     catch (err) {
@@ -1111,6 +1116,8 @@ async function migrateShop(actor) {
       console.error(`${MODULE} | could not force the autoRestock default off; migration deferred to next load`, err);
       return false;
     }
+    ui.notifications.warn(`Merchant Presets: "${actor.name}" is a 1.x merchant, so automatic restocking `
+      + "has been turned off to keep 1.x behaviour. Turn it back on in the module settings if you want it.");
   }
 
   let changed = false;

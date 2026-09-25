@@ -654,7 +654,8 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (ok) update["flags.merchant-presets.shop"] = shop;
     else shopError = `Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`;
     for (const e of repaired) warnings.push(`"${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
-    const subtypes = valuesOn(pileData(actor).overrideItemFilters, "system.type.value");
+    const filters = pileData(actor).overrideItemFilters;   // false: Item Piles' own "not overridden"
+    const subtypes = valuesOn(Array.isArray(filters) ? filters : [], "system.type.value");
     for (const t of valuesOn(DND5E_ITEM_FILTERS, "system.type.value")) subtypes.delete(t);
     if (subtypes.size) {
       warnings.push(`"${actor.name}": Item Piles refusal by item subtype not carried over: ${[...subtypes].join(", ")}`);

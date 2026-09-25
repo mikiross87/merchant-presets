@@ -186,10 +186,14 @@ export function createWorld() {
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */
+let runtimeLoads = 0;
+
 export async function loadRuntime(world) {
   const log = console.log;
   console.log = (...args) => { if (!String(args[0]).startsWith("merchant-presets |")) log(...args); };
-  await import("../scripts/merchant-presets.mjs");
+  // A fresh module instance per world: its own state (migrationGateOpen, say)
+  // must not leak from one test's world into the next.
+  await import(`../scripts/merchant-presets.mjs?world=${++runtimeLoads}`);
   world.hooks.once.get("init")?.();
   world.hooks.once.get("ready")?.();
   await new Promise(resolve => setImmediate(resolve));
