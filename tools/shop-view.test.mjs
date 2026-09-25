@@ -290,3 +290,25 @@ test("shopkeeper gear is never matched, even by name", () => {
 test("goods the shop has never carried match nothing", () => {
   assert.equal(matchingStockLine({ name: "A Very Unusual Hat" }, []), undefined);
 });
+
+/* -------------------------------------------------------------- parity with trade-plan.mjs */
+
+test("a sell row on the default category prices by its item type's category rule, as a sale does", () => {
+  const item = { _id: "i5", img: "i.webp", name: "Longsword", type: "weapon", system: { price: { value: 15, denomination: "gp" }, quantity: 1 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [{ category: "weapon", sellsAt: 1.5, buysAt: 0.25 }] }, chipBuysAt: 0.5 };
+  const row = sellRow(item, shopConfig, { category: "", bundle: 1, service: false, noBuyback: false }, rates, null, CURRENCIES5E);
+  assert.equal(row.bundlePriceCp, 375);
+});
+
+test("the Buy tab hides what a buy would refuse: contained, natural, unidentified", () => {
+  const shown = { hidden: false, notForSale: false };
+  assert.equal(isVisibleStock({ system: { container: "Bag0000000000001" } }, shown), false);
+  assert.equal(isVisibleStock({ type: "weapon", system: { type: { value: "natural" } } }, shown), false);
+  assert.equal(isVisibleStock({ system: { identified: false } }, shown), false);
+});
+
+test("a sold item whose source isn't on the shelf still matches by name, as a sale does", () => {
+  const shopItems = [{ _id: "s4", name: "Dagger", _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.xyz" }, flags: {} }];
+  const item = { name: "Dagger", _stats: { compendiumSource: "Compendium.world.homebrew.Item.q" } };
+  assert.equal(matchingStockLine(item, shopItems)?._id, "s4");
+});
