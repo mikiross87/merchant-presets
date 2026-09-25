@@ -416,7 +416,8 @@ export function stepQuantity(current, delta, { bundle, available, infinite }) {
  * @returns {number}
  */
 export function fitQuantity(quantity, { bundle, available, infinite }) {
-  if (infinite) return quantity;
+  // An endless line has no remainder: only whole bundles (the engine refuses a part-bundle there).
+  if (infinite) return quantity - (quantity % bundle);
   const most = Math.min(quantity, available);
   const whole = most - (most % bundle);
   const remainder = available % bundle;
