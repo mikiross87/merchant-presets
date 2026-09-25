@@ -679,6 +679,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tillCp,
       tillCoins: coinBreakdown(tillCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
+      // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
+      tillCapsSales: game.settings.get(MODULE, "merchantPurse") !== "unlimited",
       basket: this.#billOfSale(lines, totals, currencies, buyer),
       seal: {
         ...seal,
@@ -731,16 +733,17 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
       // No bundleOf resolver until the #102 runtime provides one.
       const bundle = bundleFor(item, line);
-      let unitCp = 0, lineTotal = 0, bundleCp = null;
+      let lineTotal = 0, bundleCp = null;
       try {
-        unitCp = itemPriceCp(item.system.price, rate, bundle, currencies);
         lineTotal = lineTotalCp(item, rate, bundle, quantity, currencies);
         bundleCp = bundlePriceCp(item, rate, currencies);
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
         itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
         struck: this._struck[kind].has(itemId),
-        unitCoins: coinBreakdown(unitCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
+        bundle,
+        unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
     }

@@ -153,7 +153,7 @@
   <aside class="sell-side-card">
     <p class="sell-ratio-label">{{localize "MERCHANT_PRESETS.Shop.Sell.BuysAt"}}</p>
     <p class="sell-ratio">{{sell.ratioLabel}} <span class="sell-ratio-of">{{localize "MERCHANT_PRESETS.Shop.Sell.OfValue"}}</span></p>
-    <p class="sell-till-note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillHolds" amount=sell.tillText}}</p>
+    {{#if sell.tillCapsSales}}<p class="sell-till-note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillHolds" amount=sell.tillText}}</p>{{/if}}
   </aside>
   <div class="sell-rows">
     {{#if sell.willBuy.length}}

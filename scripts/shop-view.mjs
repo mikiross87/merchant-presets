@@ -69,6 +69,14 @@ function denominationsByValue(currencies) {
 /** Coins a price is written in: gold, silver and copper, as the design writes "12 gp 5 sp" (never "1 pp 2 gp 1 ep"); a config with none of them keeps all its own. */
 const EVERYDAY = ["gp", "sp", "cp"];
 
+/** Every quantity a buy of a line accepts, smallest first, up to `most`: the part-bundle remainder, then whole bundles, each with the remainder on top. */
+function* buyableQuantities(bundle, remainder, most) {
+  for (let whole = 0; whole <= most; whole += bundle) {
+    if (whole > 0) yield whole;
+    if (remainder && whole + remainder <= most) yield whole + remainder;
+  }
+}
+
 /** How many bundles a buy row counts up to while looking for the fewest worth a coin. */
 const MAX_BUNDLES_TO_A_COIN = 1000;
 
@@ -281,12 +289,15 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
   const bundle = bundleFor(item, item);
   const infinite = stock.service || (stock.infinite ?? worldInfiniteStock);
   const available = item.system?.quantity ?? 0;
-  let minQuantity = bundle, worthless = false;
+  // 1 means no floor of its own: `stepQuantity` already lands only on quantities a buy accepts.
+  let minQuantity = 1, worthless = false;
   if (!unpriced && sellsAt.rate > 0 && item.system.price?.value > 0) {
     // Capped: a vanishing rate on an endless line would otherwise count bundles for ever.
     const most = infinite ? bundle * MAX_BUNDLES_TO_A_COIN : available;
-    while (minQuantity <= most && lineTotalCp(item, sellsAt.rate, bundle, minQuantity, currencies) === 0) minQuantity += bundle;
-    worthless = minQuantity > most;
+    const worth = [...buyableQuantities(bundle, infinite ? 0 : available % bundle, most)]
+      .find(q => lineTotalCp(item, sellsAt.rate, bundle, q, currencies) > 0);
+    if (worth) minQuantity = worth;
+    else worthless = true;
   }
   return {
     id: item._id ?? item.id,
