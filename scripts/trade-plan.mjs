@@ -62,7 +62,10 @@
  *   (#89). `kind` and the behaviour flags (`nutrition`/`actor`/`spell`) are
  *   untouched — the runtime still needs those, on either side. An item that
  *   lands on a shop this way reads as `STOCK_DEFAULTS` until a GM says
- *   otherwise, or it matches an existing line (see `matchingStockLine`).
+ *   otherwise, except that a sale's new copy is always finite (one sold
+ *   Flame Tongue never becomes endless under the world's infinite-stock
+ *   default) and keeps the hidden or delisted of a line it matched but
+ *   couldn't stack onto (see `matchingStockLine`).
  * - **A sold item lands on the shop**, stacked the same way a bought item
  *   lands on the buyer. 1.x did this too (see the animal-deed comment at
  *   `merchant-presets.mjs:890-899`, which only makes sense if a sold item
@@ -416,10 +419,17 @@ function lander(existingItems, isValidTarget = () => true) {
   const updateQuantities = new Map();   // real item id -> its new total quantity
   const pendingCreates = [];            // this basket's own new items, not yet given a real id
 
+  // Only the fields given: a full STOCK_DEFAULTS here would state bundle 1 over the carried flag.
+  const create = (item, quantity, shelf) => {
+    const created = copyOf(item, quantity);
+    if (shelf) created.flags = { ...created.flags, [MODULE]: { ...created.flags?.[MODULE], stock: { ...shelf } } };
+    pendingCreates.push(created);
+  };
+
   return {
     land(item, quantity, shelf = null) {
       if (item.type === "container") {
-        for (let i = 0; i < quantity; i++) pendingCreates.push(copyOf(item, 1));
+        for (let i = 0; i < quantity; i++) create(item, 1, shelf);
         return;
       }
       const pending = pendingCreates.find(d => stacksOnto(d, item));
@@ -430,10 +440,7 @@ function lander(existingItems, isValidTarget = () => true) {
         updateQuantities.set(id, (updateQuantities.get(id) ?? existing.system?.quantity ?? 0) + quantity);
         return;
       }
-      const created = copyOf(item, quantity);
-      // Only the fields given: a full STOCK_DEFAULTS here would state bundle 1 over the carried flag.
-      if (shelf) created.flags = { ...created.flags, [MODULE]: { ...created.flags?.[MODULE], stock: { ...shelf } } };
-      pendingCreates.push(created);
+      create(item, quantity, shelf);
     },
     // A create that never attempts to stack: a container's contents (see `landContainer`), which
     // dnd5e itself never merges into an unrelated top-level stack just because the names match.
@@ -716,7 +723,9 @@ function planSell(request, context) {
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: buysAt.layer });
 
     totalCp += totalLineCp;
-    const shelf = matched && (stock.hidden || stock.notForSale) ? { hidden: stock.hidden, notForSale: stock.notForSale } : null;
+    // A copy the sale creates is finite, whatever the world's infinite-stock default (one sold
+    // Flame Tongue must not become endless), and keeps a matched line's hidden or delisted.
+    const shelf = { infinite: false, ...(matched && (stock.hidden || stock.notForSale) ? { hidden: stock.hidden, notForSale: stock.notForSale } : {}) };
     lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, owned, shelf });
   }
 

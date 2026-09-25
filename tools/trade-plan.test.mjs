@@ -769,8 +769,9 @@ test("a drawn item bought then sold back carries no drawn tag onto the next shop
   assert.equal(sold.ok, true);
   const landed = sold.plan.updates.find(u => u.actorId === "Shop00000000001").itemCreates[0];
   assert.equal("drawn" in landed.flags["merchant-presets"], false);
-  assert.equal("stock" in landed.flags["merchant-presets"], false);
-  // No matching listing at this shop, so it reads as STOCK_DEFAULTS once there (not hidden, not a service).
+  assert.deepEqual(landed.flags["merchant-presets"].stock, { infinite: false });
+  // No matching listing at this shop, so it reads as STOCK_DEFAULTS once there (not hidden, not a
+  // service), except finite: a copy a sale creates never follows the world's infinite default.
   assert.equal(landed.flags["merchant-presets"].kind, "food-drink");
 });
 
