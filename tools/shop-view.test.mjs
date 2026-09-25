@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  matchingStockLine, rateFraction, rateTag, sealState, sellRow, stockLabel, titleParts
+  matchingStockLine, rateFraction, rateTag, sealState, sellRow, stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -311,4 +311,46 @@ test("a sold item whose source isn't on the shelf still matches by name, as a sa
   const shopItems = [{ _id: "s4", name: "Dagger", _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.xyz" }, flags: {} }];
   const item = { name: "Dagger", _stats: { compendiumSource: "Compendium.world.homebrew.Item.q" } };
   assert.equal(matchingStockLine(item, shopItems)?._id, "s4");
+});
+
+/* -------------------------------------------------------------- the buy stepper */
+
+test("a buy stepper steps by whole bundles", () => {
+  assert.equal(stepQuantity(0, 1, { bundle: 20, available: 300, infinite: false }), 20);
+  assert.equal(stepQuantity(40, -1, { bundle: 20, available: 300, infinite: false }), 20);
+  assert.equal(stepQuantity(20, -1, { bundle: 20, available: 300, infinite: false }), 0);
+  assert.equal(stepQuantity(300, 1, { bundle: 20, available: 300, infinite: false }), 300);   // nothing more
+  assert.equal(stepQuantity(0, 1, { bundle: 20, available: 5, infinite: true }), 20);        // infinite: no ceiling
+});
+
+test("a buy stepper reaches a sold-back part-bundle, and steps back off it", () => {
+  const shelf = { bundle: 20, available: 305, infinite: false };
+  assert.equal(stepQuantity(300, 1, shelf), 305);
+  assert.equal(stepQuantity(305, -1, shelf), 300);
+  assert.equal(stepQuantity(0, 1, { bundle: 20, available: 5, infinite: false }), 5);
+});
+
+/* -------------------------------------------------------------- sell refusals the planner makes */
+
+test("a sell row that would pay nothing even for all of it is worthless", () => {
+  const nail = { _id: "i6", img: "i.webp", name: "Bent Nail", type: "loot", system: { price: { value: 1, denomination: "cp" }, quantity: 1 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipBuysAt: 0.5 };
+  const row = sellRow(nail, shopConfig, { category: "", bundle: 1, service: false, noBuyback: false }, rates, null, CURRENCIES5E);
+  assert.equal(row.refusal, "Worthless");
+});
+
+test("a container with something in it is refused until it's emptied", () => {
+  const pack = { _id: "i7", img: "i.webp", name: "Backpack", type: "container", system: { price: { value: 2, denomination: "gp" }, quantity: 1 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipBuysAt: 0.5 };
+  const stock = { category: "", bundle: 1, service: false, noBuyback: false };
+  assert.equal(sellRow(pack, shopConfig, stock, rates, null, CURRENCIES5E, { hasContents: true }).refusal, "NotEmpty");
+  assert.equal(sellRow(pack, shopConfig, stock, rates, null, CURRENCIES5E).refusal, null);
+});
+
+test("the seal button explains the planner's other refusals instead of offering the bargain", () => {
+  for (const reason of ["worthless", "container-not-empty", "unpriced", "invalid-request"]) {
+    const seal = sealState(reason, true);
+    assert.equal(seal.disabled, true, reason);
+    assert.notEqual(seal.labelKey, "MERCHANT_PRESETS.Shop.Seal.Bargain", reason);
+  }
 });
