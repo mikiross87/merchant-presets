@@ -709,3 +709,12 @@ test("the shop description is cleaned before it's put in the page", async () => 
   const { header } = await sheet._prepareContext({});
   assert.equal(header.description, "clean:<img src=x onerror=alert(1)>");
 });
+
+test("on an endless line, a buy starts at the fewest worth a coin rather than dropping", async () => {
+  const candle = item("candle", { quantity: 0, price: { value: 1, denomination: "cp" }, flags: { "merchant-presets": { stock: { infinite: true, category: "cheap" } } } });
+  const { sheet } = openShop({ shopItems: [candle] });
+  sheet.document.flags["merchant-presets"].shop.terms.categories = [{ category: "cheap", sellsAt: 0.5, buysAt: 0.25 }];
+  await sheet._prepareContext({});
+  act(sheet, "addLine", { itemId: "candle" });
+  assert.equal(sheet._baskets.buy.get("candle"), 2);
+});

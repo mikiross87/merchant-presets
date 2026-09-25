@@ -69,6 +69,9 @@ function denominationsByValue(currencies) {
 /** Coins a price is written in: gold, silver and copper, as the design writes "12 gp 5 sp" (never "1 pp 2 gp 1 ep"); a config with none of them keeps all its own. */
 const EVERYDAY = ["gp", "sp", "cp"];
 
+/** How many bundles a buy row counts up to while looking for the fewest worth a coin. */
+const MAX_BUNDLES_TO_A_COIN = 1000;
+
 /**
  * `amountCp` broken into coins for display — in everyday coin (`EVERYDAY`),
  * largest first, floored at each step, the remainder dropped once it can't
@@ -272,6 +275,19 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
   let bundleCp = null, unpriced = false;
   try { bundleCp = bundlePriceCp(item, sellsAt.rate, currencies); }
   catch { unpriced = true; }
+  // The planner refuses a line that floors to 0 at a real price and rate ("worthless"), so the
+  // stepper starts at the fewest whole bundles worth a coin, and a shelf that never gets there
+  // can't be bought at all.
+  const bundle = bundleFor(item, item);
+  const infinite = stock.service || (stock.infinite ?? worldInfiniteStock);
+  const available = item.system?.quantity ?? 0;
+  let minQuantity = bundle, worthless = false;
+  if (!unpriced && sellsAt.rate > 0 && item.system.price?.value > 0) {
+    // Capped: a vanishing rate on an endless line would otherwise count bundles for ever.
+    const most = infinite ? bundle * MAX_BUNDLES_TO_A_COIN : available;
+    while (minQuantity <= most && lineTotalCp(item, sellsAt.rate, bundle, minQuantity, currencies) === 0) minQuantity += bundle;
+    worthless = minQuantity > most;
+  }
   return {
     id: item._id ?? item.id,
     img: item.img,
@@ -282,7 +298,9 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
     service: stock.service,
     bundlePriceCp: bundleCp,
     unpriced,
-    bundle: bundleFor(item, item),
+    worthless,
+    minQuantity,
+    bundle,
     tag: unpriced ? { kind: null, text: null } : rateTag(sellsAt, rates.chipSellsAt)
   };
 }

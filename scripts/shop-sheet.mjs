@@ -175,8 +175,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
     this._sent = { buy: new Map(), sell: new Map() };
     this._activeCategory = "all";
-    /** The fewest of each sellable item worth a coin (`sellRow`'s `minQuantity`), from the last render. */
-    this._sellMin = new Map();
+    /** Per kind, the fewest of each line worth a coin (`buyRow`/`sellRow`'s `minQuantity`), from the last render. */
+    this._minQuantity = { buy: new Map(), sell: new Map() };
     this._buyerUuid = game.user.character?.uuid ?? null;
   }
 
@@ -310,7 +310,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       img: actor.img,
       title,
       tier,
-      description: config.description,
+      // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
+      description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
       openLabel: open
         ? (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntil", { time: closesAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.AlwaysOpen"))
@@ -447,6 +448,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems))
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock());
+        this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
           // A category the GM named is shown as they wrote it; buyRow's own fallback to
@@ -576,12 +578,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     });
   }
 
-  /** A line's quantity after one step; a sale also skips below the fewest worth a coin, both ways. */
+  /** A line's quantity after one step, skipping below the fewest worth a coin, both ways. */
   #nextQuantity(kind, itemId, current, delta) {
-    const next = stepQuantity(current, delta, this.#shelfOf(kind, itemId));
-    const min = kind === "sell" ? this._sellMin.get(itemId) ?? 1 : 1;
+    const shelf = this.#shelfOf(kind, itemId);
+    const next = stepQuantity(current, delta, shelf);
+    const min = this._minQuantity[kind].get(itemId) ?? 1;
     if (next <= 0 || next >= min) return next;
-    return delta > 0 && min <= this.#shelfOf(kind, itemId).available ? min : 0;
+    return delta > 0 && (shelf.infinite || min <= shelf.available) ? min : 0;
   }
 
   /**
@@ -651,7 +654,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
-      if (row.minQuantity) this._sellMin.set(item._id, row.minQuantity);
+      if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
       return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
     });
     const willBuy = rows.filter(r => !r.refusal);

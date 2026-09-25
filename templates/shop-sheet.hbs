@@ -18,8 +18,8 @@
   <img class="shop-portrait" src="{{header.img}}" alt="" />
   <div class="shop-heading">
     <h1 class="shop-title">{{header.title}}</h1>
-    {{!-- The shop's own #98 description; shipped shops carry it as enriched HTML (a <p> of its
-          own), so this renders raw rather than double-wrapping or escaping it. --}}
+    {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
+          this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}
     <div class="shop-description">{{{header.description}}}</div>
     <div class="shop-chips">
       <span class="chip chip-open {{#if header.open}}is-open{{else}}is-closed{{/if}}">
@@ -121,7 +121,7 @@
             {{else}}{{localize "MERCHANT_PRESETS.Shop.Stock.Always"}}{{/if}}
           </span>
           <div class="item-price">
-            {{#if unpriced}}
+            {{#if (or unpriced worthless)}}
               <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
             {{else}}
               {{#if service}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Service"}}</span>{{/if}}
@@ -133,7 +133,7 @@
           </div>
           <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
             aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
-            {{#if unpriced}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}} {{#if (eq stock.state 'soldOut')}}disabled{{/if}}>
+            {{#if (or unpriced worthless)}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}} {{#if (eq stock.state 'soldOut')}}disabled{{/if}}>
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
           </button>
         </div>
