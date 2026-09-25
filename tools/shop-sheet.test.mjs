@@ -628,3 +628,57 @@ test("the header purse shows the coins the character holds, not a re-split", asy
   const { buyerPurse } = await sheet._prepareContext({});
   assert.deepEqual(coins(buyerPurse), [["gp", 150], ["sp", 30]]);
 });
+
+test("the basket can't change once a seal went out while the sale question was open", async () => {
+  const worn = item("armour");
+  worn.system.equipped = true;
+  const { sheet } = openShop({ buyerItems: [worn, item("gem")] });
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  let answer;
+  const original = globalThis.foundry.applications.api.DialogV2.confirm;
+  globalThis.foundry.applications.api.DialogV2.confirm = () => new Promise(resolve => { answer = resolve; });
+  try {
+    const asking = act(sheet, "addLine", { itemId: "armour" });
+    let finish;
+    api.trade = () => new Promise(resolve => { finish = resolve; });
+    const sealing = act(sheet, "seal");
+    await new Promise(setImmediate);
+    answer(true);
+    await asking;
+    assert.equal(sheet._tradeState.sell, "sealing");
+    assert.equal(sheet._baskets.sell.has("armour"), false);
+    finish({ status: "sealed" });
+    await sealing;
+  } finally {
+    globalThis.foundry.applications.api.DialogV2.confirm = original;
+  }
+});
+
+test("a sealed answer takes off only the quantity it carried", async () => {
+  const { sheet } = openShop({ shopItems: [item("arrows", { quantity: 40 })] });
+  act(sheet, "addLine", { itemId: "arrows" });
+  act(sheet, "addLine", { itemId: "arrows" });
+  api.trade = async () => ({ status: "sealed", lines: [{ itemId: "arrows", quantity: 1, lineTotalCp: 100 }] });
+  await act(sheet, "seal");
+  assert.deepEqual([...sheet._baskets.buy], [["arrows", 1]]);
+});
+
+test("an assigned character the player doesn't own isn't who they trade as", async () => {
+  const { sheet, buyer } = openShop();
+  const observed = Object.assign(actor("ward", [], { permission: OWNERSHIP.OBSERVER }), { type: "character" });
+  globalThis.game.actors.push(observed);
+  globalThis.game.user.character = observed;
+  sheet._buyerUuid = null;
+  await sheet._prepareContext({});
+  assert.equal(sheet._buyerUuid, buyer.uuid);
+});
+
+test("a container holding shopkeeper gear can't be sold, as the engine refuses it", async () => {
+  const bag = item("bag", { type: "container" });
+  const tongs = item("tongs", { flags: { "merchant-presets": { kind: "gear" } } });
+  tongs.system.container = "bag";
+  const { sheet } = openShop({ buyerItems: [bag, tongs] });
+  const { sell } = await sheet._prepareContext({});
+  assert.deepEqual(sell.willBuy.map(r => r.id), []);
+});

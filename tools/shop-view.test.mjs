@@ -31,9 +31,15 @@ test("a name that merely contains parentheses elsewhere isn't mistaken for a tie
 
 /* -------------------------------------------------------------- coinBreakdown */
 
-test("a price breaks into coins largest denomination first", () => {
-  // 1250 cp, greedy over every configured denomination: 1 pp (1000), 2 gp (200), 1 ep (50).
-  assert.deepEqual(coinBreakdown(1250, CURRENCIES).map(c => [c.denomination, c.count]), [["pp", 1], ["gp", 2], ["ep", 1]]);
+test("a price reads in everyday coin, as the design writes it: 12 gp 5 sp, not 1 pp 2 gp 1 ep", () => {
+  assert.deepEqual(coinBreakdown(1250, CURRENCIES).map(c => [c.denomination, c.count]), [["gp", 12], ["sp", 5]]);
+  assert.deepEqual(coinBreakdown(1500, CURRENCIES).map(c => [c.denomination, c.count]), [["gp", 15]]);
+});
+
+test("a currency config without gold, silver or copper breaks over what it has", () => {
+  const pp = { pp: CURRENCIES.pp };
+  // Amounts count in the config's finest coin, which here is the platinum piece itself.
+  assert.deepEqual(coinBreakdown(3, pp).map(c => [c.denomination, c.count]), [["pp", 3]]);
 });
 
 test("a price breaks into only the denominations a leaner currency config defines", () => {
