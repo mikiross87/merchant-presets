@@ -1,4 +1,5 @@
-import { effectiveRates, itemPriceCp } from "./pricing.mjs";
+import { effectiveRates } from "./pricing.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, dealtIn, isVisible } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -189,31 +190,18 @@ export function basketTotals(lines, purseCp, kind) {
 
 /* -------------------------------------------------------------- stock rules */
 
-/**
- * These four mirror `scripts/trade-plan.mjs`'s own `FIXED_EXCLUDED_TYPES`, `isGear`, `isVisible`
- * and `dealtIn` (#102, open as PR #122) exactly — the window only ever *displays* what the trade
- * engine would actually allow, and until the two modules can share one source (once #102 lands
- * on `next`), each keeps its own copy of the same documented rule rather than importing a module
- * this one doesn't own. A drift between them would show a row the engine then refuses, or hide
- * one it would accept — worth flagging in review if #102's own copy ever changes.
+/*
+ * The window only ever *displays* what the trade engine would allow, so these are trade-plan's
+ * own rules, not copies: a drift would show a row the engine then refuses, or hide one it takes.
  */
-const FIXED_EXCLUDED_TYPES = ["background", "class", "facility", "feat", "race", "spell", "subclass"];
+export { dealtIn };
+export { isGear as isGearItem, matchingStockLine, sourceOf } from "./trade-plan.mjs";
 
-/** The shopkeeper's own kit, tagged by the generator — never a stock row. */
-export const isGearItem = item => item.flags?.["merchant-presets"]?.kind === "gear";
-
-/** A real stock row the Buy tab can show — not gear, not hidden, not delisted. */
-export const isVisibleStock = (item, stock) => !isGearItem(item) && !stock.hidden && !stock.notForSale;
-
-/** Whether `shop` deals in `item` at all, for the Sell tab's "Won't buy" split. */
-export function dealtIn(item, shop) {
-  if (FIXED_EXCLUDED_TYPES.includes(item.type)) return false;
-  if (item.system?.type?.value === "natural") return false;
-  if (isGearItem(item)) return false;
-  if (shop.wontBuy.types.includes(item.type)) return false;
-  const kind = item.flags?.["merchant-presets"]?.kind ?? null;
-  return !(kind && shop.wontBuy.kinds.includes(kind));
-}
+/**
+ * A stock row the Buy tab can show: what a buy wouldn't refuse as not visible (gear, the fixed
+ * exclusions, hidden, delisted, inside a container) or as unidentified.
+ */
+export const isVisibleStock = (item, stock) => isVisible(item, stock) && item.system?.identified !== false;
 
 /* -------------------------------------------------------------- stock labels */
 
@@ -239,30 +227,7 @@ export function stockLabel(stock, quantity, worldInfiniteStock) {
   return { state: "count", text: null, count: quantity };
 }
 
-/** `item._stats.compendiumSource`, else `flags.core.sourceId` — the same signal `trade-plan.mjs` matches a sale against the shop's own shelf with. */
-export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
-
-/**
- * The shop's own current stock line for `item`, if it has one — by source when `item` carries
- * one, else by name. Mirrors `trade-plan.mjs`'s `matchingStockLine` (see the "stock rules" note
- * above): what a Sell-tab row's bundle, category, `noBuyback` and `service` read, since a sold
- * item no longer carries its own stock flags once it's left a shop.
- *
- * @param {object} item
- * @param {object[]} shopItems
- * @returns {object|undefined}
- */
-export function matchingStockLine(item, shopItems) {
-  const source = sourceOf(item);
-  return shopItems.find(i => !isGearItem(i) && (source != null ? sourceOf(i) === source : i.name === item.name));
-}
-
 /* -------------------------------------------------------------- rows */
-
-/** `item.system.price` at one whole bundle, for the row's sticker price. */
-function bundlePriceCp(item, rate, currencies) {
-  return itemPriceCp(item.system.price, rate, 1, currencies);
-}
 
 /**
  * @typedef {object} BuyRow
@@ -295,8 +260,8 @@ function bundlePriceCp(item, rate, currencies) {
  * @returns {BuyRow}
  */
 export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock) {
-  const category = stock.category || item.type;
-  const { sellsAt } = effectiveRates(rates.world, rates.shopTerms, category || null, deal);
+  const category = categoryFor(item, stock);
+  const { sellsAt } = effectiveRates(rates.world, rates.shopTerms, category, deal);
   let bundleCp = null, unpriced = false;
   try { bundleCp = bundlePriceCp(item, sellsAt.rate, currencies); }
   catch { unpriced = true; }
@@ -310,7 +275,7 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
     service: stock.service,
     bundlePriceCp: bundleCp,
     unpriced,
-    bundle: stock.bundle,
+    bundle: bundleFor(item, item),
     tag: unpriced ? { kind: null, text: null } : rateTag(sellsAt, rates.chipSellsAt)
   };
 }
@@ -356,8 +321,7 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies)
   if (matchedStock.noBuyback) return { ...base, refusal: "NoBuyback", bundlePriceCp: null, ratio: null };
   if (matchedStock.service) return { ...base, refusal: "General", bundlePriceCp: null, ratio: null };
 
-  const category = matchedStock.category || null;
-  const { buysAt } = effectiveRates(rates.world, rates.shopTerms, category, deal);
+  const { buysAt } = effectiveRates(rates.world, rates.shopTerms, categoryFor(item, matchedStock), deal);
   try {
     return { ...base, refusal: null, bundlePriceCp: bundlePriceCp(item, buysAt.rate, currencies), ratio: rateFraction(buysAt.rate) };
   } catch {

@@ -16,6 +16,7 @@
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
+import { bundleFor, categoryFor, lineTotalCp } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isGearItem, isVisibleStock,
   matchingStockLine, rateFraction, sealState, sellRow, titleParts
@@ -452,22 +453,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // A shop item carries its own #98 stock flag; an item on the buyer's side (a sale) never
       // does (see trade-plan.mjs's `copyOf`), so its line reads the shop's matching shelf line
       // instead — the same rule #102 prices a sale by.
-      const stock = stockFrom(kind === "buy"
-        ? (item.flags?.[MODULE]?.stock ?? {})
-        : (matchingStockLine(item, shopItems) ?? {}));
-      const rate = kind === "buy"
-        ? effectiveRates(world, config.terms, stock.category || item.type).sellsAt.rate
-        : effectiveRates(world, config.terms, stock.category || null).buysAt.rate;
-      const bundle = stock.bundle || 1;
-      let unitCp = 0, lineTotalCp = 0;
+      const line = kind === "buy" ? item : matchingStockLine(item, shopItems);
+      const stock = stockFrom(line?.flags?.[MODULE]?.stock ?? {});
+      const rates = effectiveRates(world, config.terms, categoryFor(item, stock));
+      const rate = kind === "buy" ? rates.sellsAt.rate : rates.buysAt.rate;
+      // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
+      // No bundleOf resolver until the #102 runtime provides one.
+      const bundle = bundleFor(item, line);
+      let unitCp = 0, lineTotal = 0;
       try {
         unitCp = itemPriceCp(item.system.price, rate, bundle, currencies);
-        lineTotalCp = itemPriceCp(item.system.price, rate, bundle / quantity, currencies);
+        lineTotal = lineTotalCp(item, rate, bundle, quantity, currencies);
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
-        itemId, name: item.name, img: item.img, quantity, lineTotalCp,
+        itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal,
         unitCoins: coinBreakdown(unitCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-        lineTotalCoins: coinBreakdown(lineTotalCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+        lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
     }
     return lines;
