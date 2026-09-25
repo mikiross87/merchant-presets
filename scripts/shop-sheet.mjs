@@ -613,8 +613,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   #pruneBaskets() {
     for (const kind of ["buy", "sell"]) {
-      // A bill that's out is settled by its answer (the trade itself moves these very items).
-      if (this._tradeState[kind] === "sealing") continue;
+      // A bill that's out is settled by its answer (the trade itself moves these very items), and
+      // a stamped one stays as it is until the player's next edit.
+      if (isSettled(this._tradeState[kind])) continue;
       const basket = this._baskets[kind];
       let changed = false;
       for (const [itemId, quantity] of basket) {
