@@ -175,7 +175,7 @@ test("stock-changed strikes the lines whose price moved", async () => {
   assert.deepEqual([...sheet._struck.buy], ["lamp"]);
 });
 
-test("a retry after an unconfirmed trade resends the same tradeId, so it can't land twice", async () => {
+test("an unanswered trade keeps its tradeId until it's answered, edits included, so it can't land twice", async () => {
   const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
   act(sheet, "addLine", { itemId: "rope" });
   const ids = [];
@@ -185,9 +185,13 @@ test("a retry after an unconfirmed trade resends the same tradeId, so it can't l
   await act(sheet, "seal");
   await act(sheet, "seal");
   act(sheet, "stepLine", { itemId: "rope", delta: "1" });
+  api.trade = async request => { ids.push(request.tradeId); return { status: "refused", reason: "wont-buy" }; };
+  await act(sheet, "seal");
+  act(sheet, "stepLine", { itemId: "rope", delta: "-1" });
   await act(sheet, "seal");
   assert.equal(ids[0], ids[1]);
-  assert.notEqual(ids[1], ids[2]);
+  assert.equal(ids[1], ids[2]);
+  assert.notEqual(ids[2], ids[3]);
 });
 
 test("the Sell bill's purse-after is the seller's purse plus the sale, not the till's", async () => {
@@ -469,4 +473,19 @@ test("an empty purse reads as no coin, not as worthless", async () => {
   const { buyerPurse, buy } = await sheet._prepareContext({});
   assert.deepEqual(coins(buyerPurse), [["gp", 1]]);
   assert.deepEqual(coins(buy.basket.afterCoins), [["gp", 0]]);
+});
+
+test("an unanswered trade that landed and moved the shelf keeps its id through the prune", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("lantern", { quantity: 1 }), item("ration", { quantity: 20 })] });
+  act(sheet, "addLine", { itemId: "lantern" });
+  act(sheet, "addLine", { itemId: "ration" });
+  api.trade = async () => {
+    shop.items.splice(shop.items.findIndex(i => i.id === "lantern"), 1);
+    return { status: "unconfirmed" };
+  };
+  await act(sheet, "seal");
+  const id = sheet._tradeId.buy;
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(sheet._tradeId.buy, id);
+  assert.equal(buy.seal.state, "no-gm");
 });
