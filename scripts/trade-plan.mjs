@@ -100,9 +100,10 @@
  * - **Bundle pricing for `quantity` units, floored once.** pricing.mjs's
  *   `itemPriceCp` floors a single computation; calling it once per unit and
  *   summing would floor `quantity` times, and a bundle cheap enough to floor
- *   to 0 per unit would then be free in any amount. Passing `bundle /
- *   quantity` as the bundle argument is algebraically the same as pricing
- *   `quantity` units and flooring once — see `lineTotalCp`.
+ *   to 0 per unit would then be free in any amount. `itemPriceCp` takes the
+ *   `quantity` itself and multiplies before its one division — see
+ *   `lineTotalCp`. (Dividing by the fraction `bundle / quantity` came out
+ *   1cp short on large totals.)
  * - **Prices are never computed for an unidentified item**, bought or sold
  *   (#102 refuses both). The check runs before any call into pricing.mjs, so a refused line never has a rate or
  *   a price attached to it, matching #102's decision.
@@ -367,7 +368,7 @@ function bundlePriceCp(item, rate, currencies) {
 
 /** `item`'s price for one of the `quantity` being traded, at `rate`, floored once for the lot. */
 function lineTotalCp(item, rate, bundle, quantity, currencies) {
-  return itemPriceCp(item.system.price, rate, bundle / quantity, currencies);
+  return itemPriceCp(item.system.price, rate, bundle, currencies, quantity);
 }
 
 /**
