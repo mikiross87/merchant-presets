@@ -312,6 +312,15 @@ test("the Buy tab hides what a buy would refuse: contained, natural, unidentifie
   assert.equal(isVisibleStock({ system: { identified: false } }, shown), false);
 });
 
+test("the Buy tab hides a container holding something the shop won't hand over, as a buy does", () => {
+  const shown = { hidden: false, notForSale: false };
+  const bag = { _id: "Bag0000000000001", type: "container", system: {} };
+  const gear = { _id: "Gear000000000001", system: { container: bag._id }, flags: { "merchant-presets": { kind: "gear" } } };
+  const rope = { _id: "Rope000000000001", system: { container: bag._id } };
+  assert.equal(isVisibleStock(bag, shown, [bag, rope]), true);
+  assert.equal(isVisibleStock(bag, shown, [bag, rope, gear]), false);
+});
+
 test("a sold item whose source isn't on the shelf still matches by name, as a sale does", () => {
   const shopItems = [{ _id: "s4", name: "Dagger", _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.xyz" }, flags: {} }];
   const item = { name: "Dagger", _stats: { compendiumSource: "Compendium.world.homebrew.Item.q" } };

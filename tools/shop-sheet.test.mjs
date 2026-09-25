@@ -23,6 +23,7 @@ class ActorSheetV2 {
   _toggleDisabled(disabled) { this.disabled = disabled; }
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
   render() { this.renders++; }
+  async _prepareContext() { return {}; }
 }
 
 const CURRENCIES = {
@@ -47,7 +48,16 @@ globalThis.game = {
   user: { isGM: false, character: null },
   modules: { get: () => ({ api }) },
   actors: [],
-  i18n: { localize: key => key }
+  i18n: { localize: key => key },
+  // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
+  time: {
+    worldTime: 0,
+    calendar: {
+      days: { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 },
+      timeToComponents: () => ({ hour: 12, minute: 0 }),
+      format: () => ""
+    }
+  }
 };
 
 const { default: ShopSheet } = await import("../scripts/shop-sheet.mjs");
@@ -163,4 +173,37 @@ test("a retry after an unconfirmed trade resends the same tradeId, so it can't l
   await act(sheet, "seal");
   assert.equal(ids[0], ids[1]);
   assert.notEqual(ids[1], ids[2]);
+});
+
+test("the Sell bill's purse-after is the seller's purse plus the sale, not the till's", async () => {
+  const { sheet } = openShop({ buyerItems: [item("gem", { price: { value: 14, denomination: "gp" } })] });
+  sheet.document.system.currency = { gp: 200 };
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  const { sell } = await sheet._prepareContext({});
+  assert.deepEqual(sell.basket.afterCoins.map(c => [c.denomination, c.count]), [["pp", 10], ["gp", 7]]);
+});
+
+test("adding to a sealed bill starts a new one, so the sealed lines aren't traded again", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 }), item("lamp", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed" });
+  await act(sheet, "seal");
+  act(sheet, "addLine", { itemId: "lamp" });
+  assert.deepEqual([...sheet._baskets.buy.keys()], ["lamp"]);
+});
+
+test("changing the buyer drops the last buyer's unanswered trade id", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const other = actor("borin", []);
+  globalThis.game.actors.push(other);
+  act(sheet, "addLine", { itemId: "rope" });
+  const ids = [];
+  let n = 100;
+  globalThis.foundry.utils.randomID = () => `trade${String(++n).padStart(11, "0")}`;
+  api.trade = async request => { ids.push(request.tradeId); return { status: "unconfirmed" }; };
+  await act(sheet, "seal");
+  act(sheet, "pickBuyer", { actorUuid: other.uuid });
+  await act(sheet, "seal");
+  assert.notEqual(ids[0], ids[1]);
 });
