@@ -1,7 +1,6 @@
 {{!-- One row of the Buyer Picker popover (design/README.md, "Buying as"). `this` is one
-      buyerPicker entry {id, uuid, name, img, subtitle, purse, hasPurse, current}, plus `appId`
-      merged in by the caller's hash argument, since a picked buyer needs to close its own
-      window's popover, not another open shop's. --}}
+      buyerPicker entry {id, uuid, name, img, subtitle, purse, hasPurse, current}. Picking one
+      closes the picker in ShopSheet's own pickBuyer action. --}}
 {{!-- Redeclared per-file (matches shop-sheet.hbs's own "coins" inline) rather than assumed
       visible across a partial-file boundary — Handlebars inline-partial scoping through a
       separately-loaded `{{> "path"}}` include isn't worth gambling on. --}}
@@ -15,7 +14,7 @@
   {{/each}}
 {{/inline}}
 <button type="button" class="buyer-entry {{#if current}}is-current{{/if}} {{#unless hasPurse}}is-dimmed{{/unless}}"
-  data-action="pickBuyer" data-actor-uuid="{{uuid}}" popovertarget="{{appId}}-buyer-picker">
+  data-action="pickBuyer" data-actor-uuid="{{uuid}}">
   <img class="buyer-entry-img" src="{{img}}" alt="" />
   <span class="buyer-entry-info">
     <span class="buyer-entry-name">{{name}}</span>

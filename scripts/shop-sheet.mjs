@@ -431,6 +431,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const previous = this._buyerUuid;
     this._buyerUuid = target.dataset.actorUuid;
     if (this._buyerUuid !== previous) this.#buyerChanged();
+    // Closed here, before the re-render: the render lands before the browser would act on a
+    // popovertarget, and `_preRender` would see the picker still open and restore it.
+    this.element?.querySelector(".buyer-picker")?.hidePopover();
     this.render({ parts: ["body"] });
   }
 
