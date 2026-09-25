@@ -1,5 +1,5 @@
 import { effectiveRates } from "./pricing.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, dealtIn, isVisible, lineTotalCp } from "./trade-plan.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, dealtIn, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -199,9 +199,12 @@ export { isGear as isGearItem, matchingStockLine, sourceOf } from "./trade-plan.
 
 /**
  * A stock row the Buy tab can show: what a buy wouldn't refuse as not visible (gear, the fixed
- * exclusions, hidden, delisted, inside a container) or as unidentified.
+ * exclusions, hidden, delisted, inside a container, a container holding any of those) or as
+ * unidentified. `shopItems` is the shop's own items, for that container check.
  */
-export const isVisibleStock = (item, stock) => isVisible(item, stock) && item.system?.identified !== false;
+export const isVisibleStock = (item, stock, shopItems = []) => isVisible(item, stock)
+  && item.system?.identified !== false
+  && !(item.type === "container" && hasUngivableContents(item._id, shopItems));
 
 /* -------------------------------------------------------------- stock labels */
 

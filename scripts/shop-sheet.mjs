@@ -321,18 +321,23 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static #onPickBuyer(_event, target) {
     const previous = this._buyerUuid;
     this._buyerUuid = target.dataset.actorUuid;
-    // The sell basket holds the old buyer's own item ids.
-    if (this._buyerUuid !== previous) this._baskets.sell.clear();
-    this._tradeState.buy = this._tradeState.sell = "idle";
+    if (this._buyerUuid !== previous) {
+      // The sell basket holds the old buyer's own item ids, and an unanswered trade id belongs to
+      // the old buyer's trade: resent for the new one, the GM's side would take it as a repeat.
+      this._baskets.sell.clear();
+      this.#basketChanged("buy");
+      this.#basketChanged("sell");
+    }
     this.render({ parts: ["body"] });
   }
 
   /* -------------------------------------------------------------- buy tab */
 
   #buyContext(actor, config, rates, currencies, buyer, open) {
-    const rows = actor.items
-      .map(item => ({ data: item.toObject(), stock: stockFrom(item.flags?.[MODULE]?.stock ?? {}) }))
-      .filter(({ data, stock }) => isVisibleStock(data, stock))
+    const shopItems = actor.items.map(i => i.toObject());
+    const rows = shopItems
+      .map(data => ({ data, stock: stockFrom(data.flags?.[MODULE]?.stock ?? {}) }))
+      .filter(({ data, stock }) => isVisibleStock(data, stock, shopItems))
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, null, currencies, PLACEHOLDER_WORLD_INFINITE_STOCK);
         return {
@@ -393,7 +398,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static #onAddLine(_event, target) {
     const kind = this.tabGroups.primary;
     const itemId = target.dataset.itemId;
-    const basket = this._baskets[kind];
+    const basket = this.#openBasket(kind);
     const current = basket.get(itemId) ?? 0;
     const next = stepQuantity(current, 1, this.#shelfOf(kind, itemId));
     if (next > 0) basket.set(itemId, next);
@@ -405,7 +410,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     const itemId = target.dataset.itemId;
     const delta = Number(target.dataset.delta);
-    const basket = this._baskets[kind];
+    const basket = this.#openBasket(kind);
     const current = basket.get(itemId) ?? 0;
     // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts; a
     // sale steps one at a time, up to what the seller owns.
@@ -414,6 +419,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     else basket.set(itemId, next);
     this.#basketChanged(kind);
     this.render({ parts: ["body"] });
+  }
+
+  /** The basket to edit: a sealed bill's lines are already traded, so an edit starts a new bill. */
+  #openBasket(kind) {
+    if (this._tradeState[kind] === "sealed") {
+      this._baskets[kind].clear();
+      this._lastReceipt[kind] = null;
+    }
+    return this._baskets[kind];
   }
 
   /** A basket edit clears the last trade's outcome, and the lines it struck with it. */
@@ -467,7 +481,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const wontBuy = rows.filter(r => r.refusal);
     const lines = this.#pricedLines("sell", currencies);
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
-    const totals = basketTotals(lines, tillCp, "sell");
+    // Purse-after is the seller's own purse plus the sale; the till only decides till-short.
+    const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
+    const totals = basketTotals(lines, purseCp, "sell");
     const state = !open ? "closed" : (totals.sumCp > tillCp ? "till-short" : this._tradeState.sell);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));

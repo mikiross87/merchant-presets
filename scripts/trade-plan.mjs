@@ -291,7 +291,7 @@ export function isVisible(item, stock) {
  * refused whole (`planBuy`) rather than handing over only the rest — there's no request line
  * asking for "everything in the bag except the smith's own dagger".
  */
-function hasUngivableContents(containerId, shopItems) {
+export function hasUngivableContents(containerId, shopItems) {
   return shopItems.some(i => (i.system?.container ?? null) === containerId
     && (isShelfHidden(i, safeStockOf(i) ?? stockFrom({})) || hasUngivableContents(idOf(i), shopItems)));
 }
