@@ -18,6 +18,7 @@ class ActorSheetV2 {
     this.tabGroups = { primary: "buy" };
     this.renders = 0;
     this.disabled = false;
+    globalThis.foundry.applications.instances.set(Symbol("app"), this);
   }
   get isEditable() { return this.document.testUserPermission(globalThis.game.user, this.options.editPermission); }
   _toggleDisabled(disabled) { this.disabled = disabled; }
@@ -34,11 +35,19 @@ const CURRENCIES = {
 
 globalThis.Actor = class {};
 globalThis.CONFIG = { DND5E: { currencies: CURRENCIES }, Item: { typeLabels: {} }, Actor: {} };
+/** The world clock's hour; noon unless a test moves it. */
+const clock = { hour: 12 };
+/** Hook handlers the window registers, by event name. */
+const hooks = {};
+globalThis.Hooks = { on: (name, fn) => { (hooks[name] ??= []).push(fn); } };
+const fire = (name, ...args) => (hooks[name] ?? []).forEach(fn => fn(...args));
+
 globalThis.foundry = {
   applications: {
     sheets: { ActorSheetV2 },
     api: { HandlebarsApplicationMixin: Base => Base },
-    apps: { DocumentSheetConfig: { registerSheet() {} } }
+    apps: { DocumentSheetConfig: { registerSheet() {} } },
+    instances: new Map()
   },
   utils: { randomID: () => "trade00000000001" }
 };
@@ -47,7 +56,7 @@ const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
   modules: { get: () => ({ api }) },
-  settings: { values: { merchantPurse: "finite" }, get(_module, key) { return this.values[key]; } },
+  settings: { values: { merchantPurse: "finite", tradingHours: true }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -55,7 +64,7 @@ globalThis.game = {
     worldTime: 0,
     calendar: {
       days: { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 },
-      timeToComponents: () => ({ hour: 12, minute: 0 }),
+      timeToComponents: () => ({ hour: clock.hour, minute: 0 }),
       format: () => ""
     }
   }
@@ -277,12 +286,37 @@ test("with unlimited merchant coin an empty till still buys", async () => {
   }
 });
 
-test("a refusal the window can see for itself doesn't stick once its cause is gone", async () => {
+test("a refusal on live data stays on the bill until that data changes", async () => {
   const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
   act(sheet, "addLine", { itemId: "rope" });
-  api.trade = async () => ({ status: "refused", reason: "closed" });
+  api.trade = async () => ({ status: "refused", reason: "till-short" });
   await act(sheet, "seal");
+  assert.equal((await sheet._prepareContext({})).buy.seal.state, "till-short");
+  fire("updateActor", sheet.document);
   const { buy } = await sheet._prepareContext({});
   assert.equal(buy.seal.state, "idle");
   assert.equal(buy.seal.disabled, false);
+});
+
+test("with trading hours off the shop is open around the clock", async () => {
+  globalThis.game.settings.values.tradingHours = false;
+  clock.hour = 22;
+  try {
+    const { sheet } = openShop();
+    const context = await sheet._prepareContext({});
+    assert.equal(context.open, true);
+  } finally {
+    globalThis.game.settings.values.tradingHours = true;
+    clock.hour = 12;
+  }
+});
+
+test("the window re-renders when the clock moves or its buyer's purse changes, not for other actors", () => {
+  const { sheet, buyer } = openShop();
+  const stranger = actor("stranger", []);
+  const before = sheet.renders;
+  fire("updateWorldTime", 3600);
+  fire("updateActor", buyer);
+  fire("updateActor", stranger);
+  assert.equal(sheet.renders - before, 2);
 });

@@ -87,6 +87,10 @@ test("a category layer landing on full value tags 'Full value', not a percentage
   assert.deepEqual(rateTag({ rate: 1, layer: "category" }, 0.5), { kind: "full", text: null });
 });
 
+test("a category layer at full value that matches the chip needs no tag", () => {
+  assert.deepEqual(rateTag({ rate: 1, layer: "category" }, 1), { kind: null, text: null });
+});
+
 test("a category layer away from full value is an ordinary markup or discount", () => {
   assert.deepEqual(rateTag({ rate: 0.75, layer: "category" }, 1), { kind: "discount", text: "-25%" });
 });
