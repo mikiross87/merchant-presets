@@ -590,7 +590,7 @@ function planBuy(request, context) {
     } catch {
       return { ok: false, reason: "unpriced", line: requested };
     }
-    // In practice only a remainder floors to 0: a whole bundle prices at least the bundle's own.
+    // Usually a part-bundle remainder; a whole bundle floors to 0 only at a tiny price and rate.
     if (totalLineCp === 0 && item.system.price?.value > 0) return { ok: false, reason: "worthless", line: requested };
     fresh.push({ itemId: requested.itemId, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, layer: sellsAt.layer });
 
