@@ -536,6 +536,20 @@ test("a copy a sale creates is finite, even in an infinite-stock world", () => {
   assert.equal(created.flags["merchant-presets"].stock.infinite, false);
 });
 
+test("a part-bundle someone else took first is out of stock, not a malformed request", () => {
+  const shelf = { ...arrows(), system: { ...arrows().system, quantity: 300 } };   // the odd 5 already bought
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 25), context({ shop: { items: [shelf] } }));
+  assert.equal(result.reason, "out-of-stock");
+});
+
+test("a shop that pays nothing trades for 0cp rather than refusing everything worthless", () => {
+  const owned = { ...dagger(), system: { ...dagger().system, quantity: 1 }, flags: {} };
+  const ctx = context({ shop: { terms: { sellsAt: null, buysAt: 0, categories: [] } }, buyer: { items: [owned] } });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 0);
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
