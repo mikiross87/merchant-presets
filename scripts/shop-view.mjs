@@ -370,7 +370,8 @@ export function stepQuantity(current, delta, { bundle, available, infinite }) {
  * request is in flight), "sealed" (the last request came back sealed),
  * "closed" (the shop isn't open) and every `planTrade`/#102 refusal reason
  * this window can reach from the client side — `cant-afford`, `no-gm`,
- * `till-short`, `stock-changed` render their own copy; every other reason
+ * `till-short`, `stock-changed` render their own copy (`no-gm` and
+ * `stock-changed` leave the seal live, to send the bill again); every other reason
  * (not-visible, out-of-stock, wont-buy, …) reads as a plain "Can't trade"
  * fallback, since those are refused per-line before a seal attempt, not
  * states the button itself needs to explain.
@@ -384,7 +385,8 @@ export function sealState(state, hasLines) {
     case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "fa-solid fa-spinner fa-spin" };
     case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "fa-solid fa-store" };
     case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "fa-solid fa-ban" };
-    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: true, icon: "fa-solid fa-hourglass-half" };
+    // Live, not waiting: nothing tells the window a GM has arrived, so the player sends it again.
+    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "fa-solid fa-rotate-right" };
     case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "fa-solid fa-ban" };
     case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
     case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "fa-solid fa-ban" };

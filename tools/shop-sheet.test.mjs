@@ -6,6 +6,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { SHOP_DEFAULTS } from "../scripts/schema.mjs";
 
 const OWNERSHIP = { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3 };
 
@@ -18,7 +19,7 @@ class ActorSheetV2 {
     this.renders = 0;
     this.disabled = false;
   }
-  get isEditable() { return this.document.testUserPermission(game.user, this.options.editPermission); }
+  get isEditable() { return this.document.testUserPermission(globalThis.game.user, this.options.editPermission); }
   _toggleDisabled(disabled) { this.disabled = disabled; }
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
   render() { this.renders++; }
@@ -64,7 +65,8 @@ function item(id, { quantity = 1, price = { value: 1, denomination: "gp" }, flag
 
 function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 } } = {}) {
   return {
-    id, uuid: `Actor.${id}`, name: id, type: "npc", flags: {}, system: { currency },
+    id, uuid: `Actor.${id}`, name: id, type: "npc", flags: { "merchant-presets": { shop: structuredClone(SHOP_DEFAULTS) } },
+    system: { currency },
     items: collection(items),
     testUserPermission: (_user, level) => permission >= level
   };
@@ -74,8 +76,8 @@ function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 }
 function openShop({ shopItems = [item("rope")], buyerItems = [], permission = OWNERSHIP.LIMITED } = {}) {
   const shop = actor("shop", shopItems, { permission });
   const buyer = actor("hero", buyerItems);
-  game.actors = [shop, buyer];
-  game.user.character = buyer;
+  globalThis.game.actors = [shop, buyer];
+  globalThis.game.user.character = buyer;
   const sheet = new ShopSheet({ document: shop });
   return { sheet, shop, buyer };
 }

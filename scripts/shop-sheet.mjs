@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
-import { bundleFor, categoryFor, lineTotalCp } from "./trade-plan.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, lineTotalCp } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isGearItem, isVisibleStock,
   matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
@@ -125,9 +125,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** One state per kind, so a Buy refusal never bleeds into the Sell tab's own seal button: "idle" | "sealing" | "sealed" | a `planTrade` refusal reason. */
     this._tradeState = { buy: "idle", sell: "idle" };
     this._lastReceipt = { buy: null, sell: null };
+    /** Per kind, the item ids a `stock-changed` refusal re-priced, struck on the bill until the basket changes. */
+    this._struck = { buy: new Set(), sell: new Set() };
     this._activeCategory = "all";
     this._buyerUuid = game.user.character?.uuid ?? null;
   }
+
+  /**
+   * Nothing here writes to the shop: a trade goes through `api.trade`, carried out by the GM. So
+   * core's own gate, which disables every control for a user below `editPermission` (OWNER), would
+   * only lock a Limited player out of a shop they're meant to trade with. The GM's Settings tab
+   * (#110) is the one part that edits, and only a GM ever sees it.
+   * @override
+   */
+  _toggleDisabled() {}
 
   /* -------------------------------------------------------------- tabs */
 
@@ -161,6 +172,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const open = isOpen(config.hours, minute, calendarDays);
     const buyer = this.#resolveBuyer();
     const kind = this.tabGroups.primary;
+    this.#pruneBaskets();
 
     const chipSellsAt = effectiveRates(PLACEHOLDER_WORLD_RATES, config.terms).sellsAt.rate;
     const chipBuysAt = effectiveRates(PLACEHOLDER_WORLD_RATES, config.terms).buysAt.rate;
@@ -305,7 +317,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static #onPickBuyer(_event, target) {
+    const previous = this._buyerUuid;
     this._buyerUuid = target.dataset.actorUuid;
+    // The sell basket holds the old buyer's own item ids.
+    if (this._buyerUuid !== previous) this._baskets.sell.clear();
     this._tradeState.buy = this._tradeState.sell = "idle";
     this.render({ parts: ["body"] });
   }
@@ -342,7 +357,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (!section) { section = { category: row.category, categoryLabel: row.categoryLabel, rows: [] }; sections.push(section); }
       section.rows.push(row);
     }
-    const lines = this.#pricedLines("buy", id => actor.items.get(id)?.toObject(), currencies);
+    const lines = this.#pricedLines("buy", currencies);
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
     const totals = basketTotals(lines, purseCp, "buy");
     // A basket the purse can't cover reads as "cant-afford" the moment it goes over, the same
@@ -378,9 +393,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const itemId = target.dataset.itemId;
     const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
-    const next = kind === "buy" ? stepQuantity(current, 1, this.#shelfOf(itemId)) : current + 1;
+    const next = stepQuantity(current, 1, this.#shelfOf(kind, itemId));
     if (next > 0) basket.set(itemId, next);
-    this._tradeState[kind] = "idle";
+    this.#basketChanged(kind);
     this.render({ parts: ["body"] });
   }
 
@@ -390,17 +405,40 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const delta = Number(target.dataset.delta);
     const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
-    // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts.
-    const next = kind === "buy" ? stepQuantity(current, Math.sign(delta), this.#shelfOf(itemId)) : current + delta;
+    // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts; a
+    // sale steps one at a time, up to what the seller owns.
+    const next = stepQuantity(current, Math.sign(delta), this.#shelfOf(kind, itemId));
     if (next <= 0) basket.delete(itemId);
     else basket.set(itemId, next);
-    this._tradeState[kind] = "idle";
+    this.#basketChanged(kind);
     this.render({ parts: ["body"] });
   }
 
-  /** A shop line's bundle, count and whether it runs out, for the buy stepper. */
-  #shelfOf(itemId) {
-    const item = this.document.items.get(itemId)?.toObject();
+  /** A basket edit clears the last trade's outcome, and the lines it struck with it. */
+  #basketChanged(kind) {
+    this._tradeState[kind] = "idle";
+    this._struck[kind].clear();
+  }
+
+  /** The item a basket line of `kind` names: the shop's for a buy, the buyer's own for a sale. */
+  #itemOf(kind, itemId) {
+    const owner = kind === "buy" ? this.document : this.#resolveBuyer();
+    return owner?.items?.get(itemId)?.toObject() ?? null;
+  }
+
+  /** Drops basket lines whose item has gone (bought out, sold, deleted), so they're never sent. */
+  #pruneBaskets() {
+    for (const kind of ["buy", "sell"]) {
+      for (const itemId of this._baskets[kind].keys()) {
+        if (!this.#itemOf(kind, itemId)) this._baskets[kind].delete(itemId);
+      }
+    }
+  }
+
+  /** The stepper's limits for a line: a shop line's bundle, count and whether it runs out; for a sale, what the seller owns, one at a time. */
+  #shelfOf(kind, itemId) {
+    if (kind === "sell") return { bundle: 1, available: this.#itemOf("sell", itemId)?.system?.quantity ?? 0, infinite: false };
+    const item = this.#itemOf("buy", itemId);
     if (!item) return { bundle: 1, available: 0, infinite: false };
     const stock = stockFrom(item.flags?.[MODULE]?.stock ?? {});
     return {
@@ -424,7 +462,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
-    const lines = this.#pricedLines("sell", id => buyer?.items?.get(id)?.toObject(), currencies);
+    const lines = this.#pricedLines("sell", currencies);
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
     const totals = basketTotals(lines, tillCp, "sell");
     const state = !open ? "closed" : (totals.sumCp > tillCp ? "till-short" : this._tradeState.sell);
@@ -460,13 +498,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * totals (`basketTotals`, shop-view.mjs) are computed from *these* lines, never the raw
    * itemId/quantity pairs `this._baskets` holds — those carry no price at all on their own.
    */
-  #pricedLines(kind, resolveItem, currencies) {
+  #pricedLines(kind, currencies) {
     const world = PLACEHOLDER_WORLD_RATES;
     const config = shopFrom(this.document.flags?.[MODULE]?.shop ?? {});
     const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
     const lines = [];
     for (const [itemId, quantity] of this._baskets[kind]) {
-      const item = resolveItem(itemId);
+      const item = this.#itemOf(kind, itemId);
       if (!item || quantity <= 0) continue;
       // A shop item carries its own #98 stock flag; an item on the buyer's side (a sale) never
       // does (see trade-plan.mjs's `copyOf`), so its line reads the shop's matching shelf line
@@ -478,13 +516,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
       // No bundleOf resolver until the #102 runtime provides one.
       const bundle = bundleFor(item, line);
-      let unitCp = 0, lineTotal = 0;
+      let unitCp = 0, lineTotal = 0, bundleCp = null;
       try {
         unitCp = itemPriceCp(item.system.price, rate, bundle, currencies);
         lineTotal = lineTotalCp(item, rate, bundle, quantity, currencies);
+        bundleCp = bundlePriceCp(item, rate, currencies);
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
-        itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal,
+        itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
+        struck: this._struck[kind].has(itemId),
         unitCoins: coinBreakdown(unitCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
@@ -517,13 +557,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onSeal(_event, _target) {
     const kind = this.tabGroups.primary;
-    const basket = this._baskets[kind];
-    if (!basket.size) return;
+    // The button disables on the re-render, but a second click can land before that does.
+    if (this._tradeState[kind] === "sealing") return;
+    this.#pruneBaskets();
+    const lines = this.#pricedLines(kind, CONFIG.DND5E.currencies);
+    if (!lines.length) { this.render({ parts: ["body"] }); return; }
     this._tradeState[kind] = "sealing";
+    this._struck[kind].clear();
     this.render({ parts: ["body"] });
 
-    const lines = [...basket].map(([itemId, quantity]) => ({ itemId, quantity }));
-    const request = { tradeId: foundry.utils.randomID(), kind, lines };
+    // The GM's side resolves both actors by uuid (a shop can be an unlinked token's), and checks
+    // each line against the bundle price this bill showed (#102: "stock-changed").
+    const request = {
+      tradeId: foundry.utils.randomID(), kind, shopUuid: this.document.uuid, buyerUuid: this._buyerUuid,
+      lines: lines.map(({ itemId, quantity, bundlePriceCp }) =>
+        ({ itemId, quantity, ...(bundlePriceCp != null && { expectedBundlePriceCp: bundlePriceCp }) }))
+    };
     const api = game.modules.get(MODULE).api;
 
     if (!api?.trade) {
@@ -538,9 +587,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         this._lastReceipt[kind] = result.receipt ?? null;
       } else if (result.status === "refused") {
         this._tradeState[kind] = result.reason;
+        // The bill re-prices from the live shop on the render below; strike what moved so the
+        // player sees which lines they're now agreeing to at a new price.
         if (result.reason === "stock-changed" && Array.isArray(result.lines)) {
+          const sent = new Map(request.lines.map(l => [l.itemId, l.expectedBundlePriceCp]));
           for (const fresh of result.lines) {
-            if (basket.has(fresh.itemId)) basket.set(fresh.itemId, basket.get(fresh.itemId));
+            if (sent.get(fresh.itemId) !== fresh.bundlePriceCp) this._struck[kind].add(fresh.itemId);
           }
         }
       } else {
@@ -558,7 +610,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static #onKeepShopping(_event, _target) {
     const kind = this.tabGroups.primary;
     this._baskets[kind].clear();
-    this._tradeState[kind] = "idle";
+    this.#basketChanged(kind);
     this._lastReceipt[kind] = null;
     this.render({ parts: ["body"] });
   }
