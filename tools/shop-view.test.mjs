@@ -384,3 +384,12 @@ test("the seal button explains the planner's other refusals instead of offering 
     assert.notEqual(seal.labelKey, "MERCHANT_PRESETS.Shop.Seal.Bargain", reason);
   }
 });
+
+test("a sell row knows the fewest that sell for a coin, and a lone copper piece isn't one at half", () => {
+  const chalk = { _id: "c1", img: "", name: "Chalk", type: "loot", system: { price: { value: 1, denomination: "cp" }, quantity: 5 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipBuysAt: 0.5 };
+  const shop = { wontBuy: { types: [], kinds: [] } };
+  const row = sellRow(chalk, shop, { category: "", bundle: 1, service: false, noBuyback: false }, rates, null, CURRENCIES5E);
+  assert.equal(row.refusal, null);
+  assert.equal(row.minQuantity, 2);
+});

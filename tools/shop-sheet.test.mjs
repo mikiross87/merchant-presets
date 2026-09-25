@@ -433,3 +433,40 @@ test("a basket asking for more than is left is cut to what's left", async () => 
   await sheet._prepareContext({});
   assert.equal(sheet._baskets.buy.get("torch"), 1);
 });
+
+test("the Sell tab lists goods, not the seller's spells and features", async () => {
+  const { sheet } = openShop({ buyerItems: [item("gem"), item("fireball", { type: "spell" }), item("rage", { type: "feat" })] });
+  const { sell } = await sheet._prepareContext({});
+  assert.deepEqual([...sell.willBuy, ...sell.wontBuy].map(r => r.id), ["gem"]);
+});
+
+test("a basket the shelf changed under is reset like any other edit", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("torch", { quantity: 6 })] });
+  for (let i = 0; i < 5; i++) act(sheet, "addLine", { itemId: "torch" });
+  api.trade = async () => ({ status: "refused", reason: "out-of-stock" });
+  await act(sheet, "seal");
+  shop.items.get("torch").system.quantity = 2;
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(sheet._baskets.buy.get("torch"), 2);
+  assert.equal(buy.seal.state, "idle");
+});
+
+test("a sale starts at the fewest that are worth a coin", () => {
+  const { sheet } = openShop({ buyerItems: [item("chalk", { quantity: 5, price: { value: 1, denomination: "cp" } })] });
+  sheet.tabGroups.primary = "sell";
+  return sheet._prepareContext({}).then(() => {
+    act(sheet, "addLine", { itemId: "chalk" });
+    assert.equal(sheet._baskets.sell.get("chalk"), 2);
+    act(sheet, "stepLine", { itemId: "chalk", delta: "-1" });
+    assert.equal(sheet._baskets.sell.has("chalk"), false);
+  });
+});
+
+test("an empty purse reads as no coin, not as worthless", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  buyer.system.currency = { gp: 1 };
+  act(sheet, "addLine", { itemId: "rope" });
+  const { buyerPurse, buy } = await sheet._prepareContext({});
+  assert.deepEqual(coins(buyerPurse), [["gp", 1]]);
+  assert.deepEqual(coins(buy.basket.afterCoins), [["gp", 0]]);
+});
