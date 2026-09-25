@@ -337,6 +337,19 @@ test("worldHasLegacyShops sees an unmigrated shop and ignores everything else", 
   assert.equal(worldHasLegacyShops([migrated, notOurs, legacy]), true);
 });
 
+test("a v1.0.0 merchant, which predates the profile flag, is still migrated (#120 review)", () => {
+  // v1.0.0 shipped flags.merchant-presets as {purse, itemFlags, containers}; profile arrived in v1.1.0.
+  const v100 = legacy(shipped("Adventurers_Store_Town"));
+  delete v100.flags["merchant-presets"].profile;
+  assert.ok(v100.flags["merchant-presets"].itemFlags);
+  assert.equal(needsMigration(v100), true);
+  assert.equal(worldHasLegacyShops([v100]), true);
+  assert.ok(planItemUpdates(v100).updates.length > 0);
+  const { update, shopError } = planActorUpdate(v100);
+  assert.equal(shopError, null);
+  assert.equal(validateShop(update["flags.merchant-presets.shop"]).ok, true);
+});
+
 test("needsMigration stays true when the shop half landed but items still lack .stock (#100 review)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const shopOnly = applied(store, { "flags.merchant-presets.shop": deriveShop(store) });
