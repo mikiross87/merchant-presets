@@ -127,6 +127,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._lastReceipt = { buy: null, sell: null };
     /** Per kind, the item ids a `stock-changed` refusal re-priced, struck on the bill until the basket changes. */
     this._struck = { buy: new Set(), sell: new Set() };
+    /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): a retry of the same basket resends it, so the GM's side can't carry it out twice. */
+    this._tradeId = { buy: null, sell: null };
     this._activeCategory = "all";
     this._buyerUuid = game.user.character?.uuid ?? null;
   }
@@ -418,6 +420,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   #basketChanged(kind) {
     this._tradeState[kind] = "idle";
     this._struck[kind].clear();
+    this._tradeId[kind] = null;
   }
 
   /** The item a basket line of `kind` names: the shop's for a buy, the buyer's own for a sale. */
@@ -569,7 +572,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // The GM's side resolves both actors by uuid (a shop can be an unlinked token's), and checks
     // each line against the bundle price this bill showed (#102: "stock-changed").
     const request = {
-      tradeId: foundry.utils.randomID(), kind, shopUuid: this.document.uuid, buyerUuid: this._buyerUuid,
+      tradeId: this._tradeId[kind] ??= foundry.utils.randomID(), kind, shopUuid: this.document.uuid, buyerUuid: this._buyerUuid,
       lines: lines.map(({ itemId, quantity, bundlePriceCp }) =>
         ({ itemId, quantity, ...(bundlePriceCp != null && { expectedBundlePriceCp: bundlePriceCp }) }))
     };
@@ -582,6 +585,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }
     try {
       const result = await api.trade(request);
+      // Sealed or refused, this trade is settled; only an unanswered one keeps its id for a retry.
+      if (result.status === "sealed" || result.status === "refused") this._tradeId[kind] = null;
       if (result.status === "sealed") {
         this._tradeState[kind] = "sealed";
         this._lastReceipt[kind] = result.receipt ?? null;
