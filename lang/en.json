@@ -101,6 +101,7 @@
         "TillShort": "The till can't cover this",
         "Closed": "The shop is closed",
         "NoBuyer": "No character to trade as",
+        "OutOfStock": "Not that many left",
         "StockChangedNotice": "Stock changed while this bill was open. Prices below are current.",
         "NoGmNotice": "No GM is at the table. Trades are carried out by the GM's client. Your bill is kept: seal it again once one connects.",
         "TillShortNotice": "The till holds {amount}, less than this sale. Take lines off the bill until it fits.",

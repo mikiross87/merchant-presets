@@ -163,21 +163,36 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   _toggleDisabled() {}
 
+  /**
+   * A re-render replaces the popovers, and one comes on every clock tick or buyer update (see
+   * `register`): note which is open, and the GM's search, so `_onRender` can put them back.
+   * @override
+   */
+  async _preRender(context, options) {
+    await super._preRender?.(context, options);
+    this._openPopover = this.element?.querySelector("[popover]:popover-open")?.id ?? null;
+    this._buyerSearch = this.element?.querySelector(".buyer-search")?.value ?? "";
+  }
+
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
+    if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
     // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
     // form, which has nothing to save.
     const search = this.element?.querySelector(".buyer-search");
     if (!search) return;
-    search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
-    search.addEventListener("input", () => {
+    const filter = () => {
       const query = search.value.trim().toLocaleLowerCase();
       for (const entry of this.element.querySelectorAll(".buyer-picker .buyer-entry")) {
         const name = entry.querySelector(".buyer-entry-name")?.textContent.toLocaleLowerCase() ?? "";
         entry.hidden = !!query && !name.includes(query);
       }
-    });
+    };
+    search.value = this._buyerSearch ?? "";
+    filter();
+    search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
+    search.addEventListener("input", filter);
   }
 
   /* -------------------------------------------------------------- tabs */
@@ -200,7 +215,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const context = await super._prepareContext(options);
     const actor = this.document;
     const currencies = CONFIG.DND5E.currencies;
-    const config = shopConfigOf(actor);
+    // Trading hours off means every shop is open around the clock (the setting's own promise), so
+    // the window reads it as a shop with no hours: always open, in the header too.
+    const shop = shopConfigOf(actor);
+    const config = game.settings.get(MODULE, "tradingHours") ? shop : { ...shop, hours: null };
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 
@@ -209,8 +227,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // itself, so `.days` is what's passed through here, not the calendar object that owns it.
     const calendarDays = game.time.calendar.days;
     const minute = this.#minuteOfDay();
-    // Trading hours off means every shop is open around the clock (the setting's own promise).
-    const open = !game.settings.get(MODULE, "tradingHours") || isOpen(config.hours, minute, calendarDays);
+    const open = isOpen(config.hours, minute, calendarDays);
     const buyer = this.#resolveBuyer();
     const kind = this.tabGroups.primary;
     this.#pruneBaskets();
@@ -335,8 +352,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const candidates = this.#candidateBuyers();
     let buyer = candidates.find(a => a.uuid === this._buyerUuid);
     if (!buyer) buyer = game.user.character ?? candidates[0] ?? null;
+    const previous = this._buyerUuid;
     this._buyerUuid = buyer?.uuid ?? null;
+    // The buyer went out of reach (deleted, or no longer owned): the same reset as picking another.
+    if (previous && this._buyerUuid !== previous) this.#buyerChanged();
     return buyer;
+  }
+
+  /** A new buyer: the sell basket held the old one's own items, and an unanswered trade id is the old one's trade. */
+  #buyerChanged() {
+    this._baskets.sell.clear();
+    this.#basketChanged("buy");
+    this.#basketChanged("sell");
   }
 
   #buyerPickerContext(buyer, currencies) {
@@ -361,13 +388,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return;
     const previous = this._buyerUuid;
     this._buyerUuid = target.dataset.actorUuid;
-    if (this._buyerUuid !== previous) {
-      // The sell basket holds the old buyer's own item ids, and an unanswered trade id belongs to
-      // the old buyer's trade: resent for the new one, the GM's side would take it as a repeat.
-      this._baskets.sell.clear();
-      this.#basketChanged("buy");
-      this.#basketChanged("sell");
-    }
+    if (this._buyerUuid !== previous) this.#buyerChanged();
     this.render({ parts: ["body"] });
   }
 
@@ -392,6 +413,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : []
         };
       });
+    // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
+    if (this._activeCategory !== "all" && !rows.some(r => r.category === this._activeCategory)) this._activeCategory = "all";
     const categories = groupCategories(rows).map(c => ({
       ...c,
       active: c.id === this._activeCategory,
@@ -482,11 +505,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return owner?.items?.get(itemId)?.toObject() ?? null;
   }
 
-  /** Drops basket lines whose item has gone (bought out, sold, deleted), so they're never sent. */
+  /**
+   * Drops basket lines whose item has gone (bought out, sold, deleted), and cuts a line to what's
+   * left when someone else took some, so neither is sent as it stands. What's left is always a
+   * quantity a buy accepts: whole bundles plus the line's own odd remainder.
+   */
   #pruneBaskets() {
     for (const kind of ["buy", "sell"]) {
-      for (const itemId of this._baskets[kind].keys()) {
-        if (!this.#itemOf(kind, itemId)) this._baskets[kind].delete(itemId);
+      const basket = this._baskets[kind];
+      for (const [itemId, quantity] of basket) {
+        const { available, infinite } = this.#shelfOf(kind, itemId);
+        if (!this.#itemOf(kind, itemId) || (!infinite && available <= 0)) basket.delete(itemId);
+        else if (!infinite && quantity > available) basket.set(itemId, available);
       }
     }
   }
@@ -717,6 +747,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // core's own re-render on a document update doesn't cover them.
     Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
     Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
+    Hooks.on("deleteActor", actor => ShopSheet.#liveDataChanged(app => app._buyerUuid === actor.uuid));
     // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
     for (const hook of ["createItem", "updateItem", "deleteItem"]) {
       Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));

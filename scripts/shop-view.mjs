@@ -393,11 +393,15 @@ export function sealState(state, hasLines) {
     case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "fa-solid fa-ban" };
     case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
     case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "fa-solid fa-ban" };
+    case "idle": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
+    case "out-of-stock": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" };
     case "no-buyer": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoBuyer", disabled: true, icon: "fa-solid fa-user-slash" };
     case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "fa-solid fa-ban" };
     case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "fa-solid fa-box-open" };
     case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "fa-solid fa-ban" };
     case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
-    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
+    // Any other refusal (not-visible, wont-buy, shop-misconfigured, ...) still reads as one: the
+    // bill has to change before the same request could go through.
+    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
   }
 }
