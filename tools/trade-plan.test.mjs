@@ -521,6 +521,21 @@ test("containers that hold each other (bad data) are refused, not a stack overfl
   assert.equal(result.reason, "container-not-empty");
 });
 
+test("a sold container matching a delisted line lands delisted too", () => {
+  const delisted = { ...backpack("ShopPack0000001"), flags: { "merchant-presets": { stock: { ...backpack("x").flags["merchant-presets"].stock, notForSale: true } } } };
+  const owned = { ...backpack("OwnedPack000001"), flags: {} };
+  const result = planTrade(sellRequest("OwnedPack000001", 1), context({ shop: { items: [delisted] }, buyer: { items: [owned] } }));
+  const [created] = result.plan.updates[1].itemCreates;
+  assert.equal(created.flags["merchant-presets"].stock.notForSale, true);
+});
+
+test("a copy a sale creates is finite, even in an infinite-stock world", () => {
+  const owned = { ...dagger(), system: { ...dagger().system, quantity: 1 }, flags: {} };
+  const result = planTrade(sellRequest("Dagger000000001", 1), context({ worldSettings: { ...WORLD, infiniteStock: true }, buyer: { items: [owned] } }));
+  const [created] = result.plan.updates[1].itemCreates;
+  assert.equal(created.flags["merchant-presets"].stock.infinite, false);
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
