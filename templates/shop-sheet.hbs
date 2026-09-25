@@ -142,7 +142,7 @@
       <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Buy.Empty"}}</p>
     {{/each}}
   </div>
-  {{#if closed}}
+  {{#if buy.showClosed}}
     {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}
   {{else}}
     {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" buy}}
@@ -196,7 +196,7 @@
       <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Sell.Empty"}}</p>
     {{/unless}}{{/unless}}
   </div>
-  {{#if closed}}
+  {{#if sell.showClosed}}
     {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}
   {{else}}
     {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" sell}}

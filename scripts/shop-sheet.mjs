@@ -493,7 +493,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       categories,
       // For a buy refused as till-short: the till couldn't make change.
       tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
-      basket: this.#billOfSale(lines, totals, currencies, buyer),
+      basket: this.#billOfSale(lines, totals, currencies, buyer, this._sealed.buy),
+      // A seal that's out or stamped stays on screen past closing, so its answer is seen.
+      showClosed: !open && !isSettled(this._tradeState.buy),
       seal: {
         ...seal,
         state,
@@ -681,7 +683,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
       // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
       tillCapsSales: game.settings.get(MODULE, "merchantPurse") !== "unlimited",
-      basket: this.#billOfSale(lines, totals, currencies, buyer),
+      basket: this.#billOfSale(lines, totals, currencies, buyer, this._sealed.sell),
+      // A seal that's out or stamped stays on screen past closing, so its answer is seen.
+      showClosed: !open && !isSettled(this._tradeState.sell),
       seal: {
         ...seal,
         state,
@@ -750,7 +754,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return lines;
   }
 
-  #billOfSale(lines, totals, currencies, buyer) {
+  #billOfSale(lines, totals, currencies, buyer, sealed) {
     const sumCoins = coinBreakdown(totals.sumCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
     const afterCoins = purseCoins(totals.afterCp, currencies);
     const shortfallCoins = coinBreakdown(totals.shortfallCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
@@ -762,7 +766,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shortfallText: coinsText(shortfallCoins),
       buyerName: buyer?.name ?? null,
       hasLines: lines.length > 0,
-      dateLabel: this.#worldDateLabel()
+      // A stamped bill keeps the date it sealed on; a live one reads the clock.
+      dateLabel: sealed?.dateLabel ?? this.#worldDateLabel()
     };
   }
 
@@ -813,7 +818,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // lines leave the basket.
         const carried = Array.isArray(result.lines) ? this.#carriedLines(result.lines, sent) : lines;
         this._tradeState[kind] = "sealed";
-        this._sealed[kind] = { lines: carried, sumCp: basketTotals(carried, 0, kind).sumCp, receipt: result.receipt ?? null };
+        this._sealed[kind] = {
+          lines: carried, sumCp: basketTotals(carried, 0, kind).sumCp, receipt: result.receipt ?? null,
+          dateLabel: this.#worldDateLabel()
+        };
         for (const line of carried) {
           const left = (this._baskets[kind].get(line.itemId) ?? 0) - line.quantity;
           if (left > 0) this._baskets[kind].set(line.itemId, left);
