@@ -1,0 +1,143 @@
+{
+  "MERCHANT_PRESETS": {
+    "Shop": {
+      "SheetLabel": "Shop window",
+      "NpcSheet": "NPC sheet",
+      "NoNpcSheet": "This module's own dnd5e sheet couldn't be found for the NPC sheet button.",
+      "About": "About",
+      "AlwaysOpen": "Open",
+      "OpenUntil": "Open · closes at {time}",
+      "Closed": {
+        "Label": "Closed",
+        "Title": "Shutters are down",
+        "Body": "You can look over the goods. Nothing can be bought or sold until the shop opens.",
+        "OpensIn": "Opens at {time}, in about {duration}",
+        "Hours": "{count} hour",
+        "HoursPlural": "{count} hours",
+        "Minutes": "{count} minute",
+        "MinutesPlural": "{count} minutes",
+        "Open": "Open",
+        "Close": "Close",
+        "NextRestock": "Next restock"
+      },
+      "ClosedOpensAt": "Closed · opens at {time}",
+      "TermsChip": "Sells at {sells} · Buys at {buys}",
+      "FreshStockToday": "Fresh stock today",
+      "BuyingAs": "Buying as",
+      "NoBuyer": "Pick a buyer",
+      "NoPurse": "no purse",
+      "Tabs": {
+        "buy": "Buy",
+        "GmBadge": "GM",
+        "sell": "Sell",
+        "settings": "Settings"
+      },
+      "Category": {
+        "All": "All goods"
+      },
+      "Stock": {
+        "Left": "{count} left",
+        "Last": "Last one",
+        "SoldOut": "Sold out",
+        "Always": "Always"
+      },
+      "Tag": {
+        "Full": "Full value",
+        "Bundle": "per {bundle}",
+        "PriceFor": "{count} for",
+        "New": "New",
+        "Service": "Service"
+      },
+      "Worthless": "Worthless",
+      "Free": "Free",
+      "Buy": {
+        "AddToBill": "Add to the bill of sale",
+        "Empty": "This shop has nothing left to show here."
+      },
+      "Sell": {
+        "WillBuy": "Will buy",
+        "WontBuy": "Won't buy",
+        "BuysAt": "Buys at",
+        "OfValue": "of value",
+        "Equipped": "Equipped",
+        "Empty": "Nothing in your pack this shop has an opinion on yet.",
+        "TillHolds": "The till holds {amount}, so no sale today can bring in more.",
+        "Filter": {
+          "Everything": "Everything",
+          "WillBuy": "Will buy",
+          "WontBuy": "Won't buy"
+        },
+        "Reason": {
+          "Unidentified": "Unidentified",
+          "UnidentifiedNote": "Unidentified. Get it looked at first.",
+          "General": "Won't buy this",
+          "NoBuyback": "No buyback",
+          "Unpriced": "Unpriced",
+          "Worthless": "Worth nothing here",
+          "NotEmpty": "Empty it first"
+        },
+        "ConfirmTitle": "Sell this?",
+        "ConfirmEquipped": "{name} is equipped. Sell it anyway?",
+        "ConfirmContained": "{name} is inside another item. Sell it anyway?"
+      },
+      "Bill": {
+        "TitleBuy": "Bill of Sale",
+        "TitleSell": "Bill of Sale · Selling",
+        "SumOwed": "Sum owed",
+        "YouReceive": "You receive",
+        "PurseAfter": "{name}'s purse after the bargain",
+        "ShortBy": "{name} is short by {amount}",
+        "TillDrops": "The till drops to {amount}",
+        "Empty": "Add goods to start a bill of sale.",
+        "Each": "each",
+        "Fewer": "One fewer",
+        "More": "One more"
+      },
+      "Seal": {
+        "Bargain": "Seal the bargain · {price}",
+        "BargainSell": "Seal it · take {price}",
+        "Sealing": "Counting coin…",
+        "Sealed": "SEALED",
+        "KeepShopping": "Keep shopping",
+        "CantAfford": "Not enough coin",
+        "NoGm": "No GM yet · Try again",
+        "TillShort": "The till can't cover this",
+        "Closed": "The shop is closed",
+        "NoBuyer": "No character to trade as",
+        "OutOfStock": "Not that many left",
+        "StockChangedNotice": "Stock changed while this bill was open. Prices below are current.",
+        "NoGmNotice": "No GM is at the table. Trades are carried out by the GM's client. Your bill is kept: seal it again once one connects.",
+        "TillShortNotice": "The till holds {amount}, less than this sale. Take lines off the bill until it fits.",
+        "TillShortBuyNotice": "The till holds {amount} and can't make change for this. Pay closer to the sum, or take lines off.",
+        "Worthless": "Worth nothing here",
+        "NotEmpty": "Empty it first",
+        "Unpriced": "Can't price this",
+        "Invalid": "Can't trade that"
+      },
+      "Terms": {
+        "Title": "Terms of trade",
+        "SellsAt": "Sells at",
+        "BuysAt": "Buys at",
+        "ListPrice": "list price",
+        "ListPriceNote": "The price in the book is the price you pay.",
+        "HalfValue": "half value",
+        "SellExample": "A {price} item sells here for {sellPrice}",
+        "BuyExample": "and buys back for {buyPrice}.",
+        "ExampleSells": "A 15 gp item sells here for",
+        "ExampleBuys": "A 15 gp item buys back here for",
+        "WontBuy": "Won't buy",
+        "Note": "Set by the GM on the shop. Prices below already include these terms."
+      },
+      "BuyerPicker": {
+        "Search": "Find an actor…",
+        "PlayerCharacters": "Player characters",
+        "OtherActors": "Other actors",
+        "PlayerHint": "Only actors you own. The assigned character is the default.",
+        "GmHint": "Any actor. Coins come from, and goods go to, whoever is picked."
+      },
+      "Settings": {
+        "ComingSoon": "The Settings tab is coming in #110. Terms, deals, won't-buy, hours and restock will all be editable here."
+      }
+    }
+  }
+}

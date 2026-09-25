@@ -258,15 +258,15 @@ const findById = (docs, id) => docs.find(d => idOf(d) === id);
 const stockOf = item => stockFrom(item.flags?.[MODULE]?.stock ?? {});
 const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
 const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
-const isGear = item => kindOf(item) === "gear";
-const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
+export const isGear = item => kindOf(item) === "gear";
+export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
 /** `shopOf`/`stockOf`, but never throwing: a trade only reads config, and must survive data some other bug already left invalid. */
-const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
-const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
+export const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
+export const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
 
 /** Never traded, either direction, by any shop — the fixed exclusions shared by both `isVisible` and `dealtIn`. */
-function isFixedExcluded(item) {
+export function isFixedExcluded(item) {
   return FIXED_EXCLUDED_TYPES.includes(item.type) || item.system?.type?.value === "natural" || isGear(item);
 }
 
@@ -281,7 +281,7 @@ function isShelfHidden(item, stock) {
  * hidden or delisted it, or it's sitting inside a container already on the shelf (its container
  * is the thing to buy; buying it separately would hand it out twice over — see `landContainer`).
  */
-function isVisible(item, stock) {
+export function isVisible(item, stock) {
   return !isShelfHidden(item, stock) && (item.system?.container ?? null) === null;
 }
 
@@ -291,13 +291,13 @@ function isVisible(item, stock) {
  * refused whole (`planBuy`) rather than handing over only the rest — there's no request line
  * asking for "everything in the bag except the smith's own dagger".
  */
-function hasUngivableContents(containerId, shopItems) {
+export function hasUngivableContents(containerId, shopItems) {
   return shopItems.some(i => (i.system?.container ?? null) === containerId
     && (isShelfHidden(i, safeStockOf(i) ?? stockFrom({})) || hasUngivableContents(idOf(i), shopItems)));
 }
 
 /** Whether `shop` deals in `item` at all — the fixed exclusions, then its own `wontBuy`. */
-function dealtIn(item, shop) {
+export function dealtIn(item, shop) {
   if (isFixedExcluded(item)) return false;
   if (shop.wontBuy.types.includes(item.type)) return false;
   const kind = kindOf(item);
@@ -326,7 +326,7 @@ function stacksOnto(existing, incoming) {
  * its own fallback — see "kept: bundle", below), since the item being sold no longer carries its
  * own stock flags (see `copyOf`).
  */
-function matchingStockLine(item, shopItems) {
+export function matchingStockLine(item, shopItems) {
   const source = sourceOf(item);
   const bySource = source != null ? shopItems.find(i => !isGear(i) && sourceOf(i) === source) : null;
   return bySource ?? shopItems.find(i => !isGear(i) && i.name === item.name);
@@ -342,6 +342,19 @@ function statedBundle(item) {
   const flags = item?.flags?.[MODULE];
   return flags?.stock?.bundle ?? flags?.bundle;
 }
+
+/**
+ * The bundle a trade prices `item` by: `line`'s stated bundle (on a buy, `line` is the item
+ * itself; on a sale, the matching shelf line, if any), then the item's own carried flag, then
+ * `bundleOf` (see the module header), then 1. Exported so the shop window prices by the same
+ * chain it displays.
+ */
+export function bundleFor(item, line, bundleOf) {
+  return statedBundle(line) ?? statedBundle(item) ?? bundleOf?.(item) ?? 1;
+}
+
+/** The category a line prices under: its stated one, else its item type (schema.mjs: `""`). */
+export const categoryFor = (item, stock) => stock.category || item.type;
 
 /**
  * A purse so large `pricing.pay` never refuses it: stands in for "this side's coin is infinite".
@@ -362,12 +375,12 @@ function bottomlessTill(currencies) {
  * 1gp *is* the cost of the 20 arrows it buys), so this only ever applies the rate, never divides
  * by the bundle size — that division is `lineTotalCp`'s job, for a specific `quantity` traded.
  */
-function bundlePriceCp(item, rate, currencies) {
+export function bundlePriceCp(item, rate, currencies) {
   return itemPriceCp(item.system.price, rate, 1, currencies);
 }
 
 /** `item`'s price for one of the `quantity` being traded, at `rate`, floored once for the lot. */
-function lineTotalCp(item, rate, bundle, quantity, currencies) {
+export function lineTotalCp(item, rate, bundle, quantity, currencies) {
   return itemPriceCp(item.system.price, rate, bundle, currencies, quantity);
 }
 
@@ -597,7 +610,7 @@ function planBuy(request, context) {
     // part-bundle a sale left on a finite line (5 arrows sold back onto 300): that remainder is
     // buyable too, or it would sit on the shelf for good (#102, 2026-09-25). The UI steps by the
     // bundle, so anything else is a malformed request, not a refusal a player should see.
-    const bundle = statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
+    const bundle = bundleFor(item, item, context.bundleOf);
     const infinite = stock.service || (stock.infinite ?? worldSettings.infiniteStock);
     const available = stockRemaining.get(requested.itemId) ?? 0;
     const remainder = infinite ? 0 : available % bundle;
@@ -607,7 +620,7 @@ function planBuy(request, context) {
     // there's no remainder to be stale about.
     if (odd !== 0 && odd !== remainder) return { ok: false, reason: infinite ? "invalid-request" : "out-of-stock", line: requested };
 
-    const category = stock.category || item.type;
+    const category = categoryFor(item, stock);
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
@@ -711,8 +724,8 @@ function planSell(request, context) {
     // context.bundleOf — for a good that never passed through a shop at all (starting gear, say)
     // — rather than silently assuming 1: a bundle of 20 arrows priced as 20 individual
     // purchases would pay 20x too much.
-    const bundle = statedBundle(matched) ?? statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
-    const category = stock.category || item.type;
+    const bundle = bundleFor(item, matched, context.bundleOf);
+    const category = categoryFor(item, stock);
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
