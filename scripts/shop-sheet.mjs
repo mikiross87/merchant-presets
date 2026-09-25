@@ -560,7 +560,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const basket = this._baskets[kind];
     const gone = [...basket.keys()].filter(id => !offered.has(id));
     for (const id of gone) basket.delete(id);
-    if (gone.length) this.#basketChanged(kind);
+    if (gone.length) this.#shelfChanged(kind);
+  }
+
+  /**
+   * The shelf (or the seller's pack) changed a basket under the player: a new bill, like any edit.
+   * If that emptied it, an unanswered trade has most likely landed and moved those very items, and
+   * there's nothing left to resend: its id goes, so a later bill isn't answered as that trade.
+   */
+  #shelfChanged(kind) {
+    if (!this._baskets[kind].size) {
+      this._tradeId[kind] = null;
+      this._sent[kind].clear();
+    }
+    this.#basketChanged(kind);
   }
 
   /** What to ask before selling `itemId`: only an equipped or contained item needs asking; otherwise null. */
@@ -626,7 +639,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         changed = true;
       }
       // A changed basket is a new bill: the last refusal and unanswered trade id were the old one's.
-      if (changed) this.#basketChanged(kind);
+      if (changed) this.#shelfChanged(kind);
     }
   }
 
@@ -647,8 +660,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   #sellContext(actor, config, rates, currencies, buyer, open) {
     const shopItems = actor.items.map(i => i.toObject());
-    // Goods only: spells, features and the like are never traded, so they aren't "won't buy" rows.
-    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isFixedExcluded(i));
+    // Goods only: spells, features and the like are never traded, so they aren't "won't buy" rows,
+    // and a used-up item (quantity 0) has nothing to sell.
+    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isFixedExcluded(i) && (i.system?.quantity ?? 1) > 0);
     const rows = items.map(item => {
       const line = matchingStockLine(item, shopItems);
       const matched = stockConfigOf(line);

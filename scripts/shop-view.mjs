@@ -153,6 +153,8 @@ export function rateFraction(rate) {
  * @returns {RateTag}
  */
 export function rateTag(effective, chipRate) {
+  // The schema keeps a shop's sellsAt above 0; guarded anyway, so a bad rate can't read "+Infinity%".
+  if (!(chipRate > 0)) return { kind: null, text: null };
   const diff = effective.rate - chipRate;
   if (Math.abs(diff) < 1e-9) return { kind: null, text: null };
   if (effective.layer === "category" && Math.abs(effective.rate - 1) < 1e-9) return { kind: "full", text: null };
