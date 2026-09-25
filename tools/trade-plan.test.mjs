@@ -417,6 +417,41 @@ test("bundleOf is never consulted when a matching line or a carried bundle flag 
   assert.equal(planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), flagged).ok, true);
 });
 
+test("selling a bundled good onto a sold-in line with no stock flags prices by the carried bundle", () => {
+  // A line created by an earlier sale: copyOf stripped `stock` but kept `bundle`. Matching it must
+  // not reset the bundle to STOCK_DEFAULTS' 1, or 20 arrows would pay 20x (10gp, not 0.5gp).
+  const soldIn = { ...arrows(), _id: "SoldInArrows001", system: { ...arrows().system, quantity: 20 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const owned = { ...arrows(), system: { ...arrows().system, quantity: 20 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), context({ shop: { items: [soldIn] }, buyer: { items: [owned] } }));
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 50);
+});
+
+test("buying back a sold-in line prices and steps by its carried bundle", () => {
+  const soldIn = { ...arrows(), _id: "SoldInArrows001", system: { ...arrows().system, quantity: 40 }, flags: { "merchant-presets": { bundle: 20 } } };
+  const ctx = context({ shop: { items: [soldIn] } });
+  const result = planTrade(buyRequest("SoldInArrows001", 20), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.hook.totalCp, 100);   // 1gp for the bundle of 20, not 20gp
+  assert.equal(planTrade(buyRequest("SoldInArrows001", 7), ctx).reason, "invalid-request");
+});
+
+test("an unidentified item on the shelf is refused to buy, never priced", () => {
+  const ring = { ...unidentifiedRing(), system: { ...unidentifiedRing().system, price: { value: 50, denomination: "gp" } } };
+  const result = planTrade(buyRequest("Ring0000000001", 1), context({ shop: { items: [ring] } }));
+  assert.deepEqual(result, { ok: false, reason: "unidentified", line: { itemId: "Ring0000000001", quantity: 1 } });
+});
+
+test("a quantity past the per-line cap is an invalid request, before anything is planned", () => {
+  const freeInfinite = { ...backpack("Backpack0000009"), system: { ...backpack("x").system, price: { value: 0, denomination: "gp" } }, flags: { "merchant-presets": { stock: { ...backpack("x").flags["merchant-presets"].stock, infinite: true } } } };
+  const ctx = context({ shop: { items: [freeInfinite] } });
+  assert.equal(planTrade(buyRequest("Backpack0000009", 1e12), ctx).reason, "invalid-request");
+  assert.equal(planTrade(buyRequest("Backpack0000009", 10_001), ctx).reason, "invalid-request");
+  // Split across duplicate lines, the merged total is capped too.
+  const split = { tradeId: "trade-1", kind: "buy", lines: [{ itemId: "Backpack0000009", quantity: 6000 }, { itemId: "Backpack0000009", quantity: 6000 }] };
+  assert.equal(planTrade(split, ctx).reason, "invalid-request");
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
