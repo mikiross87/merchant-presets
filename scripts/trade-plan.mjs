@@ -89,8 +89,11 @@
  *   travel"). `matchingStockLine` finds one by source (the same signal
  *   `stacksOnto` uses) or, failing that, name. No match: `STOCK_DEFAULTS`,
  *   so ordinary loot this shop has never stocked is sellable, not a service,
- *   priced one at a time, and files under no category — the sensible
- *   defaults either way.
+ *   and priced by its own bundle chain (see "bundled quantities").
+ * - **A line's category is its stated `category`, else its item type**
+ *   (schema.mjs: `""` files an item under its item type), so a shop's
+ *   `"weapon"` rule prices a dagger left on the default category, and a
+ *   weapon the shop has never stocked.
  * - **Bundle pricing for `quantity` units, floored once.** pricing.mjs's
  *   `itemPriceCp` floors a single computation; calling it once per unit and
  *   summing would floor `quantity` times, and a bundle cheap enough to floor
@@ -566,7 +569,7 @@ function planBuy(request, context) {
     const bundle = statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
     if (requested.quantity % bundle !== 0) return { ok: false, reason: "invalid-request", line: requested };
 
-    const category = stock.category || null;
+    const category = stock.category || item.type;
     const { sellsAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
@@ -671,7 +674,7 @@ function planSell(request, context) {
     // — rather than silently assuming 1: a bundle of 20 arrows priced as 20 individual
     // purchases would pay 20x too much.
     const bundle = statedBundle(matched) ?? statedBundle(item) ?? context.bundleOf?.(item) ?? 1;
-    const category = stock.category || null;
+    const category = stock.category || item.type;
     const { buysAt } = effectiveRates(world, shopConfig.terms, category, deal);
     let bundleCp, totalLineCp;
     try {
