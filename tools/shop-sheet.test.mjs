@@ -682,3 +682,13 @@ test("a container holding shopkeeper gear can't be sold, as the engine refuses i
   const { sell } = await sheet._prepareContext({});
   assert.deepEqual(sell.willBuy.map(r => r.id), []);
 });
+
+test("picking a buyer closes the picker before the re-render could restore it", () => {
+  const { sheet } = openShop();
+  const other = actor("borin", []);
+  globalThis.game.actors.push(other);
+  const picker = { open: true, hidePopover() { this.open = false; } };
+  sheet.element = { querySelector: selector => (selector === ".buyer-picker" ? picker : null) };
+  act(sheet, "pickBuyer", { actorUuid: other.uuid });
+  assert.equal(picker.open, false);
+});
