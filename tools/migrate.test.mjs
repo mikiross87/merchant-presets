@@ -232,12 +232,13 @@ test("an invalid rate (sellsAt <= 0) repairs to null (follow the world default),
   assert.ok(validateShop(shop).ok, validateShop(shop).errors.join(" | "));
 });
 
-test("a duplicate category override collapses to the last one, as Item Piles' own save would", () => {
+test("a duplicate category override collapses to the first one, the one Item Piles' .find prices by", () => {
   const store = legacy(shipped("Alchemists_Apothecaries_Village_"));
   const mods = store.flags["item-piles"].data.itemTypePriceModifiers;
-  mods.push({ ...mods[0], buyPriceModifier: 2 });   // a second, later "Valuables" override
+  const first = mods[0];
+  mods.push({ ...first, buyPriceModifier: 2 });   // a second, later "Valuables" override: never matched
   const shop = deriveShop(store);
-  assert.deepEqual(shop.terms.categories, [{ category: "Valuables", sellsAt: 2, buysAt: 1 }]);
+  assert.deepEqual(shop.terms.categories, [{ category: "Valuables", sellsAt: first.buyPriceModifier, buysAt: first.sellPriceModifier }]);
   assert.ok(validateShop(shop).ok);
 });
 

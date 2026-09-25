@@ -205,26 +205,34 @@ function pileData(actor) {
 }
 
 /**
- * `terms.categories` from `itemTypePriceModifiers`' overrides: a custom
- * category's (Valuables, or a GM's own) under its own name, and an item
- * type's under the type, which is where a stock line on the default
- * category files (schema.mjs: `""` files it under its item type). An entry
- * without `override` set never applied in Item Piles either. The schema rejects two entries
- * naming the same category, but Item Piles enforces no such thing; if a
- * GM's data ever carries a repeat, the later entry wins, the way saving
- * Item Piles' own settings form — which always writes the whole array —
- * would leave only its latest edit standing (#100 review).
+ * `terms.categories` from `itemTypePriceModifiers`: a custom category's
+ * entry (Valuables, or a GM's own) under its own name, an item type's under
+ * the type, which is where a stock line on the default category files
+ * (schema.mjs: `""` files it under its item type). Mirrors Item Piles'
+ * `getMerchantModifiersForActor` (item-piles.js 3.3.4): an entry with
+ * `override` replaces the shop's rate, one without multiplies it, so that
+ * one carries over with the product baked in; and it prices by the first
+ * match, custom categories sorted ahead of types, so a repeated category
+ * keeps that one, not the last (#120 review).
+ *
+ * @param {object[]} modifiers  `itemTypePriceModifiers`
+ * @param {{buyPriceModifier: number, sellPriceModifier: number}} shopRates  the pile's own
  */
-function categoriesFrom(modifiers) {
+function categoriesFrom(modifiers, { buyPriceModifier, sellPriceModifier }) {
   const byCategory = new Map();
-  for (const m of modifiers ?? []) {
+  const ordered = [...(modifiers ?? [])].sort((a, b) => (a?.type === "custom" && b?.type !== "custom" ? -1 : 0));
+  for (const m of ordered) {
     const category = m?.type === "custom" ? m.category : m?.type;
-    if (m?.override && category) {
-      byCategory.set(category, { category, sellsAt: m.buyPriceModifier, buysAt: m.sellPriceModifier });
-    }
+    if (!category || byCategory.has(category)) continue;
+    const sellsAt = m.override ? m.buyPriceModifier : clean(buyPriceModifier * m.buyPriceModifier);
+    const buysAt = m.override ? m.sellPriceModifier : clean(sellPriceModifier * m.sellPriceModifier);
+    byCategory.set(category, { category, sellsAt, buysAt });
   }
   return [...byCategory.values()];
 }
+
+/** Float noise off a product of two rates (1.2 * 1.5 is 1.7999999999999998). */
+const clean = v => (typeof v === "number" ? Number(v.toPrecision(12)) : v);
 
 /** The values on `filters`' entries at `path`, as a Set, comma-split and
  *  trimmed — Item Piles' own filter editor doesn't strip spaces after a
@@ -277,7 +285,7 @@ export function deriveShop(actor, packShop) {
     terms: {
       sellsAt: ip.buyPriceModifier,
       buysAt: ip.sellPriceModifier,
-      categories: categoriesFrom(ip.itemTypePriceModifiers)
+      categories: categoriesFrom(ip.itemTypePriceModifiers, ip)
     },
     hours: ip.openTimes.enabled
       ? { open: { ...ip.openTimes.open }, close: { ...ip.openTimes.close } }
