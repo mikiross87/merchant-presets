@@ -504,6 +504,23 @@ test("a sale that can't stack onto a delisted line lands delisted too", () => {
   assert.equal(created.flags["merchant-presets"].stock.hidden, false);
 });
 
+test("an unlimited-coin shop pays out in gold, silver and copper, never electrum or platinum", () => {
+  const pricey = { ...dagger(), system: { ...dagger().system, quantity: 1, price: { value: 23, denomination: "gp" } }, flags: {} };
+  const ctx = context({
+    worldSettings: { ...WORLD, infinitePurse: true },
+    buyer: { items: [pricey], currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0 } }
+  });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);   // 1150cp
+  assert.deepEqual(result.plan.updates[0].currency, { pp: 0, gp: 11, ep: 0, sp: 5, cp: 0 });
+});
+
+test("containers that hold each other (bad data) are refused, not a stack overflow", () => {
+  const a = { ...backpack("LoopA0000000001"), system: { ...backpack("x").system, container: "LoopB0000000001" }, flags: {} };
+  const b = { ...backpack("LoopB0000000001"), system: { ...backpack("x").system, container: "LoopA0000000001" }, flags: {} };
+  const result = planTrade(sellRequest("LoopA0000000001", 1), context({ buyer: { items: [a, b] } }));
+  assert.equal(result.reason, "container-not-empty");
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
