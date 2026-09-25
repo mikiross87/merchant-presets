@@ -463,6 +463,47 @@ test("a line on the default category is priced by its item type's category rule,
   assert.equal(sold.plan.hook.totalCp, 50);      // 2gp x 0.25, a weapon the shop never stocked
 });
 
+test("a buy may take a line's odd part-bundle remainder, on top of whole bundles", () => {
+  const shelf = { ...arrows(), system: { ...arrows().system, quantity: 305 } };   // 5 sold back onto 300
+  const ctx = context({ shop: { items: [shelf] }, buyer: { currency: { pp: 0, gp: 100, ep: 0, sp: 0, cp: 0 } } });
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), ctx).plan.hook.totalCp, 25);     // 1gp x 5/20
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 25), ctx).plan.hook.totalCp, 125);
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 305), ctx).plan.hook.totalCp, 1525);
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 7), ctx).reason, "invalid-request");
+
+  const soldIn = { ...arrows(), _id: "SoldInArrows002", system: { ...arrows().system, quantity: 5 }, flags: { "merchant-presets": { bundle: 20 } } };
+  assert.equal(planTrade(buyRequest("SoldInArrows002", 5), context({ shop: { items: [soldIn] } })).ok, true);
+});
+
+test("an infinite line has no remainder: whole bundles only", () => {
+  const endless = { ...arrows(), system: { ...arrows().system, quantity: 305 }, flags: { "merchant-presets": { stock: { ...arrows().flags["merchant-presets"].stock, infinite: true } } } };
+  assert.equal(planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), context({ shop: { items: [endless] } })).reason, "invalid-request");
+});
+
+test("a remainder that floors to nothing is refused worthless", () => {
+  const cheap = { ...arrows(), system: { ...arrows().system, quantity: 25, price: { value: 1, denomination: "cp" } } };
+  const result = planTrade(buyRequest("5BtSFZjMcs6csxDO", 5), context({ shop: { items: [cheap] } }));
+  assert.deepEqual(result, { ok: false, reason: "worthless", line: { itemId: "5BtSFZjMcs6csxDO", quantity: 5 } });
+});
+
+test("a sale stacks onto a hidden line, and stays hidden", () => {
+  const hidden = { ...arrows(), _id: "HiddenArrows001", system: { ...arrows().system, quantity: 40 }, flags: { "merchant-presets": { stock: { ...arrows().flags["merchant-presets"].stock, hidden: true } } } };
+  const owned = { ...arrows(), system: { ...arrows().system, quantity: 20 }, flags: {} };
+  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), context({ shop: { items: [hidden] }, buyer: { items: [owned] } }));
+  const shopUpdate = result.plan.updates[1];
+  assert.deepEqual(shopUpdate.itemUpdates, [{ _id: "HiddenArrows001", "system.quantity": 60 }]);
+  assert.deepEqual(shopUpdate.itemCreates, []);
+});
+
+test("a sale that can't stack onto a delisted line lands delisted too", () => {
+  const delisted = { ...dagger(), _id: "DelistedDagger1", flags: { "merchant-presets": { stock: { ...dagger().flags["merchant-presets"].stock, notForSale: true } } } };
+  const owned = { ...dagger(), flags: {} };
+  const result = planTrade(sellRequest("Dagger000000001", 1), context({ shop: { items: [delisted] }, buyer: { items: [owned] } }));
+  const [created] = result.plan.updates[1].itemCreates;
+  assert.equal(created.flags["merchant-presets"].stock.notForSale, true);
+  assert.equal(created.flags["merchant-presets"].stock.hidden, false);
+});
+
 /* -------------------------------------------------------------------- stacking */
 
 test("buying a consumable stacks onto an identical one already owned", () => {
