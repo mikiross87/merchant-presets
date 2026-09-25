@@ -4,6 +4,24 @@
 
 `design/` is excluded from `module.zip`.
 
+## Canvas layout
+
+Frames sit on a grid, numbered by band, and the layer order matches it. Light variants go in the left column (x 800), dark in the next (x 1800), further variants to the right, with 80 px between columns and 120 px between bands. Keep new screens on the grid.
+
+| Band | Frames |
+|---|---|
+| 00 | Components: the reusable parts and the price states |
+| 01 | Storefront — Light / Dark / Player (Light); Terms of Trade popover, light and dark |
+| 02 | Sell — Light / Dark |
+| 03 | Settings (GM) — Light / Dark; Settings (GM) · Restock — Light / Dark |
+| 04 | Closed — Light / Dark |
+| 05 | Inn — Light / Dark |
+| 06 | Storefront — Narrow (Light) / (Dark) |
+| 07 | Buyer Picker and Trade Chat Card, light and dark |
+| 08 | Trade States boards, light and dark |
+
+Every mockup except **01 Storefront — Player (Light)** draws the GM's window: three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
+
 ## Source of truth
 
 The shop sits beside dnd5e's own sheets, so its tokens are dnd5e's, measured from the installed stylesheets. The design does not invent a palette.
