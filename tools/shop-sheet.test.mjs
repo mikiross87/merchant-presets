@@ -692,3 +692,13 @@ test("picking a buyer closes the picker before the re-render could restore it", 
   act(sheet, "pickBuyer", { actorUuid: other.uuid });
   assert.equal(picker.open, false);
 });
+
+test("the search box's focus is read from its own window's document, popped out or not", async () => {
+  const { sheet } = openShop();
+  const popout = { activeElement: null };
+  const search = { value: "ar", selectionStart: 2, ownerDocument: popout };
+  popout.activeElement = search;
+  sheet.element = { querySelector: selector => (selector === ".buyer-search" ? search : null) };
+  await sheet._preRender({}, {});
+  assert.equal(sheet._searchFocus, 2);
+});
