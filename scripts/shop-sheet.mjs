@@ -16,10 +16,10 @@
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS } from "./schema.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
-  basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isGearItem, isVisibleStock,
-  matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
+  basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
+  fitQuantity, matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -53,6 +53,17 @@ const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
 
 /** Whether a seal is out or its bill is stamped: either way the live checks no longer apply. */
 const isSettled = state => state === "sealing" || state === "sealed";
+
+/** A purse's coins for display: an empty one reads as 0 of the everyday coin, not as "worthless". */
+function purseCoins(amountCp, currencies) {
+  const coins = coinBreakdown(amountCp, currencies);
+  if (!coins.length) {
+    const denomination = "gp" in currencies ? "gp" : Object.keys(currencies)[0];
+    const c = currencies[denomination];
+    coins.push({ denomination, count: 0, abbreviation: c?.abbreviation ?? denomination, icon: c?.icon, label: c?.label });
+  }
+  return coins.map(c => ({ ...c, aria: coinAriaLabel(c) }));
+}
 
 /** `coinBreakdown`'s own array, read back as plain text — "30 gp", "1 gp 9 sp 2 cp" — for the button labels and notices #101/#98's coin data doesn't otherwise have a string form for. */
 function coinsText(coins) {
@@ -151,6 +162,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): a retry of the same basket resends it, so the GM's side can't carry it out twice. */
     this._tradeId = { buy: null, sell: null };
     this._activeCategory = "all";
+    /** The fewest of each sellable item worth a coin (`sellRow`'s `minQuantity`), from the last render. */
+    this._sellMin = new Map();
     this._buyerUuid = game.user.character?.uuid ?? null;
   }
 
@@ -247,7 +260,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       header: this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies),
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
-      buyerPurse: buyer ? coinBreakdown(totalCp(buyer.system.currency ?? {}, currencies), currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
+      buyerPurse: buyer ? purseCoins(totalCp(buyer.system.currency ?? {}, currencies), currencies) : [],
       currencies,
       kind,
       // Every tab's content is built on every render, not only the active one: core's own
@@ -469,7 +482,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const itemId = target.dataset.itemId;
     const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
-    const next = stepQuantity(current, 1, this.#shelfOf(kind, itemId));
+    const next = this.#nextQuantity(kind, itemId, current, 1);
     if (next > 0) basket.set(itemId, next);
     this.#basketChanged(kind);
     this.render({ parts: ["body"] });
@@ -484,14 +497,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const current = basket.get(itemId) ?? 0;
     // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts; a
     // sale steps one at a time, up to what the seller owns.
-    const next = stepQuantity(current, Math.sign(delta), this.#shelfOf(kind, itemId));
+    const next = this.#nextQuantity(kind, itemId, current, Math.sign(delta));
     if (next <= 0) basket.delete(itemId);
     else basket.set(itemId, next);
     this.#basketChanged(kind);
     this.render({ parts: ["body"] });
   }
 
-  /** A basket edit starts a new bill: it clears the last trade's outcome, its stamped bill and the lines it struck. */
+  /** A line's quantity after one step; a sale also skips below the fewest worth a coin, both ways. */
+  #nextQuantity(kind, itemId, current, delta) {
+    const next = stepQuantity(current, delta, this.#shelfOf(kind, itemId));
+    const min = kind === "sell" ? this._sellMin.get(itemId) ?? 1 : 1;
+    if (next <= 0 || next >= min) return next;
+    return delta > 0 && min <= this.#shelfOf(kind, itemId).available ? min : 0;
+  }
+
+    /** A basket edit starts a new bill: it clears the last trade's outcome, its stamped bill and the lines it struck. */
   #basketChanged(kind) {
     this._tradeState[kind] = "idle";
     this._sealed[kind] = null;
@@ -512,12 +533,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   #pruneBaskets() {
     for (const kind of ["buy", "sell"]) {
+      // A bill that's out is settled by its answer (the trade itself moves these very items).
+      if (this._tradeState[kind] === "sealing") continue;
       const basket = this._baskets[kind];
+      let changed = false;
       for (const [itemId, quantity] of basket) {
-        const { available, infinite } = this.#shelfOf(kind, itemId);
-        if (!this.#itemOf(kind, itemId) || (!infinite && available <= 0)) basket.delete(itemId);
-        else if (!infinite && quantity > available) basket.set(itemId, available);
+        const fit = this.#itemOf(kind, itemId) ? fitQuantity(quantity, this.#shelfOf(kind, itemId)) : 0;
+        if (fit === quantity) continue;
+        if (fit > 0) basket.set(itemId, fit);
+        else basket.delete(itemId);
+        changed = true;
       }
+      // A changed basket is a new bill: the last refusal and unanswered trade id were the old one's.
+      if (changed) this.#basketChanged(kind);
     }
   }
 
@@ -538,12 +566,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   #sellContext(actor, config, rates, currencies, buyer, open) {
     const shopItems = actor.items.map(i => i.toObject());
-    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isGearItem(i));
+    // Goods only: spells, features and the like are never traded, so they aren't "won't buy" rows.
+    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isFixedExcluded(i));
     const rows = items.map(item => {
       const line = matchingStockLine(item, shopItems);
       const matched = stockConfigOf(line);
       const hasContents = item.type === "container" && items.some(i => i.system?.container === item._id);
       const row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
+      if (row.minQuantity) this._sellMin.set(item._id, row.minQuantity);
       return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
     });
     const willBuy = rows.filter(r => !r.refusal);
@@ -637,7 +667,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   #billOfSale(lines, totals, currencies, buyer) {
     const sumCoins = coinBreakdown(totals.sumCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
-    const afterCoins = coinBreakdown(totals.afterCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
+    const afterCoins = purseCoins(totals.afterCp, currencies);
     const shortfallCoins = coinBreakdown(totals.shortfallCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
     return {
       lines,

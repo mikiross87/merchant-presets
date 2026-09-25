@@ -338,10 +338,15 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies,
     return { ...base, refusal: "Unpriced", bundlePriceCp: null, ratio: null };
   }
   // The planner's "worthless": even all of it floors to nothing at a rate that isn't 0.
-  if (allCp === 0 && buysAt.rate > 0 && item.system.price?.value > 0) {
+  const priced = buysAt.rate > 0 && item.system.price?.value > 0;
+  if (allCp === 0 && priced) {
     return { ...base, refusal: "Worthless", bundlePriceCp: null, ratio: null };
   }
-  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate) };
+  // The planner checks the quantity actually sold, so a sale starts at the fewest worth a coin.
+  let minQuantity = 1;
+  const lineBundle = bundle ?? (matchedStock.bundle || 1);
+  while (priced && minQuantity < base.owned && lineTotalCp(item, buysAt.rate, lineBundle, minQuantity, currencies) === 0) minQuantity++;
+  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity };
 }
 
 /* -------------------------------------------------------------- the buy stepper */
@@ -363,6 +368,23 @@ export function stepQuantity(current, delta, { bundle, available, infinite }) {
   if (infinite || next <= available) return next;
   const rest = available - current;
   return rest > 0 && rest === available % bundle ? available : current;
+}
+
+/**
+ * The largest quantity up to `quantity` that a buy of this line accepts right now: whole bundles,
+ * plus the line's own odd remainder, within what's left. For a basket line the shelf changed
+ * under (someone else bought or sold some).
+ *
+ * @param {number} quantity
+ * @param {{bundle: number, available: number, infinite: boolean}} shelf
+ * @returns {number}
+ */
+export function fitQuantity(quantity, { bundle, available, infinite }) {
+  if (infinite) return quantity;
+  const most = Math.min(quantity, available);
+  const whole = most - (most % bundle);
+  const remainder = available % bundle;
+  return remainder > 0 && most % bundle >= remainder ? whole + remainder : whole;
 }
 
 /* -------------------------------------------------------------- trade states */

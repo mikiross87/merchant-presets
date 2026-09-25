@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  matchingStockLine, rateFraction, rateTag, sealState, sellRow, stepQuantity, stockLabel, titleParts
+  fitQuantity, matchingStockLine, rateFraction, rateTag, sealState, sellRow, stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -392,4 +392,12 @@ test("a sell row knows the fewest that sell for a coin, and a lone copper piece 
   const row = sellRow(chalk, shop, { category: "", bundle: 1, service: false, noBuyback: false }, rates, null, CURRENCIES5E);
   assert.equal(row.refusal, null);
   assert.equal(row.minQuantity, 2);
+});
+
+test("a basket line is fitted to what a buy of the shelf accepts now", () => {
+  const shelf = { bundle: 20, available: 28, infinite: false };
+  assert.equal(fitQuantity(30, shelf), 28, "down to the whole shelf, remainder included");
+  assert.equal(fitQuantity(25, shelf), 20, "down to whole bundles when the remainder doesn't fit");
+  assert.equal(fitQuantity(5, shelf), 0, "an old remainder that no longer matches is dropped");
+  assert.equal(fitQuantity(40, { bundle: 20, available: 0, infinite: true }), 40, "an infinite line never changes");
 });

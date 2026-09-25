@@ -266,7 +266,7 @@ export const safeShopOf = actor => { try { return shopOf(actor); } catch { retur
 export const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
 
 /** Never traded, either direction, by any shop — the fixed exclusions shared by both `isVisible` and `dealtIn`. */
-function isFixedExcluded(item) {
+export function isFixedExcluded(item) {
   return FIXED_EXCLUDED_TYPES.includes(item.type) || item.system?.type?.value === "natural" || isGear(item);
 }
 
