@@ -152,7 +152,6 @@ test("sealed offers to keep shopping and is never disabled", () => {
 
 for (const [reason, labelKey] of [
   ["cant-afford", "MERCHANT_PRESETS.Shop.Seal.CantAfford"],
-  ["no-gm", "MERCHANT_PRESETS.Shop.Seal.NoGm"],
   ["till-short", "MERCHANT_PRESETS.Shop.Seal.TillShort"],
   ["closed", "MERCHANT_PRESETS.Shop.Seal.Closed"]
 ]) {
@@ -162,6 +161,12 @@ for (const [reason, labelKey] of [
     assert.equal(result.disabled, true);
   });
 }
+
+test("no GM keeps the seal live, so the bill can be sent again once one connects", () => {
+  assert.deepEqual(sealState("no-gm", true),
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "fa-solid fa-rotate-right" });
+  assert.equal(sealState("no-gm", false).disabled, true);
+});
 
 test("stock-changed stays active, recomputed, unless it emptied the basket", () => {
   assert.equal(sealState("stock-changed", true).disabled, false);
