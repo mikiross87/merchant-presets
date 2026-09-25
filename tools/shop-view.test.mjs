@@ -415,3 +415,18 @@ test("a sell row says what its price buys: one bundle", () => {
   const row = sellRow(arrows, shop, { category: "", bundle: 20, service: false, noBuyback: false }, rates, null, CURRENCIES5E, { bundle: 20 });
   assert.equal(row.bundle, 20);
 });
+
+test("a buy row that floors to nothing a bundle at a time starts at the fewest worth a coin", () => {
+  const candle = { _id: "k1", img: "", name: "Candle", type: "loot", system: { price: { value: 1, denomination: "cp" }, quantity: 10 } };
+  const rates = { world: { sellsAt: 0.5, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 0.5 };
+  const row = buyRow(candle, { category: "", hidden: false, notForSale: false, infinite: false, service: false }, rates, null, CURRENCIES5E, false);
+  assert.equal(row.worthless, false);
+  assert.equal(row.minQuantity, 2);
+});
+
+test("a buy row whose whole shelf floors to nothing is worthless, as the engine refuses it", () => {
+  const candle = { _id: "k1", img: "", name: "Candle", type: "loot", system: { price: { value: 1, denomination: "cp" }, quantity: 1 } };
+  const rates = { world: { sellsAt: 0.5, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 0.5 };
+  const row = buyRow(candle, { category: "", hidden: false, notForSale: false, infinite: false, service: false }, rates, null, CURRENCIES5E, false);
+  assert.equal(row.worthless, true);
+});

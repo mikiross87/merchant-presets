@@ -56,7 +56,7 @@ globalThis.foundry = {
     apps: { DocumentSheetConfig: { registerSheet() {} } },
     instances: new Map()
   },
-  utils: { randomID: () => "trade00000000001" }
+  utils: { randomID: () => "trade00000000001", cleanHTML: html => `clean:${html}` }
 };
 globalThis.ui = { notifications: { warn() {} } };
 const api = {};
@@ -701,4 +701,11 @@ test("the search box's focus is read from its own window's document, popped out 
   sheet.element = { querySelector: selector => (selector === ".buyer-search" ? search : null) };
   await sheet._preRender({}, {});
   assert.equal(sheet._searchFocus, 2);
+});
+
+test("the shop description is cleaned before it's put in the page", async () => {
+  const { sheet } = openShop();
+  sheet.document.flags["merchant-presets"].shop.description = "<img src=x onerror=alert(1)>";
+  const { header } = await sheet._prepareContext({});
+  assert.equal(header.description, "clean:<img src=x onerror=alert(1)>");
 });
