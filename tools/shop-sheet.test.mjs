@@ -813,3 +813,26 @@ test("a basket the player empties by hand keeps the unanswered trade id", async 
   await sheet._prepareContext({});
   assert.equal(sheet._tradeId.buy, id);
 });
+
+test("a line trimmed below the fewest worth a coin leaves the bill", async () => {
+  const cheap = item("pins", { quantity: 25, price: { value: 1, denomination: "cp" }, flags: { "merchant-presets": { stock: { bundle: 20 } } } });
+  const { sheet, shop } = openShop({ shopItems: [cheap] });
+  await sheet._prepareContext({});
+  act(sheet, "addLine", { itemId: "pins" });
+  act(sheet, "addLine", { itemId: "pins" });
+  assert.equal(sheet._baskets.buy.get("pins"), 25);
+  shop.items.get("pins").system.quantity = 5;
+  await sheet._prepareContext({});
+  assert.equal(sheet._baskets.buy.has("pins"), false);
+});
+
+test("a bill line whose one-bundle price floors to nothing shows no unit price, not Free each", async () => {
+  const { sheet } = openShop({ buyerItems: [item("chalk", { quantity: 5, price: { value: 1, denomination: "cp" } })] });
+  sheet.tabGroups.primary = "sell";
+  await sheet._prepareContext({});
+  act(sheet, "addLine", { itemId: "chalk" });
+  const { sell } = await sheet._prepareContext({});
+  const [line] = sell.basket.lines;
+  assert.equal(line.quantity, 2);
+  assert.equal(line.showUnit, false);
+});

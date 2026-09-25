@@ -452,3 +452,13 @@ test("a sold-out line kept on the shelf shows its price, not worthless", () => {
 test("a rate tag against a zero chip rate is no tag, not an infinite percentage", () => {
   assert.deepEqual(rateTag({ rate: 0.5, layer: "category" }, 0), { kind: null, text: null });
 });
+
+test("a row whose one-bundle price floors to nothing shows the fewest worth a coin: 2 for 1 cp", () => {
+  const chalk = { _id: "c1", img: "", name: "Chalk", type: "loot", system: { price: { value: 1, denomination: "cp" }, quantity: 5 } };
+  const half = { world: { sellsAt: 0.5, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 0.5, chipBuysAt: 0.5 };
+  const shelf = { category: "", hidden: false, notForSale: false, infinite: false, service: false, noBuyback: false, bundle: 1 };
+  const buy = buyRow(chalk, shelf, half, null, CURRENCIES5E, false);
+  assert.deepEqual([buy.priceFor, buy.priceForCp], [2, 1]);
+  const sell = sellRow(chalk, { wontBuy: { types: [], kinds: [] } }, shelf, half, null, CURRENCIES5E);
+  assert.deepEqual([sell.priceFor, sell.priceForCp], [2, 1]);
+});
