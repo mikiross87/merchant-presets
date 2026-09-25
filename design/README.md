@@ -6,7 +6,7 @@
 
 ## Canvas layout
 
-Frames sit on a grid, numbered by band, and the layer order matches it. Light variants go in the left column (x 800), dark in the next (x 1800), further variants to the right, with 80 px between columns and 120 px between bands. Keep new screens on the grid.
+Frames sit on a grid, numbered by band, and the layer order matches it. Light variants go in the left column (x 800), dark in the next (x 1800), further variants to the right, with at least 80 px between columns (the columns keep their x even beside the narrower 480 px frames) and 120 px between bands. Keep new screens on the grid.
 
 | Band | Frames |
 |---|---|
@@ -23,7 +23,7 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 
 A new agreed screen goes in the next band (09, at y 6405) and gets a row here.
 
-Every mockup except **01 Storefront — Player (Light)** draws the GM's window: three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
+Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
 **Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
 
@@ -71,7 +71,7 @@ The shop sits beside dnd5e's own sheets, so its tokens are dnd5e's, measured fro
 
 Notes:
 
-- The three `on-dark` tokens colour text and icons on fills that are dark in both themes: the maroon header and its chips, the chat card's strip, the primary and seal buttons, the `GM` badge, and selected pills and rows. Shapes and translucent tints still carry their hex values.
+- The three `on-dark` tokens (`text-on-dark`, `text-on-dark-muted`, `accent-on-dark`) colour text and icons on fills that are dark in both themes: the maroon header and its chips, the chat card's strip, the primary and seal buttons, the `GM` badge, and selected pills and rows. Shapes and translucent tints still carry their hex values.
 - dnd5e only defines `#e3ce9e` in its high-contrast sheet, so the build needs a module variable for `accent-on-dark`.
 - `text-on-dark-soft` (the shop description) and `seal-mark` (the wax seal's mark) were drawn as `#e8dcd6` and `#f3dcb0`, which have no source. Decided 2026-09-25 (#125): snap both to the nearest Foundry colour. Foundry's sci-fi theme overrides `--color-light-2/3` with blues. The standard light and dark themes don't.
 - The light app background is a paper texture over parchment, and the dark one is a denim texture over `#0d0b0b`. Both textures are transparent overlays, so the mockups use the base colours. The build uses the variable, which brings the texture with it.
