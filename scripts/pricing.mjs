@@ -49,9 +49,13 @@
 
 /* ---------------------------------------------------------------- coins */
 
-/** Clears float noise from a product or quotient of coin values; not a real rounding rule. */
+/**
+ * Clears float noise from a product or quotient of coin values; not a real rounding rule.
+ * Relative (12 significant digits), not a fixed 1e-9 step: at a line total in the millions of
+ * copper, `value * 1e9` is past where a double still holds every integer.
+ */
 function clean(value) {
-  return Math.round(value * 1e9) / 1e9;
+  return Number(value.toPrecision(12));
 }
 
 /** The denomination with the highest `conversion`: the smallest coin, dnd5e's cp. */
@@ -103,21 +107,24 @@ function breakIntoCoins(amountCp, denominations) {
 /* ---------------------------------------------------------------- price */
 
 /**
- * An item's price in the finest coin, for one of the `bundle` it's sold in.
+ * An item's price in the finest coin, for `quantity` of the `bundle` it's sold in (one, by
+ * default), floored once. `quantity` multiplies before the one division: dividing by the
+ * fraction `bundle / quantity` instead came out 1cp short on large totals.
  *
  * @param {{value: number, denomination: string}} price  dnd5e's `item.system.price`
  * @param {number} rate    the effective sellsAt or buysAt rate (see `effectiveRates`)
  * @param {number} bundle  `quantityForPrice`: how many the price buys
  * @param {Record<string, {conversion: number}>} currencies
+ * @param {number} [quantity]  how many units are priced together
  * @returns {number}
  * @throws {RangeError} if `price.denomination` isn't in `currencies`
  */
-export function itemPriceCp(price, rate, bundle, currencies) {
+export function itemPriceCp(price, rate, bundle, currencies, quantity = 1) {
   if (!(price.denomination in currencies)) {
     throw new RangeError(`unknown denomination: ${price.denomination}`);
   }
   const base = baseDenomination(currencies);
-  const raw = price.value * cpValue(price.denomination, currencies, base) * rate / bundle;
+  const raw = price.value * cpValue(price.denomination, currencies, base) * rate * quantity / bundle;
   return Math.floor(clean(raw));
 }
 
@@ -243,6 +250,22 @@ function makeChange(holdings, amountCp, currencies) {
       available[denomination] = (available[denomination] ?? 0) + count;
     }
   }
+}
+
+/**
+ * Pays `amountCp` exactly out of `holdings`, breaking its own coins as needed — the money-changer
+ * side of the #101 decision, applied to the payer rather than the payee: a payer with varied
+ * coinage pays precisely, so whoever it's paying never has to give anything back. Refused only
+ * when `holdings`' total is short of `amountCp`. Never mutates `holdings`.
+ *
+ * @param {Record<string, number>} holdings  the payer's coins by denomination
+ * @param {number} amountCp                  the amount to pay, in the finest coin
+ * @param {Record<string, {conversion: number}>} currencies
+ * @returns {{ok: true, given: Record<string, number>, remaining: Record<string, number>} | {ok: false}}
+ */
+export function payExact(holdings, amountCp, currencies) {
+  if (totalCp(holdings, currencies) < amountCp) return { ok: false };
+  return { ok: true, ...makeChange(holdings, amountCp, currencies) };
 }
 
 /**
