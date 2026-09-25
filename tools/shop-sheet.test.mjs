@@ -72,7 +72,7 @@ globalThis.game = {
     calendar: {
       days: { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 },
       timeToComponents: () => ({ hour: clock.hour, minute: 0 }),
-      format: () => ""
+      format: time => `t${time}`
     }
   }
 };
@@ -737,5 +737,35 @@ test("under unlimited merchant coin the Sell tab doesn't say the till caps a sal
     assert.equal(sell.tillCapsSales, false);
   } finally {
     globalThis.game.settings.values.merchantPurse = "finite";
+  }
+});
+
+test("a seal that lands after closing still shows its stamp, not the closed card", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed" });
+  await act(sheet, "seal");
+  clock.hour = 22;
+  try {
+    const { buy } = await sheet._prepareContext({});
+    assert.equal(buy.showClosed, false);
+    assert.equal(buy.seal.state, "sealed");
+  } finally {
+    clock.hour = 12;
+  }
+});
+
+test("the stamp keeps the date the trade sealed, not the clock's latest", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed" });
+  globalThis.game.time.worldTime = 0;
+  await act(sheet, "seal");
+  globalThis.game.time.worldTime = 3600;
+  try {
+    const { buy } = await sheet._prepareContext({});
+    assert.equal(buy.basket.dateLabel, "t0");
+  } finally {
+    globalThis.game.time.worldTime = 0;
   }
 });
