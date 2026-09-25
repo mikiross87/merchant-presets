@@ -401,3 +401,11 @@ test("a basket line is fitted to what a buy of the shelf accepts now", () => {
   assert.equal(fitQuantity(5, shelf), 0, "an old remainder that no longer matches is dropped");
   assert.equal(fitQuantity(40, { bundle: 20, available: 0, infinite: true }), 40, "an infinite line never changes");
 });
+
+test("a sell row says what its price buys: one bundle", () => {
+  const arrows = { _id: "a1", img: "", name: "Arrows", type: "consumable", system: { price: { value: 1, denomination: "gp" }, quantity: 37 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipBuysAt: 0.5 };
+  const shop = { wontBuy: { types: [], kinds: [] } };
+  const row = sellRow(arrows, shop, { category: "", bundle: 20, service: false, noBuyback: false }, rates, null, CURRENCIES5E, { bundle: 20 });
+  assert.equal(row.bundle, 20);
+});

@@ -523,3 +523,39 @@ test("a buyer lost while a seal is out leaves the bill alone until the answer", 
   finish({ status: "sealed" });
   await sealing;
 });
+
+test("keep shopping leaves lines the sealed trade never carried on the bill", async () => {
+  const { sheet } = openShop({ shopItems: [item("arrows", { quantity: 10 }), item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "arrows" });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed", lines: [{ itemId: "arrows", quantity: 1, lineTotalCp: 100 }] });
+  await act(sheet, "seal");
+  act(sheet, "keepShopping");
+  assert.deepEqual([...sheet._baskets.buy], [["rope", 1]]);
+});
+
+test("a step that changes nothing leaves the stamped bill alone", async () => {
+  const { sheet } = openShop({ shopItems: [item("lamp", { quantity: 1 }), item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed" });
+  await act(sheet, "seal");
+  act(sheet, "addLine", { itemId: "lamp" });
+  act(sheet, "addLine", { itemId: "lamp" });
+  assert.deepEqual([...sheet._baskets.buy], [["lamp", 1]]);
+  sheet._tradeState.buy = "stock-changed";
+  sheet._struck.buy.add("lamp");
+  act(sheet, "addLine", { itemId: "lamp" });
+  assert.equal(sheet._tradeState.buy, "stock-changed");
+  assert.deepEqual([...sheet._struck.buy], ["lamp"]);
+});
+
+test("a GM with no character of their own buys as a player character, not the first actor", () => {
+  const monster = actor("goblin", []);
+  const pc = Object.assign(actor("aria", []), { type: "character" });
+  const shop = actor("shop", [item("rope")]);
+  globalThis.game.actors = [monster, shop, pc];
+  globalThis.game.user.character = null;
+  const sheet = new ShopSheet({ document: shop });
+  sheet._buyerUuid = null;
+  return sheet._prepareContext({}).then(() => assert.equal(sheet._buyerUuid, pc.uuid));
+});
