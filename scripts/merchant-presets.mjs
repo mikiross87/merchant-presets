@@ -20,10 +20,10 @@
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, isShop, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
+import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
   STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
-import { deriveShop, hasCurrentShop, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+import { deriveShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops }
   from "./migrate.mjs";
 
@@ -1071,7 +1071,7 @@ async function resolvePackShop(actorData) {
  * @returns {Promise<boolean>} whether anything was actually written
  */
 async function migrateShop(actor) {
-  if (!migrationGateOpen || !isShop(actor)) return false;
+  if (!migrationGateOpen || !isMigratable(actor)) return false;
   const data = actor.toObject();
 
   // needsMigration can usually decide without scanning every scene's

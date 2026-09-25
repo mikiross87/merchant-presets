@@ -9,7 +9,7 @@
  * nothing there reads those flags yet. Switching Item Piles off on the shop,
  * so it stops treating our NPCs as its own merchants (#97), is a second,
  * separate half gated behind `NATIVE_SHOP`: see its own comment. Only this
- * module's shops are touched — `isShop` — so a world's other Item Piles
+ * module's shops are touched — `isMigratable` — so a world's other Item Piles
  * merchants, kept for loot or a GM's own trading, are left exactly as they
  * are.
  *
@@ -172,6 +172,21 @@ function tierFrom(actor, packShop) {
  */
 export function packShopCandidates(actor) {
   return [actor?.flags?.["merchant-presets"]?.shop?.source, actor?._stats?.compendiumSource].filter(Boolean);
+}
+
+/**
+ * Whether `actor` is one of this module's shops, for the migration: `isShop`,
+ * or a v1.0.0 merchant. v1.0.0 shipped `flags.merchant-presets` as `purse`,
+ * `itemFlags` and `containers` only; `profile`, which `isShop` reads, arrived
+ * in v1.1.0. Every 1.x release carries `itemFlags`, and nothing else writes
+ * it. Kept out of `isShop` itself, so the rest of the runtime still sees
+ * such an actor only once it's migrated.
+ *
+ * @param {object} actor
+ * @returns {boolean}
+ */
+export function isMigratable(actor) {
+  return isShop(actor) || Boolean(actor?.flags?.["merchant-presets"]?.itemFlags);
 }
 
 /** `flags.item-piles.data`, with every stripped key read back as Item Piles' own default. */
@@ -389,7 +404,7 @@ function tokensNeedDisable(tokens) {
  * @returns {boolean}
  */
 export function needsMigration(actor, nativeShop = NATIVE_SHOP, tokens = []) {
-  if (!isShop(actor)) return false;
+  if (!isMigratable(actor)) return false;
   if (!hasCurrentShop(actor) || itemsNeedStock(actor)) return true;
   if (!nativeShop) return false;      // data half already done; the cut-over isn't live yet
   if (actor.flags?.["item-piles"]?.data?.enabled === true) return true;
@@ -405,7 +420,7 @@ export function needsMigration(actor, nativeShop = NATIVE_SHOP, tokens = []) {
  * @returns {boolean}
  */
 export function worldHasLegacyShops(actors) {
-  return Array.from(actors).some(a => isShop(a) && !hasCurrentShop(a));
+  return Array.from(actors).some(a => isMigratable(a) && !hasCurrentShop(a));
 }
 
 /**
@@ -662,7 +677,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
  * @returns {{updates: object[], errors: {item: string, errors: string[]}[]}}
  */
 export function planItemUpdates(actor) {
-  if (!isShop(actor)) return { updates: [], errors: [] };
+  if (!isMigratable(actor)) return { updates: [], errors: [] };
   const updates = [];
   const errors = [];
   for (const item of actor.items ?? []) {
