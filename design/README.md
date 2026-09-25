@@ -19,12 +19,27 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 06 | Storefront — Narrow (Light) / (Dark) |
 | 07 | Buyer Picker and Trade Chat Card, light and dark |
 | 08 | Trade States boards, light and dark |
+| X | Explore lane: ideas, not agreed design (see below) |
+
+A new agreed screen goes in the next band (09, at y 6405) and gets a row here.
 
 Every mockup except **01 Storefront — Player (Light)** draws the GM's window: three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
 **Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
 
 The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
+
+### Explore lane
+
+Ideas and rough mocks go in the **Explore** lane, starting at x 4800, to the right of every band. Nothing there is agreed design, and #103 doesn't build from it.
+
+- **Place:** level with the band the idea explores, so it reads beside the screen it challenges.
+- **Name:** `X<band> <Screen> · <idea> (#issue)`, e.g. `X02 Sell · Haggle (#112)`.
+- **Build:** light only, not reusable. Start from a detached copy of the master: its contents as a plain frame, not an instance, so you can add and remove nodes. Through Pencil's `execute` API that's `Insert(document, Get(masterId))` with `reusable` and `id` removed. Its window parts stay live instances.
+- **Accepted:** move it into its band (or the next new one), make it a reusable master with a dark instance, and write the decision here.
+- **Rejected:** delete the frame and record why under the relevant section's "Rejected" list. Git history keeps the drawing.
+
+Draw explorations on their own branch, so a PR of agreed design doesn't carry half-finished ideas.
 
 ## Source of truth
 
