@@ -388,7 +388,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return buyer ?? null;
     // A GM owns every actor and seldom has a character: prefer a player character to whichever
     // actor (a goblin, another merchant) happens to come first.
-    if (!buyer) buyer = game.user.character ?? candidates.find(a => a.type === "character") ?? candidates[0] ?? null;
+    // The assigned character counts only if the user could trade as it (owned, and not this shop).
+    const own = candidates.find(a => a === game.user.character);
+    if (!buyer) buyer = own ?? candidates.find(a => a.type === "character") ?? candidates[0] ?? null;
     const previous = this._buyerUuid;
     this._buyerUuid = buyer?.uuid ?? null;
     // The buyer went out of reach (deleted, or no longer owned): the same reset as picking another.
@@ -513,6 +515,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // #103: selling something worn or packed away asks first, once, as it goes on the bill.
     const question = kind === "sell" && !current ? this.#saleQuestion(itemId) : null;
     if (question && !(await this.#confirm(question))) return;
+    // The question isn't modal: a seal may have gone out while it was open.
+    if (question && this._tradeState[kind] === "sealing") return;
     const next = this.#nextQuantity(kind, itemId, current, 1);
     // A line already at its most changes nothing, so the bill (and its stamp or strikes) stands.
     if (next === current) return;
@@ -638,7 +642,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rows = items.map(item => {
       const line = matchingStockLine(item, shopItems);
       const matched = stockConfigOf(line);
-      const hasContents = item.type === "container" && items.some(i => i.system?.container === item._id);
+      // Anything inside counts, gear included: the engine refuses a sale of any non-empty container.
+      const hasContents = item.type === "container" && (buyer?.items ?? []).some(i => i.system?.container === item._id);
       let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
@@ -799,7 +804,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         const carried = Array.isArray(result.lines) ? this.#carriedLines(result.lines, sent) : lines;
         this._tradeState[kind] = "sealed";
         this._sealed[kind] = { lines: carried, sumCp: basketTotals(carried, 0, kind).sumCp, receipt: result.receipt ?? null };
-        for (const line of carried) this._baskets[kind].delete(line.itemId);
+        for (const line of carried) {
+          const left = (this._baskets[kind].get(line.itemId) ?? 0) - line.quantity;
+          if (left > 0) this._baskets[kind].set(line.itemId, left);
+          else this._baskets[kind].delete(line.itemId);
+        }
       } else if (result.status === "refused") {
         this._tradeState[kind] = result.reason;
         // The bill re-prices from the live shop on the render below; strike what moved so the

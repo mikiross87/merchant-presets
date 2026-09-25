@@ -66,12 +66,14 @@ function denominationsByValue(currencies) {
     .sort((a, b) => b[1] - a[1]);
 }
 
+/** Coins a price is written in: gold, silver and copper, as the design writes "12 gp 5 sp" (never "1 pp 2 gp 1 ep"); a config with none of them keeps all its own. */
+const EVERYDAY = ["gp", "sp", "cp"];
+
 /**
- * `amountCp` broken into coins for display — largest denomination first,
- * floored at each step, the remainder dropped once it can't make a whole coin
- * of the smallest denomination the config defines. Not a real payment (see
- * the module header); a price of 12cp with only gp/sp/cp configured shows as
- * one sp, two cp.
+ * `amountCp` broken into coins for display — in everyday coin (`EVERYDAY`),
+ * largest first, floored at each step, the remainder dropped once it can't
+ * make a whole coin of the smallest. Not a real payment (see the module
+ * header); a price of 12cp shows as one sp, two cp.
  *
  * @param {number} amountCp
  * @param {Record<string, {conversion: number, icon?: string, label?: string, abbreviation?: string}>} currencies
@@ -82,7 +84,9 @@ export function coinBreakdown(amountCp, currencies) {
   if (!(amountCp > 0)) return [];
   const coins = [];
   let remaining = Math.floor(amountCp);
-  for (const [denomination, value] of denominationsByValue(currencies)) {
+  const byValue = denominationsByValue(currencies);
+  const everyday = byValue.filter(([denomination]) => EVERYDAY.includes(denomination));
+  for (const [denomination, value] of everyday.length ? everyday : byValue) {
     const count = Math.floor(remaining / value);
     if (count > 0) {
       const info = currencies[denomination] ?? {};

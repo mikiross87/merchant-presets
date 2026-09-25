@@ -213,7 +213,7 @@ test("the Sell bill's purse-after is the seller's purse plus the sale, not the t
   sheet.tabGroups.primary = "sell";
   act(sheet, "addLine", { itemId: "gem" });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual(coins(sell.basket.afterCoins), [["pp", 10], ["gp", 7]]);
+  assert.deepEqual(coins(sell.basket.afterCoins), [["gp", 107]]);
 });
 
 test("adding to a sealed bill starts a new one, so the sealed lines aren't traded again", async () => {
