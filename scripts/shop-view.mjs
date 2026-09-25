@@ -1,5 +1,5 @@
 import { effectiveRates } from "./pricing.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, dealtIn, isVisible } from "./trade-plan.mjs";
+import { bundleFor, bundlePriceCp, categoryFor, dealtIn, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -305,9 +305,13 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
  * @param {{world: object, shopTerms: object, chipBuysAt: number}} rates
  * @param {object|null} deal
  * @param {Record<string, object>} currencies
+ * @param {{hasContents?: boolean, bundle?: number}} [seller]  `hasContents`: whether `item`, a
+ *   container, still holds anything on the seller (a sale refuses it as container-not-empty).
+ *   `bundle`: trade-plan's `bundleFor` on the matched line — `matchedStock` alone has already
+ *   defaulted a missing bundle to 1.
  * @returns {SellRow}
  */
-export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies) {
+export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies, { hasContents = false, bundle } = {}) {
   const base = {
     id: item._id ?? item.id,
     img: item.img,
@@ -316,17 +320,46 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies)
     contained: item.system?.container != null,
     owned: item.system?.quantity ?? 0
   };
+  if (hasContents) return { ...base, refusal: "NotEmpty", bundlePriceCp: null, ratio: null };
   if (item.system?.identified === false) return { ...base, refusal: "Unidentified", bundlePriceCp: null, ratio: null };
   if (!dealtIn(item, shopConfig)) return { ...base, refusal: "General", bundlePriceCp: null, ratio: null };
   if (matchedStock.noBuyback) return { ...base, refusal: "NoBuyback", bundlePriceCp: null, ratio: null };
   if (matchedStock.service) return { ...base, refusal: "General", bundlePriceCp: null, ratio: null };
 
   const { buysAt } = effectiveRates(rates.world, rates.shopTerms, categoryFor(item, matchedStock), deal);
+  let bundleCp, allCp;
   try {
-    return { ...base, refusal: null, bundlePriceCp: bundlePriceCp(item, buysAt.rate, currencies), ratio: rateFraction(buysAt.rate) };
+    bundleCp = bundlePriceCp(item, buysAt.rate, currencies);
+    allCp = lineTotalCp(item, buysAt.rate, bundle ?? (matchedStock.bundle || 1), Math.max(base.owned, 1), currencies);
   } catch {
     return { ...base, refusal: "Unpriced", bundlePriceCp: null, ratio: null };
   }
+  // The planner's "worthless": even all of it floors to nothing at a rate that isn't 0.
+  if (allCp === 0 && buysAt.rate > 0 && item.system.price?.value > 0) {
+    return { ...base, refusal: "Worthless", bundlePriceCp: null, ratio: null };
+  }
+  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate) };
+}
+
+/* -------------------------------------------------------------- the buy stepper */
+
+/**
+ * A buy line's next quantity after one step (`delta` +1 or -1): whole bundles, plus the
+ * part-bundle a sale left on a finite line (trade-plan.mjs, "bundled quantities"), so the
+ * stepper only ever lands on a quantity a buy accepts. Stepping up where nothing more fits
+ * stays put; stepping down off a part-bundle drops just the part.
+ *
+ * @param {number} current
+ * @param {1|-1} delta
+ * @param {{bundle: number, available: number, infinite: boolean}} shelf
+ * @returns {number}
+ */
+export function stepQuantity(current, delta, { bundle, available, infinite }) {
+  if (delta < 0) return Math.max(0, current - (current % bundle || bundle));
+  const next = current + bundle;
+  if (infinite || next <= available) return next;
+  const rest = available - current;
+  return rest > 0 && rest === available % bundle ? available : current;
 }
 
 /* -------------------------------------------------------------- trade states */
@@ -355,6 +388,10 @@ export function sealState(state, hasLines) {
     case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "fa-solid fa-ban" };
     case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
     case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "fa-solid fa-ban" };
+    case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "fa-solid fa-ban" };
+    case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "fa-solid fa-box-open" };
+    case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "fa-solid fa-ban" };
+    case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
     default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
   }
 }

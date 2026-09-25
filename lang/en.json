@@ -7,7 +7,19 @@
       "About": "About",
       "AlwaysOpen": "Open",
       "OpenUntil": "Open · closes at {time}",
-      "Closed": "Closed",
+      "Closed": {
+        "Label": "Closed",
+        "Title": "Shutters are down",
+        "Body": "You can look over the goods. Nothing can be bought or sold until the shop opens.",
+        "OpensIn": "Opens at {time}, in about {duration}",
+        "Hours": "{count} hour",
+        "HoursPlural": "{count} hours",
+        "Minutes": "{count} minute",
+        "MinutesPlural": "{count} minutes",
+        "Open": "Open",
+        "Close": "Close",
+        "NextRestock": "Next restock"
+      },
       "ClosedOpensAt": "Closed · opens at {time}",
       "TermsChip": "Sells at {sells} · Buys at {buys}",
       "FreshStockToday": "Fresh stock today",
@@ -57,7 +69,9 @@
           "UnidentifiedNote": "Unidentified. Get it looked at first.",
           "General": "Won't buy this",
           "NoBuyback": "No buyback",
-          "Unpriced": "Unpriced"
+          "Unpriced": "Unpriced",
+          "Worthless": "Worth nothing here",
+          "NotEmpty": "Empty it first"
         },
         "ConfirmTitle": "Sell this?",
         "ConfirmEquipped": "{name} is equipped. Sell it anyway?",
@@ -88,7 +102,11 @@
         "Closed": "The shop is closed",
         "StockChangedNotice": "Stock changed while this bill was open. Prices below are current.",
         "NoGmNotice": "No GM is at the table. Trades are carried out by the GM's client. Your bill is kept until one connects.",
-        "TillShortNotice": "The till holds {amount}, less than this sale. Take lines off the bill until it fits."
+        "TillShortNotice": "The till holds {amount}, less than this sale. Take lines off the bill until it fits.",
+        "Worthless": "Worth nothing here",
+        "NotEmpty": "Empty it first",
+        "Unpriced": "Can't price this",
+        "Invalid": "Can't trade that"
       },
       "Terms": {
         "Title": "Terms of trade",
@@ -101,18 +119,6 @@
         "BuyExample": "and buys back for {buyPrice}.",
         "WontBuy": "Won't buy",
         "Note": "Set by the GM on the shop. Prices below already include these terms."
-      },
-      "Closed": {
-        "Title": "Shutters are down",
-        "Body": "You can look over the goods. Nothing can be bought or sold until the shop opens.",
-        "OpensIn": "Opens at {time}, in about {duration}",
-        "Hours": "{count} hour",
-        "HoursPlural": "{count} hours",
-        "Minutes": "{count} minute",
-        "MinutesPlural": "{count} minutes",
-        "Open": "Open",
-        "Close": "Close",
-        "NextRestock": "Next restock"
       },
       "BuyerPicker": {
         "Search": "Find an actor…",

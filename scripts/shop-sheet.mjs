@@ -19,7 +19,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, categoryFor, lineTotalCp } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isGearItem, isVisibleStock,
-  matchingStockLine, rateFraction, sealState, sellRow, titleParts
+  matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -210,7 +210,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       open,
       openLabel: open
         ? (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntil", { time: closesAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.AlwaysOpen"))
-        : (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.ClosedOpensAt", { time: opensAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.Closed")),
+        : (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.ClosedOpensAt", { time: opensAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.Closed.Label")),
       // design/README.md's own mockup ("Sells at list · Buys at ½"): the chip reads sellsAt in
       // words but buysAt as the row-tag fraction glyph — an asymmetry the mockup draws on
       // purpose, unlike the Terms popover below, which spells both out in words.
@@ -377,7 +377,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     const itemId = target.dataset.itemId;
     const basket = this._baskets[kind];
-    basket.set(itemId, (basket.get(itemId) ?? 0) + 1);
+    const current = basket.get(itemId) ?? 0;
+    const next = kind === "buy" ? stepQuantity(current, 1, this.#shelfOf(itemId)) : current + 1;
+    if (next > 0) basket.set(itemId, next);
     this._tradeState[kind] = "idle";
     this.render({ parts: ["body"] });
   }
@@ -387,11 +389,25 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const itemId = target.dataset.itemId;
     const delta = Number(target.dataset.delta);
     const basket = this._baskets[kind];
-    const next = (basket.get(itemId) ?? 0) + delta;
+    const current = basket.get(itemId) ?? 0;
+    // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts.
+    const next = kind === "buy" ? stepQuantity(current, Math.sign(delta), this.#shelfOf(itemId)) : current + delta;
     if (next <= 0) basket.delete(itemId);
     else basket.set(itemId, next);
     this._tradeState[kind] = "idle";
     this.render({ parts: ["body"] });
+  }
+
+  /** A shop line's bundle, count and whether it runs out, for the buy stepper. */
+  #shelfOf(itemId) {
+    const item = this.document.items.get(itemId)?.toObject();
+    if (!item) return { bundle: 1, available: 0, infinite: false };
+    const stock = stockFrom(item.flags?.[MODULE]?.stock ?? {});
+    return {
+      bundle: bundleFor(item, item),
+      available: item.system?.quantity ?? 0,
+      infinite: stock.service || (stock.infinite ?? PLACEHOLDER_WORLD_INFINITE_STOCK)
+    };
   }
 
   /* -------------------------------------------------------------- sell tab */
@@ -400,8 +416,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const shopItems = actor.items.map(i => i.toObject());
     const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isGearItem(i));
     const rows = items.map(item => {
-      const matched = stockFrom(matchingStockLine(item, shopItems) ?? {});
-      const row = sellRow(item, config, matched, rates, null, currencies);
+      const line = matchingStockLine(item, shopItems);
+      const matched = stockFrom(line?.flags?.[MODULE]?.stock ?? {});
+      const hasContents = item.type === "container" && items.some(i => i.system?.container === item._id);
+      const row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
       return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
     });
     const willBuy = rows.filter(r => !r.refusal);
