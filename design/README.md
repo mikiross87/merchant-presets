@@ -22,6 +22,8 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 
 Every mockup except **01 Storefront — Player (Light)** draws the GM's window: three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
+**Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
+
 ## Source of truth
 
 The shop sits beside dnd5e's own sheets, so its tokens are dnd5e's, measured from the installed stylesheets. The design does not invent a palette.
