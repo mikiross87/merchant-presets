@@ -159,7 +159,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._sealed = { buy: null, sell: null };
     /** Per kind, the item ids a `stock-changed` refusal re-priced, struck on the bill until the basket changes. */
     this._struck = { buy: new Set(), sell: new Set() };
-    /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): a retry of the same basket resends it, so the GM's side can't carry it out twice. */
+    /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): every seal resends it until one is answered (sealed or refused) or the buyer changes, so the GM's side can't carry it out twice. */
     this._tradeId = { buy: null, sell: null };
     this._activeCategory = "all";
     /** The fewest of each sellable item worth a coin (`sellRow`'s `minQuantity`), from the last render. */
@@ -374,6 +374,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** A new buyer: the sell basket held the old one's own items, and an unanswered trade id is the old one's trade. */
   #buyerChanged() {
+    this._tradeId.buy = this._tradeId.sell = null;
     this._baskets.sell.clear();
     this.#basketChanged("buy");
     this.#basketChanged("sell");
@@ -512,12 +513,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return delta > 0 && min <= this.#shelfOf(kind, itemId).available ? min : 0;
   }
 
-    /** A basket edit starts a new bill: it clears the last trade's outcome, its stamped bill and the lines it struck. */
+  /**
+   * A basket edit starts a new bill: it clears the last trade's outcome, its stamped bill and the
+   * lines it struck. It keeps an unanswered trade's id (and its "no GM" state): that trade may
+   * have landed, and only a resend under the same id lets the GM's side answer it as a repeat.
+   */
   #basketChanged(kind) {
-    this._tradeState[kind] = "idle";
+    this._tradeState[kind] = this._tradeId[kind] ? "no-gm" : "idle";
     this._sealed[kind] = null;
     this._struck[kind].clear();
-    this._tradeId[kind] = null;
   }
 
   /** The item a basket line of `kind` names: the shop's for a buy, the buyer's own for a sale. */
