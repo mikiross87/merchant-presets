@@ -80,7 +80,13 @@ function collection(docs) {
 
 function item(id, { quantity = 1, price = { value: 1, denomination: "gp" }, flags = {}, type = "loot" } = {}) {
   const data = { _id: id, name: id, type, img: "", system: { quantity, price }, flags };
-  return { id, ...data, toObject: () => structuredClone(data) };
+  // Like Document#toObject: the item's current data, so a test's later edits show through.
+  return {
+    id, ...data,
+    toObject() {
+      return structuredClone(Object.fromEntries(Object.entries(this).filter(([k, v]) => k !== "id" && typeof v !== "function")));
+    }
+  };
 }
 
 function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 } } = {}) {

@@ -443,6 +443,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         };
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
+    this.#keepOffered("buy", new Set(rows.map(r => r.id)));
     if (this._activeCategory !== "all" && !rows.some(r => r.category === this._activeCategory)) this._activeCategory = "all";
     const categories = groupCategories(rows).map(c => ({
       ...c,
@@ -523,6 +524,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
+  /**
+   * Drops basket lines the tab no longer offers: the GM hid or delisted one, or the shop stopped
+   * buying it. The engine would refuse them anyway, and a hidden item's name shouldn't stay on the
+   * player's bill. Left alone while a seal is out or its stamp is showing.
+   */
+  #keepOffered(kind, offered) {
+    if (isSettled(this._tradeState[kind])) return;
+    const basket = this._baskets[kind];
+    const gone = [...basket.keys()].filter(id => !offered.has(id));
+    for (const id of gone) basket.delete(id);
+    if (gone.length) this.#basketChanged(kind);
+  }
+
   /** A line's quantity after one step; a sale also skips below the fewest worth a coin, both ways. */
   #nextQuantity(kind, itemId, current, delta) {
     const next = stepQuantity(current, delta, this.#shelfOf(kind, itemId));
@@ -594,12 +608,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const line = matchingStockLine(item, shopItems);
       const matched = stockConfigOf(line);
       const hasContents = item.type === "container" && items.some(i => i.system?.container === item._id);
-      const row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
+      let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
+      // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
+      if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._sellMin.set(item._id, row.minQuantity);
       return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
+    this.#keepOffered("sell", new Set(willBuy.map(r => r.id)));
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
     // Purse-after is the seller's own purse plus the sale; the till only decides till-short, and
     // not at all under unlimited merchant coin (the trade engine's bottomless till).
