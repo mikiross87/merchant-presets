@@ -199,7 +199,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._openPopover = this.element?.querySelector("[popover]:popover-open")?.id ?? null;
     const search = this.element?.querySelector(".buyer-search");
     this._buyerSearch = search?.value ?? "";
-    this._searchFocus = search && search === document.activeElement ? search.selectionStart : null;
+    // Its own document: a popped-out window (ApplicationV2#detachWindow) isn't the main one.
+    this._searchFocus = search && search === search.ownerDocument?.activeElement ? search.selectionStart : null;
   }
 
   /** @override */
