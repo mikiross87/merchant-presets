@@ -405,7 +405,8 @@ test("a basket line is fitted to what a buy of the shelf accepts now", () => {
   assert.equal(fitQuantity(30, shelf), 28, "down to the whole shelf, remainder included");
   assert.equal(fitQuantity(25, shelf), 20, "down to whole bundles when the remainder doesn't fit");
   assert.equal(fitQuantity(5, shelf), 0, "an old remainder that no longer matches is dropped");
-  assert.equal(fitQuantity(40, { bundle: 20, available: 0, infinite: true }), 40, "an infinite line never changes");
+  assert.equal(fitQuantity(40, { bundle: 20, available: 0, infinite: true }), 40, "an infinite line keeps whole bundles");
+  assert.equal(fitQuantity(305, { bundle: 20, available: 0, infinite: true }), 300, "an infinite line has no remainder to keep");
 });
 
 test("a sell row says what its price buys: one bundle", () => {
