@@ -439,3 +439,11 @@ test("a shelf holding only a part-bundle can still be bought, the remainder at i
   assert.equal(row.worthless, false);
   assert.equal(row.minQuantity, 5);
 });
+
+test("a sold-out line kept on the shelf shows its price, not worthless", () => {
+  const rope = { _id: "r1", img: "", name: "Rope", type: "loot", system: { price: { value: 1, denomination: "gp" }, quantity: 0 } };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 1 };
+  const row = buyRow(rope, { category: "", hidden: false, notForSale: false, infinite: false, service: false, keep: true }, rates, null, CURRENCIES5E, false);
+  assert.equal(row.worthless, false);
+  assert.equal(row.bundlePriceCp, 100);
+});
