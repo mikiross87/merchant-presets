@@ -346,7 +346,7 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies,
   let minQuantity = 1;
   const lineBundle = bundle ?? (matchedStock.bundle || 1);
   while (priced && minQuantity < base.owned && lineTotalCp(item, buysAt.rate, lineBundle, minQuantity, currencies) === 0) minQuantity++;
-  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity };
+  return { ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity, bundle: lineBundle };
 }
 
 /* -------------------------------------------------------------- the buy stepper */

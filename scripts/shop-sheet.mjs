@@ -186,7 +186,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _preRender(context, options) {
     await super._preRender?.(context, options);
     this._openPopover = this.element?.querySelector("[popover]:popover-open")?.id ?? null;
-    this._buyerSearch = this.element?.querySelector(".buyer-search")?.value ?? "";
+    const search = this.element?.querySelector(".buyer-search");
+    this._buyerSearch = search?.value ?? "";
+    this._searchFocus = search && search === document.activeElement ? search.selectionStart : null;
   }
 
   /** @override */
@@ -205,6 +207,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       }
     };
     search.value = this._buyerSearch ?? "";
+    // Typing survives a clock tick's re-render: focus and caret go back where they were.
+    if (this._searchFocus != null) {
+      search.focus();
+      search.setSelectionRange(this._searchFocus, this._searchFocus);
+    }
     filter();
     search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
     search.addEventListener("input", filter);
@@ -368,7 +375,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     let buyer = candidates.find(a => a.uuid === this._buyerUuid);
     // A seal that's out is settled by its answer; the buyer (and the reset a new one brings) waits for it.
     if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return buyer ?? null;
-    if (!buyer) buyer = game.user.character ?? candidates[0] ?? null;
+    // A GM owns every actor and seldom has a character: prefer a player character to whichever
+    // actor (a goblin, another merchant) happens to come first.
+    if (!buyer) buyer = game.user.character ?? candidates.find(a => a.type === "character") ?? candidates[0] ?? null;
     const previous = this._buyerUuid;
     this._buyerUuid = buyer?.uuid ?? null;
     // The buyer went out of reach (deleted, or no longer owned): the same reset as picking another.
@@ -490,6 +499,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const basket = this._baskets[kind];
     const current = basket.get(itemId) ?? 0;
     const next = this.#nextQuantity(kind, itemId, current, 1);
+    // A line already at its most changes nothing, so the bill (and its stamp or strikes) stands.
+    if (next === current) return;
     if (next > 0) basket.set(itemId, next);
     this.#basketChanged(kind);
     this.render({ parts: ["body"] });
@@ -505,6 +516,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A buy steps by the bundle (and a sold-back part-bundle), the only quantities it accepts; a
     // sale steps one at a time, up to what the seller owns.
     const next = this.#nextQuantity(kind, itemId, current, Math.sign(delta));
+    if (next === current) return;
     if (next <= 0) basket.delete(itemId);
     else basket.set(itemId, next);
     this.#basketChanged(kind);
@@ -778,7 +790,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static #onKeepShopping(_event, _target) {
     const kind = this.tabGroups.primary;
-    this._baskets[kind].clear();
+    // The sealed lines already left the basket; anything still in it wasn't traded and stays.
     this.#basketChanged(kind);
     this.render({ parts: ["body"] });
   }
