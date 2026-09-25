@@ -47,6 +47,7 @@ const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
   modules: { get: () => ({ api }) },
+  settings: { values: { merchantPurse: "finite" }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -83,6 +84,9 @@ function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 }
 }
 
 /** A window on a shop selling `shopItems`, opened by a player who owns `buyer` and has `permission` on the shop. */
+/** A buyer's purse, as the bill reads it: [denomination, count] pairs. */
+const coins = list => list.map(c => [c.denomination, c.count]);
+
 function openShop({ shopItems = [item("rope")], buyerItems = [], permission = OWNERSHIP.LIMITED } = {}) {
   const shop = actor("shop", shopItems, { permission });
   const buyer = actor("hero", buyerItems);
@@ -181,7 +185,7 @@ test("the Sell bill's purse-after is the seller's purse plus the sale, not the t
   sheet.tabGroups.primary = "sell";
   act(sheet, "addLine", { itemId: "gem" });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual(sell.basket.afterCoins.map(c => [c.denomination, c.count]), [["pp", 10], ["gp", 7]]);
+  assert.deepEqual(coins(sell.basket.afterCoins), [["pp", 10], ["gp", 7]]);
 });
 
 test("adding to a sealed bill starts a new one, so the sealed lines aren't traded again", async () => {
@@ -206,4 +210,79 @@ test("changing the buyer drops the last buyer's unanswered trade id", async () =
   act(sheet, "pickBuyer", { actorUuid: other.uuid });
   await act(sheet, "seal");
   assert.notEqual(ids[0], ids[1]);
+});
+
+test("a sealed buy stays sealed on the bill after the purse it emptied is re-read", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("sword", { quantity: 5, price: { value: 15, denomination: "gp" } })] });
+  buyer.system.currency = { gp: 20 };
+  act(sheet, "addLine", { itemId: "sword" });
+  api.trade = async () => { buyer.system.currency = { gp: 5 }; return { status: "sealed" }; };
+  await act(sheet, "seal");
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "sealed");
+  assert.deepEqual(buy.basket.lines.map(l => [l.itemId, l.quantity]), [["sword", 1]]);
+});
+
+test("a sealed sale of a whole stack keeps its bill once the item has left the seller", async () => {
+  const { sheet, buyer } = openShop({ buyerItems: [item("gem", { quantity: 2 })] });
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  act(sheet, "stepLine", { itemId: "gem", delta: "1" });
+  api.trade = async () => { buyer.items.splice(0); return { status: "sealed" }; };
+  await act(sheet, "seal");
+  const { sell } = await sheet._prepareContext({});
+  assert.equal(sell.seal.state, "sealed");
+  assert.deepEqual(sell.basket.lines.map(l => [l.itemId, l.quantity]), [["gem", 2]]);
+});
+
+test("the basket can't change while a seal is waiting for its answer", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 }), item("lamp", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  let finish;
+  api.trade = () => new Promise(resolve => { finish = resolve; });
+  const sealing = act(sheet, "seal");
+  await new Promise(setImmediate);
+  const id = sheet._tradeId.buy;
+  act(sheet, "addLine", { itemId: "lamp" });
+  act(sheet, "stepLine", { itemId: "rope", delta: "1" });
+  assert.deepEqual([...sheet._baskets.buy], [["rope", 1]]);
+  assert.equal(sheet._tradeId.buy, id);
+  finish({ status: "sealed" });
+  await sealing;
+});
+
+test("changing the buyer after a sealed buy doesn't bring its lines back as a new bill", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const other = actor("borin", []);
+  globalThis.game.actors.push(other);
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "sealed" });
+  await act(sheet, "seal");
+  act(sheet, "pickBuyer", { actorUuid: other.uuid });
+  assert.equal(sheet._baskets.buy.size, 0);
+});
+
+test("with unlimited merchant coin an empty till still buys", async () => {
+  globalThis.game.settings.values.merchantPurse = "unlimited";
+  try {
+    const { sheet } = openShop({ buyerItems: [item("gem", { price: { value: 7, denomination: "gp" } })] });
+    sheet.document.system.currency = {};
+    sheet.tabGroups.primary = "sell";
+    act(sheet, "addLine", { itemId: "gem" });
+    const { sell } = await sheet._prepareContext({});
+    assert.notEqual(sell.seal.state, "till-short");
+    assert.equal(sell.seal.disabled, false);
+  } finally {
+    globalThis.game.settings.values.merchantPurse = "finite";
+  }
+});
+
+test("a refusal the window can see for itself doesn't stick once its cause is gone", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  api.trade = async () => ({ status: "refused", reason: "closed" });
+  await act(sheet, "seal");
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "idle");
+  assert.equal(buy.seal.disabled, false);
 });
