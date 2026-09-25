@@ -3,9 +3,11 @@
  * plain Node and drive it through its hooks. Not a test file itself.
  *
  * Only what merchant-presets.mjs touches on import, at `ready`, and on the way
- * through `rewire` is modelled; settings default to the module's own defaults
- * with trading hours, restocking and stock weight off so those passes stay out
- * of the way.
+ * through `rewire` and `migrateShop` (#100) is modelled; settings default to
+ * the module's own defaults with trading hours, restocking and stock weight
+ * off so those passes stay out of the way. `game.scenes` starts empty — no
+ * test here places a token — so `migrateShop`'s per-scene token pass always
+ * finds nothing to do.
  */
 import { readdirSync, readFileSync } from "node:fs";
 
@@ -34,23 +36,39 @@ const flagged = doc => Object.assign(doc, {
   async setFlag(scope, key, value) { set(this, `flags.${scope}.${key}`, value); }
 });
 
+/** `doc`'s own data, the way `Document#toObject()` strips a document back to
+ *  plain data — everything but its methods. */
+function plainData(doc) {
+  const out = {};
+  for (const [k, v] of Object.entries(doc)) if (typeof v !== "function") out[k] = structuredClone(v);
+  return out;
+}
+
 /**
  * Install the globals and return the world they describe.
- * @returns {{hooks, actors, tables, compendium, calls, settings, merchant, fire}}
+ * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting}}
  */
 export function createWorld() {
   const hooks = { once: new Map(), on: new Map() };
   const actors = [];
   const tables = [];
   const folders = [];
+  const scenes = [];
   const compendium = new Map();
-  const calls = { itemUpdates: [], tablesCreated: 0, messages: [] };
+  // `writes` is every settings.set and actor#update call, in the order they
+  // actually happened — the only way to test a write-ordering guarantee
+  // (#100 review: the autoRestock write must land before the actor's own).
+  const calls = { itemUpdates: [], tablesCreated: 0, messages: [], writes: [] };
   // This module's settings by key; another module's as "<module>.<key>".
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
     spellcastingToChat: true, "item-piles.outputToChat": 1
   };
+  // No world ever has a stored value in the stub: every setting is at its default.
+  const storage = { get: () => ({ find: () => undefined }) };
+  // Keys a test has asked settings.set to fail for, once — see `failSetting`.
+  const failingSettings = new Set();
 
   globalThis.Hooks = {
     once: (name, fn) => hooks.once.set(name, fn),
@@ -70,6 +88,10 @@ export function createWorld() {
     getSpeaker: ({ actor } = {}) => ({ actor: actor?.id, alias: actor?.name })
   };
   globalThis.fromUuid = globalThis.foundry.utils.fromUuid;
+  // The real _replace forces mergeObject to overwrite a nested object wholesale
+  // instead of merging into it; `set` below already overwrites a leaf value
+  // outright with no merge step to force past, so unwrapping is a no-op here.
+  globalThis._replace = v => v;
   globalThis.ui = { notifications: { info() {}, warn() {}, error() {} } };
   globalThis.CONFIG = {};
   globalThis.CONST = {};
@@ -94,6 +116,7 @@ export function createWorld() {
     user,
     users: Object.assign([user], { activeGM: user }),
     actors,
+    scenes,
     folders: { find: fn => folders.find(fn) },
     tables: {
       find: fn => tables.find(fn), filter: fn => tables.filter(fn),
@@ -102,7 +125,17 @@ export function createWorld() {
         results: src.results.map(r => ({ documentUuid: r.documentUuid, name: r.name }))
       })
     },
-    settings: { register() {}, get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`] },
+    settings: {
+      register() {},
+      get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`],
+      async set(scope, key, value) {
+        const full = scope === "merchant-presets" ? key : `${scope}.${key}`;
+        if (failingSettings.delete(full)) throw new Error(`stub: ${full} write failed`);
+        settings[full] = value;
+        calls.writes.push({ type: "setting", key: full, value });
+      },
+      storage
+    },
     modules: new Map([["merchant-presets", { version: "1.3.0" }], ["item-piles", { active: true }]]),
     itempiles: { API: {
       ITEM_QUANTITY_ATTRIBUTE: "system.quantity",
@@ -128,9 +161,13 @@ export function createWorld() {
     return flagged(Object.assign(doc, {
       id: doc._id, uuid: `Actor.${doc._id}`, pack: null, effects: [],
       items: doc.items.map(i => ({ ...i, id: i._id })),
-      async update(changes) { for (const [k, v] of Object.entries(changes)) set(this, k, v); },
+      async update(changes) {
+        for (const [k, v] of Object.entries(changes)) set(this, k, v);
+        calls.writes.push({ type: "actorUpdate", actor: this.id, changes });
+      },
       async updateEmbeddedDocuments(_type, updates) { calls.itemUpdates.push({ actor: this.id, updates }); },
-      async deleteEmbeddedDocuments() {}
+      async deleteEmbeddedDocuments() {},
+      toObject() { return plainData(this); }
     }));
   }
 
@@ -140,14 +177,23 @@ export function createWorld() {
     await new Promise(resolve => setImmediate(resolve));
   }
 
-  return { hooks, actors, tables, compendium, calls, settings, merchant, fire };
+  /** Make the next `game.settings.set(scope, key, …)` for this key throw,
+   *  once — to test that a failed settings write stops whatever depended on
+   *  it landing first, rather than being silently skipped over. */
+  const failSetting = (scope, key) => failingSettings.add(scope === "merchant-presets" ? key : `${scope}.${key}`);
+
+  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */
+let runtimeLoads = 0;
+
 export async function loadRuntime(world) {
   const log = console.log;
   console.log = (...args) => { if (!String(args[0]).startsWith("merchant-presets |")) log(...args); };
-  await import("../scripts/merchant-presets.mjs");
+  // A fresh module instance per world: its own state (migrationGateOpen, say)
+  // must not leak from one test's world into the next.
+  await import(`../scripts/merchant-presets.mjs?world=${++runtimeLoads}`);
   world.hooks.once.get("init")?.();
   world.hooks.once.get("ready")?.();
   await new Promise(resolve => setImmediate(resolve));
