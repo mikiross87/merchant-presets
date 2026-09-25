@@ -380,6 +380,12 @@ test("what the migration can't carry over is warned about, not dropped silently 
   assert.deepEqual(planActorUpdate(legacy(shipped("Adventurers_Store_Town"))).warnings, []);
 });
 
+test("Item Piles' own not-overridden filters (false) migrate, not throw (#120 review)", () => {
+  const { update, warnings } = planActorUpdate(retuned({ overrideItemFilters: false }));
+  assert.ok(update["flags.merchant-presets.shop"]);
+  assert.deepEqual(warnings, []);
+});
+
 test("needsMigration stays true when the shop half landed but items still lack .stock (#100 review)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const shopOnly = applied(store, { "flags.merchant-presets.shop": deriveShop(store) });

@@ -64,3 +64,15 @@ test("a 1.x merchant created inside a compendium is never migrated there (#120 r
   assert.deepEqual(shopWrites(world, shop.id), []);
   assert.equal(world.calls.writes.some(w => w.type === "setting" && w.key === "autoRestock"), false);
 });
+
+test("forcing autoRestock off after the first load tells the GM, not just the log (#120 review)", async () => {
+  const world = createWorld();
+  await loadRuntime(world);
+  const told = [];
+  globalThis.ui.notifications.warn = message => told.push(message);
+  const shop = legacyMerchant(world, "General_Store_Village_");
+  world.actors.push(shop);
+  await world.fire("createActor", shop, {}, "gm");
+  assert.equal(told.length, 1);
+  assert.match(told[0], /restock/i);
+});
