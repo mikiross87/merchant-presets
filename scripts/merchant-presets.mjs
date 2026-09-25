@@ -23,7 +23,7 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
   STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
-import { deriveShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, worldHasLegacyShops }
   from "./migrate.mjs";
 
@@ -1215,7 +1215,12 @@ async function setUpShop(actor, sourceUuid, keepIds) {
   // and won't-buy outright (#119 fix 3). Deriving it from the source's own
   // Item Piles data is a defensive fallback for a source that somehow still
   // lacks one.
-  const sourceShop = hasCurrentShop(sourceData) ? sourceData.flags["merchant-presets"].shop : deriveShop(sourceData);
+  let sourceShop = sourceData.flags["merchant-presets"]?.shop;
+  if (!hasCurrentShop(sourceData)) {
+    const derived = derivedShop(sourceData);
+    if (!derived.ok) throw new Error(`merchant ${sourceUuid} has no valid shop config: ${derived.errors.join("; ")}`);
+    sourceShop = derived.shop;
+  }
   const plan = planShop({ ...sourceData, uuid: source.uuid }, actor.toObject(), keepIds, sourceShop);
 
   // Hold the merchant while it is half built: the flag update below puts it on

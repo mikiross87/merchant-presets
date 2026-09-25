@@ -553,6 +553,20 @@ function repairShop(shop) {
   return { shop: repaired, ok, errors, repaired: firstPass };
 }
 
+/**
+ * `deriveShop`, then `repairShop` — the config a migration would write, for a
+ * caller outside the migration (`setUpShop`'s fallback for a source with no
+ * current shop). Never write `shop` when `ok` is false: it carries the
+ * current version, so it would never be picked up again.
+ *
+ * @param {object} actor
+ * @param {object} [packShop]
+ * @returns {{shop: object, ok: boolean, errors: string[], repaired: string[]}}
+ */
+export function derivedShop(actor, packShop) {
+  return repairShop(deriveShop(actor, packShop));
+}
+
 /** `v` as a boolean when it's an unambiguous stand-in for one —
  *  `"true"`/`"false"`, `1`/`0` — or `fallback` otherwise. Guessing at
  *  anything less clear-cut risks silently un-hiding a good or unlocking its
@@ -658,7 +672,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
   const warnings = [];
 
   if (!hasCurrentShop(actor)) {
-    const { shop, ok, errors, repaired } = repairShop(deriveShop(actor, packShop));
+    const { shop, ok, errors, repaired } = derivedShop(actor, packShop);
     if (ok) update["flags.merchant-presets.shop"] = shop;
     else shopError = `Invalid migrated shop config for "${actor.name}": ${errors.join("; ")}`;
     for (const e of repaired) warnings.push(`"${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
