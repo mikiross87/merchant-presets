@@ -291,7 +291,8 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
   const available = item.system?.quantity ?? 0;
   // 1 means no floor of its own: `stepQuantity` already lands only on quantities a buy accepts.
   let minQuantity = 1, worthless = false;
-  if (!unpriced && sellsAt.rate > 0 && item.system.price?.value > 0) {
+  // Nothing on a finite shelf (a sold-out line kept for restock) is out of stock, not worthless.
+  if (!unpriced && sellsAt.rate > 0 && item.system.price?.value > 0 && (infinite || available > 0)) {
     // Capped: a vanishing rate on an endless line would otherwise count bundles for ever.
     const most = infinite ? bundle * MAX_BUNDLES_TO_A_COIN : available;
     const worth = [...buyableQuantities(bundle, infinite ? 0 : available % bundle, most)]
