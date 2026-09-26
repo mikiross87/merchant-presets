@@ -660,13 +660,17 @@ export function isMadeVisitable(actor, worldId) {
 }
 
 /**
- * Whether a GM has set `actor`'s ownership: a default other than None, or any player's own
- * level (a fence opened to one rogue's player). Either is left alone (#138 review). 1.x never
- * set ownership, so the field's own default reads as undecided.
+ * Whether a GM has set `actor`'s ownership: a default other than None, or a player given a
+ * visiting level of their own, Limited or Observer (a fence opened to one rogue's player). Either
+ * is left alone (#138 review). An Owner entry isn't a choice: Foundry writes one for the GM who
+ * imports or creates any document (`fromCompendium`, the server's `_preCreate`). 1.x never set
+ * ownership, so the field's own default reads as undecided.
  */
 export function isOwnershipChosen(actor) {
+  const LIMITED = 1, OWNER = 3;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
   const ownership = actor?.ownership ?? {};
-  return (ownership.default ?? 0) !== 0 || Object.keys(ownership).some(k => k !== "default");
+  return (ownership.default ?? 0) !== 0
+    || Object.entries(ownership).some(([k, level]) => k !== "default" && level >= LIMITED && level < OWNER);
 }
 
 /**
