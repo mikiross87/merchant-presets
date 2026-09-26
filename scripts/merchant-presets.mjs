@@ -985,7 +985,10 @@ function handleTradeQuery(request, { user }) {
 async function handleRestockQuery(request, { user }) {
   if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
   const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
-  return { restocked: shop ? await restock(shop) : null };
+  // A restock that throws has stopped: answered as failed, logged here, never left to read as a
+  // query that timed out and may still run (#140 review).
+  const restocked = shop ? await restock(shop).catch(err => { console.error(`${MODULE} | restock of "${shop.name}" failed`, err); return null; }) : null;
+  return { restocked };
 }
 
 /**
