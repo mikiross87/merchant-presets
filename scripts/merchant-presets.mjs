@@ -1757,10 +1757,15 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
   } finally {
     rewiring.delete(actor.id);
   }
-  // Native (#104): the chosen merchant's table draws this shop's first shelf; this already runs on
-  // the trade queue, so the restock is called directly.
-  if (NATIVE_SHOP) await restockNow(actor);
-  else await rewire(actor);
+  // Native (#104): migrated to the shop window here (the plan copies the source's Item Piles
+  // data, still switched on), then the chosen merchant's table draws this shop's first shelf; this
+  // already runs on the trade queue, so the restock is called directly.
+  if (NATIVE_SHOP) {
+    await migrateShop(actor);
+    await restockNow(actor);
+  } else {
+    await rewire(actor);
+  }
   return actor.items.filter(i => !isGear(i)).length;
 }
 
@@ -2066,7 +2071,12 @@ Hooks.once("ready", async () => {
     migrateAll()
       .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
       // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
-      .then(() => Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive)));
+      // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+      .then(() => {
+        if (game.users.activeGM !== game.user) return;
+        return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+      })
+      .catch(err => console.error(`${MODULE} |`, err));
     return;
   }
   if (!game.modules.get("item-piles")?.active) {
@@ -2132,7 +2142,9 @@ const arriving = new Set();
  * @param {Actor} actor
  */
 async function arrive(actor) {
-  if (actor.pack || arriving.has(actor.id)) return;
+  // A shop being set up (`setUpShopNow`) is half built until it finishes, and migrates and rolls
+  // its own shelf there (#138 review).
+  if (actor.pack || arriving.has(actor.id) || rewiring.has(actor.id)) return;
   arriving.add(actor.id);
   try {
     await migrateShop(actor);

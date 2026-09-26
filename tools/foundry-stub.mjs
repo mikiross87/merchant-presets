@@ -220,7 +220,7 @@ export function createWorld() {
 
   /** A player character, owned by `owners`, with `currency` and `items`. */
   function character(id, { currency = {}, items = [], owners = [] } = {}) {
-    const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {},
+    const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {}, effects: [],
       system: { currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0, ...currency } },
       items: items.map(i => itemDoc({ ...i, id: i._id })) }), { owners });
     actors.push(doc);
