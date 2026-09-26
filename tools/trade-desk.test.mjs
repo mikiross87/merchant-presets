@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, receiptHtml, recipients,
-  resultOf, serial, WORLD_RATES
+  resultOf, serial, shouldReclaim, CLAIM_STALE_MS, WORLD_RATES
 } from "../scripts/trade-desk.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape (same fixture as tools/pricing.test.mjs). */
@@ -226,4 +226,19 @@ test("the trade hook carries uuids, the trader and each line's item", () => {
   assert.equal(payload.lines[1].item.name, "Arrows");
   assert.equal(payload.lines[1].quantity, 20);
   assert.doesNotThrow(() => JSON.stringify(payload), "it crosses the socket as JSON");
+});
+
+/* ----------------------------------------------------------- shouldReclaim */
+
+test("a GM tab takes the claim when nobody holds it", () => {
+  assert.equal(shouldReclaim({ claim: undefined, tabId: "b", lastAliveAt: 0, now: 0 }), true);
+});
+
+test("a GM tab takes the claim from a claimer that's gone quiet (#102 live run: a closed tab's unload write never landed)", () => {
+  assert.equal(shouldReclaim({ claim: "a", tabId: "b", lastAliveAt: 1000, now: 1000 + CLAIM_STALE_MS + 1 }), true);
+  assert.equal(shouldReclaim({ claim: "a", tabId: "b", lastAliveAt: 1000, now: 1000 + CLAIM_STALE_MS }), false);
+});
+
+test("the claiming tab never re-claims from itself", () => {
+  assert.equal(shouldReclaim({ claim: "b", tabId: "b", lastAliveAt: 0, now: 10 * CLAIM_STALE_MS }), false);
 });

@@ -146,6 +146,31 @@ test("the tab that loads claims trades, and takes the claim back when it's given
   assert.equal(gm.flags["merchant-presets"].tradeTab, claim);
 });
 
+test("a GM tab takes the claim over from a claiming tab that has gone quiet, not from one still talking", async t => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"], now: 0 });
+  const { world } = await setUp();
+  const gm = globalThis.game.user;
+  const alive = () => world.receive("module.merchant-presets", { type: "claim-alive", userId: "gm", tabId: "other-tab" });
+  gm.flags["merchant-presets"].tradeTab = "other-tab";   // another tab opened later and claimed
+  alive();
+  for (let s = 0; s < 60; s += 10) { t.mock.timers.tick(10_000); alive(); }
+  assert.equal(gm.flags["merchant-presets"].tradeTab, "other-tab", "a claimer that keeps saying so keeps the claim");
+
+  t.mock.timers.tick(40_000);   // it closed without its unload write landing (the #102 live run)
+  await tick();
+  assert.notEqual(gm.flags["merchant-presets"].tradeTab, "other-tab");
+  assert.equal(typeof gm.flags["merchant-presets"].tradeTab, "string");
+});
+
+test("the claiming tab says so on the socket, so the others know it's still there", async t => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"], now: 0 });
+  const { world } = await setUp();
+  t.mock.timers.tick(10_000);
+  const said = world.calls.socket.filter(s => s.message.type === "claim-alive");
+  assert.equal(said.length, 1);
+  assert.equal(said[0].message.tabId, globalThis.game.user.flags["merchant-presets"].tradeTab);
+});
+
 test("a trade is heard on this client and sent to every other, then posts one receipt", async () => {
   const { world, shop, api, request } = await setUp();
   const heard = [];
