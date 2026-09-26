@@ -35,6 +35,16 @@ async function setUp() {
   return { world, shop, clock };
 }
 
+/** Make the shop's stock table unfindable, wherever it lives (the compendium's, or a world copy); returns an undo. */
+function hideTable(world, shop) {
+  const uuid = shop.flags["merchant-presets"].shop.restock.table;
+  const packed = world.compendium.get(uuid);
+  const index = world.tables.findIndex(t => t.uuid === uuid);
+  const [worldCopy] = index === -1 ? [] : world.tables.splice(index, 1);
+  world.compendium.delete(uuid);
+  return () => { if (packed) world.compendium.set(uuid, packed); if (worldCopy) world.tables.push(worldCopy); };
+}
+
 const byName = (shop, name) => shop.items.filter(i => i.name === name);
 const drawn = item => item.flags?.["merchant-presets"]?.drawn === true;
 
@@ -128,12 +138,10 @@ test("turning restocking off mid-session stops it at the next tick (#135 review)
 
 test("a shop whose stock table is missing isn't scheduled until it's found, so its shelf is adopted first (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
-  const table = shop.flags["merchant-presets"].shop.restock.table;
-  const saved = world.compendium.get(table);
-  world.compendium.delete(table);
+  const restore = hideTable(world, shop);
   await clock(at(0, 1));
   assert.equal(shop.flags["merchant-presets"].schedule, undefined);
-  world.compendium.set(table, saved);
+  restore();
   await clock(at(0, 2));
   assert.ok(byName(shop, "Bell").every(drawn));
   assert.ok(shop.flags["merchant-presets"].schedule);
@@ -142,7 +150,7 @@ test("a shop whose stock table is missing isn't scheduled until it's found, so i
 test("a due shop whose table has gone isn't reported as restocked (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
-  world.compendium.delete(shop.flags["merchant-presets"].shop.restock.table);
+  hideTable(world, shop);
   const told = [];
   globalThis.ui.notifications.info = message => told.push(message);
   const warn = console.warn;

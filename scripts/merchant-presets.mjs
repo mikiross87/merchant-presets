@@ -594,7 +594,8 @@ async function adoptShelf(actor, table) {
  * keeps the stock config its shelf item had.
  *
  * @param {Actor} actor
- * @returns {Promise<string[]>} the lines it drew or topped up
+ * @returns {Promise<string[]|null>} the lines it drew or topped up; null if
+ *   it couldn't restock at all (no shop config, or its table is gone)
  */
 function restock(actor) {
   return runTrade(() => restockNow(actor));
@@ -603,11 +604,11 @@ function restock(actor) {
 async function restockNow(actor) {
   const raw = actor.flags?.[MODULE]?.shop;
   const shop = safeShopOf(actor);
-  if (!shop?.restock.table) return [];
+  if (!shop?.restock.table) return null;
   const table = await fromUuid(shop.restock.table).catch(() => null);
   if (!table) {
     console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
-    return [];
+    return null;
   }
   // Never scheduled yet: its shelf predates native restocking, so it has no drawn goods to replace.
   if (!actor.flags?.[MODULE]?.schedule) await adoptShelf(actor, table);
@@ -645,8 +646,11 @@ async function scheduleShop(actor, now, previous, calendar) {
     const shop = safeShopOf(actor);
     const days = shop ? await daysOf(shop.restock.every) : null;
     if (days == null || !shop.restock.table) return null;
+    // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
+    // would skip the adoption, and its first restock would add a second shelf.
     const table = await fromUuid(shop.restock.table).catch(() => null);
-    if (table) await adoptShelf(actor, table);
+    if (!table) return null;
+    await adoptShelf(actor, table);
     await actor.update({ [`flags.${MODULE}.schedule`]: initialSchedule(now, days, calendar) });
     return null;
   }
@@ -747,12 +751,13 @@ function registerTradingHours() {
 }
 
 /**
- * Wire restocking to the world clock. Only the GM tab that claims trades acts
- * (`registerTradeDesk`), so a GM with two tabs open restocks once; the others
- * keep their place on the clock in case the claim moves to them.
+ * Wire restocking to the world clock. Only the active GM acts, and of their
+ * tabs only the one that claims trades (`registerTradeDesk`), so two GMs or
+ * two tabs restock once; the others keep their place on the clock in case the
+ * claim moves to them. The switch is read on every tick: the migration can
+ * turn it off mid-session when a 1.x merchant arrives (#135 review).
  */
 function registerRestock() {
-  if (!game.settings.get(MODULE, "autoRestock")) return;
   // 0 means "never run": start from now, or the first tick would see a jump of
   // the whole world time and restock every shop at once.
   let previous = game.settings.get(MODULE, "lastRestockTime") || game.time.worldTime;
@@ -761,7 +766,8 @@ function registerRestock() {
     if (worldTime === previous) return;
     const from = previous;
     previous = worldTime;
-    if (!game.user.isGM || !claimsTrades(tradeClaim(), thisTab())) return;
+    if (!game.settings.get(MODULE, "autoRestock")) return;
+    if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
     // Rewinding the clock should not trigger a day's worth of restocks.
     if (worldTime > from) await scheduledRestocks(worldTime, from);
