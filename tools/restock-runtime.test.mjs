@@ -165,6 +165,21 @@ const tableOf = (world, shop) => {
   return world.compendium.get(uuid) ?? world.tables.find(t => t.uuid === uuid);
 };
 
+test("a restock that couldn't run keeps the shop due, and it restocks at the next opening (#135 review, round 3)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const restore = hideTable(world, shop);
+  const bell = byName(shop, "Bell")[0]._id;
+  const warn = console.warn;
+  console.warn = () => {};
+  try { await clock(at(3, 8)); } finally { console.warn = warn; }
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(0, 1), dueAt: at(3) }, "still due");
+  restore();
+  await clock(at(4, 8));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked a day late rather than a cycle late");
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(4, 7), dueAt: at(7) });
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));

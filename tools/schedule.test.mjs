@@ -348,6 +348,12 @@ const drawn = (id, name, type, quantity, extra = {}) =>
 const gmAdded = { _id: "gm1", name: "Rope, Silk", type: "loot", system: { quantity: 5 }, flags: {} };
 const gear = { _id: "gear1", name: "Longsword", type: "weapon", system: { quantity: 1 }, flags: { "merchant-presets": { kind: "gear" } } };
 
+test("reroll never deletes a drawn good this shop's table doesn't name: one sold here from another shop (#135 review)", () => {
+  const soldHere = drawn("x1", "Bell", "loot", 1);   // drawn by the General Store, sold on through Item Piles
+  const plan = planRestock(shop, [drawn("i1", "Arrows", "consumable", 40), soldHere], [{ ...draws[0], quantity: 10 }], context);
+  assert.deepEqual(plan.deletes, ["i1"]);
+});
+
 test("reroll replaces the whole drawn shelf, and leaves the GM's own goods and gear alone", () => {
   const items = [
     drawn("i1", "Arrows", "consumable", 40),
