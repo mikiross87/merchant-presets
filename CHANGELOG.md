@@ -35,6 +35,13 @@ than for the code. Reference the issue or PR it closes.
   stock table put on the shelf. Goods you added by hand stay, and a line you
   hid or edited keeps your settings. Worlds upgrading from 1.x keep restocking
   off until you turn it on. (#105)
+- 2.0: the shops run without Item Piles. Double-clicking a shop's token opens
+  its shop window, for players and GMs alike. A shop dragged in from the
+  compendium stays hidden from players until you place its token on a scene,
+  then players can visit it; set a shop's ownership yourself and your choice
+  holds. Every shop you drag in rolls its own shelf, and *Set up as shop…*
+  works without Item Piles too. Shops already in your world move over on
+  their own the first time you load, tokens included. (#104)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler

@@ -54,7 +54,7 @@ export const SHOP_SHEET_ID = "merchant-presets.ShopSheet";
  * to `true` once #104 makes the shop window the sheet, and `needsMigration`
  * picks every already-data-migrated shop back up to finish the cut-over.
  */
-export const NATIVE_SHOP = false;
+export const NATIVE_SHOP = true;
 
 /**
  * Item Piles 3.3.4's `CONSTANTS.ITEM_DEFAULTS` — what a per-item
