@@ -1754,18 +1754,19 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
+    // Native (#104): migrated to the shop window here (the plan copies the source's Item Piles
+    // data, still switched on), then the chosen merchant's table draws this shop's first shelf.
+    // Still held: this user's own updates fire updateActor, whose arrival hook would otherwise
+    // roll the shelf a second time (#138 review). Already on the trade queue, so the restock is
+    // called directly.
+    if (NATIVE_SHOP) {
+      await migrateShop(actor);
+      await restockNow(actor);
+    }
   } finally {
     rewiring.delete(actor.id);
   }
-  // Native (#104): migrated to the shop window here (the plan copies the source's Item Piles
-  // data, still switched on), then the chosen merchant's table draws this shop's first shelf; this
-  // already runs on the trade queue, so the restock is called directly.
-  if (NATIVE_SHOP) {
-    await migrateShop(actor);
-    await restockNow(actor);
-  } else {
-    await rewire(actor);
-  }
+  if (!NATIVE_SHOP) await rewire(actor);
   return actor.items.filter(i => !isGear(i)).length;
 }
 
