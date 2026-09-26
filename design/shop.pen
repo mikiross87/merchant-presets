@@ -146,6 +146,100 @@
         },
         {
           "type": "frame",
+          "id": "UFsFb",
+          "name": "Seal Button",
+          "reusable": true,
+          "width": 220,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "$header-2",
+                "position": 0
+              },
+              {
+                "color": "$header-1",
+                "position": 1
+              }
+            ]
+          },
+          "cornerRadius": 4,
+          "stroke": "$accent-gold",
+          "strokeWidth": 1,
+          "gap": 10,
+          "padding": [
+            10,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "v4Fxx6",
+              "name": "Wax Seal",
+              "width": 26,
+              "height": 26,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#c23a3a",
+                    "position": 0
+                  },
+                  {
+                    "color": "#7a1414",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 13,
+              "stroke": "#e3ce9e",
+              "strokeWidth": 1.5,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "DagSE",
+                  "name": "Seal mark",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "stamp",
+                  "library": "lucide",
+                  "fill": "$seal-mark"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "iLCwo",
+              "name": "Seal label",
+              "fill": "$text-on-dark",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Seal the bargain · 30 gp",
+              "textAlign": "center",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
           "id": "obOO9",
           "name": "Quantity Stepper",
           "reusable": true,
@@ -2431,7 +2525,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -2460,7 +2554,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -2865,6 +2959,7 @@
                       "id": "dEaIj",
                       "name": "Purse After",
                       "width": "fill_container",
+                      "height": "fill_container",
                       "layout": "vertical",
                       "gap": 5,
                       "children": [
@@ -2971,102 +3066,16 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "n1o9z",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": "fill_container"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "vXznV",
+                      "id": "vnsxn",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
-                      "fill": {
-                        "type": "gradient",
-                        "gradientType": "linear",
-                        "enabled": true,
-                        "rotation": 180,
-                        "size": {
-                          "height": 1
-                        },
-                        "colors": [
-                          {
-                            "color": "$header-2",
-                            "position": 0
-                          },
-                          {
-                            "color": "$header-1",
-                            "position": 1
-                          }
-                        ]
-                      },
-                      "cornerRadius": 4,
-                      "stroke": "$accent-gold",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "N8oGo",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
-                          "fill": {
-                            "type": "gradient",
-                            "gradientType": "radial",
-                            "enabled": true,
-                            "rotation": 0,
-                            "size": {
-                              "width": 1,
-                              "height": 1
-                            },
-                            "colors": [
-                              {
-                                "color": "#c23a3a",
-                                "position": 0
-                              },
-                              {
-                                "color": "#7a1414",
-                                "position": 1
-                              }
-                            ]
-                          },
-                          "cornerRadius": 13,
-                          "stroke": "#e3ce9e",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "bznob",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "stamp",
-                              "library": "lucide",
-                              "fill": "$seal-mark"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "text",
-                          "id": "F0acf",
-                          "name": "Seal label",
-                          "fill": "$text-on-dark",
-                          "content": "Seal the bargain · 30 gp",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal the bargain · 30 gp"
                         }
-                      ]
+                      }
                     },
                     {
                       "type": "text",
@@ -4043,7 +4052,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -4077,7 +4086,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -4423,6 +4432,7 @@
                       "id": "tf3OO",
                       "name": "Purse After",
                       "width": "fill_container",
+                      "height": "fill_container",
                       "layout": "vertical",
                       "gap": 5,
                       "children": [
@@ -4529,102 +4539,16 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "py8ef",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": "fill_container"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "xgBah",
+                      "id": "M7E00x",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
-                      "fill": {
-                        "type": "gradient",
-                        "gradientType": "linear",
-                        "enabled": true,
-                        "rotation": 180,
-                        "size": {
-                          "height": 1
-                        },
-                        "colors": [
-                          {
-                            "color": "$header-2",
-                            "position": 0
-                          },
-                          {
-                            "color": "$header-1",
-                            "position": 1
-                          }
-                        ]
-                      },
-                      "cornerRadius": 4,
-                      "stroke": "$accent-gold",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "kh6r4",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
-                          "fill": {
-                            "type": "gradient",
-                            "gradientType": "radial",
-                            "enabled": true,
-                            "rotation": 0,
-                            "size": {
-                              "width": 1,
-                              "height": 1
-                            },
-                            "colors": [
-                              {
-                                "color": "#c23a3a",
-                                "position": 0
-                              },
-                              {
-                                "color": "#7a1414",
-                                "position": 1
-                              }
-                            ]
-                          },
-                          "cornerRadius": 13,
-                          "stroke": "#e3ce9e",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "kI7Hs",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "stamp",
-                              "library": "lucide",
-                              "fill": "$seal-mark"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "text",
-                          "id": "gfKrm",
-                          "name": "Seal label",
-                          "fill": "$text-on-dark",
-                          "content": "Seal it · take 57 gp 5 sp",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal it · take 57 gp 5 sp"
                         }
-                      ]
+                      }
                     },
                     {
                       "type": "text",
@@ -9205,7 +9129,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -9242,7 +9166,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -9810,6 +9734,7 @@
                       "id": "y2wXZ",
                       "name": "Purse After",
                       "width": "fill_container",
+                      "height": "fill_container",
                       "layout": "vertical",
                       "gap": 5,
                       "children": [
@@ -9916,102 +9841,29 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "LDEY8",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": "fill_container"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "X9G94",
+                      "id": "KXzhX",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
-                      "fill": {
-                        "type": "gradient",
-                        "gradientType": "linear",
-                        "enabled": true,
-                        "rotation": 180,
-                        "size": {
-                          "height": 1
-                        },
-                        "colors": [
-                          {
-                            "color": "$header-2",
-                            "position": 0
-                          },
-                          {
-                            "color": "$header-1",
-                            "position": 1
-                          }
-                        ]
-                      },
-                      "cornerRadius": 4,
-                      "stroke": "$accent-gold",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "t0gO1S",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
-                          "fill": {
-                            "type": "gradient",
-                            "gradientType": "radial",
-                            "enabled": true,
-                            "rotation": 0,
-                            "size": {
-                              "width": 1,
-                              "height": 1
-                            },
-                            "colors": [
-                              {
-                                "color": "#c23a3a",
-                                "position": 0
-                              },
-                              {
-                                "color": "#7a1414",
-                                "position": 1
-                              }
-                            ]
-                          },
-                          "cornerRadius": 13,
-                          "stroke": "#e3ce9e",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "dC1gf",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "stamp",
-                              "library": "lucide",
-                              "fill": "$seal-mark"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "text",
-                          "id": "V1TIOx",
-                          "name": "Seal label",
-                          "fill": "$text-on-dark",
-                          "content": "Seal it · 1 gp 9 sp 2 cp",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal it · 1 gp 9 sp 2 cp"
                         }
-                      ]
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "iNzdo",
+                      "name": "Slip foot",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Exact change is counted from your coins.",
+                      "textAlign": "center",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -11268,22 +11120,14 @@
               ]
             },
             {
-              "id": "B0484j",
+              "id": "l5O2k",
               "type": "ref",
-              "ref": "cuFJz",
-              "name": "Seal",
+              "ref": "UFsFb",
+              "name": "Seal Button",
               "width": "fill_container",
-              "padding": [
-                10,
-                14
-              ],
               "descendants": {
-                "HoVd8": {
-                  "icon": "stamp"
-                },
-                "fvB3n": {
-                  "content": "Seal the bargain · 30 gp",
-                  "fontWeight": "700"
+                "iLCwo": {
+                  "content": "Seal the bargain · 30 gp"
                 }
               }
             }
@@ -13097,7 +12941,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -13127,7 +12971,7 @@
                       "opacity": 0.55,
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -13645,58 +13489,28 @@
                       "height": 6
                     },
                     {
-                      "type": "frame",
-                      "id": "C7ZAK",
+                      "id": "L2gOjQ",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
                       "fill": "$surface-row-alt",
-                      "cornerRadius": 4,
                       "stroke": "$border-faint",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "qeJxF",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
+                      "descendants": {
+                        "v4Fxx6": {
                           "fill": "$border-faint",
-                          "cornerRadius": 13,
                           "stroke": "$border-faint",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "ex7ga",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "loader",
-                              "library": "lucide",
-                              "fill": "$text-secondary"
-                            }
-                          ]
+                          "strokeWidth": 1
                         },
-                        {
-                          "type": "text",
-                          "id": "S9b67e",
-                          "name": "Seal label",
-                          "fill": "$text-secondary",
+                        "DagSE": {
+                          "icon": "loader",
+                          "fill": "$text-secondary"
+                        },
+                        "iLCwo": {
                           "content": "Counting coin…",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                          "fill": "$text-secondary"
                         }
-                      ]
+                      }
                     },
                     {
                       "type": "text",
@@ -13765,7 +13579,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -13799,7 +13613,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -14459,7 +14273,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -14488,7 +14302,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -15058,58 +14872,28 @@
                       "height": 6
                     },
                     {
-                      "type": "frame",
-                      "id": "n9afxn",
+                      "id": "cEL0g",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
                       "fill": "$surface-row-alt",
-                      "cornerRadius": 4,
                       "stroke": "$border-faint",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "NamiD",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
+                      "descendants": {
+                        "v4Fxx6": {
                           "fill": "$border-faint",
-                          "cornerRadius": 13,
                           "stroke": "$border-faint",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "ICTeO",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "circle-slash",
-                              "library": "lucide",
-                              "fill": "$text-secondary"
-                            }
-                          ]
+                          "strokeWidth": 1
                         },
-                        {
-                          "type": "text",
-                          "id": "y99dBH",
-                          "name": "Seal label",
-                          "fill": "$text-secondary",
+                        "DagSE": {
+                          "icon": "circle-slash",
+                          "fill": "$text-secondary"
+                        },
+                        "iLCwo": {
                           "content": "Not enough coin",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                          "fill": "$text-secondary"
                         }
-                      ]
+                      }
                     },
                     {
                       "type": "text",
@@ -15178,7 +14962,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -15207,7 +14991,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -15767,58 +15551,28 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "oKoL8",
+                      "id": "Zs7nl",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
                       "fill": "$surface-row-alt",
-                      "cornerRadius": 4,
                       "stroke": "$border-faint",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "x7Kcjg",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
+                      "descendants": {
+                        "v4Fxx6": {
                           "fill": "$border-faint",
-                          "cornerRadius": 13,
                           "stroke": "$border-faint",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "LU3Ig",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "hourglass",
-                              "library": "lucide",
-                              "fill": "$text-secondary"
-                            }
-                          ]
+                          "strokeWidth": 1
                         },
-                        {
-                          "type": "text",
-                          "id": "F4Vqg",
-                          "name": "Seal label",
-                          "fill": "$text-secondary",
+                        "DagSE": {
+                          "icon": "hourglass",
+                          "fill": "$text-secondary"
+                        },
+                        "iLCwo": {
                           "content": "Waiting for a GM",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                          "fill": "$text-secondary"
                         }
-                      ]
+                      }
                     }
                   ]
                 }
@@ -15874,7 +15628,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -15908,7 +15662,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -16299,58 +16053,28 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "b6TAIq",
+                      "id": "Bv1MT",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
                       "fill": "$surface-row-alt",
-                      "cornerRadius": 4,
                       "stroke": "$border-faint",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "BYXkN",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
+                      "descendants": {
+                        "v4Fxx6": {
                           "fill": "$border-faint",
-                          "cornerRadius": 13,
                           "stroke": "$border-faint",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "HJIte",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "circle-slash",
-                              "library": "lucide",
-                              "fill": "$text-secondary"
-                            }
-                          ]
+                          "strokeWidth": 1
                         },
-                        {
-                          "type": "text",
-                          "id": "S1ixjO",
-                          "name": "Seal label",
-                          "fill": "$text-secondary",
+                        "DagSE": {
+                          "icon": "circle-slash",
+                          "fill": "$text-secondary"
+                        },
+                        "iLCwo": {
                           "content": "The till can't cover this",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                          "fill": "$text-secondary"
                         }
-                      ]
+                      }
                     }
                   ]
                 }
@@ -16406,7 +16130,7 @@
                     "blur": 6
                   },
                   "layout": "vertical",
-                  "gap": 12,
+                  "gap": 8,
                   "padding": [
                     16,
                     16,
@@ -16477,7 +16201,7 @@
                       "name": "Ledger",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 12,
+                      "gap": 8,
                       "children": [
                         {
                           "type": "frame",
@@ -16998,95 +16722,16 @@
                       "height": 6
                     },
                     {
-                      "type": "frame",
-                      "id": "J2oER2",
+                      "id": "FYUNF",
+                      "type": "ref",
+                      "ref": "UFsFb",
                       "name": "Seal Button",
                       "width": "fill_container",
-                      "fill": {
-                        "type": "gradient",
-                        "gradientType": "linear",
-                        "enabled": true,
-                        "rotation": 180,
-                        "size": {
-                          "height": 1
-                        },
-                        "colors": [
-                          {
-                            "color": "$header-2",
-                            "position": 0
-                          },
-                          {
-                            "color": "$header-1",
-                            "position": 1
-                          }
-                        ]
-                      },
-                      "cornerRadius": 4,
-                      "stroke": "$accent-gold",
-                      "strokeWidth": 1,
-                      "gap": 10,
-                      "padding": [
-                        10,
-                        14
-                      ],
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "q0h0W1",
-                          "name": "Wax Seal",
-                          "width": 26,
-                          "height": 26,
-                          "fill": {
-                            "type": "gradient",
-                            "gradientType": "radial",
-                            "enabled": true,
-                            "rotation": 0,
-                            "size": {
-                              "width": 1,
-                              "height": 1
-                            },
-                            "colors": [
-                              {
-                                "color": "#c23a3a",
-                                "position": 0
-                              },
-                              {
-                                "color": "#7a1414",
-                                "position": 1
-                              }
-                            ]
-                          },
-                          "cornerRadius": 13,
-                          "stroke": "#e3ce9e",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "GA0B6",
-                              "name": "Seal mark",
-                              "width": 14,
-                              "height": 14,
-                              "icon": "stamp",
-                              "library": "lucide",
-                              "fill": "$seal-mark"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "text",
-                          "id": "Zwblg",
-                          "name": "Seal label",
-                          "fill": "$text-on-dark",
-                          "content": "Seal the bargain · 15 gp",
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "700"
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal the bargain · 15 gp"
                         }
-                      ]
+                      }
                     },
                     {
                       "type": "text",

@@ -27,7 +27,7 @@ Every window mockup except **01 Storefront — Player (Light)** draws the GM's w
 
 **Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
 
-The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
+The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head** and its button from **Seal Button**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
 
 ### Explore lane
 
@@ -236,6 +236,7 @@ Reusable in `shop.pen` (the Components frame):
 - Quantity Stepper
 - Item Row: art, name, meta, stock, a price block with an optional struck list price, a terms tag and a second coin, and an add button
 - Slip Head: the Bill of Sale's kicker, title and date
+- Seal Button: the wax seal pinned left and the label centred in the space beside it; the waiting and refusal states override the fill, stroke, icon and label colour
 
 Reusable in the Window Parts frame:
 
