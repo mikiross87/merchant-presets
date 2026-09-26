@@ -1103,8 +1103,10 @@ function registerTradeListeners() {
  * doesn't land, trades read as unconfirmed for up to about half a minute,
  * until another GM tab notices the silence and takes the claim
  * (`registerTradeDesk`). The window resends the same trade id, and a sealed
- * trade is recorded on the character in the update that moves its coin, so
- * whichever tab answers the resend finds it there and nothing lands twice.
+ * trade is recorded on the shop in the trade's last write, so whichever tab
+ * answers the resend finds it there and nothing lands twice. The module
+ * socket can't say who sent a message, so a player's client could forge a
+ * trade hook or a claim heartbeat; neither moves goods or coin.
  */
 
 const SOCKET = `module.${MODULE}`;
@@ -1152,8 +1154,7 @@ function shopIsOpen(shop) {
 
 /**
  * One actor's share of a plan: its items first, then its coin, with `also`
- * (the character's trade record) in that same last update, so a trade counts
- * as done exactly when its payment does.
+ * (the shop's trade record) in that same last update.
  */
 async function applyUpdate(actor, update, also = {}) {
   if (update.itemUpdates.length) await actor.updateEmbeddedDocuments("Item", update.itemUpdates);
@@ -1173,7 +1174,7 @@ async function carryOutTrade(request, user) {
   const refused = checkParties({ user, shop, buyer });
   if (refused) return { status: "refused", reason: refused };
   // Carried out already, maybe by a tab that has since lost the claim: its first outcome.
-  const done = recordedOutcome(buyer.flags?.[MODULE]?.trades, user.id, request.tradeId);
+  const done = recordedOutcome(shop.flags?.[MODULE]?.trades, user.id, request.tradeId);
   if (done) return done;
 
   const planned = planTrade(request, {
@@ -1194,13 +1195,15 @@ async function carryOutTrade(request, user) {
 
   const { plan } = planned;
   const result = resultOf(planned);
-  const record = { [`flags.${MODULE}.trades`]: withRecord(buyer.flags?.[MODULE]?.trades,
+  // The record goes on the shop, in the very last write, so it's there only once the whole
+  // trade is: a tab that dies part-way leaves no record, and the resend plans again.
+  const record = { [`flags.${MODULE}.trades`]: withRecord(shop.flags?.[MODULE]?.trades,
     { userId: user.id, tradeId: plan.tradeId, result }) };
+  const toShop = plan.updates.find(u => u.actorId === shop.id);
+  const toBuyer = plan.updates.find(u => u.actorId !== shop.id);
   try {
-    for (const update of plan.updates) {
-      const isShop = update.actorId === shop.id;
-      await applyUpdate(isShop ? shop : buyer, update, isShop ? {} : record);
-    }
+    await applyUpdate(buyer, toBuyer);
+    await applyUpdate(shop, toShop, record);
   } catch (err) {
     console.error(`${MODULE} | trade ${plan.tradeId} failed part-way; check ${shop.name} and ${buyer.name}`, err);
     ui.notifications.error(`A trade between ${buyer.name} and ${shop.name} failed part-way. Check both inventories.`);
@@ -1273,7 +1276,10 @@ function registerTradeDesk() {
   let lastAliveAt = Date.now();
   game.socket.on(SOCKET, message => {
     if (message?.type === "trade") Hooks.callAll(TRADE_HOOK, message.trade, { carriedOut: false });
-    if (message?.type === "claim-alive" && message.userId === game.user.id) lastAliveAt = Date.now();
+    // Only the tab named in the claim counts: a stray or stale heartbeat mustn't hold it for a dead tab.
+    if (message?.type === "claim-alive" && message.userId === game.user.id && message.tabId === tradeClaim()) {
+      lastAliveAt = Date.now();
+    }
   });
   loadBundles().catch(err => console.error(`${MODULE} | could not index the dnd5e packs' bundles`, err));
   if (!game.user.isGM) return;

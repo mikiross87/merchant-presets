@@ -74,14 +74,15 @@ export function outcomes(limit = 500) {
   };
 }
 
-/** How many sealed trades a character's record keeps: a resend comes within a minute or two. */
-export const TRADE_RECORDS = 20;
+/** How many sealed trades a shop's record keeps, across all its customers: a resend comes within a minute or two. */
+export const TRADE_RECORDS = 50;
 
 /**
- * The first outcome of a sealed trade, from the record kept on the character
+ * The first outcome of a sealed trade, from the record kept on the shop
  * (`flags.merchant-presets.trades`), or null. The in-memory `outcomes` memo dies with the tab
- * that answered; this record is written in the same update that moves the character's coin, so
- * a resend reaching another GM tab after the claim moved (#134 review) still finds it.
+ * that answered; this record is written in the trade's last write, the shop's own, so a resend
+ * reaching another GM tab after the claim moved (#134 review) finds it, and only once the
+ * whole trade has landed.
  *
  * @param {unknown} records  the flag's value, as stored (never trusted to be well-formed)
  * @param {string} userId
