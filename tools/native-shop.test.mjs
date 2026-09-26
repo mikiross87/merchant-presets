@@ -56,6 +56,26 @@ test("placing a token leaves a GM's own visibility choice alone (#104)", async (
   assert.equal(hidden.ownership.default, 0);
 });
 
+test("a scene arriving with a shop's token already on it makes the shop visitable (#138 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  // An Adventure or scene import: the tokens come with the scene, and only createScene fires.
+  await world.fire("createScene", { tokens: [{ actor: shop, actorId: shop.id, actorLink: true }] }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, LIMITED);
+});
+
+test("a 1.x merchant dropped straight onto the canvas is made visitable too (#138 review)", async () => {
+  const { world } = await setUp();
+  const legacy = world.merchant("General_Store_Village_");
+  legacy.ownership = { default: 0 };
+  delete legacy.flags["merchant-presets"].shop;          // not migrated yet when its token lands
+  world.actors.push(legacy);
+  await world.fire("createToken", { actor: legacy, actorId: legacy.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.equal(legacy.ownership.default, LIMITED);
+});
+
 test("placing a token of an actor that isn't a shop changes nothing (#104)", async () => {
   const { world } = await setUp();
   const npc = world.character("goblin");
