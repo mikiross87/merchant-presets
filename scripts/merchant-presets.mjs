@@ -1595,9 +1595,12 @@ Hooks.once("ready", async () => {
   // The shops restock on their own schedule (#105).
   registerRestock();
   // A shop arriving is new to this world, whatever its flags say: one exported after it was made
-  // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
+  // visitable, or after the GM set Players can visit (#110), comes back with its ownership cleared
+  // but its mark kept (#138 review, round 9; #140 review, round 6).
   Hooks.on("preCreateActor", actor => {
-    if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    for (const key of ["madeVisitable", "visibility"]) {
+      if (actor.flags?.[MODULE]?.[key] != null) actor.updateSource({ [`flags.${MODULE}.${key}`]: null });
+    }
   });
   Hooks.on("createToken", token => {
     if (game.users.activeGM !== game.user) return;   // one GM does the writing

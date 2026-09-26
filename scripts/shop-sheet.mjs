@@ -1074,7 +1074,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       restock: {
         table: table ? { name: table.name, uuid: table.uuid } : null,
         chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
-          id, active: id === chip || (id === "dice" && this._everyDice && chip !== "dice"),
+          // "Dice…" just picked, no formula saved yet: it's the one lit.
+          id, active: this._everyDice ? id === "dice" : id === chip,
           label: id === "dice" ? i18n("Restock.Dice") : id === "never" ? everyLabel("never")
             : id === "1" ? everyLabel(1) : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: id })
         })),
