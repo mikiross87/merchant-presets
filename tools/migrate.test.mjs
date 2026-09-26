@@ -946,6 +946,22 @@ test("a token whose price went back to Item Piles' default keeps that price, not
   assert.notEqual(plan.shop.terms.sellsAt, derivedShop(base, base.flags["merchant-presets"].shop).shop.terms.sellsAt);
 });
 
+test("the cut-over's own enabled:false on a token document isn't a setting of the token's (#137 review, round 3)", () => {
+  const { token, actor, base } = onToken(migratedStore(), {}, { "item-piles": { data: { enabled: false } } });
+  assert.equal(planTokenMigration(token, actor, base).shop, null);
+});
+
+test("the same settings stored in another key order are the same shop (#137 review, round 3)", () => {
+  const store = migratedStore();
+  const data = structuredClone(store.flags["item-piles"].data);
+  for (const table of data.tablesForPopulate ?? []) {
+    if (table.items) table.items = Object.fromEntries(Object.entries(table.items).reverse());
+  }
+  const { token, actor, base } = onToken(store, {}, { "item-piles": { data } });
+  assert.ok(Object.keys(data.tablesForPopulate?.[0]?.items ?? {}).length > 1, "the fixture has quantities to reorder");
+  assert.equal(planTokenMigration(token, actor, base).shop, null);
+});
+
 test("a token already migrated, or one with nothing of its own, or a linked one, needs nothing (#124)", () => {
   const plain = onToken(migratedStore(), {});
   assert.equal(tokenNeedsMigration(plain.token, plain.actor, plain.base), false);
