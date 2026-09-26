@@ -349,6 +349,13 @@ const drawn = (id, name, type, quantity, extra = {}) =>
 const gmAdded = { _id: "gm1", name: "Rope, Silk", type: "loot", system: { quantity: 5 }, flags: {} };
 const gear = { _id: "gear1", name: "Longsword", type: "weapon", system: { quantity: 1 }, flags: { "merchant-presets": { kind: "gear" } } };
 
+test("a line with no settings of its own on record keeps the stock config its good ships with (#135 review, round 10)", () => {
+  const service = { name: "Spellcasting: Divination", quantity: 1,
+    data: { type: "loot", name: "Spellcasting: Divination", system: {}, flags: { "merchant-presets": { kind: "spellcasting", stock: { service: true, category: "Services" } } } } };
+  const plan = planRestock(shop, [], [service], { ...context, stockFlags: {} });
+  assert.deepEqual(plan.creates[0].flags["merchant-presets"].stock, { service: true, category: "Services" });
+});
+
 test("reroll replaces what this shop drew, even a line its table dropped, and keeps a good another shop drew (#135 review)", () => {
   const by = (item, shopId) => ({ ...item, flags: { "merchant-presets": { drawn: shopId } } });
   const items = [

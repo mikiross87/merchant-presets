@@ -326,6 +326,29 @@ test("a shelf isn't adopted while one of its table's items can't be found (#135 
   assert.ok(byName(shop, "Bell").every(drawn));
 });
 
+test("a table line pointing at something other than an item is skipped, not an emptied shelf (#135 review, round 10)", async () => {
+  const { world, shop, clock } = await setUp();
+  world.compendium.set("Compendium.world.tables.RollTable.nestedTable0001", { name: "Trinkets", documentName: "RollTable",
+    toObject: () => ({ name: "Trinkets", results: [] }) });
+  tableOf(world, shop).results.push({ _id: "nestedLine00001", id: "nestedLine00001", type: "document", name: "Trinkets",
+    documentUuid: "Compendium.world.tables.RollTable.nestedTable0001" });
+  await clock(at(0, 1));
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(3, 8));
+  assert.notEqual(byName(shop, "Bell")[0]?._id, bell, "restocked");
+  assert.equal(byName(shop, "Trinkets").length, 0);
+});
+
+test("a line whose item records its own compendium source keeps it (#135 review, round 10)", async () => {
+  const { world, shop, clock } = await setUp();
+  const line = tableOf(world, shop).results.find(r => r.name === "Bell");
+  const doc = world.compendium.get(line.documentUuid);
+  world.compendium.set(line.documentUuid, { ...doc, toObject: () => ({ ...doc.toObject(), _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.srdBell0000000" } }) });
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(byName(shop, "Bell")[0]._stats.compendiumSource, "Compendium.dnd5e.equipment24.Item.srdBell0000000");
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
