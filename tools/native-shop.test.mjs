@@ -9,6 +9,17 @@ import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 const LIMITED = 1;
 const tick = async (n = 10) => { for (let i = 0; i < n; i++) await new Promise(resolve => setImmediate(resolve)); };
 
+/** Serve each stock table line's document, as the compendium would (tools/restock-runtime.test.mjs). */
+function serveStock(world, shop) {
+  const table = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
+  for (const result of table.results) {
+    const onShelf = shop.items.find(i => i.name === result.name);
+    const name = result.name;
+    world.compendium.set(result.documentUuid, { name, uuid: result.documentUuid,
+      toObject: () => ({ name, type: onShelf?.type ?? "loot", system: { quantity: 1, price: structuredClone(onShelf?.system.price ?? { value: 1, denomination: "gp" }) }, flags: {} }) });
+  }
+}
+
 /** A world whose Item Piles is gone (the cut-over's premise), with General Store (Town) in the pack. */
 async function setUp() {
   const world = createWorld();
@@ -16,13 +27,7 @@ async function setUp() {
   await loadRuntime(world);
   const shop = world.merchant("General_Store_Town_");
   shop.ownership = { default: 0 };
-  // Each stock table line's document, as the compendium serves it (tools/restock-runtime.test.mjs).
-  const table = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
-  for (const result of table.results) {
-    const onShelf = shop.items.find(i => i.name === result.name);
-    world.compendium.set(result.documentUuid, { name: result.name, uuid: result.documentUuid,
-      toObject: () => ({ name: result.name, type: onShelf?.type ?? "loot", system: { quantity: 1, price: structuredClone(onShelf?.system.price ?? { value: 1, denomination: "gp" }) }, flags: {} }) });
-  }
+  serveStock(world, shop);
   return { world, shop };
 }
 
@@ -70,4 +75,31 @@ test("a shop imported from the pack opens as the shop window and rolls its own s
   assert.ok(shop.flags["merchant-presets"].shelf, "adopted by its first native restock");
   assert.ok(shop.items.filter(i => i.flags["merchant-presets"]?.kind !== "gear").every(i => i.flags["merchant-presets"]?.drawn),
     "every good on the shelf was drawn by it");
+});
+
+test("setting an NPC up as a shop migrates it to the shop window itself, and rolls its shelf once (#138 review)", async () => {
+  const { world, shop } = await setUp();
+  const npc = world.character("grumm");
+  npc.type = "npc";
+  world.actors.push(npc);
+  const source = "Compendium.merchant-presets.merchants.Actor.generalStoreTown";
+  world.compendium.set(source, { uuid: source, toObject: () => structuredClone(shop.toObject()) });
+  await globalThis.game.modules.get("merchant-presets").api.setUpShop(npc, source, []);
+  await tick();
+  assert.equal(npc.flags.core?.sheetClass, "merchant-presets.ShopSheet");
+  assert.equal(npc.flags["item-piles"].data.enabled, false);
+  const adoptions = world.calls.writes.filter(w => w.type === "actorUpdate" && w.actor === npc.id && w.changes["flags.merchant-presets.shelf"]);
+  assert.equal(adoptions.length, 1);
+});
+
+test("shops replaced while the world was closed are rolled by the active GM only (#138 review)", async () => {
+  const world = createWorld();
+  globalThis.game.modules.set("item-piles", { active: false });
+  globalThis.game.users.activeGM = { id: "another-gm", isGM: true };   // this client is a second GM
+  const shop = world.merchant("General_Store_Town_");
+  serveStock(world, shop);
+  world.actors.push(shop);
+  await loadRuntime(world);
+  await tick();
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
 });
