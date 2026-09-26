@@ -1210,3 +1210,48 @@ test("another buyer's deal, or an ended one, leaves the price at list (#111)", a
   await act(sheet, "seal");
   assert.equal(sent.lines[0].expectedBundlePriceCp, 100);
 });
+
+/** Runs `fn` with localize filling in its data, so a test can read what a label says. */
+async function withLabels(fn) {
+  const { localize } = globalThis.game.i18n;
+  globalThis.game.i18n.localize = (key, data) => (data ? `${key.split(".").pop()}(${Object.values(data).join(",")})` : key);
+  try { return await fn(); }
+  finally { globalThis.game.i18n.localize = localize; }
+}
+
+test("the header chip tells the buyer their deal, and only them (#111)", async () => {
+  await withLabels(async () => {
+    const { sheet, shop, buyer } = openShop();
+    const config = shop.flags["merchant-presets"].shop;
+    config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "secret", ends: null }];
+    let { header } = await sheet._prepareContext({});
+    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½) · YourPrice(-10%) · YourOffers(+20%)");
+    config.deals = [{ actor: "Actor.someoneElse", name: "x", buy: -0.1, sell: null, note: "", ends: null }];
+    ({ header } = await sheet._prepareContext({}));
+    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½)");
+  });
+});
+
+test("a bill line the deal priced is marked as the buyer's deal (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const config = shop.flags["merchant-presets"].shop;
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: null, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let context = await sheet._prepareContext({});
+  assert.equal(context.buy.basket.lines[0].dealt, true);
+  assert.deepEqual(coins(context.buy.sections[0].rows[0].listCoins), [["gp", 1]]);
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: null, sell: 0.1, note: "", ends: null }];
+  context = await sheet._prepareContext({});
+  assert.equal(context.buy.basket.lines[0].dealt, false);
+  assert.deepEqual(context.buy.sections[0].rows[0].listCoins, []);
+});
+
+test("the GM's note on a deal never reaches the player's window (#111)", async () => {
+  const { sheet, shop, buyer } = openShop();
+  shop.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: null, note: "SECRET-NOTE", ends: null }];
+  // The shop's own documents are in the context whole, as they're on the client anyway; nothing
+  // built for display may carry the note.
+  const context = await sheet._prepareContext({});
+  const shown = Object.fromEntries(Object.entries(context).filter(([key]) => key !== "actor" && key !== "config"));
+  assert.ok(!JSON.stringify(shown).includes("SECRET-NOTE"));
+});

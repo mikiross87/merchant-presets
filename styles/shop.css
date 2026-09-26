@@ -347,6 +347,9 @@
 .shop-sheet .item-price { display: flex; align-items: center; gap: 0.4rem; }
 .shop-sheet .price-worthless { font-style: italic; color: var(--mp-success); }
 .shop-sheet .price-coins { display: flex; gap: 0.4rem; }
+/* The price without the buyer's deal (#111), struck small beside the one they pay. */
+.shop-sheet .price-list { display: flex; gap: 0.25rem; font-size: 0.75rem; color: var(--color-text-secondary); }
+.shop-sheet .price-list img { width: 0.8rem; height: 0.8rem; }
 
 .shop-sheet .price-tag {
   font-family: var(--dnd5e-font-roboto-condensed);
@@ -358,7 +361,7 @@
 }
 
 .shop-sheet .tag-markup { background: color-mix(in oklab, var(--mp-warning), transparent 80%); color: var(--mp-warning); }
-.shop-sheet .tag-discount, .shop-sheet .tag-full { background: color-mix(in oklab, var(--mp-success), transparent 80%); color: var(--mp-success); }
+.shop-sheet .tag-discount, .shop-sheet .tag-full, .shop-sheet .tag-deal { background: color-mix(in oklab, var(--mp-success), transparent 80%); color: var(--mp-success); }
 .shop-sheet .tag-neutral { background: var(--dnd5e-color-table-row-even); color: var(--color-text-secondary); }
 
 .shop-sheet .item-add {

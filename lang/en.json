@@ -230,6 +230,12 @@
           "Everyone": "Everyone",
           "Note": "Open shop windows refresh for everyone when a change is saved."
         }
+      },
+      "Deal": {
+        "YourPrice": "Your price {percent}",
+        "YourOffers": "Your offers {percent}",
+        "Yours": "Your deal",
+        "ListPrice": "Price without your deal"
       }
     }
   }

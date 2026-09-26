@@ -24,7 +24,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, matchingStockLine, rateFraction, sealState, sellRow, stepQuantity, titleParts
+  fitQuantity, matchingStockLine, rateFraction, sealState, sellRow, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -387,7 +387,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rates = {
       world, shopTerms: config.terms, chipSellsAt, chipBuysAt, deal: this.#dealOf(buyer)
     };
-    const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies);
+    const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, rates.deal);
 
     Object.assign(context, {
       appId: this.id,
@@ -422,7 +422,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return c.hour * calendar.days.minutesPerHour + c.minute;
   }
 
-  #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies) {
+  #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, deal) {
+    // The buyer's own deal, after the shop's terms (#111; design v8ap9 "Sells at list · Your price
+    // −10%"): only the character with the deal is ever shown it.
+    const dealParts = [
+      deal?.buy ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: signedPercent(deal.buy) }) : null,
+      deal?.sell ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: signedPercent(deal.sell) }) : null
+    ].filter(Boolean);
     const closesAt = config.hours ? this.#formatTime(config.hours.close) : null;
     const opensAt = config.hours ? this.#formatTime(config.hours.open) : null;
     return {
@@ -438,7 +444,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // design/README.md's own mockup ("Sells at list · Buys at ½"): the chip reads sellsAt in
       // words but buysAt as the row-tag fraction glyph — an asymmetry the mockup draws on
       // purpose, unlike the Terms popover below, which spells both out in words.
-      termsChip: game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) }),
+      termsChip: [game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) }),
+        ...dealParts].join(" · "),
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
     };
   }
@@ -577,7 +584,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
-          priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : []
+          priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
+          listCoins: coinBreakdown(row.listPriceCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
         };
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
@@ -792,7 +800,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
-      return { ...row, priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [] };
+      return {
+        ...row,
+        priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
+        listCoins: coinBreakdown(row.listPriceCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+      };
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
@@ -870,6 +882,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const stock = stockConfigOf(line);
       const rates = effectiveRates(world, config.terms, categoryFor(item, stock), deal);
       const rate = kind === "buy" ? rates.sellsAt.rate : rates.buysAt.rate;
+      const list = effectiveRates(world, config.terms, categoryFor(item, stock));
+      const listRate = kind === "buy" ? list.sellsAt.rate : list.buysAt.rate;
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
       const bundle = bundleFor(item, line, bundleOf);
       let lineTotal = 0, bundleCp = null;
@@ -880,6 +894,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       lines.push({
         itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
         struck: this._struck[kind].has(itemId),
+        // The buyer's deal moved this line's price: the bill marks it as theirs.
+        dealt: Math.abs(rate - listRate) > 1e-9,
         // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
         bundle,
         unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
