@@ -26,7 +26,8 @@ async function setUp() {
   globalThis.game.modules.set("item-piles", { active: false });
   await loadRuntime(world);
   const shop = world.merchant("General_Store_Town_");
-  shop.ownership = { default: 0 };
+  // As Foundry leaves an imported shop: hidden, and owned by the GM who imported it.
+  shop.ownership = { default: 0, gm: 3 };
   serveStock(world, shop);
   return { world, shop };
 }

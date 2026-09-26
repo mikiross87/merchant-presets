@@ -500,6 +500,12 @@ test("a shop marked in another world, its ownership cleared by export, is made v
   assert.equal(planOwnership(store, true, "world-b"), 1);
 });
 
+test("the OWNER entry Foundry writes for the creating GM isn't a choice: the shop is made visitable (#138 review, round 7)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.ownership = { default: 0, theGmUser000001: 3 };   // fromCompendium and _preCreate both add this
+  assert.equal(planOwnership(store, true, "world-a"), 1);
+});
+
 test("a shop the GM opened to one player only is the GM's choice, left alone (#138 review, round 6)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 0, rogueUser000001: 1 };
