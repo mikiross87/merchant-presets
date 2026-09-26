@@ -816,10 +816,12 @@ export function planTokenMigration(token, actor, base) {
   const warnings = [];
   if (!token.delta?.flags?.["merchant-presets"]?.shop) {
     const packShop = base?.flags?.["merchant-presets"]?.shop;
+    // Item Piles reads an unlinked token's settings off the token document alone, over its own
+    // defaults (`getActorFlagData`), and saves only what differs from those defaults: a key the
+    // document leaves out is Item Piles' default, never the base actor's (#137 review).
     const onDocument = token.flags?.["item-piles"]?.data;
     const tokenView = onDocument
-      ? { ...actor, flags: { ...actor.flags, "item-piles": { ...actor.flags?.["item-piles"],
-        data: { ...actor.flags?.["item-piles"]?.data, ...onDocument } } } }
+      ? { ...actor, flags: { ...actor.flags, "item-piles": { ...actor.flags?.["item-piles"], data: onDocument } } }
       : actor;
     const mine = derivedShop(tokenView, packShop);
     const theirs = derivedShop(base, packShop);

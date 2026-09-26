@@ -1622,6 +1622,10 @@ async function migrateShop(actor) {
     for (const { item, errors } of plan.errors) {
       console.error(`${MODULE} | invalid migrated stock config for "${item}" on a token of "${actor.name}": ${errors.join("; ")}`);
     }
+    // Known limit (#137 review): Foundry builds the token's actor by deep-merging the delta over
+    // the base, so a key the token's config leaves out reads the base's. The one map where that
+    // shows is `restock.quantities`: a token whose Item Piles table config omitted lines the
+    // base lists keeps the base's formulas for them.
     if (plan.shop) { await token.actor.update({ [`flags.${MODULE}.shop`]: plan.shop }); changed = true; }
     if (plan.itemUpdates.length) { await token.actor.updateEmbeddedDocuments("Item", plan.itemUpdates); changed = true; }
   }
