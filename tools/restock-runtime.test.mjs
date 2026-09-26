@@ -17,16 +17,19 @@ async function setUp() {
   world.settings.autoRestock = true;
   globalThis.game.time.calendar.days = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
   globalThis.game.time.calendar.timeToComponents = t => ({ hour: Math.floor((t % DAY) / 3600), minute: 0 });
-  const shop = world.merchant("General_Store_Town_");
+  // Settled in the world (1.x wired it to a world table), not fresh from the pack: the schedule, not
+  // an arrival, gives it its first restock.
+  const shop = world.merchant("General_Store_Town_", { table: "RollTable.worldCopy000001" });
   world.actors.push(shop);
   // Each stock table line's document, as the compendium serves it: the shelf's own copy, stripped
   // of what this shop stamped on it.
   const table = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
   for (const result of table.results) {
     const onShelf = shop.items.find(i => i.name === result.name);
+    const name = result.name;   // the item's own name, fixed: relabelling the table line doesn't rename it
     world.compendium.set(result.documentUuid, {
-      name: result.name,
-      toObject: () => ({ name: result.name, type: onShelf?.type ?? "loot", img: "x.webp",
+      name,
+      toObject: () => ({ name, type: onShelf?.type ?? "loot", img: "x.webp",
         system: { quantity: 1, price: structuredClone(onShelf?.system.price ?? { value: 1, denomination: "gp" }) }, flags: {} })
     });
   }

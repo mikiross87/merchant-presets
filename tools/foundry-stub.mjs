@@ -130,12 +130,13 @@ export function createWorld() {
   const socketHandlers = new Map();
   globalThis.game = {
     user,
-    users: Object.assign([user], { activeGM: user }),
+    users: Object.assign([user], { activeGM: user, get(id) { return this.find(u => u.id === id); } }),
     socket: {
       on: (name, fn) => socketHandlers.set(name, fn),
       emit: (name, message) => calls.socket.push({ name, message })
     },
     packs: [],
+    world: { id: "stub-world" },
     actors,
     scenes,
     folders: { find: fn => folders.find(fn) },
@@ -195,6 +196,9 @@ export function createWorld() {
     return Object.assign(doc, {
       documentName: "Actor",
       testUserPermission: (u, level) => u.isGM || owners.includes(u.id) || (level === "LIMITED" && doc.ownership?.default >= 1),
+      updateSource(changes) {
+        for (const [k, v] of Object.entries(changes)) set(this, k, v);
+      },
       async update(changes) {
         for (const [k, v] of Object.entries(changes)) set(this, k, v);
         calls.writes.push({ type: "actorUpdate", actor: this.id, changes });
@@ -220,7 +224,7 @@ export function createWorld() {
 
   /** A player character, owned by `owners`, with `currency` and `items`. */
   function character(id, { currency = {}, items = [], owners = [] } = {}) {
-    const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {},
+    const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {}, effects: [],
       system: { currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0, ...currency } },
       items: items.map(i => itemDoc({ ...i, id: i._id })) }), { owners });
     actors.push(doc);

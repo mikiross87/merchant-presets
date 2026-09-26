@@ -32,7 +32,7 @@ import {
   receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
-import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
@@ -209,8 +209,10 @@ async function wireTables(actor) {
  * the shop has one, and it sells out. Stock flagged as limited — poisons, spell
  * scrolls, and anything else a shop would not hold in depth — is always rolled;
  * everything else is rolled only when the world is set to finite stock. Anything that rolls zero
- * is simply not in stock today — "Roll All Tables" on the Populate Items tab
- * brings it back.
+ * is simply not in stock today; the next restock may bring it back.
+ *
+ * Item Piles only: once the shops are native (#104), an import's first restock rolls its shelf
+ * instead (`onCreateActor`).
  */
 async function applyStockMode(actor) {
   const finite = game.settings.get(MODULE, "stockMode") === "finite";
@@ -639,6 +641,11 @@ async function drawsFor(table, quantities) {
  * (#135 review). Made once, when the shop is adopted.
  */
 const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
+/**
+ * Whether user `id` is a player, for `isOwnershipChosen`: a level given to one, Owner included, is
+ * the GM's choice; a GM's own entry, or one left for a user deleted since, lets nobody in.
+ */
+const isPlayer = id => { const user = game.users.get(id); return !!user && !user.isGM; };
 
 /**
  * Adopt a shop's shelf, once, before its first native restock: give it a shelf
@@ -1572,7 +1579,8 @@ async function migrateShop(actor) {
     && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
 
   const packShop = await resolvePackShop(data);
-  const { update, shopError, warnings } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
+  const { update, shopError, warnings } = planActorUpdate(data,
+    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null, isPlayer });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -1752,10 +1760,19 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
+    // Native (#104): migrated to the shop window here (the plan copies the source's Item Piles
+    // data, still switched on), then the chosen merchant's table draws this shop's first shelf.
+    // Still held: this user's own updates fire updateActor, whose arrival hook would otherwise
+    // roll the shelf a second time (#138 review). Already on the trade queue, so the restock is
+    // called directly.
+    if (NATIVE_SHOP) {
+      await migrateShop(actor);
+      await restockNow(actor);
+    }
   } finally {
     rewiring.delete(actor.id);
   }
-  await rewire(actor);
+  if (!NATIVE_SHOP) await rewire(actor);
   return actor.items.filter(i => !isGear(i)).length;
 }
 
@@ -1823,7 +1840,7 @@ function registerShopSetup() {
     options.push({
       label: "Set up as shop…",
       icon: "fa-solid fa-store",
-      visible: li => game.user.isGM && !!game.modules.get("item-piles")?.active && actorOf(li)?.type === "npc",
+      visible: li => game.user.isGM && (NATIVE_SHOP || !!game.modules.get("item-piles")?.active) && actorOf(li)?.type === "npc",
       onClick: (_event, li) => {
         const actor = actorOf(li);
         if (actor) shopDialog(actor).catch(err => {
@@ -2043,7 +2060,43 @@ Hooks.once("ready", async () => {
 
   // The shops restock on their own schedule (#105), Item Piles or not.
   registerRestock();
+  if (NATIVE_SHOP) {
+    // A shop arriving is new to this world, whatever its flags say: one exported after it was made
+    // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
+    Hooks.on("preCreateActor", actor => {
+      if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    });
+    Hooks.on("createToken", token => {
+      if (game.users.activeGM !== game.user) return;   // one GM does the writing
+      makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+    });
+    // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
+    // alone, never createToken for them (#138 review).
+    Hooks.on("createScene", scene => {
+      if (game.users.activeGM !== game.user || scene.pack) return;
+      for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+    });
+  }
 
+  // Once the shops are native (#104), Item Piles' populate tables and open/closed status have
+  // nothing left to do: a shop arriving from the pack rolls its own shelf instead (`arrive`).
+  if (NATIVE_SHOP) {
+    Hooks.on("updateActor", (actor, _changes, _options, userId) => {
+      if (userId !== game.user.id || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+      arrive(actor).catch(err => console.error(`${MODULE} |`, err));
+    });
+    releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
+    migrateAll()
+      .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
+      // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
+      // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+      .then(() => {
+        if (game.users.activeGM !== game.user) return;
+        return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+      })
+      .catch(err => console.error(`${MODULE} |`, err));
+    return;
+  }
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
     migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
@@ -2088,6 +2141,62 @@ Hooks.once("ready", async () => {
  * @param {Actor} actor
  */
 async function onCreateActor(actor) {
+  if (NATIVE_SHOP) return arrive(actor);
   if (game.modules.get("item-piles")?.active) await rewire(actor);
   await migrateShop(actor);
+}
+
+/** Ids of the shops `arrive` is working on right now: a create and an update can come together. */
+const arriving = new Set();
+
+/**
+ * A shop arriving fresh from the pack (dragged in, or written over an existing actor by Replace
+ * Actor, #66) once the shops are native (#104): migrated to its shop window, let go of stray kit
+ * ids (#89, which would hide goods from the window), and given its own shelf by a first native
+ * restock: the per-import stock roll `applyStockMode` made through Item Piles. Fresh pack data is
+ * still on its compendium stock table with no shelf key; a shop that has either been rolled here
+ * or wired to a world table by 1.x keeps the shelf it has.
+ *
+ * @param {Actor} actor
+ */
+async function arrive(actor) {
+  // A shop being set up (`setUpShopNow`) is half built until it finishes, and migrates and rolls
+  // its own shelf there (#138 review).
+  if (actor.pack || arriving.has(actor.id) || rewiring.has(actor.id)) return;
+  arriving.add(actor.id);
+  try {
+    await migrateShop(actor);
+    if (!isPreset(actor)) return;
+    await releaseStrays(actor);
+    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
+  } finally {
+    arriving.delete(actor.id);
+  }
+}
+
+/**
+ * Make a hidden shop visitable when the GM places its token (#104, decided on the issue): shops
+ * arrive hidden (ownership None) so an unplaced one stays out of players' Actors sidebar, and a
+ * placed one opens for players on a double-click, which core gates on Limited. A GM's own choice
+ * holds either way: any default ownership but None, or the "Players can visit" switch (#110,
+ * `flags.merchant-presets.visibility`) once it's been set.
+ *
+ * @param {TokenDocument} token
+ */
+async function makeVisitable(token) {
+  const LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  // A token in a compendium scene (an Adventure being built) is on no world scene, though its
+  // baseActor still resolves to the world actor by id (#138 review).
+  if (token.parent?.pack) return;
+  const actor = token.baseActor ?? token.actor;
+  // Any shop the migration takes, not only one it already has: a 1.x merchant dropped straight onto
+  // the canvas lands before its migration writes the 2.0 config (#138 review).
+  if (!actor || actor.pack || !isMigratable(actor)) return;
+  if (actor.flags?.[MODULE]?.visibility != null) return;
+  // Once per shop, in this world: a GM who sets it back to None afterwards has decided, and None
+  // set by hand looks exactly like the untouched default. A GM's own ownership, a player's own
+  // level included, holds (#138 review).
+  const worldId = game.world?.id ?? null;
+  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor, isPlayer)) return;
+  await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: worldId });
 }

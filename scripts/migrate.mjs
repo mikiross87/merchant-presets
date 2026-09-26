@@ -54,7 +54,7 @@ export const SHOP_SHEET_ID = "merchant-presets.ShopSheet";
  * to `true` once #104 makes the shop window the sheet, and `needsMigration`
  * picks every already-data-migrated shop back up to finish the cut-over.
  */
-export const NATIVE_SHOP = false;
+export const NATIVE_SHOP = true;
 
 /**
  * Item Piles 3.3.4's `CONSTANTS.ITEM_DEFAULTS` — what a per-item
@@ -638,14 +638,47 @@ function planSheetClass(actor) {
  *
  * @param {object} actor
  * @param {boolean} hasTokenOnScene
+ * @param {string|null} worldId
+ * @param {(userId: string) => boolean} [isPlayer] See `isOwnershipChosen`.
  * @returns {number|null} A `CONST.DOCUMENT_OWNERSHIP_LEVELS` value to write, or `null`.
  */
-export function planOwnership(actor, hasTokenOnScene) {
+export function planOwnership(actor, hasTokenOnScene, worldId, isPlayer) {
   const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS (constants.mjs:470-496)
+  // Made visitable once already, in this world: None now is the GM hiding it again, and the
+  // migration re-runs whenever a shelf item lacks its stock config (a sale lands one). A mark from
+  // another world came along with an export, which cleared the ownership it was set against
+  // (#138 review).
+  if (isMadeVisitable(actor, worldId)) return null;
+  if (isOwnershipChosen(actor, isPlayer)) return null;
   const current = actor?.ownership?.default ?? NONE;
-  if (current !== NONE) return null;             // a GM's own choice, 1.x never sets this
   const target = hasTokenOnScene ? LIMITED : NONE;
   return target === current ? null : target;
+}
+
+/** Whether `actor` was made visitable already, in world `worldId` (`flags.merchant-presets.madeVisitable`). */
+export function isMadeVisitable(actor, worldId) {
+  const mark = actor?.flags?.["merchant-presets"]?.madeVisitable;
+  return mark != null && mark === worldId;
+}
+
+/**
+ * Whether a GM has set `actor`'s ownership: a default other than None, or a player given a level
+ * of their own (a fence opened to one rogue's player, or a shop handed to its player-merchant).
+ * Either is left alone (#138 review). A GM's Owner entry isn't a choice: Foundry writes one for the
+ * GM who imports or creates any document (`fromCompendium`, the server's `_preCreate`). Nor is a
+ * level left for a user since deleted: it lets nobody in (#138 review, round 9). 1.x never set
+ * ownership, so the field's own default reads as undecided.
+ *
+ * @param {object} actor
+ * @param {(userId: string) => boolean} [isPlayer] Whether a user exists and isn't a GM; without
+ *   it, every entry below Owner is taken for a player's and every Owner entry for a GM's.
+ */
+export function isOwnershipChosen(actor, isPlayer) {
+  const LIMITED = 1, OWNER = 3;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  const ownership = actor?.ownership ?? {};
+  const players = isPlayer ?? ((_id, level) => level < OWNER);
+  return (ownership.default ?? 0) !== 0
+    || Object.entries(ownership).some(([k, level]) => k !== "default" && level >= LIMITED && players(k, level));
 }
 
 /**
@@ -670,6 +703,8 @@ export function planOwnership(actor, hasTokenOnScene) {
  * @param {object} [options.packShop]         See `deriveShop`.
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
  * @param {boolean} [options.nativeShop]      Defaults to `NATIVE_SHOP`.
+ * @param {string|null} [options.worldId]     See `planOwnership`.
+ * @param {(userId: string) => boolean} [options.isPlayer] See `isOwnershipChosen`.
  * @returns {{update: object|null, shopError: string|null, warnings: string[]}} `update`: `null`
  *   if there's nothing to write. `shopError`: set, and the shop key left out
  *   of `update`, when the derived shop config is still invalid after
@@ -680,7 +715,7 @@ export function planOwnership(actor, hasTokenOnScene) {
  *   other than the fixed `natural` — for the caller to warn about, since
  *   once the shop is current its Item Piles data is never read again.
  */
-export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP } = {}) {
+export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nativeShop = NATIVE_SHOP, worldId = null, isPlayer } = {}) {
   if (!needsMigration(actor, nativeShop)) return { update: null, shopError: null, warnings: [] };
   const update = {};
   let shopError = null;
@@ -712,8 +747,13 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     const sheetClass = planSheetClass(actor);
     if (sheetClass) update["flags.core.sheetClass"] = sheetClass;
 
-    const ownership = planOwnership(actor, hasTokenOnScene);
-    if (ownership !== null) update["ownership.default"] = ownership;
+    const ownership = planOwnership(actor, hasTokenOnScene, worldId, isPlayer);
+    if (ownership !== null) {
+      update["ownership.default"] = ownership;
+      // What `makeVisitable` (merchant-presets.mjs) marks too: made visitable once in this world,
+      // never again, so a GM who hides it afterwards keeps it hidden (#138 review).
+      if (ownership > 0) update["flags.merchant-presets.madeVisitable"] = worldId;
+    }
   }
 
   return { update: Object.keys(update).length ? update : null, shopError, warnings };
