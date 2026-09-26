@@ -1380,3 +1380,13 @@ test("the chip promises what the deal really gives once the cap has cut it (#142
     assert.match(settings.preview.deals[0].chip, /YourOffers\(\+100%\)$/);
   });
 });
+
+test("a bill line whose total the deal didn't move isn't marked as the deal's (#142 review)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("twine", { quantity: 5, price: { value: 1, denomination: "sp" } })] });
+  shop.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "hero", buy: 0.02, sell: null, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "twine" });
+  const context = await sheet._prepareContext({});
+  assert.equal(context.buy.basket.lines[0].lineTotalCp, 10);
+  assert.equal(context.buy.basket.lines[0].dealt, false);
+  assert.equal(context.buy.sections[0].rows[0].listText, "");
+});

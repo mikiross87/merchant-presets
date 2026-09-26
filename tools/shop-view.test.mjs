@@ -518,3 +518,17 @@ test("a deal's size reads signed, to a hundredth of a percent", () => {
   assert.equal(signedPercent(-0.125), "-12.5%");
   assert.equal(signedPercent(1 / 9), "+11.11%");
 });
+
+test("a deal too small to move a cheap row's coins claims nothing on it (#142 review)", () => {
+  const twine = { _id: "tw", img: "i.webp", name: "Twine", type: "loot", system: { price: { value: 1, denomination: "sp" }, quantity: 5 } };
+  // 10.2 cp floors to 10, the list price: no strike, no tag.
+  const row = buyRow(twine, PLAIN_STOCK, LIST, { buy: 0.02, sell: null }, CURRENCIES5E, false);
+  assert.equal(row.bundlePriceCp, 10);
+  assert.equal(row.listPriceCp, null);
+  assert.deepEqual(row.tag, { kind: null, text: null });
+  const cord = { ...twine, system: { price: { value: 2, denomination: "sp" }, quantity: 1 } };
+  const sold = sellRow(cord, shopConfig, PLAIN_STOCK, LIST, { buy: null, sell: 0.02 }, CURRENCIES5E);
+  assert.equal(sold.bundlePriceCp, 10);
+  assert.equal(sold.listPriceCp, null);
+  assert.equal(sold.tag, null);
+});
