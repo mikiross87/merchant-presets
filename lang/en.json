@@ -137,6 +137,7 @@
       },
       "Settings": {
         "Invalid": "That change wasn't saved: {errors}",
+        "SaveFailed": "That change wasn't saved: Foundry refused the update. The console has the details.",
         "Broken": "This shop's settings can't be read (a 1.x merchant not yet migrated, or a hand edit), so the tab won't write over them. Reload to migrate it, or fix its flags.",
         "Sections": {
           "terms": "Terms",

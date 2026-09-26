@@ -269,6 +269,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._settingsRendering = true;
   }
 
+  /**
+   * A render that throws between `_preRender` and `_onRender` still ends the re-render window:
+   * otherwise every blur afterwards would read as one, and no typed field would ever save.
+   * @override
+   */
+  async render(...args) {
+    try { return await super.render(...args); }
+    finally { this._settingsRendering = false; }
+  }
+
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
@@ -1071,7 +1081,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         reroll: shop.restock.mode === "reroll",
         purseGp: actor.flags?.[MODULE]?.purse ?? null,
         last: schedule?.lastRestock != null ? this.#dateLabel(schedule.lastRestock) : null,
-        next: chip !== "never" && schedule?.dueAt != null ? this.#dateLabel(schedule.dueAt) : null,
+        // Only a date the shop will keep: one counted for another schedule is recounted at the
+        // clock's next tick (`scheduleShop`), and a shop with no table never restocks.
+        next: chip !== "never" && shop.restock.table && schedule?.dueAt != null
+          && (schedule.every === undefined || schedule.every === shop.restock.every)
+          ? this.#dateLabel(schedule.dueAt) : null,
         autoOff: !game.settings.get(MODULE, "autoRestock")
       },
       canReset: !!preset,
@@ -1136,10 +1150,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
       await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
     };
-    const queued = (this._edits ?? Promise.resolve()).then(run);
-    // One failed write mustn't stall every edit after it.
-    this._edits = queued.catch(err => console.error(`${MODULE} | a shop setting wasn't saved`, err));
-    return queued;
+    // Never rejects: a write the server refuses is said, and the field put back to what the shop
+    // still holds; the next edit still runs, and the control's listener has nothing to catch.
+    this._edits = (this._edits ?? Promise.resolve()).then(run).catch(err => {
+      console.error(`${MODULE} | a shop setting wasn't saved`, err);
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.SaveFailed"));
+      this.render({ parts: ["body"] });
+    });
+    return this._edits;
   }
 
   static #onSettingsSection(_event, target) {
