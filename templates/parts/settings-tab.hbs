@@ -7,6 +7,7 @@
       <input type="checkbox" class="settings-switch" data-op="visit" {{checked visit}} />
     </span>
     <span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Hint"}}</span>
+    {{#if visitOthers}}<span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Others" count=visitOthers}}</span>{{/if}}
   </label>
   {{#each sections}}
     <button type="button" class="category-link {{#if active}}active{{/if}}" data-action="settingsSection" data-section="{{id}}">

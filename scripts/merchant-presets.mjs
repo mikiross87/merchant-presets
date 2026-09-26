@@ -990,20 +990,22 @@ async function handleRestockQuery(request, { user }) {
 
 /**
  * Restock `actor` now, as "Restock now" does: sent to the active GM's claiming tab (see
- * `handleRestockQuery`). Resolves the lines restocked, or null if it couldn't restock, or no GM
- * answered.
+ * `handleRestockQuery`). `restocked` when it ran, `failed` when it couldn't (the claiming tab's
+ * console says why), `no-answer` when no GM answered in time: it may be queued behind a
+ * scheduled sweep, and still run.
  *
  * @param {Actor} actor
- * @returns {Promise<string[]|null>}
+ * @returns {Promise<{status: "restocked"|"failed"|"no-answer", restocked: string[]|null}>}
  */
 async function requestRestock(actor) {
   const gm = game.users.activeGM;
-  if (!gm) return null;
+  if (!gm) return { status: "no-answer", restocked: null };
   try {
-    return (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+    const restocked = (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+    return { status: restocked ? "restocked" : "failed", restocked };
   } catch (err) {
     console.warn(`${MODULE} | restock of "${actor.name}" unconfirmed:`, err.message);
-    return null;
+    return { status: "no-answer", restocked: null };
   }
 }
 
@@ -1595,7 +1597,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MODULE).api = { registerDrinks, restock: requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
+  game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
     setUpShop, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for

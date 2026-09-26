@@ -72,14 +72,17 @@ const NONE = 0, LIMITED = 1;
 /** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
 const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
 
+/** A value quoted for an attribute selector. */
+const attr = value => String(value).replace(/["\\]/g, "\\$&");
+
 /**
  * A selector that finds `control` again in the next render: its data-op and the data it edits,
  * and a radio's own value (the restock mode's two radios share everything else).
  */
 const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end"]
   .filter(key => control.dataset[key] != null)
-  .map(key => `[data-${key}="${CSS.escape(control.dataset[key])}"]`).join("")}${
-  control.type === "radio" ? `[value="${CSS.escape(control.value)}"]` : ""}`;
+  .map(key => `[data-${key}="${attr(control.dataset[key])}"]`).join("")}${
+  control.type === "radio" ? `[value="${attr(control.value)}"]` : ""}`;
 
 /**
  * A text field's selection, `[start, end]` (a caret is an empty one); null for a time input or a
@@ -266,9 +269,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       ? { selector: settingSelector(active), value: active.value, selection: selectionOf(active),
         // A value just refused goes back to the saved one: the field stays focused when the
         // browser window, not the field, lost focus, and would otherwise carry it over.
-        dirty: !this._resetTyping && isTypedField(active) && active.value !== active.defaultValue }
+        dirty: this._resetTyping !== settingSelector(active) && isTypedField(active) && active.value !== active.defaultValue }
       : null;
-    this._resetTyping = false;
+    this._resetTyping = null;
     // From here until `_onRender`, a blur is the re-render removing a field, not the GM leaving it.
     this._settingsRendering = true;
   }
@@ -1053,6 +1056,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
       section: Object.fromEntries(SETTINGS_SECTIONS.map(s => [s.id, s.id === this._settingsSection])),
       visit: (actor.ownership?.default ?? NONE) >= LIMITED,
+      // Players the GM gave their own level: the switch sets only the default, so they keep it.
+      visitOthers: Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
+        const user = id !== "default" && game.users?.get(id);
+        return user && !user.isGM && level > NONE;
+      }).length,
       terms: {
         // In words, what the shop actually charges and pays: capped, as the chip and trades are.
         sells: { ...rate("sellsAt"), word: termsWord(effective.sellsAt.rate, "sell") },
@@ -1129,7 +1137,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       every: () => ({ op, every: value.trim() }),
       mode: () => ({ op, mode: value })
     }[op];
-    if (change) await this.#edit(change);
+    if (change) await this.#edit(change, settingSelector(control));
   }
 
   /**
@@ -1139,7 +1147,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * they read before either saved (#140 review). A config that can't be read is left alone: the
    * edit would write the defaults over it, a 1.x shop's migration marker included.
    */
-  #edit(makeChange) {
+  #edit(makeChange, field = null) {
     return this.#queue(async () => {
       const shop = safeShopOf(this.document);
       if (!shop) {
@@ -1151,26 +1159,28 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const result = applyChange(shop, change);
       if (!result.ok) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
-        this._resetTyping = true;   // puts the field back, even one still focused (an alt-tab)
+        this._resetTyping = field;   // puts that field back, even one still focused (an alt-tab)
         this.render({ parts: ["body"] });
         return;
       }
       if (change.op === "every") this._everyDice = false;
       // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
       await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
-    });
+    }, field);
   }
 
   /**
    * Runs `task`, a Settings-tab write, after every one queued before it. Never rejects: a write
    * the server refuses is said, and the control put back to what the shop still holds; the next
-   * write still runs, and the control's listener has nothing to catch.
+   * write still runs, and the control's listener has nothing to catch. `field` is the selector of
+   * the typed field the write came from: only that one is put back, not another the GM has since
+   * moved on to and is typing in.
    */
-  #queue(task) {
+  #queue(task, field = null) {
     this._edits = (this._edits ?? Promise.resolve()).then(task).catch(err => {
       console.error(`${MODULE} | a shop setting wasn't saved`, err);
       ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.SaveFailed"));
-      this._resetTyping = true;
+      this._resetTyping = field;
       this.render({ parts: ["body"] });
     });
     return this._edits;
@@ -1206,8 +1216,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onRestockNow() {
     if (!game.user.isGM) return;
-    const restocked = await game.modules.get(MODULE).api?.restock?.(this.document);
-    if (restocked == null) ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Failed"));
+    const answer = await game.modules.get(MODULE).api?.requestRestock?.(this.document);
+    const status = answer?.status ?? "no-answer";
+    if (status === "failed") ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Failed"));
+    else if (status === "no-answer") ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NoAnswer"));
   }
 
   static async #onResetToPreset() {

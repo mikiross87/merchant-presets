@@ -148,7 +148,8 @@
         },
         "Visit": {
           "Label": "Players can visit",
-          "Hint": "Off hides the shop from players entirely."
+          "Hint": "Off hides the shop from players, except any you gave their own access to it.",
+          "Others": "Players with their own access: {count}. Change it in the shop's Ownership."
         },
         "Terms": {
           "Hint": "Rates apply to every item unless a category rule says otherwise.",
@@ -215,7 +216,8 @@
           "Last": "Last restocked {date}",
           "Next": "Next: {date}",
           "Now": "Restock now",
-          "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console says which."
+          "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console of the GM tab that runs trades says which.",
+          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment."
         },
         "Reset": {
           "Label": "Reset to preset",
