@@ -158,8 +158,9 @@ trades out itself. For GMs upgrading a world:
 - 2.0: Item Piles and itempilesdnd5e are no longer required, and nothing here
   talks to Item Piles any more; a world that keeps it for its own merchants
   or loot can. Macros calling the module's Item Piles-era functions
-  (`rewire`, `rewireAll`, `reapplyItemFlags`, `reconcileContainers`,
-  `replenishPurse`, `syncOpenState`, `syncOpenStateAll`) need removing: the
+  (`rewire`, `rewireAll`, `restockOnTimeChange`, `reapplyItemFlags`,
+  `reconcileContainers`, `replenishPurse`, `syncOpenState`,
+  `syncOpenStateAll`) need removing: the
   shops restock, open and close on their own now. (#106)
 - The Jeweler's three *Spell Components (gems)* price bands. They were
   services, so paying for one left nothing in the pack, and each charged the

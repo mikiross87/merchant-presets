@@ -295,9 +295,10 @@ Shops **restock on their own schedule**, by trade and settlement size — an inn
 daily, a jeweler fortnightly — when their doors open on the due day, via the
 *Shops restock on their schedule* setting. It is on in new worlds; a world
 upgraded from 1.x keeps it off until you turn it on. A restock redraws only
-what the shop's stock table put there: anything you added by hand stays. A shop set to re-roll replaces what
-it drew; one set to top up refills its lines. The till is topped up to the
-shop's starting purse and never has coin taken away, so a shop that did well
+what the shop's stock table put there: anything you added by hand stays. A shop
+set to re-roll draws everything again at fresh quantities; one set to top up
+brings back only the drawn goods that sold out and leaves the rest as they are.
+The till is topped up to the shop's starting purse and never has coin taken away, so a shop that did well
 keeps what it earned. Only one GM client runs the pass, and winding the clock
 backwards never restocks.
 
