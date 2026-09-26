@@ -30,14 +30,6 @@ body:
       placeholder: "e.g. 6.0.5"
     validations:
       required: true
-  - type: input
-    id: itempiles-version
-    attributes:
-      label: Item Piles and itempilesdnd5e versions
-      description: Both are required by this module; most issues involve them.
-      placeholder: "e.g. Item Piles 3.3.4, itempilesdnd5e 1.1.0"
-    validations:
-      required: true
   - type: dropdown
     id: where
     attributes:
@@ -54,9 +46,8 @@ body:
     id: isolated
     attributes:
       label: Does it still happen with other modules disabled?
-      description: Item Piles and itempilesdnd5e have to stay on — they are required.
       options:
-        - "Yes — only Merchant Presets and Item Piles enabled"
+        - "Yes — only Merchant Presets enabled"
         - "No — it needs another module active (name it above)"
         - "Haven't tried"
     validations:

@@ -24,8 +24,7 @@ jobs:
           stale-issue-label: stale
           stale-issue-message: >
             This has been waiting on a reproduction with other modules disabled
-            for three weeks. Item Piles and itempilesdnd5e should stay enabled —
-            they are required — but if it still happens with everything else
+            for three weeks. If it still happens with every other module
             off, say so and it stays open. Otherwise it will close in fourteen
             days. Reopening is always fine.
           close-issue-message: >

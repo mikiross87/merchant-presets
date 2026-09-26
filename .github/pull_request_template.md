@@ -6,7 +6,7 @@ Closes #
 ## Checklist
 
 - [ ] `npm run pack` succeeds, and the change was tested in a Foundry V14
-      `dnd5e` world with Item Piles active
+      `dnd5e` world
 - [ ] If `_source` or `data/recipes.json` changed, the packs were regenerated
       and the world was closed while building
 - [ ] Nothing references the paid Player's Handbook or Dungeon Master's Guide

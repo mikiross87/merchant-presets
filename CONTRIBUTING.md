@@ -2,8 +2,16 @@
 
 Thanks for your interest. Two halves to this repo, with different rules:
 
-- **Code** — `scripts/merchant-presets.mjs` is the whole runtime, loaded
-  directly by Foundry as an ES module. No bundler, no transpiler.
+- **Code** — `scripts/`, loaded directly by Foundry as ES modules. No bundler,
+  no transpiler. `merchant-presets.mjs` wires everything into Foundry: hooks,
+  settings, the trade runtime, restocks and migration. `shop-sheet.mjs` is the
+  shop window. The rest hold the rules, free of Foundry so `tools/*.test.mjs`
+  can test them under plain Node: `schema.mjs` (the shop and stock config),
+  `pricing.mjs` (rates, the sell ≤ buy cap, payment), `deals.mjs`,
+  `trade-plan.mjs` (what a trade may do), `trade-desk.mjs` (the one GM tab that
+  carries trades out), `schedule.mjs` (hours and restocks), `migrate.mjs` (1.x
+  Item Piles data to 2.0), `shop-settings.mjs` (the Settings tab's edits),
+  `shop-view.mjs` (the window's view-model) and `shop.mjs`.
 - **Content** — the compendiums in `packs/` are *generated*. They are not
   tracked in git. The tracked source is the JSON in `_source/`.
 
@@ -18,8 +26,9 @@ Thanks for your interest. Two halves to this repo, with different rules:
 3. Get it into Foundry, either by installing a release through the manifest URL
    and replacing the installed folder, or by pointing a copy of this directory
    at `<userdata>/Data/modules/merchant-presets`.
-4. Enable the module in a `dnd5e` world alongside Item Piles and its dnd5e
-   extension, and reload the browser after each change (`hotReload` is off).
+4. Enable the module in a `dnd5e` world, and reload the browser after each
+   change (`hotReload` is off). Trades need a GM logged in: they're carried out
+   on the GM's client.
 
 Run `npm run lint` and `npm test` before pushing; CI runs both.
 
@@ -127,35 +136,29 @@ Constraints worth knowing before changing the generator:
   the item filters are computed — inside the loop its own types would otherwise
   read as stocked and let a chain shirt onto the shelf.
 - **`flags.merchant-presets.profile` or `.shop` is how the runtime recognises
-  a merchant.** Import repoints the merchant's stock table from the
-  compendium to a world copy, so the table only identifies a merchant until
-  then; `profile` survives the import and the runtime never writes it. Keep
-  emitting it on every merchant, or the trading-hours and stock-weight passes
-  skip the world copies (#56). Stock is rolled only in the `rewire` call that
-  wires a compendium table, so `rewireAll()` never re-rolls a shop already in
-  the world. `rewire` runs on `createActor`, and on `updateActor` for a
-  merchant still on its compendium table: Foundry's *Replace Actor*, the
-  default when the world already holds that shop, imports as an update (#66).
-  The `ready` pass wires any such merchant left over. `rewire` handles one
-  pass per merchant at a time, since both hooks can arrive together.
+  a merchant** (`isPreset` in `scripts/shop.mjs`). Keep emitting `profile` on
+  every merchant; the runtime never writes it. A shop whose restock table still
+  points into this module's compendium and that has no shelf key yet is fresh
+  pack data: the active GM migrates it and rolls its first shelf (`arrive`), on
+  `createActor`, on `updateActor` (Foundry's *Replace Actor*, the default when
+  the world already holds that shop, imports as an update, #66), and at load for
+  any left over.
 - **An NPC set up as a shop is a first-class merchant, not a stand-in.**
   `setUpShop` tags everything the NPC keeps with
-  `flags.merchant-presets.kind: "gear"` and stamps
-  `flags.merchant-presets.shop: {source, tier}` in place of `profile`, which
-  names a shipped stat block the NPC never had (#57). Both are load-bearing:
-  `isPreset` in `scripts/shop.mjs` treats the `shop` marker exactly like
-  `profile`, so a shop set up this way gets the same wiring, trading hours and
-  restocks as one dragged from the compendium, and `tierOf` reads the
-  marker's `tier` before falling back to parsing the name, since the NPC's
-  own name carries no `(Village|Town|City)` suffix to parse.
-- **World stock tables are stamped with the list they were copied from**
-  (`flags.merchant-presets.stock`). An import reuses a world table only while
-  its stamp still matches the compendium table, so changing a shop's stock
-  lines reaches merchants dragged in afterwards and leaves the ones already in
-  a world on their old list (#63). A recipe change that alters a shop's lines
-  therefore needs its CHANGELOG line to tell GMs to drag in a fresh merchant.
+  `flags.merchant-presets.kind: "gear"` and copies the chosen merchant's whole
+  `flags.merchant-presets.shop`, with its own `source` and `tier`, in place of
+  `profile`, which names a shipped stat block the NPC never had (#57). `isPreset`
+  treats the `shop` marker exactly like `profile`, so a shop set up this way gets
+  the same trading hours and restocks as one dragged from the compendium, and
+  `tierOf` reads the config's `tier` before falling back to parsing the name,
+  since the NPC's own name carries no `(Village|Town|City)` suffix to parse.
+- **A shop restocks from the table its config names** (`shop.restock.table`).
+  A 2.0 import names the compendium table, so a change to a shop's stock lines
+  reaches shops already in a world at their next restock. A shop migrated from
+  1.x keeps the world copy of the table that 1.x made, so a recipe change's
+  CHANGELOG line should tell those GMs to drag in a fresh merchant.
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
-  Item Piles' `tradeItems` hook: `flags.merchant-presets.actor` names the SRD
+  this module's own `merchant-presets.trade` hook: `flags.merchant-presets.actor` names the SRD
   stat block an animal good stands for, and buying it copies that actor into the
   world. A `kind` of `spellcasting` posts a chat message naming the spell. On a
   named service, `flags.merchant-presets.spell` supplies the spell to link, and
@@ -185,16 +188,16 @@ Constraints worth knowing before changing the generator:
   level service. Named services carry `flags.merchant-presets.spell`, which is
   how the script tells its own goods from the hand-made level services, and
   what the purchase message links. They
-  also carry the Item Piles category *Spells, Components Included*. Item Piles
-  sorts the items under a heading by name, so without it the level services sort
-  in among them. `make_item` carries a good's own category onto each shop's
-  copy.
+  also carry the stock category *Spells, Components Included*: the window lists
+  the items under a heading by name, so without it the level services sort in
+  among them. `make_item` carries a good's own category onto each shop's copy.
 - **Valuables sell back at full value** (SRD 5.2 *Equipment*). A good of type
-  `loot` whose `system.type.value` is `gem`, `art` or `trade` is filed under
-  the Item Piles custom category *Valuables*: on the good, on each shop's
-  copy, and in the shop's restock record. Every shop whose item filters let
-  one in carries an `itemTypePriceModifiers` entry that overrides its rate
-  for that category with 1. `is_valuable` in `build_srd.py` is the one
+  `loot` whose `system.type.value` is `gem`, `art` or `trade` is filed under the
+  stock category *Valuables*: on the good, on each shop's copy, and in the
+  shop's restock record. Every shop that buys one carries the category rule
+  `{category: "Valuables", sellsAt: null, buysAt: 1}`: full value when it buys,
+  its own rate (null follows the shop) when it sells, and never paying more than
+  it charges (#143). `is_valuable` in `build_srd.py` is the one
   definition. It checks the item type because dnd5e also files artisan's tools
   under `system.type.value: "art"`. Per-item `sellPriceModifier`s were
   rejected: they multiply the buying shop's rate, and the player's copy
@@ -202,7 +205,7 @@ Constraints worth knowing before changing the generator:
 - **Containers** cannot carry a quantity: dnd5e declares
   `quantity: new NumberField({min: 1, max: 1})`, because each container is a
   distinct object with its own contents. A shop with four pouches holds four
-  documents, and `reconcileContainers()` restores them after a restock.
+  documents.
 
 ## Pull requests
 
@@ -232,7 +235,7 @@ notes are that version's `CHANGELOG.md` section.
 
 ### The `next` branch (2.0)
 
-2.0 (#108) replaces Item Piles and changes the shop data format. It lands in
+2.0 (#108) drops Item Piles and changes the shop data format. It lands in
 stages that would leave `main` unreleasable, so it lives on a long-lived `next`
 branch, and `main` keeps shipping 1.x.
 
