@@ -409,3 +409,63 @@ export function planRestock(shop, items, draws, context) {
   const restocked = [...new Set(creates.map(c => c.name))];
   return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
 }
+
+/* ------------------------------------------------------------------ the runtime's first restock (#105) */
+
+/**
+ * The item updates that stamp a shop's existing shelf as drawn, for its first
+ * native restock. Nothing has stamped `drawn` before (the build doesn't, and
+ * 1.x restocked through Item Piles), so without this a reroll would delete
+ * nothing and add a second shelf. A non-gear item whose name is one of the
+ * stock table's lines counts as drawn, just as a 1.x restock replaced it; a
+ * good the GM added under any other name stays theirs.
+ *
+ * @param {Item[]} items  The shop's embedded items, plainly.
+ * @param {string[]} tableNames  The names of its stock table's lines.
+ * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": true}` updates.
+ */
+export function adoptDrawn(items, tableNames) {
+  const names = new Set(tableNames);
+  return items
+    .filter(i => !isGear(i) && !isDrawn(i) && names.has(i.name))
+    .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": true }));
+}
+
+/**
+ * {@link planRestock}'s `context.stockFlags` for this restock's `draws`: each
+ * line's stock config as the shelf holds it now, so a GM's direct edit (hidden,
+ * infinite, a category) survives a reroll that replaces the item (#119's
+ * done-when on #105). A line not on the shelf at all (a `keep: false` good that
+ * sold out) falls back to `fromRecord(name)`, the shop's recorded Item Piles
+ * flags derived the way the migration does. A line neither knows is left out:
+ * its copy then reads as the defaults.
+ *
+ * @param {Item[]} items
+ * @param {{name: string}[]} draws
+ * @param {(name: string) => object|undefined} fromRecord
+ * @returns {Record<string, object>}
+ */
+export function restockStockFlags(items, draws, fromRecord) {
+  const flags = {};
+  for (const { name } of draws) {
+    const live = items.find(i => !isGear(i) && i.name === name && i.flags?.["merchant-presets"]?.stock);
+    const stock = live?.flags["merchant-presets"].stock ?? fromRecord(name);
+    if (stock) flags[name] = stock;
+  }
+  return flags;
+}
+
+/**
+ * The {@link ScheduleState} for a shop the schedule sees for the first time:
+ * due `days` whole days on (see {@link nextDue}), counting from `now`'s own
+ * day, with nothing restocked yet. No restock fires on first sight, so a
+ * world loaded after a long gap doesn't restock every shop at once.
+ *
+ * @param {number} now
+ * @param {number} days  Already resolved (see {@link intervalOf}).
+ * @param {CalendarDays} calendar
+ * @returns {ScheduleState}
+ */
+export function initialSchedule(now, days, calendar) {
+  return { lastRestock: now, dueAt: nextDue(days, now, calendar) };
+}

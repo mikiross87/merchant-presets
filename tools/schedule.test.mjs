@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dueRestock, intervalOf, isOpen, nextDue, nextOpen, planRestock, scheduleNext } from "../scripts/schedule.mjs";
+import {
+  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, nextDue, nextOpen, planRestock, restockStockFlags, scheduleNext
+} from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
 
 // game.time.calendar.days, as the core calendar reports it. A day is exactly
@@ -499,4 +501,29 @@ test("a missing or invalid purse leaves the till untouched, rather than writing 
 test("a missing currentGp reads as an empty till, not as already full", () => {
   const plan = planRestock(shop, [], [], { ...context, currentGp: undefined });
   assert.equal(plan.currency, context.purse);
+});
+
+/* ------------------------------------------------------ the runtime's first restock (#105) */
+
+const shelfItem = (id, name, flags = {}) => ({ _id: id, name, type: "loot", system: { quantity: 3 }, flags: { "merchant-presets": flags } });
+
+test("a shop's first native restock adopts the table's lines on its shelf as drawn", () => {
+  const items = [
+    shelfItem("bell", "Bell", { stock: { keep: true } }),
+    shelfItem("mine", "Grandma's Locket"),              // added by hand: not a table line
+    shelfItem("club", "Club", { kind: "gear" }),        // the shopkeeper's own: never stock
+    shelfItem("rope", "Rope", { drawn: true })          // already drawn: nothing to do
+  ];
+  assert.deepEqual(adoptDrawn(items, ["Bell", "Rope", "Club"]), [{ _id: "bell", "flags.merchant-presets.drawn": true }]);
+});
+
+test("a redrawn line keeps the stock config on the shelf, so a GM's edit survives the reroll", () => {
+  const items = [shelfItem("bell", "Bell", { drawn: true, stock: { infinite: true, hidden: true } }), shelfItem("gear", "Bell", { kind: "gear", stock: { hidden: false } })];
+  const draws = [{ name: "Bell" }, { name: "Rope" }, { name: "Lamp" }];
+  const fromRecord = name => (name === "Rope" ? { keep: false } : undefined);
+  assert.deepEqual(restockStockFlags(items, draws, fromRecord), { Bell: { infinite: true, hidden: true }, Rope: { keep: false } });
+});
+
+test("a shop first seen by the schedule is due a whole interval from that day", () => {
+  assert.deepEqual(initialSchedule(at(3, 15), 3, calendar), { lastRestock: at(3, 15), dueAt: at(6) });
 });

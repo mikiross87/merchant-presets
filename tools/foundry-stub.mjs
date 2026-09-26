@@ -45,6 +45,10 @@ function plainData(doc) {
   return out;
 }
 
+/** An embedded item as the runtime sees one: its data, plus `toObject` — not enumerable, as a
+ *  class method isn't, so cloning or spreading the item still sees only its data. */
+const itemDoc = data => Object.defineProperty(data, "toObject", { value() { return plainData(this); } });
+
 /**
  * Install the globals and return the world they describe.
  * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, character, receive, fire, failSetting}}
@@ -175,7 +179,7 @@ export function createWorld() {
     if (table) doc.flags["item-piles"].data.tablesForPopulate[0].uuid = table;
     return actorLike(flagged(Object.assign(doc, {
       id: doc._id, uuid: `Actor.${doc._id}`, pack: null, effects: [],
-      items: doc.items.map(i => ({ ...i, id: i._id }))
+      items: doc.items.map(i => itemDoc({ ...i, id: i._id }))
     })));
   }
 
@@ -201,7 +205,7 @@ export function createWorld() {
         }
       },
       async createEmbeddedDocuments(_type, data) {
-        const created = data.map(d => { const id = d._id ?? newId("I"); return { ...structuredClone(d), _id: id, id }; });
+        const created = data.map(d => { const id = d._id ?? newId("I"); return itemDoc({ ...structuredClone(d), _id: id, id }); });
         this.items.push(...created);
         return created;
       },
@@ -216,7 +220,7 @@ export function createWorld() {
   function character(id, { currency = {}, items = [], owners = [] } = {}) {
     const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {},
       system: { currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0, ...currency } },
-      items: items.map(i => ({ ...i, id: i._id })) }), { owners });
+      items: items.map(i => itemDoc({ ...i, id: i._id })) }), { owners });
     actors.push(doc);
     return doc;
   }
