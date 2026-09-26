@@ -560,6 +560,16 @@ async function daysOf(every) {
 }
 
 /**
+ * Whether a stock table result can put an item on the shelf: one pointing at an Item. A text
+ * line ("Nothing today") or one pointing at another document (a nested table, a journal) never
+ * becomes stock, so it's neither drawn nor waited for (#135 review).
+ */
+const isItemLine = result => /(^|\.)Item\.[^.]+$/.test(result.documentUuid ?? "");
+
+/** Shops already warned this session that their table doesn't resolve: once each, not every tick. */
+const unresolvedWarned = new Set();
+
+/**
  * The names of the items a stock table's lines point to: what adoption stamps
  * as drawn. The documents' own names, as the shelf carries them, not the
  * results' labels, which a GM's own table may word differently. Null while
@@ -569,7 +579,7 @@ async function daysOf(every) {
 async function lineNames(table) {
   const names = [];
   for (const result of table.results ?? []) {
-    if (!result.documentUuid) continue;   // a text line never puts an item on the shelf
+    if (!isItemLine(result)) continue;
     // The pack's index has the name, without loading the document: a world's first tick adopts
     // every shop at once, and loading each line made that take seconds per shop (#105 live run).
     let entry = null;
@@ -593,15 +603,15 @@ async function lineNames(table) {
 async function drawsFor(table, quantities) {
   const draws = [];
   for (const result of table.results ?? []) {
-    // A text line ("Nothing today") never becomes an item: nothing to draw, nothing to wait for.
-    if (!result.documentUuid) continue;
+    if (!isItemLine(result)) continue;
     const doc = await fromUuid(result.documentUuid).catch(() => null);
     if (!doc) {
       console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"; restock skipped`);
       return null;
     }
     const data = doc.toObject();
-    data._stats = { ...data._stats, compendiumSource: doc.uuid ?? result.documentUuid };
+    // A world item that already records where it came from keeps that source (#135 review).
+    data._stats = { ...data._stats, compendiumSource: data._stats?.compendiumSource ?? doc.uuid ?? result.documentUuid };
     const formula = quantities?.[result.id ?? result._id] ?? "1";
     draws.push({ name: doc.name, data, quantity: await rollStock(formula) });
   }
@@ -633,7 +643,10 @@ async function adoptOnce(actor, table) {
   if (known) return known;
   const names = await lineNames(table);
   if (!names) {
-    console.warn(`${MODULE} | "${actor.name}": not every line of its stock table resolves; not restocking it yet`);
+    if (!unresolvedWarned.has(actor.uuid)) {
+      unresolvedWarned.add(actor.uuid);
+      console.warn(`${MODULE} | "${actor.name}": not every line of its stock table resolves; not restocking it yet`);
+    }
     return null;
   }
   const key = foundry.utils.randomID();

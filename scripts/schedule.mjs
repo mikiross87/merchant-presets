@@ -289,7 +289,9 @@ function drawnItem(draw, context, system) {
   data.system = { ...data.system, ...system };
   data.flags = {
     ...data.flags,
-    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true, stock: context.stockFlags[draw.name] }
+    // The shop's record wins; a line it has none for keeps the config its good ships with.
+    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true,
+      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock }
   };
   return data;
 }
