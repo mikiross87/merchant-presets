@@ -7,6 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { shopFrom, validateShop } from "../scripts/schema.mjs";
 import { activeDeal, endsAfterDays, nextCloseAt } from "../scripts/deals.mjs";
+import { isOpen } from "../scripts/schedule.mjs";
 import { applyChange, dealFields } from "../scripts/shop-settings.mjs";
 
 const ARIA = "Actor.aria000000000000";
@@ -83,14 +84,30 @@ const at = (day, hour, minute = 0) => day * DAY + hour * 3600 + minute * 60;
 const HOURS = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } };
 const NIGHT = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
 
-test("'until the shop closes' is the shop's next closing, after now", () => {
-  assert.equal(nextCloseAt(HOURS, at(3, 10), CAL), at(3, 19));
-  assert.equal(nextCloseAt(HOURS, at(3, 19), CAL), at(4, 19));    // closing right now: the next one
-  assert.equal(nextCloseAt(HOURS, at(3, 20), CAL), at(4, 19));    // closed: the close after it reopens
-  assert.equal(nextCloseAt(HOURS, at(3, 5), CAL), at(3, 19));
-  assert.equal(nextCloseAt(NIGHT, at(3, 23), CAL), at(4, 4));     // runs past midnight
-  assert.equal(nextCloseAt(NIGHT, at(3, 2), CAL), at(3, 4));
-  assert.equal(nextCloseAt(HOURS, at(3, 10) + 0.5, CAL), at(3, 19));
+// schedule.mjs `isOpen` keeps a shop open through its whole closing minute (19:00 to 19:00:59),
+// so it has closed at 19:01: that's when a deal "until the shop closes" ends (#142 review).
+test("'until the shop closes' ends when the shop has closed, after now", () => {
+  assert.equal(nextCloseAt(HOURS, at(3, 10), CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 19), CAL), at(3, 19, 1));      // still open, its last minute
+  assert.equal(nextCloseAt(HOURS, at(3, 19) + 30, CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 19, 1), CAL), at(4, 19, 1));   // just closed: the next one
+  assert.equal(nextCloseAt(HOURS, at(3, 20), CAL), at(4, 19, 1));      // closed: the close after it reopens
+  assert.equal(nextCloseAt(HOURS, at(3, 5), CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(NIGHT, at(3, 23), CAL), at(4, 4, 1));       // runs past midnight
+  assert.equal(nextCloseAt(NIGHT, at(3, 2), CAL), at(3, 4, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 10) + 0.5, CAL), at(3, 19, 1));
+});
+
+test("a deal until closing is in force while the shop is open, and over once it isn't", () => {
+  const minute = t => Math.floor((t % DAY) / 60);
+  const made = at(3, 10);
+  const config = shop([deal({ ends: { at: nextCloseAt(HOURS, made, CAL), when: "close" } })]);
+  for (const t of [at(3, 18, 59), at(3, 19), at(3, 19) + 59.5]) {
+    assert.equal(isOpen(HOURS, minute(t), CAL), true);
+    assert.ok(activeDeal(config, ARIA, t), `in force at ${t}`);
+  }
+  assert.equal(isOpen(HOURS, minute(at(3, 19, 1)), CAL), false);
+  assert.equal(activeDeal(config, ARIA, at(3, 19, 1)), null);
 });
 
 test("a shop that never closes has no closing for a deal to end at", () => {
@@ -175,7 +192,7 @@ test("the deal form reads as the tab's change: sides as percentages, empty as no
 });
 
 test("the deal form's end: the shop's next closing, some days from now, or the end it had", () => {
-  assert.deepEqual(dealFields(form({ ends: "close" }), FORM_AT).ends, { at: at(3, 19), when: "close" });
+  assert.deepEqual(dealFields(form({ ends: "close" }), FORM_AT).ends, { at: at(3, 19, 1), when: "close" });
   assert.deepEqual(dealFields(form({ ends: "days", days: "2" }), FORM_AT).ends, { at: at(5, 10), when: "date" });
   const previous = { ends: { at: 777, when: "date" } };
   assert.deepEqual(dealFields(form({ ends: "keep" }), { ...FORM_AT, previous }).ends, { at: 777, when: "date" });
