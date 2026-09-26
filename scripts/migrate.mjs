@@ -819,13 +819,18 @@ export function planTokenMigration(token, actor, base) {
     // Item Piles reads an unlinked token's settings off the token document alone, over its own
     // defaults (`getActorFlagData`), and saves only what differs from those defaults: a key the
     // document leaves out is Item Piles' default, never the base actor's (#137 review).
+    // `enabled: false` is the cut-over's own write (`planTokenDisable`), never a setting the GM
+    // made: a document holding only that has no settings of its own, and follows the base (#137
+    // review). `enabled: true` alone is a GM's Item Piles config with every other key at its
+    // default, which Item Piles drops on save.
     const onDocument = token.flags?.["item-piles"]?.data;
-    const tokenView = onDocument
+    const ownSettings = Object.keys(onDocument ?? {}).some(k => k !== "enabled") || onDocument?.enabled === true;
+    const tokenView = ownSettings
       ? { ...actor, flags: { ...actor.flags, "item-piles": { ...actor.flags?.["item-piles"], data: onDocument } } }
       : actor;
     const mine = derivedShop(tokenView, packShop);
     const theirs = derivedShop(base, packShop);
-    if (mine.ok && JSON.stringify(mine.shop) !== JSON.stringify(theirs.shop)) {
+    if (mine.ok && !sameValue(mine.shop, theirs.shop)) {
       shop = mine.shop;
       for (const e of mine.repaired) warnings.push(`A token of "${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
     } else if (!mine.ok) {
@@ -833,6 +838,15 @@ export function planTokenMigration(token, actor, base) {
     }
   }
   return { shop, itemUpdates, errors, warnings };
+}
+
+/** Deep equality of plain data, whatever order its keys were stored in. */
+function sameValue(a, b) {
+  if (a === b) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(k => sameValue(a[k], b[k]));
 }
 
 /** Whether an unlinked shop token has anything of its own to migrate (`planTokenMigration`). */
