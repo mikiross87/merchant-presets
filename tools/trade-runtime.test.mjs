@@ -74,6 +74,35 @@ test("a trade resent after the claim moved to a fresh tab is still carried out o
   assert.equal(tess.system.currency.gp, 19);
 });
 
+test("a trade whose shop half never landed isn't recorded as sealed (#134 review, round 3)", async () => {
+  const { world, shop, request } = await setUp();
+  const write = shop.updateEmbeddedDocuments;
+  shop.updateEmbeddedDocuments = async () => { throw new Error("stub: the claiming tab died here"); };
+  const error = console.error;
+  console.error = () => {};
+  const first = request([{ itemId: BELL, quantity: 1 }], { tradeId: "halfway00000001" });
+  try { await globalThis.game.modules.get("merchant-presets").api.trade(first); }
+  finally { console.error = error; shop.updateEmbeddedDocuments = write; }
+  await loadRuntime(world);   // another tab takes the claim
+  const shelf = qty(shop, BELL);
+  const again = await globalThis.game.modules.get("merchant-presets").api.trade(first);
+  assert.equal(again.status, "sealed");
+  assert.equal(qty(shop, BELL), shelf - 1, "the resend carried the shop's half out, rather than answering from a record");
+});
+
+test("a claim-alive from a tab that doesn't hold the claim keeps nobody waiting (#134 review, round 3)", async t => {
+  t.mock.timers.enable({ apis: ["setInterval", "Date"], now: 0 });
+  const { world } = await setUp();
+  const gm = globalThis.game.user;
+  gm.flags["merchant-presets"].tradeTab = "dead-tab";
+  for (let s = 0; s < 60; s += 10) {
+    t.mock.timers.tick(10_000);
+    world.receive("module.merchant-presets", { type: "claim-alive", userId: "gm", tabId: "forged-tab" });
+  }
+  await tick();
+  assert.notEqual(gm.flags["merchant-presets"].tradeTab, "dead-tab");
+});
+
 test("a player whose role can't query users is told so, not left unconfirmed (#134 review)", async () => {
   const { shop, api, request } = await setUp();
   shop.ownership = { default: 1 };
