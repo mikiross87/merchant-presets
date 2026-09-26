@@ -119,6 +119,18 @@ test("a shop exported with the GM's Players can visit choice is made visitable w
   assert.equal(shop.ownership.default, LIMITED);
 });
 
+test("a copy of a shop the GM hid keeps it hidden when placed (#140 review, round 8)", async () => {
+  const { world, shop } = await setUp();
+  // Duplicated in this world, or imported: "hidden" is right whatever ownership came along.
+  shop.flags["merchant-presets"].visibility = false;
+  shop.ownership = { default: 0 };
+  await world.fire("preCreateActor", shop, {}, {}, "gm");
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, 0);
+});
+
 test("a level left for a player since deleted doesn't keep a placed shop hidden (#138 review, round 9)", async () => {
   const { world, shop } = await setUp();
   shop.ownership = { default: 0, gm: 3, goneUser00000001: 2 };
