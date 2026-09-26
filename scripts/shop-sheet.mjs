@@ -72,10 +72,14 @@ const NONE = 0, LIMITED = 1;
 /** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
 const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
 
-/** A selector that finds `control` again in the next render: its data-op and the data it edits. */
+/**
+ * A selector that finds `control` again in the next render: its data-op and the data it edits,
+ * and a radio's own value (the restock mode's two radios share everything else).
+ */
 const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end"]
   .filter(key => control.dataset[key] != null)
-  .map(key => `[data-${key}="${CSS.escape(control.dataset[key])}"]`).join("")}`;
+  .map(key => `[data-${key}="${CSS.escape(control.dataset[key])}"]`).join("")}${
+  control.type === "radio" ? `[value="${CSS.escape(control.value)}"]` : ""}`;
 
 /**
  * A text field's selection, `[start, end]` (a caret is an empty one); null for a time input or a
@@ -256,7 +260,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // re-renders the window, and tabbing on from a field saves it as the next one gains focus.
     const active = this.element?.ownerDocument?.activeElement;
     this._settingFocus = active && this.element.contains(active) && active.matches(".settings-tab [data-op]")
-      ? { selector: settingSelector(active), value: active.value, dirty: active.value !== active.defaultValue, selection: selectionOf(active) }
+      // Only a typed field holds typing to carry over: a select has no defaultValue, and its
+      // choice (a rule just added) may not be one of the new render's options.
+      ? { selector: settingSelector(active), value: active.value, selection: selectionOf(active),
+        dirty: isTypedField(active) && active.value !== active.defaultValue }
       : null;
     // From here until `_onRender`, a blur is the re-render removing a field, not the GM leaving it.
     this._settingsRendering = true;
@@ -1003,6 +1010,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.${key}`);
     const preset = await this.#presetShop(shop);
     const typeLabel = type => game.i18n.localize(CONFIG.Item.typeLabels?.[type] ?? type);
+    const effective = effectiveRates(world, shop.terms);
     const rate = side => ({
       percent: percentOf(shop.terms[side] ?? world[side]),
       worldDefault: shop.terms[side] === null
@@ -1028,8 +1036,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       section: Object.fromEntries(SETTINGS_SECTIONS.map(s => [s.id, s.id === this._settingsSection])),
       visit: (actor.ownership?.default ?? NONE) >= LIMITED,
       terms: {
-        sells: { ...rate("sellsAt"), word: termsWord(shop.terms.sellsAt ?? world.sellsAt, "sell") },
-        buys: { ...rate("buysAt"), word: termsWord(shop.terms.buysAt ?? world.buysAt, "buy") },
+        // In words, what the shop actually charges and pays: capped, as the chip and trades are.
+        sells: { ...rate("sellsAt"), word: termsWord(effective.sellsAt.rate, "sell") },
+        buys: { ...rate("buysAt"), word: termsWord(effective.buysAt.rate, "buy") },
         exampleSell: header.terms.exampleSell,
         exampleBuy: header.terms.exampleBuy,
         rules: shop.terms.categories.map(c => ({
