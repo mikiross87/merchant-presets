@@ -641,6 +641,11 @@ async function drawsFor(table, quantities) {
  * (#135 review). Made once, when the shop is adopted.
  */
 const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
+/**
+ * Whether user `id` is a GM, for `isOwnershipChosen`: a player made Owner is the GM's choice. A
+ * user deleted since counts as one: their entry lets nobody in.
+ */
+const isGm = id => game.users.get(id)?.isGM ?? true;
 
 /**
  * Adopt a shop's shelf, once, before its first native restock: give it a shelf
@@ -1575,7 +1580,7 @@ async function migrateShop(actor) {
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data,
-    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null });
+    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null, isGm });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -2187,6 +2192,6 @@ async function makeVisitable(token) {
   // set by hand looks exactly like the untouched default. A GM's own ownership, a player's own
   // level included, holds (#138 review).
   const worldId = game.world?.id ?? null;
-  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor)) return;
+  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor, isGm)) return;
   await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: worldId });
 }
