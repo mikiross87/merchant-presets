@@ -790,17 +790,20 @@ function sameStock(have, want) {
  * keeps a synthetic actor: the base actor with the token's `delta` laid over
  * it. The migration of the base actor never reaches the delta, so:
  *
- * - items the token holds of its own (it traded, say) get a stock config the
- *   same way the base's do (`planItemUpdates`), from their own Item Piles flags;
+ * - items in the token's own delta (it traded, say) get a stock config the
+ *   same way the base's do (`planItemUpdates`), from their own Item Piles
+ *   flags; the base's items are the base's migration's business;
  * - a token whose Item Piles shop settings (hours, prices, ...) differ from
  *   the base's gets its own `flags.merchant-presets.shop`, derived from them
- *   with the base's config as the pack source. Its settings are its delta's,
- *   with any Item Piles keeps on the token document itself laid over them.
- *   "Differ" is judged on the derived configs, not on which keys the delta
- *   holds: Item Piles can copy the whole data object into a delta, or just
- *   write its open/closed status there (`enabled`, too, is the cut-over's own
- *   write), and a token given a copy for that would stop following the base
- *   shop's config (#137 review).
+ *   with the base's config as the pack source. Its settings are what Item
+ *   Piles reads for it: the token document's own Item Piles data, alone, over
+ *   Item Piles' defaults, when it has any (a lone `enabled: false` is the
+ *   cut-over's write, not a setting); otherwise its synthetic actor's.
+ *   "Differ" is judged on the derived configs, by value, not on which keys are
+ *   stored: Item Piles can copy its whole data object into a delta, or just an
+ *   open/closed status, and a token given a copy for that would stop following
+ *   the base shop's config (#137 review). A token whose shop config is already
+ *   this version's is done, as the base is (`hasCurrentShop`).
  *
  * Applied through the token's synthetic actor, so every write lands in its delta.
  *
@@ -811,10 +814,14 @@ function sameStock(have, want) {
  */
 export function planTokenMigration(token, actor, base) {
   if (token?.actorLink || !isMigratable(actor)) return { shop: null, itemUpdates: [], errors: [], warnings: [] };
-  const { updates: itemUpdates, errors } = planItemUpdates(actor);
+  const own = new Set((token.delta?.items ?? []).map(i => i._id));
+  const planned = planItemUpdates(actor);
+  const itemUpdates = planned.updates.filter(u => own.has(u._id));
+  const ownNames = new Set((token.delta?.items ?? []).map(i => i.name).filter(Boolean));
+  const errors = planned.errors.filter(e => ownNames.has(e.item));
   let shop = null;
   const warnings = [];
-  if (!token.delta?.flags?.["merchant-presets"]?.shop) {
+  if (!hasCurrentShop({ flags: token.delta?.flags })) {
     const packShop = base?.flags?.["merchant-presets"]?.shop;
     // Item Piles reads an unlinked token's settings off the token document alone, over its own
     // defaults (`getActorFlagData`), and saves only what differs from those defaults: a key the
