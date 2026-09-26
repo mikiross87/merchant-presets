@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities, tierOf }
+import { isPreset, keepableItems, listShops, needsWiring, planShop, tierOf }
   from "../scripts/shop.mjs";
 
 /** A real shipped document, as the generator writes it. */
@@ -16,7 +16,7 @@ const shipped = source("merchants", "Temple_Faith_Store_Town_");
 /** The world copy a GM gets by dragging the merchant out of the compendium. */
 const dragged = () => structuredClone(shipped);
 
-/** That copy after wireTables has pointed its stock table at the world RollTable. */
+/** That copy after 1.x's wiring pointed its stock table at a world RollTable. */
 function imported() {
   const actor = dragged();
   for (const t of actor.flags["item-piles"].data.tablesForPopulate) t.uuid = "RollTable.world1";
@@ -41,105 +41,6 @@ test("a GM's own Item Piles merchant is not ours", () => {
   assert.equal(isPreset(own), false);
   assert.equal(isPreset({ name: "Barthen", flags: {} }), false);
   assert.equal(isPreset(undefined), false);
-});
-
-/* ------------------------------------------------------------- stock tables */
-
-const jeweler = source("stock", "Jeweler_Town_");
-const DIAMOND = "Compendium.merchant-presets.goods.Item.diamond300gpXXXX";
-
-/** The Jeweler (Town) stock table as the compendium serves it. */
-const shipTable = results => ({
-  uuid: `Compendium.merchant-presets.stock.RollTable.${jeweler._id}`,
-  name: jeweler.name,
-  results: structuredClone(results)
-});
-const before = shipTable(jeweler.results);
-
-/** The same shop after an update swaps its 500 GP gem band for a named diamond. */
-const after = shipTable(jeweler.results
-  .filter(r => !r.name.includes("500 gp"))
-  .concat({ ...jeweler.results[0], _id: "diamondResult001", name: "Diamond (300 GP)", documentUuid: DIAMOND }));
-
-/** A world copy in Merchant Stock, as Foundry holds it. */
-const worldTable = (name, results, stamp) => ({
-  name,
-  results: structuredClone(results),
-  flags: stamp ? { "merchant-presets": { stock: stamp } } : {}
-});
-
-test("a first import names the world copy after the shop", () => {
-  const plan = planWorldTable([], before, "1.3.0");
-  assert.equal(plan.existing, undefined);
-  assert.equal(plan.name, "Jeweler (Town)");
-});
-
-test("an import after the shop's stock list changed does not reuse the copy of the old list (#63)", () => {
-  const old = worldTable("Jeweler (Town)", before.results);
-  assert.equal(planWorldTable([old], after, "1.3.0").existing, undefined);
-});
-
-test("the new copy is named for the version when the old copy holds the shop's name", () => {
-  const old = worldTable("Jeweler (Town)", before.results);
-  assert.equal(planWorldTable([old], after, "1.3.0").name, "Jeweler (Town) (v1.3.0)");
-});
-
-test("a copy made before copies were stamped is reused while its list is unchanged, in any order", () => {
-  const old = worldTable("Jeweler (Town)", before.results.toReversed());
-  assert.equal(planWorldTable([old], before, "1.3.0").existing, old);
-});
-
-test("a copy of the current list is reused after the GM edits it", () => {
-  const old = worldTable("Jeweler (Town)", before.results);
-  const { name, stamp } = planWorldTable([old], after, "1.3.0");
-  const edited = worldTable(name, after.results.slice(1), stamp);
-  assert.equal(planWorldTable([old, edited], after, "1.3.0").existing, edited);
-});
-
-test("a stamped copy of an older list is not reused", () => {
-  const { name, stamp } = planWorldTable([], before, "1.2.4");
-  const old = worldTable(name, before.results, stamp);
-  assert.equal(planWorldTable([old], after, "1.3.0").existing, undefined);
-});
-
-test("a stamped copy of another shop's identical list is not reused", () => {
-  const village = { ...before, uuid: "Compendium.merchant-presets.stock.RollTable.jewelerVillage01", name: "Jeweler (Village)" };
-  const { name, stamp } = planWorldTable([], village, "1.3.0");
-  const other = worldTable(name, before.results, stamp);
-  assert.equal(planWorldTable([other], before, "1.3.0").existing, undefined);
-});
-
-/* ------------------------------------------------------- remapQuantities */
-
-// The Jeweler (Town) table's own real results, as the compendium and a
-// freshly-imported world copy would each carry them: same documentUuids,
-// different ids (a fresh import always assigns new ones).
-const compendiumResults = jeweler.results.map(r => ({ id: r._id, documentUuid: r.documentUuid }));
-const worldResults = jeweler.results.map((r, i) => ({ id: `world${String(i).padStart(4, "0")}`, documentUuid: r.documentUuid }));
-
-test("remapQuantities carries every real formula across to the world table's own result ids", () => {
-  const quantities = Object.fromEntries(compendiumResults.map(r => [r.id, "2d6+4"]));
-  const remapped = remapQuantities(compendiumResults, worldResults, quantities);
-  assert.equal(Object.keys(remapped).length, worldResults.length);
-  for (const r of worldResults) assert.equal(remapped[r.id], "2d6+4");
-});
-
-test("remapQuantities matches by what a result points at, not its position", () => {
-  const shuffled = worldResults.toReversed();
-  const quantities = { [compendiumResults[0].id]: "1d4+1" };
-  const remapped = remapQuantities(compendiumResults, shuffled, quantities);
-  const moved = shuffled.find(r => r.documentUuid === compendiumResults[0].documentUuid);
-  assert.equal(remapped[moved.id], "1d4+1");
-});
-
-test("remapQuantities defaults to \"1\": no map at all, a result missing from it, or one `from` never had", () => {
-  assert.ok(Object.values(remapQuantities(compendiumResults, worldResults)).every(f => f === "1"));
-  assert.ok(Object.values(remapQuantities(compendiumResults, worldResults, {})).every(f => f === "1"));
-
-  const extra = { id: "worldExtra0001", documentUuid: "Compendium.merchant-presets.goods.Item.notInCompendium000" };
-  const quantities = Object.fromEntries(compendiumResults.map(r => [r.id, "3d6"]));
-  const remapped = remapQuantities(compendiumResults, [...worldResults, extra], quantities);
-  assert.equal(remapped[extra.id], "1");
 });
 
 /* ---------------------------------------------------------- needs wiring */

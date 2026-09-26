@@ -75,9 +75,9 @@ than for the code. Reference the issue or PR it closes.
   and for whom, links the spell, and links any effects it puts on a creature,
   such as Raise Dead's Resurrection Sickness, for the GM to drag onto whoever
   it was cast on. A spell bought by level asks the buyer to tell the GM which
-  one. Nothing is applied automatically. The message follows Item Piles' chat
-  visibility, and the *Bought spellcasting is announced in chat* setting turns
-  it off. (#70)
+  one. Nothing is applied automatically. The message is whispered to the GMs
+  when *Trades in chat* is, and the *Bought spellcasting is announced in chat*
+  setting turns it off. (#70)
 - Turn any NPC into one of the shops: right-click it in the Actors sidebar,
   choose *Set up as shop…*, pick a shop and a settlement size, and tick the
   items it keeps as its own. It becomes that merchant, with the stock, buying
@@ -100,6 +100,12 @@ than for the code. Reference the issue or PR it closes.
 
 ### Removed
 
+- 2.0: Item Piles and itempilesdnd5e are no longer required, and nothing here
+  talks to Item Piles any more; a world that keeps it for its own merchants
+  or loot can. Macros calling the module's Item Piles-era functions
+  (`rewire`, `rewireAll`, `reapplyItemFlags`, `reconcileContainers`,
+  `replenishPurse`, `syncOpenState`, `syncOpenStateAll`) need removing: the
+  shops restock, open and close on their own now. (#106)
 - The Jeweler's three *Spell Components (gems)* price bands. They were
   services, so paying for one left nothing in the pack, and each charged the
   top of its band. The named components above replace them. (#51)

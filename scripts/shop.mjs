@@ -3,15 +3,15 @@
  * tested with plain Node (tools/shop.test.mjs).
  */
 
-/** Where the shipped merchants' stock tables live before import repoints them. */
+/** Where the shipped merchants' stock tables live: a shop still pointing here is fresh pack data. */
 export const STOCK_PREFIX = "Compendium.merchant-presets.stock.RollTable.";
 
 /**
  * Whether this is one of our merchants, sitting in the world rather than a pack.
  *
- * The compendium stock table only identifies a merchant until import: wiring
- * repoints it at the world copy, and every merchant already in the world then
- * looked like someone else's (#56). `profile` — the SRD stat block the
+ * The compendium stock table only identifies a merchant until 1.x wired it to
+ * a world copy, and every merchant already in the world then looked like
+ * someone else's (#56). `profile` — the SRD stat block the
  * generator built the shopkeeper from — ships on every merchant, survives the
  * import, and is never written by the runtime, so it is what identifies one
  * afterwards. An NPC set up as a shop carries `shop` instead (#57).
@@ -28,9 +28,9 @@ export function isPreset(actor) {
 }
 
 /**
- * Whether one of our merchants still has to be brought into the world: its
- * populate table is the compendium's, which Item Piles cannot use and drops the
- * first time its Populate Items tab saves.
+ * Whether one of our merchants is fresh pack data, still to be given its own
+ * shelf: its Item Piles populate table is still the compendium's. A shop rolled
+ * in this world, or wired to a world table by 1.x, never is again.
  *
  * @param {object|undefined} actor  An Actor document or its data.
  * @returns {boolean}
@@ -39,80 +39,6 @@ export function needsWiring(actor) {
   const tables = actor?.flags?.["item-piles"]?.data?.tablesForPopulate;
   return isPreset(actor) && Array.isArray(tables)
     && tables.some(t => typeof t?.uuid === "string" && t.uuid.startsWith(STOCK_PREFIX));
-}
-
-/**
- * A stock list's identity: what its results point at, in any order. FNV-1a
- * over the sorted document UUIDs, short enough to keep on a flag.
- *
- * @param {Iterable<object>} results  A RollTable's results.
- * @returns {string}
- */
-function stockSignature(results) {
-  const text = Array.from(results, r => r.documentUuid ?? "").sort().join("\n");
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) {
-    hash ^= text.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return (hash >>> 0).toString(16).padStart(8, "0");
-}
-
-/**
- * Where importing a compendium stock table should land in the world.
- *
- * Every merchant of a shop shares one world copy of its stock table, but that
- * copy is only right for the list it was made from. Matched by name alone, a
- * merchant dragged in after an update that changed the shop's list rolled the
- * old list at its first restock, and lines for goods since removed quietly
- * rolled nothing (#63). So each copy is stamped with the compendium table and
- * list it came from, and reused only while that still describes the shop.
- * The stamp, not the copy's own results, is what matches: a GM who edits the
- * table keeps it. Copies made before the stamp existed match by name and by
- * their results, which is the best evidence they carry.
- *
- * A copy that no longer matches is left alone, along with the merchants using
- * it. The new one takes the version in its name when the shop's name is taken,
- * so the two can be told apart in the folder and on the Populate Items tab.
- *
- * @param {object[]} tables  The RollTables already in the Merchant Stock folder.
- * @param {object} src       The compendium stock table being imported.
- * @param {string} version   This module's version.
- * @returns {{existing: object|undefined, name: string, stamp: {source: string, signature: string}}}
- *   `existing` is the world table to reuse; otherwise create one named `name`.
- *   Either way the table should carry `stamp` at `flags.merchant-presets.stock`.
- */
-export function planWorldTable(tables, src, version) {
-  const stamp = { source: src.uuid, signature: stockSignature(src.results) };
-  const stampOf = table => table.flags?.["merchant-presets"]?.stock;
-  const existing =
-    tables.find(t => stampOf(t)?.source === stamp.source && stampOf(t)?.signature === stamp.signature)
-    ?? tables.find(t => !stampOf(t) && t.name === src.name && stockSignature(t.results) === stamp.signature);
-  const taken = tables.some(t => t.name === src.name);
-  return { existing, name: taken ? `${src.name} (v${version})` : src.name, stamp };
-}
-
-/**
- * A per-result quantity map (`{resultId: formula}`, as both Item Piles'
- * `tablesForPopulate[0].items` and a shop's own `restock.quantities` (#98)
- * are shaped), re-keyed from `from`'s result ids to `to`'s — a fresh import
- * gives a RollTable's embedded results new ids, so a map keyed by the old
- * ones is stale the moment wiring repoints the table at its world copy.
- * Matched by what each result points at (`documentUuid`), not position or
- * order. A result `to` has that `from` doesn't (the table changed since,
- * say) gets the same "1" a stock roll defaults an unrecognised result to.
- *
- * @param {Iterable<{id: string, documentUuid: string}>} from
- * @param {Iterable<{id: string, documentUuid: string}>} to
- * @param {Record<string, string>} [quantities]  Keyed by `from`'s ids.
- * @returns {Record<string, string>} Keyed by `to`'s ids.
- */
-export function remapQuantities(from, to, quantities) {
-  const byTarget = new Map();
-  for (const r of from) byTarget.set(r.documentUuid, quantities?.[r.id] ?? "1");
-  const out = {};
-  for (const r of to) out[r.id] = byTarget.get(r.documentUuid) ?? "1";
-  return out;
 }
 
 /* -------------------------------------------------------- setting up a shop */

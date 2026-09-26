@@ -4,8 +4,7 @@ import { createWorld, loadRuntime, source } from "./foundry-stub.mjs";
 
 // #105's restock on the world clock, driven through the real merchant-presets.mjs: the
 // schedule (schedule.mjs's dueRestock/planRestock, unit-tested in tools/schedule.test.mjs)
-// wired to updateWorldTime, the shop's own stock table and the trade queue. No Item Piles
-// involved: the stub's refreshMerchantInventory isn't there to call.
+// wired to updateWorldTime, the shop's own stock table and the trade queue.
 
 const DAY = 24 * 60 * 60;
 const at = (day, hour = 0) => day * DAY + hour * 3600;
@@ -188,13 +187,11 @@ test("a hidden line that sells out and leaves the shelf comes back hidden (#135 
   await clock(at(0, 1));
   const bell = byName(shop, "Bell")[0];
   bell.flags["merchant-presets"].stock.hidden = true;
-  bell.flags["item-piles"] = { ...bell.flags["item-piles"], item: { ...bell.flags["item-piles"]?.item, hidden: true } };
   await clock(at(3, 8));                                     // restocked: the shop notes each line's settings
   await shop.deleteEmbeddedDocuments("Item", byName(shop, "Bell").map(b => b._id));   // sold out, keep: false
   await clock(at(6, 8));
   const [back] = byName(shop, "Bell");
   assert.equal(back.flags["merchant-presets"].stock.hidden, true);
-  assert.equal(back.flags["item-piles"]?.item?.hidden, true);
 });
 
 test("a second manual restock doesn't adopt a same-named good the GM added by hand since (#135 review, round 5)", async () => {
@@ -204,13 +201,6 @@ test("a second manual restock doesn't adopt a same-named good the GM added by ha
   await shop.createEmbeddedDocuments("Item", [{ _id: "myOwnRope00001", name: "Rope", type: "consumable", system: { quantity: 2 }, flags: {} }]);
   await api.restock(shop);
   assert.ok(shop.items.some(i => i._id === "myOwnRope00001"), "the GM's own Rope stays");
-});
-
-test("adopting a shop switches off Item Piles' own restock on open, so the two never both fill the shelf (#135 review, round 5)", async () => {
-  const { shop, clock } = await setUp();
-  shop.flags["item-piles"].data.refreshItemsOnOpen = true;
-  await clock(at(0, 1));
-  assert.equal(shop.flags["item-piles"].data.refreshItemsOnOpen, false);
 });
 
 test("a restock that fails part-way has already noted each line's settings (#135 review, round 5)", async () => {
@@ -352,30 +342,6 @@ test("a line whose item records its own compendium source keeps it (#135 review,
   assert.equal(byName(shop, "Bell")[0]._stats.compendiumSource, "Compendium.dnd5e.equipment24.Item.srdBell0000000");
 });
 
-test("a shop wired afresh (Replace Actor) starts its shelf afresh too (#135 review, round 11)", async () => {
-  const { shop, clock } = await setUp();
-  await clock(at(0, 1));                                        // adopted and scheduled
-  const packTable = `Compendium.merchant-presets.stock.RollTable.${source("stock", "General_Store_Town_")._id}`;
-  // Replace Actor writes the pack's data back over the shop: on its compendium table again.
-  shop.flags["item-piles"].data.tablesForPopulate[0].uuid = packTable;
-  await globalThis.game.modules.get("merchant-presets").api.rewire(shop);
-  const flags = shop.flags["merchant-presets"];
-  assert.equal(flags.shelf ?? null, null);
-  assert.equal(flags.schedule ?? null, null);
-  assert.equal(flags.lines ?? null, null);
-});
-
-test("a re-wired shop's goods lose their old stamps, so its next reroll has one of each line (#135 review, round 12)", async () => {
-  const { shop, clock } = await setUp();
-  await clock(at(0, 1));                                        // adopted: goods stamped with its key
-  shop.flags["item-piles"].data.tablesForPopulate[0].uuid = `Compendium.merchant-presets.stock.RollTable.${source("stock", "General_Store_Town_")._id}`;
-  await globalThis.game.modules.get("merchant-presets").api.rewire(shop);
-  assert.ok(shop.items.every(i => !drawn(i)), "no good keeps the old key");
-  await clock(at(0, 2));                                        // adopted afresh under a new key
-  await clock(at(3, 8));
-  assert.equal(byName(shop, "Bell").length, 1);
-});
-
 test("setting a shop up waits for a trade in progress on the same queue (#135 review, round 11)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
@@ -415,16 +381,6 @@ test("a table line whose document can't be found stops the restock, rather than 
   console.warn = () => {};
   try { await clock(at(3, 8)); } finally { console.warn = warn; }
   assert.equal(byName(shop, "Bell")[0]?._id, bell, "the Bell line is still on the shelf");
-});
-
-test("a line hidden through Item Piles stays hidden through a reroll (#135 review, round 2)", async () => {
-  const { shop, clock } = await setUp();
-  await clock(at(0, 1));
-  const bell = byName(shop, "Bell")[0];
-  bell.flags["item-piles"] = { ...bell.flags["item-piles"], item: { ...bell.flags["item-piles"]?.item, hidden: true } };
-  await clock(at(3, 8));
-  assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "rerolled");
-  assert.equal(byName(shop, "Bell")[0].flags["item-piles"]?.item?.hidden, true);
 });
 
 test("a topup that found nothing sold isn't reported as a restock (#135 review, round 2)", async () => {

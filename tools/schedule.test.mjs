@@ -369,12 +369,12 @@ test("reroll replaces what this shop drew, even a line its table dropped, and ke
 });
 
 test("a shop remembers each drawn line's settings, so one that left the shelf comes back with them (#135 review)", () => {
-  const hidden = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } }, "item-piles": { item: { hidden: true } } } };
+  const hidden = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } } } };
   const theirs = { ...drawn("x1", "Bell", "loot", 1), flags: { "merchant-presets": { drawn: "pawnshop", stock: { hidden: false } } } };
   const memory = lineMemory([{ name: "Rope", stock: { keep: false } }], [hidden, theirs, gmAdded, gear], "gs");
   assert.deepEqual(memory, [
     { name: "Rope", stock: { keep: false } },
-    { name: "Arrows", stock: { hidden: true }, piles: { item: { hidden: true } } }
+    { name: "Arrows", stock: { hidden: true } }
   ]);
 });
 

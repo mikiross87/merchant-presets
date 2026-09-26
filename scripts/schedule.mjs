@@ -446,18 +446,18 @@ export function adoptDrawn(items, tableNames, drawnBy) {
 }
 
 /**
- * What a shop remembers of each line it drew, `name -> {stock, piles}` (its #98 stock config and
- * Item Piles' own flags), refreshed from the shelf at every restock: a line that rolls 0 or sells
+ * What a shop remembers of each line it drew, `name -> {stock}` (its #98 stock config), refreshed
+ * from the shelf at every restock: a line that rolls 0 or sells
  * out and leaves the shelf comes back with the GM's settings rather than the defaults (#135
  * review). Lines no longer on the shelf keep what was remembered before.
  *
- * A list of `{name, stock?, piles?}`, not an object keyed by name: Foundry expands a key with a
+ * A list of `{name, stock?}`, not an object keyed by name: Foundry expands a key with a
  * dot in it into a path, and a GM's own line may well be called "Scroll (Lvl. 1)".
  *
- * @param {{name: string, stock?: object, piles?: object}[]|undefined} previous
+ * @param {{name: string, stock?: object}[]|undefined} previous
  * @param {Item[]} items
  * @param {string} drawnBy
- * @returns {{name: string, stock?: object, piles?: object}[]}
+ * @returns {{name: string, stock?: object}[]}
  */
 export function lineMemory(previous, items, drawnBy) {
   const memory = new Map((Array.isArray(previous) ? previous : []).filter(l => typeof l?.name === "string").map(l => [l.name, l]));
@@ -465,7 +465,6 @@ export function lineMemory(previous, items, drawnBy) {
     if (isGear(item) || !isDrawn(item, drawnBy)) continue;
     const line = { name: item.name };
     if (item.flags?.["merchant-presets"]?.stock) line.stock = item.flags["merchant-presets"].stock;
-    if (item.flags?.["item-piles"]) line.piles = item.flags["item-piles"];
     memory.set(item.name, line);
   }
   return [...memory.values()];
