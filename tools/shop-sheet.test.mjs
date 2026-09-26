@@ -1010,3 +1010,12 @@ test("a change to the module's world settings re-renders every open shop window"
   fire("createSetting", { key: "merchant-presets.buysAt" });
   assert.equal(sheet.renders, renders + 2);
 });
+
+test("a shop imported from the pack resets to the merchant it was imported from", async t => {
+  // Live data: a pack import leaves `shop.source` null; core records the pack entry in `_stats`.
+  const { sheet, shop, preset } = openSettings(t, { shopConfig: { source: null, hours: null } });
+  shop._stats = { compendiumSource: PRESET_UUID };
+  assert.equal((await sheet._prepareContext({})).settings.canReset, true);
+  await act(sheet, "resetToPreset");
+  assert.deepEqual(writtenShop(shop), { ...preset, source: null });
+});
