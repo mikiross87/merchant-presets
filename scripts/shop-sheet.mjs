@@ -14,7 +14,10 @@
  */
 
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
-import { SHOP_DEFAULTS, STOCK_DEFAULTS } from "./schema.mjs";
+import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
+import {
+  applyChange, EVERY_CHOICES, everyChoice, percentOf, resetToPreset, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
+} from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
@@ -53,6 +56,21 @@ const stockConfigOf = item => (item ? safeStockOf(item) : null) ?? STOCK_DEFAULT
  * and the window's own checks decide again.
  */
 const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
+
+/** The GM Settings tab's sections (#110), in its side nav's order, with their icons. */
+const SETTINGS_SECTIONS = [
+  { id: "terms", icon: "fa-solid fa-scale-balanced" },
+  { id: "deals", icon: "fa-solid fa-handshake" },
+  { id: "wontBuy", icon: "fa-solid fa-ban" },
+  { id: "hours", icon: "fa-solid fa-hourglass-half" },
+  { id: "restock", icon: "fa-solid fa-rotate" }
+];
+
+/** CONST.DOCUMENT_OWNERSHIP_LEVELS: a shop players can visit is Limited to them by default. */
+const NONE = 0, LIMITED = 1;
+
+/** A number typed into the tab; an emptied field is no number at all, not 0. */
+const typedNumber = text => (String(text).trim() === "" ? NaN : Number(text));
 
 /** Whether a seal is out or its bill is stamped: either way the live checks no longer apply. */
 const isSettled = state => state === "sealing" || state === "sealed";
@@ -142,7 +160,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       stepLine: ShopSheet.#onStepLine,
       pickBuyer: ShopSheet.#onPickBuyer,
       seal: ShopSheet.#onSeal,
-      keepShopping: ShopSheet.#onKeepShopping
+      keepShopping: ShopSheet.#onKeepShopping,
+      settingsSection: ShopSheet.#onSettingsSection,
+      setEvery: ShopSheet.#onSetEvery,
+      removeRule: ShopSheet.#onRemoveRule,
+      restockNow: ShopSheet.#onRestockNow,
+      resetToPreset: ShopSheet.#onResetToPreset,
+      openTable: ShopSheet.#onOpenTable
     }
   };
 
@@ -155,7 +179,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       templates: [
         `${TEMPLATES}/parts/bill-of-sale.hbs`,
         `${TEMPLATES}/parts/closed-card.hbs`,
-        `${TEMPLATES}/parts/buyer-entry.hbs`
+        `${TEMPLATES}/parts/buyer-entry.hbs`,
+        `${TEMPLATES}/parts/settings-tab.hbs`
       ]
     }
   };
@@ -181,6 +206,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, the fewest of each line worth a coin (`buyRow`/`sellRow`'s `minQuantity`), from the last render. */
     this._minQuantity = { buy: new Map(), sell: new Map() };
     this._buyerUuid = game.user.character?.uuid ?? null;
+    /** The GM Settings tab's open section (#110). */
+    this._settingsSection = "terms";
+    /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
+    this._everyDice = false;
   }
 
   /**
@@ -210,6 +239,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
+    // The GM's Settings tab (#110) edits on change. Enter would submit the sheet's form, which
+    // saves nothing: it commits the field instead, the way leaving it does.
+    for (const control of this.element?.querySelectorAll(".settings-tab [data-op]") ?? []) {
+      control.addEventListener("change", () => this._onSettingChange(control));
+      control.addEventListener("keydown", event => {
+        if (event.key !== "Enter" || control.tagName !== "INPUT") return;
+        event.preventDefault();
+        control.blur();
+      });
+    }
     // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
     // form, which has nothing to save.
     const search = this.element?.querySelector(".buyer-search");
@@ -275,6 +314,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rates = {
       world, shopTerms: config.terms, chipSellsAt, chipBuysAt
     };
+    const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies);
 
     Object.assign(context, {
       appId: this.id,
@@ -282,7 +322,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       actor,
       config,
       open,
-      header: this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies),
+      header,
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
       buyerPurse: buyer ? heldCoins(buyer.system.currency, currencies) : [],
@@ -294,7 +334,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // whatever it held (or didn't) at the last full render.
       buy: this.#buyContext(actor, config, rates, currencies, buyer, open),
       sell: this.#sellContext(actor, config, rates, currencies, buyer, open),
-      settings: game.user.isGM ? {} : null,
+      // The shop's own config, not `config`: the world's trading-hours switch shows no hours, but
+      // the GM edits the ones the shop keeps.
+      settings: game.user.isGM ? await this.#settingsContext(actor, shop, world, header) : null,
       closed: !open ? this.#closedContext(config, minute, calendarDays) : null
     });
     return context;
@@ -793,7 +835,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   #worldDateLabel() {
-    try { return game.time.calendar.format(game.time.worldTime, "timestamp"); }
+    return this.#dateLabel(game.time.worldTime);
+  }
+
+  #dateLabel(time) {
+    try { return game.time.calendar.format(time, "timestamp"); }
     catch { return ""; }
   }
 
@@ -891,6 +937,182 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
+  /* -------------------------------------------------------------- settings tab (#110) */
+
+  /**
+   * The config the shop's preset merchant ships with (`shop.source`, a merchant in the pack): what
+   * Reset to preset puts back, and where a shop that keeps hours again takes them from. Null when
+   * the shop has no preset, or it can't be found or read.
+   */
+  async #presetShop(shop) {
+    if (!shop.source) return null;
+    const merchant = await Promise.resolve(fromUuid(shop.source)).catch(() => null);
+    const preset = merchant?.flags?.[MODULE]?.shop;
+    return validateShop(preset).ok ? shopFrom(preset) : null;
+  }
+
+  /** The GM's Settings tab: `shop` is the shop's own config, `world` the world's rates. */
+  async #settingsContext(actor, shop, world, header) {
+    const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.${key}`);
+    const preset = await this.#presetShop(shop);
+    const typeLabel = type => game.i18n.localize(CONFIG.Item.typeLabels?.[type] ?? type);
+    const rate = side => ({
+      percent: percentOf(shop.terms[side] ?? world[side]),
+      worldDefault: shop.terms[side] === null
+    });
+
+    // A rule can price an item type, or a category the GM named on a shelf line.
+    const ruled = new Set(shop.terms.categories.map(c => c.category));
+    const named = actor.items.map(i => safeStockOf(i)?.category).filter(Boolean);
+    const ruleChoices = [...new Set([...WONT_BUY_TYPES, ...named])].filter(c => !ruled.has(c))
+      .map(value => ({ value, label: WONT_BUY_TYPES.includes(value) ? typeLabel(value) : value }));
+
+    const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
+    const { chip, formula } = everyChoice(shop.restock);
+    const everyLabel = every => (every === "never" ? i18n("Restock.Never")
+      : every === 1 ? i18n("Restock.Daily")
+        : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
+    const schedule = actor.flags?.[MODULE]?.schedule;
+
+    return {
+      sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
+      section: Object.fromEntries(SETTINGS_SECTIONS.map(s => [s.id, s.id === this._settingsSection])),
+      visit: (actor.ownership?.default ?? NONE) >= LIMITED,
+      terms: {
+        sells: { ...rate("sellsAt"), word: termsWord(shop.terms.sellsAt ?? world.sellsAt, "sell") },
+        buys: { ...rate("buysAt"), word: termsWord(shop.terms.buysAt ?? world.buysAt, "buy") },
+        exampleSell: header.terms.exampleSell,
+        exampleBuy: header.terms.exampleBuy,
+        rules: shop.terms.categories.map((c, index) => ({
+          index, label: WONT_BUY_TYPES.includes(c.category) ? typeLabel(c.category) : c.category,
+          sellsPercent: percentOf(c.sellsAt), buysPercent: percentOf(c.buysAt)
+        })),
+        ruleChoices
+      },
+      wontBuy: {
+        types: WONT_BUY_TYPES.map(value => ({ value, label: typeLabel(value), checked: shop.wontBuy.types.includes(value) })),
+        kinds: WONT_BUY_KINDS.map(value => ({ value, label: i18n(`Kinds.${value}`), checked: shop.wontBuy.kinds.includes(value) }))
+      },
+      hours: {
+        keeps: shop.hours !== null,
+        open: shop.hours ? timeText(shop.hours.open) : "",
+        close: shop.hours ? timeText(shop.hours.close) : "",
+        worldOff: !game.settings.get(MODULE, "tradingHours")
+      },
+      restock: {
+        table: table ? { name: table.name, uuid: table.uuid } : null,
+        chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
+          id, active: id === chip || (id === "dice" && this._everyDice && chip !== "dice"),
+          label: id === "dice" ? i18n("Restock.Dice") : id === "never" ? everyLabel("never")
+            : id === "1" ? everyLabel(1) : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: id })
+        })),
+        showFormula: chip === "dice" || this._everyDice,
+        formula,
+        current: chip === "never" ? everyLabel("never") : everyLabel(shop.restock.every),
+        presetEvery: preset ? everyLabel(preset.restock.onOpen ? preset.restock.every : "never") : null,
+        reroll: shop.restock.mode === "reroll",
+        purseGp: actor.flags?.[MODULE]?.purse ?? null,
+        last: schedule?.lastRestock != null ? this.#dateLabel(schedule.lastRestock) : null,
+        next: chip !== "never" && schedule?.dueAt != null ? this.#dateLabel(schedule.dueAt) : null,
+        autoOff: !game.settings.get(MODULE, "autoRestock")
+      },
+      canReset: !!preset,
+      // What players see at these terms: the header chip, and its worked example.
+      preview: { chip: header.termsChip, exampleSell: header.terms.exampleSell, exampleBuy: header.terms.exampleBuy }
+    };
+  }
+
+  /**
+   * One Settings-tab control changed (`control` is the input, select or checkbox; its `data-op`
+   * names the edit). GM only: the tab never renders for a player, and a player's own client
+   * couldn't write the shop anyway.
+   */
+  async _onSettingChange(control) {
+    if (!game.user.isGM) return;
+    const { op, side, index, list, end } = control.dataset;
+    if (op === "visit") {
+      // The GM's own choice, which placing a token never overrides again (`makeVisitable`).
+      await this.document.update({ "ownership.default": control.checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: control.checked });
+      return;
+    }
+    const world = worldOf().rates;
+    const shop = shopConfigOf(this.document);
+    const value = control.value;
+    const change = {
+      rate: () => ({ op, side, percent: typedNumber(value) }),
+      // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
+      rateDefault: () => ({ op: "rate", side, percent: control.checked ? null : percentOf(world[side]) }),
+      addRule: () => ({ op, category: value, world }),
+      ruleRate: () => ({ op, index: Number(index), side, percent: typedNumber(value) }),
+      wontBuy: () => ({ op, list, value: control.dataset.value, on: control.checked }),
+      keepHours: async () => ({ op, on: control.checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
+      hour: () => ({ op, end, time: value }),
+      every: () => ({ op, every: value.trim() }),
+      mode: () => ({ op, mode: value })
+    }[op];
+    if (change) await this.#writeShop(shop, await change());
+  }
+
+  /** Writes `change` applied to `shop`, whole; an edit the config can't hold is refused, and the field put back. */
+  async #writeShop(shop, change) {
+    const result = applyChange(shop, change);
+    if (!result.ok) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
+      this.render({ parts: ["body"] });
+      return;
+    }
+    if (change.op === "every") this._everyDice = false;
+    // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
+    await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
+  }
+
+  static #onSettingsSection(_event, target) {
+    this._settingsSection = target.dataset.section;
+    this.render({ parts: ["body"] });
+  }
+
+  static async #onSetEvery(_event, target) {
+    if (!game.user.isGM) return;
+    const every = target.dataset.every;
+    if (every === "dice") {
+      this._everyDice = true;
+      this.render({ parts: ["body"] });
+      return;
+    }
+    await this.#writeShop(shopConfigOf(this.document), { op: "every", every });
+  }
+
+  static async #onRemoveRule(_event, target) {
+    if (!game.user.isGM) return;
+    await this.#writeShop(shopConfigOf(this.document), { op: "removeRule", index: Number(target.dataset.index) });
+  }
+
+  static async #onRestockNow() {
+    if (!game.user.isGM) return;
+    const restocked = await game.modules.get(MODULE).api?.restock?.(this.document);
+    if (restocked == null) ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Failed"));
+  }
+
+  static async #onResetToPreset() {
+    if (!game.user.isGM) return;
+    const shop = shopConfigOf(this.document);
+    const preset = await this.#presetShop(shop);
+    if (!preset) return;
+    const yes = await foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Reset.Title") },
+      content: `<p>${game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Reset.Question")}</p>`
+    });
+    if (!yes) return;
+    const result = resetToPreset(shop, preset);
+    if (result.ok) await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
+  }
+
+  static async #onOpenTable() {
+    const uuid = shopConfigOf(this.document).restock.table;
+    const table = uuid ? await Promise.resolve(fromUuid(uuid)).catch(() => null) : null;
+    table?.sheet?.render(true);
+  }
+
   /* -------------------------------------------------------------- header button */
 
   static #onNpcSheet() {
@@ -919,6 +1141,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
     Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
     Hooks.on("deleteActor", actor => ShopSheet.#liveDataChanged(app => app._buyerUuid === actor.uuid));
+    // The world's rates, stock and purse modes and trading hours price and open every shop (#110).
+    for (const hook of ["createSetting", "updateSetting"]) {
+      Hooks.on(hook, setting => { if (setting.key?.startsWith(`${MODULE}.`)) ShopSheet.#liveDataChanged(() => true); });
+    }
     // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
     for (const hook of ["createItem", "updateItem", "deleteItem"]) {
       Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));

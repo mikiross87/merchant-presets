@@ -1,0 +1,168 @@
+{{!-- The GM's Settings tab (#110); `this` is shop-sheet.mjs's #settingsContext. Every control
+      with a data-op edits on change (ShopSheet#_onSettingChange); buttons go through actions. --}}
+<nav class="shop-categories settings-nav">
+  <label class="settings-visit">
+    <span class="settings-visit-row">
+      <b>{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Label"}}</b>
+      <input type="checkbox" class="settings-switch" data-op="visit" {{checked visit}} />
+    </span>
+    <span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Hint"}}</span>
+  </label>
+  {{#each sections}}
+    <button type="button" class="category-link {{#if active}}active{{/if}}" data-action="settingsSection" data-section="{{id}}">
+      <span><i class="{{icon}}" aria-hidden="true"></i> {{label}}</span>
+    </button>
+  {{/each}}
+  <button type="button" class="settings-reset" data-action="resetToPreset" {{disabled (not canReset)}}
+    {{#unless canReset}}data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Reset.NoPreset'}}"{{/unless}}>
+    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Settings.Reset.Label"}}
+  </button>
+</nav>
+
+<div class="settings-body">
+  {{#if section.terms}}
+    <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.terms"}}</h2>
+    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.Hint"}}</p>
+    <div class="settings-rate">
+      <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.SellsAt"}}</span>
+      <span class="settings-percent"><input type="number" min="1" step="1" value="{{terms.sells.percent}}" data-op="rate" data-side="sellsAt" {{disabled terms.sells.worldDefault}} />%</span>
+      <em>{{terms.sells.word}}</em>
+      <label><input type="checkbox" data-op="rateDefault" data-side="sellsAt" {{checked terms.sells.worldDefault}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.WorldDefault"}}</label>
+    </div>
+    <div class="settings-rate">
+      <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.BuysAt"}}</span>
+      <span class="settings-percent"><input type="number" min="0" step="1" value="{{terms.buys.percent}}" data-op="rate" data-side="buysAt" {{disabled terms.buys.worldDefault}} />%</span>
+      <em>{{terms.buys.word}}</em>
+      <label><input type="checkbox" data-op="rateDefault" data-side="buysAt" {{checked terms.buys.worldDefault}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.WorldDefault"}}</label>
+    </div>
+    <p class="settings-example"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i>
+      {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells"}} {{> coins terms.exampleSell}}
+      · {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleBuys"}} {{> coins terms.exampleBuy}}
+    </p>
+
+    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Title"}}</h3>
+    {{#each terms.rules}}
+      <div class="settings-rule">
+        <b>{{label}}</b>
+        <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Sells"}}
+          <input type="number" min="1" step="1" value="{{sellsPercent}}" data-op="ruleRate" data-index="{{index}}" data-side="sellsAt" />%</span>
+        <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Buys"}}
+          <input type="number" min="0" step="1" value="{{buysPercent}}" data-op="ruleRate" data-index="{{index}}" data-side="buysAt" />%</span>
+        <button type="button" class="settings-icon" data-action="removeRule" data-index="{{index}}"
+          data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    {{else}}
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.None"}}</p>
+    {{/each}}
+    {{#if terms.ruleChoices.length}}
+      <select class="settings-add-rule" data-op="addRule">
+        <option value="" selected>{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Add"}}</option>
+        {{#each terms.ruleChoices}}<option value="{{value}}">{{label}}</option>{{/each}}
+      </select>
+    {{/if}}
+  {{/if}}
+
+  {{#if section.deals}}
+    <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.deals"}}</h2>
+    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Later"}}</p>
+  {{/if}}
+
+  {{#if section.wontBuy}}
+    <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.wontBuy"}}</h2>
+    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Hint"}}</p>
+    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Types"}}</h3>
+    <div class="settings-checks">
+      {{#each wontBuy.types}}
+        <label><input type="checkbox" data-op="wontBuy" data-list="types" data-value="{{value}}" {{checked checked}} /> {{label}}</label>
+      {{/each}}
+    </div>
+    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Kinds"}}</h3>
+    <div class="settings-checks">
+      {{#each wontBuy.kinds}}
+        <label><input type="checkbox" data-op="wontBuy" data-list="kinds" data-value="{{value}}" {{checked checked}} /> {{label}}</label>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if section.hours}}
+    <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.hours"}}</h2>
+    {{#if hours.worldOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.WorldOff"}}</p>{{/if}}
+    <label class="settings-line"><input type="checkbox" data-op="keepHours" {{checked hours.keeps}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Keeps"}}</label>
+    {{#if hours.keeps}}
+      <div class="settings-rate">
+        <span>{{localize "MERCHANT_PRESETS.Shop.Closed.Open"}}</span>
+        <input type="time" value="{{hours.open}}" data-op="hour" data-end="open" />
+        <span>{{localize "MERCHANT_PRESETS.Shop.Closed.Close"}}</span>
+        <input type="time" value="{{hours.close}}" data-op="hour" data-end="close" />
+      </div>
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Hint"}}</p>
+    {{else}}
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.AlwaysOpen"}}</p>
+    {{/if}}
+  {{/if}}
+
+  {{#if section.restock}}
+    <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.restock"}}</h2>
+    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
+    {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
+    {{#if restock.table}}
+      <button type="button" class="settings-table" data-action="openTable">
+        <i class="fa-solid fa-table-list" aria-hidden="true"></i> <b>{{restock.table.name}}</b>
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+      </button>
+    {{else}}
+      <p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTable"}}</p>
+    {{/if}}
+    <div class="settings-rate">
+      <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Restocks"}}</span>
+      <b>{{restock.current}}</b>
+      <em>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WhenOpens"}}</em>
+    </div>
+    <div class="settings-chips">
+      {{#each restock.chips}}
+        <button type="button" class="chip settings-chip {{#if active}}active{{/if}}" data-action="setEvery" data-every="{{id}}">{{label}}</button>
+      {{/each}}
+    </div>
+    {{#if restock.showFormula}}
+      <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
+        <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" /></label>
+    {{/if}}
+    {{#if restock.presetEvery}}
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Preset" every=restock.presetEvery}}</p>
+    {{/if}}
+    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.What"}}</h3>
+    <label class="settings-radio">
+      <input type="radio" name="restock-mode" value="reroll" data-op="mode" {{checked restock.reroll}} />
+      <span><b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Reroll"}}</b>
+        <span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.RerollHint"}}</span></span>
+    </label>
+    <label class="settings-radio">
+      <input type="radio" name="restock-mode" value="topup" data-op="mode" {{checked (not restock.reroll)}} />
+      <span><b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Topup"}}</b>
+        <span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.TopupHint"}}</span></span>
+    </label>
+    {{#if restock.purseGp}}
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Till" gp=restock.purseGp}}</p>
+    {{/if}}
+    <div class="settings-restock-now">
+      <div>
+        {{#if restock.last}}<b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Last" date=restock.last}}</b>{{/if}}
+        {{#if restock.next}}<span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Next" date=restock.next}}</span>{{/if}}
+      </div>
+      <button type="button" class="seal-button" data-action="restockNow" {{disabled (not restock.table)}}>
+        <i class="fa-solid fa-rotate" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Now"}}
+      </button>
+    </div>
+  {{/if}}
+</div>
+
+<aside class="settings-preview">
+  <h2 class="settings-heading"><i class="fa-regular fa-eye" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Title"}}</h2>
+  <p class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Everyone"}}</p>
+  <span class="chip chip-terms"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{preview.chip}}</span>
+  <p class="settings-example">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells"}} {{> coins preview.exampleSell}}</p>
+  <p class="settings-example">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleBuys"}} {{> coins preview.exampleBuy}}</p>
+  <p class="settings-footnote">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Note"}}</p>
+</aside>

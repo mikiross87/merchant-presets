@@ -59,6 +59,8 @@ globalThis.foundry = {
   utils: { randomID: () => "trade00000000001", cleanHTML: html => `clean:${html}` }
 };
 globalThis.ui = { notifications: { warn() {} } };
+// A GM's window looks up the shop's preset and stock table (#110); nothing resolves unless a test says so.
+globalThis.fromUuid = async () => null;
 const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
@@ -835,4 +837,176 @@ test("a bill line whose one-bundle price floors to nothing shows no unit price, 
   const [line] = sell.basket.lines;
   assert.equal(line.quantity, 2);
   assert.equal(line.showUnit, false);
+});
+
+/* ------------------------------------------------------------ settings tab (#110) */
+
+/** The config writes a GM's Settings tab made, as `actor.update` got them. */
+const PRESET_UUID = "Compendium.merchant-presets.merchants.Actor.smith";
+
+/**
+ * A shop window opened by the GM (or a player, with `gm: false`), whose shop records its updates
+ * and came from a preset merchant selling at 125%. Restores the player user and the world
+ * settings when the test ends.
+ */
+function openSettings(t, { gm = true, shopConfig = {}, ownership = 0 } = {}) {
+  const opened = openShop({ permission: OWNERSHIP.OWNER });
+  const { shop } = opened;
+  shop.ownership = { default: ownership };
+  shop.flags["merchant-presets"].shop = { ...structuredClone(SHOP_DEFAULTS), source: PRESET_UUID, ...shopConfig };
+  shop.updates = [];
+  shop.update = async changes => { shop.updates.push(changes); };
+  const preset = { ...structuredClone(SHOP_DEFAULTS), tier: "City", terms: { sellsAt: 1.25, buysAt: null, categories: [] } };
+  const warnings = [];
+  const saved = { isGM: globalThis.game.user.isGM, values: { ...globalThis.game.settings.values }, warn: globalThis.ui.notifications.warn };
+  globalThis.game.user.isGM = gm;
+  globalThis.ui.notifications.warn = message => warnings.push(message);
+  globalThis._replace = value => ({ replaced: value });
+  globalThis.fromUuid = async uuid => (uuid === PRESET_UUID ? { flags: { "merchant-presets": { shop: preset } } } : null);
+  t.after(() => {
+    globalThis.game.user.isGM = saved.isGM;
+    globalThis.game.settings.values = saved.values;
+    globalThis.ui.notifications.warn = saved.warn;
+  });
+  return { ...opened, preset, warnings };
+}
+
+/** The shop config the last update wrote, unwrapped from `_replace`. */
+const writtenShop = shop => shop.updates.at(-1)["flags.merchant-presets.shop"].replaced;
+
+/** A change event on a Settings-tab control, as the window hears it. */
+const change = (sheet, dataset, { value = "", checked = false } = {}) => sheet._onSettingChange({ dataset, value, checked });
+
+test("a player's window never gets the Settings tab's context", async t => {
+  const { sheet } = openSettings(t, { gm: false });
+  assert.equal((await sheet._prepareContext({})).settings, null);
+});
+
+test("the GM's Settings tab shows the shop's rates, following the world's own where it has none", async t => {
+  const { sheet } = openSettings(t, { shopConfig: { terms: { sellsAt: null, buysAt: 0.4, categories: [] } } });
+  globalThis.game.settings.values.sellsAt = 110;
+  const { settings } = await sheet._prepareContext({});
+  assert.deepEqual(
+    [settings.terms.sells.percent, settings.terms.sells.worldDefault, settings.terms.buys.percent, settings.terms.buys.worldDefault],
+    [110, true, 40, false]);
+});
+
+test("the window prices from the world's own rate setting, as the trade does", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.sellsAt = 200;
+  const { buy } = await sheet._prepareContext({});
+  // A 1 gp rope at 200%.
+  assert.equal(buy.sections[0].rows[0].bundlePriceCp, 200);
+});
+
+test("a rate the GM types is written as the whole shop config, replacing the old one", async t => {
+  const { sheet, shop } = openSettings(t);
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
+  assert.equal(shop.updates.length, 1);
+  const written = writtenShop(shop);
+  assert.equal(written.terms.sellsAt, 1.2);
+  assert.equal(written.source, PRESET_UUID);
+});
+
+test("ticking World default hands the rate back to the world, and unticking keeps the world's figure", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { terms: { sellsAt: 1.3, buysAt: null, categories: [] } } });
+  globalThis.game.settings.values.buysAt = 45;
+  await change(sheet, { op: "rateDefault", side: "sellsAt" }, { checked: true });
+  assert.equal(writtenShop(shop).terms.sellsAt, null);
+  await change(sheet, { op: "rateDefault", side: "buysAt" }, { checked: false });
+  assert.equal(writtenShop(shop).terms.buysAt, 0.45);
+});
+
+test("an edit the config can't hold is refused with a warning, and nothing is written", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  const renders = sheet.renders;
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "0" });
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+  // Re-rendered, so the field shows the value the shop still has.
+  assert.equal(sheet.renders, renders + 2);
+});
+
+test("a player can't write the shop's config, whatever reaches the window", async t => {
+  const { sheet, shop } = openSettings(t, { gm: false });
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
+  await act(sheet, "setEvery", { every: "3" });
+  assert.equal(shop.updates.length, 0);
+});
+
+test("each Settings-tab control makes its own edit", async t => {
+  const { sheet, shop } = openSettings(t);
+  const last = () => writtenShop(shop);
+  await change(sheet, { op: "addRule" }, { value: "weapon" });
+  assert.deepEqual(last().terms.categories, [{ category: "weapon", sellsAt: 1, buysAt: 0.5 }]);
+  shop.flags["merchant-presets"].shop = last();
+  await change(sheet, { op: "ruleRate", index: "0", side: "buysAt" }, { value: "75" });
+  assert.equal(last().terms.categories[0].buysAt, 0.75);
+  await act(sheet, "removeRule", { index: "0" });
+  assert.deepEqual(last().terms.categories, []);
+  await change(sheet, { op: "wontBuy", list: "kinds", value: "meal" }, { checked: true });
+  assert.deepEqual(last().wontBuy.kinds, ["meal"]);
+  await change(sheet, { op: "hour", end: "open" }, { value: "09:15" });
+  assert.deepEqual(last().hours.open, { hour: 9, minute: 15 });
+  await change(sheet, { op: "keepHours" }, { checked: false });
+  assert.equal(last().hours, null);
+  await act(sheet, "setEvery", { every: "14" });
+  assert.equal(last().restock.every, 14);
+  await change(sheet, { op: "every" }, { value: "2d6" });
+  assert.equal(last().restock.every, "2d6");
+  await change(sheet, { op: "mode" }, { value: "topup" });
+  assert.equal(last().restock.mode, "topup");
+});
+
+test("keeping hours again starts from the preset's hours", async t => {
+  const { sheet, shop, preset } = openSettings(t, { shopConfig: { hours: null } });
+  preset.hours = { open: { hour: 5, minute: 0 }, close: { hour: 13, minute: 0 } };
+  await sheet._prepareContext({});
+  await change(sheet, { op: "keepHours" }, { checked: true });
+  assert.deepEqual(writtenShop(shop).hours, preset.hours);
+});
+
+test("Players can visit sets the shop's default ownership and marks the GM's choice", async t => {
+  const { sheet, shop } = openSettings(t);
+  await change(sheet, { op: "visit" }, { checked: true });
+  assert.deepEqual(shop.updates.at(-1), { "ownership.default": 1, "flags.merchant-presets.visibility": true });
+  await change(sheet, { op: "visit" }, { checked: false });
+  assert.deepEqual(shop.updates.at(-1), { "ownership.default": 0, "flags.merchant-presets.visibility": false });
+  assert.equal((await sheet._prepareContext({})).settings.visit, false);
+});
+
+test("Reset to preset asks first, then puts back the preset's config", async t => {
+  const { sheet, shop, preset } = openSettings(t, { shopConfig: { hours: null, description: "mine" } });
+  dialog.answer = false;
+  await act(sheet, "resetToPreset");
+  assert.equal(shop.updates.length, 0);
+  dialog.answer = true;
+  await act(sheet, "resetToPreset");
+  assert.deepEqual(writtenShop(shop), { ...preset, source: PRESET_UUID });
+});
+
+test("a shop whose preset can't be found offers no reset", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { source: null } });
+  assert.equal((await sheet._prepareContext({})).settings.canReset, false);
+  await act(sheet, "resetToPreset");
+  assert.equal(shop.updates.length, 0);
+});
+
+test("Restock now restocks the shop through the runtime", async t => {
+  const { sheet, shop } = openSettings(t);
+  const restocked = [];
+  api.restock = async actor => { restocked.push(actor); return []; };
+  t.after(() => { delete api.restock; });
+  await act(sheet, "restockNow");
+  assert.deepEqual(restocked, [shop]);
+});
+
+test("a change to the module's world settings re-renders every open shop window", async t => {
+  const { sheet } = openSettings(t);
+  const renders = sheet.renders;
+  fire("updateSetting", { key: "merchant-presets.sellsAt" });
+  fire("updateSetting", { key: "core.fontSize" });
+  fire("createSetting", { key: "merchant-presets.buysAt" });
+  assert.equal(sheet.renders, renders + 2);
 });

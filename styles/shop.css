@@ -493,18 +493,109 @@
 .shop-sheet .closed-hours td:first-child { color: var(--color-text-secondary); }
 .shop-sheet .closed-hours td:last-child { text-align: right; font-weight: 700; }
 
-/* -------------------------------------------------------------- settings placeholder */
+/* -------------------------------------------------------------- settings tab (#110) */
 
-.shop-sheet .settings-tab.active { display: flex; }
-.shop-sheet .settings-placeholder {
-  margin: auto;
-  text-align: center;
+.shop-sheet .settings-nav { gap: 0.2rem; }
+.shop-sheet .settings-visit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: var(--dnd5e-border-gold);
+  border-radius: 0.4rem;
+  background: var(--dnd5e-color-card, var(--color-bg-option));
+  font-size: 0.85rem;
+}
+.shop-sheet .settings-visit-row { display: flex; justify-content: space-between; align-items: center; }
+.shop-sheet .settings-reset { margin-top: auto; font-size: 0.8rem; }
+
+.shop-sheet .settings-body, .shop-sheet .settings-preview {
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+}
+.shop-sheet .settings-preview { border-left: var(--dnd5e-border-gold); align-items: flex-start; }
+
+.shop-sheet .settings-heading {
+  font-size: 1.2rem;
+  border-bottom: var(--dnd5e-border-gold);
+  padding-bottom: 0.2rem;
+}
+.shop-sheet .settings-subheading {
+  font-family: var(--dnd5e-font-roboto-condensed);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0.5rem 0 0;
   color: var(--color-text-secondary);
-  max-width: 40ch;
-  padding: 2rem;
+}
+.shop-sheet .settings-hint, .shop-sheet .settings-footnote { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0; }
+.shop-sheet .settings-footnote { font-style: italic; }
+.shop-sheet .settings-note {
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  border-left: 3px solid var(--mp-warning);
+  background: var(--dnd5e-color-table-row-even);
 }
 
-.shop-sheet .settings-placeholder i { font-size: 2rem; color: var(--dnd5e-color-gold); margin-bottom: 0.5rem; display: block; }
+.shop-sheet .settings-rate, .shop-sheet .settings-rule {
+  display: grid;
+  grid-template-columns: 5.5rem auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.shop-sheet .settings-rule { grid-template-columns: 1fr auto auto auto; }
+.shop-sheet .settings-rate em { color: var(--color-text-secondary); }
+.shop-sheet .settings-percent { display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
+.shop-sheet .settings-percent input { width: 4.5rem; text-align: right; }
+.shop-sheet .settings-example { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; font-size: 0.82rem; margin: 0; }
+.shop-sheet .settings-icon { width: auto; background: none; border: none; color: var(--color-text-secondary); cursor: pointer; }
+.shop-sheet .settings-add-rule { align-self: flex-start; }
+
+.shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
+.shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
+
+.shop-sheet .settings-table {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border: var(--dnd5e-border-gold);
+  border-radius: 0.4rem;
+}
+.shop-sheet .settings-table b { flex: 1; }
+.shop-sheet .settings-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.shop-sheet .settings-chip {
+  width: auto;
+  color: var(--color-text-primary);
+  background: none;
+  border: 1px solid var(--color-border);
+}
+.shop-sheet .settings-chip.active { background: var(--dnd5e-color-gold); border-color: var(--dnd5e-color-gold); color: #fff; }
+.shop-sheet .settings-formula { width: 8rem; }
+
+.shop-sheet .settings-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+}
+.shop-sheet .settings-radio:has(input:checked) { border-color: var(--dnd5e-color-gold); }
+.shop-sheet .settings-radio > span { display: flex; flex-direction: column; }
+.shop-sheet .settings-restock-now { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.85rem; }
+.shop-sheet .settings-restock-now > div { display: flex; flex-direction: column; }
+.shop-sheet .settings-restock-now .seal-button { width: auto; padding: 0.4rem 1rem; }
 
 /* -------------------------------------------------------------- motion */
 

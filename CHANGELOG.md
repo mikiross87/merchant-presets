@@ -18,9 +18,16 @@ than for the code. Reference the issue or PR it closes.
   shop deals in and what it won't touch, and a running Bill of Sale that
   totals the basket and what's left in the buyer's purse. Players pick which
   of their own characters (or other owned actors) they're buying as; GMs can
-  buy or sell as anyone, and get a Settings tab (more of it lands with #110)
-  and a button back to the NPC's own stat sheet. It opens like any other
-  actor sheet — double-click the shop's token. (#103)
+  buy or sell as anyone, and get a Settings tab and a button back to the
+  NPC's own stat sheet. It opens like any other actor sheet — double-click
+  the shop's token. (#103)
+- 2.0: the shop window's GM-only Settings tab, where each shop's terms are
+  changed: what it sells and buys at (or the world default), category rules,
+  what it won't buy, its hours, and how often and how it restocks, with
+  *Restock now*, *Players can visit* and *Reset to preset*. Changes save as
+  you make them, and every open shop window reprices at once. Two new world
+  settings, *Shops sell at (%)* and *Shops buy at (%)*, set the default
+  rates. (#110)
 - 2.0: sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent

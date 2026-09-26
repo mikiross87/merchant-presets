@@ -210,9 +210,6 @@
 
 {{#if settings}}
   <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}}" data-group="primary" data-tab="settings">
-    <div class="settings-placeholder">
-      <i class="fa-solid fa-gear" aria-hidden="true"></i>
-      <p>{{localize "MERCHANT_PRESETS.Shop.Settings.ComingSoon"}}</p>
-    </div>
+    {{> "modules/merchant-presets/templates/parts/settings-tab.hbs" settings}}
   </section>
 {{/if}}
