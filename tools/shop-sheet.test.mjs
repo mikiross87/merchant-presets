@@ -1302,6 +1302,17 @@ test("adding a deal writes it from the form, for the character picked", async t 
   assert.match(opened.asked[0].content, new RegExp(buyer.uuid), "the character is offered");
 });
 
+test("the deal form offers player characters, not the mounts and shops players own (#111 live run)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  const camel = { uuid: "Actor.camel", name: "Camel", type: "npc", hasPlayerOwner: true };
+  globalThis.game.actors = [shop, buyer, camel];
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  assert.match(opened.asked[0].content, new RegExp(buyer.uuid));
+  assert.doesNotMatch(opened.asked[0].content, /Actor\.camel/);
+});
+
 test("a character with a deal isn't offered for another", async t => {
   const opened = openDeals(t);
   const { sheet, buyer } = opened;
