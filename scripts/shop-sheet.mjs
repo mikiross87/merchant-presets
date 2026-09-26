@@ -273,9 +273,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
-      if (this._settingFocus.dirty) focus.value = this._settingFocus.value;
       focus.focus();
-      if (this._settingFocus.caret != null) focus.setSelectionRange?.(this._settingFocus.caret, this._settingFocus.caret);
+      if (this._settingFocus.dirty) {
+        // Set after focusing, so the caret lands at the end (a number field has no other way).
+        focus.value = this._settingFocus.value;
+        if (this._settingFocus.caret != null) focus.setSelectionRange?.(this._settingFocus.caret, this._settingFocus.caret);
+      } else if (isTypedField(focus)) {
+        // Just clicked into, nothing typed yet: selected, so typing replaces it as it would have.
+        focus.select?.();
+      }
     }
     // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
     // form, which has nothing to save.
