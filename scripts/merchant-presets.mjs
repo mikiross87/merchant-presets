@@ -1569,7 +1569,7 @@ async function migrateShop(actor) {
   const tokens = scenes.flatMap(s => s.tokens);
   const unlinked = scenes.flatMap(s => s.docs).filter(t => !t.actorLink && t.actor);
   if (!needsMigration(data, NATIVE_SHOP, tokens)
-    && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject()))) return false;
+    && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
@@ -1617,7 +1617,7 @@ async function migrateShop(actor) {
   // Each unlinked token's own half, through its synthetic actor so it lands in the delta, and
   // before Item Piles is switched off on it below: its own settings are read from there.
   for (const token of unlinked) {
-    const plan = planTokenMigration(token.toObject(), token.actor.toObject(), actor.flags?.[MODULE]?.shop);
+    const plan = planTokenMigration(token.toObject(), token.actor.toObject(), actor.toObject());
     for (const w of plan.warnings) console.warn(`${MODULE} | ${w}`);
     for (const { item, errors } of plan.errors) {
       console.error(`${MODULE} | invalid migrated stock config for "${item}" on a token of "${actor.name}": ${errors.join("; ")}`);

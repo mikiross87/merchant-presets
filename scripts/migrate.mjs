@@ -792,38 +792,50 @@ function sameStock(have, want) {
  *
  * - items the token holds of its own (it traded, say) get a stock config the
  *   same way the base's do (`planItemUpdates`), from their own Item Piles flags;
- * - a token whose delta re-tuned Item Piles' shop settings (hours, prices, ...)
- *   gets its own `flags.merchant-presets.shop`, derived from those merged
- *   settings with the base's config as the pack source. `enabled` alone isn't
- *   a re-tune: the cut-over itself writes it (`planTokenDisable`), and a token
- *   given a copy for it would stop following the base shop's config.
+ * - a token whose Item Piles shop settings (hours, prices, ...) differ from
+ *   the base's gets its own `flags.merchant-presets.shop`, derived from them
+ *   with the base's config as the pack source. Its settings are its delta's,
+ *   with any Item Piles keeps on the token document itself laid over them.
+ *   "Differ" is judged on the derived configs, not on which keys the delta
+ *   holds: Item Piles can copy the whole data object into a delta, or just
+ *   write its open/closed status there (`enabled`, too, is the cut-over's own
+ *   write), and a token given a copy for that would stop following the base
+ *   shop's config (#137 review).
  *
  * Applied through the token's synthetic actor, so every write lands in its delta.
  *
- * @param {{actorLink: boolean, delta?: object}} token  The token's own data.
+ * @param {{actorLink: boolean, delta?: object, flags?: object}} token  The token's own data.
  * @param {object} actor  Its synthetic actor's data (`token.actor.toObject()`).
- * @param {object} [packShop]  The base shop's config, for what Item Piles never held.
+ * @param {object} base  The base actor's data.
  * @returns {{shop: object|null, itemUpdates: object[], errors: object[], warnings: string[]}}
  */
-export function planTokenMigration(token, actor, packShop = actor?.flags?.["merchant-presets"]?.shop) {
+export function planTokenMigration(token, actor, base) {
   if (token?.actorLink || !isMigratable(actor)) return { shop: null, itemUpdates: [], errors: [], warnings: [] };
   const { updates: itemUpdates, errors } = planItemUpdates(actor);
-  const own = token.delta?.flags ?? {};
-  const retuned = Object.keys(own["item-piles"]?.data ?? {}).some(k => k !== "enabled");
   let shop = null;
   const warnings = [];
-  if (retuned && !own["merchant-presets"]?.shop) {
-    const derived = derivedShop(actor, packShop);
-    if (derived.ok) shop = derived.shop;
-    else warnings.push(`A token of "${actor.name}": its own Item Piles settings don't make a valid shop: ${derived.errors.join("; ")}`);
-    for (const e of derived.repaired) warnings.push(`A token of "${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
+  if (!token.delta?.flags?.["merchant-presets"]?.shop) {
+    const packShop = base?.flags?.["merchant-presets"]?.shop;
+    const onDocument = token.flags?.["item-piles"]?.data;
+    const tokenView = onDocument
+      ? { ...actor, flags: { ...actor.flags, "item-piles": { ...actor.flags?.["item-piles"],
+        data: { ...actor.flags?.["item-piles"]?.data, ...onDocument } } } }
+      : actor;
+    const mine = derivedShop(tokenView, packShop);
+    const theirs = derivedShop(base, packShop);
+    if (mine.ok && JSON.stringify(mine.shop) !== JSON.stringify(theirs.shop)) {
+      shop = mine.shop;
+      for (const e of mine.repaired) warnings.push(`A token of "${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
+    } else if (!mine.ok) {
+      warnings.push(`A token of "${actor.name}": its own Item Piles settings don't make a valid shop: ${mine.errors.join("; ")}`);
+    }
   }
   return { shop, itemUpdates, errors, warnings };
 }
 
 /** Whether an unlinked shop token has anything of its own to migrate (`planTokenMigration`). */
-export function tokenNeedsMigration(token, actor) {
-  const plan = planTokenMigration(token, actor);
+export function tokenNeedsMigration(token, actor, base) {
+  const plan = planTokenMigration(token, actor, base);
   return plan.shop !== null || plan.itemUpdates.length > 0;
 }
 
