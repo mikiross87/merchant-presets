@@ -101,12 +101,20 @@ const typedNumber = text => (String(text).trim() === "" ? NaN : Number(text));
 
 /**
  * The header chip with a buyer's deal after the shop's terms (#111; design v8ap9 "Sells at list ·
- * Your price −10%"). Only the character with the deal is ever shown it.
+ * Your price −10%"). Only the character with the deal is ever shown it. Each side says what the
+ * deal really does at the shop's own terms, as the rows' tags do, so a deal the sell <= buy cap cut
+ * short promises no more than a sale pays (#142 review).
  */
-function dealChip(termsChip, deal) {
+function dealChip(termsChip, deal, world, terms) {
+  if (!deal) return termsChip;
+  const list = effectiveRates(world, terms);
+  const dealt = effectiveRates(world, terms, null, deal);
+  const effect = (from, to) => (from > 0 && Math.abs(to - from) > 1e-9 ? signedPercent(to / from - 1) : null);
+  const price = effect(list.sellsAt.rate, dealt.sellsAt.rate);
+  const offers = effect(list.buysAt.rate, dealt.buysAt.rate);
   return [termsChip,
-    deal?.buy ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: signedPercent(deal.buy) }) : null,
-    deal?.sell ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: signedPercent(deal.sell) }) : null
+    price ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: price }) : null,
+    offers ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: offers }) : null
   ].filter(Boolean).join(" · ");
 }
 
@@ -115,6 +123,12 @@ function dealChip(termsChip, deal) {
  * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
  */
 const listText = (cp, currencies) => coinBreakdown(cp ?? 0, currencies).map(c => `${c.count} ${c.abbreviation ?? c.denomination}`).join(" ");
+
+/**
+ * The hours a shop really closes by: none while the world's trading hours are off, since every
+ * shop is then open around the clock, so no deal can last "until the shop closes" (#142 review).
+ */
+const closingHours = shop => (game.settings.get(MODULE, "tradingHours") ? shop.hours : null);
 
 /** Text for a form's HTML: the deal form is built as a string (DialogV2.input). */
 const escapeText = text => String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -462,7 +476,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // design/README.md's own mockup ("Sells at list · Buys at ½"): the chip reads sellsAt in
       // words but buysAt as the row-tag fraction glyph — an asymmetry the mockup draws on
       // purpose, unlike the Terms popover below, which spells both out in words.
-      termsChip: dealChip(termsChip, deal),
+      termsChip: dealChip(termsChip, deal, worldOf().rates, config.terms),
       // What everyone else sees: the Settings tab's preview (#110).
       termsChipBase: termsChip,
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
@@ -1158,7 +1172,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         chip: header.termsChipBase, exampleSell: header.terms.exampleSell, exampleBuy: header.terms.exampleBuy,
         deals: shop.deals.filter(d => activeDeal(shop, d.actor, game.time.worldTime)).map(d => ({
           name: d.name,
-          chip: dealChip(header.termsChipBase, d),
+          chip: dealChip(header.termsChipBase, d, world, shop.terms),
           exampleSell: this.#exampleSell(world, shop, d)
         }))
       }
@@ -1350,7 +1364,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       <div class="form-group"><label>${i18n("Form.Ends")}</label><select name="ends">
         ${previous?.ends ? endOption("keep", this.#endLabel(previous), { selected: true }) : ""}
         ${endOption("never", i18n("NoEnd"), { selected: !previous?.ends })}
-        ${endOption("close", i18n("Form.WhenCloses"), { disabled: !shop.hours })}
+        ${endOption("close", i18n("Form.WhenCloses"), { disabled: !closingHours(shop) })}
         ${endOption("days", i18n("Form.AfterDays"))}
       </select></div>
       <div class="form-group"><label>${i18n("Form.Days")}</label><input type="number" name="days" min="1" step="1" /></div>
@@ -1367,7 +1381,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const name = game.actors.find(a => a.uuid === actor)?.name ?? previous?.name ?? "";
     await this.#edit(config => {
       const fields = dealFields({ ...answer, actor }, {
-        name, worldTime: game.time.worldTime, hours: config.hours, calendar: game.time.calendar.days,
+        name, worldTime: game.time.worldTime, hours: closingHours(config), calendar: game.time.calendar.days,
         previous: config.deals.find(d => d.actor === actor) ?? null
       });
       if (fields.error) {
