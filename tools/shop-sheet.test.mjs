@@ -945,7 +945,7 @@ test("a player can't write the shop's config, whatever reaches the window", asyn
 test("each Settings-tab control makes its own edit", async t => {
   const { sheet, shop } = openSettings(t);
   const last = () => writtenShop(shop);
-  await change(sheet, { op: "addRule" }, { value: "weapon" });
+  await act(sheet, "addRule", { category: "weapon" });
   assert.deepEqual(last().terms.categories, [{ category: "weapon", sellsAt: 1, buysAt: 0.5 }]);
   shop.flags["merchant-presets"].shop = last();
   await change(sheet, { op: "ruleRate", category: "weapon", side: "buysAt" }, { value: "75" });
@@ -1119,6 +1119,27 @@ test("a render that fails doesn't leave the window deaf to typed fields (#140 re
   t.after(() => { base.render = render; });
   await assert.rejects(Promise.resolve().then(() => sheet.render()));
   assert.equal(sheet._settingsRendering, false);
+});
+
+test("a Players can visit write the server refuses is said, and the box put back (#140 review, round 5)", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  shop.update = async () => { throw new Error("server says no"); };
+  const logged = console.error;
+  console.error = () => {};
+  t.after(() => { console.error = logged; });
+  const renders = sheet.renders;
+  await change(sheet, { op: "visit" }, { checked: true });   // resolves: nothing left unhandled
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.SaveFailed"]);
+  assert.equal(sheet.renders, renders + 1);
+});
+
+test("choosing a category in Add rule adds nothing until Add is pressed (#140 review, round 5)", async t => {
+  const { sheet, shop } = openSettings(t);
+  // Arrowing through a closed select fires change for each option on Windows and Linux.
+  await change(sheet, { op: "addRule" }, { value: "weapon" });
+  assert.equal(shop.updates.length, 0);
+  await act(sheet, "addRule", { category: "weapon" });
+  assert.deepEqual(writtenShop(shop).terms.categories.map(r => r.category), ["weapon"]);
 });
 
 test("a restock that can't run says so without blaming a missing table", async t => {
