@@ -55,6 +55,13 @@ export function everyChoice(restock) {
 /** A schedule as the tab sends it: "7" or 7 is seven days, "never" is never, anything else a formula. */
 const everyOf = every => (typeof every === "string" && /^\d+$/.test(every.trim()) ? Number(every) : every);
 
+/** A deal side as the tab sends it, a percentage, as the factor schema.mjs holds; 0% is no change. */
+const adjustmentOf = percent => (percent === 0 || percent === null ? null : rateOf(percent));
+
+/** A deal from the tab's form: its sides as percentages (-10 is 10% off). */
+const dealOf = ({ actor, name, buy, sell, note, ends }) =>
+  ({ actor, name, buy: adjustmentOf(buy), sell: adjustmentOf(sell), note, ends });
+
 /** The edits, each on a fresh copy of the config; an error message refuses the change outright. */
 const CHANGES = {
   rate(shop, { side, percent }) {
@@ -103,6 +110,20 @@ const CHANGES = {
   mode(shop, { mode }) {
     shop.restock.mode = mode;
   },
+  // Deals are named by their character, as rules are by category (see `ruleRate`).
+  addDeal(shop, change) {
+    if (shop.deals.some(d => d.actor === change.actor)) return `${change.name} already has a deal here`;
+    shop.deals.push(dealOf(change));
+  },
+  editDeal(shop, change) {
+    const at = shop.deals.findIndex(d => d.actor === change.actor);
+    if (at < 0) return "no such deal";
+    shop.deals[at] = dealOf(change);
+  },
+  removeDeal(shop, { actor }) {
+    // Already gone (a double click): nothing to do.
+    shop.deals = shop.deals.filter(d => d.actor !== actor);
+  },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);
     if (!result.ok) return result.errors.join("; ");
@@ -118,7 +139,9 @@ const CHANGES = {
  * @param {{op: string}} change  `{op: "rate", side, percent|null}`, `{op: "addRule", category,
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
- *   `{op: "every", every}`, `{op: "mode", mode}` or `{op: "reset", preset}` (`resetToPreset`)
+ *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "addDeal"|"editDeal", actor, name, buy, sell,
+ *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
+ *   (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}
  */
 export function applyChange(shop, change) {
@@ -133,7 +156,7 @@ export function applyChange(shop, change) {
 
 /**
  * The config the shop was imported with: its preset's own (`sourceShop`, the merchant in the
- * pack), keeping the shop's own `source`, which names that preset.
+ * pack), keeping the shop's own `source`, which names that preset, and its deals (#111).
  *
  * @param {object} shop
  * @param {unknown} sourceShop  the preset merchant's `flags.merchant-presets.shop`
@@ -142,5 +165,6 @@ export function applyChange(shop, change) {
 export function resetToPreset(shop, sourceShop) {
   const { ok, errors } = validateShop(sourceShop);
   if (!ok) return { ok, errors };
-  return { ok, shop: { ...shopFrom(sourceShop), source: shop.source } };
+  // Deals are with a character, not part of the preset: a reset keeps them.
+  return { ok, shop: { ...shopFrom(sourceShop), source: shop.source, deals: shop.deals } };
 }
