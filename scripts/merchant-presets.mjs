@@ -22,7 +22,13 @@ import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutriti
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
   STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
-import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
+import { boughtWith, fromItemPiles, goodFlag, uuidOf } from "./trade.mjs";
+import { planTrade, safeShopOf } from "./trade-plan.mjs";
+import { isOpen } from "./schedule.mjs";
+import {
+  bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
+  receiptHtml, recipients, resultOf, serial, TRADE_HOOK, WORLD_RATES
+} from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planRestockStock, planTokenUpdates, shouldForceAutoRestockOff,
@@ -765,20 +771,22 @@ function warnOutdatedNutrition() {
  * for its state helpers and condition ids). The flag is the whole contract, so
  * a meal copied onto a tavern of your own works the same way.
  *
- * Item Piles fires `item-piles-tradeItems` on every client; only the buying
- * user's client acts, so one purchase gets one prompt. Players own their own
- * characters, so the flag write and the condition toggle need no GM. That
- * client gets the buyer as an actor and the meal as plain data, not the UUID
- * and Item document the hook is documented with (scripts/trade.mjs, #48).
+ * Every client hears a trade (see `registerTradeListeners`); only the client
+ * that asked for it acts, so one purchase gets one prompt. Players own their
+ * own characters, so the flag write and the condition toggle need no GM. The
+ * meal arrives as plain data (scripts/trade.mjs, #48).
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{askedHere: boolean}} where
  */
-async function offerMeals(_seller, buyerRef, itemPrices, userId) {
-  if (userId !== game.user.id) return;
+async function offerMeals(trade, { askedHere }) {
+  if (!askedHere || trade.kind !== "buy") return;
   if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "mealsFeed")) return;
-  const buyer = await fromUuid(uuidOf(buyerRef));
+  const buyer = await fromUuid(trade.buyerUuid);
   if (buyer?.type !== "character") return;
 
-  for (const entry of boughtWith(itemPrices, "nutrition")) {
+  for (const entry of boughtWith(trade, "nutrition")) {
     await eatMeal(buyer, entry.item, entry.quantity)
       .catch(err => console.error(`${MODULE} | could not apply ${entry.item?.name}`, err));
   }
@@ -838,12 +846,6 @@ function creditMeal(actor, cfg, sn, nutrition, quantity) {
     if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
     if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
     return result;
-  });
-}
-
-function registerMeals() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    offerMeals(...args).catch(err => console.error(`${MODULE} |`, err));
   });
 }
 
@@ -915,28 +917,30 @@ const ANIMAL_FOLDER = "Purchased Animals";
  * folder, owned by whoever owns the buying character — and the loot item
  * becomes the bill of sale, linking to the creatures it stands for.
  *
- * Item Piles runs every trade through a GM, so one is always online; the
- * active GM's client does the creating, which players are not allowed to.
+ * Every trade runs through a GM, so one is always online; the client that
+ * carried the trade out does the creating, which players are not allowed to.
  * Nothing is placed on a scene: the GM drags the animal in from the sidebar.
  * Selling the deed back is money only — the animal stays for the GM to deal
  * with, since deleting actors unasked is not this module's business.
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{carriedOut: boolean}} where
  */
-async function deliverAnimals(sellerRef, buyerRef, itemPrices, _userId) {
-  if (game.users.activeGM !== game.user) return;
+async function deliverAnimals(trade, { carriedOut }) {
+  if (!carriedOut) return;
   if (!game.settings.get(MODULE, "animalsSpawn")) return;
-  const bought = boughtWith(itemPrices, "actor");
+  const bought = boughtWith(trade, "actor");
   if (!bought.length) return;
 
-  // Actors rather than UUIDs, despite the hook's documentation (#48).
-  const buyer = await fromUuid(uuidOf(buyerRef));
-  const seller = await fromUuid(uuidOf(sellerRef));
+  const buyer = await fromUuid(trade.buyerUuid);
+  const seller = await fromUuid(trade.shopUuid);
   if (!buyer) return;
 
   // Selling a deed to a merchant: the deed is the merchant's entry now.
-  if (game.itempiles?.API?.isItemPileMerchant?.(buyer)) {
+  if (trade.kind === "sell") {
     const names = bought.map(e => e.item.name).join(", ");
     await ChatMessage.create({
-      content: `<p><strong>${seller?.name ?? "Someone"}</strong> sold ${names} to ${buyer.name}. `
+      content: `<p><strong>${buyer.name}</strong> sold ${names} to ${seller?.name ?? "a merchant"}. `
         + `The animal is still in the <em>${ANIMAL_FOLDER}</em> folder for the GM to remove or keep.</p>`,
       whisper: game.users.filter(u => u.isGM).map(u => u.id)
     });
@@ -995,32 +999,30 @@ async function recordDeed(buyer, good, uuids) {
   });
 }
 
-function registerAnimals() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    deliverAnimals(...args).catch(err => console.error(`${MODULE} |`, err));
-  });
-}
-
 /* ------------------------------------------------------------- spellcasting */
 
 /**
  * Say in chat which spell a bought spellcasting service casts, and for whom
  * (#70). The message text, and why it carries no price, is scripts/casting.mjs.
  *
- * Posted by the client of the user who traded, like the meal prompt, so one
+ * Posted by the client that asked for the trade, like the meal prompt, so one
  * trade makes one message and no GM has to be at the table. A named service
  * links its spell, fetched here for the effects the GM may drag onto the
  * target; a spell that cannot be fetched is still announced, linked, without
  * them.
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{askedHere: boolean, chatMode: number}} where  `chatMode` is Item
+ *   Piles' *Output to chat* scale (casting.mjs `chatRecipients`).
  */
-async function announceSpellcasting(sellerRef, buyerRef, itemPrices, userId) {
-  if (userId !== game.user.id) return;
+async function announceSpellcasting(trade, { askedHere, chatMode }) {
+  if (!askedHere) return;
   if (!game.settings.get(MODULE, "spellcastingToChat")) return;
-  const bought = castsIn(itemPrices);
+  const bought = castsIn(trade);
   if (!bought.length) return;
-  const seller = await fromUuid(uuidOf(sellerRef));
-  const buyer = await fromUuid(uuidOf(buyerRef));
-  if (!seller || !buyer || !game.itempiles?.API?.isItemPileMerchant?.(seller)) return;
+  const seller = await fromUuid(trade.shopUuid);
+  const buyer = await fromUuid(trade.buyerUuid);
+  if (!seller || !buyer) return;
 
   const casts = [];
   for (const { item, quantity } of bought) {
@@ -1029,18 +1031,230 @@ async function announceSpellcasting(sellerRef, buyerRef, itemPrices, userId) {
     casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
   }
 
-  let mode = 1;
-  try { mode = Number(game.settings.get("item-piles", "outputToChat")) || 0; } catch { /* Item Piles' setting is not registered */ }
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: seller }),
     content: castingMessage({ shop: seller.name, buyer: buyer.name, casts }),
-    whisper: chatRecipients(mode, game.users.filter(u => u.isGM).map(u => u.id), userId)
+    whisper: chatRecipients(chatMode, game.users.filter(u => u.isGM).map(u => u.id), trade.userId)
   });
 }
 
-function registerSpellcasting() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    announceSpellcasting(...args).catch(err => console.error(`${MODULE} |`, err));
+/* ------------------------------------------------------------ trade listeners */
+
+/** Item Piles' *Output to chat* setting, which its own trade card follows: 1 (public) if it isn't registered. */
+function itemPilesChatMode() {
+  try { return Number(game.settings.get("item-piles", "outputToChat")) || 0; }
+  catch { return 1; }
+}
+
+/** The `tradeChat` setting on Item Piles' scale, for the messages that sit beside the receipt: GM whisper is its 3. */
+const nativeChatMode = () => (game.settings.get(MODULE, "tradeChat") === "gm" ? 3 : 1);
+
+/**
+ * Run the meal, animal and spellcasting listeners for one trade. `askedHere`:
+ * this is the client that asked for the trade (prompts and the casting message
+ * go there, once). `carriedOut`: this is the client that made the writes
+ * (documents are created there, once).
+ */
+function onTrade(trade, where) {
+  for (const listener of [offerMeals, deliverAnimals, announceSpellcasting]) {
+    listener(trade, where).catch(err => console.error(`${MODULE} |`, err));
+  }
+}
+
+/**
+ * Hear every shop trade, from either source, on every client. Item Piles'
+ * trades (while it still runs the shops, #104) fire `item-piles-tradeItems`,
+ * with actors rather than the UUIDs it documents (#48); this module's own fire
+ * `merchant-presets.trade` (`carryOutTrade`).
+ */
+function registerTradeListeners() {
+  Hooks.on("item-piles-tradeItems", (sellerRef, buyerRef, itemPrices, userId) => {
+    Promise.all([fromUuid(uuidOf(sellerRef)), fromUuid(uuidOf(buyerRef))]).then(([seller, buyer]) => {
+      const isMerchant = actor => !!actor && !!game.itempiles?.API?.isItemPileMerchant?.(actor);
+      const trade = fromItemPiles(seller, buyer, itemPrices, userId, isMerchant);
+      if (!trade) return;
+      onTrade(trade, {
+        askedHere: userId === game.user.id,
+        carriedOut: game.user.isGM && game.users.activeGM === game.user,
+        chatMode: itemPilesChatMode()
+      });
+    }).catch(err => console.error(`${MODULE} |`, err));
+  });
+  Hooks.on(TRADE_HOOK, (trade, { carriedOut } = {}) => {
+    onTrade(trade, { askedHere: askedHere.delete(trade.tradeId), carriedOut: !!carriedOut, chatMode: nativeChatMode() });
+  });
+}
+
+/* ---------------------------------------------------------------- trade desk */
+
+/**
+ * The GM-side trade (#102): the shop window asks, one GM tab carries it out.
+ *
+ * A player's `api.trade(request)` queries the active GM through
+ * `CONFIG.queries`. Foundry sends a query to every tab that GM has open and
+ * takes the first answer, so exactly one tab claims trades (the last one
+ * opened, through a flag on the GM's user) and the rest never answer. That tab
+ * runs trades one at a time, answers a repeated `tradeId` with its first
+ * outcome, plans each with `planTrade` against fresh snapshots of the shop and
+ * the character, and carries the plan out. Then it posts the receipt and fires
+ * `merchant-presets.trade` on every client (trade-desk.mjs `hookPayload`).
+ *
+ * Known limit: a claiming tab that crashes, rather than closing, leaves its
+ * claim behind, and trades read as unconfirmed until a GM tab is reloaded.
+ */
+
+const SOCKET = `module.${MODULE}`;
+const runTrade = serial();
+const tradeOutcomes = outcomes();
+/** Trade ids this client asked for: the meal prompt and casting message belong to it. */
+const askedHere = new Set();
+/** This tab's id, for the trade claim. Made on first use: `foundry.utils` isn't there at import. */
+let tabId = null;
+const thisTab = () => (tabId ??= foundry.utils.randomID());
+/** `planTrade`'s and the window's bundle resolver; empty until the dnd5e indexes load. */
+let bundleOf = bundleResolver(new Map());
+
+const tradeClaim = () => game.user.getFlag(MODULE, "tradeTab");
+const claimTrades = () => game.user.setFlag(MODULE, "tradeTab", thisTab());
+
+/**
+ * Index every dnd5e Item pack by `system.quantity`, so `bundleOf` can read a
+ * good's bundle off its compendium source without an async fetch: the SRD's
+ * Arrows are 20 for 1 gp with no bundle flag of ours anywhere.
+ */
+async function loadBundles() {
+  const quantities = new Map();
+  for (const pack of game.packs ?? []) {
+    if (pack.metadata?.packageName !== "dnd5e" || pack.documentName !== "Item") continue;
+    const index = await pack.getIndex({ fields: ["system.quantity"] });
+    for (const entry of index) if (entry.system?.quantity > 1) quantities.set(entry.uuid, entry.system.quantity);
+  }
+  bundleOf = bundleResolver(quantities);
+}
+
+/** An actor named by a request's uuid, or null: the request is untrusted, so anything else is nobody. */
+async function actorAt(uuid) {
+  if (typeof uuid !== "string") return null;
+  const doc = await fromUuid(uuid).catch(() => null);
+  return doc?.documentName === "Actor" ? doc : null;
+}
+
+/** Whether `shop` is open by its own hours on the world clock. Trading hours off: always. */
+function shopIsOpen(shop) {
+  if (!game.settings.get(MODULE, "tradingHours")) return true;
+  const hours = safeShopOf(shop)?.hours ?? null;
+  return isOpen(hours, minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime)), game.time.calendar.days);
+}
+
+/** One actor's share of a plan: its items first, then its coin. */
+async function applyUpdate(actor, update) {
+  if (update.itemUpdates.length) await actor.updateEmbeddedDocuments("Item", update.itemUpdates);
+  if (update.itemCreates.length) await actor.createEmbeddedDocuments("Item", update.itemCreates, { keepId: true });
+  if (update.itemDeletes.length) await actor.deleteEmbeddedDocuments("Item", update.itemDeletes);
+  if (update.currency) await actor.update({ "system.currency": update.currency });
+}
+
+/**
+ * Validate, plan and carry out one trade, on the claiming GM tab. Never
+ * throws: a write that fails reads as refused `error`, since the window must
+ * not be told a half-made trade sealed.
+ */
+async function carryOutTrade(request, user) {
+  const [shop, buyer] = await Promise.all([actorAt(request?.shopUuid), actorAt(request?.buyerUuid)]);
+  const refused = checkParties({ user, shop, buyer });
+  if (refused) return { status: "refused", reason: refused };
+
+  const planned = planTrade(request, {
+    shop: shop.toObject(),
+    buyer: buyer.toObject(),
+    worldSettings: {
+      rates: WORLD_RATES,
+      infiniteStock: game.settings.get(MODULE, "stockMode") === "unlimited",
+      infinitePurse: game.settings.get(MODULE, "merchantPurse") === "unlimited"
+    },
+    currencies: CONFIG.DND5E.currencies,
+    deal: null,
+    now: { isOpen: shopIsOpen(shop) },
+    newId: () => foundry.utils.randomID(),
+    bundleOf
+  });
+  if (!planned.ok) return resultOf(planned);
+
+  const { plan } = planned;
+  try {
+    for (const update of plan.updates) {
+      await applyUpdate(update.actorId === shop.id ? shop : buyer, update);
+    }
+  } catch (err) {
+    console.error(`${MODULE} | trade ${plan.tradeId} failed part-way; check ${shop.name} and ${buyer.name}`, err);
+    ui.notifications.error(`A trade between ${buyer.name} and ${shop.name} failed part-way. Check both inventories.`);
+    return { status: "refused", reason: "error" };
+  }
+
+  const trade = hookPayload(plan, { shopUuid: shop.uuid, buyerUuid: buyer.uuid, userId: user.id });
+  try {
+    game.socket.emit(SOCKET, { type: "trade", trade });
+    Hooks.callAll(TRADE_HOOK, trade, { carriedOut: true });
+    const whisper = recipients(game.settings.get(MODULE, "tradeChat"), game.users.filter(u => u.isGM).map(u => u.id));
+    if (whisper) {
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: shop }),
+        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies),
+        whisper
+      });
+    }
+  } catch (err) {
+    console.error(`${MODULE} | trade ${plan.tradeId} landed, but telling the table failed`, err);
+  }
+  return resultOf(planned);
+}
+
+/**
+ * The `CONFIG.queries` handler. A tab without the claim never answers, so the
+ * server takes the claiming tab's answer; answering "no" from here would beat
+ * it and refuse a trade that's about to go through.
+ */
+function handleTradeQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  if (typeof request?.tradeId !== "string" || !request.tradeId) return { status: "refused", reason: "invalid-request" };
+  return tradeOutcomes.once(user.id, request.tradeId, () => runTrade(() => carryOutTrade(request, user)));
+}
+
+/**
+ * Ask the GM to carry out a trade: `{tradeId, kind, shopUuid, buyerUuid,
+ * lines: [{itemId, quantity, expectedBundlePriceCp?}]}` (the contract on
+ * #102). Resolves `{status: "sealed"|"refused"|"no-gm"|"unconfirmed", ...}`,
+ * never rejects.
+ */
+async function trade(request) {
+  const gm = game.users.activeGM;
+  if (!gm) return clientOutcome(false);
+  if (typeof request?.tradeId === "string") askedHere.add(request.tradeId);
+  try {
+    return await gm.query(QUERY, request, { timeout: QUERY_TIMEOUT_MS });
+  } catch (err) {
+    console.warn(`${MODULE} | trade ${request?.tradeId} unconfirmed:`, err.message);
+    return clientOutcome(true);
+  }
+}
+
+/**
+ * Wire the trade desk on this client: the socket every client hears trades
+ * on, the bundle index, and on a GM's tab the trade claim, taken on load,
+ * given up on close, and taken back by another tab when it's given up.
+ */
+function registerTradeDesk() {
+  game.socket.on(SOCKET, message => {
+    if (message?.type === "trade") Hooks.callAll(TRADE_HOOK, message.trade, { carriedOut: false });
+  });
+  loadBundles().catch(err => console.error(`${MODULE} | could not index the dnd5e packs' bundles`, err));
+  if (!game.user.isGM) return;
+  claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
+  globalThis.addEventListener?.("beforeunload", () => {
+    if (claimsTrades(tradeClaim(), thisTab())) game.user.unsetFlag(MODULE, "tradeTab");
+  });
+  Hooks.on("updateUser", user => {
+    if (user === game.user && tradeClaim() == null) claimTrades().catch(() => {});
   });
 }
 
@@ -1353,6 +1567,7 @@ function registerShopSetup() {
 /* ----------------------------------------------------------------- settings */
 
 Hooks.once("init", () => {
+  (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1490,6 +1705,18 @@ Hooks.once("init", () => {
     default: true
   });
 
+  game.settings.register(MODULE, "tradeChat", {
+    name: "Trades in chat",
+    hint: "Each trade made in the shop window posts one receipt in chat: what changed hands and for how "
+      + "much. Public, whispered to the GMs, or off. The meal, animal and spellcasting messages follow "
+      + "the same choice between public and GM-only.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { public: "Public (default)", gm: "Whispered to the GMs", off: "Off" },
+    default: "public"
+  });
+
   game.settings.register(MODULE, "spellcastingToChat", {
     name: "Bought spellcasting is announced in chat",
     hint: "Buying a spellcasting service moves gold and nothing else. With this on, the shop says in "
@@ -1508,16 +1735,17 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
   game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
     reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
-    syncOpenState, syncOpenStateAll, setUpShop, migrateShop, migrateAll };
+    syncOpenState, syncOpenStateAll, setUpShop, migrateShop, migrateAll,
+    trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too — and it does not depend on Item Piles.
   registerDrinks();
-  // The buyer's own client answers the meal prompt, so this is for players too.
-  registerMeals();
+  // The buyer's own client answers the meal prompt and posts the spellcasting
+  // announcement, so trades are heard by players too.
+  registerTradeListeners();
   registerActivityMeals();
-  // So is the spellcasting announcement: whoever traded posts it.
-  registerSpellcasting();
+  registerTradeDesk();
 
   if (!game.user.isGM) return;
   warnOutdatedNutrition();
@@ -1560,7 +1788,6 @@ Hooks.once("ready", async () => {
 
   registerRestock();
   registerTradingHours();
-  registerAnimals();
   // Time moves while a world is closed, so put the shops on the right side of
   // their doors now rather than at the next tick of the clock.
   syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });

@@ -33,7 +33,8 @@ const newId = prefix => `${prefix}${String(nextId++).padStart(15, "0")}`;
 /** A document's flag accessors, over its plain `flags`. */
 const flagged = doc => Object.assign(doc, {
   getFlag(scope, key) { return this.flags?.[scope]?.[key]; },
-  async setFlag(scope, key, value) { set(this, `flags.${scope}.${key}`, value); }
+  async setFlag(scope, key, value) { set(this, `flags.${scope}.${key}`, value); },
+  async unsetFlag(scope, key) { delete this.flags?.[scope]?.[key]; }
 });
 
 /** `doc`'s own data, the way `Document#toObject()` strips a document back to
@@ -46,7 +47,7 @@ function plainData(doc) {
 
 /**
  * Install the globals and return the world they describe.
- * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting}}
+ * @returns {{hooks, actors, tables, scenes, compendium, calls, settings, merchant, character, receive, fire, failSetting}}
  */
 export function createWorld() {
   const hooks = { once: new Map(), on: new Map() };
@@ -58,12 +59,12 @@ export function createWorld() {
   // `writes` is every settings.set and actor#update call, in the order they
   // actually happened — the only way to test a write-ordering guarantee
   // (#100 review: the autoRestock write must land before the actor's own).
-  const calls = { itemUpdates: [], tablesCreated: 0, messages: [], writes: [] };
+  const calls = { itemUpdates: [], tablesCreated: 0, messages: [], writes: [], socket: [] };
   // This module's settings by key; another module's as "<module>.<key>".
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
-    spellcastingToChat: true, "item-piles.outputToChat": 1
+    spellcastingToChat: true, tradeChat: "public", "item-piles.outputToChat": 1
   };
   // No world ever has a stored value in the stub: every setting is at its default.
   const storage = { get: () => ({ find: () => undefined }) };
@@ -72,13 +73,15 @@ export function createWorld() {
 
   globalThis.Hooks = {
     once: (name, fn) => hooks.once.set(name, fn),
-    on: (name, fn) => hooks.on.set(name, [...(hooks.on.get(name) ?? []), fn])
+    on: (name, fn) => hooks.on.set(name, [...(hooks.on.get(name) ?? []), fn]),
+    callAll: (name, ...args) => { for (const fn of hooks.on.get(name) ?? []) fn(...args); return true; }
   };
   globalThis.foundry = {
     utils: {
       getProperty: get, setProperty: set,
       isEmpty: o => !o || !Object.keys(o).length,
       deepClone: o => structuredClone(o),
+      randomID: () => newId("r"),
       fromUuid: async uuid => compendium.get(uuid) ?? tables.find(t => t.uuid === uuid)
         ?? actors.find(a => a.uuid === uuid) ?? null
     }
@@ -93,7 +96,10 @@ export function createWorld() {
   // outright with no merge step to force past, so unwrapping is a no-op here.
   globalThis._replace = v => v;
   globalThis.ui = { notifications: { info() {}, warn() {}, error() {} } };
-  globalThis.CONFIG = {};
+  globalThis.CONFIG = { DND5E: { currencies: {
+    pp: { conversion: 0.1, abbreviation: "pp" }, gp: { conversion: 1, abbreviation: "gp" },
+    ep: { conversion: 2, abbreviation: "ep" }, sp: { conversion: 10, abbreviation: "sp" }, cp: { conversion: 100, abbreviation: "cp" }
+  } } };
   globalThis.CONST = {};
   globalThis.Roll = class { async evaluate() { return { total: 1 }; } };
   globalThis.Folder = { implementation: { create: async data => {
@@ -111,10 +117,19 @@ export function createWorld() {
     return table;
   } } };
 
-  const user = { id: "gm", isGM: true };
+  // The GM's `query` answers the way Foundry's server does for a single tab:
+  // it runs this client's own handler with the querying user in the context.
+  const user = flagged({ id: "gm", isGM: true, flags: {},
+    async query(name, data) { return globalThis.CONFIG.queries[name](data, { user: globalThis.game.user }); } });
+  const socketHandlers = new Map();
   globalThis.game = {
     user,
     users: Object.assign([user], { activeGM: user }),
+    socket: {
+      on: (name, fn) => socketHandlers.set(name, fn),
+      emit: (name, message) => calls.socket.push({ name, message })
+    },
+    packs: [],
     actors,
     scenes,
     folders: { find: fn => folders.find(fn) },
@@ -158,18 +173,56 @@ export function createWorld() {
         results: stock.results.map(r => ({ ...r, id: r._id })) });
     }
     if (table) doc.flags["item-piles"].data.tablesForPopulate[0].uuid = table;
-    return flagged(Object.assign(doc, {
+    return actorLike(flagged(Object.assign(doc, {
       id: doc._id, uuid: `Actor.${doc._id}`, pack: null, effects: [],
-      items: doc.items.map(i => ({ ...i, id: i._id })),
+      items: doc.items.map(i => ({ ...i, id: i._id }))
+    })));
+  }
+
+  /**
+   * The Actor methods the runtime calls, over plain data. `updateEmbeddedDocuments`
+   * both records the call (wiring/strays tests count them) and applies it (the
+   * trade tests read the result back); a create keeps a given `_id`, as
+   * `keepId` does.
+   */
+  function actorLike(doc, { owners = [] } = {}) {
+    return Object.assign(doc, {
+      documentName: "Actor",
+      testUserPermission: (u, level) => u.isGM || owners.includes(u.id) || (level === "LIMITED" && doc.ownership?.default >= 1),
       async update(changes) {
         for (const [k, v] of Object.entries(changes)) set(this, k, v);
         calls.writes.push({ type: "actorUpdate", actor: this.id, changes });
       },
-      async updateEmbeddedDocuments(_type, updates) { calls.itemUpdates.push({ actor: this.id, updates }); },
-      async deleteEmbeddedDocuments() {},
+      async updateEmbeddedDocuments(_type, updates) {
+        calls.itemUpdates.push({ actor: this.id, updates });
+        for (const { _id, ...changes } of updates) {
+          const item = this.items.find(i => i._id === _id);
+          if (item) for (const [k, v] of Object.entries(changes)) set(item, k, v);
+        }
+      },
+      async createEmbeddedDocuments(_type, data) {
+        const created = data.map(d => { const id = d._id ?? newId("I"); return { ...structuredClone(d), _id: id, id }; });
+        this.items.push(...created);
+        return created;
+      },
+      async deleteEmbeddedDocuments(_type, ids) {
+        for (const id of ids) this.items.splice(this.items.findIndex(i => i._id === id), 1);
+      },
       toObject() { return plainData(this); }
-    }));
+    });
   }
+
+  /** A player character, owned by `owners`, with `currency` and `items`. */
+  function character(id, { currency = {}, items = [], owners = [] } = {}) {
+    const doc = actorLike(flagged({ _id: id, id, uuid: `Actor.${id}`, name: id, type: "character", flags: {},
+      system: { currency: { pp: 0, gp: 0, ep: 0, sp: 0, cp: 0, ...currency } },
+      items: items.map(i => ({ ...i, id: i._id })) }), { owners });
+    actors.push(doc);
+    return doc;
+  }
+
+  /** Deliver a socket message the way another client would receive it. */
+  const receive = (name, message) => socketHandlers.get(name)?.(message);
 
   /** Call every listener on a hook, then let the promises they start settle. */
   async function fire(name, ...args) {
@@ -182,7 +235,7 @@ export function createWorld() {
    *  it landing first, rather than being silently skipped over. */
   const failSetting = (scope, key) => failingSettings.add(scope === "merchant-presets" ? key : `${scope}.${key}`);
 
-  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, fire, failSetting };
+  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, character, receive, fire, failSetting };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */

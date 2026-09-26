@@ -20,8 +20,15 @@ than for the code. Reference the issue or PR it closes.
   of their own characters (or other owned actors) they're buying as; GMs can
   buy or sell as anyone, and get a Settings tab (more of it lands with #110)
   and a button back to the NPC's own stat sheet. It opens like any other
-  actor sheet — double-click the shop's token — but sealing a bargain isn't
-  wired up yet, so every trade currently waits on a GM. (#103)
+  actor sheet — double-click the shop's token. (#103)
+- 2.0: sealing a bargain in the shop window carries the trade out on the GM's
+  side, with no Item Piles involved: the goods, the coin and the shop's stock
+  all move at once, two players can't both buy the last one, and a trade sent
+  twice over a flaky connection only happens once. A GM has to be logged in;
+  with none, the window says so and keeps the bill. Each trade posts one
+  receipt in chat, public or whispered to the GMs, or none, set by the new
+  *Trades in chat* setting. Meals, bought animals and spellcasting work the
+  same way they did through Item Piles. (#102)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler
