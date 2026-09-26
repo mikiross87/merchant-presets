@@ -110,6 +110,12 @@ function dealChip(termsChip, deal) {
   ].filter(Boolean).join(" · ");
 }
 
+/**
+ * The price without the buyer's deal, as the small struck text over theirs (design AutYE, "2 gp"):
+ * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
+ */
+const listText = (cp, currencies) => coinBreakdown(cp ?? 0, currencies).map(c => `${c.count} ${c.abbreviation ?? c.denomination}`).join(" ");
+
 /** Text for a form's HTML: the deal form is built as a string (DialogV2.input). */
 const escapeText = text => String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -598,7 +604,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
           priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
-          listCoins: coinBreakdown(row.listPriceCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+          listText: listText(row.listPriceCp, currencies)
         };
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
@@ -816,7 +822,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return {
         ...row,
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
-        listCoins: coinBreakdown(row.listPriceCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
+        listText: listText(row.listPriceCp, currencies)
       };
     });
     const willBuy = rows.filter(r => !r.refusal);

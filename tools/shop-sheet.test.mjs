@@ -1239,11 +1239,11 @@ test("a bill line the deal priced is marked as the buyer's deal (#111)", async (
   act(sheet, "addLine", { itemId: "rope" });
   let context = await sheet._prepareContext({});
   assert.equal(context.buy.basket.lines[0].dealt, true);
-  assert.deepEqual(coins(context.buy.sections[0].rows[0].listCoins), [["gp", 1]]);
+  assert.equal(context.buy.sections[0].rows[0].listText, "1 gp");
   config.deals = [{ actor: buyer.uuid, name: "hero", buy: null, sell: 0.1, note: "", ends: null }];
   context = await sheet._prepareContext({});
   assert.equal(context.buy.basket.lines[0].dealt, false);
-  assert.deepEqual(context.buy.sections[0].rows[0].listCoins, []);
+  assert.equal(context.buy.sections[0].rows[0].listText, "");
 });
 
 test("the GM's note on a deal never reaches the player's window (#111)", async () => {
