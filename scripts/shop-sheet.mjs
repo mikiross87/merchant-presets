@@ -91,7 +91,14 @@ const KIND_ICONS = {
   "Temple & Faith Store": "lucide:church",
   "Tinkering Store": "lucide:cog"
 };
-const kindIcon = source => KIND_ICONS[titleParts(source ?? "").title] ?? "lucide:store";
+function kindIcon(actor, shop) {
+  // The shipped merchant it came from, as #presetShop finds it: set up from one (#57), or imported.
+  const uuid = shop.source ?? actor._stats?.compendiumSource;
+  let name = null;
+  try { name = uuid ? fromUuidSync(uuid)?.name ?? null : null; }
+  catch { /* a pack that's gone: no kind of its own */ }
+  return KIND_ICONS[titleParts(name ?? "").title] ?? "lucide:store";
+}
 
 /** CONST.DOCUMENT_OWNERSHIP_LEVELS: a shop players can visit is Limited to them by default. */
 const NONE = 0, LIMITED = 1;
@@ -331,6 +338,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       close.innerHTML = icon("x", { "data-pen": "Close" });
       right.append(close);
     }
+    // Core's own header buttons (the token's): the NPC sheet has them.
+    for (const el of header.querySelectorAll(":scope > .header-control")) el.remove();
     header.append(right);
     return frame;
   }
@@ -522,7 +531,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       img: actor.img,
       title,
       tier,
-      kindIcon: kindIcon(config.source),
+      kindIcon: kindIcon(actor, config),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,

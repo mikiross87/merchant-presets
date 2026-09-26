@@ -42,7 +42,8 @@
   --mp-danger: var(--color-level-error);
 }
 
-.shop-sheet.theme-dark {
+/* Core puts colorScheme.applications on <body>; a sheet configured with its own theme is .themed. */
+.shop-sheet.theme-dark, .shop-sheet:not(.themed):is(body.theme-dark *) {
   --mp-window: #0d0b0b;
   --mp-surface: #252830;
   --mp-inset: #212329;
@@ -76,7 +77,12 @@
   color: var(--mp-text);
 }
 
+.shop-sheet.merchant-presets.application { gap: 0; padding: 0; }
+
 .shop-sheet .window-content {
+  flex: 1 1 auto;
+  gap: 0;
+  margin: 0;
   /* dnd5e paints its own background on .dnd5e2.application, where its texture's relative url
      resolves; re-using the variable here would resolve it against this file and 404. */
   background: transparent;
@@ -117,6 +123,7 @@
 /* Window Bar: core's header, as the design draws it. */
 .shop-sheet > .window-header {
   flex: none;
+  margin: 0;
   height: 30px;
   min-height: 30px;
   padding: 0 12px;
@@ -127,13 +134,18 @@
   color: var(--mp-bar-ink);
 }
 .shop-sheet > .window-header .window-title {
+  /* Core centres it over the whole bar; the design sets it at the left. */
+  position: static;
+  inset: auto;
+  width: auto;
+  text-align: left;
   flex: 0 1 auto;
   min-width: 0;
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font: 400 12px/normal Roboto, system-ui, sans-serif;
+  font: 400 12px/14px Roboto, system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   color: var(--mp-bar-ink);
@@ -145,7 +157,7 @@
   border-radius: 3px;
   outline: 1px solid #c9c7b866;
   color: var(--mp-bar-ink);
-  font: 400 11px/normal Roboto, system-ui, sans-serif;
+  font: 400 11px/13px Roboto, system-ui, sans-serif;
   white-space: nowrap;
 }
 .shop-sheet .mp-npc-sheet .mp-icon { width: 12px; height: 12px; }
@@ -170,18 +182,18 @@
   outline: 2px solid var(--mp-gold);
   object-fit: cover;
 }
-.shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-shop-name {
   margin: 0;
   border: none;
-  font: 700 30px/normal "Alegreya SC", system-ui, sans-serif;
+  font: 700 30px/41px "Alegreya SC", system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
   color: var(--mp-on-dark);
 }
-.shop-sheet .mp-description { font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
+.shop-sheet .mp-description { align-self: stretch; font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
 .shop-sheet .mp-description p { margin: 0; }
 .shop-sheet .mp-chips { display: flex; align-items: center; gap: 8px; }
 .shop-sheet .mp-hero-chip {
@@ -190,7 +202,7 @@
   border-radius: 999px;
   background: #00000040;
   color: var(--mp-on-dark);
-  font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif;
   white-space: nowrap;
   cursor: default;
 }
@@ -204,6 +216,7 @@
   flex: none;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 6px;
   padding: 10px 14px;
   border-radius: 6px;
@@ -211,7 +224,7 @@
   outline: 1px solid #9f927566;
 }
 .shop-sheet .mp-purse-label {
-  font: 700 11px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 700 11px/13px "Roboto Condensed", system-ui, sans-serif;
   letter-spacing: 1px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -234,16 +247,16 @@
   height: 20px;
   border-radius: 10px;
   background: var(--mp-gold-light);
-  font: 700 12px/normal "Alegreya SC", system-ui, sans-serif;
+  font: 700 12px/16px "Alegreya SC", system-ui, sans-serif;
   color: #401f25;
 }
-.shop-sheet .mp-buyer-name { font: 700 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-on-dark); }
+.shop-sheet .mp-buyer-name { font: 700 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-on-dark); }
 .shop-sheet .mp-purse-coins { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-purse .mp-coin b { color: var(--mp-on-dark); }
 
 /* The design's coins: the amount, then the glyph. */
 .shop-sheet .mp-coin { display: flex; align-items: center; gap: 4px; }
-.shop-sheet .mp-coin b { font: 700 15px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-coin b { font: 700 15px/18px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-coin img { flex: none; width: 16px; height: 16px; border: none; border-radius: 50%; }
 
 /* -------------------------------------------------------------- tabs */
@@ -257,28 +270,33 @@
   height: 39.5px;
   margin: 0 0 -0.5px;
   padding: 0 24px;
+  justify-content: flex-start;
   background: var(--mp-surface);
-  border: none;
-  border-bottom: 1px solid var(--mp-line);
+  border: 0 solid var(--mp-line);
+  border-bottom-width: 1px;
+  text-transform: none;
 }
 .shop-sheet .mp-tab {
   gap: 6px;
   height: 25px;
   margin-bottom: -1px;
   padding: 0 2px 10px;
-  border-bottom: 2px solid transparent;
+  border: 0 solid transparent;
+  border-bottom-width: 2px;
   color: var(--mp-muted);
-  font: 500 14px/normal Roboto, system-ui, sans-serif;
+  font: 500 14px/16px Roboto, system-ui, sans-serif;
   white-space: nowrap;
 }
 .shop-sheet .mp-tab .mp-icon { width: 15px; height: 15px; }
-.shop-sheet .mp-tab.active { border-bottom-color: var(--mp-accent); color: var(--mp-text); font-weight: 700; }
+.shop-sheet .mp-tab span { margin: 0; border: 0; }
+.shop-sheet .mp-tab.active { border-color: var(--mp-accent); color: var(--mp-text); font-weight: 700; }
 .shop-sheet .mp-tab.active .mp-icon { color: var(--mp-accent); }
 .shop-sheet .mp-gm-badge {
+  display: flex;
   padding: 1px 5px;
   border-radius: 3px;
   background: var(--mp-accent);
-  font: 700 9px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 700 9px/11px "Roboto Condensed", system-ui, sans-serif;
   letter-spacing: 1px;
   color: var(--mp-on-dark);
 }
@@ -604,7 +622,7 @@
 
 /* -------------------------------------------------------------- settings tab (#110, design v8ap9) */
 
-.shop-sheet .settings-tab.active { display: flex; }
+.shop-sheet .settings-tab.active { display: flex; flex-direction: row; gap: 0; }
 
 .shop-sheet .mp-section-nav {
   flex: none;
@@ -615,7 +633,8 @@
   width: 179.5px;
   margin-right: -0.5px;
   padding: 16px 10px;
-  border-right: 1px solid var(--mp-line);
+  border: 0 solid var(--mp-line);
+  border-right-width: 1px;
   overflow-y: auto;
 }
 .shop-sheet .mp-visit {
@@ -629,7 +648,7 @@
   cursor: pointer;
 }
 .shop-sheet .mp-visit-row { display: flex; align-items: center; justify-content: space-between; }
-.shop-sheet .mp-visit-row b { font: 700 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-visit-row b { font: 700 12px/14px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-switch {
   display: flex;
   align-items: center;
@@ -644,22 +663,25 @@
 .shop-sheet .mp-visit input:checked + .mp-switch { justify-content: flex-end; background: var(--mp-green); }
 .shop-sheet .mp-visit input:focus-visible + .mp-switch { box-shadow: 0 0 0 2px var(--mp-gold-light); }
 .shop-sheet .mp-knob { width: 12px; height: 12px; border-radius: 50%; background: #ffffff; }
-.shop-sheet .mp-visit-hint { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-visit-hint { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-visit-gap { flex: none; height: 8px; }
 .shop-sheet .mp-nav-link {
   gap: 8px;
   padding: 7px 10px;
   border-radius: 4px;
   color: var(--mp-text);
-  font: 400 13px/normal Roboto, system-ui, sans-serif;
+  font: 400 13px/15px Roboto, system-ui, sans-serif;
   white-space: nowrap;
 }
 .shop-sheet .mp-nav-link.active {
   margin-left: -1.5px;
-  border-left: 3px solid var(--mp-gold);
+  border: 0 solid var(--mp-gold);
+  border-left-width: 3px;
   background: var(--mp-surface);
   font-weight: 700;
 }
+.shop-sheet .mp-nav-link .mp-icon { color: var(--mp-muted); }
+.shop-sheet .mp-nav-link.active .mp-icon { color: var(--mp-accent); }
 .shop-sheet .mp-nav-spacer { flex: 1 1 0; }
 .shop-sheet .mp-reset {
   gap: 8px;
@@ -667,7 +689,7 @@
   border-radius: 4px;
   outline: 1px solid var(--mp-line);
   color: var(--mp-muted);
-  font: 400 12px/normal Roboto, system-ui, sans-serif;
+  font: 400 12px/14px Roboto, system-ui, sans-serif;
   white-space: nowrap;
 }
 .shop-sheet .mp-reset .mp-icon { width: 13px; height: 13px; }
@@ -688,17 +710,17 @@
 .shop-sheet .mp-section-title {
   margin: 0;
   border: none;
-  font: 700 18px/normal "Alegreya SC", system-ui, sans-serif;
+  font: 700 18px/25px "Alegreya SC", system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
   color: var(--mp-heading);
 }
 .shop-sheet .mp-rule { flex: 1 1 0; height: 1px; background: var(--mp-rule); }
-.shop-sheet .mp-hint { margin: 0; font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-hint { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
 
 .shop-sheet .mp-rate-row { display: flex; align-items: center; gap: 12px; }
-.shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/normal Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
 .shop-sheet .mp-field {
   flex: none;
   display: flex;
@@ -715,13 +737,13 @@
   all: unset;
   flex: 1 1 0;
   min-width: 0;
-  font: 700 14px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 700 14px/16px "Roboto Condensed", system-ui, sans-serif;
   color: var(--mp-text);
 }
 .shop-sheet .mp-field input:disabled { cursor: not-allowed; }
 .shop-sheet .mp-field:focus-within { outline-color: var(--mp-accent); }
-.shop-sheet .mp-field span { font: 400 13px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
-.shop-sheet .mp-plain { flex: 1 1 0; font: italic 400 14px/normal "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-field span { font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-plain { flex: 1 1 0; font: italic 400 14px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .shop-sheet .mp-box {
   display: flex;
@@ -738,7 +760,7 @@
 .shop-sheet .mp-check input:checked + .mp-box { background: var(--mp-accent); outline-color: var(--mp-accent); }
 .shop-sheet .mp-check input:checked + .mp-box .mp-icon { visibility: visible; }
 .shop-sheet .mp-check input:focus-visible + .mp-box { box-shadow: 0 0 0 2px var(--mp-gold-light); }
-.shop-sheet .mp-check > span:last-child { font: 400 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-check > span:last-child { font: 400 12px/14px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 
 .shop-sheet .mp-live-example {
   display: flex;
@@ -749,11 +771,11 @@
   border-radius: 4px;
   background: var(--mp-inset);
 }
-.shop-sheet .mp-live-example > span:not(.mp-coin) { font: 400 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-live-example > span:not(.mp-coin) { font: 400 12px/14px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-live-example .mp-icon { color: var(--mp-gold); }
 
 .shop-sheet .mp-rules { display: flex; align-items: center; gap: 10px; }
-.shop-sheet .mp-rules-none { flex: 1 1 0; font: 400 12px/normal Roboto, system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-rules-none { flex: 1 1 0; font: 400 12px/14px Roboto, system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-button {
   flex: none;
   justify-content: center;
@@ -763,7 +785,7 @@
   background: var(--mp-surface);
   outline: 1px solid var(--mp-line);
   color: var(--mp-text);
-  font: 500 12px/normal Roboto, system-ui, sans-serif;
+  font: 500 12px/14px Roboto, system-ui, sans-serif;
   white-space: nowrap;
 }
 
@@ -787,19 +809,19 @@
   border-radius: 14px;
   background: var(--mp-inset);
   outline: 1px solid var(--mp-gold);
-  font: 700 14px/normal "Alegreya SC", system-ui, sans-serif;
+  font: 700 14px/19px "Alegreya SC", system-ui, sans-serif;
   color: var(--mp-heading);
 }
-.shop-sheet .mp-deal-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.shop-sheet .mp-deal-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .shop-sheet .mp-deal-line { display: flex; align-items: center; gap: 8px; }
-.shop-sheet .mp-deal-line b { font: 700 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
-.shop-sheet .mp-deal-note { font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-deal-line b { font: 700 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-deal-note { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-icon-button { color: var(--mp-muted); }
-.shop-sheet .mp-tag { padding: 1px 6px; border-radius: 3px; }
+.shop-sheet .mp-tag { display: flex; padding: 1px 6px; border-radius: 3px; }
 .shop-sheet .mp-tag.is-good { background: var(--mp-green-tint); }
-.shop-sheet .mp-tag span { font: 700 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
+.shop-sheet .mp-tag span { font: 700 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
 .shop-sheet .mp-deals-foot { display: flex; align-items: center; justify-content: space-between; }
-.shop-sheet .mp-cap-note { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-cap-note { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 
 .shop-sheet .mp-players-see {
   flex: none;
@@ -811,14 +833,15 @@
   width: 279.5px;
   margin-left: -0.5px;
   padding: 18px;
-  border-left: 1px solid var(--mp-line);
+  border: 0 solid var(--mp-line);
+  border-left-width: 1px;
   background: var(--mp-surface);
   overflow-y: auto;
 }
 .shop-sheet .mp-preview-head { display: flex; align-items: center; gap: 8px; }
-.shop-sheet .mp-preview-head .mp-icon { width: 15px; height: 15px; }
+.shop-sheet .mp-preview-head .mp-icon { width: 15px; height: 15px; color: var(--mp-gold); }
 .shop-sheet .mp-kicker {
-  font: 700 10px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -831,7 +854,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background: var(--mp-chip);
-  font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif;
   white-space: nowrap;
   color: var(--mp-on-dark);
 }
@@ -843,23 +866,25 @@
   gap: 8px;
   margin-bottom: -0.5px;
   padding: 6px 8px;
-  border-bottom: 1px solid var(--mp-line);
+  /* The frame's stroke straddles the row's edge rather than adding to its height. */
+  border: 0 solid var(--mp-line);
+  box-shadow: inset 0 -1px var(--mp-line);
   background: var(--mp-surface);
 }
 .shop-sheet .mp-preview-icon { flex: none; width: 32px; height: 32px; border: none; border-radius: 4px; outline: 1px solid var(--mp-gold); object-fit: cover; }
-.shop-sheet .mp-preview-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.shop-sheet .mp-name-line { display: flex; align-items: center; gap: 6px; font: 500 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-preview-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-sheet .mp-name-line { display: flex; align-items: center; gap: 6px; font: 500 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-price-block { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.shop-sheet .mp-list-price { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-list-price { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-price-line { display: flex; align-items: center; gap: 6px; }
 .shop-sheet .mp-price-line .mp-tag { padding: 1px 5px; }
-.shop-sheet .mp-price-line .mp-tag span { font-size: 10px; }
+.shop-sheet .mp-price-line .mp-tag span { font-size: 10px; line-height: 12px; }
 .shop-sheet .mp-divider { flex: none; align-self: stretch; height: 1px; margin: 0; border: none; background: var(--mp-line); }
-.shop-sheet .mp-preview-foot { margin: 0; font: italic 400 13px/normal "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-preview-foot { align-self: stretch; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* The sections the design has no frame for yet (#145 step 4): kept to the same type and colours. */
 .shop-sheet .settings-subheading {
-  font: 700 12px/normal "Roboto Condensed", system-ui, sans-serif;
+  font: 700 12px/14px "Roboto Condensed", system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0.5rem 0 0;

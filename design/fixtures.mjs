@@ -59,9 +59,11 @@ export async function setup() {
   const drawn = shop.items.filter(i => i.flags[MP]?.drawn);
   const armsOrTools = i => i.type === "weapon" || i.type === "tool" || (i.type === "equipment" && i.system.type?.value in (CONFIG.DND5E.armorTypes ?? {}));
   await shop.deleteEmbeddedDocuments("Item", drawn.filter(i => armsOrTools(i) && !(i.name in rows)).map(i => i.id));
-  await shop.updateEmbeddedDocuments("Item", drawn.filter(i => i.name in rows).map(i => ({
-    _id: i.id, "system.quantity": rows[i.name][0], [`flags.${MP}.new`]: rows[i.name][1] === true
-  })));
+  // The frame's rows first, in its order (the window lists the shelf by sort), then the gear.
+  const order = Object.keys(rows);
+  await shop.updateEmbeddedDocuments("Item", shop.items.filter(i => i.flags[MP]?.drawn).map(i => (i.name in rows
+    ? { _id: i.id, sort: (order.indexOf(i.name) + 1) * 100, "system.quantity": rows[i.name][0], [`flags.${MP}.new`]: rows[i.name][1] === true }
+    : { _id: i.id, sort: 10_000 + i.sort })));
 
   const day = cal.days.hoursPerDay * cal.days.minutesPerHour * cal.days.secondsPerMinute;
   const closes = Math.floor(game.time.worldTime / day) * day + (19 * cal.days.minutesPerHour + 1) * cal.days.secondsPerMinute;

@@ -7,6 +7,7 @@
  * calendar, so never point it at a world you care about.
  *
  *   node tools/design-check-run.mjs --url http://localhost:30001 [--setup] [--frames v8ap9,dpdpS] [--out dir]
+ *     [--show 60] [--dump "^(Hero|Tabs)$"]   (--dump prints both sides' boxes for the layers it matches)
  *
  * Prints each frame's score and its failing checks; writes `<out>/<frame>.json` and design/app
  * screenshots. Exit code 1 when any frame scores under 98%.
@@ -55,19 +56,51 @@ function collect({ rootSelector, attr, iconAttr }) {
     const cs = getComputedStyle(el);
     const inline = el.getAttribute("style") ?? "";
     const outline = cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0;
+    const sets = [...inline.matchAll(/(?:^|;)\s*([a-z-]+)\s*:/g)].map(m => m[1]);
+    // An icon's colour: the export fills its outlined paths; the window strokes in currentColor.
+    const icon = el.getAttribute(iconAttr) || null;
+    const fill = icon && el.querySelector("path")?.getAttribute("fill");
+    const color = icon && fill && fill !== "none" ? fill : cs.color;
+    if (icon) sets.push("color");
     return {
       name: el === root ? "(frame)" : el.getAttribute(attr).trim(),
       box: { x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height },
-      sets: [...inline.matchAll(/(?:^|;)\s*([a-z-]+)\s*:/g)].map(m => m[1]),
+      sets,
       style: {
-        color: cs.color, "background-color": cs.backgroundColor, "border-radius": cs.borderTopLeftRadius,
+        color, "background-color": cs.backgroundColor, "border-radius": cs.borderTopLeftRadius,
         "border-color": outline ? cs.outlineColor : cs.borderTopColor,
         "font-family": cs.fontFamily, "font-size": cs.fontSize, "font-weight": cs.fontWeight
       },
       text: textOf(el, cs),
-      icon: el.getAttribute(iconAttr) || null
+      icon
     };
   });
+}
+
+/**
+ * Runs in the export's page: each text line as tall as Pencil draws it. The export writes
+ * `line-height: normal`, which a browser leaves fractional (Roboto 10px: 11.72); Pencil rounds
+ * every line to a whole pixel (12), and a column of text drifts a pixel a line without this. The
+ * window states the same heights in its CSS.
+ */
+function pencilLineHeights() {
+  const ratios = new Map();
+  const ratio = cs => {
+    const key = `${cs.fontFamily}|${cs.fontWeight}|${cs.fontStyle}`;
+    if (!ratios.has(key)) {
+      const probe = document.createElement("div");
+      probe.textContent = "Hg";
+      probe.style.cssText = `font-family:${cs.fontFamily};font-weight:${cs.fontWeight};font-style:${cs.fontStyle};font-size:100px;line-height:normal;position:absolute`;
+      document.body.append(probe);
+      ratios.set(key, probe.getBoundingClientRect().height / 100);
+      probe.remove();
+    }
+    return ratios.get(key);
+  };
+  for (const el of document.querySelectorAll("[data-pencil-name]")) {
+    const cs = getComputedStyle(el);
+    if (cs.lineHeight === "normal") el.style.lineHeight = `${Math.round(parseFloat(cs.fontSize) * ratio(cs))}px`;
+  }
 }
 
 const browser = await chromium.launch({ executablePath, args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader",
@@ -79,6 +112,8 @@ async function login(context, user) {
   await page.fill("input[name=username]", user);
   await page.click("button[name=join]");
   await page.waitForFunction(() => globalThis.game?.ready, null, { timeout: 90_000 });
+  // Core's banners (headless Chromium has no GPU, and says so) would sit over the window's shot.
+  await page.addStyleTag({ content: "#notifications { display: none !important; }" });
   await page.waitForTimeout(8000);
   return page;
 }
@@ -104,9 +139,16 @@ for (const id of WANTED) {
 
   // The design, as exported.
   const dctx = await browser.newContext({ viewport: { width: frame.width + 40, height: frame.height + 40 } });
+  // The export names its art relative to the canvas (design/assets/); it's written into design/export/.
+  await dctx.route(/\/design\/export\/assets\//, route => route.fulfill({ path: new globalThis.URL(route.request().url().replace("/export/assets/", "/assets/")).pathname }));
   const dpage = await dctx.newPage();
   await dpage.goto(new globalThis.URL(`../design/export/${id}.html`, import.meta.url).href);
+  // The export writes its stroked nodes as content-box, so a browser adds their padding and
+  // border to the size Pencil gave them (Section Nav 200.5 wide, not the canvas's 179.5). The
+  // canvas is the spec: its sizes hold padding and stroke, as border-box does.
+  await dpage.addStyleTag({ content: "[data-pencil-id] { box-sizing: border-box !important; }" });
   await dpage.evaluate(() => document.fonts.ready);
+  await dpage.evaluate(pencilLineHeights);
   const design = await dpage.evaluate(collect, { rootSelector: `[data-pencil-id="${id}"]`, attr: "data-pencil-name", iconAttr: "data-icon-name" });
   await dpage.locator(`[data-pencil-id="${id}"]`).screenshot({ path: `${OUT}${id}-design.png` });
 
@@ -122,7 +164,15 @@ for (const id of WANTED) {
   await actx.close();
 
   if (design.error || app.error) { console.log(id, design.error ?? app.error); results.push({ id, score: 0 }); continue; }
-  const result = scoreFrame(pairNodes(design, app));
+  const pairs = pairNodes(design, app);
+  const result = scoreFrame(pairs);
+  // `--dump <regex>`: both sides' boxes for the layers it names, to see where a drift starts.
+  if (typeof args.dump === "string") {
+    const box = b => (b ? `${b.x.toFixed(1)},${b.y.toFixed(1)} ${b.w.toFixed(1)}x${b.h.toFixed(1)}` : "missing");
+    for (const p of pairs.filter(p => new RegExp(args.dump).test(p.design.name))) {
+      console.log(`   ${p.design.name}#${p.index} design ${box(p.design.box)} app ${box(p.app?.box)}`);
+    }
+  }
   writeFileSync(`${OUT}${id}.json`, JSON.stringify({ id, name: frame.name, ...result }, null, 2));
   results.push({ id, name: frame.name, score: result.score, total: result.total, passed: result.passed });
   console.log(`${result.score >= BAR ? "PASS" : "FAIL"} ${id} ${frame.name}: ${(result.score * 100).toFixed(1)}% (${result.passed}/${result.total})`);

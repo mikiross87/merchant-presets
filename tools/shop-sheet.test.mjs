@@ -1503,10 +1503,15 @@ test("the window is titled with the shop's name alone, and its kind chip wears i
   const { sheet, shop } = openShop();
   shop.name = "Armourer & Blacksmiths (Town)";
   assert.equal(sheet.title, "Armourer & Blacksmiths");
-  shop.flags["merchant-presets"].shop.source = "Armourer & Blacksmiths (Town)";
-  assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:hammer");
-  shop.flags["merchant-presets"].shop.source = null;
-  assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:store");
+  // Its preset, as an imported shop records it: the pack's own entry names its kind.
+  const lookup = globalThis.fromUuidSync;
+  globalThis.fromUuidSync = uuid => (uuid === "Compendium.merchant-presets.merchants.Actor.smith" ? { name: "Armourer & Blacksmiths (Town)" } : null);
+  try {
+    shop._stats = { compendiumSource: "Compendium.merchant-presets.merchants.Actor.smith" };
+    assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:hammer");
+    shop._stats = {};
+    assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:store");
+  } finally { globalThis.fromUuidSync = lookup; }
 });
 
 test("the hours read as the frames write them, without a leading zero (#145)", async () => {
