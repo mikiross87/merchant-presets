@@ -587,10 +587,18 @@ async function drawsFor(table, quantities) {
   return draws;
 }
 
-/** Stamp a shop's shelf as drawn before its first native restock (schedule.mjs `adoptDrawn`). */
+/**
+ * Stamp a shop's shelf as drawn before its first native restock (schedule.mjs
+ * `adoptDrawn`), and switch off Item Piles' own restock on open: what it adds
+ * is never stamped, so the next native reroll would add a second shelf beside
+ * it (#135 review).
+ */
 async function adoptShelf(actor, table) {
   const updates = adoptDrawn(actor.items.map(i => i.toObject()), tableNames(table), actor.id);
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  if (actor.flags?.["item-piles"]?.data?.refreshItemsOnOpen) {
+    await actor.update({ "flags.item-piles.data.refreshItemsOnOpen": false });
+  }
 }
 
 /**
@@ -617,8 +625,9 @@ async function restockNow(actor) {
     console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
     return null;
   }
-  // Never scheduled yet: its shelf predates native restocking, so it has no drawn goods to replace.
-  if (!actor.flags?.[MODULE]?.schedule) await adoptShelf(actor, table);
+  // Neither scheduled nor restocked natively yet: its shelf predates native restocking, so it has
+  // no drawn goods to replace. Only once: a later hand-added good of the same name stays the GM's.
+  if (!actor.flags?.[MODULE]?.schedule && !actor.flags?.[MODULE]?.lines) await adoptShelf(actor, table);
 
   const items = actor.items.map(i => i.toObject());
   const draws = await drawsFor(table, shop.restock.quantities);
@@ -640,13 +649,12 @@ async function restockNow(actor) {
   for (const create of plan.creates) {
     if (livePiles.has(create.name)) create.flags = { ...create.flags, "item-piles": structuredClone(livePiles.get(create.name)) };
   }
+  // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
+  await actor.update({ [`flags.${MODULE}.lines`]: memory });
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   const created = plan.creates.length ? await actor.createEmbeddedDocuments("Item", plan.creates) : [];
-  await actor.update({
-    [`flags.${MODULE}.lines`]: memory,
-    ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {})
-  });
+  if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
   // Only a fresh copy with nothing to carry over gets the recorded flags: re-applying them to
   // every item would undo what the GM changed in Item Piles.
   const fresh = new Set(created.filter(c => !livePiles.has(c.name)).map(c => c.id));
