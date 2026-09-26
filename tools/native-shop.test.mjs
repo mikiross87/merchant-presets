@@ -84,12 +84,23 @@ test("setting an NPC up as a shop migrates it to the shop window itself, and rol
   world.actors.push(npc);
   const source = "Compendium.merchant-presets.merchants.Actor.generalStoreTown";
   world.compendium.set(source, { uuid: source, toObject: () => structuredClone(shop.toObject()) });
+  // As Foundry does for this user's own update: fire updateActor, where the native arrival hook listens.
+  const update = npc.update.bind(npc);
+  npc.update = async changes => {
+    await update(changes);
+    for (const fn of world.hooks.on.get("updateActor") ?? []) fn(npc, changes, {}, "gm");
+  };
+  let draws = 0;
+  const create = npc.createEmbeddedDocuments.bind(npc);
+  npc.createEmbeddedDocuments = async (type, data, options) => {
+    if (data.some(d => d.flags?.["merchant-presets"]?.drawn)) draws++;
+    return create(type, data, options);
+  };
   await globalThis.game.modules.get("merchant-presets").api.setUpShop(npc, source, []);
-  await tick();
+  await tick(60);
   assert.equal(npc.flags.core?.sheetClass, "merchant-presets.ShopSheet");
   assert.equal(npc.flags["item-piles"].data.enabled, false);
-  const adoptions = world.calls.writes.filter(w => w.type === "actorUpdate" && w.actor === npc.id && w.changes["flags.merchant-presets.shelf"]);
-  assert.equal(adoptions.length, 1);
+  assert.equal(draws, 1, "one restock draws the new shelf, not a second from the arrival hook");
 });
 
 test("shops replaced while the world was closed are rolled by the active GM only (#138 review)", async () => {
