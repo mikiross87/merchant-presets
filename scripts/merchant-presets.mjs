@@ -2062,7 +2062,7 @@ Hooks.once("ready", async () => {
     // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
     // alone, never createToken for them (#138 review).
     Hooks.on("createScene", scene => {
-      if (game.users.activeGM !== game.user) return;
+      if (game.users.activeGM !== game.user || scene.pack) return;
       for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
     });
   }
@@ -2174,6 +2174,9 @@ async function arrive(actor) {
  */
 async function makeVisitable(token) {
   const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  // A token in a compendium scene (an Adventure being built) is on no world scene, though its
+  // baseActor still resolves to the world actor by id (#138 review).
+  if (token.parent?.pack) return;
   const actor = token.baseActor ?? token.actor;
   // Any shop the migration takes, not only one it already has: a 1.x merchant dropped straight onto
   // the canvas lands before its migration writes the 2.0 config (#138 review).

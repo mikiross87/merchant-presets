@@ -642,6 +642,9 @@ function planSheetClass(actor) {
  */
 export function planOwnership(actor, hasTokenOnScene) {
   const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS (constants.mjs:470-496)
+  // Made visitable once already: None now is the GM hiding it again, and the migration re-runs
+  // whenever a shelf item lacks its stock config (a sale lands one) (#138 review).
+  if (actor?.flags?.["merchant-presets"]?.madeVisitable) return null;
   const current = actor?.ownership?.default ?? NONE;
   if (current !== NONE) return null;             // a GM's own choice, 1.x never sets this
   const target = hasTokenOnScene ? LIMITED : NONE;
