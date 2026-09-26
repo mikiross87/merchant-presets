@@ -1413,8 +1413,10 @@ Hooks.once("init", () => {
   // trade alike.
   game.settings.register(MODULE, "sellsAt", {
     name: "Shops sell at (%)",
-    hint: "What a shop charges, as a percentage of an item's price, unless its own terms say "
-      + "otherwise: 100 is list price, 120 a markup. Open shop windows reprice at once.",
+    hint: "What a shop charges, as a percentage of an item's price, when its own terms are set to "
+      + "World default (the shop window's Settings tab): 100 is list price, 120 a markup. The "
+      + "shipped merchants set their own rates, so tick World default on a shop to have it follow "
+      + "this. Open shop windows reprice at once.",
     scope: "world",
     config: true,
     type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 1, step: 1, initial: 100 }),
@@ -1423,8 +1425,9 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "buysAt", {
     name: "Shops buy at (%)",
-    hint: "What a shop pays for what players sell it, as a percentage of the item's value, unless "
-      + "its own terms say otherwise: 50 is half. A shop never pays more than it would charge.",
+    hint: "What a shop pays for what players sell it, as a percentage of the item's value, when "
+      + "its own terms are set to World default: 50 is half. The shipped merchants set their own "
+      + "rates. A shop never pays more than it would charge.",
     scope: "world",
     config: true,
     type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 0, step: 1, initial: 50 }),

@@ -186,6 +186,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       keepShopping: ShopSheet.#onKeepShopping,
       settingsSection: ShopSheet.#onSettingsSection,
       setEvery: ShopSheet.#onSetEvery,
+      addRule: ShopSheet.#onAddRule,
       removeRule: ShopSheet.#onRemoveRule,
       restockNow: ShopSheet.#onRestockNow,
       resetToPreset: ShopSheet.#onResetToPreset,
@@ -263,8 +264,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // Only a typed field holds typing to carry over: a select has no defaultValue, and its
       // choice (a rule just added) may not be one of the new render's options.
       ? { selector: settingSelector(active), value: active.value, selection: selectionOf(active),
-        dirty: isTypedField(active) && active.value !== active.defaultValue }
+        // A value just refused goes back to the saved one: the field stays focused when the
+        // browser window, not the field, lost focus, and would otherwise carry it over.
+        dirty: !this._resetTyping && isTypedField(active) && active.value !== active.defaultValue }
       : null;
+    this._resetTyping = false;
     // From here until `_onRender`, a blur is the re-render removing a field, not the GM leaving it.
     this._settingsRendering = true;
   }
@@ -1102,18 +1106,17 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onSettingChange(control) {
     if (!game.user.isGM) return;
     const { op, side, list, end } = control.dataset;
-    if (op === "visit") {
-      // The GM's own choice, which placing a token never overrides again (`makeVisitable`).
-      await this.document.update({ "ownership.default": control.checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: control.checked });
-      return;
-    }
     // Read now, while the control still holds what the GM set; applied when its turn comes.
     const value = control.value, checked = control.checked;
+    if (op === "visit") {
+      // The GM's own choice, which placing a token never overrides again (`makeVisitable`).
+      await this.#queue(() => this.document.update({ "ownership.default": checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: checked }));
+      return;
+    }
     const change = {
       rate: () => ({ op, side, percent: typedNumber(value) }),
       // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
       rateDefault: () => ({ op: "rate", side, percent: checked ? null : percentOf(worldOf().rates[side]) }),
-      addRule: () => ({ op, category: value, world: worldOf().rates }),
       ruleRate: () => ({ op, category: control.dataset.category, side, percent: typedNumber(value) }),
       wontBuy: () => ({ op, list, value: control.dataset.value, on: checked }),
       keepHours: async shop => ({ op, on: checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
@@ -1132,7 +1135,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * edit would write the defaults over it, a 1.x shop's migration marker included.
    */
   #edit(makeChange) {
-    const run = async () => {
+    return this.#queue(async () => {
       const shop = safeShopOf(this.document);
       if (!shop) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
@@ -1143,18 +1146,26 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const result = applyChange(shop, change);
       if (!result.ok) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
-        this.render({ parts: ["body"] });   // puts the field back
+        this._resetTyping = true;   // puts the field back, even one still focused (an alt-tab)
+        this.render({ parts: ["body"] });
         return;
       }
       if (change.op === "every") this._everyDice = false;
       // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
       await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
-    };
-    // Never rejects: a write the server refuses is said, and the field put back to what the shop
-    // still holds; the next edit still runs, and the control's listener has nothing to catch.
-    this._edits = (this._edits ?? Promise.resolve()).then(run).catch(err => {
+    });
+  }
+
+  /**
+   * Runs `task`, a Settings-tab write, after every one queued before it. Never rejects: a write
+   * the server refuses is said, and the control put back to what the shop still holds; the next
+   * write still runs, and the control's listener has nothing to catch.
+   */
+  #queue(task) {
+    this._edits = (this._edits ?? Promise.resolve()).then(task).catch(err => {
       console.error(`${MODULE} | a shop setting wasn't saved`, err);
       ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.SaveFailed"));
+      this._resetTyping = true;
       this.render({ parts: ["body"] });
     });
     return this._edits;
@@ -1174,6 +1185,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     await this.#edit(() => ({ op: "every", every }));
+  }
+
+  /** Adds a rule for the category picked beside the button (a test passes it as `data-category`). */
+  static async #onAddRule(_event, target) {
+    if (!game.user.isGM) return;
+    const category = target.dataset.category ?? target.closest?.(".settings-add-rule")?.querySelector("select")?.value;
+    await this.#edit(() => ({ op: "addRule", category, world: worldOf().rates }));
   }
 
   static async #onRemoveRule(_event, target) {

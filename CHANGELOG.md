@@ -26,8 +26,9 @@ than for the code. Reference the issue or PR it closes.
   what it won't buy, its hours, and how often and how it restocks, with
   *Restock now*, *Players can visit* and *Reset to preset*. Changes save as
   you make them, and every open shop window reprices at once. Two new world
-  settings, *Shops sell at (%)* and *Shops buy at (%)*, set the default
-  rates. (#110)
+  settings, *Shops sell at (%)* and *Shops buy at (%)*, set the rates for any
+  shop whose terms are on *World default*; the shipped merchants keep their
+  own until you tick it. (#110)
 - 2.0: sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent

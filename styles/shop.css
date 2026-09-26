@@ -556,7 +556,8 @@
 .shop-sheet .settings-percent input { width: 4.5rem; text-align: right; }
 .shop-sheet .settings-example { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; font-size: 0.82rem; margin: 0; }
 .shop-sheet .settings-icon { width: auto; background: none; border: none; color: var(--color-text-secondary); cursor: pointer; }
-.shop-sheet .settings-add-rule { align-self: flex-start; }
+.shop-sheet .settings-add-rule { align-self: flex-start; display: flex; gap: 0.4rem; }
+.shop-sheet .settings-add-rule button { width: auto; white-space: nowrap; }
 
 .shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }

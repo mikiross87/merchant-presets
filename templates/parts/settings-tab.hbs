@@ -58,10 +58,13 @@
       <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.None"}}</p>
     {{/each}}
     {{#if terms.ruleChoices.length}}
-      <select class="settings-add-rule" data-op="addRule">
-        <option value="" selected>{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Add"}}</option>
-        {{#each terms.ruleChoices}}<option value="{{value}}">{{label}}</option>{{/each}}
-      </select>
+      {{!-- A pick alone adds nothing: arrowing through a closed select fires change per option. --}}
+      <div class="settings-add-rule">
+        <select aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Category'}}">
+          {{#each terms.ruleChoices}}<option value="{{value}}">{{label}}</option>{{/each}}
+        </select>
+        <button type="button" data-action="addRule"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Add"}}</button>
+      </div>
     {{/if}}
   {{/if}}
 
