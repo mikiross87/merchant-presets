@@ -1322,9 +1322,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${key}`);
-    // A player's character, or anything a player owns, that has no deal here yet.
-    const candidates = previous ? [] : game.actors.filter(a => (a.type === "character" || a.hasPlayerOwner)
-      && !shop.deals.some(d => d.actor === a.uuid));
+    // A character with no deal here yet: not the mounts, shops and summons players also own.
+    const candidates = previous ? [] : game.actors.filter(a => a.type === "character" && !shop.deals.some(d => d.actor === a.uuid));
     if (!previous && !candidates.length) {
       ui.notifications.warn(i18n("NoCharacters"));
       return;
