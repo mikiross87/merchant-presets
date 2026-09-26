@@ -30,7 +30,7 @@ async function setUp() {
 /** Run `fn` as a player: `api.trade` asks as them, while the GM's tab answers as itself. */
 async function asPlayer(fn, id = "p1") {
   const gm = globalThis.game.user;
-  const player = { id, isGM: false };
+  const player = { id, isGM: false, hasPermission: () => true };
   const query = gm.query;
   gm.query = async (name, data) => {
     const asking = globalThis.game.user;
@@ -72,6 +72,21 @@ test("a trade resent after the claim moved to a fresh tab is still carried out o
   assert.equal(qty(shop, ROPE), shelf);
   assert.deepEqual(named(tess, "Rope").map(r => r.system.quantity), [1]);
   assert.equal(tess.system.currency.gp, 19);
+});
+
+test("a player whose role can't query users is told so, not left unconfirmed (#134 review)", async () => {
+  const { shop, api, request } = await setUp();
+  shop.ownership = { default: 1 };
+  const told = [];
+  globalThis.ui.notifications.warn = message => told.push(message);
+  const result = await asPlayer(() => {
+    globalThis.game.user.hasPermission = permission => permission !== "QUERY_USER";
+    return api.trade(request([{ itemId: BELL, quantity: 1 }]));
+  });
+  assert.deepEqual(result, { status: "refused", reason: "no-permission" });
+  assert.equal(told.length, 1);
+  assert.match(told[0], /permission/i);
+  assert.equal(qty(shop, BELL), 11);
 });
 
 test("a shop in a compendium is refused before anything is written (#134 review)", async () => {

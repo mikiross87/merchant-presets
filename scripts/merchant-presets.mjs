@@ -1245,6 +1245,13 @@ function handleTradeQuery(request, { user }) {
 async function trade(request) {
   const gm = game.users.activeGM;
   if (!gm) return clientOutcome(false);
+  // Core refuses to send a query without this permission (Player by default, but a GM can raise
+  // it). Caught as a failed query it would read as unconfirmed for ever, with no one told why.
+  if (!game.user.hasPermission("QUERY_USER")) {
+    ui.notifications.warn("Your role doesn't have permission to query users, which trading in a shop needs. "
+      + "Ask the GM to grant it in Configure Permissions.");
+    return { status: "refused", reason: "no-permission" };
+  }
   if (typeof request?.tradeId === "string") askedHere.add(request.tradeId);
   try {
     return await gm.query(QUERY, request, { timeout: QUERY_TIMEOUT_MS });

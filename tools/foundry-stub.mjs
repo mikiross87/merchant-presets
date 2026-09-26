@@ -119,7 +119,7 @@ export function createWorld() {
 
   // The GM's `query` answers the way Foundry's server does for a single tab:
   // it runs this client's own handler with the querying user in the context.
-  const user = flagged({ id: "gm", isGM: true, flags: {},
+  const user = flagged({ id: "gm", isGM: true, flags: {}, hasPermission: () => true,
     async query(name, data) { return globalThis.CONFIG.queries[name](data, { user: globalThis.game.user }); } });
   const socketHandlers = new Map();
   globalThis.game = {
