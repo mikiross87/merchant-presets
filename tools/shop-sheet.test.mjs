@@ -1073,6 +1073,13 @@ test("a double click on a rule's trash removes that rule only (#140 review, roun
   assert.deepEqual(shop.flags["merchant-presets"].shop.terms.categories.map(r => r.category), ["armor", "loot"]);
 });
 
+test("the Terms section words a rate as the shop charges it, capped (#140 review, round 3)", async t => {
+  const { sheet } = openSettings(t, { shopConfig: { terms: { sellsAt: 0.4, buysAt: null, categories: [] } } });
+  const { settings } = await sheet._prepareContext({});
+  // Never buys above what it sells at: the world's half is capped to 40%, as the chip and trades say.
+  assert.equal(settings.terms.buys.word, "40%");
+});
+
 test("a restock that can't run says so without blaming a missing table", async t => {
   const { sheet, warnings } = openSettings(t);
   api.restock = async () => null;
