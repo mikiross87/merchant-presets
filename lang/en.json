@@ -22,6 +22,7 @@
       },
       "ClosedOpensAt": "Closed · opens at {time}",
       "TermsChip": "Sells at {sells} · Buys at {buys}",
+      "TermsChipSells": "Sells at {sells}",
       "FreshStockToday": "Fresh stock today",
       "BuyingAs": "Buying as",
       "NoBuyer": "Pick a buyer",
@@ -119,6 +120,7 @@
         "SellsAt": "Sells at",
         "BuysAt": "Buys at",
         "ListPrice": "list price",
+        "List": "list",
         "ListPriceNote": "The price in the book is the price you pay.",
         "HalfValue": "half value",
         "SellExample": "A {price} item sells here for {sellPrice}",
@@ -149,20 +151,24 @@
         "Visit": {
           "Label": "Players can visit",
           "Hint": "Off hides the shop from players, except any you gave their own access to it.",
+          "HintAll": "Off hides the shop from players entirely.",
           "Others": "Players with their own access: {count}. Change it in the shop's Ownership."
         },
         "Terms": {
-          "Hint": "Rates apply to every item unless a category rule says otherwise.",
+          "Hint": "Rates apply to every item unless a category rule or a deal says otherwise.",
           "SellsAt": "Sells at",
           "BuysAt": "Buys at",
           "WorldDefault": "World default",
           "ExampleSells": "A 15 gp longsword sells for",
-          "ExampleBuys": "buys back for"
+          "ExampleItem": "{item} ({price}) sells for",
+          "ExampleBuys": "· buys back for",
+          "OfValue": "{fraction} of value"
         },
         "Rules": {
           "Title": "Category rules",
           "None": "None. Every category trades at the rates above.",
-          "Add": "Add rule",
+          "Add": "+ Add rule",
+          "AddTitle": "Add a category rule",
           "Category": "Category to add a rule for",
           "Sells": "Sells",
           "Buys": "Buys",
@@ -172,7 +178,7 @@
           "Hint": "Special prices for one character. Only that character sees them.",
           "None": "No deals yet.",
           "Cap": "No deal can make selling pay more than buying.",
-          "Add": "Add deal",
+          "Add": "+ Add deal",
           "Edit": "Edit deal",
           "Remove": "Remove deal",
           "Buying": "Buying {percent}",

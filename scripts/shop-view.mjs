@@ -151,6 +151,9 @@ export function rateFraction(rate) {
  * @typedef {{kind: "markup"|"discount"|"full"|"deal"|null, text: string|null}} RateTag
  */
 
+/** A true minus sign (U+2212), as the design sets every negative figure; a hyphen is shorter and sits lower. */
+export const MINUS = "\u2212";
+
 /**
  * The tag a Buy-tab row shows beside its price, comparing the row's own
  * effective rate against the shop's chip (world/shop layers only — never a
@@ -169,18 +172,18 @@ export function rateTag(effective, chipRate) {
   if (Math.abs(diff) < 1e-9) return { kind: null, text: null };
   if (effective.layer === "category" && Math.abs(effective.rate - 1) < 1e-9) return { kind: "full", text: null };
   const pct = Math.round(Math.abs(diff / chipRate) * 100);
-  return diff > 0 ? { kind: "markup", text: `+${pct}%` } : { kind: "discount", text: `-${pct}%` };
+  return diff > 0 ? { kind: "markup", text: `+${pct}%` } : { kind: "discount", text: `${MINUS}${pct}%` };
 }
 
 /**
- * A deal's size as the window shows it: signed, to a hundredth of a percent ("-10%", "+12.5%").
+ * A deal's size as the window shows it: signed, to a hundredth of a percent ("−10%", "+12.5%").
  *
  * @param {number} factor  -0.1 is 10% off
  * @returns {string}
  */
 export function signedPercent(factor) {
   const percent = Math.round(factor * 10_000) / 100;
-  return `${percent < 0 ? "-" : "+"}${Math.abs(percent)}%`;
+  return `${percent < 0 ? MINUS : "+"}${Math.abs(percent)}%`;
 }
 
 /**

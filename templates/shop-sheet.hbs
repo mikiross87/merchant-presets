@@ -1,8 +1,10 @@
-{{!-- The shop window (#103). One root template: every tab's markup is always in the DOM (see
+{{!-- The shop window (#103), built to design/shop.pen's frames (#145): every element the design
+      draws carries its layer name as `data-pen`, which tools/design-check.mjs pairs with the
+      frame's node of that name. One root template: every tab's markup is always in the DOM (see
       shop-sheet.mjs's _prepareContext comment), and core's native changeTab() toggles which
       .tab[data-tab] section is visible. --}}
 
-{{!-- Reused wherever a price or a purse shows coins: `this` is a coinBreakdown() array. --}}
+{{!-- Coins, the amount before each glyph: `this` is a coinBreakdown() array. --}}
 {{#*inline "coins"}}
   {{#each this}}
     <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
@@ -13,33 +15,47 @@
     <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
   {{/each}}
 {{/inline}}
+{{!-- The design's coins: `coins` a coinBreakdown() array, `mode` how each is named (mpCoinPen). --}}
+{{#*inline "mpCoins"}}
+  {{#each coins}}
+    <span class="mp-coin coin-{{denomination}}" data-pen="{{mpCoinPen ../mode this @index}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
+      <b data-pen="Amount">{{count}}</b><img data-pen="Coin" src="{{icon}}" alt="" />
+    </span>
+  {{else}}
+    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
+  {{/each}}
+{{/inline}}
 
-<header class="shop-header">
-  <img class="shop-portrait" src="{{header.img}}" alt="" />
-  <div class="shop-heading">
-    <h1 class="shop-title">{{header.title}}</h1>
+<header class="mp-hero" data-pen="Hero">
+  <img class="mp-portrait" data-pen="Merchant Portrait" src="{{header.img}}" alt="" />
+  <div class="mp-identity" data-pen="Identity">
+    <div class="mp-title-line" data-pen="Title line">
+      <h1 class="mp-shop-name" data-pen="Shop Name">{{header.title}}</h1>
+    </div>
     {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
           this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}
-    <div class="shop-description">{{{header.description}}}</div>
-    <div class="shop-chips">
-      <span class="chip chip-open {{#if header.open}}is-open{{else}}is-closed{{/if}}">
-        <i class="fa-solid fa-circle" aria-hidden="true"></i> {{header.openLabel}}
+    <div class="mp-description" data-pen="Shop Description">{{{header.description}}}</div>
+    <div class="mp-chips" data-pen="Chips">
+      <span class="mp-hero-chip mp-open-chip {{#if header.open}}is-open{{else}}is-closed{{/if}}" data-pen="Open Chip">
+        <span class="mp-dot" data-pen="Dot"></span><span data-pen="Open Label">{{header.openLabel}}</span>
       </span>
-      <span class="chip chip-tier"><i class="fa-solid fa-map-pin" aria-hidden="true"></i> {{header.tier}}</span>
-      <button type="button" class="chip chip-terms" popovertarget="{{appId}}-terms-popover">
-        <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{header.termsChip}}
+      <span class="mp-hero-chip" data-pen="Kind Chip">
+        {{mpIcon header.kindIcon pen="Kind icon"}}<span data-pen="Kind Label">{{header.tier}}</span>
+      </span>
+      <button type="button" class="mp-hero-chip mp-terms-chip chip-terms" data-pen="Terms Chip" popovertarget="{{appId}}-terms-popover">
+        {{mpIcon "scale" pen="Terms icon"}}<span data-pen="Terms Label">{{header.termsChip}}</span>{{mpIcon "chevron-down" pen="Terms chevron"}}
       </button>
     </div>
   </div>
-  <div class="buying-as">
-    <span class="buying-as-label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
-    <button type="button" class="buying-as-toggle" popovertarget="{{appId}}-buyer-picker">
-      {{#if buyer}}<img class="buying-as-avatar" src="{{buyer.img}}" alt="" />{{/if}}
-      <span class="buying-as-name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
-      <i class="fa-solid fa-caret-down" aria-hidden="true"></i>
+  <div class="mp-purse" data-pen="Purse">
+    <span class="mp-purse-label" data-pen="Purse Label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
+    <button type="button" class="mp-buyer-row buying-as-toggle" data-pen="Buyer row" popovertarget="{{appId}}-buyer-picker">
+      {{#if buyer}}<span class="mp-buyer-avatar" data-pen="Buyer avatar"><span data-pen="Buyer initial">{{buyerInitial}}</span></span>{{/if}}
+      <span class="mp-buyer-name" data-pen="Buyer name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
+      {{mpIcon "chevron-down" pen="Buyer chevron"}}
     </button>
     {{#if buyer}}
-      <div class="purse">{{> coins buyerPurse}}</div>
+      <div class="mp-purse-coins" data-pen="Purse Coins">{{> mpCoins coins=buyerPurse mode="metal"}}</div>
     {{/if}}
   </div>
 </header>
@@ -86,11 +102,11 @@
   {{/if}}
 </div>
 
-<nav class="sheet-tabs tabs" data-group="primary">
+<nav class="mp-tabs sheet-tabs tabs" data-group="primary" data-pen="Tabs">
   {{#each tabs}}
-    <button type="button" class="tab-link {{cssClass}}" data-action="tab" data-group="primary" data-tab="{{id}}">
-      <i class="{{icon}}" aria-hidden="true"></i> {{localize label}}
-      {{#if gm}}<span class="badge-gm">{{localize "MERCHANT_PRESETS.Shop.Tabs.GmBadge"}}</span>{{/if}}
+    <button type="button" class="mp-tab tab-link {{cssClass}}" data-action="tab" data-group="primary" data-tab="{{id}}" data-pen="Tab {{localize label}}">
+      {{mpIcon icon pen=(concat (localize label) " icon")}}<span data-pen="{{localize label}} label">{{localize label}}</span>
+      {{#if gm}}<span class="mp-gm-badge" data-pen="GM badge"><span data-pen="GM badge text">{{localize "MERCHANT_PRESETS.Shop.Tabs.GmBadge"}}</span></span>{{/if}}
     </button>
   {{/each}}
 </nav>
@@ -210,7 +226,7 @@
 </section>
 
 {{#if settings}}
-  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}}" data-group="primary" data-tab="settings">
+  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}}" data-group="primary" data-tab="settings" data-pen="Body">
     {{> "modules/merchant-presets/templates/parts/settings-tab.hbs" settings}}
   </section>
 {{/if}}

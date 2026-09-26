@@ -20,6 +20,7 @@ import {
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal, nextCloseAt } from "./deals.mjs";
+import { icon } from "./icons.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -60,12 +61,37 @@ const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
 
 /** The GM Settings tab's sections (#110), in its side nav's order, with their icons. */
 const SETTINGS_SECTIONS = [
-  { id: "terms", icon: "fa-solid fa-scale-balanced" },
-  { id: "deals", icon: "fa-solid fa-handshake" },
-  { id: "wontBuy", icon: "fa-solid fa-ban" },
-  { id: "hours", icon: "fa-solid fa-hourglass-half" },
-  { id: "restock", icon: "fa-solid fa-rotate" }
+  { id: "terms", icon: "lucide:scale" },
+  { id: "deals", icon: "lucide:handshake" },
+  { id: "wontBuy", icon: "lucide:ban" },
+  { id: "hours", icon: "lucide:hourglass" },
+  { id: "restock", icon: "lucide:refresh-cw" }
 ];
+
+/**
+ * The hero's kind chip icon for each shipped shop (design: the smith's hammer, the inn's beer),
+ * by its name without the tier; any other shop gets the storefront.
+ */
+const KIND_ICONS = {
+  "Adventurers' Store": "lucide:backpack",
+  "Alchemists & Apothecaries": "lucide:flask-conical",
+  "Arcane Store": "lucide:wand-sparkles",
+  "Armourer & Blacksmiths": "lucide:hammer",
+  "Criminal & Illicit Store": "lucide:venetian-mask",
+  "Dock": "lucide:anchor",
+  "Druidic Store": "lucide:leaf",
+  "Fletcher & Woodworker": "lucide:axe",
+  "General Store": "lucide:store",
+  "Inn & Tavern": "lucide:beer",
+  "Jeweler": "lucide:gem",
+  "Leatherworker": "lucide:scissors",
+  "Musical Store": "lucide:music",
+  "Stable": "lucide:fence",
+  "Tailor & Textile Store": "lucide:shirt",
+  "Temple & Faith Store": "lucide:church",
+  "Tinkering Store": "lucide:cog"
+};
+const kindIcon = source => KIND_ICONS[titleParts(source ?? "").title] ?? "lucide:store";
 
 /** CONST.DOCUMENT_OWNERSHIP_LEVELS: a shop players can visit is Limited to them by default. */
 const NONE = 0, LIMITED = 1;
@@ -112,7 +138,9 @@ function dealChip(termsChip, deal, world, terms) {
   const effect = (from, to) => (from > 0 && Math.abs(to - from) > 1e-9 ? signedPercent(to / from - 1) : null);
   const price = effect(list.sellsAt.rate, dealt.sellsAt.rate);
   const offers = effect(list.buysAt.rate, dealt.buysAt.rate);
-  return [termsChip,
+  if (!price && !offers) return termsChip;
+  // The design's "Sells at list · Your price −10%": the shop's selling rate, then the deal's own.
+  return [game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChipSells", { sells: chipWord(list.sellsAt.rate) }),
     price ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: price }) : null,
     offers ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: offers }) : null
   ].filter(Boolean).join(" · ");
@@ -168,6 +196,11 @@ function coinsText(coins) {
  * design/README.md ("Sells at list price", "Buys at half value"); `rateFraction` (shop-view.mjs)
  * is for a row's own tag, a different vocabulary ("½"). Anything else falls back to a percentage.
  */
+/** The chip's short word for a selling rate: "list" at list price, else a percentage. */
+function chipWord(rate) {
+  return Math.abs(rate - 1) < 1e-9 ? game.i18n.localize("MERCHANT_PRESETS.Shop.Terms.List") : `${Math.round(rate * 100)}%`;
+}
+
 function termsWord(rate, kind) {
   if (kind === "sell" && rate === 1) return game.i18n.localize("MERCHANT_PRESETS.Shop.Terms.ListPrice");
   if (kind === "buy" && rate === 0.5) return game.i18n.localize("MERCHANT_PRESETS.Shop.Terms.HalfValue");
@@ -203,17 +236,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // this class none of those variables resolve, design/README.md's token table included.
     classes: ["merchant-presets", "shop-sheet", "dnd5e2"],
     position: { width: 920, height: 680 },
-    window: {
-      resizable: true,
-      icon: "fa-solid fa-store",
-      controls: [{
-        action: "npcSheet",
-        icon: "fa-solid fa-address-card",
-        label: "MERCHANT_PRESETS.Shop.NpcSheet",
-        ownership: "OWNER",
-        visible: () => game.user.isGM
-      }]
-    },
+    window: { resizable: true, icon: "fa-solid fa-store" },
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
       selectCategory: ShopSheet.#onSelectCategory,
@@ -275,6 +298,41 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._settingsSection = "terms";
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
     this._everyDice = false;
+  }
+
+  /** The shop's name, as its own heading shows it: no "Non-Player Character:" and no tier (#145). */
+  get title() {
+    return titleParts(this.document.name).title;
+  }
+
+  /**
+   * The design's own Window Bar (#145) on core's header, so core's dragging and closing still
+   * work: the title, then (for a GM) a button to the NPC sheet, then close. No icon, no id link
+   * and no controls menu; the NPC sheet has its own, and it's the one a GM configures.
+   * @override
+   */
+  async _renderFrame(options) {
+    const frame = await super._renderFrame(options);
+    const header = frame.querySelector(":scope > .window-header");
+    if (!header) return frame;
+    header.dataset.pen = "Window Bar";
+    header.querySelector(":scope > .window-title")?.setAttribute("data-pen", "Window Title");
+    for (const el of header.querySelectorAll(":scope > .window-icon, :scope > .document-id-link, :scope > [data-action='toggleControls'], :scope > .controls-dropdown")) el.remove();
+    const right = document.createElement("div");
+    right.className = "mp-bar-right";
+    right.dataset.pen = "Bar right";
+    if (game.user.isGM) {
+      right.insertAdjacentHTML("beforeend", `<button type="button" class="mp-npc-sheet" data-action="npcSheet" data-pen="NPC sheet button">`
+        + `${icon("user-round", { "data-pen": "NPC sheet icon" })}<span data-pen="NPC sheet label">${escapeText(game.i18n.localize("MERCHANT_PRESETS.Shop.NpcSheet"))}</span></button>`);
+    }
+    const close = header.querySelector(":scope > [data-action='close']");
+    if (close) {
+      close.className = "mp-close";
+      close.innerHTML = icon("x", { "data-pen": "Close" });
+      right.append(close);
+    }
+    header.append(right);
+    return frame;
   }
 
   /**
@@ -347,10 +405,6 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         });
       } else control.addEventListener("change", () => this._onSettingChange(control));
     }
-    // The category picked for a new rule, kept until Add is pressed: a clock tick's re-render
-    // would otherwise put the first choice back, and Add would rule that one.
-    this.element?.querySelector(".settings-add-rule select")
-      ?.addEventListener("change", event => { this._ruleChoice = event.target.value; });
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
       const { dirty, value, selection } = this._settingFocus;
@@ -387,10 +441,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   _getTabsConfig(group) {
     if (group !== "primary") return super._getTabsConfig(group);
     const tabs = [
-      { id: "buy", icon: "fa-solid fa-bag-shopping" },
-      { id: "sell", icon: "fa-solid fa-hand-holding-dollar" }
+      { id: "buy", icon: "lucide:shopping-bag" },
+      { id: "sell", icon: "lucide:hand-coins" }
     ];
-    if (game.user.isGM) tabs.push({ id: "settings", icon: "fa-solid fa-gear", gm: true });
+    if (game.user.isGM) tabs.push({ id: "settings", icon: "lucide:settings-2", gm: true });
     return { tabs, initial: "buy", labelPrefix: "MERCHANT_PRESETS.Shop.Tabs" };
   }
 
@@ -435,6 +489,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       header,
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
+      buyerInitial: buyer ? (buyer.name || "?").charAt(0).toUpperCase() : "",
       buyerPurse: buyer ? heldCoins(buyer.system.currency, currencies) : [],
       currencies,
       kind,
@@ -460,13 +515,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, deal) {
-    const termsChip = game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) });
+    const termsChip = game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: chipWord(chipSellsAt), buys: rateFraction(chipBuysAt) });
     const closesAt = config.hours ? this.#formatTime(config.hours.close) : null;
     const opensAt = config.hours ? this.#formatTime(config.hours.open) : null;
     return {
       img: actor.img,
       title,
       tier,
+      kindIcon: kindIcon(config.source),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -515,7 +571,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   #formatTime(time) {
-    return `${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`;
+    return `${time.hour}:${String(time.minute).padStart(2, "0")}`;
   }
 
   #closedContext(config, minute, calendarDays) {
@@ -605,11 +661,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /* -------------------------------------------------------------- buy tab */
 
+  /** The shop's goods players can see, in its own order: the one a GM sets by dragging on the NPC sheet. */
+  #shelf(actor) {
+    const shopItems = actor.items.map(i => i.toObject()).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+    return shopItems.map(data => ({ data, stock: safeStockOf(data) }))
+      .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems));
+  }
+
   #buyContext(actor, config, rates, currencies, buyer, open) {
-    const shopItems = actor.items.map(i => i.toObject());
-    const rows = shopItems
-      .map(data => ({ data, stock: safeStockOf(data) }))
-      .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems))
+    const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         this._minQuantity.buy.set(row.id, row.minQuantity);
@@ -1103,11 +1163,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       worldDefault: shop.terms[side] === null
     });
 
-    // A rule can price an item type, or a category the GM named on a shelf line.
-    const ruled = new Set(shop.terms.categories.map(c => c.category));
-    const named = actor.items.map(i => safeStockOf(i)?.category).filter(Boolean);
-    const ruleChoices = [...new Set([...WONT_BUY_TYPES, ...named])].filter(c => !ruled.has(c))
-      .map(value => ({ value, label: WONT_BUY_TYPES.includes(value) ? typeLabel(value) : value, selected: value === this._ruleChoice }));
+    const ruleChoices = this.#ruleChoices(actor, shop);
 
     const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
     const { chip, formula } = everyChoice(shop.restock);
@@ -1115,24 +1171,41 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
     const schedule = actor.flags?.[MODULE]?.schedule;
+    // Players the GM gave their own level: the switch sets only the default, so they keep it.
+    const visitOthers = Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
+      const user = id !== "default" && game.users?.get(id);
+      return user && !user.isGM && level > NONE;
+    }).length;
+    const currencies = CONFIG.DND5E.currencies;
+    const coins = cp => coinBreakdown(cp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
+    // The first good on the Buy list, the design's Longsword: the Terms example prices it, and
+    // Players see shows it as everyone sees it and as each deal's character does.
+    const sample = this.#previewRow(actor, shop, world, null, currencies);
+    let example = { text: i18n("Terms.ExampleSells"), sell: header.terms.exampleSell, buy: header.terms.exampleBuy };
+    if (sample) {
+      try {
+        example = {
+          text: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Terms.ExampleItem", { item: sample.name, price: listText(bundlePriceCp(sample.data, 1, currencies), currencies) }),
+          sell: sample.priceCoins,
+          buy: coins(bundlePriceCp(sample.data, effectiveRates(world, shop.terms, sample.category).buysAt.rate, currencies))
+        };
+      } catch { /* unpriced at list: the fixed example stands */ }
+    }
 
     return {
       // A config that failed validation shows the defaults here; editing is refused (see `#edit`).
       broken: !safeShopOf(actor),
+      // One page: the nav jumps to a section, and marks the one last jumped to.
       sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
-      section: Object.fromEntries(SETTINGS_SECTIONS.map(s => [s.id, s.id === this._settingsSection])),
       visit: (actor.ownership?.default ?? NONE) >= LIMITED,
-      // Players the GM gave their own level: the switch sets only the default, so they keep it.
-      visitOthers: Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
-        const user = id !== "default" && game.users?.get(id);
-        return user && !user.isGM && level > NONE;
-      }).length,
+      // "Entirely" holds only while no player has access of their own; then the hint says so.
+      visitHint: i18n(visitOthers ? "Visit.Hint" : "Visit.HintAll"),
+      visitOthers,
       terms: {
         // In words, what the shop actually charges and pays: capped, as the chip and trades are.
         sells: { ...rate("sellsAt"), word: termsWord(effective.sellsAt.rate, "sell") },
-        buys: { ...rate("buysAt"), word: termsWord(effective.buysAt.rate, "buy") },
-        exampleSell: header.terms.exampleSell,
-        exampleBuy: header.terms.exampleBuy,
+        buys: { ...rate("buysAt"), word: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Terms.OfValue", { fraction: rateFraction(effective.buysAt.rate) }) },
+        example,
         rules: shop.terms.categories.map(c => {
           // A side the rule leaves to the shop shows blank, with what that side really trades at as
           // its placeholder: the shop's rate, capped as trades cap it.
@@ -1182,14 +1255,46 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // What players see at these terms: the header chip and its worked example, then each deal in
       // force as its own character sees it.
       preview: {
-        chip: header.termsChipBase, exampleSell: header.terms.exampleSell, exampleBuy: header.terms.exampleBuy,
-        deals: shop.deals.filter(d => activeDeal(shop, d.actor, game.time.worldTime)).map(d => ({
+        chip: header.termsChipBase,
+        item: sample,
+        example,
+        // Only a deal that moves a Buy-list price: the preview's row is one (design: Aria's, not
+        // Tomas's, whose deal is on what the shop pays him).
+        deals: shop.deals.filter(d => d.buy && activeDeal(shop, d.actor, game.time.worldTime)).map(d => ({
           name: d.name,
           chip: dealChip(header.termsChipBase, d, world, shop.terms),
+          item: this.#previewRow(actor, shop, world, d, currencies),
           exampleSell: this.#exampleSell(world, shop, d)
         }))
       }
     };
+  }
+
+  /** What a new category rule can price: an item type, or a category the GM named on a shelf line, with no rule yet. */
+  #ruleChoices(actor, shop) {
+    const ruled = new Set(shop.terms.categories.map(c => c.category));
+    const named = actor.items.map(i => safeStockOf(i)?.category).filter(Boolean);
+    const typeLabel = type => game.i18n.localize(CONFIG.Item.typeLabels?.[type] ?? type);
+    return [...new Set([...WONT_BUY_TYPES, ...named])].filter(c => !ruled.has(c))
+      .map(value => ({ value, label: WONT_BUY_TYPES.includes(value) ? typeLabel(value) : value }));
+  }
+
+  /**
+   * The first good on the Buy list that has a price, as `deal`'s character sees it (everyone, with
+   * no deal): the Settings preview's row. Null when the shelf has none.
+   */
+  #previewRow(actor, shop, world, deal, currencies) {
+    const rates = { world, shopTerms: shop.terms, chipSellsAt: effectiveRates(world, shop.terms).sellsAt.rate };
+    for (const { data, stock } of this.#shelf(actor)) {
+      const row = buyRow(data, stock, rates, deal, currencies, worldInfiniteStock(), bundleOf);
+      if (row.unpriced || row.worthless) continue;
+      return {
+        data, name: row.name, img: row.img, category: row.category, tag: row.tag,
+        priceCoins: coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        listText: listText(row.listPriceCp, currencies)
+      };
+    }
+    return null;
   }
 
   /** One deal as the Deals section lists it (design v8ap9): who, what it changes, the note and its end. */
@@ -1301,9 +1406,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return this._edits;
   }
 
+  /** Settings is one page (design v8ap9): the nav scrolls its section into view and marks it. */
   static #onSettingsSection(_event, target) {
     this._settingsSection = target.dataset.section;
-    this.render({ parts: ["body"] });
+    for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link === target);
+    this.element.querySelector(`.settings-section[data-section="${this._settingsSection}"]`)?.scrollIntoView({ block: "start" });
   }
 
   static async #onSetEvery(_event, target) {
@@ -1317,10 +1424,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     await this.#edit(() => ({ op: "every", every }));
   }
 
-  /** Adds a rule for the category picked beside the button (a test passes it as `data-category`). */
+  /** Adds a rule for a category the GM picks in a small form (a test passes it as `data-category`). */
   static async #onAddRule(_event, target) {
     if (!game.user.isGM) return;
-    const category = target.dataset.category ?? target.closest?.(".settings-add-rule")?.querySelector("select")?.value;
+    let category = target.dataset.category;
+    if (!category) {
+      const choices = this.#ruleChoices(this.document, shopConfigOf(this.document));
+      if (!choices.length) return;
+      const answer = await foundry.applications.api.DialogV2.input({
+        window: { title: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Rules.AddTitle") },
+        content: `<div class="form-group"><label>${escapeText(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Rules.Category"))}</label>`
+          + `<select name="category">${choices.map(c => `<option value="${escapeText(c.value)}">${escapeText(c.label)}</option>`).join("")}</select></div>`,
+        ok: { label: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Rules.Add") }
+      });
+      category = answer?.category;
+      if (!category) return;
+    }
     await this.#edit(() => ({ op: "addRule", category, world: worldOf().rates }));
   }
 
@@ -1455,6 +1574,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** Registered at init (#104): never the default, so an ordinary NPC keeps its usual sheet until a shop's own `flags.core.sheetClass` opts it in. */
   static register() {
+    // `{{mpIcon "scale" pen="Terms icon"}}`: a Lucide icon inline; `pen` is its design layer name
+    // (#145). A script hands one over as "lucide:scale".
+    Handlebars.registerHelper("mpIcon", (name, options) => {
+      const pen = options?.hash?.pen;
+      return new Handlebars.SafeString(icon(String(name).replace(/^lucide:/, ""), pen ? { "data-pen": pen } : {}));
+    });
+    // A coin's design layer name, which depends on where it shows: in a purse by its metal
+    // ("gold"), in a worked example by its metal and count ("gold 15"), in a price by its place.
+    Handlebars.registerHelper("mpCoinPen", (mode, coin, index) => {
+      const metal = game.i18n.localize(coin?.label ?? "").toLowerCase();
+      if (mode === "price") return index ? "Price Minor" : "Price";
+      return mode === "count" ? `${metal} ${coin?.count}` : metal;
+    });
     foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, MODULE, ShopSheet, {
       types: ["npc"],
       makeDefault: false,

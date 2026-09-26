@@ -45,6 +45,12 @@ const clock = { hour: 12 };
 const hooks = {};
 globalThis.Hooks = { on: (name, fn) => { (hooks[name] ??= []).push(fn); } };
 const fire = (name, ...args) => (hooks[name] ?? []).forEach(fn => fn(...args));
+/** Template helpers the window registers, by name. */
+const helpers = {};
+globalThis.Handlebars = {
+  registerHelper: (name, fn) => { helpers[name] = fn; },
+  SafeString: class { constructor(text) { this.text = text; } toString() { return this.text; } }
+};
 
 globalThis.foundry = {
   applications: {
@@ -1074,10 +1080,12 @@ test("a double click on a rule's trash removes that rule only (#140 review, roun
 });
 
 test("the Terms section words a rate as the shop charges it, capped (#140 review, round 3)", async t => {
-  const { sheet } = openSettings(t, { shopConfig: { terms: { sellsAt: 0.4, buysAt: null, categories: [] } } });
-  const { settings } = await sheet._prepareContext({});
-  // Never buys above what it sells at: the world's half is capped to 40%, as the chip and trades say.
-  assert.equal(settings.terms.buys.word, "40%");
+  await withLabels(async () => {
+    const { sheet } = openSettings(t, { shopConfig: { terms: { sellsAt: 0.4, buysAt: null, categories: [] } } });
+    const { settings } = await sheet._prepareContext({});
+    // Never buys above what it sells at: the world's half is capped to 40%, as the chip and trades say.
+    assert.equal(settings.terms.buys.word, "OfValue(40%)");
+  });
 });
 
 test("a save the server refuses is said, and the field put back (#140 review, round 4)", async t => {
@@ -1142,11 +1150,21 @@ test("choosing a category in Add rule adds nothing until Add is pressed (#140 re
   assert.deepEqual(writtenShop(shop).terms.categories.map(r => r.category), ["weapon"]);
 });
 
-test("the category picked in Add rule survives a re-render (#140 review, round 7)", async t => {
-  const { sheet } = openSettings(t);
-  sheet._ruleChoice = "tool";   // what the select's change listener notes
-  const { settings } = await sheet._prepareContext({});
-  assert.deepEqual(settings.terms.ruleChoices.filter(c => c.selected).map(c => c.value), ["tool"]);
+test("Add rule asks which category in a form, and rules the one picked (#145: the design has only the button)", async t => {
+  const { sheet, shop } = openSettings(t);
+  const DialogV2 = globalThis.foundry.applications.api.DialogV2;
+  const input = DialogV2.input;
+  const asked = [];
+  DialogV2.input = async options => { asked.push(options); return { category: "tool" }; };
+  t.after(() => { DialogV2.input = input; });
+  await act(sheet, "addRule");
+  assert.match(asked[0].content, /<option value="tool">/);
+  assert.deepEqual(writtenShop(shop).terms.categories.map(c => c.category), ["tool"]);
+  // Dismissed, it adds nothing.
+  DialogV2.input = async () => null;
+  const writes = shop.updates.length;
+  await act(sheet, "addRule");
+  assert.equal(shop.updates.length, writes);
 });
 
 test("the Settings tab keeps its scroll position across re-renders (#140 review, round 7)", () => {
@@ -1225,10 +1243,11 @@ test("the header chip tells the buyer their deal, and only them (#111)", async (
     const config = shop.flags["merchant-presets"].shop;
     config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "secret", ends: null }];
     let { header } = await sheet._prepareContext({});
-    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½) · YourPrice(-10%) · YourOffers(+20%)");
+    // The design's "Sells at list · Your price −10%": the selling rate, then what the deal changes.
+    assert.equal(header.termsChip, "TermsChipSells(MERCHANT_PRESETS.Shop.Terms.List) · YourPrice(−10%) · YourOffers(+20%)");
     config.deals = [{ actor: "Actor.someoneElse", name: "x", buy: -0.1, sell: null, note: "", ends: null }];
     ({ header } = await sheet._prepareContext({}));
-    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½)");
+    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.List,½)");
   });
 });
 
@@ -1283,13 +1302,13 @@ test("the Deals section lists each deal with what it changes and when it ends", 
       { actor: "Actor.old", name: "Old", buy: -0.2, sell: 0.2, note: "", ends: { at: -1, when: "date" } }];
     const { settings } = await sheet._prepareContext({});
     assert.deepEqual(settings.deals.list.map(d => [d.name, d.initial, d.badges, d.line, d.ended]), [
-      ["Aria", "A", ["Buying(-10%)"], "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd", false],
+      ["Aria", "A", ["Buying(−10%)"], "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd", false],
       ["Tomas", "T", ["Selling(+10%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.UntilClose", false],
-      ["Old", "O", ["Buying(-20%)", "Selling(+20%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.Ended", true]
+      ["Old", "O", ["Buying(−20%)", "Selling(+20%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.Ended", true]
     ]);
-    // Players see: only the deals in force, each for its own character.
-    assert.deepEqual(settings.preview.deals.map(d => d.name), ["Aria", "Tomas"]);
-    assert.match(settings.preview.deals[0].chip, /YourPrice\(-10%\)/);
+    // Players see: only the deals in force that move a Buy-list price, each for its own character.
+    assert.deepEqual(settings.preview.deals.map(d => d.name), ["Aria"]);
+    assert.match(settings.preview.deals[0].chip, /YourPrice\(−10%\)/);
   });
 });
 
@@ -1377,7 +1396,8 @@ test("the chip promises what the deal really gives once the cap has cut it (#142
     sheet.document.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "Aria", buy: null, sell: 1.5, note: "", ends: null }];
     const { header, settings } = await sheet._prepareContext({});
     assert.match(header.termsChip, /YourOffers\(\+100%\)$/);
-    assert.match(settings.preview.deals[0].chip, /YourOffers\(\+100%\)$/);
+    // Offers aren't a Buy-list price, so Players see has no row for it.
+    assert.deepEqual(settings.preview.deals, []);
   });
 });
 
@@ -1417,4 +1437,84 @@ test("the Terms popover and a rule's placeholders show what trades pay, capped (
     { category: "weapon", sellsAt: 0.3, buysAt: 0.3 }
   ]);
   assert.deepEqual(settings.terms.rules.map(r => [r.sellsFollows, r.buysFollows]), [[80, 80], [30, 30]]);
+});
+
+/* ------------------------------------------------------------ design names (#145) */
+
+test("a coin is named as the design names it where it shows: by metal, metal and count, or place", () => {
+  const gold = { label: "Gold", count: 15 };
+  assert.equal(helpers.mpCoinPen("metal", gold, 0), "gold");
+  assert.equal(helpers.mpCoinPen("count", gold, 0), "gold 15");
+  assert.equal(helpers.mpCoinPen("price", gold, 0), "Price");
+  assert.equal(helpers.mpCoinPen("price", { label: "Silver", count: 5 }, 1), "Price Minor");
+});
+
+test("an icon helper call gives the inline Lucide icon, named for the checker, from a script's \"lucide:\" name too", () => {
+  const html = String(helpers.mpIcon("lucide:scale", { hash: { pen: "Terms icon" } }));
+  assert.match(html, /^<svg class="mp-icon" data-icon="scale" data-pen="Terms icon"/);
+  assert.doesNotMatch(String(helpers.mpIcon("scale", { hash: {} })), /data-pen/);
+});
+
+test("the Buy list keeps the shelf's own order, the one a GM drags on the NPC sheet (#145)", async () => {
+  const anvil = Object.assign(item("anvil"), { sort: 200 }), bellows = Object.assign(item("bellows"), { sort: 100 });
+  const { sheet } = openShop({ shopItems: [anvil, bellows] });
+  const { buy } = await sheet._prepareContext({});
+  assert.deepEqual(buy.sections.flatMap(s => s.rows.map(r => r.name)), ["bellows", "anvil"]);
+});
+
+test("Players see and the Terms example show the first good on the Buy list, by name and value (#145)", async t => {
+  await withLabels(async () => {
+    const { sheet, buyer } = openDeals(t, []);
+    sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
+    const { settings } = await sheet._prepareContext({});
+    const coins = list => list.map(c => `${c.count} ${c.denomination}`);
+    // The shelf's one good, a 1 gp rope: sold at list, bought back at half.
+    assert.equal(settings.terms.example.text, "ExampleItem(rope,1 gp)");
+    assert.deepEqual(coins(settings.terms.example.sell), ["1 gp"]);
+    assert.deepEqual(coins(settings.terms.example.buy), ["5 sp"]);
+    assert.equal(settings.preview.item.name, "rope");
+    assert.deepEqual(coins(settings.preview.item.priceCoins), ["1 gp"]);
+    // As Aria sees it: her price, list struck above, and what her deal takes off.
+    const aria = settings.preview.deals[0].item;
+    assert.deepEqual(coins(aria.priceCoins), ["9 sp"]);
+    assert.equal(aria.listText, "1 gp");
+    assert.equal(aria.tag.text, "−10%");
+  });
+});
+
+test("an empty shelf keeps the fixed 15 gp example and shows no preview row (#145)", async t => {
+  const opened = openSettings(t);
+  opened.shop.items = [];
+  const { settings } = await opened.sheet._prepareContext({});
+  assert.equal(settings.terms.example.text, "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells");
+  assert.equal(settings.preview.item, null);
+});
+
+test("the visit hint says \"entirely\" only while no player has access of their own (#145)", async t => {
+  const { sheet, shop } = openSettings(t);
+  assert.equal((await sheet._prepareContext({})).settings.visitHint, "MERCHANT_PRESETS.Shop.Settings.Visit.HintAll");
+  globalThis.game.users = Object.assign([{ id: "rogue", isGM: false }], { get(id) { return this.find(u => u.id === id); } });
+  t.after(() => { delete globalThis.game.users; });
+  shop.ownership = { default: 0, rogue: 1 };
+  assert.equal((await sheet._prepareContext({})).settings.visitHint, "MERCHANT_PRESETS.Shop.Settings.Visit.Hint");
+});
+
+test("the window is titled with the shop's name alone, and its kind chip wears its trade (#145)", async () => {
+  const { sheet, shop } = openShop();
+  shop.name = "Armourer & Blacksmiths (Town)";
+  assert.equal(sheet.title, "Armourer & Blacksmiths");
+  shop.flags["merchant-presets"].shop.source = "Armourer & Blacksmiths (Town)";
+  assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:hammer");
+  shop.flags["merchant-presets"].shop.source = null;
+  assert.equal((await sheet._prepareContext({})).header.kindIcon, "lucide:store");
+});
+
+test("the hours read as the frames write them, without a leading zero (#145)", async () => {
+  await withLabels(async () => {
+    const { sheet } = openShop();
+    assert.equal((await sheet._prepareContext({})).header.openLabel, "OpenUntil(19:00)");
+    clock.hour = 3;
+    try { assert.equal((await sheet._prepareContext({})).header.openLabel, "ClosedOpensAt(7:00)"); }
+    finally { clock.hour = 12; }
+  });
 });

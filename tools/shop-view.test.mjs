@@ -86,7 +86,7 @@ test("a row priced above the chip is an amber markup", () => {
 });
 
 test("a row priced below the chip is a green discount", () => {
-  assert.deepEqual(rateTag({ rate: 0.9, layer: "deal" }, 1), { kind: "discount", text: "-10%" });
+  assert.deepEqual(rateTag({ rate: 0.9, layer: "deal" }, 1), { kind: "discount", text: "−10%" });
 });
 
 test("a category layer landing on full value tags 'Full value', not a percentage", () => {
@@ -98,7 +98,7 @@ test("a category layer at full value that matches the chip needs no tag", () => 
 });
 
 test("a category layer away from full value is an ordinary markup or discount", () => {
-  assert.deepEqual(rateTag({ rate: 0.75, layer: "category" }, 1), { kind: "discount", text: "-25%" });
+  assert.deepEqual(rateTag({ rate: 0.75, layer: "category" }, 1), { kind: "discount", text: "−25%" });
 });
 
 /* -------------------------------------------------------------- groupCategories */
@@ -484,7 +484,7 @@ test("a deal shows on the row as the list price struck and what the deal takes o
   const row = buyRow(LONGSWORD, PLAIN_STOCK, LIST, { buy: -0.1, sell: null }, CURRENCIES5E, false);
   assert.equal(row.bundlePriceCp, 1350);
   assert.equal(row.listPriceCp, 1500);
-  assert.deepEqual(row.tag, { kind: "deal", text: "-10%" });
+  assert.deepEqual(row.tag, { kind: "deal", text: "−10%" });
 });
 
 test("without a deal, or with one only on the other side, a row has no list price to strike", () => {
@@ -513,9 +513,9 @@ test("a deal the cap cuts short shows what it really does, not what it asked for
 });
 
 test("a deal's size reads signed, to a hundredth of a percent", () => {
-  assert.equal(signedPercent(-0.1), "-10%");
+  assert.equal(signedPercent(-0.1), "−10%");
   assert.equal(signedPercent(0.2), "+20%");
-  assert.equal(signedPercent(-0.125), "-12.5%");
+  assert.equal(signedPercent(-0.125), "−12.5%");
   assert.equal(signedPercent(1 / 9), "+11.11%");
 });
 

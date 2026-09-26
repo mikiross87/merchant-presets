@@ -1,150 +1,297 @@
 /*
- * The shop window (#103). Every colour is a dnd5e/Foundry CSS variable — see design/README.md's
- * token table, "Source of truth": nothing here invents a palette, so light/dark and any dnd5e
- * theme follow automatically. Typography follows the same table: Modesto Condensed for titles,
- * Roboto for body and item names, Roboto Condensed for prices/quantities/compact labels.
+ * The shop window (#103), built to design/shop.pen's approved frames (#145): every size, gap and
+ * colour here is the frame's own, as its export (design/export/<id>.html) writes it, and
+ * tools/design-check.mjs holds the window to them. The two palettes are the light and dark
+ * frames', paired node by node; Foundry's application colour scheme picks one. Type is the
+ * frames': Alegreya SC for titles, Roboto for text, Roboto Condensed for figures and labels,
+ * Crimson Pro italic for asides (bundled, styles/fonts.css).
  */
 
 .shop-sheet {
+  /* Theme-independent: the maroon hero and what sits on it, the window bar, state colours. */
+  --mp-gold: #9f9275;
+  --mp-gold-light: #e3ce9e;
+  --mp-bar: #191813;
+  --mp-bar-ink: #c9c7b8;
+  --mp-on-dark: #ffffff;
+  --mp-on-dark-muted: #efe6d8;
+  --mp-green: #26b231;
+  --mp-green-ink: #1d7a26;
+  --mp-green-tint: #26b23126;
+  /* Light, the default. */
+  --mp-window: #f1ebe8;
+  --mp-surface: #ffffff;
+  --mp-inset: #f1ebe8;
+  --mp-paper: #f7efdc;
+  --mp-paper-line: #d9c9a0;
+  --mp-paper-ink: #3b2a1e;
+  --mp-text: #191813;
+  --mp-heading: #191813;
+  --mp-muted: #666666;
+  --mp-line: #bbbbbb;
+  --mp-rule: #9f9275;
+  --mp-accent: #741b2b;
+  --mp-chip: #401f25;
+  --mp-hero: linear-gradient(-90deg, #401f25 0%, #741b2b 100%);
+  --mp-seal: linear-gradient(180deg, #741b2b 0%, #401f25 100%);
+  --mp-danger-ink: #8a0505;
+  --mp-warning-ink: #8a4f0c;
+  /* Pre-#145 names the Buy, Sell and bill rules below still read, until their frames are built. */
   --mp-success: var(--color-level-success);
   --mp-warning: var(--color-level-warning);
   --mp-danger: var(--color-level-error);
+}
+
+.shop-sheet.theme-dark {
+  --mp-window: #0d0b0b;
+  --mp-surface: #252830;
+  --mp-inset: #212329;
+  --mp-paper: #2b2721;
+  --mp-paper-line: #4a4336;
+  --mp-paper-ink: #e8dcc4;
+  --mp-text: #ffffff;
+  --mp-heading: #9f9275;
+  --mp-muted: #999999;
+  --mp-line: #434857;
+  --mp-rule: #242731;
+  --mp-accent: #9f9275;
+  --mp-chip: #491d25;
+  --mp-hero: linear-gradient(-90deg, #491d25 0%, #311b1f 100%);
+  --mp-seal: linear-gradient(180deg, #311b1f 0%, #491d25 100%);
+  --mp-danger-ink: #ff8f85;
+  --mp-warning-ink: #f2b56b;
+}
+
+/* -------------------------------------------------------------- the window */
+
+/* Over dnd5e's own .dnd5e2.application background (a texture) and Foundry's frame. */
+.shop-sheet.merchant-presets.application {
+  background: var(--mp-window);
+  border: none;
+  border-radius: 6px;
+  outline: 1px solid var(--mp-rule);
+  outline-offset: -0.5px;
+  box-shadow: 0 8px 32px #00000040;
+  overflow: hidden;
+  color: var(--mp-text);
 }
 
 .shop-sheet .window-content {
   /* dnd5e paints its own background on .dnd5e2.application, where its texture's relative url
      resolves; re-using the variable here would resolve it against this file and 404. */
   background: transparent;
-  color: var(--color-text-primary);
-  font-family: var(--dnd5e-font-roboto);
+  color: var(--mp-text);
+  font-family: Roboto, system-ui, sans-serif;
   padding: 0;
-  display: grid;
-  grid-template-rows: auto auto 1fr;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* dnd5e.css's own ".dnd5e2" headings and nav text run uppercase by default (its own house
-   style); the design draws this window's headers, tabs, categories and chips in normal case, so
-   that's overridden here rather than left to whatever ".dnd5e2" happens to carry. */
-.shop-sheet h1, .shop-sheet h2, .shop-sheet h3,
-.shop-sheet .tab-link, .shop-sheet .category-link, .shop-sheet .chip, .shop-sheet .item-name {
+/* dnd5e.css runs ".dnd5e2" headings and nav text uppercase, in its own face; the frames don't. */
+.shop-sheet h1, .shop-sheet h2, .shop-sheet h3 {
+  margin: 0;
+  font-family: "Alegreya SC", system-ui, sans-serif;
+  font-weight: 700;
   text-transform: none;
 }
+.shop-sheet .category-link, .shop-sheet .item-name { text-transform: none; }
 
-.shop-sheet h1, .shop-sheet h2, .shop-sheet h3 {
-  font-family: var(--dnd5e-font-modesto);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.shop-sheet .mp-icon { display: block; flex: none; width: 14px; height: 14px; }
+.shop-sheet .mp-visually-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; margin: 0; }
+
+/* Every control the design draws starts from nothing: core's and dnd5e's button styles set sizes,
+   borders and fonts the frames don't have. */
+.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button) {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button):focus-visible {
+  box-shadow: 0 0 0 2px var(--mp-gold-light);
+}
+.shop-sheet :is(.mp-reset, .mp-button, .mp-icon-button):disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Window Bar: core's header, as the design draws it. */
+.shop-sheet > .window-header {
+  flex: none;
+  height: 30px;
+  min-height: 30px;
+  padding: 0 12px;
+  gap: 0;
+  justify-content: space-between;
+  background: var(--mp-bar);
+  border: none;
+  color: var(--mp-bar-ink);
+}
+.shop-sheet > .window-header .window-title {
+  flex: 0 1 auto;
+  min-width: 0;
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 12px/normal Roboto, system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mp-bar-ink);
 }
-
-/* -------------------------------------------------------------- header */
-
-.shop-sheet .shop-header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1rem;
-  align-items: start;
-  padding: 1rem 1.25rem;
-  background: linear-gradient(160deg, var(--dnd5e-card-header-1), var(--dnd5e-card-header-2));
-  color: #fff;
+.shop-sheet .mp-bar-right { display: flex; align-items: center; gap: 12px; }
+.shop-sheet .mp-npc-sheet {
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  outline: 1px solid #c9c7b866;
+  color: var(--mp-bar-ink);
+  font: 400 11px/normal Roboto, system-ui, sans-serif;
+  white-space: nowrap;
 }
+.shop-sheet .mp-npc-sheet .mp-icon { width: 12px; height: 12px; }
+.shop-sheet .mp-close { color: var(--mp-bar-ink); }
 
-.shop-sheet .shop-portrait {
-  width: 72px;
-  height: 72px;
+/* -------------------------------------------------------------- hero */
+
+.shop-sheet .mp-hero {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 24px;
+  background: var(--mp-hero);
+}
+.shop-sheet .mp-portrait {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  border: none;
   border-radius: 50%;
-  border: 2px solid var(--dnd5e-color-gold);
+  outline: 2px solid var(--mp-gold);
   object-fit: cover;
 }
-
-.shop-sheet .shop-title {
-  font-size: 1.7rem;
-  color: #fff;
+.shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
+.shop-sheet .mp-shop-name {
+  margin: 0;
+  border: none;
+  font: 700 30px/normal "Alegreya SC", system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--mp-on-dark);
 }
-
-.shop-sheet .shop-description {
-  margin: 0.25rem 0 0.5rem;
-  font-size: 0.85rem;
-  opacity: 0.85;
-  max-width: 60ch;
-}
-
-.shop-sheet .shop-description p { margin: 0; }
-
-.shop-sheet .shop-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.shop-sheet .chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-size: 0.75rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 1rem;
-  background: rgb(0 0 0 / 25%);
-  border: 1px solid rgb(255 255 255 / 20%);
-  color: #fff;
+.shop-sheet .mp-description { font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
+.shop-sheet .mp-description p { margin: 0; }
+.shop-sheet .mp-chips { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-hero-chip {
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #00000040;
+  color: var(--mp-on-dark);
+  font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif;
+  white-space: nowrap;
   cursor: default;
 }
+.shop-sheet .mp-hero-chip .mp-icon { width: 12px; height: 12px; color: var(--mp-gold-light); }
+.shop-sheet .mp-open-chip.is-open { outline: 1px solid #26b23180; }
+.shop-sheet .mp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mp-muted); }
+.shop-sheet .mp-open-chip.is-open .mp-dot { background: var(--mp-green); }
+.shop-sheet .mp-terms-chip { outline: 1px solid #e3ce9e66; cursor: pointer; }
 
-.shop-sheet button.chip {
-  cursor: pointer;
-  font: inherit;
-}
-
-.shop-sheet .chip-open i { font-size: 0.55rem; }
-.shop-sheet .chip-open.is-open i { color: var(--mp-success); }
-.shop-sheet .chip-open.is-closed i { color: var(--color-text-secondary); }
-
-.shop-sheet .buying-as {
+.shop-sheet .mp-purse {
+  flex: none;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 0.3rem;
-  background: rgb(0 0 0 / 25%);
-  border: 1px solid var(--dnd5e-color-gold);
-  border-radius: 0.4rem;
-  padding: 0.5rem 0.75rem;
-  min-width: 200px;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #00000047;
+  outline: 1px solid #9f927566;
 }
-
-.shop-sheet .buying-as-label {
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-size: 0.65rem;
+.shop-sheet .mp-purse-label {
+  font: 700 11px/normal "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.75;
+  white-space: nowrap;
+  color: var(--mp-gold-light);
 }
-
-.shop-sheet .buying-as-toggle {
+.shop-sheet .mp-buyer-row {
+  align-self: flex-start;
+  gap: 6px;
+  padding: 2px 6px 2px 2px;
+  border-radius: 999px;
+  background: #00000033;
+  outline: 1px solid #e3ce9e55;
+}
+.shop-sheet .mp-buyer-row .mp-icon { width: 13px; height: 13px; color: var(--mp-gold-light); }
+.shop-sheet .mp-buyer-avatar {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: none;
-  color: #fff;
-  font-family: var(--dnd5e-font-modesto);
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 0;
-}
-
-.shop-sheet .buying-as-avatar {
+  justify-content: center;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 10px;
+  background: var(--mp-gold-light);
+  font: 700 12px/normal "Alegreya SC", system-ui, sans-serif;
+  color: #401f25;
+}
+.shop-sheet .mp-buyer-name { font: 700 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-on-dark); }
+.shop-sheet .mp-purse-coins { display: flex; align-items: center; gap: 12px; }
+.shop-sheet .mp-purse .mp-coin b { color: var(--mp-on-dark); }
+
+/* The design's coins: the amount, then the glyph. */
+.shop-sheet .mp-coin { display: flex; align-items: center; gap: 4px; }
+.shop-sheet .mp-coin b { font: 700 15px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-coin img { flex: none; width: 16px; height: 16px; border: none; border-radius: 50%; }
+
+/* -------------------------------------------------------------- tabs */
+
+.shop-sheet .mp-tabs {
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  box-sizing: border-box;
+  height: 39.5px;
+  margin: 0 0 -0.5px;
+  padding: 0 24px;
+  background: var(--mp-surface);
+  border: none;
+  border-bottom: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-tab {
+  gap: 6px;
+  height: 25px;
+  margin-bottom: -1px;
+  padding: 0 2px 10px;
+  border-bottom: 2px solid transparent;
+  color: var(--mp-muted);
+  font: 500 14px/normal Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+}
+.shop-sheet .mp-tab .mp-icon { width: 15px; height: 15px; }
+.shop-sheet .mp-tab.active { border-bottom-color: var(--mp-accent); color: var(--mp-text); font-weight: 700; }
+.shop-sheet .mp-tab.active .mp-icon { color: var(--mp-accent); }
+.shop-sheet .mp-gm-badge {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--mp-accent);
+  font: 700 9px/normal "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 1px;
+  color: var(--mp-on-dark);
 }
 
-.shop-sheet .purse {
-  display: flex;
-  gap: 0.5rem;
+.shop-sheet .tab { display: none; overflow: hidden; min-height: 0; }
+.shop-sheet .tab.active {
+  display: grid;
+  grid-template-columns: 180px 1fr 280px;
+  flex: 1 1 0;
+  min-height: 0;
 }
+
+.shop-sheet .sell-tab.active { grid-template-columns: 180px 1fr 280px; }
 
 /* -------------------------------------------------------------- coins */
 
@@ -223,47 +370,6 @@
 .shop-sheet .buyer-entry-name { font-weight: 700; }
 .shop-sheet .buyer-entry-subtitle { font-size: 0.75rem; color: var(--color-text-secondary); display: flex; gap: 0.3rem; align-items: center; }
 .shop-sheet .buyer-entry-check { color: var(--mp-danger); }
-
-/* -------------------------------------------------------------- tabs */
-
-.shop-sheet .sheet-tabs {
-  display: flex;
-  background: var(--dnd5e-background-card);
-  border-bottom: var(--dnd5e-border-gold);
-}
-
-.shop-sheet .tab-link {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: none;
-  border-bottom: 3px solid transparent;
-  padding: 0.6rem 1rem;
-  font-family: var(--dnd5e-font-modesto);
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.shop-sheet .tab-link.active { color: var(--dnd5e-color-gold); border-bottom-color: var(--dnd5e-color-gold); }
-.shop-sheet .badge-gm {
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-size: 0.6rem;
-  background: var(--mp-danger);
-  color: #fff;
-  border-radius: 0.6rem;
-  padding: 0 0.4rem;
-}
-
-.shop-sheet .tab { display: none; overflow: hidden; min-height: 0; }
-.shop-sheet .tab.active {
-  display: grid;
-  grid-template-columns: 180px 1fr 280px;
-  min-height: 0;
-}
-
-.shop-sheet .sell-tab.active { grid-template-columns: 180px 1fr 280px; }
 
 /* -------------------------------------------------------------- categories / stock */
 
@@ -362,30 +468,6 @@
 
 .shop-sheet .tag-markup { background: color-mix(in oklab, var(--mp-warning), transparent 80%); color: var(--mp-warning); }
 .shop-sheet .tag-discount, .shop-sheet .tag-full, .shop-sheet .tag-deal { background: color-mix(in oklab, var(--mp-success), transparent 80%); color: var(--mp-success); }
-/* The Deals section (#111, design v8ap9): a card per deal. */
-.shop-sheet .settings-deal {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.6rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid var(--dnd5e-color-gold);
-  border-radius: 0.4rem;
-}
-.shop-sheet .settings-deal.is-ended { opacity: 0.6; }
-.shop-sheet .settings-deal-initial {
-  flex: none;
-  width: 2rem;
-  height: 2rem;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid var(--dnd5e-color-gold);
-  font-family: var(--dnd5e-font-modesto);
-}
-.shop-sheet .settings-deal-info { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; }
-.shop-sheet .settings-deals-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
-
 .shop-sheet .tag-neutral { background: var(--dnd5e-color-table-row-even); color: var(--color-text-secondary); }
 
 .shop-sheet .item-add {
@@ -520,54 +602,275 @@
 .shop-sheet .closed-hours td:first-child { color: var(--color-text-secondary); }
 .shop-sheet .closed-hours td:last-child { text-align: right; font-weight: 700; }
 
-/* -------------------------------------------------------------- settings tab (#110) */
+/* -------------------------------------------------------------- settings tab (#110, design v8ap9) */
 
-.shop-sheet .settings-nav { gap: 0.2rem; }
-.shop-sheet .settings-visit {
+.shop-sheet .settings-tab.active { display: flex; }
+
+.shop-sheet .mp-section-nav {
+  flex: none;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border: var(--dnd5e-border-gold);
-  border-radius: 0.4rem;
-  font-size: 0.85rem;
-}
-.shop-sheet .settings-visit-row { display: flex; justify-content: space-between; align-items: center; }
-.shop-sheet .settings-reset { margin-top: auto; font-size: 0.8rem; }
-
-.shop-sheet .settings-body, .shop-sheet .settings-preview {
+  gap: 2px;
+  box-sizing: border-box;
+  width: 179.5px;
+  margin-right: -0.5px;
+  padding: 16px 10px;
+  border-right: 1px solid var(--mp-line);
   overflow-y: auto;
-  padding: 0.75rem 1rem;
+}
+.shop-sheet .mp-visit {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  min-height: 0;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  cursor: pointer;
 }
-.shop-sheet .settings-preview { border-left: var(--dnd5e-border-gold); align-items: flex-start; }
-
-.shop-sheet .settings-heading {
-  font-size: 1.2rem;
-  border-bottom: var(--dnd5e-border-gold);
-  padding-bottom: 0.2rem;
+.shop-sheet .mp-visit-row { display: flex; align-items: center; justify-content: space-between; }
+.shop-sheet .mp-visit-row b { font: 700 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 30px;
+  height: 16px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--mp-line);
 }
-.shop-sheet .settings-subheading {
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-size: 0.8rem;
+.shop-sheet .mp-visit input:checked + .mp-switch { justify-content: flex-end; background: var(--mp-green); }
+.shop-sheet .mp-visit input:focus-visible + .mp-switch { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.shop-sheet .mp-knob { width: 12px; height: 12px; border-radius: 50%; background: #ffffff; }
+.shop-sheet .mp-visit-hint { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-visit-gap { flex: none; height: 8px; }
+.shop-sheet .mp-nav-link {
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: var(--mp-text);
+  font: 400 13px/normal Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+}
+.shop-sheet .mp-nav-link.active {
+  margin-left: -1.5px;
+  border-left: 3px solid var(--mp-gold);
+  background: var(--mp-surface);
   font-weight: 700;
+}
+.shop-sheet .mp-nav-spacer { flex: 1 1 0; }
+.shop-sheet .mp-reset {
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  outline: 1px solid var(--mp-line);
+  color: var(--mp-muted);
+  font: 400 12px/normal Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+}
+.shop-sheet .mp-reset .mp-icon { width: 13px; height: 13px; }
+
+/* One scrolling page; the nav is its way around, so no scrollbar takes the design's width. */
+.shop-sheet .mp-form {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 20px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.shop-sheet .settings-section { flex: none; display: flex; flex-direction: column; gap: 10px; }
+.shop-sheet .mp-section-head { display: flex; align-items: center; gap: 10px; }
+.shop-sheet .mp-section-title {
+  margin: 0;
+  border: none;
+  font: 700 18px/normal "Alegreya SC", system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--mp-heading);
+}
+.shop-sheet .mp-rule { flex: 1 1 0; height: 1px; background: var(--mp-rule); }
+.shop-sheet .mp-hint { margin: 0; font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+
+.shop-sheet .mp-rate-row { display: flex; align-items: center; gap: 12px; }
+.shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/normal Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-field {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  width: 84px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-field input {
+  all: unset;
+  flex: 1 1 0;
+  min-width: 0;
+  font: 700 14px/normal "Roboto Condensed", system-ui, sans-serif;
+  color: var(--mp-text);
+}
+.shop-sheet .mp-field input:disabled { cursor: not-allowed; }
+.shop-sheet .mp-field:focus-within { outline-color: var(--mp-accent); }
+.shop-sheet .mp-field span { font: 400 13px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-plain { flex: 1 1 0; font: italic 400 14px/normal "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.shop-sheet .mp-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  color: #ffffff;
+}
+.shop-sheet .mp-box .mp-icon { width: 11px; height: 11px; visibility: hidden; }
+.shop-sheet .mp-check input:checked + .mp-box { background: var(--mp-accent); outline-color: var(--mp-accent); }
+.shop-sheet .mp-check input:checked + .mp-box .mp-icon { visibility: visible; }
+.shop-sheet .mp-check input:focus-visible + .mp-box { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.shop-sheet .mp-check > span:last-child { font: 400 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+
+.shop-sheet .mp-live-example {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--mp-inset);
+}
+.shop-sheet .mp-live-example > span:not(.mp-coin) { font: 400 12px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-live-example .mp-icon { color: var(--mp-gold); }
+
+.shop-sheet .mp-rules { display: flex; align-items: center; gap: 10px; }
+.shop-sheet .mp-rules-none { flex: 1 1 0; font: 400 12px/normal Roboto, system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-button {
+  flex: none;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  color: var(--mp-text);
+  font: 500 12px/normal Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.shop-sheet .mp-deal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-deal.is-ended { opacity: 0.6; }
+.shop-sheet .mp-deal-avatar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--mp-inset);
+  outline: 1px solid var(--mp-gold);
+  font: 700 14px/normal "Alegreya SC", system-ui, sans-serif;
+  color: var(--mp-heading);
+}
+.shop-sheet .mp-deal-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.shop-sheet .mp-deal-line { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-deal-line b { font: 700 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-deal-note { font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-icon-button { color: var(--mp-muted); }
+.shop-sheet .mp-tag { padding: 1px 6px; border-radius: 3px; }
+.shop-sheet .mp-tag.is-good { background: var(--mp-green-tint); }
+.shop-sheet .mp-tag span { font: 700 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
+.shop-sheet .mp-deals-foot { display: flex; align-items: center; justify-content: space-between; }
+.shop-sheet .mp-cap-note { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+
+.shop-sheet .mp-players-see {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 279.5px;
+  margin-left: -0.5px;
+  padding: 18px;
+  border-left: 1px solid var(--mp-line);
+  background: var(--mp-surface);
+  overflow-y: auto;
+}
+.shop-sheet .mp-preview-head { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-preview-head .mp-icon { width: 15px; height: 15px; }
+.shop-sheet .mp-kicker {
+  font: 700 10px/normal "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--mp-muted);
+}
+.shop-sheet .mp-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--mp-chip);
+  font: 400 12px/normal "Roboto Condensed", system-ui, sans-serif;
+  white-space: nowrap;
+  color: var(--mp-on-dark);
+}
+.shop-sheet .mp-chip .mp-icon { width: 12px; height: 12px; color: var(--mp-gold-light); }
+.shop-sheet .mp-preview-row {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: -0.5px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--mp-line);
+  background: var(--mp-surface);
+}
+.shop-sheet .mp-preview-icon { flex: none; width: 32px; height: 32px; border: none; border-radius: 4px; outline: 1px solid var(--mp-gold); object-fit: cover; }
+.shop-sheet .mp-preview-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.shop-sheet .mp-name-line { display: flex; align-items: center; gap: 6px; font: 500 13px/normal Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-price-block { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.shop-sheet .mp-list-price { font: 400 11px/normal "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-price-line { display: flex; align-items: center; gap: 6px; }
+.shop-sheet .mp-price-line .mp-tag { padding: 1px 5px; }
+.shop-sheet .mp-price-line .mp-tag span { font-size: 10px; }
+.shop-sheet .mp-divider { flex: none; align-self: stretch; height: 1px; margin: 0; border: none; background: var(--mp-line); }
+.shop-sheet .mp-preview-foot { margin: 0; font: italic 400 13px/normal "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+
+/* The sections the design has no frame for yet (#145 step 4): kept to the same type and colours. */
+.shop-sheet .settings-subheading {
+  font: 700 12px/normal "Roboto Condensed", system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0.5rem 0 0;
-  color: var(--color-text-secondary);
+  color: var(--mp-muted);
 }
-.shop-sheet .settings-hint, .shop-sheet .settings-footnote { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0; }
-.shop-sheet .settings-footnote { font-style: italic; }
 .shop-sheet .settings-note {
   font-size: 0.8rem;
   margin: 0;
   padding: 0.35rem 0.5rem;
-  border-left: 3px solid var(--mp-warning);
-  background: var(--dnd5e-color-table-row-even);
+  border-left: 3px solid var(--mp-warning-ink);
+  background: var(--mp-inset);
 }
 
 .shop-sheet .settings-rate, .shop-sheet .settings-rule {
@@ -578,13 +881,9 @@
   font-size: 0.85rem;
 }
 .shop-sheet .settings-rule { grid-template-columns: 1fr auto auto auto; }
-.shop-sheet .settings-rate em { color: var(--color-text-secondary); }
+.shop-sheet .settings-rate em { color: var(--mp-muted); }
 .shop-sheet .settings-percent { display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
 .shop-sheet .settings-percent input { width: 4.5rem; text-align: right; }
-.shop-sheet .settings-example { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; font-size: 0.82rem; margin: 0; }
-.shop-sheet .settings-icon { width: auto; background: none; border: none; color: var(--color-text-secondary); cursor: pointer; }
-.shop-sheet .settings-add-rule { align-self: flex-start; display: flex; gap: 0.4rem; }
-.shop-sheet .settings-add-rule button { width: auto; white-space: nowrap; }
 
 .shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
@@ -595,18 +894,18 @@
   gap: 0.5rem;
   text-align: left;
   padding: 0.5rem 0.75rem;
-  border: var(--dnd5e-border-gold);
+  border: 1px solid var(--mp-line);
   border-radius: 0.4rem;
 }
 .shop-sheet .settings-table b { flex: 1; }
 .shop-sheet .settings-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 .shop-sheet .settings-chip {
   width: auto;
-  color: var(--color-text-primary);
+  color: var(--mp-text);
   background: none;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--mp-line);
 }
-.shop-sheet .settings-chip.active { background: var(--dnd5e-color-gold); border-color: var(--dnd5e-color-gold); color: #fff; }
+.shop-sheet .settings-chip.active { background: var(--mp-accent); border-color: var(--mp-accent); color: var(--mp-on-dark); }
 .shop-sheet .settings-formula { width: 8rem; }
 
 .shop-sheet .settings-radio {
@@ -614,11 +913,11 @@
   align-items: flex-start;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--mp-line);
   border-radius: 0.4rem;
   font-size: 0.85rem;
 }
-.shop-sheet .settings-radio:has(input:checked) { border-color: var(--dnd5e-color-gold); }
+.shop-sheet .settings-radio:has(input:checked) { border-color: var(--mp-accent); }
 .shop-sheet .settings-radio > span { display: flex; flex-direction: column; }
 .shop-sheet .settings-restock-now { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-restock-now > div { display: flex; flex-direction: column; }
@@ -649,23 +948,6 @@
 /* -------------------------------------------------------------- narrow layout (below ~760px) */
 
 @media (max-width: 760px) {
-  .shop-sheet .shop-header {
-    grid-template-columns: auto 1fr;
-    padding: 0.6rem 0.8rem;
-  }
-
-  .shop-sheet .shop-portrait { width: 44px; height: 44px; }
-  .shop-sheet .shop-title { font-size: 1.2rem; }
-  .shop-sheet .shop-description { display: none; }
-
-  .shop-sheet .buying-as {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 0;
-  }
-
   .shop-sheet .tab.active, .shop-sheet .sell-tab.active {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;

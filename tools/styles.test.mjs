@@ -37,9 +37,25 @@ function selectors(css) {
   return out;
 }
 
+/** A selector list's selectors: split at its own commas, not those inside `:is(…)` and the like. */
+function split(list) {
+  const out = [];
+  let depth = 0, start = 0;
+  for (let i = 0; i < list.length; i++) {
+    if (list[i] === "(") depth++;
+    else if (list[i] === ")") depth--;
+    else if (list[i] === "," && depth === 0) { out.push(list.slice(start, i)); start = i + 1; }
+  }
+  return [...out, list.slice(start)].map(s => s.trim());
+}
+
+test("a selector list splits at its own commas only", () => {
+  assert.deepEqual(split(".shop-sheet :is(.a, .b), .shop-sheet .c"), [".shop-sheet :is(.a, .b)", ".shop-sheet .c"]);
+});
+
 test("every shop stylesheet selector is scoped to the shop window", () => {
   const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8");
-  const unscoped = selectors(css).flatMap(list => list.split(",").map(s => s.trim()))
+  const unscoped = selectors(css).flatMap(split)
     .filter(s => s !== SCOPE && !s.startsWith(`${SCOPE} `) && !s.startsWith(`${SCOPE}.`) && !s.startsWith(`${SCOPE}:`));
   assert.deepEqual(unscoped, []);
 });
