@@ -158,3 +158,50 @@ test("a due shop whose table has gone isn't reported as restocked (#135 review)"
   try { await clock(at(3, 8)); } finally { console.warn = warn; }
   assert.deepEqual(told, []);
 });
+
+/** The shop's stock table, wherever it lives (the compendium's, or a world copy). */
+const tableOf = (world, shop) => {
+  const uuid = shop.flags["merchant-presets"].shop.restock.table;
+  return world.compendium.get(uuid) ?? world.tables.find(t => t.uuid === uuid);
+};
+
+test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  const bellSource = tableOf(world, shop).results.find(r => r.name === "Bell").documentUuid;
+  assert.equal(byName(shop, "Bell")[0]._stats?.compendiumSource, bellSource);
+});
+
+test("a table line whose document can't be found stops the restock, rather than losing the line (#135 review, round 2)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  world.compendium.delete(tableOf(world, shop).results.find(r => r.name === "Bell").documentUuid);
+  const bell = byName(shop, "Bell")[0]._id;
+  const warn = console.warn;
+  console.warn = () => {};
+  try { await clock(at(3, 8)); } finally { console.warn = warn; }
+  assert.equal(byName(shop, "Bell")[0]?._id, bell, "the Bell line is still on the shelf");
+});
+
+test("a line hidden through Item Piles stays hidden through a reroll (#135 review, round 2)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const bell = byName(shop, "Bell")[0];
+  bell.flags["item-piles"] = { ...bell.flags["item-piles"], item: { ...bell.flags["item-piles"]?.item, hidden: true } };
+  await clock(at(3, 8));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "rerolled");
+  assert.equal(byName(shop, "Bell")[0].flags["item-piles"]?.item?.hidden, true);
+});
+
+test("a topup that found nothing sold isn't reported as a restock (#135 review, round 2)", async () => {
+  const { shop, clock } = await setUp();
+  shop.flags["merchant-presets"].shop.restock.mode = "topup";
+  shop.system.currency.gp = shop.flags["merchant-presets"].purse;
+  for (const item of shop.items) if (item.system.quantity === 0) item.system.quantity = 1;
+  await clock(at(0, 1));
+  const told = [];
+  globalThis.ui.notifications.info = message => told.push(message);
+  await clock(at(3, 8));
+  assert.deepEqual(told, []);
+});
