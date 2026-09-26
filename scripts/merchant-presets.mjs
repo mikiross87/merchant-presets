@@ -13,8 +13,8 @@ import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
-  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
-  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
+  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
@@ -921,11 +921,8 @@ async function carryOutTrade(request, user) {
   const planned = planTrade(request, {
     shop: shop.toObject(),
     buyer: buyer.toObject(),
-    worldSettings: {
-      rates: WORLD_RATES,
-      infiniteStock: game.settings.get(MODULE, "stockMode") === "unlimited",
-      infinitePurse: game.settings.get(MODULE, "merchantPurse") === "unlimited"
-    },
+    // The same terms the window billed from (trade-desk.mjs `worldTerms`).
+    worldSettings: worldTerms(key => game.settings.get(MODULE, key)),
     currencies: CONFIG.DND5E.currencies,
     deal: null,
     now: { isOpen: shopIsOpen(shop) },
@@ -978,6 +975,41 @@ function handleTradeQuery(request, { user }) {
   if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
   if (typeof request?.tradeId !== "string" || !request.tradeId) return { status: "refused", reason: "invalid-request" };
   return tradeOutcomes.once(user.id, request.tradeId, () => runTrade(() => carryOutTrade(request, user)));
+}
+
+/**
+ * The restock query's handler: a GM's "Restock now" (#110), carried out on the claiming tab's
+ * trade queue, where trades and the scheduled restocks run, so it can't interleave with either
+ * on the same shelf (#140 review). Like a trade, a tab without the claim never answers.
+ */
+async function handleRestockQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
+  // A restock that throws has stopped: answered as failed, logged here, never left to read as a
+  // query that timed out and may still run (#140 review).
+  const restocked = shop ? await restock(shop).catch(err => { console.error(`${MODULE} | restock of "${shop.name}" failed`, err); return null; }) : null;
+  return { restocked };
+}
+
+/**
+ * Restock `actor` now, as "Restock now" does: sent to the active GM's claiming tab (see
+ * `handleRestockQuery`). `restocked` when it ran, `failed` when it couldn't (the claiming tab's
+ * console says why), `no-answer` when no GM answered in time: it may be queued behind a
+ * scheduled sweep, and still run.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<{status: "restocked"|"failed"|"no-answer", restocked: string[]|null}>}
+ */
+async function requestRestock(actor) {
+  const gm = game.users.activeGM;
+  if (!gm) return { status: "no-answer", restocked: null };
+  try {
+    const restocked = (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+    return { status: restocked ? "restocked" : "failed", restocked };
+  } catch (err) {
+    console.warn(`${MODULE} | restock of "${actor.name}" unconfirmed:`, err.message);
+    return { status: "no-answer", restocked: null };
+  }
 }
 
 /**
@@ -1379,6 +1411,7 @@ function registerShopSetup() {
 
 Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
+  CONFIG.queries[RESTOCK_QUERY] = handleRestockQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1409,6 +1442,32 @@ Hooks.once("init", () => {
       unlimited: "Unlimited — shops can always pay"
     },
     default: "finite"
+  });
+
+  // The world's default rates (#110), as percentages; a shop's own terms (its Settings tab) and
+  // category rules override them. Read through trade-desk.mjs `worldTerms`, by the window and the
+  // trade alike.
+  game.settings.register(MODULE, "sellsAt", {
+    name: "Shops sell at (%)",
+    hint: "What a shop charges, as a percentage of an item's price, when its own terms are set to "
+      + "World default (the shop window's Settings tab): 100 is list price, 120 a markup. The "
+      + "shipped merchants set their own rates, so tick World default on a shop to have it follow "
+      + "this. Open shop windows reprice at once.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 1, step: 1, initial: 100 }),
+    default: 100
+  });
+
+  game.settings.register(MODULE, "buysAt", {
+    name: "Shops buy at (%)",
+    hint: "What a shop pays for what players sell it, as a percentage of the item's value, when "
+      + "its own terms are set to World default: 50 is half. The shipped merchants set their own "
+      + "rates. A shop never pays more than it would charge.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 0, step: 1, initial: 50 }),
+    default: 50
   });
 
   game.settings.register(MODULE, "autoRestock", {
@@ -1541,7 +1600,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MODULE).api = { registerDrinks, restock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
+  game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
     setUpShop, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
@@ -1572,9 +1631,13 @@ Hooks.once("ready", async () => {
   // The shops restock on their own schedule (#105).
   registerRestock();
   // A shop arriving is new to this world, whatever its flags say: one exported after it was made
-  // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
+  // visitable, or after the GM switched Players can visit on (#110), comes back with its ownership
+  // cleared but its mark kept (#138 review, round 9; #140 review, round 6). Switched off, the
+  // choice stays: hidden is right whatever ownership came along, a duplicate's included (round 8).
   Hooks.on("preCreateActor", actor => {
-    if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    const flags = actor.flags?.[MODULE];
+    if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
   });
   Hooks.on("createToken", token => {
     if (game.users.activeGM !== game.user) return;   // one GM does the writing

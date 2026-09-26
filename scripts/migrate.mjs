@@ -628,6 +628,8 @@ export function planOwnership(actor, hasTokenOnScene, worldId, isPlayer) {
   // another world came along with an export, which cleared the ownership it was set against
   // (#138 review).
   if (isMadeVisitable(actor, worldId)) return null;
+  // The GM set "Players can visit" in the shop window (#110): theirs, either way.
+  if (actor?.flags?.["merchant-presets"]?.visibility != null) return null;
   if (isOwnershipChosen(actor, isPlayer)) return null;
   const current = actor?.ownership?.default ?? NONE;
   const target = hasTokenOnScene ? LIMITED : NONE;

@@ -131,6 +131,42 @@ test("an assistant GM's client never restocks: only the active GM does (#135 rev
   assert.equal(shop.flags["merchant-presets"].schedule ?? null, null);
 });
 
+test("Restock now is carried out by the tab holding the trade claim, as a trade is (#140 review, round 8)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const gm = globalThis.game.users.activeGM;
+  const asked = [];
+  const query = gm.query;
+  gm.query = (name, data, options) => { asked.push(name); return query.call(gm, name, data, options); };
+  const bell = byName(shop, "Bell")[0];
+  const restocked = await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  gm.query = query;
+  assert.deepEqual(asked, ["merchant-presets.restock"]);
+  assert.ok(Array.isArray(restocked));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "the claiming tab restocked it");
+});
+
+test("a restock that throws on the claiming tab reads as failed, not as maybe still running (#140 review, round 10)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  shop.createEmbeddedDocuments = async () => { throw new Error("stub: create refused"); };
+  const warned = console.error;
+  console.error = () => {};
+  try {
+    const answer = await globalThis.game.modules.get("merchant-presets").api.requestRestock(shop);
+    assert.deepEqual(answer, { status: "failed", restocked: null });
+  } finally { console.error = warned; }
+});
+
+test("a player can't restock a shop through the query (#140 review, round 8)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const bell = byName(shop, "Bell")[0];
+  const answer = await globalThis.CONFIG.queries["merchant-presets.restock"]({ shopUuid: shop.uuid }, { user: { id: "player", isGM: false } });
+  assert.deepEqual(answer, { restocked: null });
+  assert.equal(byName(shop, "Bell")[0]._id, bell._id);
+});
+
 test("turning restocking off mid-session stops it at the next tick (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
   world.settings.autoRestock = false;   // what migrateShop does when a 1.x merchant arrives

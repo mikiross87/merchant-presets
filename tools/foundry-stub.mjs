@@ -88,7 +88,9 @@ export function createWorld() {
       randomID: () => newId("r"),
       fromUuid: async uuid => compendium.get(uuid) ?? tables.find(t => t.uuid === uuid)
         ?? actors.find(a => a.uuid === uuid) ?? null
-    }
+    },
+    // A setting's typed field (the world rates, #110): only ever handed to `register`, which ignores it.
+    data: { fields: { NumberField: class { constructor(options) { this.options = options; } } } }
   };
   globalThis.ChatMessage = {
     create: async data => { calls.messages.push(data); return data; },

@@ -136,7 +136,100 @@
         "GmHint": "Any actor. Coins come from, and goods go to, whoever is picked."
       },
       "Settings": {
-        "ComingSoon": "The Settings tab is coming in #110. Terms, deals, won't-buy, hours and restock will all be editable here."
+        "Invalid": "That change wasn't saved: {errors}",
+        "SaveFailed": "That change wasn't saved: Foundry refused the update. The console has the details.",
+        "Broken": "This shop's settings can't be read (a 1.x merchant not yet migrated, or a hand edit), so the tab won't write over them. Reload to migrate it, or fix its flags.",
+        "Sections": {
+          "terms": "Terms",
+          "deals": "Deals",
+          "wontBuy": "Won't buy",
+          "hours": "Hours",
+          "restock": "Restock"
+        },
+        "Visit": {
+          "Label": "Players can visit",
+          "Hint": "Off hides the shop from players, except any you gave their own access to it.",
+          "Others": "Players with their own access: {count}. Change it in the shop's Ownership."
+        },
+        "Terms": {
+          "Hint": "Rates apply to every item unless a category rule says otherwise.",
+          "SellsAt": "Sells at",
+          "BuysAt": "Buys at",
+          "WorldDefault": "World default",
+          "ExampleSells": "A 15 gp longsword sells for",
+          "ExampleBuys": "buys back for"
+        },
+        "Rules": {
+          "Title": "Category rules",
+          "None": "None. Every category trades at the rates above.",
+          "Add": "Add rule",
+          "Category": "Category to add a rule for",
+          "Sells": "Sells",
+          "Buys": "Buys",
+          "Remove": "Remove rule"
+        },
+        "Deals": {
+          "Later": "Special prices for one character come with deals (#111)."
+        },
+        "WontBuy": {
+          "Hint": "The shop refuses to buy anything of these types or kinds. Its shopkeeper's own gear is never for sale.",
+          "Types": "Item types",
+          "Kinds": "Kinds of goods"
+        },
+        "Kinds": {
+          "vehicle": "Vehicles",
+          "mount": "Mounts",
+          "tack": "Tack and harness",
+          "food-drink": "Food and drink",
+          "meal": "Meals",
+          "lodging": "Lodging",
+          "service": "Services",
+          "spellcasting": "Spellcasting",
+          "component": "Spell components",
+          "travel": "Travel"
+        },
+        "Hours": {
+          "Keeps": "Keeps trading hours",
+          "Hint": "Closes to players outside these hours, on the world clock. A close before the open runs past midnight.",
+          "AlwaysOpen": "Open around the clock.",
+          "WorldOff": "Trading hours are off for the whole world (Configure Settings), so every shop is open around the clock."
+        },
+        "Restock": {
+          "Hint": "Restocking draws the shelf from the stock table and refills the till.",
+          "WorldOff": "Scheduled restocks are off for the whole world (Configure Settings); Restock now still works.",
+          "NoTable": "This shop has no stock table, so it can't restock.",
+          "Restocks": "Restocks",
+          "WhenOpens": "when the shop opens",
+          "Daily": "Daily",
+          "Days": "{days} days",
+          "EveryDays": "Every {days} days",
+          "Dice": "Dice…",
+          "Never": "Never",
+          "Formula": "Days, as a dice formula",
+          "Preset": "Preset default: {every}.",
+          "What": "What a restock does",
+          "Reroll": "Re-roll the shelf",
+          "RerollHint": "Everything the table drew is drawn again at fresh quantities. Goods you added by hand stay.",
+          "Topup": "Top up",
+          "TopupHint": "Only drawn goods that sold out come back. Goods you added by hand stay.",
+          "Till": "Either way, the till is refilled to {gp} gp.",
+          "Last": "Last restocked {date}",
+          "Next": "Next: {date}",
+          "Now": "Restock now",
+          "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console of the GM tab that runs trades says which.",
+          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment."
+        },
+        "Reset": {
+          "Label": "Reset to preset",
+          "Title": "Reset to preset",
+          "Question": "Put back the terms, hours, won't-buy and restock this shop was imported with? Its goods and coin stay as they are.",
+          "NoPreset": "This shop's preset merchant can't be found."
+        },
+        "Preview": {
+          "Title": "Players see",
+          "Everyone": "Everyone",
+          "Note": "Open shop windows refresh for everyone when a change is saved."
+        }
       }
     }
   }

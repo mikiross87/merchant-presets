@@ -21,14 +21,35 @@
 import { coinBreakdown } from "./shop-view.mjs";
 
 /**
- * World default rates: list price to buy, half to sell back (#110 hasn't shipped the Configure
- * Settings entry yet). Every shipped preset's own terms start from these. The shop window and the
- * GM's trade both read this one object, so a price the window shows is the price the GM charges.
+ * The world's own trade terms (#110): the Configure Settings default rates, stored as percentages
+ * (`sellsAt` 100, `buysAt` 50: list price to buy, half to sell back), and the stock and purse
+ * modes. The shop window and the GM's trade both read them through this one function, so a price
+ * the window shows is the price the GM charges; a copy each would let the window bill at a rate
+ * the trade then refuses as `stock-changed`, on every retry (#110, from the #130 review). A rate
+ * that isn't a usable number (a hand-edited setting) reads as its default.
+ *
+ * @param {(key: string) => unknown} get  `key => game.settings.get("merchant-presets", key)`
+ * @returns {{rates: {sellsAt: number, buysAt: number}, infiniteStock: boolean, infinitePurse: boolean}}
  */
-export const WORLD_RATES = Object.freeze({ sellsAt: 1, buysAt: 0.5 });
+export function worldTerms(get) {
+  const rate = (key, fallback, ok) => {
+    const percent = get(key);
+    // Rounded to a hundredth of a percent: 57 / 100 is 0.5700000000000001.
+    return typeof percent === "number" && Number.isFinite(percent) && ok(percent)
+      ? Math.round(percent * 100) / 10_000 : fallback;
+  };
+  return {
+    rates: { sellsAt: rate("sellsAt", 1, p => p > 0), buysAt: rate("buysAt", 0.5, p => p >= 0) },
+    infiniteStock: get("stockMode") === "unlimited",
+    infinitePurse: get("merchantPurse") === "unlimited"
+  };
+}
 
 /** The `CONFIG.queries` key a trade is sent under. */
 export const QUERY = "merchant-presets.trade";
+
+/** The `CONFIG.queries` key a GM's "Restock now" (#110) is sent under, to the tab that holds the trade claim. */
+export const RESTOCK_QUERY = "merchant-presets.restock";
 
 /** How long a player waits for the GM before the trade reads as unconfirmed. */
 export const QUERY_TIMEOUT_MS = 15_000;
