@@ -20,6 +20,7 @@
 </nav>
 
 <div class="settings-body">
+  {{#if broken}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Broken"}}</p>{{/if}}
   {{#if section.terms}}
     <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.terms"}}</h2>
     <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.Hint"}}</p>

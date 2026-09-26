@@ -137,6 +137,7 @@
       },
       "Settings": {
         "Invalid": "That change wasn't saved: {errors}",
+        "Broken": "This shop's settings can't be read (a 1.x merchant not yet migrated, or a hand edit), so the tab won't write over them. Reload to migrate it, or fix its flags.",
         "Sections": {
           "terms": "Terms",
           "deals": "Deals",
@@ -212,7 +213,7 @@
           "Last": "Last restocked {date}",
           "Next": "Next: {date}",
           "Now": "Restock now",
-          "Failed": "The shop couldn't restock: its stock table is missing."
+          "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console says which."
         },
         "Reset": {
           "Label": "Reset to preset",

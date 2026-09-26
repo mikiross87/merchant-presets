@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
 import {
-  applyChange, EVERY_CHOICES, everyChoice, percentOf, resetToPreset, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
+  applyChange, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
@@ -68,6 +68,19 @@ const SETTINGS_SECTIONS = [
 
 /** CONST.DOCUMENT_OWNERSHIP_LEVELS: a shop players can visit is Limited to them by default. */
 const NONE = 0, LIMITED = 1;
+
+/** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
+const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
+
+/** A selector that finds `control` again in the next render: its data-op and the data it edits. */
+const settingSelector = control => `.settings-tab ${["op", "side", "index", "list", "value", "end"]
+  .filter(key => control.dataset[key] != null)
+  .map(key => `[data-${key}="${CSS.escape(control.dataset[key])}"]`).join("")}`;
+
+/** A text field's caret; null for a number or time input, which has none (reading it throws). */
+function caretOf(control) {
+  try { return control.selectionStart; } catch { return null; }
+}
 
 /** A number typed into the tab; an emptied field is no number at all, not 0. */
 const typedNumber = text => (String(text).trim() === "" ? NaN : Number(text));
@@ -233,21 +246,36 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._buyerSearch = search?.value ?? "";
     // Its own document: a popped-out window (ApplicationV2#detachWindow) isn't the main one.
     this._searchFocus = search && search === search.ownerDocument?.activeElement ? search.selectionStart : null;
+    // The Settings field the GM is in, and what they've typed there but not yet left: each save
+    // re-renders the window, and tabbing on from a field saves it as the next one gains focus.
+    const active = this.element?.ownerDocument?.activeElement;
+    this._settingFocus = active && this.element.contains(active) && active.matches(".settings-tab [data-op]")
+      ? { selector: settingSelector(active), value: active.value, dirty: active.value !== active.defaultValue, caret: caretOf(active) }
+      : null;
   }
 
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
-    // The GM's Settings tab (#110) edits on change. Enter would submit the sheet's form, which
-    // saves nothing: it commits the field instead, the way leaving it does.
+    // The GM's Settings tab (#110). A field saves when it's left (Enter leaves it): a time input
+    // fires `change` on each part typed, and saving 01:00 would re-render before the 9 of 19:00.
+    // Boxes, radios and selects save on change. Enter would otherwise submit the sheet's form.
     for (const control of this.element?.querySelectorAll(".settings-tab [data-op]") ?? []) {
-      control.addEventListener("change", () => this._onSettingChange(control));
-      control.addEventListener("keydown", event => {
-        if (event.key !== "Enter" || control.tagName !== "INPUT") return;
-        event.preventDefault();
-        control.blur();
-      });
+      if (isTypedField(control)) {
+        control.addEventListener("blur", () => { if (control.value !== control.defaultValue) this._onSettingChange(control); });
+        control.addEventListener("keydown", event => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          control.blur();
+        });
+      } else control.addEventListener("change", () => this._onSettingChange(control));
+    }
+    const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
+    if (focus) {
+      if (this._settingFocus.dirty) focus.value = this._settingFocus.value;
+      focus.focus();
+      if (this._settingFocus.caret != null) focus.setSelectionRange?.(this._settingFocus.caret, this._settingFocus.caret);
     }
     // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
     // form, which has nothing to save.
@@ -978,6 +1006,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const schedule = actor.flags?.[MODULE]?.schedule;
 
     return {
+      // A config that failed validation shows the defaults here; editing is refused (see `#edit`).
+      broken: !safeShopOf(actor),
       sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
       section: Object.fromEntries(SETTINGS_SECTIONS.map(s => [s.id, s.id === this._settingsSection])),
       visit: (actor.ownership?.default ?? NONE) >= LIMITED,
@@ -1038,35 +1068,53 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       await this.document.update({ "ownership.default": control.checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: control.checked });
       return;
     }
-    const world = worldOf().rates;
-    const shop = shopConfigOf(this.document);
-    const value = control.value;
+    // Read now, while the control still holds what the GM set; applied when its turn comes.
+    const value = control.value, checked = control.checked;
     const change = {
       rate: () => ({ op, side, percent: typedNumber(value) }),
       // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
-      rateDefault: () => ({ op: "rate", side, percent: control.checked ? null : percentOf(world[side]) }),
-      addRule: () => ({ op, category: value, world }),
+      rateDefault: () => ({ op: "rate", side, percent: checked ? null : percentOf(worldOf().rates[side]) }),
+      addRule: () => ({ op, category: value, world: worldOf().rates }),
       ruleRate: () => ({ op, index: Number(index), side, percent: typedNumber(value) }),
-      wontBuy: () => ({ op, list, value: control.dataset.value, on: control.checked }),
-      keepHours: async () => ({ op, on: control.checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
+      wontBuy: () => ({ op, list, value: control.dataset.value, on: checked }),
+      keepHours: async shop => ({ op, on: checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
       hour: () => ({ op, end, time: value }),
       every: () => ({ op, every: value.trim() }),
       mode: () => ({ op, mode: value })
     }[op];
-    if (change) await this.#writeShop(shop, await change());
+    if (change) await this.#edit(change);
   }
 
-  /** Writes `change` applied to `shop`, whole; an edit the config can't hold is refused, and the field put back. */
-  async #writeShop(shop, change) {
-    const result = applyChange(shop, change);
-    if (!result.ok) {
-      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
-      this.render({ parts: ["body"] });
-      return;
-    }
-    if (change.op === "every") this._everyDice = false;
-    // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
-    await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
+  /**
+   * Queues one edit of the shop's config: `makeChange(shop)` gives the `applyChange` change, or
+   * null for none. Each edit reads the config only once the edit before it has landed, so two
+   * quick edits (leaving one field for a checkbox) can't each write over the other with what
+   * they read before either saved (#140 review). A config that can't be read is left alone: the
+   * edit would write the defaults over it, a 1.x shop's migration marker included.
+   */
+  #edit(makeChange) {
+    const run = async () => {
+      const shop = safeShopOf(this.document);
+      if (!shop) {
+        ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
+        return;
+      }
+      const change = await makeChange(shop);
+      if (!change) return;
+      const result = applyChange(shop, change);
+      if (!result.ok) {
+        ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
+        this.render({ parts: ["body"] });   // puts the field back
+        return;
+      }
+      if (change.op === "every") this._everyDice = false;
+      // Replaced, not merged: a merge would keep a removed rule's or quantity formula's old keys.
+      await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
+    };
+    const queued = (this._edits ?? Promise.resolve()).then(run);
+    // One failed write mustn't stall every edit after it.
+    this._edits = queued.catch(err => console.error(`${MODULE} | a shop setting wasn't saved`, err));
+    return queued;
   }
 
   static #onSettingsSection(_event, target) {
@@ -1082,12 +1130,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       this.render({ parts: ["body"] });
       return;
     }
-    await this.#writeShop(shopConfigOf(this.document), { op: "every", every });
+    await this.#edit(() => ({ op: "every", every }));
   }
 
   static async #onRemoveRule(_event, target) {
     if (!game.user.isGM) return;
-    await this.#writeShop(shopConfigOf(this.document), { op: "removeRule", index: Number(target.dataset.index) });
+    await this.#edit(() => ({ op: "removeRule", index: Number(target.dataset.index) }));
   }
 
   static async #onRestockNow() {
@@ -1098,7 +1146,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onResetToPreset() {
     if (!game.user.isGM) return;
-    const shop = shopConfigOf(this.document);
+    const shop = safeShopOf(this.document);
+    if (!shop) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
+      return;
+    }
     const preset = await this.#presetShop(shop);
     if (!preset) return;
     const yes = await foundry.applications.api.DialogV2.confirm({
@@ -1106,8 +1158,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       content: `<p>${game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Reset.Question")}</p>`
     });
     if (!yes) return;
-    const result = resetToPreset(shop, preset);
-    if (result.ok) await this.document.update({ [`flags.${MODULE}.shop`]: _replace(result.shop) });
+    await this.#edit(() => ({ op: "reset", preset }));
   }
 
   static async #onOpenTable() {
@@ -1144,9 +1195,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
     Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
     Hooks.on("deleteActor", actor => ShopSheet.#liveDataChanged(app => app._buyerUuid === actor.uuid));
-    // The world's rates, stock and purse modes and trading hours price and open every shop (#110).
+    // The world's rates, stock and purse modes, trading hours and restock switch price and open
+    // every shop (#110). Only those: the restock loop writes its own clock setting every tick.
+    const shown = new Set(["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock"].map(k => `${MODULE}.${k}`));
     for (const hook of ["createSetting", "updateSetting"]) {
-      Hooks.on(hook, setting => { if (setting.key?.startsWith(`${MODULE}.`)) ShopSheet.#liveDataChanged(() => true); });
+      Hooks.on(hook, setting => { if (shown.has(setting.key)) ShopSheet.#liveDataChanged(() => true); });
     }
     // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
     for (const hook of ["createItem", "updateItem", "deleteItem"]) {

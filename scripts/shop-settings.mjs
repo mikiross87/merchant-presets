@@ -100,6 +100,12 @@ const CHANGES = {
   },
   mode(shop, { mode }) {
     shop.restock.mode = mode;
+  },
+  reset(shop, { preset }) {
+    const result = resetToPreset(shop, preset);
+    if (!result.ok) return result.errors.join("; ");
+    for (const key of Object.keys(shop)) delete shop[key];
+    Object.assign(shop, result.shop);
   }
 };
 
@@ -110,7 +116,7 @@ const CHANGES = {
  * @param {{op: string}} change  `{op: "rate", side, percent|null}`, `{op: "addRule", category,
  *   world}`, `{op: "ruleRate", index, side, percent}`, `{op: "removeRule", index}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
- *   `{op: "every", every}` or `{op: "mode", mode}`
+ *   `{op: "every", every}`, `{op: "mode", mode}` or `{op: "reset", preset}` (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}
  */
 export function applyChange(shop, change) {

@@ -160,6 +160,13 @@ test("reset puts back the preset's config and keeps which preset the shop came f
   assert.deepEqual(reset, { ...preset, source: edited.source });
 });
 
+test("reset is a change like any other, keeping the shop's own source", () => {
+  const preset = shop({ tier: "City", hours: null });
+  const config = applied(shop({ source: "Actor.mine" }), { op: "reset", preset });
+  assert.deepEqual(config, { ...preset, source: "Actor.mine" });
+  refused(shop(), { op: "reset", preset: { version: 1, tier: "Hamlet" } });
+});
+
 test("reset refuses a preset config that isn't valid", () => {
   const result = resetToPreset(shop(), { version: 1, tier: "Hamlet" });
   assert.equal(result.ok, false);
