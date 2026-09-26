@@ -59,6 +59,29 @@ test("a player's purchase lands: goods on the character, coin in the till, stock
   assert.equal(shop.system.currency.gp, 252);
 });
 
+test("a trade resent after the claim moved to a fresh tab is still carried out only once (#134 review)", async () => {
+  const { world, shop, tess, request } = await setUp();
+  const first = request([{ itemId: ROPE, quantity: 1 }], { tradeId: "moved0000000001" });
+  const sealed = await globalThis.game.modules.get("merchant-presets").api.trade(first);
+  assert.equal(sealed.status, "sealed");
+  await loadRuntime(world);   // the claiming tab reloads (or another takes over): its memory is empty
+  const again = await globalThis.game.modules.get("merchant-presets").api.trade({ ...first, lines: [{ itemId: ROPE, quantity: 3 }] });
+  assert.equal(again.status, "sealed");
+  assert.deepEqual(again.lines, sealed.lines, "the first trade's lines");
+  assert.equal(qty(shop, ROPE), 6);
+  assert.deepEqual(named(tess, "Rope").map(r => r.system.quantity), [1]);
+  assert.equal(tess.system.currency.gp, 19);
+});
+
+test("a shop in a compendium is refused before anything is written (#134 review)", async () => {
+  const { shop, tess, api, request } = await setUp();
+  shop.pack = "merchant-presets.merchants";
+  const result = await api.trade(request([{ itemId: BELL, quantity: 1 }]));
+  assert.deepEqual([result.status, result.reason], ["refused", "invalid-request"]);
+  assert.equal(tess.system.currency.gp, 20);
+  assert.equal(named(tess, "Bell").length, 0);
+});
+
 test("a sale lands: the item leaves the character, the shop pays exactly", async () => {
   const { shop, tess, api, request } = await setUp();
   tess.items.push({ _id: "ownedRope000001", id: "ownedRope000001", name: "Rope", type: "consumable",
