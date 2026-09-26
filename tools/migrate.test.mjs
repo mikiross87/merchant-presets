@@ -477,6 +477,13 @@ test("a shop made visitable once and hidden again by the GM stays hidden through
   assert.equal(planOwnership(store, true, "world-a"), null);
 });
 
+test("a shop the GM switched off Players can visit stays hidden through a re-run migration (#140 review, round 6)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["merchant-presets"].visibility = false;
+  store.ownership = { default: 0 };
+  assert.equal(planOwnership(store, true, "world-a"), null);
+});
+
 test("a shop marked in another world, its ownership cleared by export, is made visitable here (#138 review, round 6)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.flags["merchant-presets"].madeVisitable = "world-a";
