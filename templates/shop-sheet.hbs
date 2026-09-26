@@ -125,11 +125,11 @@
               <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
             {{else}}
               {{#if service}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Service"}}</span>{{/if}}
-              {{#if tag.text}}<span class="price-tag tag-{{tag.kind}}">{{tag.text}}</span>{{/if}}
+              {{#if tag.text}}<span class="price-tag tag-{{tag.kind}}" {{#if (eq tag.kind "deal")}}data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"{{/if}}>{{tag.text}}</span>{{/if}}
               {{#if (eq tag.kind "full")}}<span class="price-tag tag-full">{{localize "MERCHANT_PRESETS.Shop.Tag.Full"}}</span>{{/if}}
               {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
               {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
-              <span class="price-coins">{{> coins priceCoins}}</span>
+              <span class="price-stack">{{#if listText}}<s class="price-list" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}<span class="price-coins">{{> coins priceCoins}}</span></span>
             {{/if}}
           </div>
           <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
@@ -169,9 +169,10 @@
           <span class="price-tag tag-neutral">{{ratio}}</span>
           {{!-- One grid cell, as on the Buy row: the row's grid has five columns whatever tags show. --}}
           <div class="item-price">
+            {{#if tag.text}}<span class="price-tag tag-deal" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}">{{tag.text}}</span>{{/if}}
             {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
             {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
-            <span class="price-coins">{{> coins priceCoins}}</span>
+            <span class="price-stack">{{#if listText}}<s class="price-list" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}<span class="price-coins">{{> coins priceCoins}}</span></span>
           </div>
           <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
             aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}" {{#unless ../sell.open}}disabled{{/unless}}>

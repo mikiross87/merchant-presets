@@ -10,7 +10,8 @@
  *
  * Rates read from the shop's side, as the shop window words them: it *sells
  * at* `terms.sellsAt` × price and *buys at* `terms.buysAt` × value. A null
- * rate follows the world default (#110). The portrait is the actor's own
+ * rate follows the world default (#110). `deals` (#111, deals.mjs) give one
+ * character their own price, as a factor on the shop's. The portrait is the actor's own
  * image and the title its name, so neither is config.
  */
 
@@ -32,7 +33,8 @@ export const SHOP_DEFAULTS = deepFreeze({
   terms: { sellsAt: null, buysAt: null, categories: [] },
   hours: { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } },   // null: always open
   restock: { table: null, quantities: {}, onOpen: true, every: 7, mode: "reroll" },   // #105
-  wontBuy: { types: [], kinds: [] }
+  wontBuy: { types: [], kinds: [] },
+  deals: []                // one character's own price here (#111)
 });
 
 export const STOCK_DEFAULTS = deepFreeze({
@@ -97,6 +99,25 @@ const list = (inner, key = v => v) => (v, path, errors) => {
   }
 };
 
+// A deal's adjustment, as a factor on this shop's own rate (pricing.mjs `effectiveRates`): -0.1 is
+// 10% off. Above -1, so no deal gives the goods away or has the shop paid to take them.
+const adjustment = check(v => typeof v === "number" && Number.isFinite(v) && v > -1, "must be a number above -1");
+
+const deal = (v, path, errors) => {
+  shape({
+    actor: name,
+    name: string,
+    buy: nullOr(adjustment),
+    sell: nullOr(adjustment),
+    note: string,
+    ends: nullOr(shape({
+      at: check(v => typeof v === "number" && Number.isFinite(v), "must be a world time"),
+      when: oneOf(["close", "date"])
+    }, ["at", "when"]))
+  }, ["actor", "buy", "sell"])(v, path, errors);
+  if (isObject(v) && !v.buy && !v.sell) errors.push(`${path}: changes no price`);
+};
+
 const time = shape({
   hour: check(v => isInt(v, 0, 23), "must be a whole hour, 0 to 23"),
   minute: check(v => isInt(v, 0, 59), "must be a whole minute, 0 to 59")
@@ -136,7 +157,8 @@ const shopShape = shape({
   }),
   // dnd5e item types and our `kind`s. Checked for shape only: the item types
   // live in CONFIG, which a Foundry-free module can't read.
-  wontBuy: shape({ types: list(name), kinds: list(name) })
+  wontBuy: shape({ types: list(name), kinds: list(name) }),
+  deals: list(deal, d => d?.actor)
 }, ["version"]);
 
 const stockShape = shape({
