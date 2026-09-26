@@ -26,8 +26,8 @@ import { boughtWith, fromItemPiles, goodFlag, uuidOf } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { isOpen } from "./schedule.mjs";
 import {
-  bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
-  receiptHtml, recipients, resultOf, serial, TRADE_HOOK, WORLD_RATES
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
+  receiptHtml, recipients, resultOf, serial, shouldReclaim, TRADE_HOOK, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
@@ -1099,8 +1099,11 @@ function registerTradeListeners() {
  * the character, and carries the plan out. Then it posts the receipt and fires
  * `merchant-presets.trade` on every client (trade-desk.mjs `hookPayload`).
  *
- * Known limit: a claiming tab that crashes, rather than closing, leaves its
- * claim behind, and trades read as unconfirmed until a GM tab is reloaded.
+ * Known limit: when the claiming tab closes or crashes and its unload write
+ * doesn't land, trades read as unconfirmed for up to about half a minute,
+ * until another GM tab notices the silence and takes the claim
+ * (`registerTradeDesk`). The window resends the same trade id, so nothing
+ * lands twice.
  */
 
 const SOCKET = `module.${MODULE}`;
@@ -1240,22 +1243,41 @@ async function trade(request) {
 
 /**
  * Wire the trade desk on this client: the socket every client hears trades
- * on, the bundle index, and on a GM's tab the trade claim, taken on load,
- * given up on close, and taken back by another tab when it's given up.
+ * on, the bundle index, and on a GM's tab the trade claim. It's taken on load,
+ * given up on close, and kept alive by a heartbeat on the socket; another tab
+ * takes it once it's given up or its claimer goes quiet (`shouldReclaim`).
  */
 function registerTradeDesk() {
+  // When this tab last heard the claiming tab, or noticed a new claim: the
+  // grace period a claimer gets before its silence counts.
+  let lastAliveAt = Date.now();
   game.socket.on(SOCKET, message => {
     if (message?.type === "trade") Hooks.callAll(TRADE_HOOK, message.trade, { carriedOut: false });
+    if (message?.type === "claim-alive" && message.userId === game.user.id) lastAliveAt = Date.now();
   });
   loadBundles().catch(err => console.error(`${MODULE} | could not index the dnd5e packs' bundles`, err));
   if (!game.user.isGM) return;
-  claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
+
+  const reclaim = () => claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
+  reclaim();
   globalThis.addEventListener?.("beforeunload", () => {
     if (claimsTrades(tradeClaim(), thisTab())) game.user.unsetFlag(MODULE, "tradeTab");
   });
   Hooks.on("updateUser", user => {
-    if (user === game.user && tradeClaim() == null) claimTrades().catch(() => {});
+    if (user !== game.user) return;
+    lastAliveAt = Date.now();
+    if (tradeClaim() == null) reclaim();
   });
+  const heartbeat = setInterval(() => {
+    const claim = tradeClaim();
+    if (claimsTrades(claim, thisTab())) {
+      game.socket.emit(SOCKET, { type: "claim-alive", userId: game.user.id, tabId: thisTab() });
+    } else if (shouldReclaim({ claim, tabId: thisTab(), lastAliveAt, now: Date.now() })) {
+      lastAliveAt = Date.now();
+      reclaim();
+    }
+  }, CLAIM_HEARTBEAT_MS);
+  heartbeat.unref?.();   // plain Node (the tests): never keep the process alive for it
 }
 
 /* ----------------------------------------------------------- 1.x migration */

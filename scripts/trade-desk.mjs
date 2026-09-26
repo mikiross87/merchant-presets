@@ -125,6 +125,27 @@ export function claimsTrades(claim, tabId) {
   return claim != null && claim === tabId;
 }
 
+/** How often the claiming tab says it's still there, on the module socket. */
+export const CLAIM_HEARTBEAT_MS = 10_000;
+
+/** How long the other GM tabs wait on a silent claimer before one of them takes over. */
+export const CLAIM_STALE_MS = 25_000;
+
+/**
+ * Whether tab `tabId` should claim trades now: nobody holds the claim, or another tab holds it
+ * but hasn't said it's there for longer than `CLAIM_STALE_MS`. A tab that closes clears its claim
+ * as it goes, but that write doesn't always land (#102's live run), and a crashed tab never
+ * writes at all, so silence is what finally moves the claim. Several tabs may take it at once;
+ * the last write wins and every tab then reads the same claim.
+ *
+ * @param {{claim: string|undefined, tabId: string, lastAliveAt: number, now: number}} state
+ *   `lastAliveAt`: when this tab last heard the claimer, or took notice of its claim.
+ */
+export function shouldReclaim({ claim, tabId, lastAliveAt, now }) {
+  if (claim == null) return true;
+  return claim !== tabId && now - lastAliveAt > CLAIM_STALE_MS;
+}
+
 /**
  * What `api.trade` tells the window when the query itself didn't come back with an answer.
  *
