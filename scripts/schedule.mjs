@@ -449,21 +449,24 @@ export function adoptDrawn(items, tableNames, drawnBy) {
  * out and leaves the shelf comes back with the GM's settings rather than the defaults (#135
  * review). Lines no longer on the shelf keep what was remembered before.
  *
- * @param {Record<string, {stock?: object, piles?: object}>|undefined} previous
+ * A list of `{name, stock?, piles?}`, not an object keyed by name: Foundry expands a key with a
+ * dot in it into a path, and a GM's own line may well be called "Scroll (Lvl. 1)".
+ *
+ * @param {{name: string, stock?: object, piles?: object}[]|undefined} previous
  * @param {Item[]} items
  * @param {string} drawnBy
- * @returns {Record<string, {stock?: object, piles?: object}>}
+ * @returns {{name: string, stock?: object, piles?: object}[]}
  */
 export function lineMemory(previous, items, drawnBy) {
-  const memory = { ...previous };
+  const memory = new Map((Array.isArray(previous) ? previous : []).filter(l => typeof l?.name === "string").map(l => [l.name, l]));
   for (const item of items) {
     if (isGear(item) || !isDrawn(item, drawnBy)) continue;
-    const line = {};
+    const line = { name: item.name };
     if (item.flags?.["merchant-presets"]?.stock) line.stock = item.flags["merchant-presets"].stock;
     if (item.flags?.["item-piles"]) line.piles = item.flags["item-piles"];
-    memory[item.name] = line;
+    memory.set(item.name, line);
   }
-  return memory;
+  return [...memory.values()];
 }
 
 /**
@@ -478,12 +481,14 @@ export function lineMemory(previous, items, drawnBy) {
  * @param {Item[]} items
  * @param {{name: string}[]} draws
  * @param {(name: string) => object|undefined} fromRecord
+ * @param {string} drawnBy  The shop's shelf key.
  * @returns {Record<string, object>}
  */
-export function restockStockFlags(items, draws, fromRecord) {
+export function restockStockFlags(items, draws, fromRecord, drawnBy) {
   const flags = {};
   for (const { name } of draws) {
-    const live = items.find(i => !isGear(i) && i.name === name && i.flags?.["merchant-presets"]?.stock);
+    // This shop's own copy only: a same-named good the GM added, or another shop drew, isn't the line.
+    const live = items.find(i => !isGear(i) && isDrawn(i, drawnBy) && i.name === name && i.flags?.["merchant-presets"]?.stock);
     const stock = live?.flags["merchant-presets"].stock ?? fromRecord(name);
     if (stock) flags[name] = stock;
   }

@@ -664,16 +664,17 @@ async function restockNow(actor) {
   // What the shelf says of each line now, over what it said at earlier restocks: a line that
   // left the shelf comes back with the GM's settings (schedule.mjs `lineMemory`).
   const memory = lineMemory(actor.flags?.[MODULE]?.lines, items, shelf);
+  const remembered = new Map(memory.map(line => [line.name, line]));
   const plan = planRestock(raw, items, draws, {
     purse: actor.flags?.[MODULE]?.purse,
     currentGp: actor.system?.currency?.gp,
-    stockFlags: restockStockFlags(items, draws, name => memory[name]?.stock ?? stockFromRecord(record[name])),
+    stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), shelf),
     containers: actor.flags?.[MODULE]?.containers ?? {},
     drawnBy: shelf
   });
   // Item Piles still shows the shops until #104, and keeps a GM's edits to a line (hidden, say)
   // in its own flags on the item: a redrawn copy carries them over from the one it replaces.
-  const livePiles = new Map(Object.entries(memory).filter(([, line]) => line.piles).map(([name, line]) => [name, line.piles]));
+  const livePiles = new Map(memory.filter(line => line.piles).map(line => [line.name, line.piles]));
   for (const create of plan.creates) {
     if (livePiles.has(create.name)) create.flags = { ...create.flags, "item-piles": structuredClone(livePiles.get(create.name)) };
   }
@@ -1663,6 +1664,10 @@ async function setUpShop(actor, sourceUuid, keepIds) {
       [`flags.${MODULE}.itemFlags`]: plan.moduleFlags.itemFlags ? _replace(plan.moduleFlags.itemFlags) : null,
       [`flags.${MODULE}.containers`]: plan.moduleFlags.containers ? _replace(plan.moduleFlags.containers) : null,
       [`flags.${MODULE}.shop`]: _replace(plan.moduleFlags.shop),
+      // A new shelf from a new table: the next restock adopts it afresh (#135 review).
+      [`flags.${MODULE}.shelf`]: null,
+      [`flags.${MODULE}.schedule`]: null,
+      [`flags.${MODULE}.lines`]: null,
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });

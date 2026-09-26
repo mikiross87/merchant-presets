@@ -218,7 +218,7 @@ test("a restock that fails part-way has already noted each line's settings (#135
   const error = console.error;
   console.error = () => {};
   try { await clock(at(3, 8)); } finally { console.error = error; }
-  assert.equal(shop.flags["merchant-presets"].lines?.Bell?.stock?.hidden, true);
+  assert.equal(shop.flags["merchant-presets"].lines?.find(l => l.name === "Bell")?.stock?.hidden, true);
 });
 
 test("a duplicated shop still knows its own shelf: one line each, not a second shelf (#135 review, round 6)", async () => {
