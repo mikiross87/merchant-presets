@@ -196,6 +196,9 @@ export function createWorld() {
     return Object.assign(doc, {
       documentName: "Actor",
       testUserPermission: (u, level) => u.isGM || owners.includes(u.id) || (level === "LIMITED" && doc.ownership?.default >= 1),
+      updateSource(changes) {
+        for (const [k, v] of Object.entries(changes)) set(this, k, v);
+      },
       async update(changes) {
         for (const [k, v] of Object.entries(changes)) set(this, k, v);
         calls.writes.push({ type: "actorUpdate", actor: this.id, changes });
