@@ -158,8 +158,8 @@ Constraints worth knowing before changing the generator:
   roll counts (`shop.restock.quantities`, falling back to `"1"`) and each line's
   settings (`flags.merchant-presets.itemFlags`, by name) are stored on the shop
   when it arrives. So after a recipe change, a shop already in a world gets a new
-  line at quantity 1 with default settings — a service arrives as an ordinary,
-  limited, sellable item — and keeps its old counts. A recipe change that alters
+  line at quantity 1, with the settings its good ships with (`sync_goods_stock`;
+  the defaults for an SRD item), and keeps its old counts. A recipe change that alters
   a shop's lines needs its CHANGELOG line to tell GMs to drag in a fresh
   merchant (#63).
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
