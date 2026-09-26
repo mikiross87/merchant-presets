@@ -673,6 +673,9 @@ async function scheduleShop(actor, now, previous, calendar) {
   const due = dueRestock(raw, state, previous, now, calendar);
   if (!due.due) return null;
   const restocked = await restockNow(actor);
+  // Couldn't run (its table or a line's document is missing): still due, so the next opening
+  // tries again, rather than the shop skipping a whole cycle.
+  if (restocked === null) return null;
   const days = await daysOf(due.nextEvery);
   await actor.update({ [`flags.${MODULE}.schedule`]: scheduleNext(due.at, days ?? 1, calendar) });
   return restocked;
@@ -1744,7 +1747,7 @@ Hooks.once("init", () => {
       + "(an inn daily, a jeweler fortnightly), on Foundry's own calendar. A restock redraws only "
       + "what the shop's stock table put there; anything you added by hand stays, and a line you "
       + "hid or edited keeps your settings. Worlds upgrading from 1.x keep this off until you turn "
-      + "it on. Takes effect on reload.",
+      + "it on.",
     scope: "world",
     config: true,
     type: Boolean,

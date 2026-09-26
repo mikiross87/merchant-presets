@@ -322,8 +322,9 @@ function dedupedByName(draws) {
  * deleted, updated, or counted as sold out (#105).
  *
  * `shop.restock.mode` decides the shape of the change:
- * - `"reroll"` (the default): every drawn item is replaced — the shelf comes
- *   back exactly as if the shop had just been dragged in fresh.
+ * - `"reroll"` (the default): every drawn item one of this table's lines names
+ *   is replaced — the shelf comes back exactly as if the shop had just been
+ *   dragged in fresh. A drawn good from some other shop's table stays.
  * - `"topup"`: only a drawn line the shop has actually sold through is drawn
  *   again; everything still genuinely in stock is untouched. This is driven
  *   by `draws` — the table's own lines — not by what is sitting on the
@@ -407,7 +408,10 @@ export function planRestock(shop, items, draws, context) {
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
+  // Only what this shop's own table draws: a drawn good that came from another shop's table (sold
+  // on through Item Piles, which copies every flag) is this shop's stock now, not its draw.
+  const lines = new Set(uniqueDraws.map(d => d.name));
+  return { deletes: drawnNow.filter(i => lines.has(i.name)).map(i => i._id), creates, updates: [], currency, restocked };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */
