@@ -67,7 +67,8 @@ test("a category can only be ruled once, and a rule it doesn't have can't be edi
   refused(config, { op: "addRule", category: "weapon", world: WORLD });
   refused(config, { op: "addRule", category: "", world: WORLD });
   refused(config, { op: "ruleRate", category: "armor", side: "sellsAt", percent: 100 });
-  refused(config, { op: "removeRule", category: "armor" });
+  // Removing a rule that's gone (a second click) changes nothing, and isn't an error.
+  assert.deepEqual(applied(config, { op: "removeRule", category: "armor" }), config);
   refused(config, { op: "ruleRate", category: "weapon", side: "sellsAt", percent: 0 });
 });
 

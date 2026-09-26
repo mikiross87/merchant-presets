@@ -26,13 +26,13 @@
     <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.Hint"}}</p>
     <div class="settings-rate">
       <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.SellsAt"}}</span>
-      <span class="settings-percent"><input type="number" min="1" step="1" value="{{terms.sells.percent}}" data-op="rate" data-side="sellsAt" {{disabled terms.sells.worldDefault}} />%</span>
+      <span class="settings-percent"><input type="text" inputmode="decimal" value="{{terms.sells.percent}}" data-op="rate" data-side="sellsAt" {{disabled terms.sells.worldDefault}} />%</span>
       <em>{{terms.sells.word}}</em>
       <label><input type="checkbox" data-op="rateDefault" data-side="sellsAt" {{checked terms.sells.worldDefault}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.WorldDefault"}}</label>
     </div>
     <div class="settings-rate">
       <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.BuysAt"}}</span>
-      <span class="settings-percent"><input type="number" min="0" step="1" value="{{terms.buys.percent}}" data-op="rate" data-side="buysAt" {{disabled terms.buys.worldDefault}} />%</span>
+      <span class="settings-percent"><input type="text" inputmode="decimal" value="{{terms.buys.percent}}" data-op="rate" data-side="buysAt" {{disabled terms.buys.worldDefault}} />%</span>
       <em>{{terms.buys.word}}</em>
       <label><input type="checkbox" data-op="rateDefault" data-side="buysAt" {{checked terms.buys.worldDefault}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Terms.WorldDefault"}}</label>
     </div>
@@ -46,10 +46,10 @@
       <div class="settings-rule">
         <b>{{label}}</b>
         <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Sells"}}
-          <input type="number" min="1" step="1" value="{{sellsPercent}}" data-op="ruleRate" data-index="{{index}}" data-side="sellsAt" />%</span>
+          <input type="text" inputmode="decimal" value="{{sellsPercent}}" data-op="ruleRate" data-category="{{category}}" data-side="sellsAt" />%</span>
         <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Buys"}}
-          <input type="number" min="0" step="1" value="{{buysPercent}}" data-op="ruleRate" data-index="{{index}}" data-side="buysAt" />%</span>
-        <button type="button" class="settings-icon" data-action="removeRule" data-index="{{index}}"
+          <input type="text" inputmode="decimal" value="{{buysPercent}}" data-op="ruleRate" data-category="{{category}}" data-side="buysAt" />%</span>
+        <button type="button" class="settings-icon" data-action="removeRule" data-category="{{category}}"
           data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}">
           <i class="fa-solid fa-trash" aria-hidden="true"></i>
         </button>

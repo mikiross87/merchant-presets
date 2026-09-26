@@ -68,14 +68,16 @@ const CHANGES = {
     const { sellsAt, buysAt } = effectiveRates(world, shop.terms);
     shop.terms.categories.push({ category, sellsAt: sellsAt.rate, buysAt: buysAt.rate });
   },
-  ruleRate(shop, { index, side, percent }) {
-    const rule = shop.terms.categories[index];
+  // A rule is named by its category, never its place in the list: edits queue, and a remove
+  // ahead of this one would shift every place after it (#140 review).
+  ruleRate(shop, { category, side, percent }) {
+    const rule = shop.terms.categories.find(c => c.category === category);
     if (!rule || (side !== "sellsAt" && side !== "buysAt")) return "no such rule";
     rule[side] = rateOf(percent);
   },
-  removeRule(shop, { index }) {
-    if (!shop.terms.categories[index]) return "no such rule";
-    shop.terms.categories.splice(index, 1);
+  removeRule(shop, { category }) {
+    // Already gone (a double click): nothing to do.
+    shop.terms.categories = shop.terms.categories.filter(c => c.category !== category);
   },
   wontBuy(shop, { list, value, on }) {
     if (list !== "types" && list !== "kinds") return "no such list";
@@ -114,7 +116,7 @@ const CHANGES = {
  *
  * @param {object} shop
  * @param {{op: string}} change  `{op: "rate", side, percent|null}`, `{op: "addRule", category,
- *   world}`, `{op: "ruleRate", index, side, percent}`, `{op: "removeRule", index}`, `{op:
+ *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}` or `{op: "reset", preset}` (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}

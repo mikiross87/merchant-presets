@@ -73,13 +73,19 @@ const NONE = 0, LIMITED = 1;
 const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
 
 /** A selector that finds `control` again in the next render: its data-op and the data it edits. */
-const settingSelector = control => `.settings-tab ${["op", "side", "index", "list", "value", "end"]
+const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end"]
   .filter(key => control.dataset[key] != null)
   .map(key => `[data-${key}="${CSS.escape(control.dataset[key])}"]`).join("")}`;
 
-/** A text field's caret; null for a number or time input, which has none (reading it throws). */
-function caretOf(control) {
-  try { return control.selectionStart; } catch { return null; }
+/**
+ * A text field's selection, `[start, end]` (a caret is an empty one); null for a time input or a
+ * box, which have none. The tab's percentages are text fields for this: a number input's caret
+ * can't be read or put back.
+ */
+function selectionOf(control) {
+  try {
+    return control.selectionStart == null ? null : [control.selectionStart, control.selectionEnd];
+  } catch { return null; }
 }
 
 /** A number typed into the tab; an emptied field is no number at all, not 0. */
@@ -250,8 +256,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // re-renders the window, and tabbing on from a field saves it as the next one gains focus.
     const active = this.element?.ownerDocument?.activeElement;
     this._settingFocus = active && this.element.contains(active) && active.matches(".settings-tab [data-op]")
-      ? { selector: settingSelector(active), value: active.value, dirty: active.value !== active.defaultValue, caret: caretOf(active) }
+      ? { selector: settingSelector(active), value: active.value, dirty: active.value !== active.defaultValue, selection: selectionOf(active) }
       : null;
+    // From here until `_onRender`, a blur is the re-render removing a field, not the GM leaving it.
+    this._settingsRendering = true;
   }
 
   /** @override */
@@ -261,9 +269,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // The GM's Settings tab (#110). A field saves when it's left (Enter leaves it): a time input
     // fires `change` on each part typed, and saving 01:00 would re-render before the 9 of 19:00.
     // Boxes, radios and selects save on change. Enter would otherwise submit the sheet's form.
+    this._settingsRendering = false;
     for (const control of this.element?.querySelectorAll(".settings-tab [data-op]") ?? []) {
       if (isTypedField(control)) {
-        control.addEventListener("blur", () => { if (control.value !== control.defaultValue) this._onSettingChange(control); });
+        control.addEventListener("blur", () => {
+          // Chromium blurs a focused field when a re-render takes it off the page, half-typed:
+          // that isn't the GM leaving it. Its typing carries over to the new field (`_preRender`).
+          if (this._settingsRendering || !control.isConnected) return;
+          if (control.value !== control.defaultValue) this._onSettingChange(control);
+        });
         control.addEventListener("keydown", event => {
           if (event.key !== "Enter") return;
           event.preventDefault();
@@ -273,15 +287,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
+      const { dirty, value, selection } = this._settingFocus;
+      if (dirty) focus.value = value;
       focus.focus();
-      if (this._settingFocus.dirty) {
-        // Set after focusing, so the caret lands at the end (a number field has no other way).
-        focus.value = this._settingFocus.value;
-        if (this._settingFocus.caret != null) focus.setSelectionRange?.(this._settingFocus.caret, this._settingFocus.caret);
-      } else if (isTypedField(focus)) {
-        // Just clicked into, nothing typed yet: selected, so typing replaces it as it would have.
-        focus.select?.();
-      }
+      // Exactly where the caret or selection was: a click into a field, or a triple-click on it.
+      if (selection) focus.setSelectionRange?.(...selection);
     }
     // The GM's buyer search filters the picker by name. Enter would otherwise submit the sheet's
     // form, which has nothing to save.
@@ -1022,8 +1032,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         buys: { ...rate("buysAt"), word: termsWord(shop.terms.buysAt ?? world.buysAt, "buy") },
         exampleSell: header.terms.exampleSell,
         exampleBuy: header.terms.exampleBuy,
-        rules: shop.terms.categories.map((c, index) => ({
-          index, label: WONT_BUY_TYPES.includes(c.category) ? typeLabel(c.category) : c.category,
+        rules: shop.terms.categories.map(c => ({
+          category: c.category, label: WONT_BUY_TYPES.includes(c.category) ? typeLabel(c.category) : c.category,
           sellsPercent: percentOf(c.sellsAt), buysPercent: percentOf(c.buysAt)
         })),
         ruleChoices
@@ -1068,7 +1078,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   async _onSettingChange(control) {
     if (!game.user.isGM) return;
-    const { op, side, index, list, end } = control.dataset;
+    const { op, side, list, end } = control.dataset;
     if (op === "visit") {
       // The GM's own choice, which placing a token never overrides again (`makeVisitable`).
       await this.document.update({ "ownership.default": control.checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: control.checked });
@@ -1081,7 +1091,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
       rateDefault: () => ({ op: "rate", side, percent: checked ? null : percentOf(worldOf().rates[side]) }),
       addRule: () => ({ op, category: value, world: worldOf().rates }),
-      ruleRate: () => ({ op, index: Number(index), side, percent: typedNumber(value) }),
+      ruleRate: () => ({ op, category: control.dataset.category, side, percent: typedNumber(value) }),
       wontBuy: () => ({ op, list, value: control.dataset.value, on: checked }),
       keepHours: async shop => ({ op, on: checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
       hour: () => ({ op, end, time: value }),
@@ -1141,7 +1151,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onRemoveRule(_event, target) {
     if (!game.user.isGM) return;
-    await this.#edit(() => ({ op: "removeRule", index: Number(target.dataset.index) }));
+    await this.#edit(() => ({ op: "removeRule", category: target.dataset.category }));
   }
 
   static async #onRestockNow() {
