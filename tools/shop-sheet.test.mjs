@@ -1003,8 +1003,8 @@ test("a shop whose preset can't be found offers no reset", async t => {
 test("Restock now restocks the shop through the runtime", async t => {
   const { sheet, shop } = openSettings(t);
   const restocked = [];
-  api.restock = async actor => { restocked.push(actor); return []; };
-  t.after(() => { delete api.restock; });
+  api.requestRestock = async actor => { restocked.push(actor); return { status: "restocked", restocked: [] }; };
+  t.after(() => { delete api.requestRestock; });
   await act(sheet, "restockNow");
   assert.deepEqual(restocked, [shop]);
 });
@@ -1153,10 +1153,29 @@ test("the Settings tab keeps its scroll position across re-renders (#140 review,
   assert.ok(ShopSheet.PARTS.body.scrollable.includes(".settings-body"));
 });
 
+test("Restock now tells a failed restock from one the GM's tab hasn't answered yet (#140 review, round 9)", async t => {
+  const { sheet, warnings } = openSettings(t);
+  t.after(() => { delete api.requestRestock; });
+  api.requestRestock = async () => ({ status: "no-answer", restocked: null });
+  await act(sheet, "restockNow");
+  api.requestRestock = async () => ({ status: "restocked", restocked: [] });
+  await act(sheet, "restockNow");
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.Restock.NoAnswer"]);
+});
+
+test("the Settings tab says when players keep their own access to a shop hidden by default (#140 review, round 9)", async t => {
+  const { sheet, shop } = openSettings(t);
+  globalThis.game.users = Object.assign([{ id: "gm1", isGM: true }, { id: "rogue", isGM: false }],
+    { get(id) { return this.find(u => u.id === id); } });
+  t.after(() => { delete globalThis.game.users; });
+  shop.ownership = { default: 0, gm1: 3, rogue: 1, gone: 2 };
+  assert.equal((await sheet._prepareContext({})).settings.visitOthers, 1);
+});
+
 test("a restock that can't run says so without blaming a missing table", async t => {
   const { sheet, warnings } = openSettings(t);
-  api.restock = async () => null;
-  t.after(() => { delete api.restock; });
+  api.requestRestock = async () => ({ status: "failed", restocked: null });
+  t.after(() => { delete api.requestRestock; });
   await act(sheet, "restockNow");
   assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.Restock.Failed"]);
   const lang = JSON.parse(readFileSync(new URL("../lang/en.json", import.meta.url)));
