@@ -68,6 +68,24 @@ test("a shop the GM hides again after placing it stays hidden when another token
   assert.equal(shop.ownership.default, 0);
 });
 
+test("a shop marked visitable in another world, exported and imported here, is made visitable (#138 review, round 6)", async () => {
+  const { world, shop } = await setUp();
+  shop.flags["merchant-presets"].madeVisitable = "some-other-world";   // export keeps flags, clears ownership
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, LIMITED);
+});
+
+test("a shop the GM opened to one player only stays that way when its token is placed (#138 review, round 6)", async () => {
+  const { world, shop } = await setUp();
+  shop.ownership = { default: 0, rogueUser000001: 1 };
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.deepEqual(shop.ownership, { default: 0, rogueUser000001: 1 });
+});
+
 test("a scene arriving with a shop's token already on it makes the shop visitable (#138 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);

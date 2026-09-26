@@ -479,17 +479,31 @@ test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet 
 
 test("planActorUpdate makes a shop with a placed token visitable (Limited)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
+  const { update } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true, worldId: "world-a" });
   assert.equal(update["ownership.default"], 1);
-  // Marked, so placing another token never re-opens it after a GM hides it again (#138 review).
-  assert.equal(update["flags.merchant-presets.madeVisitable"], true);
+  // Marked with this world, so placing another token here never re-opens it after a GM hides it
+  // again (#138 review), while a copy exported to another world starts afresh.
+  assert.equal(update["flags.merchant-presets.madeVisitable"], "world-a");
 });
 
 test("a shop made visitable once and hidden again by the GM stays hidden through a re-run migration (#138 review, round 5)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  store.flags["merchant-presets"].madeVisitable = true;
+  store.flags["merchant-presets"].madeVisitable = "world-a";
   store.ownership = { default: 0 };
-  assert.equal(planOwnership(store, true), null);
+  assert.equal(planOwnership(store, true, "world-a"), null);
+});
+
+test("a shop marked in another world, its ownership cleared by export, is made visitable here (#138 review, round 6)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["merchant-presets"].madeVisitable = "world-a";
+  store.ownership = { default: 0 };
+  assert.equal(planOwnership(store, true, "world-b"), 1);
+});
+
+test("a shop the GM opened to one player only is the GM's choice, left alone (#138 review, round 6)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.ownership = { default: 0, rogueUser000001: 1 };
+  assert.equal(planOwnership(store, true, "world-a"), null);
 });
 
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {

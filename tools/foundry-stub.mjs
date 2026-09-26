@@ -136,6 +136,7 @@ export function createWorld() {
       emit: (name, message) => calls.socket.push({ name, message })
     },
     packs: [],
+    world: { id: "stub-world" },
     actors,
     scenes,
     folders: { find: fn => folders.find(fn) },
