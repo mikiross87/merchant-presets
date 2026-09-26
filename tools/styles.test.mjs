@@ -43,3 +43,12 @@ test("every shop stylesheet selector is scoped to the shop window", () => {
     .filter(s => s !== SCOPE && !s.startsWith(`${SCOPE} `) && !s.startsWith(`${SCOPE}.`) && !s.startsWith(`${SCOPE}:`));
   assert.deepEqual(unscoped, []);
 });
+
+test("the shop stylesheet never re-uses a dnd5e background that carries a relative image url (#104 live run)", () => {
+  // dnd5e's --dnd5e-application-background (and the textures it points at) hold url("../../ui/…"),
+  // which resolves against the stylesheet that *uses* the variable: from styles/shop.css that's
+  // /modules/ui/denim075.png, a 404 for every player who opens the window. dnd5e paints it on
+  // .dnd5e2.application itself, where it resolves.
+  const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8");
+  assert.doesNotMatch(css, /var\(--dnd5e-(application-background|background-texture-[a-z-]+|journal-content-background)\)/);
+});
