@@ -32,7 +32,7 @@ import {
   receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
-import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
@@ -1574,7 +1574,8 @@ async function migrateShop(actor) {
     && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
 
   const packShop = await resolvePackShop(data);
-  const { update, shopError, warnings } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
+  const { update, shopError, warnings } = planActorUpdate(data,
+    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -2173,7 +2174,7 @@ async function arrive(actor) {
  * @param {TokenDocument} token
  */
 async function makeVisitable(token) {
-  const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  const LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
   // A token in a compendium scene (an Adventure being built) is on no world scene, though its
   // baseActor still resolves to the world actor by id (#138 review).
   if (token.parent?.pack) return;
@@ -2182,9 +2183,10 @@ async function makeVisitable(token) {
   // the canvas lands before its migration writes the 2.0 config (#138 review).
   if (!actor || actor.pack || !isMigratable(actor)) return;
   if (actor.flags?.[MODULE]?.visibility != null) return;
-  // Once per shop: a GM who sets it back to None afterwards has decided, and None set by hand
-  // looks exactly like the untouched default (#138 review).
-  if (actor.flags?.[MODULE]?.madeVisitable) return;
-  if ((actor.ownership?.default ?? NONE) !== NONE) return;
-  await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: true });
+  // Once per shop, in this world: a GM who sets it back to None afterwards has decided, and None
+  // set by hand looks exactly like the untouched default. A GM's own ownership, a player's own
+  // level included, holds (#138 review).
+  const worldId = game.world?.id ?? null;
+  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor)) return;
+  await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: worldId });
 }
