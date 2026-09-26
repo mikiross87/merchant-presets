@@ -928,6 +928,24 @@ test("Item Piles settings kept on the token document itself count as the token's
   assert.deepEqual(plan.shop?.hours, { open: { hour: 9, minute: 0 }, close: { hour: 17, minute: 0 } });
 });
 
+test("a token's own Item Piles data reads over Item Piles' defaults, not the base's, as Item Piles reads it (#137 review, round 2)", () => {
+  // The GM put this token's hours back to Item Piles' own 9:00-18:00, so Item Piles saved only what
+  // differs from its defaults: {enabled: true}. The base shop keeps its 7:00-19:00.
+  const { token, actor, base } = onToken(migratedStore(), {}, { "item-piles": { data: { openTimes: { enabled: true } } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.deepEqual(plan.shop?.hours, { open: { hour: 9, minute: 0 }, close: { hour: 18, minute: 0 } });
+});
+
+test("a token whose price went back to Item Piles' default keeps that price, not the base's (#137 review, round 2)", () => {
+  const store = migratedStore();
+  store.flags["item-piles"].data.buyPriceModifier = 1.5;    // the base shop charges half again
+  // The GM set this token back to 1, Item Piles' default, so Item Piles dropped the key from its data.
+  const { token, actor, base } = onToken(store, {}, { "item-piles": { data: { enabled: true } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.ok(plan.shop, "the token's own price differs from the base's");
+  assert.notEqual(plan.shop.terms.sellsAt, derivedShop(base, base.flags["merchant-presets"].shop).shop.terms.sellsAt);
+});
+
 test("a token already migrated, or one with nothing of its own, or a linked one, needs nothing (#124)", () => {
   const plain = onToken(migratedStore(), {});
   assert.equal(tokenNeedsMigration(plain.token, plain.actor, plain.base), false);
