@@ -352,14 +352,15 @@ function isOpenAt(pileData, minute) {
  * Each merchant carries the intended flags keyed by item name; re-apply them.
  *
  * @param {Actor} actor
+ * @param {Set<string>|null} [only]  just these item ids (a restock's fresh copies), not the shelf
  * @returns {Promise<number>} how many items were corrected
  */
-async function reapplyItemFlags(actor) {
+async function reapplyItemFlags(actor, only = null) {
   const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.itemFlags");
   if (!wanted) return 0;
   const updates = [];
   for (const item of actor.items) {
-    if (isGear(item)) continue;
+    if (isGear(item) || (only && !only.has(item.id))) continue;
     const want = wanted[item.name];
     if (!want) continue;
     const { quantityForPrice, ...itemFlags } = want;
@@ -562,20 +563,26 @@ async function daysOf(every) {
 const tableNames = table => [...(table?.results ?? [])].map(r => r.name ?? r.text).filter(Boolean);
 
 /**
- * This restock's draw from a shop's stock table: each line's document, and
- * its quantity freshly rolled from the shop's own `restock.quantities`. A line
- * whose document can't be found (the SRD pack missing, say) is skipped.
+ * This restock's draw from a shop's stock table: each line's document, with
+ * its compendium source recorded as an import would (stacking, the shelf match
+ * and the bundle fallback all read it), and its quantity freshly rolled from
+ * the shop's own `restock.quantities`. Null if any line's document can't be
+ * found (the SRD pack not loaded, a world item deleted): a reroll would delete
+ * that line's drawn copy and have nothing to replace it with, so the whole
+ * restock waits for the table to resolve (#135 review).
  */
 async function drawsFor(table, quantities) {
   const draws = [];
   for (const result of table.results ?? []) {
     const doc = result.documentUuid ? await fromUuid(result.documentUuid).catch(() => null) : null;
     if (!doc) {
-      console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"`);
-      continue;
+      console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"; restock skipped`);
+      return null;
     }
+    const data = doc.toObject();
+    data._stats = { ...data._stats, compendiumSource: doc.uuid ?? result.documentUuid };
     const formula = quantities?.[result.id ?? result._id] ?? "1";
-    draws.push({ name: doc.name, data: doc.toObject(), quantity: await rollStock(formula) });
+    draws.push({ name: doc.name, data, quantity: await rollStock(formula) });
   }
   return draws;
 }
@@ -615,6 +622,7 @@ async function restockNow(actor) {
 
   const items = actor.items.map(i => i.toObject());
   const draws = await drawsFor(table, shop.restock.quantities);
+  if (!draws) return null;
   const record = actor.flags?.[MODULE]?.itemFlags ?? {};
   const plan = planRestock(raw, items, draws, {
     purse: actor.flags?.[MODULE]?.purse,
@@ -622,12 +630,20 @@ async function restockNow(actor) {
     stockFlags: restockStockFlags(items, draws, name => stockFromRecord(record[name])),
     containers: actor.flags?.[MODULE]?.containers ?? {}
   });
+  // Item Piles still shows the shops until #104, and keeps a GM's edits to a line (hidden, say)
+  // in its own flags on the item: a redrawn copy carries them over from the one it replaces.
+  const livePiles = new Map(items.filter(i => !isGear(i) && i.flags?.["item-piles"]).map(i => [i.name, i.flags["item-piles"]]));
+  for (const create of plan.creates) {
+    if (livePiles.has(create.name)) create.flags = { ...create.flags, "item-piles": structuredClone(livePiles.get(create.name)) };
+  }
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
-  if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
+  const created = plan.creates.length ? await actor.createEmbeddedDocuments("Item", plan.creates) : [];
   if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
-  // Item Piles still shows the shops until #104, and reads its own flags off each item.
-  if (game.modules.get("item-piles")?.active) await reapplyItemFlags(actor);
+  // Only a fresh copy with nothing to carry over gets the recorded flags: re-applying them to
+  // every item would undo what the GM changed in Item Piles.
+  const fresh = new Set(created.filter(c => !livePiles.has(c.name)).map(c => c.id));
+  if (game.modules.get("item-piles")?.active && fresh.size) await reapplyItemFlags(actor, fresh);
   await syncStockWeight(actor);        // last: the shelf and the till have both just moved
   return plan.restocked;
 }
@@ -676,7 +692,8 @@ async function scheduledRestocks(worldTime, previous) {
   for (const actor of game.actors) {
     if (!actor.flags?.[MODULE]?.shop || actor.pack) continue;
     try {
-      if (await runTrade(() => scheduleShop(actor, worldTime, previous, calendar))) restocked.push(actor.name);
+      const lines = await runTrade(() => scheduleShop(actor, worldTime, previous, calendar));
+      if (lines?.length) restocked.push(actor.name);
     } catch (err) {
       console.error(`${MODULE} | could not restock "${actor.name}"`, err);
     }
