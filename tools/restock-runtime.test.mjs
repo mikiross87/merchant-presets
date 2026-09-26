@@ -194,6 +194,33 @@ test("a hidden line that sells out and leaves the shelf comes back hidden (#135 
   assert.equal(back.flags["item-piles"]?.item?.hidden, true);
 });
 
+test("a second manual restock doesn't adopt a same-named good the GM added by hand since (#135 review, round 5)", async () => {
+  const { shop } = await setUp();
+  const api = globalThis.game.modules.get("merchant-presets").api;
+  await api.restock(shop);                          // never scheduled (a 1.x world with the switch off)
+  await shop.createEmbeddedDocuments("Item", [{ _id: "myOwnRope00001", name: "Rope", type: "consumable", system: { quantity: 2 }, flags: {} }]);
+  await api.restock(shop);
+  assert.ok(shop.items.some(i => i._id === "myOwnRope00001"), "the GM's own Rope stays");
+});
+
+test("adopting a shop switches off Item Piles' own restock on open, so the two never both fill the shelf (#135 review, round 5)", async () => {
+  const { shop, clock } = await setUp();
+  shop.flags["item-piles"].data.refreshItemsOnOpen = true;
+  await clock(at(0, 1));
+  assert.equal(shop.flags["item-piles"].data.refreshItemsOnOpen, false);
+});
+
+test("a restock that fails part-way has already noted each line's settings (#135 review, round 5)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  byName(shop, "Bell")[0].flags["merchant-presets"].stock.hidden = true;
+  shop.createEmbeddedDocuments = async () => { throw new Error("stub: a create failed validation"); };
+  const error = console.error;
+  console.error = () => {};
+  try { await clock(at(3, 8)); } finally { console.error = error; }
+  assert.equal(shop.flags["merchant-presets"].lines?.Bell?.stock?.hidden, true);
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
