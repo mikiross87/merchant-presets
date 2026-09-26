@@ -282,6 +282,25 @@ test("setting a shop up again starts its shelf afresh: no second shelf at the ne
   assert.equal(flags.lines ?? null, null);
 });
 
+test("a plain text line in the stock table doesn't stop the shop restocking (#135 review, round 8)", async () => {
+  const { world, shop, clock } = await setUp();
+  tableOf(world, shop).results.push({ _id: "textLine0000001", id: "textLine0000001", type: "text", name: "Nothing today" });
+  await clock(at(0, 1));
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(3, 8));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell);
+});
+
+test("a shop given a shorter interval restocks on the new one, not the old due date (#135 review, round 8)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));                                  // every 3 days: due day 3
+  shop.flags["merchant-presets"].shop.restock.every = 1;  // the GM makes it daily
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(1, 8));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked on day 1");
+  assert.equal(shop.flags["merchant-presets"].schedule.dueAt, at(2));
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
