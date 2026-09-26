@@ -186,16 +186,20 @@ export function signedPercent(factor) {
 /**
  * What a buyer's deal did to one row (#111): the price it would be at without the deal, struck
  * beside the real one, and a tag with the deal's real effect, so a deal the sell <= buy cap cut
- * short says what it gives, not what the GM asked for. Nothing when the deal left the rate alone.
+ * short says what it gives, not what the GM asked for. Nothing when the deal left the shown price
+ * alone: a small deal on cheap goods can floor to the same coins (#142 review).
  *
  * @param {number} listRate  the row's rate without the deal
  * @param {number} rate  the row's rate with it
  * @param {() => number} listPrice  the row's shown price at `listRate`
+ * @param {number} shownCp  the row's shown price at `rate`
  * @returns {{listPriceCp: number, tag: RateTag}|null}
  */
-function dealShown(listRate, rate, listPrice) {
+function dealShown(listRate, rate, listPrice, shownCp) {
   if (!(listRate > 0) || Math.abs(rate - listRate) < 1e-9) return null;
-  return { listPriceCp: listPrice(), tag: { kind: "deal", text: signedPercent(rate / listRate - 1) } };
+  const listPriceCp = listPrice();
+  if (listPriceCp === shownCp) return null;
+  return { listPriceCp, tag: { kind: "deal", text: signedPercent(rate / listRate - 1) } };
 }
 
 /* -------------------------------------------------------------- categories */
@@ -342,9 +346,11 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock,
     else worthless = true;
   }
   const priceFor = cheapestLot(item, sellsAt.rate, bundle, bundleCp, worthless ? null : minQuantity, currencies);
-  const listRate = effectiveRates(rates.world, rates.shopTerms, category).sellsAt.rate;
+  const list = effectiveRates(rates.world, rates.shopTerms, category).sellsAt;
+  const listRate = list.rate;
   const dealt = unpriced ? null : dealShown(listRate, sellsAt.rate, () => (priceFor.priceFor
-    ? lineTotalCp(item, listRate, bundle, priceFor.priceFor, currencies) : bundlePriceCp(item, listRate, currencies)));
+    ? lineTotalCp(item, listRate, bundle, priceFor.priceFor, currencies) : bundlePriceCp(item, listRate, currencies)),
+  priceFor.priceForCp ?? bundleCp);
   return {
     id: item._id ?? item.id,
     img: item.img,
@@ -360,7 +366,8 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock,
     ...priceFor,
     bundle,
     listPriceCp: dealt?.listPriceCp ?? null,
-    tag: unpriced ? { kind: null, text: null } : dealt?.tag ?? rateTag(sellsAt, rates.chipSellsAt)
+    // A deal that didn't move the coins leaves the row as it would be without it.
+    tag: unpriced ? { kind: null, text: null } : dealt?.tag ?? rateTag(list, rates.chipSellsAt)
   };
 }
 
@@ -433,7 +440,8 @@ export function sellRow(item, shopConfig, matchedStock, rates, deal, currencies,
   const lot = cheapestLot(item, buysAt.rate, lineBundle, bundleCp, minQuantity, currencies);
   const listRate = effectiveRates(rates.world, rates.shopTerms, category).buysAt.rate;
   const dealt = dealShown(listRate, buysAt.rate, () => (lot.priceFor
-    ? lineTotalCp(item, listRate, lineBundle, lot.priceFor, currencies) : bundlePriceCp(item, listRate, currencies)));
+    ? lineTotalCp(item, listRate, lineBundle, lot.priceFor, currencies) : bundlePriceCp(item, listRate, currencies)),
+  lot.priceForCp ?? bundleCp);
   return {
     ...base, refusal: null, bundlePriceCp: bundleCp, ratio: rateFraction(buysAt.rate), minQuantity, bundle: lineBundle,
     ...lot, listPriceCp: dealt?.listPriceCp ?? null, tag: dealt?.tag ?? null

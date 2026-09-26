@@ -919,16 +919,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const listRate = kind === "buy" ? list.sellsAt.rate : list.buysAt.rate;
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
       const bundle = bundleFor(item, line, bundleOf);
-      let lineTotal = 0, bundleCp = null;
+      let lineTotal = 0, bundleCp = null, listTotal = 0;
       try {
         lineTotal = lineTotalCp(item, rate, bundle, quantity, currencies);
         bundleCp = bundlePriceCp(item, rate, currencies);
+        listTotal = lineTotalCp(item, listRate, bundle, quantity, currencies);
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
         itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
         struck: this._struck[kind].has(itemId),
-        // The buyer's deal moved this line's price: the bill marks it as theirs.
-        dealt: Math.abs(rate - listRate) > 1e-9,
+        // The buyer's deal moved this line's total: the bill marks it as theirs. Compared in coin,
+        // since a small deal on cheap goods can floor to the same total (#142 review).
+        dealt: lineTotal !== listTotal,
         // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
         bundle,
         unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
