@@ -786,6 +786,83 @@ function sameStock(have, want) {
 }
 
 /**
+ * What one unlinked shop token needs of its own (#124). An unlinked token
+ * keeps a synthetic actor: the base actor with the token's `delta` laid over
+ * it. The migration of the base actor never reaches the delta, so:
+ *
+ * - items in the token's own delta (it traded, say) get a stock config the
+ *   same way the base's do (`planItemUpdates`), from their own Item Piles
+ *   flags; the base's items are the base's migration's business;
+ * - a token whose Item Piles shop settings (hours, prices, ...) differ from
+ *   the base's gets its own `flags.merchant-presets.shop`, derived from them
+ *   with the base's config as the pack source. Its settings are what Item
+ *   Piles reads for it: the token document's own Item Piles data, alone, over
+ *   Item Piles' defaults, when it has any (a lone `enabled: false` is the
+ *   cut-over's write, not a setting); otherwise its synthetic actor's.
+ *   "Differ" is judged on the derived configs, by value, not on which keys are
+ *   stored: Item Piles can copy its whole data object into a delta, or just an
+ *   open/closed status, and a token given a copy for that would stop following
+ *   the base shop's config (#137 review). A token whose shop config is already
+ *   this version's is done, as the base is (`hasCurrentShop`).
+ *
+ * Applied through the token's synthetic actor, so every write lands in its delta.
+ *
+ * @param {{actorLink: boolean, delta?: object, flags?: object}} token  The token's own data.
+ * @param {object} actor  Its synthetic actor's data (`token.actor.toObject()`).
+ * @param {object} base  The base actor's data.
+ * @returns {{shop: object|null, itemUpdates: object[], errors: object[], warnings: string[]}}
+ */
+export function planTokenMigration(token, actor, base) {
+  if (token?.actorLink || !isMigratable(actor)) return { shop: null, itemUpdates: [], errors: [], warnings: [] };
+  const own = new Set((token.delta?.items ?? []).map(i => i._id));
+  const planned = planItemUpdates(actor);
+  const itemUpdates = planned.updates.filter(u => own.has(u._id));
+  const ownNames = new Set((token.delta?.items ?? []).map(i => i.name).filter(Boolean));
+  const errors = planned.errors.filter(e => ownNames.has(e.item));
+  let shop = null;
+  const warnings = [];
+  if (!hasCurrentShop({ flags: token.delta?.flags })) {
+    const packShop = base?.flags?.["merchant-presets"]?.shop;
+    // Item Piles reads an unlinked token's settings off the token document alone, over its own
+    // defaults (`getActorFlagData`), and saves only what differs from those defaults: a key the
+    // document leaves out is Item Piles' default, never the base actor's (#137 review).
+    // `enabled: false` is the cut-over's own write (`planTokenDisable`), never a setting the GM
+    // made: a document holding only that has no settings of its own, and follows the base (#137
+    // review). `enabled: true` alone is a GM's Item Piles config with every other key at its
+    // default, which Item Piles drops on save.
+    const onDocument = token.flags?.["item-piles"]?.data;
+    const ownSettings = Object.keys(onDocument ?? {}).some(k => k !== "enabled") || onDocument?.enabled === true;
+    const tokenView = ownSettings
+      ? { ...actor, flags: { ...actor.flags, "item-piles": { ...actor.flags?.["item-piles"], data: onDocument } } }
+      : actor;
+    const mine = derivedShop(tokenView, packShop);
+    const theirs = derivedShop(base, packShop);
+    if (mine.ok && !sameValue(mine.shop, theirs.shop)) {
+      shop = mine.shop;
+      for (const e of mine.repaired) warnings.push(`A token of "${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
+    } else if (!mine.ok) {
+      warnings.push(`A token of "${actor.name}": its own Item Piles settings don't make a valid shop: ${mine.errors.join("; ")}`);
+    }
+  }
+  return { shop, itemUpdates, errors, warnings };
+}
+
+/** Deep equality of plain data, whatever order its keys were stored in. */
+function sameValue(a, b) {
+  if (a === b) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(k => sameValue(a[k], b[k]));
+}
+
+/** Whether an unlinked shop token has anything of its own to migrate (`planTokenMigration`). */
+export function tokenNeedsMigration(token, actor, base) {
+  const plan = planTokenMigration(token, actor, base);
+  return plan.shop !== null || plan.itemUpdates.length > 0;
+}
+
+/**
  * The `Scene#updateEmbeddedDocuments("Token", …)` entry to switch Item Piles
  * off on one token, or `null` if there's nothing to do.
  *

@@ -6,7 +6,7 @@ import { planShop } from "../scripts/shop.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planRestockStock, planTokenDisable, planTokenUpdates,
-  shouldForceAutoRestockOff,
+  shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
   worldHasLegacyShops, derivedShop
 } from "../scripts/migrate.mjs";
 
@@ -877,4 +877,113 @@ test("a restock leaves lines the record doesn't name, and stock already right, a
   const byHand = { _id: "handAdded000001", name: "A GM's own find", type: "loot", system: {}, flags: {} };
   actor.items.push(byHand);
   assert.deepEqual(planRestockStock(actor).updates, []);
+});
+
+/* ---------------------------------------------------- unlinked tokens (#124) */
+
+/** A shop on an unlinked token, as its synthetic actor reads: the (migrated) base actor with the
+ *  token's own delta laid over it. `delta` is the token's own data only; `tokenFlags` the token
+ *  document's own flags, where Item Piles can keep a token's settings too. */
+function onToken(base, delta, tokenFlags = {}) {
+  const actor = structuredClone(base);
+  actor.items = [...actor.items, ...(delta.items ?? [])];
+  if (delta.flags) actor.flags = applied(actor.flags, Object.fromEntries(
+    Object.entries(delta.flags["item-piles"]?.data ?? {}).map(([k, v]) => [`item-piles.data.${k}`, v])));
+  return { token: { actorLink: false, delta, flags: tokenFlags }, actor, base };
+}
+
+const migratedStore = () => withItemsMigrated(shipped("General_Store_Town_"));
+const tradedBell = { _id: "tokenBell000001", name: "Brass Bell", type: "equipment", system: { quantity: 1, price: { value: 1, denomination: "gp" } },
+  flags: { "item-piles": { item: { hidden: true, infiniteQuantity: "no" } } } };
+const nineToFive = { enabled: true, open: { hour: 9, minute: 0 }, close: { hour: 17, minute: 0 } };
+
+test("an unlinked token's own traded items get a stock config, from its own Item Piles flags (#124)", () => {
+  const { token, actor, base } = onToken(migratedStore(), { items: [tradedBell] });
+  const plan = planTokenMigration(token, actor, base);
+  assert.deepEqual(plan.itemUpdates.map(u => u._id), ["tokenBell000001"], "only the token's own item: the base's are done");
+  assert.equal(plan.itemUpdates[0]["flags.merchant-presets.stock"].hidden, true);
+  assert.equal(plan.itemUpdates[0]["flags.merchant-presets.stock"].infinite, false);
+  assert.equal(plan.shop, null, "no shop-level Item Piles overrides on this token");
+});
+
+test("a token that re-tuned its own Item Piles settings gets its own shop config from them (#124)", () => {
+  const { token, actor, base } = onToken(migratedStore(), { flags: { "item-piles": { data: { openTimes: nineToFive } } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.ok(plan.shop, "a shop config for the token");
+  assert.deepEqual(plan.shop.hours, { open: { hour: 9, minute: 0 }, close: { hour: 17, minute: 0 } });
+  assert.deepEqual(plan.itemUpdates, []);
+});
+
+test("a token whose delta only copies the base's settings, or its open/closed status, isn't re-tuned (#137 review)", () => {
+  const store = migratedStore();
+  const copied = structuredClone(store.flags["item-piles"].data);
+  copied.openTimes = { ...copied.openTimes, status: "closed" };
+  const { token, actor, base } = onToken(store, { flags: { "item-piles": { data: copied } } });
+  assert.equal(planTokenMigration(token, actor, base).shop, null);
+});
+
+test("Item Piles settings kept on the token document itself count as the token's own (#137 review)", () => {
+  const { token, actor, base } = onToken(migratedStore(), {}, { "item-piles": { data: { openTimes: nineToFive } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.deepEqual(plan.shop?.hours, { open: { hour: 9, minute: 0 }, close: { hour: 17, minute: 0 } });
+});
+
+test("a token's own Item Piles data reads over Item Piles' defaults, not the base's, as Item Piles reads it (#137 review, round 2)", () => {
+  // The GM put this token's hours back to Item Piles' own 9:00-18:00, so Item Piles saved only what
+  // differs from its defaults: {enabled: true}. The base shop keeps its 7:00-19:00.
+  const { token, actor, base } = onToken(migratedStore(), {}, { "item-piles": { data: { openTimes: { enabled: true } } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.deepEqual(plan.shop?.hours, { open: { hour: 9, minute: 0 }, close: { hour: 18, minute: 0 } });
+});
+
+test("a token whose price went back to Item Piles' default keeps that price, not the base's (#137 review, round 2)", () => {
+  const store = migratedStore();
+  store.flags["item-piles"].data.buyPriceModifier = 1.5;    // the base shop charges half again
+  // The GM set this token back to 1, Item Piles' default, so Item Piles dropped the key from its data.
+  const { token, actor, base } = onToken(store, {}, { "item-piles": { data: { enabled: true } } });
+  const plan = planTokenMigration(token, actor, base);
+  assert.ok(plan.shop, "the token's own price differs from the base's");
+  assert.notEqual(plan.shop.terms.sellsAt, derivedShop(base, base.flags["merchant-presets"].shop).shop.terms.sellsAt);
+});
+
+test("the cut-over's own enabled:false on a token document isn't a setting of the token's (#137 review, round 3)", () => {
+  const { token, actor, base } = onToken(migratedStore(), {}, { "item-piles": { data: { enabled: false } } });
+  assert.equal(planTokenMigration(token, actor, base).shop, null);
+});
+
+test("the same settings stored in another key order are the same shop (#137 review, round 3)", () => {
+  const store = migratedStore();
+  const data = structuredClone(store.flags["item-piles"].data);
+  for (const table of data.tablesForPopulate ?? []) {
+    if (table.items) table.items = Object.fromEntries(Object.entries(table.items).reverse());
+  }
+  const { token, actor, base } = onToken(store, {}, { "item-piles": { data } });
+  assert.ok(Object.keys(data.tablesForPopulate?.[0]?.items ?? {}).length > 1, "the fixture has quantities to reorder");
+  assert.equal(planTokenMigration(token, actor, base).shop, null);
+});
+
+test("a token's shop config from an older version still migrates, as the base's would (#137 review, round 4)", () => {
+  const { token, actor, base } = onToken(migratedStore(), { flags: { "merchant-presets": { shop: { version: 0 } } } },
+    { "item-piles": { data: { enabled: true, openTimes: nineToFive } } });
+  assert.ok(planTokenMigration(token, actor, base).shop);
+});
+
+test("a token plans only its own delta's items, not the base's (#137 review, round 4)", () => {
+  const store = migratedStore();
+  const unmigrated = { _id: "baseOnly0000001", name: "Base-only Lamp", type: "equipment", system: { quantity: 1 }, flags: {} };
+  store.items.push(unmigrated);                                     // the base's own, still to migrate
+  const { token, actor, base } = onToken(store, { items: [tradedBell] });
+  assert.deepEqual(planTokenMigration(token, actor, base).itemUpdates.map(u => u._id), ["tokenBell000001"]);
+});
+
+test("a token already migrated, or one with nothing of its own, or a linked one, needs nothing (#124)", () => {
+  const plain = onToken(migratedStore(), {});
+  assert.equal(tokenNeedsMigration(plain.token, plain.actor, plain.base), false);
+  const done = onToken(migratedStore(), { items: [{ ...tradedBell, flags: { "merchant-presets": { stock: { ...STOCK_DEFAULTS } } } }],
+    flags: { "item-piles": { data: { openTimes: nineToFive } }, "merchant-presets": { shop: { version: 1 } } } });
+  assert.equal(tokenNeedsMigration(done.token, done.actor, done.base), false);
+  const linked = onToken(migratedStore(), { items: [tradedBell] });
+  assert.equal(tokenNeedsMigration({ ...linked.token, actorLink: true }, linked.actor, linked.base), false);
+  const traded = onToken(migratedStore(), { items: [tradedBell] });
+  assert.equal(tokenNeedsMigration(traded.token, traded.actor, traded.base), true);
 });

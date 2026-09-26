@@ -33,7 +33,8 @@ import {
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
+  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
+  tokenNeedsMigration,
   worldHasLegacyShops }
   from "./migrate.mjs";
 
@@ -1559,20 +1560,16 @@ async function migrateShop(actor) {
   if (!migrationGateOpen || actor.pack || !isMigratable(actor)) return false;
   const data = actor.toObject();
 
-  // needsMigration can usually decide without scanning every scene's
-  // tokens — the expensive part across a whole world's actors — so check
-  // without them first. Only once the cut-over (NATIVE_SHOP) is live and
-  // this shop would otherwise look fully done can a stray token still
-  // change the answer, the one case tokens have to be gathered just to
-  // find out (#100 review).
-  const definitelyNeedsMigration = needsMigration(data, NATIVE_SHOP);
-  if (!definitelyNeedsMigration && !NATIVE_SHOP) return false;
-
-  const scenes = game.scenes.map(scene => ({
-    scene, tokens: scene.tokens.filter(t => t.actorId === actor.id).map(t => t.toObject())
-  }));
+  // This shop's tokens, every scene's: an unlinked one keeps a delta of its
+  // own (items it traded, Item Piles settings re-tuned on it) that the base
+  // actor's migration never reaches (#124), so even a shop whose own config
+  // is current may still have a token to migrate.
+  const scenes = game.scenes.map(scene => ({ scene, docs: scene.tokens.filter(t => t.actorId === actor.id) }));
+  for (const s of scenes) s.tokens = s.docs.map(t => t.toObject());
   const tokens = scenes.flatMap(s => s.tokens);
-  if (!definitelyNeedsMigration && !needsMigration(data, NATIVE_SHOP, tokens)) return false;
+  const unlinked = scenes.flatMap(s => s.docs).filter(t => !t.actorLink && t.actor);
+  if (!needsMigration(data, NATIVE_SHOP, tokens)
+    && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data, { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP });
@@ -1615,6 +1612,22 @@ async function migrateShop(actor) {
   if (itemUpdates.length) { await actor.updateEmbeddedDocuments("Item", itemUpdates); changed = true; }
   for (const { item, errors } of itemErrors) {
     console.error(`${MODULE} | invalid migrated stock config for "${item}" on "${actor.name}": ${errors.join("; ")}`);
+  }
+
+  // Each unlinked token's own half, through its synthetic actor so it lands in the delta, and
+  // before Item Piles is switched off on it below: its own settings are read from there.
+  for (const token of unlinked) {
+    const plan = planTokenMigration(token.toObject(), token.actor.toObject(), actor.toObject());
+    for (const w of plan.warnings) console.warn(`${MODULE} | ${w}`);
+    for (const { item, errors } of plan.errors) {
+      console.error(`${MODULE} | invalid migrated stock config for "${item}" on a token of "${actor.name}": ${errors.join("; ")}`);
+    }
+    // Known limit (#137 review): Foundry builds the token's actor by deep-merging the delta over
+    // the base, so a key the token's config leaves out reads the base's. The one map where that
+    // shows is `restock.quantities`: a token whose Item Piles table config omitted lines the
+    // base lists keeps the base's formulas for them.
+    if (plan.shop) { await token.actor.update({ [`flags.${MODULE}.shop`]: plan.shop }); changed = true; }
+    if (plan.itemUpdates.length) { await token.actor.updateEmbeddedDocuments("Item", plan.itemUpdates); changed = true; }
   }
 
   for (const { scene, tokens: sceneTokens } of scenes) {
