@@ -111,48 +111,58 @@
   {{/each}}
 </nav>
 
-<section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}}" data-group="primary" data-tab="buy">
-  <nav class="shop-categories">
+<section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}}" data-group="primary" data-tab="buy" data-pen="Body">
+  <nav class="mp-categories" data-pen="Categories">
     {{#each buy.categories}}
-      <button type="button" class="category-link {{#if active}}active{{/if}}" data-action="selectCategory" data-category="{{id}}">
-        {{#if (eq id "all")}}{{localize "MERCHANT_PRESETS.Shop.Category.All"}}{{else}}{{label}}{{/if}}
-        <span class="category-count">{{count}}</span>
+      <button type="button" class="mp-nav-link {{#if active}}active{{/if}}" data-action="selectCategory" data-category="{{id}}" data-pen="Cat {{pen}}">
+        {{mpIcon icon pen=(concat pen " icon")}}<span class="mp-nav-label" data-pen="{{pen}} label">{{label}}</span><span class="mp-nav-count" data-pen="{{pen}} count">{{count}}</span>
       </button>
     {{/each}}
   </nav>
-  <div class="shop-stock">
+  <div class="mp-stock shop-stock" data-pen="Stock">
     {{#each buy.sections}}
-      <h2 class="stock-section-header">{{categoryLabel}}</h2>
+      <div class="mp-group" data-pen="Group {{pen}}">
+        <h2 class="mp-group-heading" data-pen="{{pen}} heading">{{label}}</h2><span class="mp-rule" data-pen="{{pen}} rule"></span>
+      </div>
       {{#each rows}}
-        <div class="item-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#unless ../../open}}is-dimmed{{/unless}} {{#if inBasket}}in-basket{{/if}}">
-          <img class="item-art" src="{{img}}" alt="" />
-          <div class="item-info">
-            <span class="item-name">{{name}}{{#if isNew}}<span class="badge-new">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span>{{/if}}</span>
-            <span class="item-meta">{{categoryLabel}}</span>
+        <div class="mp-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#unless ../../open}}is-dimmed{{/unless}} {{#if inBasket}}in-basket{{/if}}" data-pen="Row {{name}}">
+          <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+          <div class="mp-row-text" data-pen="Text">
+            <span class="mp-name-line" data-pen="Name line">
+              <span data-pen="Name">{{name}}</span>
+              {{#if isNew}}<span class="mp-new-badge" data-pen="New badge"><span data-pen="New badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span></span>{{/if}}
+            </span>
+            <span class="mp-meta" data-pen="Meta">{{meta}}</span>
           </div>
-          <span class="item-stock {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#if (eq stock.state 'last')}}is-last{{/if}}">
+          <span class="mp-stock-state is-{{stock.state}}" data-pen="Stock">
             {{#if (eq stock.state "count")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Left" count=stock.count}}
             {{else if (eq stock.state "last")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Last"}}
             {{else if (eq stock.state "soldOut")}}{{localize "MERCHANT_PRESETS.Shop.Stock.SoldOut"}}
             {{else}}{{localize "MERCHANT_PRESETS.Shop.Stock.Always"}}{{/if}}
           </span>
-          <div class="item-price">
+          <div class="mp-price-block" data-pen="Price Block">
             {{#if (or unpriced worthless)}}
               <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
             {{else}}
-              {{#if service}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Service"}}</span>{{/if}}
-              {{#if tag.text}}<span class="price-tag tag-{{tag.kind}}" {{#if (eq tag.kind "deal")}}data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"{{/if}}>{{tag.text}}</span>{{/if}}
-              {{#if (eq tag.kind "full")}}<span class="price-tag tag-full">{{localize "MERCHANT_PRESETS.Shop.Tag.Full"}}</span>{{/if}}
-              {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
-              {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
-              <span class="price-stack">{{#if listText}}<s class="price-list" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}<span class="price-coins">{{> coins priceCoins}}</span></span>
+              {{#if listText}}<s class="mp-list-price" data-pen="List Price" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}
+              <span class="mp-price-line" data-pen="Price Line">
+                {{#if service}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Service"}}</span>{{/if}}
+                {{#if tag.text}}<span class="mp-tag is-good price-tag tag-{{tag.kind}}" data-pen="Terms Tag" {{#if (eq tag.kind "deal")}}data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"{{/if}}><span data-pen="Terms Tag Text">{{tag.text}}</span></span>{{/if}}
+                {{#if (eq tag.kind "full")}}<span class="price-tag tag-full">{{localize "MERCHANT_PRESETS.Shop.Tag.Full"}}</span>{{/if}}
+                {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
+                {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
+                {{> mpCoins coins=priceCoins mode="price"}}
+              </span>
             {{/if}}
           </div>
-          <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
-            aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
-            {{#if (or unpriced worthless)}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}} {{#if (eq stock.state 'soldOut')}}disabled{{/if}}>
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
-          </button>
+          {{!-- A sold-out line has nothing to add (design: the Shield row); its row stays, for restock. --}}
+          {{#unless (eq stock.state "soldOut")}}
+            <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
+              aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
+              {{#if (or unpriced worthless)}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}}>
+              {{mpIcon "plus" pen="Add icon"}}
+            </button>
+          {{/unless}}
         </div>
       {{/each}}
     {{else}}

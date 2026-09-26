@@ -36,6 +36,47 @@
       "Category": {
         "All": "All goods"
       },
+      "Group": {
+        "weapons": "Weapons",
+        "armor": "Armor",
+        "tools": "Tools",
+        "gear": "Gear",
+        "meal": "Meals",
+        "lodging": "Lodging",
+        "food-drink": "Food & drink",
+        "service": "Services",
+        "spellcasting": "Spellcasting",
+        "component": "Spell components",
+        "mount": "Mounts",
+        "tack": "Tack",
+        "vehicle": "Vehicles",
+        "travel": "Travel"
+      },
+      "Meta": {
+        "Weight": "{weight} {units}",
+        "Ac": "AC {ac}",
+        "Dex": " + Dex",
+        "DexMax": " + Dex (max {max})",
+        "Str": "Str {str}",
+        "ShieldAc": "+{ac} AC"
+      },
+      "Day": {
+        "night": "night",
+        "dawn": "dawn",
+        "morning": "morning",
+        "midMorning": "mid-morning",
+        "midday": "midday",
+        "afternoon": "afternoon",
+        "evening": "evening"
+      },
+      "Ordinal": {
+        "one": "{n}st",
+        "two": "{n}nd",
+        "few": "{n}rd",
+        "other": "{n}th",
+        "zero": "{n}th",
+        "many": "{n}th"
+      },
       "Stock": {
         "Left": "{count} left",
         "Last": "Last one",
@@ -83,6 +124,7 @@
       },
       "Bill": {
         "TitleBuy": "Bill of Sale",
+        "Date": "{day} of {month} · {part}",
         "TitleSell": "Bill of Sale · Selling",
         "SumOwed": "Sum owed",
         "YouReceive": "You receive",
@@ -92,7 +134,8 @@
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
         "Fewer": "One fewer",
-        "More": "One more"
+        "More": "One more",
+        "ExactChange": "Exact change is counted from your coins."
       },
       "Seal": {
         "Bargain": "Seal the bargain · {price}",

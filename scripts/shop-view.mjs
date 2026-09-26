@@ -228,6 +228,101 @@ export function groupCategories(rows) {
   ];
 }
 
+/* -------------------------------------------------------------- shelf groups (#145) */
+
+/**
+ * The Buy list's groups when the GM named no category: the module's own kinds of goods (the inn's
+ * meals, lodging, food and drink; design mRg3y), else a good's kind by item type (the smith's
+ * weapons, armour, tools and gear; design y6iNf), each with its nav icon.
+ */
+export const SHELF_GROUP_ICONS = Object.freeze({
+  weapons: "lucide:sword", armor: "lucide:shield", tools: "lucide:wrench", gear: "lucide:backpack",
+  meal: "lucide:soup", lodging: "lucide:bed-double", "food-drink": "lucide:beer", service: "lucide:concierge-bell",
+  spellcasting: "lucide:sparkles", component: "lucide:gem", mount: "lucide:fence", tack: "lucide:link",
+  vehicle: "lucide:caravan", travel: "lucide:map"
+});
+
+/**
+ * Where a good sits on the Buy list: under a category the GM named on its line, else its kind of
+ * good. For display only; category rules still price by `categoryFor`.
+ *
+ * @param {object} item  an item's `toObject()`
+ * @param {object} stock  its completed stock config
+ * @param {Record<string, unknown>} armorTypes  CONFIG.DND5E.armorTypes: the equipment types that are armour (a shield too)
+ * @returns {{id: string, named: string|null, icon: string}}  `named`: the GM's own name for it, if theirs
+ */
+export function shelfGroup(item, stock, armorTypes = {}) {
+  if (stock?.category) return { id: `named:${stock.category}`, named: stock.category, icon: "lucide:tag" };
+  const kind = item.flags?.["merchant-presets"]?.kind;
+  if (kind && kind !== "gear" && kind in SHELF_GROUP_ICONS) return { id: kind, named: null, icon: SHELF_GROUP_ICONS[kind] };
+  const id = item.type === "weapon" ? "weapons"
+    : item.type === "equipment" && Object.hasOwn(armorTypes, item.system?.type?.value ?? "") ? "armor"
+      : item.type === "tool" ? "tools" : "gear";
+  return { id, named: null, icon: SHELF_GROUP_ICONS[id] };
+}
+
+/** "Martial Melee" as the design writes it in a row: "Martial melee". */
+const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase() : "");
+
+/**
+ * A good's line under its name (design y6iNf): what it is, then what matters about it.
+ * "Martial melee · Versatile · 3 lb", "Medium armor · AC 14 + Dex (max 2)", "+2 AC · 6 lb",
+ * "Artisan's tools · 8 lb"; anything else by its type, then its weight.
+ *
+ * @param {object} item  an item's `toObject()`
+ * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
+ *   typeLabels: object, properties: object, weightUnits: object}} labels  CONFIG.DND5E's, localized
+ * @param {(key: string, data?: object) => string} t  the window's localize, for the pieces in words
+ * @returns {string}
+ */
+export function itemMeta(item, labels, t) {
+  const sys = item.system ?? {};
+  const label = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
+  const weight = sys.weight?.value > 0
+    ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
+    : null;
+  const parts = [];
+  if (item.type === "weapon") {
+    parts.push(sentenceCase(label(labels.weaponTypes?.[sys.type?.value])));
+    const props = [...(sys.properties ?? [])].map(p => label(labels.properties?.[p])).filter(Boolean);
+    if (props.length) parts.push(sentenceCase(props.join(", ")));
+    parts.push(weight);
+  } else if (item.type === "equipment" && sys.type?.value === "shield") {
+    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), weight);
+  } else if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, sys.type?.value ?? "")) {
+    // Armour's weight goes unsaid: its AC and what wearing it asks are what a buyer weighs.
+    const dex = sys.armor?.dex;
+    const ac = t("Ac", { ac: sys.armor?.value ?? 0 })
+      + (sys.type.value === "heavy" ? "" : dex ? t("DexMax", { max: dex }) : t("Dex"));
+    parts.push(sentenceCase(label(labels.armorTypes[sys.type.value])), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
+  } else if (item.type === "tool") {
+    parts.push(sentenceCase(label(labels.toolTypes?.[sys.type?.value])) || label(labels.typeLabels?.tool), weight);
+  } else {
+    parts.push(label(labels.consumableTypes?.[sys.type?.value]) || label(labels.typeLabels?.[item.type]), weight);
+  }
+  return parts.filter(Boolean).join(" · ");
+}
+
+/**
+ * The part of the day an hour falls in, as the bill dates itself ("mid-morning"): a key under
+ * MERCHANT_PRESETS.Shop.Day. On a calendar whose day isn't 24 hours, the hour is scaled to one.
+ *
+ * @param {number} hour
+ * @param {number} [hoursPerDay]
+ * @returns {"night"|"dawn"|"morning"|"midMorning"|"midday"|"afternoon"|"evening"}
+ */
+export function partOfDay(hour, hoursPerDay = 24) {
+  const h = (hour * 24) / hoursPerDay;
+  if (h < 5) return "night";
+  if (h < 7) return "dawn";
+  if (h < 9) return "morning";
+  if (h < 12) return "midMorning";
+  if (h < 14) return "midday";
+  if (h < 18) return "afternoon";
+  if (h < 22) return "evening";
+  return "night";
+}
+
 /* -------------------------------------------------------------- basket */
 
 /**
@@ -510,23 +605,23 @@ export function fitQuantity(quantity, { bundle, available, infinite }) {
  */
 export function sealState(state, hasLines) {
   switch (state) {
-    case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "fa-solid fa-spinner fa-spin" };
-    case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "fa-solid fa-store" };
-    case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "fa-solid fa-ban" };
+    case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "lucide:loader" };
+    case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "lucide:store" };
+    case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "lucide:circle-slash" };
     // Live, not waiting: nothing tells the window a GM has arrived, so the player sends it again.
-    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "fa-solid fa-rotate-right" };
-    case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "fa-solid fa-ban" };
-    case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
-    case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "fa-solid fa-ban" };
-    case "idle": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
-    case "out-of-stock": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" };
-    case "no-buyer": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoBuyer", disabled: true, icon: "fa-solid fa-user-slash" };
-    case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "fa-solid fa-ban" };
-    case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "fa-solid fa-box-open" };
-    case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "fa-solid fa-ban" };
-    case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
+    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "lucide:hourglass" };
+    case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "lucide:circle-slash" };
+    case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "lucide:stamp" };
+    case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "lucide:circle-slash" };
+    case "idle": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "lucide:stamp" };
+    case "out-of-stock": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "lucide:circle-slash" };
+    case "no-buyer": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoBuyer", disabled: true, icon: "lucide:user-x" };
+    case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "lucide:circle-slash" };
+    case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "lucide:package-open" };
+    case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "lucide:circle-slash" };
+    case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" };
     // Any other refusal (not-visible, wont-buy, shop-misconfigured, ...) still reads as one: the
     // bill has to change before the same request could go through.
-    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
+    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" };
   }
 }

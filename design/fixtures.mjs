@@ -38,10 +38,19 @@ export async function setup() {
   await game.settings.set(MP, "sellsAt", 100);
   await game.settings.set(MP, "buysAt", 50);
 
-  // The 14th of Mirtul (month 4 of Harptos's twelve; days count from 0), 10:00.
+  // The 14th of Mirtul (month 4 of Harptos's twelve; days count from 0), 10:00. A time is built
+  // from the day of the year, which Harptos's festival days offset: found, not counted.
   const cal = game.time.calendar;
   const now = cal.timeToComponents(game.time.worldTime);
-  const at = cal.componentsToTime({ ...now, month: 4, dayOfMonth: 13, hour: 10, minute: 0, second: 0 });
+  const perDay = cal.days.hoursPerDay * cal.days.minutesPerHour * cal.days.secondsPerMinute;
+  const yearStart = cal.componentsToTime({ ...now, day: 0, hour: 0, minute: 0, second: 0 });
+  let day = 0;
+  while (day < 400) {
+    const c = cal.timeToComponents(yearStart + day * perDay);
+    if (c.month === 4 && c.dayOfMonth === 13) break;
+    day++;
+  }
+  const at = cal.componentsToTime({ ...now, day, hour: 10, minute: 0, second: 0 });
   if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
 
   const aria = game.actors.getName("Aria");
@@ -65,8 +74,7 @@ export async function setup() {
     ? { _id: i.id, sort: (order.indexOf(i.name) + 1) * 100, "system.quantity": rows[i.name][0], [`flags.${MP}.new`]: rows[i.name][1] === true }
     : { _id: i.id, sort: 10_000 + i.sort })));
 
-  const day = cal.days.hoursPerDay * cal.days.minutesPerHour * cal.days.secondsPerMinute;
-  const closes = Math.floor(game.time.worldTime / day) * day + (19 * cal.days.minutesPerHour + 1) * cal.days.secondsPerMinute;
+  const closes = Math.floor(game.time.worldTime / perDay) * perDay + (19 * cal.days.minutesPerHour + 1) * cal.days.secondsPerMinute;
   await shop.update({
     name,
     img: "icons/environment/settlement/blacksmith.webp",

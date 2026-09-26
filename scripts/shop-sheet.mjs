@@ -25,7 +25,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, matchingStockLine, rateFraction, sealState, sellRow, signedPercent, stepQuantity, titleParts
+  fitQuantity, itemMeta, matchingStockLine, partOfDay, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -67,6 +67,22 @@ const SETTINGS_SECTIONS = [
   { id: "hours", icon: "lucide:hourglass" },
   { id: "restock", icon: "lucide:refresh-cw" }
 ];
+
+/** CONFIG.DND5E's labels a row's meta line reads (shop-view.mjs `itemMeta`). */
+function metaLabels() {
+  const D = CONFIG.DND5E;
+  return {
+    weaponTypes: D.weaponTypes, armorTypes: D.armorTypes, toolTypes: D.toolTypes, consumableTypes: D.consumableTypes,
+    typeLabels: Object.fromEntries(Object.entries(CONFIG.Item.typeLabels ?? {}).map(([k, v]) => [k, game.i18n.localize(v)])),
+    properties: D.itemProperties, weightUnits: D.weightUnits
+  };
+}
+
+/** A shelf group's design layer name: the gear group is "Adventuring gear" on the canvas, "Gear" on screen. */
+const groupPen = (id, label) => (id === "all" ? "All goods" : id === "gear" ? "Adventuring gear" : label);
+
+/** The design names a coin by its metal ("gold 15"); a homebrew coin by its own label. */
+const COIN_METALS = { pp: "platinum", gp: "gold", ep: "electrum", sp: "silver", cp: "copper" };
 
 /**
  * The hero's kind chip icon for each shipped shop (design: the smith's hammer, the inn's beer),
@@ -682,12 +698,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         this._minQuantity.buy.set(row.id, row.minQuantity);
+        const group = shelfGroup(data, stock, CONFIG.DND5E.armorTypes ?? {});
         return {
           ...row,
-          // A category the GM named is shown as they wrote it; buyRow's own fallback to
-          // item.type (schema.mjs: "" files it under its item type") is a dnd5e type key like
-          // "weapon", so it reads through CONFIG.Item.typeLabels for a real word instead.
-          categoryLabel: stock.category || game.i18n.localize(CONFIG.Item.typeLabels?.[row.category] ?? row.category),
+          // Its place on the list (design y6iNf): a category the GM named, as they wrote it, else
+          // its kind of good. The pricing category (`row.category`) stays what rules key on.
+          group: group.id,
+          groupIcon: group.icon,
+          groupLabel: group.named ?? game.i18n.localize(`MERCHANT_PRESETS.Shop.Group.${group.id}`),
+          meta: itemMeta(data, metaLabels(), (key, d) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, d)),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
@@ -697,17 +716,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
     this.#keepOffered("buy", new Map(rows.filter(r => !r.unpriced && !r.worthless).map(r => [r.id, r.minQuantity])));
-    if (this._activeCategory !== "all" && !rows.some(r => r.category === this._activeCategory)) this._activeCategory = "all";
-    const categories = groupCategories(rows).map(c => ({
-      ...c,
-      active: c.id === this._activeCategory,
-      label: rows.find(r => r.category === c.id)?.categoryLabel ?? c.label
-    }));
-    const visibleRows = this._activeCategory === "all" ? rows : rows.filter(r => r.category === this._activeCategory);
+    if (this._activeCategory !== "all" && !rows.some(r => r.group === this._activeCategory)) this._activeCategory = "all";
+    // The nav lists the groups in shelf order, as the list does.
+    const categories = groupCategories(rows.map(r => ({ category: r.group }))).map(c => {
+      const first = rows.find(r => r.group === c.id);
+      const label = first?.groupLabel ?? game.i18n.localize("MERCHANT_PRESETS.Shop.Category.All");
+      return { ...c, active: c.id === this._activeCategory, label, icon: first?.groupIcon ?? "lucide:layout-grid", pen: groupPen(c.id, label) };
+    });
+    const visibleRows = this._activeCategory === "all" ? rows : rows.filter(r => r.group === this._activeCategory);
     const sections = [];
     for (const row of visibleRows) {
-      let section = sections.find(s => s.category === row.category);
-      if (!section) { section = { category: row.category, categoryLabel: row.categoryLabel, rows: [] }; sections.push(section); }
+      let section = sections.find(s => s.group === row.group);
+      if (!section) { section = { group: row.group, label: row.groupLabel, pen: groupPen(row.group, row.groupLabel), rows: [] }; sections.push(section); }
       section.rows.push(row);
     }
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
@@ -1008,6 +1028,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
         bundle,
         unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        // The same sticker in words, as the bill's detail line writes it ("15 gp each").
+        unitText: coinsText(coinBreakdown(bundleCp ?? 0, currencies)),
         // A bundle that floors to nothing has no sticker worth showing beside a real line total.
         showUnit: (bundleCp ?? 0) > 0 || lineTotal === 0,
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
@@ -1041,8 +1063,26 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     };
   }
 
+  /** The bill's date now: "14th of Mirtul · mid-morning" (design y6iNf). */
   #worldDateLabel() {
-    return this.#dateLabel(game.time.worldTime);
+    return this.#billDateLabel(game.time.worldTime);
+  }
+
+  /** "14th of Mirtul · mid-morning"; a festival day, in no month, as the calendar writes it. */
+  #billDateLabel(time) {
+    try {
+      const calendar = game.time.calendar;
+      const c = calendar.timeToComponents(time);
+      const month = calendar.months?.values?.[c.month];
+      if (!month) return this.#dateLabel(time);
+      const day = c.dayOfMonth + 1;
+      const ordinal = new Intl.PluralRules(game.i18n.lang, { type: "ordinal" }).select(day);
+      return game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.Date", {
+        day: game.i18n.localize(`MERCHANT_PRESETS.Shop.Ordinal.${ordinal}`, { n: day }),
+        month: game.i18n.localize(month.name),
+        part: game.i18n.localize(`MERCHANT_PRESETS.Shop.Day.${partOfDay(c.hour, calendar.days.hoursPerDay)}`)
+      });
+    } catch { return this.#dateLabel(time); }
   }
 
   #dateLabel(time) {
@@ -1592,7 +1632,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A coin's design layer name, which depends on where it shows: in a purse by its metal
     // ("gold"), in a worked example by its metal and count ("gold 15"), in a price by its place.
     Handlebars.registerHelper("mpCoinPen", (mode, coin, index) => {
-      const metal = game.i18n.localize(coin?.label ?? "").toLowerCase();
+      const metal = COIN_METALS[coin?.denomination] ?? game.i18n.localize(coin?.label ?? "").toLowerCase();
       if (mode === "price") return index ? "Price Minor" : "Price";
       return mode === "count" ? `${metal} ${coin?.count}` : metal;
     });

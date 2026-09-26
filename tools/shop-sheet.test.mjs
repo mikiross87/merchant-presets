@@ -1442,11 +1442,12 @@ test("the Terms popover and a rule's placeholders show what trades pay, capped (
 /* ------------------------------------------------------------ design names (#145) */
 
 test("a coin is named as the design names it where it shows: by metal, metal and count, or place", () => {
-  const gold = { label: "Gold", count: 15 };
+  const gold = { denomination: "gp", label: "Gold Pieces", count: 15 };
   assert.equal(helpers.mpCoinPen("metal", gold, 0), "gold");
   assert.equal(helpers.mpCoinPen("count", gold, 0), "gold 15");
   assert.equal(helpers.mpCoinPen("price", gold, 0), "Price");
-  assert.equal(helpers.mpCoinPen("price", { label: "Silver", count: 5 }, 1), "Price Minor");
+  assert.equal(helpers.mpCoinPen("price", { denomination: "sp", count: 5 }, 1), "Price Minor");
+  assert.equal(helpers.mpCoinPen("metal", { denomination: "shell", label: "Cowrie" }, 0), "cowrie");
 });
 
 test("an icon helper call gives the inline Lucide icon, named for the checker, from a script's \"lucide:\" name too", () => {

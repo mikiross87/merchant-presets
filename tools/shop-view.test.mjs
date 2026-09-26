@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, matchingStockLine, rateFraction, rateTag, sealState, sellRow, signedPercent, stepQuantity, stockLabel, titleParts
+  fitQuantity, itemMeta, matchingStockLine, partOfDay, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -143,18 +144,18 @@ test("a sell basket's purse-after is what's gained, with no shortfall", () => {
 
 test("an idle basket with lines reads as ready to seal", () => {
   assert.deepEqual(sealState("idle", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: false, icon: "fa-solid fa-stamp" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: false, icon: "lucide:stamp" });
 });
 
 test("out-of-stock says there aren't that many left, and waits for the bill to change", () => {
   assert.deepEqual(sealState("out-of-stock", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "lucide:circle-slash" });
 });
 
 test("a refusal the window has no words for still reads as one, not as ready to seal", () => {
   for (const reason of ["not-visible", "shop-misconfigured", "wont-buy", "no-buyback", "unidentified"]) {
     assert.deepEqual(sealState(reason, true),
-      { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" }, reason);
+      { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" }, reason);
   }
 });
 
@@ -164,12 +165,12 @@ test("an idle, empty basket disables the seal without a refusal reason", () => {
 
 test("sealing shows a spinner and is disabled", () => {
   assert.deepEqual(sealState("sealing", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "fa-solid fa-spinner fa-spin" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "lucide:loader" });
 });
 
 test("sealed offers to keep shopping and is never disabled", () => {
   assert.deepEqual(sealState("sealed", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "fa-solid fa-store" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "lucide:store" });
 });
 
 for (const [reason, labelKey] of [
@@ -186,7 +187,7 @@ for (const [reason, labelKey] of [
 
 test("no GM keeps the seal live, so the bill can be sent again once one connects", () => {
   assert.deepEqual(sealState("no-gm", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "fa-solid fa-rotate-right" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "lucide:hourglass" });
   assert.equal(sealState("no-gm", false).disabled, true);
 });
 
@@ -531,4 +532,55 @@ test("a deal too small to move a cheap row's coins claims nothing on it (#142 re
   assert.equal(sold.bundlePriceCp, 10);
   assert.equal(sold.listPriceCp, null);
   assert.equal(sold.tag, null);
+});
+
+/* -------------------------------------------------------------- shelf groups and meta (#145) */
+
+/** CONFIG.DND5E's labels a row's meta line reads, 6.0.5 shape (weaponTypes etc. already localized). */
+const LABELS = {
+  weaponTypes: { simpleM: "Simple Melee", martialM: "Martial Melee" },
+  armorTypes: { light: "Light Armor", medium: "Medium Armor", heavy: "Heavy Armor", natural: "Natural Armor", shield: "Shield" },
+  toolTypes: { art: "Artisan's Tools" },
+  consumableTypes: { potion: { label: "Potion" } },
+  typeLabels: { loot: "Loot", tool: "Tool" },
+  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" } },
+  weightUnits: { lb: { abbreviation: "lb" } }
+};
+const words = { Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
+const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
+
+test("a row's meta line says what the good is, then what matters about it (design y6iNf)", () => {
+  const lb = value => ({ weight: { value, units: "lb" } });
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t), "Martial melee · Versatile · 3 lb");
+  assert.equal(itemMeta(gear("weapon", { type: { value: "simpleM" }, properties: ["lgt", "thr"], ...lb(2) }), LABELS, t), "Simple melee · Light, thrown · 2 lb");
+  // Armour: its AC and what wearing it asks, not its weight.
+  assert.equal(itemMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t), "Medium armor · AC 14 + Dex (max 2)");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "heavy" }, armor: { value: 16, dex: 0 }, strength: 13, ...lb(55) }), LABELS, t), "Heavy armor · AC 16 · Str 13");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "light" }, armor: { value: 11, dex: null }, ...lb(10) }), LABELS, t), "Light armor · AC 11 + Dex");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t), "+2 AC · 6 lb");
+  assert.equal(itemMeta(gear("tool", { type: { value: "art" }, ...lb(8) }), LABELS, t), "Artisan's tools · 8 lb");
+  // Anything else by its own type; a weightless good says nothing of weight.
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
+  assert.equal(itemMeta(gear("loot", {}), LABELS, t), "Loot");
+});
+
+test("a good sits under the category its line names, else its kind of good", () => {
+  const armorTypes = LABELS.armorTypes;
+  const weapon = { type: "weapon", system: {}, flags: {} };
+  assert.deepEqual(shelfGroup(weapon, { category: "" }, armorTypes), { id: "weapons", named: null, icon: "lucide:sword" });
+  assert.deepEqual(shelfGroup(weapon, { category: "Heirlooms" }, armorTypes), { id: "named:Heirlooms", named: "Heirlooms", icon: "lucide:tag" });
+  assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "shield" } } }, {}, armorTypes).id, "armor");
+  assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "trinket" } } }, {}, armorTypes).id, "gear");
+  assert.equal(shelfGroup({ type: "tool", system: {} }, {}, armorTypes).id, "tools");
+  // The module's own goods, by their kind (design mRg3y): an inn's meals and rooms.
+  assert.deepEqual(shelfGroup({ type: "loot", system: {}, flags: { "merchant-presets": { kind: "meal" } } }, {}, armorTypes),
+    { id: "meal", named: null, icon: "lucide:soup" });
+  assert.equal(shelfGroup({ type: "loot", system: {}, flags: { "merchant-presets": { kind: "lodging" } } }, {}, armorTypes).id, "lodging");
+});
+
+test("the part of the day an hour falls in, on any length of day", () => {
+  assert.deepEqual([3, 6, 8, 10, 12, 15, 19, 23].map(h => partOfDay(h)),
+    ["night", "dawn", "morning", "midMorning", "midday", "afternoon", "evening", "night"]);
+  assert.equal(partOfDay(5, 12), "midMorning");
 });
