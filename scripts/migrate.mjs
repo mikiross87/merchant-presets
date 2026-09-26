@@ -610,6 +610,21 @@ function repairStock(stock) {
   return { stock: repaired, ok, errors };
 }
 
+/**
+ * A line's #98 stock config from its recorded Item Piles flags alone
+ * (`flags.merchant-presets.itemFlags[name]`), the migration's way: for a
+ * restock redrawing a line that's no longer on the shelf to read its own
+ * config from (#105). `undefined` with no record, or one that won't repair.
+ *
+ * @param {object|undefined} recorded
+ * @returns {object|undefined}
+ */
+export function stockFromRecord(recorded) {
+  if (!recorded) return undefined;
+  const repaired = repairStock(deriveStock(recorded));
+  return repaired.ok ? repaired.stock : undefined;
+}
+
 /** `flags.core.sheetClass`, or `null` if it's already ours. */
 function planSheetClass(actor) {
   return actor?.flags?.core?.sheetClass === SHOP_SHEET_ID ? null : SHOP_SHEET_ID;

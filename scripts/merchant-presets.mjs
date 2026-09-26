@@ -24,14 +24,16 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTab
   STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, fromItemPiles, goodFlag, uuidOf } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
-import { isOpen } from "./schedule.mjs";
+import {
+  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, planRestock, restockStockFlags, scheduleNext
+} from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
   receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planRestockStock, planTokenUpdates, shouldForceAutoRestockOff,
+  planAutoRestockDefault, planItemUpdates, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
   worldHasLegacyShops }
   from "./migrate.mjs";
 
@@ -379,23 +381,6 @@ async function reapplyItemFlags(actor) {
 }
 
 /**
- * Put back each recorded line's stock config (#119): the restock rebuilt it
- * from the compendium, which carries none (an SRD item) or only a good's own
- * goods-level stamp. `planRestockStock` derives it exactly as the migration does.
- *
- * @param {Actor} actor
- * @returns {Promise<number>} how many items were corrected
- */
-async function reapplyStock(actor) {
-  const { updates, errors } = planRestockStock(actor);
-  for (const { item, errors: why } of errors) {
-    console.warn(`${MODULE} | "${actor.name}": could not restore the stock config of "${item}"`, why);
-  }
-  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  return updates.length;
-}
-
-/**
  * Put the shop's containers back to their proper number.
  *
  * A container cannot carry a quantity — dnd5e's ContainerData declares
@@ -566,57 +551,132 @@ async function releaseStraysAll() {
   return n;
 }
 
+/** A restock interval as a whole number of days, rolling a dice formula; null for "never". */
+async function daysOf(every) {
+  const interval = intervalOf(every);
+  if (!interval) return null;
+  return interval.days ?? rollStock(interval.formula);
+}
+
+/** The names of a stock table's lines: what a first restock adopts as drawn. */
+const tableNames = table => [...(table?.results ?? [])].map(r => r.name ?? r.text).filter(Boolean);
+
 /**
- * Restock one merchant: rebuild the shelf, then put back what the rebuild lost.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>}
+ * This restock's draw from a shop's stock table: each line's document, and
+ * its quantity freshly rolled from the shop's own `restock.quantities`. A line
+ * whose document can't be found (the SRD pack missing, say) is skipped.
  */
-async function restock(actor) {
-  await game.itempiles.API.refreshMerchantInventory(actor);
-  await reapplyItemFlags(actor);
-  await reapplyStock(actor);
-  await reconcileContainers(actor);
-  await replenishPurse(actor);
-  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
-  return true;
+async function drawsFor(table, quantities) {
+  const draws = [];
+  for (const result of table.results ?? []) {
+    const doc = result.documentUuid ? await fromUuid(result.documentUuid).catch(() => null) : null;
+    if (!doc) {
+      console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"`);
+      continue;
+    }
+    const formula = quantities?.[result.id ?? result._id] ?? "1";
+    draws.push({ name: doc.name, data: doc.toObject(), quantity: await rollStock(formula) });
+  }
+  return draws;
+}
+
+/** Stamp a shop's shelf as drawn before its first native restock (schedule.mjs `adoptDrawn`). */
+async function adoptShelf(actor, table) {
+  const updates = adoptDrawn(actor.items.map(i => i.toObject()), tableNames(table));
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
 }
 
 /**
- * Restock every merchant whose doors just opened.
+ * Restock one shop from its own stock table (#105), off the trade queue's
+ * back: a restock and a trade on the same shelf never interleave (#134
+ * review). What's replaced is only what a restock drew (`planRestock`); goods
+ * the GM added by hand and the shopkeeper's gear stay, and each redrawn line
+ * keeps the stock config its shelf item had.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<string[]>} the lines it drew or topped up
+ */
+function restock(actor) {
+  return runTrade(() => restockNow(actor));
+}
+
+async function restockNow(actor) {
+  const raw = actor.flags?.[MODULE]?.shop;
+  const shop = safeShopOf(actor);
+  if (!shop?.restock.table) return [];
+  const table = await fromUuid(shop.restock.table).catch(() => null);
+  if (!table) {
+    console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
+    return [];
+  }
+  // Never scheduled yet: its shelf predates native restocking, so it has no drawn goods to replace.
+  if (!actor.flags?.[MODULE]?.schedule) await adoptShelf(actor, table);
+
+  const items = actor.items.map(i => i.toObject());
+  const draws = await drawsFor(table, shop.restock.quantities);
+  const record = actor.flags?.[MODULE]?.itemFlags ?? {};
+  const plan = planRestock(raw, items, draws, {
+    purse: actor.flags?.[MODULE]?.purse,
+    currentGp: actor.system?.currency?.gp,
+    stockFlags: restockStockFlags(items, draws, name => stockFromRecord(record[name])),
+    containers: actor.flags?.[MODULE]?.containers ?? {}
+  });
+  if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
+  if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
+  if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
+  if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
+  // Item Piles still shows the shops until #104, and reads its own flags off each item.
+  if (game.modules.get("item-piles")?.active) await reapplyItemFlags(actor);
+  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
+  return plan.restocked;
+}
+
+/**
+ * One shop's turn on the clock: seen for the first time, it's adopted and
+ * scheduled (no restock); due (`dueRestock`), it restocks and is scheduled
+ * again from that opening.
+ *
+ * @returns {Promise<string[]|null>} the lines restocked, or null if it wasn't due
+ */
+async function scheduleShop(actor, now, previous, calendar) {
+  const raw = actor.flags[MODULE].shop;
+  const state = actor.flags[MODULE].schedule;
+  if (!state) {
+    const shop = safeShopOf(actor);
+    const days = shop ? await daysOf(shop.restock.every) : null;
+    if (days == null || !shop.restock.table) return null;
+    const table = await fromUuid(shop.restock.table).catch(() => null);
+    if (table) await adoptShelf(actor, table);
+    await actor.update({ [`flags.${MODULE}.schedule`]: initialSchedule(now, days, calendar) });
+    return null;
+  }
+  const due = dueRestock(raw, state, previous, now, calendar);
+  if (!due.due) return null;
+  const restocked = await restockNow(actor);
+  const days = await daysOf(due.nextEvery);
+  await actor.update({ [`flags.${MODULE}.schedule`]: scheduleNext(due.at, days ?? 1, calendar) });
+  return restocked;
+}
+
+/**
+ * Restock every shop whose due day's opening fell between `previous` and
+ * `worldTime` (#105), one at a time on the trade queue.
  *
  * @param {number} worldTime  The new world time.
  * @param {number} previous   The world time last processed.
- * @returns {Promise<number>} how many merchants were restocked
+ * @returns {Promise<number>} how many shops were restocked
  */
-async function restockOnTimeChange(worldTime, previous) {
-  const calendar = game.time.calendar;
-  const { secondsPerMinute, minutesPerHour, hoursPerDay } = calendar.days;
-  const secondsPerDay = secondsPerMinute * minutesPerHour * hoursPerDay;
-
-  const wasMinute = minuteOfDay(calendar.timeToComponents(previous));
-  const nowMinute = minuteOfDay(calendar.timeToComponents(worldTime));
-  if (wasMinute === nowMinute && worldTime - previous < secondsPerDay) return 0;
-
-  // A jump of a full day or more passes every opening time on the way.
-  const dayPassed = (worldTime - previous) >= secondsPerDay;
-
+async function scheduledRestocks(worldTime, previous) {
+  const calendar = game.time.calendar.days;
   const restocked = [];
   for (const actor of game.actors) {
-    const pileData = foundry.utils.getProperty(actor, "flags.item-piles.data");
-    if (pileData?.type !== "merchant" || !pileData.refreshItemsOnOpen) continue;
-    if (!pileData.openTimes?.enabled) continue;
-    if (!(foundry.utils.getProperty(actor, FLAG_PATH) ?? []).length) continue;
-    if (!dayPassed && (isOpenAt(pileData, wasMinute) || !isOpenAt(pileData, nowMinute))) continue;
-
+    if (!actor.flags?.[MODULE]?.shop || actor.pack) continue;
     try {
-      await restock(actor);
-      restocked.push(actor.name);
+      if (await runTrade(() => scheduleShop(actor, worldTime, previous, calendar))) restocked.push(actor.name);
     } catch (err) {
       console.error(`${MODULE} | could not restock "${actor.name}"`, err);
     }
   }
-
   if (restocked.length) {
     log(`restocked ${restocked.length}: ${restocked.join(", ")}`);
     ui.notifications.info(`Merchant Presets: ${restocked.length} shop(s) restocked for the new day.`);
@@ -663,6 +723,9 @@ async function syncOpenState(actor) {
  * @returns {Promise<number>} how many changed
  */
 async function syncOpenStateAll() {
+  // Only Item Piles reads this status. The shop window and the GM's trade read the hours off the
+  // clock themselves (#105), so once the shops are native (#104) there's nothing to write.
+  if (NATIVE_SHOP) return 0;
   if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
   let n = 0;
   for (const actor of game.actors) {
@@ -683,7 +746,11 @@ function registerTradingHours() {
   log(`trading hours active on the ${game.time.calendar.name ?? "world"} calendar`);
 }
 
-/** Wire restocking to the world clock. Only the designated GM acts. */
+/**
+ * Wire restocking to the world clock. Only the GM tab that claims trades acts
+ * (`registerTradeDesk`), so a GM with two tabs open restocks once; the others
+ * keep their place on the clock in case the claim moves to them.
+ */
 function registerRestock() {
   if (!game.settings.get(MODULE, "autoRestock")) return;
   // 0 means "never run": start from now, or the first tick would see a jump of
@@ -691,13 +758,13 @@ function registerRestock() {
   let previous = game.settings.get(MODULE, "lastRestockTime") || game.time.worldTime;
 
   Hooks.on("updateWorldTime", async worldTime => {
-    if (game.users.activeGM !== game.user) return;      // one GM does the work
     if (worldTime === previous) return;
     const from = previous;
     previous = worldTime;
+    if (!game.user.isGM || !claimsTrades(tradeClaim(), thisTab())) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
     // Rewinding the clock should not trigger a day's worth of restocks.
-    if (worldTime > from) await restockOnTimeChange(worldTime, from);
+    if (worldTime > from) await scheduledRestocks(worldTime, from);
   });
   log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
 }
@@ -1649,16 +1716,16 @@ Hooks.once("init", () => {
   });
 
   game.settings.register(MODULE, "autoRestock", {
-    name: "Restock shops when they open",
-    hint: "Each merchant carries trading hours and can restock when its doors open for the day, "
-      + "using Foundry's own calendar rather than Simple Calendar. OFF BY DEFAULT: a restock "
-      + "rebuilds the shelf from the shop's stock table, which discards anything you added to that "
-      + "merchant by hand. Turn it on once your shops hold nothing you would miss. Takes effect on "
-      + "reload.",
+    name: "Shops restock on their schedule",
+    hint: "Each shop restocks when its doors open on its due day, every few days by its kind "
+      + "(an inn daily, a jeweler fortnightly), on Foundry's own calendar. A restock redraws only "
+      + "what the shop's stock table put there; anything you added by hand stays, and a line you "
+      + "hid or edited keeps your settings. Worlds upgrading from 1.x keep this off until you turn "
+      + "it on. Takes effect on reload.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: false
+    default: true
   });
 
   // Last world time a restock pass ran for, so a reload cannot re-fire one.
@@ -1781,7 +1848,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
+  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, scheduledRestocks, reapplyItemFlags,
     reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
     syncOpenState, syncOpenStateAll, setUpShop, migrateShop, migrateAll,
     trade, bundleOf: item => bundleOf(item) };
@@ -1818,6 +1885,9 @@ Hooks.once("ready", async () => {
     onCreateActor(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
+  // The shops restock on their own schedule (#105), Item Piles or not.
+  registerRestock();
+
   if (!game.modules.get("item-piles")?.active) {
     ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
     migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
@@ -1834,7 +1904,6 @@ Hooks.once("ready", async () => {
     rewire(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
-  registerRestock();
   registerTradingHours();
   // Time moves while a world is closed, so put the shops on the right side of
   // their doors now rather than at the next tick of the clock.
