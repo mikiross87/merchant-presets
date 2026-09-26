@@ -56,6 +56,18 @@ test("placing a token leaves a GM's own visibility choice alone (#104)", async (
   assert.equal(hidden.ownership.default, 0);
 });
 
+test("a shop the GM hides again after placing it stays hidden when another token is placed (#138 review, round 4)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, LIMITED);
+  shop.ownership.default = 0;                                         // the GM hides it again
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, 0);
+});
+
 test("a scene arriving with a shop's token already on it makes the shop visitable (#138 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);
