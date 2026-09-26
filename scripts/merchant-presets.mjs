@@ -2059,6 +2059,12 @@ Hooks.once("ready", async () => {
       if (game.users.activeGM !== game.user) return;   // one GM does the writing
       makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
     });
+    // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
+    // alone, never createToken for them (#138 review).
+    Hooks.on("createScene", scene => {
+      if (game.users.activeGM !== game.user) return;
+      for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+    });
   }
 
   // Once the shops are native (#104), Item Piles' populate tables and open/closed status have
@@ -2169,8 +2175,10 @@ async function arrive(actor) {
 async function makeVisitable(token) {
   const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
   const actor = token.baseActor ?? token.actor;
-  if (!actor || actor.pack || !actor.flags?.[MODULE]?.shop) return;
-  if (actor.flags[MODULE].visibility != null) return;
+  // Any shop the migration takes, not only one it already has: a 1.x merchant dropped straight onto
+  // the canvas lands before its migration writes the 2.0 config (#138 review).
+  if (!actor || actor.pack || !isMigratable(actor)) return;
+  if (actor.flags?.[MODULE]?.visibility != null) return;
   if ((actor.ownership?.default ?? NONE) !== NONE) return;
   await actor.update({ "ownership.default": LIMITED });
 }
