@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, receiptHtml, recipients,
-  resultOf, serial, shouldReclaim, CLAIM_STALE_MS, WORLD_RATES
+  recordedOutcome, resultOf, serial, shouldReclaim, CLAIM_STALE_MS, TRADE_RECORDS, withRecord, WORLD_RATES
 } from "../scripts/trade-desk.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape (same fixture as tools/pricing.test.mjs). */
@@ -182,6 +182,13 @@ test("an actor that isn't a shop, a missing party, or trading with yourself is r
   assert.equal(checkParties({ user, shop, buyer: shop }), "invalid-request");
 });
 
+test("an actor in a compendium never trades, shop or buyer (#134 review)", () => {
+  const user = { id: "gm", isGM: true };
+  const packed = { ...party("shop", { flags: SHOP_FLAGS }), pack: "merchant-presets.merchants" };
+  assert.equal(checkParties({ user, shop: packed, buyer: party("pc") }), "invalid-request");
+  assert.equal(checkParties({ user, shop: party("shop", { flags: SHOP_FLAGS }), buyer: { ...party("pc"), pack: "world.heroes" } }), "invalid-request");
+});
+
 /* ---------------------------------------------------------------- recipients */
 
 test("the trade chat mode picks who sees the receipt", () => {
@@ -226,6 +233,24 @@ test("the trade hook carries uuids, the trader and each line's item", () => {
   assert.equal(payload.lines[1].item.name, "Arrows");
   assert.equal(payload.lines[1].quantity, 20);
   assert.doesNotThrow(() => JSON.stringify(payload), "it crosses the socket as JSON");
+});
+
+/* ---------------------------------------------------------- trade records */
+
+test("a sealed trade is found on the buyer's record by who asked and its id", () => {
+  const records = withRecord([], { userId: "p1", tradeId: "t1", result: { status: "sealed", lines: [] } });
+  assert.deepEqual(recordedOutcome(records, "p1", "t1"), { status: "sealed", lines: [] });
+  assert.equal(recordedOutcome(records, "p2", "t1"), null);
+  assert.equal(recordedOutcome(undefined, "p1", "t1"), null);
+  assert.equal(recordedOutcome("junk", "p1", "t1"), null, "a hand-edited flag never throws");
+});
+
+test("the record keeps only the latest trades, newest last", () => {
+  let records = [];
+  for (let i = 0; i < TRADE_RECORDS + 3; i++) records = withRecord(records, { userId: "p1", tradeId: `t${i}`, result: {} });
+  assert.equal(records.length, TRADE_RECORDS);
+  assert.equal(records.at(-1).tradeId, `t${TRADE_RECORDS + 2}`);
+  assert.equal(recordedOutcome(records, "p1", "t0"), null);
 });
 
 /* ----------------------------------------------------------- shouldReclaim */

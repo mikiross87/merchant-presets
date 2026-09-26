@@ -74,6 +74,36 @@ export function outcomes(limit = 500) {
   };
 }
 
+/** How many sealed trades a character's record keeps: a resend comes within a minute or two. */
+export const TRADE_RECORDS = 20;
+
+/**
+ * The first outcome of a sealed trade, from the record kept on the character
+ * (`flags.merchant-presets.trades`), or null. The in-memory `outcomes` memo dies with the tab
+ * that answered; this record is written in the same update that moves the character's coin, so
+ * a resend reaching another GM tab after the claim moved (#134 review) still finds it.
+ *
+ * @param {unknown} records  the flag's value, as stored (never trusted to be well-formed)
+ * @param {string} userId
+ * @param {string} tradeId
+ * @returns {object|null}
+ */
+export function recordedOutcome(records, userId, tradeId) {
+  if (!Array.isArray(records)) return null;
+  return records.find(r => r?.userId === userId && r?.tradeId === tradeId)?.result ?? null;
+}
+
+/**
+ * `records` with `entry` added last, keeping the newest `TRADE_RECORDS`.
+ *
+ * @param {unknown} records
+ * @param {{userId: string, tradeId: string, result: object}} entry
+ * @returns {object[]}
+ */
+export function withRecord(records, entry) {
+  return [...(Array.isArray(records) ? records : []), entry].slice(-TRADE_RECORDS);
+}
+
 /**
  * `planTrade`'s answer as `api.trade` returns it. A sealed trade carries the lines actually
  * carried out, which the window stamps its bill from, and the chat card's data as `receipt`.
@@ -167,6 +197,9 @@ export function clientOutcome(hasGm) {
  */
 export function checkParties({ user, shop, buyer }) {
   if (!shop || !buyer) return "not-found";
+  // A compendium's actors are read-only to a trade: a locked pack would refuse the shop's half
+  // after the buyer's had already been written.
+  if (shop.pack || buyer.pack) return "invalid-request";
   if (!shop.flags?.["merchant-presets"]?.shop) return "invalid-request";
   if (shop === buyer || (shop.uuid && shop.uuid === buyer.uuid)) return "invalid-request";
   if (user.isGM) return null;

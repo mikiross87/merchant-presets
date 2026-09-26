@@ -27,7 +27,7 @@ import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { isOpen } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
-  receiptHtml, recipients, resultOf, serial, shouldReclaim, TRADE_HOOK, WORLD_RATES
+  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMigratable, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
@@ -1102,8 +1102,9 @@ function registerTradeListeners() {
  * Known limit: when the claiming tab closes or crashes and its unload write
  * doesn't land, trades read as unconfirmed for up to about half a minute,
  * until another GM tab notices the silence and takes the claim
- * (`registerTradeDesk`). The window resends the same trade id, so nothing
- * lands twice.
+ * (`registerTradeDesk`). The window resends the same trade id, and a sealed
+ * trade is recorded on the character in the update that moves its coin, so
+ * whichever tab answers the resend finds it there and nothing lands twice.
  */
 
 const SOCKET = `module.${MODULE}`;
@@ -1149,12 +1150,17 @@ function shopIsOpen(shop) {
   return isOpen(hours, minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime)), game.time.calendar.days);
 }
 
-/** One actor's share of a plan: its items first, then its coin. */
-async function applyUpdate(actor, update) {
+/**
+ * One actor's share of a plan: its items first, then its coin, with `also`
+ * (the character's trade record) in that same last update, so a trade counts
+ * as done exactly when its payment does.
+ */
+async function applyUpdate(actor, update, also = {}) {
   if (update.itemUpdates.length) await actor.updateEmbeddedDocuments("Item", update.itemUpdates);
   if (update.itemCreates.length) await actor.createEmbeddedDocuments("Item", update.itemCreates, { keepId: true });
   if (update.itemDeletes.length) await actor.deleteEmbeddedDocuments("Item", update.itemDeletes);
-  if (update.currency) await actor.update({ "system.currency": update.currency });
+  const changes = { ...(update.currency ? { "system.currency": update.currency } : {}), ...also };
+  if (Object.keys(changes).length) await actor.update(changes);
 }
 
 /**
@@ -1166,6 +1172,9 @@ async function carryOutTrade(request, user) {
   const [shop, buyer] = await Promise.all([actorAt(request?.shopUuid), actorAt(request?.buyerUuid)]);
   const refused = checkParties({ user, shop, buyer });
   if (refused) return { status: "refused", reason: refused };
+  // Carried out already, maybe by a tab that has since lost the claim: its first outcome.
+  const done = recordedOutcome(buyer.flags?.[MODULE]?.trades, user.id, request.tradeId);
+  if (done) return done;
 
   const planned = planTrade(request, {
     shop: shop.toObject(),
@@ -1184,9 +1193,13 @@ async function carryOutTrade(request, user) {
   if (!planned.ok) return resultOf(planned);
 
   const { plan } = planned;
+  const result = resultOf(planned);
+  const record = { [`flags.${MODULE}.trades`]: withRecord(buyer.flags?.[MODULE]?.trades,
+    { userId: user.id, tradeId: plan.tradeId, result }) };
   try {
     for (const update of plan.updates) {
-      await applyUpdate(update.actorId === shop.id ? shop : buyer, update);
+      const isShop = update.actorId === shop.id;
+      await applyUpdate(isShop ? shop : buyer, update, isShop ? {} : record);
     }
   } catch (err) {
     console.error(`${MODULE} | trade ${plan.tradeId} failed part-way; check ${shop.name} and ${buyer.name}`, err);
@@ -1209,7 +1222,7 @@ async function carryOutTrade(request, user) {
   } catch (err) {
     console.error(`${MODULE} | trade ${plan.tradeId} landed, but telling the table failed`, err);
   }
-  return resultOf(planned);
+  return result;
 }
 
 /**
@@ -1730,8 +1743,8 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "tradeChat", {
     name: "Trades in chat",
     hint: "Each trade made in the shop window posts one receipt in chat: what changed hands and for how "
-      + "much. Public, whispered to the GMs, or off. The meal, animal and spellcasting messages follow "
-      + "the same choice between public and GM-only.",
+      + "much. Public, whispered to the GMs, or off. The spellcasting announcement follows the same "
+      + "choice between public and GM-only.",
     scope: "world",
     config: true,
     type: String,

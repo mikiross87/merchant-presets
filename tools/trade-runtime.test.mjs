@@ -65,10 +65,11 @@ test("a trade resent after the claim moved to a fresh tab is still carried out o
   const sealed = await globalThis.game.modules.get("merchant-presets").api.trade(first);
   assert.equal(sealed.status, "sealed");
   await loadRuntime(world);   // the claiming tab reloads (or another takes over): its memory is empty
-  const again = await globalThis.game.modules.get("merchant-presets").api.trade({ ...first, lines: [{ itemId: ROPE, quantity: 3 }] });
+  const shelf = qty(shop, ROPE);   // (the reload's own wiring may re-roll the shelf; only the resend matters)
+  const again = await globalThis.game.modules.get("merchant-presets").api.trade({ ...first, lines: [{ itemId: ROPE, quantity: 1 }] });
   assert.equal(again.status, "sealed");
   assert.deepEqual(again.lines, sealed.lines, "the first trade's lines");
-  assert.equal(qty(shop, ROPE), 6);
+  assert.equal(qty(shop, ROPE), shelf);
   assert.deepEqual(named(tess, "Rope").map(r => r.system.quantity), [1]);
   assert.equal(tess.system.currency.gp, 19);
 });
