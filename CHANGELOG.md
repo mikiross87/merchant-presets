@@ -11,6 +11,41 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Upgrading from 1.x
+
+2.0 drops Item Piles: each shop gets its own window, and the module carries
+trades out itself. For GMs upgrading a world:
+
+- **Back up the world first.** Going back to 1.x means restoring that backup:
+  1.x can't read a 2.0 shop, and its *Set up as shop…* replaces a shop's data
+  and re-rolls its stock.
+- **What moves over on its own.** The first time a GM loads the world, every
+  shop from this module (dragged in, or made with *Set up as shop…*), tokens
+  included, keeps: its sell and buy rates and category price rules, its
+  description, trading hours, the item types and kinds of goods it won't buy,
+  its stock table and roll quantities, and each stock line's settings
+  (unlimited or limited, service, not bought back, category, bundle size,
+  hidden, not for sale). Other Item Piles merchants in the world are left
+  exactly as they are.
+- **What doesn't.** Only a shop's first stock table is carried; refusals by
+  item subtype aren't; a setting that doesn't make sense is reset to the
+  default. Each of these is logged in the browser console, naming the shop.
+  Anything else Item Piles held, such as a custom per-item price list, is not
+  read.
+- **What changes for players.** Double-clicking a shop's token opens its shop
+  window. A GM has to be logged in for a trade to go through; with none, the
+  window says so and keeps the bill.
+- **Restocking and the till.** Upgraded worlds keep restocking off until you
+  turn *Shops restock on their schedule* on. A restock now tops the till up to
+  the shop's starting purse and never takes coin away, where 1.x reset it to
+  exactly the purse: a shop that did well keeps what it earned. Goods you added
+  by hand survive a restock.
+- **Keeping Item Piles installed** is fine; nothing here talks to it. If its
+  *giving items* setting is on, a player dropping an item on a shop's token
+  offers it as a gift the GM has to confirm, as with any token.
+- **Macros** calling the module's Item Piles-era functions need removing; they
+  are listed under *Removed*.
+
 ### Added
 
 - 2.0: each shop's own window — its portrait, hours, tier and terms of trade
@@ -123,8 +158,9 @@ than for the code. Reference the issue or PR it closes.
 - 2.0: Item Piles and itempilesdnd5e are no longer required, and nothing here
   talks to Item Piles any more; a world that keeps it for its own merchants
   or loot can. Macros calling the module's Item Piles-era functions
-  (`rewire`, `rewireAll`, `reapplyItemFlags`, `reconcileContainers`,
-  `replenishPurse`, `syncOpenState`, `syncOpenStateAll`) need removing: the
+  (`rewire`, `rewireAll`, `restockOnTimeChange`, `reapplyItemFlags`,
+  `reconcileContainers`, `replenishPurse`, `syncOpenState`,
+  `syncOpenStateAll`) need removing: the
   shops restock, open and close on their own now. (#106)
 - The Jeweler's three *Spell Components (gems)* price bands. They were
   services, so paying for one left nothing in the pack, and each charged the

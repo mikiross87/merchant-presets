@@ -8,12 +8,12 @@
 [![License](https://img.shields.io/badge/license-MIT%20code%20%7C%20CC%20BY%204.0%20content-informational)](LICENSE)
 
 A module for **[Foundry Virtual Tabletop](https://foundryvtt.com/)** v14 and the
-**dnd5e** system, built on
-[Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles).
+**dnd5e** system.
 
-Seventeen ready-made shops as Item Piles merchants, in Village / Town / City
-sizes — **51 merchants, 1,351 stock lines.** Drag one out of the compendium,
-drop a token, and your players can shop.
+Seventeen ready-made shops: drag one out, drop a token, and your players can
+shop. No other modules required. Each comes in Village / Town / City sizes —
+**51 merchants, 1,551 stock lines** — with its own shop window, stock that runs
+out and comes back, a purse that runs dry, and hours it keeps.
 
 Built entirely from **SRD 5.2** (CC-BY-4.0) plus this module's own goods, so it
 works in any `dnd5e` world and redistributes no paid content.
@@ -35,7 +35,6 @@ https://github.com/mikiross87/merchant-presets/releases/latest/download/module.j
 | | |
 |---|---|
 | System | `dnd5e` 5.3.0+ |
-| Required | `item-piles` 3.2.7+, `itempilesdnd5e` |
 | Optional | `simple-nutrition-5e` 1.0+, for meals and food that feed characters |
 
 No book modules are needed, or used. The Player's Handbook and Dungeon Master's
@@ -52,55 +51,77 @@ All three sit in a **Merchant Presets** compendium folder.
 ## Usage
 
 Drag a merchant out of the compendium into the Actors sidebar, rename it to
-whatever the local shopkeeper is called, and drop a token on the scene. Players
-double-click the token to shop.
+whatever the local shopkeeper is called, and drop a token on the scene. On
+arrival the shop rolls its own stock for its size, so two copies of the same
+shop differ. Players double-click the token to shop. Dragging in a shop the
+world already holds asks whether to replace it or create a new actor; either
+works.
 
-> **Drag it out first — don't open a merchant inside the compendium.** Module
-> compendiums are locked, and Item Piles writes to a merchant as soon as you
-> open its *Populate Items* tab, so opening one in place throws
-> `You may not update documents in the locked compendium`. Nothing is broken;
-> the sheet just has nowhere to save. Work on the world copy.
+A shop arrives hidden from players, so one you haven't placed stays out of
+their Actors sidebar. Placing its token opens it to them (Limited permission,
+which is what a double-click needs). A permission you set yourself always
+wins, and so does the *Players can visit* switch in the shop's Settings tab.
 
-On import the module does two things to the world copy: it repoints the
-merchant's populate configuration at a world copy of its stock table (created in
-a `Merchant Stock` RollTable folder), and it rolls the shop's stock. The first
-is necessary because Item Piles' *Populate Items* tab rebuilds its list from
-world tables only and discards compendium entries. Dragging in a shop the world
-already holds asks whether to replace it or create a new actor; either works.
-To fix merchants imported before this module was enabled:
+### The shop window
 
-```js
-game.modules.get("merchant-presets").api.rewireAll()
-```
+- **Buy** — the stock by category, with what's left of each, and a running
+  **Bill of Sale** that totals the basket and shows what's left in the buyer's
+  purse. *Seal the bargain* makes the trade.
+- **Sell** — everything the character carries, split into what this shop will
+  buy (and for how much) and what it won't touch, with the reason.
+- **Up top** — the shop's hours, size and terms of trade: what it sells and buys
+  at, with a worked example, any category rules, and what it won't buy.
+- **Who's buying** — a player picks which of their own characters they're
+  trading as; a GM can trade as anyone.
+
+A trade is carried out by a GM's client, so **a GM has to be logged in**. With
+none, the window says so and keeps the bill for when one arrives. Goods, coin
+and stock all move at once, two players can't both buy the last one, and a
+trade sent twice over a flaky connection only happens once. Each trade posts a
+receipt in chat — public, whispered to the GMs, or none, by the *Trades in chat*
+setting.
+
+### Settings (GM)
+
+The window's GM-only **Settings** tab changes the shop. Each change saves as
+you make it, and every open window reprices at once:
+
+- **Terms** — what it sells and buys at, or *World default* to follow the
+  world's *Shops sell at (%)* and *Shops buy at (%)* settings; and category
+  rules, such as Valuables at full value.
+- **Deals** — one character's own price here: cheaper when they buy, more when
+  they sell, or both, with a note and an optional end (when the shop next
+  closes, after some days, or never). Only that character sees it. No deal can
+  make selling pay more than buying. The note is never shown to players, but
+  it's saved on the shop, so a player could read it from the browser console.
+- **Won't buy** — item types and kinds of goods the shop turns away.
+- **Hours** — when it opens and closes, or open around the clock.
+- **Restock** — how often, whether it re-rolls or tops up, and *Restock now*.
+- **Players can visit**, and **Reset to preset** to put the shop back as it
+  shipped (its deals stay).
+
+The *NPC sheet* button in the window's header opens the dnd5e stat sheet.
 
 ### Your own NPCs as shops
 
 Already have a shopkeeper — Sister Garaele in Phandelver, say? Right-click her
-in the Actors sidebar and choose **Set up as shop…**. Item Piles doesn't need
-to be enabled on her first; the module turns it on as part of the setup. Pick
-one of the shops and a settlement size, tick the items she should keep as her
-own gear, and confirm. Everything physical left unticked — weapons, armour,
-equipment, consumables, tools, loot, containers and what's in them — is
-deleted for good, so read the dialog's warning before you click through.
+in the Actors sidebar and choose **Set up as shop…**. Pick one of the shops and
+a settlement size, tick the items she should keep as her own gear, and confirm.
+Everything physical left unticked — weapons, armour, equipment, consumables,
+tools, loot, containers and what's in them — is deleted for good, so read the
+dialog's warning before you click through.
 
 She becomes that merchant: stock rolled for the size you chose, its buying
-rules, prices, purse and trading hours, restocking included. Her name,
-portrait, stat block (spells and features included) and token don't change,
-and the gear she kept never shows up in the shop window and survives a
-restock, exactly like a shipped shopkeeper's own weapon and armour.
+rules, prices, purse, trading hours and restock schedule. Her name, portrait,
+stat block (spells and features included) and token don't change, and the gear
+she kept never shows up in the shop window and survives a restock, exactly like
+a shipped shopkeeper's own weapon and armour.
 
 Setting her up again, with another shop or another size, keeps whatever gear
 she's already holding — the dialog only offers her gear this time round — and
 replaces the stock. Anything added to her since the last setup, spells and
 features included, goes with the old stock: she comes back as she was set up.
-The stock table she used before isn't deleted; it's left
-behind in the `Merchant Stock` folder, same as it is for a shipped merchant.
-There's no undo. If you decide she shouldn't be a shop after all, turning Item
-Piles off on her stops the shop window and trading, but the module still
-recognises her by the `shop` marker — its stock-weight effect and
-trading-hours status keep applying, and with automatic restocking on it will
-try to restock her and log an error, same as for a shipped merchant with Item
-Piles turned off. There's no one-click way to undo the setup.
+There's no one-click way to undo the setup.
 
 The dialog is a thin wrapper around the module's API, so a macro can drive it
 too — physical items left out of `keepIds` are deleted, same as the dialog's
@@ -203,8 +224,9 @@ Aria." The spell is linked. So are any effects it carries that go on a creature,
 such as Raise Dead's Resurrection Sickness, and the GM drags them onto whoever
 the spell was cast on. A service sold by level asks the buyer to tell the GM
 which spell. Nothing is applied automatically, since the buyer is often not the
-target. The message carries no price, because Item Piles' own trade card
-already shows it, and it follows that card's chat visibility.
+target. The message carries no price, because the trade's own receipt shows
+it, and it's whispered to the GMs when the *Trades in chat* setting whispers
+receipts.
 
 To have a spell use up its component, give the spell's activity a Material
 consumption target: on the *Activation* tab, under *Consumption*, add a target
@@ -246,82 +268,59 @@ recorded and the GM is warned at load.
 - **Unlimited** — shops never run out of ordinary goods.
 - **Always limited either way** — poisons, spell scrolls and other consumables
   a party would not find in unlimited supply. Sell out and they're gone until
-  restock. A restock rebuilds items from the SRD compendium, which carries no
-  Item Piles flags, so each merchant stores the intended per-item flags by name
-  and the module re-applies them afterwards — otherwise limited stock would
-  quietly become unlimited after the first restock.
+  the next restock.
 - **Containers are stocked as separate items.** Backpacks, pouches, chests and
   the like can't carry a quantity in dnd5e — each container is its own object
   with its own contents, exactly as two pouches on a character sheet are two
-  items. So a shop with four pouches lists four pouches, shown as separate rows
-  with no quantity, bought one at a time. Counts are deliberately small (1d2 in
-  a village, up to 1d4 in a city), because they are rows in the list rather than
-  a number.
-- **Restocking** — open the merchant, *Populate Items* tab, **Roll All Tables**.
-  Each merchant is pre-wired to its own stock table in `addAll` mode, so this
-  rebuilds the canonical list and re-rolls the counts.
+  items. So a shop with four pouches lists four pouches, bought one at a time.
+  Buying one brings what's visibly in it; a container with anything still
+  inside can't be sold until it's emptied.
+- **Bundled goods** (Arrows ×20, Bolts ×20, Sling Bullets ×20, Needles ×50,
+  Firearm Bullets ×10, Iron Spikes ×10) are priced per bundle and bought in
+  whole bundles: the row reads "per 20", and the bill steps by the bundle.
+- **Services** — lodging, meals, ship passage, stabling, coach rides, tolls and
+  spellcasting — are bought without an item changing hands, never run out, and
+  can't be sold back.
 
-### Trading hours and automatic restocking
+### Trading hours and restocking
 
-Every merchant ships with hours set on Item Piles' *Merchant* tab — a jeweler
-keeps 09:00–17:00, a dock opens at 05:00, the tavern runs 06:00 to 02:00, and
-the fence trades 20:00 to 04:00 — along with `refreshItemsOnOpen`, so the shop
-restocks each morning when the doors open.
+Every merchant ships with hours — a jeweler keeps 09:00–17:00, a dock opens at
+05:00, the tavern runs 06:00 to 02:00, and the fence trades 20:00 to 04:00 —
+driven by Foundry's own world clock, so anything that advances time works. With
+*Shops keep their trading hours* on (the default), a shop outside its hours
+closes to players and says when it opens again; turn the setting off and every
+shop stays open around the clock. Change one shop's hours on its Settings tab.
 
-**This module fires them, not Item Piles.** Item Piles has both features but
-reaches them only through Simple Calendar, which it requires by name — so
-neither fires from Foundry's built-in calendar or from Calendaria. Worse for the
-hours: when Simple Calendar is absent, Item Piles rewrites the merchant's status
-from *auto* back to *always open* and saves it, so the hours cannot even be left
-armed for later. Simple Calendar is unmaintained and does not support v14, which
-this module requires, so that route is shut for good rather than merely missing.
+Shops **restock on their own schedule**, by trade and settlement size — an inn
+daily, a jeweler fortnightly — when their doors open on the due day, via the
+*Shops restock on their schedule* setting. It is on in new worlds; a world
+upgraded from 1.x keeps it off until you turn it on. A restock redraws only
+what the shop's stock table put there: anything you added by hand stays. A shop
+set to re-roll draws everything again at fresh quantities; one set to top up
+brings back only the drawn goods that sold out and leaves the rest as they are.
+The till is topped up to the shop's starting purse and never has coin taken away, so a shop that did well
+keeps what it earned. Only one GM client runs the pass, and winding the clock
+backwards never restocks.
 
-This module therefore drives both off Foundry's own world clock, and anything
-that advances time works. The hours are **on by default**, via *Shops keep their
-trading hours*: a shop outside its hours closes to players, and the GM can still
-open the sheet. Turn the setting off for shops that never shut.
-
-Restocking, by contrast, is **off by default**, via the *Restock shops when they
-open* setting. A restock rebuilds the shelf from the shop's stock table, and Item
-Piles clears the merchant's existing items to do it — so anything you added by hand is
-discarded. Turn it on once your shops hold nothing you would miss. Only the
-designated GM runs the pass, the last processed world time is stored so a reload
-cannot re-fire one, and winding the clock backwards never restocks.
-
-To restock one shop by hand, with the flags and purse restored:
+To restock one shop by hand, use *Restock now* on its Settings tab, or:
 
 ```js
 game.modules.get("merchant-presets").api.restock(actor)
 ```
 
-Not supported: **closed days and holidays**. Those are keyed to Simple Calendar
-notes, which core has no equivalent for, and Simple Calendar is not coming back
-for v14. The `closedDays` and `closedHolidays` flags ship empty and are left
-alone — a shop keeps the same hours every day of the year.
-
-Merchants ship with status `open` rather than `auto` deliberately: with `auto`
-and no Simple Calendar, Item Piles rewrites the flag on first render, which
-throws on a locked module compendium. The module sets the status itself once a
-merchant is in the world, so the shipped value is only ever a starting point.
-- **Bundled goods** (Arrows ×20, Bolts ×20, Sling Bullets ×20, Needles ×50,
-  Firearm Bullets ×10, Iron Spikes ×10) carry Item Piles' `quantityForPrice`,
-  so a player pays the bundle price and receives the bundle. The Quantity column
-  shows total *units* — that is what `system.quantity` means — so "Arrows (20)"
-  at 460 is 23 bundles, and the buy dialog offers 23 purchases of 1 gp.
-- **Services** — lodging, meals, ship passage, stabling, coach rides, tolls and
-  spellcasting — are flagged `isService`: bought without an item changing hands,
-  and never out of stock. They also carry `cantBeSoldToMerchants`, so nobody can
-  sell a night's lodging back to the innkeeper.
+Not supported: **closed days and holidays** — a shop keeps the same hours every
+day of the year.
 
 ## What a shop will buy, and with what
 
 **Coin is finite.** Each merchant has a purse scaled to its trade and the
 settlement — 40 gp for a village innkeeper, 12,500 gp for a city dock — and
-cannot buy past it. Most shops pay **50%** of list; the Jeweler pays **60%**,
-and the Criminal & Illicit Store pays **35%** while charging **125%**, the only
-markup in the set. A merchant's coin depletes as it buys and is refilled to the shop's own purse on
-restock, so a party carrying 3,000 gp of loot has to find someone who can afford
-it — or come back another day. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
+cannot buy past it. Most shops pay **50%** of list, the world default; the
+Jeweler pays **60%**, and the Criminal & Illicit Store pays **35%** while
+charging **125%**, the only markup in the set. A merchant's coin depletes as it
+buys and is topped back up to the shop's own purse on restock, so a party
+carrying 3,000 gp of loot has to find someone who can afford it — or come back
+another day. A shop never pays more for an item than it would charge for it. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
 can always pay.
 
 **Shops only buy what they deal in.** Every merchant refuses item types it does
@@ -342,7 +341,7 @@ that list.
 ### Encumbrance
 
 A merchant's wares and its till live in the actor's own inventory, because that
-is what Item Piles reads as the shop. dnd5e therefore counts the whole shelf
+is the shelf the shop sells from. dnd5e therefore counts the whole shelf
 against the shopkeeper: a city stable carries 14,775 lb of horses and wagons
 against a capacity of 240.
 
@@ -351,11 +350,20 @@ the system ships — the figure is shown but no condition is applied. Turn that
 variant on and every shopkeeper is permanently Exceeding Carrying Capacity,
 which under the 2024 rules is Speed 0.
 
-The stock cannot be moved off the actor without hiding it from Item Piles, so
-the *Shop stock is not carried* setting cancels its weight instead: an effect on
+The stock can't move off the actor, since it is the shop, so the *Shop stock is
+not carried* setting cancels its weight instead: an effect on
 each merchant lifts the thresholds by exactly what the shop holds, leaving the
 shopkeeper's own equipment to count normally. It is off by default, and only
 worth turning on if you run encumbrance.
+
+## Upgrading from 1.x
+
+2.0 drops Item Piles. The first time a GM loads an upgraded world, every shop
+from this module moves to 2.0's own shop window, keeping its terms, hours,
+stock and settings; other Item Piles merchants in the world are left alone, and
+Item Piles can stay installed. **Back up the world before upgrading** — going
+back to 1.x means restoring that backup. [CHANGELOG.md](CHANGELOG.md) lists
+what migrates and what doesn't.
 
 ## Prices
 

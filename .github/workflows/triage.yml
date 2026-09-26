@@ -23,9 +23,6 @@ jobs:
       # "have we already said this?" checks work on the edited re-run.
       LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
     steps:
-      # Needed only to read the Item Piles minimum out of module.json.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
       - name: Label and comment from the form answers
         run: |
           set -euo pipefail
@@ -82,27 +79,6 @@ jobs:
             fi
           else
             echo "no usable module version in the report ('$RAW')"
-          fi
-
-          # 3. Item Piles below the minimum this module declares. The field is
-          # free text asking for two versions, so match "Item Piles <x.y.z>"
-          # while refusing to match "itempilesdnd5e <x.y.z>" — the "dnd5e"
-          # after the name means the version pattern cannot follow. Anything
-          # not confidently parsed is skipped rather than guessed at.
-          IP_MIN="$(jq -r '.relationships.requires[]? | select(.id == "item-piles") | .compatibility.minimum // empty' module.json)"
-          IP_RAW="$(field "Item Piles and itempilesdnd5e versions")"
-          IP_MATCH="$(printf '%s' "$IP_RAW" | grep -oiE 'item[[:space:]_-]*piles[[:space:]v:]*[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
-          IP_VER="$(printf '%s' "$IP_MATCH" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+$' || true)"
-          if [ -n "$IP_MIN" ] && [ -n "$IP_VER" ]; then
-            echo "item-piles reported=$IP_VER minimum=$IP_MIN"
-            if is_older "$IP_VER" "$IP_MIN"; then
-              if ! has_label needs-itempiles-update; then
-                add_note "This module requires Item Piles \`$IP_MIN\` or newer, and the report lists \`$IP_VER\`. Please update Item Piles and check whether the problem persists — several merchant behaviours depend on it."
-              fi
-              gh issue edit "$ISSUE" -R "$REPO" --add-label needs-itempiles-update
-            fi
-          else
-            echo "item-piles version not confidently parsed from '$IP_RAW' (minimum='$IP_MIN') - skipping"
           fi
 
           # One comment carrying whatever is new, rather than one per finding.
