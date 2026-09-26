@@ -139,8 +139,10 @@ function expectedShop(merchant) {
     // At the world's own defaults (list, half) a shop follows the world's rate settings (#141).
     sellsAt: atWorldDefaults(d) ? null : d.buyPriceModifier,
     buysAt: atWorldDefaults(d) ? null : d.sellPriceModifier,
+    // Item Piles overrides both sides of a custom category; ours states only the one that differs:
+    // Valuables sell at the shop's own rate (#143 review).
     categories: (d.itemTypePriceModifiers ?? []).map(mod =>
-      ({ category: mod.category, sellsAt: mod.buyPriceModifier, buysAt: mod.sellPriceModifier })),
+      ({ category: mod.category, sellsAt: mod.buyPriceModifier === d.buyPriceModifier ? null : mod.buyPriceModifier, buysAt: mod.sellPriceModifier })),
     hours: { open: d.openTimes.open, close: d.openTimes.close },
     table: table.uuid,
     quantities: table.items,
@@ -204,4 +206,16 @@ test("the presets at list/half ship on World default; the six with their own rat
   assert.equal(following.length, 45);
   assert.deepEqual(own.map(t => [t.sellsAt, t.buysAt]).sort(),
     [[1, 0.6], [1, 0.6], [1, 0.6], [1.25, 0.35], [1.25, 0.35], [1.25, 0.35]]);
+});
+
+test("the Valuables rule states only full value when bought; selling follows the shop's own rate (#143 review)", () => {
+  let checked = 0;
+  for (const m of merchants) {
+    const terms = m.flags["merchant-presets"].shop.terms;
+    const rule = terms.categories.find(c => c.category === "Valuables");
+    if (!rule) continue;
+    assert.deepEqual(rule, { category: "Valuables", sellsAt: null, buysAt: 1 }, m.name);
+    checked++;
+  }
+  assert.ok(checked >= 10, `only ${checked} shops buy valuables`);
 });

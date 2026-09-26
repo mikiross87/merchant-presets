@@ -179,3 +179,10 @@ test("a rate shows as a percentage without float noise", () => {
   assert.equal(percentOf(1.15), 115);
   assert.equal(percentOf(0.125), 12.5);
 });
+
+test("a rule's side can be handed back to the shop's rate, but not both sides (#143 review)", () => {
+  let config = applied(shop(), { op: "addRule", category: "Valuables", world: WORLD });
+  config = applied(config, { op: "ruleRate", category: "Valuables", side: "sellsAt", percent: null });
+  assert.deepEqual(config.terms.categories[0], { category: "Valuables", sellsAt: null, buysAt: 0.5 });
+  refused(config, { op: "ruleRate", category: "Valuables", side: "buysAt", percent: null });
+});

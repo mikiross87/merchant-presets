@@ -318,3 +318,11 @@ test("a category rule without a name is missing its name, not a duplicate", () =
   assert.match(errorsOf(r), /category: missing/);
   assert.doesNotMatch(errorsOf(r), /duplicate/);
 });
+
+test("a category rule may leave one side to the shop's rate, not both (#143 review)", () => {
+  const rule = r => validateShop({ version: 1, terms: { sellsAt: null, buysAt: null, categories: [{ category: "Valuables", ...r }] } }).ok;
+  assert.equal(rule({ sellsAt: null, buysAt: 1 }), true);
+  assert.equal(rule({ sellsAt: 1.2, buysAt: null }), true);
+  assert.equal(rule({ sellsAt: null, buysAt: null }), false);
+  assert.equal(rule({ sellsAt: 0, buysAt: 1 }), false);
+});

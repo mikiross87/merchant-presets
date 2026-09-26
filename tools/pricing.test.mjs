@@ -245,3 +245,14 @@ test("payExact refuses only when its own total is short", () => {
   assert.deepEqual(payExact(purse, 91, DND5E_CURRENCIES), { ok: false });
   assert.equal(payExact(purse, 90, DND5E_CURRENCIES).ok, true);
 });
+
+test("a category rule's unset side follows the shop, and the world past it (#143 review)", () => {
+  // Valuables: full value when the shop buys, and whatever the shop charges when it sells.
+  const terms = { sellsAt: null, buysAt: null, categories: [{ category: "Valuables", sellsAt: null, buysAt: 1 }] };
+  const world = { sellsAt: 1.5, buysAt: 0.5 };
+  const rates = effectiveRates(world, terms, "Valuables");
+  assert.deepEqual(rates.sellsAt, { rate: 1.5, layer: "world" });
+  assert.deepEqual(rates.buysAt, { rate: 1, layer: "category" });
+  const own = effectiveRates(world, { ...terms, sellsAt: 1.25 }, "Valuables");
+  assert.deepEqual(own.sellsAt, { rate: 1.25, layer: "shop" });
+});

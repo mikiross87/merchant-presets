@@ -1390,3 +1390,15 @@ test("a bill line whose total the deal didn't move isn't marked as the deal's (#
   assert.equal(context.buy.basket.lines[0].dealt, false);
   assert.equal(context.buy.sections[0].rows[0].listText, "");
 });
+
+test("a rule side left blank follows the shop's rate, shown as its placeholder (#143 review)", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { terms: { sellsAt: 1.2, buysAt: null, categories: [{ category: "Valuables", sellsAt: 1.2, buysAt: 1 }] } } });
+  await change(sheet, { op: "ruleRate", category: "Valuables", side: "sellsAt" }, { value: "" });
+  assert.deepEqual(writtenShop(shop).terms.categories[0], { category: "Valuables", sellsAt: null, buysAt: 1 });
+  const { settings, header } = await sheet._prepareContext({});
+  const rule = settings.terms.rules[0];
+  assert.equal(rule.sellsPercent, "");
+  assert.equal(rule.sellsFollows, 120);
+  // The Terms popover says what the rule charges, the shop's rate on its unset side.
+  assert.deepEqual(header.terms.categories[0], { category: "Valuables", sellsAt: 1.2, buysAt: 1 });
+});
