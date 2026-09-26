@@ -77,6 +77,15 @@ test("a scene arriving with a shop's token already on it makes the shop visitabl
   assert.equal(shop.ownership.default, LIMITED);
 });
 
+test("a scene in a compendium (an Adventure being built) never opens the world's shops (#138 review, round 5)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  await world.fire("createScene", { pack: "world.my-adventure", tokens: [{ actor: shop, actorId: shop.id, actorLink: true }] }, {}, "gm");
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true, parent: { pack: "world.my-adventure" } }, {}, "gm");
+  await tick();
+  assert.equal(shop.ownership.default, 0);
+});
+
 test("a 1.x merchant dropped straight onto the canvas is made visitable too (#138 review)", async () => {
   const { world } = await setUp();
   const legacy = world.merchant("General_Store_Village_");
