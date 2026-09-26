@@ -349,6 +349,41 @@ test("a line whose item records its own compendium source keeps it (#135 review,
   assert.equal(byName(shop, "Bell")[0]._stats.compendiumSource, "Compendium.dnd5e.equipment24.Item.srdBell0000000");
 });
 
+test("a shop wired afresh (Replace Actor) starts its shelf afresh too (#135 review, round 11)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));                                        // adopted and scheduled
+  const packTable = `Compendium.merchant-presets.stock.RollTable.${shop.flags["merchant-presets"].shop.restock.table.split(".").pop()}`;
+  // Replace Actor writes the pack's data back over the shop: on its compendium table again.
+  shop.flags["item-piles"].data.tablesForPopulate[0].uuid = packTable;
+  await globalThis.game.modules.get("merchant-presets").api.rewire(shop);
+  const flags = shop.flags["merchant-presets"];
+  assert.equal(flags.shelf ?? null, null);
+  assert.equal(flags.schedule ?? null, null);
+  assert.equal(flags.lines ?? null, null);
+});
+
+test("setting a shop up waits for a trade in progress on the same queue (#135 review, round 11)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const tess = world.character("tess", { currency: { gp: 20 } });
+  let release;
+  const write = tess.createEmbeddedDocuments;
+  tess.createEmbeddedDocuments = async (...args) => { await new Promise(r => { release = r; }); return write.apply(tess, args); };
+  const api = globalThis.game.modules.get("merchant-presets").api;
+  const trade = api.trade({ tradeId: "queued000000002", kind: "buy", shopUuid: shop.uuid, buyerUuid: tess.uuid,
+    lines: [{ itemId: byName(shop, "Bell")[0]._id, quantity: 1 }] });
+  await tick();
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  const setup = api.setUpShop(shop, city, []);
+  await tick();
+  assert.ok(shop.flags["merchant-presets"].shelf, "not yet made over while the trade is in flight");
+  release();
+  await trade;
+  await setup;
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
