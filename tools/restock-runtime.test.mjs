@@ -362,6 +362,17 @@ test("a shop wired afresh (Replace Actor) starts its shelf afresh too (#135 revi
   assert.equal(flags.lines ?? null, null);
 });
 
+test("a re-wired shop's goods lose their old stamps, so its next reroll has one of each line (#135 review, round 12)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));                                        // adopted: goods stamped with its key
+  shop.flags["item-piles"].data.tablesForPopulate[0].uuid = `Compendium.merchant-presets.stock.RollTable.${source("stock", "General_Store_Town_")._id}`;
+  await globalThis.game.modules.get("merchant-presets").api.rewire(shop);
+  assert.ok(shop.items.every(i => !drawn(i)), "no good keeps the old key");
+  await clock(at(0, 2));                                        // adopted afresh under a new key
+  await clock(at(3, 8));
+  assert.equal(byName(shop, "Bell").length, 1);
+});
+
 test("setting a shop up waits for a trade in progress on the same queue (#135 review, round 11)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
