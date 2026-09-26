@@ -940,13 +940,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /* -------------------------------------------------------------- settings tab (#110) */
 
   /**
-   * The config the shop's preset merchant ships with (`shop.source`, a merchant in the pack): what
-   * Reset to preset puts back, and where a shop that keeps hours again takes them from. Null when
-   * the shop has no preset, or it can't be found or read.
+   * The config the shop's preset merchant ships with: what Reset to preset puts back, and where a
+   * shop that keeps hours again takes them from. The preset is the merchant an NPC was set up from
+   * (`shop.source`, #57), else the pack entry the shop was imported from, which core records in
+   * `_stats.compendiumSource` (a pack import leaves `source` null). Null when there's neither, or
+   * it can't be found or read.
    */
   async #presetShop(shop) {
-    if (!shop.source) return null;
-    const merchant = await Promise.resolve(fromUuid(shop.source)).catch(() => null);
+    const uuid = shop.source ?? this.document._stats?.compendiumSource;
+    if (!uuid) return null;
+    const merchant = await Promise.resolve(fromUuid(uuid)).catch(() => null);
     const preset = merchant?.flags?.[MODULE]?.shop;
     return validateShop(preset).ok ? shopFrom(preset) : null;
   }
