@@ -206,3 +206,16 @@ test("a deal form whose end can't be kept is refused", () => {
   assert.ok(dealFields(form({ ends: "keep" }), FORM_AT).error, "nothing to keep on a new deal");
   assert.ok(dealFields(form({ ends: "someday" }), FORM_AT).error);
 });
+
+test("hours that run round the whole day never close, so no deal ends at their 'close' (#142 review)", () => {
+  const minute = t => Math.floor((t % DAY) / 60);
+  for (const hours of [
+    { open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } },
+    { open: { hour: 7, minute: 0 }, close: { hour: 6, minute: 59 } }
+  ]) {
+    for (let m = 0; m < 24 * 60; m += 1) assert.equal(isOpen(hours, m, CAL), true);
+    assert.equal(nextCloseAt(hours, at(3, 10), CAL), null, JSON.stringify(hours));
+  }
+  assert.equal(minute(at(3, 10)), 600);
+  assert.ok(dealFields(form({ ends: "close" }), { ...FORM_AT, hours: { open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } } }).error);
+});
