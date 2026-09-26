@@ -48,6 +48,9 @@ export function worldTerms(get) {
 /** The `CONFIG.queries` key a trade is sent under. */
 export const QUERY = "merchant-presets.trade";
 
+/** The `CONFIG.queries` key a GM's "Restock now" (#110) is sent under, to the tab that holds the trade claim. */
+export const RESTOCK_QUERY = "merchant-presets.restock";
+
 /** How long a player waits for the GM before the trade reads as unconfirmed. */
 export const QUERY_TIMEOUT_MS = 15_000;
 

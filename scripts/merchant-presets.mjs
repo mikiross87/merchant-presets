@@ -13,7 +13,7 @@ import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
-  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
   receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
@@ -978,6 +978,36 @@ function handleTradeQuery(request, { user }) {
 }
 
 /**
+ * The restock query's handler: a GM's "Restock now" (#110), carried out on the claiming tab's
+ * trade queue, where trades and the scheduled restocks run, so it can't interleave with either
+ * on the same shelf (#140 review). Like a trade, a tab without the claim never answers.
+ */
+async function handleRestockQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
+  return { restocked: shop ? await restock(shop) : null };
+}
+
+/**
+ * Restock `actor` now, as "Restock now" does: sent to the active GM's claiming tab (see
+ * `handleRestockQuery`). Resolves the lines restocked, or null if it couldn't restock, or no GM
+ * answered.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<string[]|null>}
+ */
+async function requestRestock(actor) {
+  const gm = game.users.activeGM;
+  if (!gm) return null;
+  try {
+    return (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+  } catch (err) {
+    console.warn(`${MODULE} | restock of "${actor.name}" unconfirmed:`, err.message);
+    return null;
+  }
+}
+
+/**
  * Ask the GM to carry out a trade: `{tradeId, kind, shopUuid, buyerUuid,
  * lines: [{itemId, quantity, expectedBundlePriceCp?}]}` (the contract on
  * #102). Resolves `{status: "sealed"|"refused"|"no-gm"|"unconfirmed", ...}`,
@@ -1376,6 +1406,7 @@ function registerShopSetup() {
 
 Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
+  CONFIG.queries[RESTOCK_QUERY] = handleRestockQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1564,7 +1595,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MODULE).api = { registerDrinks, restock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
+  game.modules.get(MODULE).api = { registerDrinks, restock: requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
     setUpShop, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
@@ -1595,12 +1626,13 @@ Hooks.once("ready", async () => {
   // The shops restock on their own schedule (#105).
   registerRestock();
   // A shop arriving is new to this world, whatever its flags say: one exported after it was made
-  // visitable, or after the GM set Players can visit (#110), comes back with its ownership cleared
-  // but its mark kept (#138 review, round 9; #140 review, round 6).
+  // visitable, or after the GM switched Players can visit on (#110), comes back with its ownership
+  // cleared but its mark kept (#138 review, round 9; #140 review, round 6). Switched off, the
+  // choice stays: hidden is right whatever ownership came along, a duplicate's included (round 8).
   Hooks.on("preCreateActor", actor => {
-    for (const key of ["madeVisitable", "visibility"]) {
-      if (actor.flags?.[MODULE]?.[key] != null) actor.updateSource({ [`flags.${MODULE}.${key}`]: null });
-    }
+    const flags = actor.flags?.[MODULE];
+    if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
   });
   Hooks.on("createToken", token => {
     if (game.users.activeGM !== game.user) return;   // one GM does the writing
