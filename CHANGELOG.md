@@ -27,8 +27,12 @@ than for the code. Reference the issue or PR it closes.
   *Restock now*, *Players can visit* and *Reset to preset*. Changes save as
   you make them, and every open shop window reprices at once. Two new world
   settings, *Shops sell at (%)* and *Shops buy at (%)*, set the rates for any
-  shop whose terms are on *World default*; the shipped merchants keep their
-  own until you tick it. (#110)
+  shop whose terms are on *World default*. Most shipped merchants import on
+  *World default* (the few with their own rates keep them); shops already in
+  your world keep the rates they have until you tick it. Shops that buy gems
+  and art at full value sell them at their own rate, and never pay more for
+  them than they charge: below 100% sells, they buy them back at that rate
+  too. (#110, #141)
 - 2.0: deals — give one character their own price at one shop, from the
   Settings tab: cheaper when they buy, more when they sell, or both, with an
   optional note and an end (when the shop next closes, after some days, or

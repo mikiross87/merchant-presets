@@ -81,7 +81,8 @@ const CHANGES = {
   ruleRate(shop, { category, side, percent }) {
     const rule = shop.terms.categories.find(c => c.category === category);
     if (!rule || (side !== "sellsAt" && side !== "buysAt")) return "no such rule";
-    rule[side] = rateOf(percent);
+    // null hands that side back to the shop's own rate.
+    rule[side] = percent === null ? null : rateOf(percent);
   },
   removeRule(shop, { category }) {
     // Already gone (a double click): nothing to do.

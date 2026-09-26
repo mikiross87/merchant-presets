@@ -271,8 +271,8 @@ test("rates may be null, meaning the world default (#110)", () => {
   assert.ok(validateShop({ version: SHOP_VERSION, terms: { sellsAt: null, buysAt: null } }).ok);
   assert.equal(SHOP_DEFAULTS.terms.sellsAt, null);
   assert.equal(SHOP_DEFAULTS.terms.buysAt, null);
-  // A category rule is a rule: it always states its own rates.
-  const rule = { category: "Valuables", sellsAt: null, buysAt: 1 };
+  // A category rule states at least one rate of its own; a null side follows the shop (#143 review).
+  const rule = { category: "Valuables", sellsAt: null, buysAt: null };
   assert.equal(validateShop({ version: SHOP_VERSION, terms: { categories: [rule] } }).ok, false);
 });
 
@@ -317,4 +317,12 @@ test("a category rule without a name is missing its name, not a duplicate", () =
   assert.equal(r.ok, false);
   assert.match(errorsOf(r), /category: missing/);
   assert.doesNotMatch(errorsOf(r), /duplicate/);
+});
+
+test("a category rule may leave one side to the shop's rate, not both (#143 review)", () => {
+  const rule = r => validateShop({ version: 1, terms: { sellsAt: null, buysAt: null, categories: [{ category: "Valuables", ...r }] } }).ok;
+  assert.equal(rule({ sellsAt: null, buysAt: 1 }), true);
+  assert.equal(rule({ sellsAt: 1.2, buysAt: null }), true);
+  assert.equal(rule({ sellsAt: null, buysAt: null }), false);
+  assert.equal(rule({ sellsAt: 0, buysAt: 1 }), false);
 });

@@ -7034,8 +7034,8 @@
         "source": null,
         "description": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>",
         "terms": {
-          "sellsAt": 1.0,
-          "buysAt": 0.5,
+          "sellsAt": null,
+          "buysAt": null,
           "categories": []
         },
         "hours": {

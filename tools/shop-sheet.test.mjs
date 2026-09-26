@@ -1390,3 +1390,31 @@ test("a bill line whose total the deal didn't move isn't marked as the deal's (#
   assert.equal(context.buy.basket.lines[0].dealt, false);
   assert.equal(context.buy.sections[0].rows[0].listText, "");
 });
+
+test("a rule side left blank follows the shop's rate, shown as its placeholder (#143 review)", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { terms: { sellsAt: 1.2, buysAt: null, categories: [{ category: "Valuables", sellsAt: 1.2, buysAt: 1 }] } } });
+  await change(sheet, { op: "ruleRate", category: "Valuables", side: "sellsAt" }, { value: "" });
+  assert.deepEqual(writtenShop(shop).terms.categories[0], { category: "Valuables", sellsAt: null, buysAt: 1 });
+  const { settings, header } = await sheet._prepareContext({});
+  const rule = settings.terms.rules[0];
+  assert.equal(rule.sellsPercent, "");
+  assert.equal(rule.sellsFollows, 120);
+  // The Terms popover says what the rule charges, the shop's rate on its unset side.
+  assert.deepEqual(header.terms.categories[0], { category: "Valuables", sellsAt: 1.2, buysAt: 1 });
+});
+
+test("the Terms popover and a rule's placeholders show what trades pay, capped (#143 review)", async t => {
+  const { sheet } = openSettings(t, { shopConfig: { terms: { sellsAt: null, buysAt: null, categories: [
+    { category: "Valuables", sellsAt: null, buysAt: 1 },
+    { category: "weapon", sellsAt: 0.3, buysAt: null }
+  ] } } });
+  // The world sells at 80%: Valuables can't be bought back at full value above what they sell for.
+  globalThis.game.settings.values.sellsAt = 80;
+  globalThis.game.settings.values.buysAt = 50;
+  const { header, settings } = await sheet._prepareContext({});
+  assert.deepEqual(header.terms.categories, [
+    { category: "Valuables", sellsAt: 0.8, buysAt: 0.8 },
+    { category: "weapon", sellsAt: 0.3, buysAt: 0.3 }
+  ]);
+  assert.deepEqual(settings.terms.rules.map(r => [r.sellsFollows, r.buysFollows]), [[80, 80], [30, 30]]);
+});

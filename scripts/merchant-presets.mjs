@@ -1453,9 +1453,9 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "sellsAt", {
     name: "Shops sell at (%)",
     hint: "What a shop charges, as a percentage of an item's price, when its own terms are set to "
-      + "World default (the shop window's Settings tab): 100 is list price, 120 a markup. The "
-      + "shipped merchants set their own rates, so tick World default on a shop to have it follow "
-      + "this. Open shop windows reprice at once.",
+      + "World default (the shop window's Settings tab): 100 is list price, 120 a markup. Most "
+      + "shipped merchants import on World default; a few set their own rates, and so do shops "
+      + "imported or set up before 2.0. Open shop windows reprice at once.",
     scope: "world",
     config: true,
     type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 1, step: 1, initial: 100 }),
@@ -1465,8 +1465,8 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "buysAt", {
     name: "Shops buy at (%)",
     hint: "What a shop pays for what players sell it, as a percentage of the item's value, when "
-      + "its own terms are set to World default: 50 is half. The shipped merchants set their own "
-      + "rates. A shop never pays more than it would charge.",
+      + "its own terms are set to World default: 50 is half. Most shipped merchants import on "
+      + "World default. A shop never pays more than it would charge.",
     scope: "world",
     config: true,
     type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 0, step: 1, initial: 50 }),

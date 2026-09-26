@@ -1514,8 +1514,8 @@
         "source": null,
         "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
         "terms": {
-          "sellsAt": 1.0,
-          "buysAt": 0.5,
+          "sellsAt": null,
+          "buysAt": null,
           "categories": []
         },
         "hours": {

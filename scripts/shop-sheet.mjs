@@ -499,7 +499,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       buysAtLabel: termsWord(chipBuysAt, "buy"),
       exampleSell: coinBreakdown(sellCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       exampleBuy: coinBreakdown(buyCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-      categories: config.terms.categories,
+      // What each rule's goods really trade at: the shop's own rate on a side it leaves unset, and
+      // never paying more than it charges (pricing.mjs `effectiveRates`, as trades price them).
+      categories: config.terms.categories.map(c => {
+        const { sellsAt, buysAt } = effectiveRates(worldOf().rates, config.terms, c.category);
+        return { category: c.category, sellsAt: sellsAt.rate, buysAt: buysAt.rate };
+      }),
       // "food-drink" etc reads as a real word, not the generator's own hyphenated token
       // (tools/build_srd.py's GOODS_KINDS, per trade-plan.mjs's header) — item types
       // (CONFIG.Item.typeLabels) are already localized words with no hyphen to fix.
@@ -1128,10 +1133,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         buys: { ...rate("buysAt"), word: termsWord(effective.buysAt.rate, "buy") },
         exampleSell: header.terms.exampleSell,
         exampleBuy: header.terms.exampleBuy,
-        rules: shop.terms.categories.map(c => ({
-          category: c.category, label: WONT_BUY_TYPES.includes(c.category) ? typeLabel(c.category) : c.category,
-          sellsPercent: percentOf(c.sellsAt), buysPercent: percentOf(c.buysAt)
-        })),
+        rules: shop.terms.categories.map(c => {
+          // A side the rule leaves to the shop shows blank, with what that side really trades at as
+          // its placeholder: the shop's rate, capped as trades cap it.
+          const traded = effectiveRates(world, shop.terms, c.category);
+          return {
+            category: c.category, label: WONT_BUY_TYPES.includes(c.category) ? typeLabel(c.category) : c.category,
+            sellsPercent: c.sellsAt === null ? "" : percentOf(c.sellsAt), sellsFollows: percentOf(traded.sellsAt.rate),
+            buysPercent: c.buysAt === null ? "" : percentOf(c.buysAt), buysFollows: percentOf(traded.buysAt.rate)
+          };
+        }),
         ruleChoices
       },
       wontBuy: {
@@ -1233,7 +1244,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       rate: () => ({ op, side, percent: typedNumber(value) }),
       // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
       rateDefault: () => ({ op: "rate", side, percent: checked ? null : percentOf(worldOf().rates[side]) }),
-      ruleRate: () => ({ op, category: control.dataset.category, side, percent: typedNumber(value) }),
+      // Left blank, the rule's side follows the shop's rate again.
+      ruleRate: () => ({ op, category: control.dataset.category, side, percent: value.trim() === "" ? null : typedNumber(value) }),
       wontBuy: () => ({ op, list, value: control.dataset.value, on: checked }),
       keepHours: async shop => ({ op, on: checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
       hour: () => ({ op, end, time: value }),

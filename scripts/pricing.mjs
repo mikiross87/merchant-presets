@@ -142,7 +142,8 @@ export function itemPriceCp(price, rate, bundle, currencies, quantity = 1) {
  *
  * @param {{sellsAt: number, buysAt: number}} world  Configure Settings defaults (#110)
  * @param {{sellsAt: number|null, buysAt: number|null,
- *   categories: {category: string, sellsAt: number, buysAt: number}[]}} shop  a shop config's `terms` (#98)
+ *   categories: {category: string, sellsAt: number|null, buysAt: number|null}[]}} shop  a shop config's
+ *   `terms` (#98); a rule's null side follows the shop's rate
  * @param {string|null} [category]  the item's category, matched against `shop.categories`
  * @param {{buy?: number, sell?: number}|null} [deal]  a character's deal (#111), as a percentage
  *   of what the character would otherwise pay or be offered *at this shop*: `buy` scales
@@ -159,10 +160,9 @@ export function effectiveRates(world, shop, category = null, deal = null) {
   if (shop.buysAt !== null) buysAt = { rate: shop.buysAt, layer: "shop" };
 
   const rule = category ? shop.categories.find(c => c.category === category) : null;
-  if (rule) {
-    sellsAt = { rate: rule.sellsAt, layer: "category" };
-    buysAt = { rate: rule.buysAt, layer: "category" };
-  }
+  // A rule's unset (null) side leaves the shop's rate, or the world's, in place.
+  if (rule?.sellsAt != null) sellsAt = { rate: rule.sellsAt, layer: "category" };
+  if (rule?.buysAt != null) buysAt = { rate: rule.buysAt, layer: "category" };
 
   if (deal?.buy) sellsAt = { rate: clean(sellsAt.rate * (1 + deal.buy)), layer: "deal" };
   if (deal?.sell) buysAt = { rate: clean(buysAt.rate * (1 + deal.sell)), layer: "deal" };

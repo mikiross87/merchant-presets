@@ -11370,12 +11370,12 @@
         "source": null,
         "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "terms": {
-          "sellsAt": 1.0,
-          "buysAt": 0.5,
+          "sellsAt": null,
+          "buysAt": null,
           "categories": [
             {
               "category": "Valuables",
-              "sellsAt": 1.0,
+              "sellsAt": null,
               "buysAt": 1
             }
           ]
