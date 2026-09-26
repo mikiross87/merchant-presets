@@ -2179,6 +2179,9 @@ async function makeVisitable(token) {
   // the canvas lands before its migration writes the 2.0 config (#138 review).
   if (!actor || actor.pack || !isMigratable(actor)) return;
   if (actor.flags?.[MODULE]?.visibility != null) return;
+  // Once per shop: a GM who sets it back to None afterwards has decided, and None set by hand
+  // looks exactly like the untouched default (#138 review).
+  if (actor.flags?.[MODULE]?.madeVisitable) return;
   if ((actor.ownership?.default ?? NONE) !== NONE) return;
-  await actor.update({ "ownership.default": LIMITED });
+  await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: true });
 }

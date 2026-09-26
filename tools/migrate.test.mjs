@@ -481,6 +481,8 @@ test("planActorUpdate makes a shop with a placed token visitable (Limited)", () 
   const store = legacy(shipped("General_Store_Village_"));
   const { update } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
   assert.equal(update["ownership.default"], 1);
+  // Marked, so placing another token never re-opens it after a GM hides it again (#138 review).
+  assert.equal(update["flags.merchant-presets.madeVisitable"], true);
 });
 
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {

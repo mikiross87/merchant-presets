@@ -713,7 +713,12 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, nati
     if (sheetClass) update["flags.core.sheetClass"] = sheetClass;
 
     const ownership = planOwnership(actor, hasTokenOnScene);
-    if (ownership !== null) update["ownership.default"] = ownership;
+    if (ownership !== null) {
+      update["ownership.default"] = ownership;
+      // What `makeVisitable` (merchant-presets.mjs) marks too: made visitable once, never again, so
+      // a GM who hides it afterwards keeps it hidden (#138 review).
+      if (ownership > 0) update["flags.merchant-presets.madeVisitable"] = true;
+    }
   }
 
   return { update: Object.keys(update).length ? update : null, shopError, warnings };
