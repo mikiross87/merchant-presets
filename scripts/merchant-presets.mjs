@@ -9,6 +9,7 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
+import { activeDeal } from "./deals.mjs";
 import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
@@ -924,7 +925,9 @@ async function carryOutTrade(request, user) {
     // The same terms the window billed from (trade-desk.mjs `worldTerms`).
     worldSettings: worldTerms(key => game.settings.get(MODULE, key)),
     currencies: CONFIG.DND5E.currencies,
-    deal: null,
+    // The buyer's deal at this moment, read as the window read it (#111): a shop config that
+    // can't be read has none, and planTrade refuses it anyway.
+    deal: activeDeal(safeShopOf(shop) ?? { deals: [] }, buyer.uuid, game.time.worldTime),
     now: { isOpen: shopIsOpen(shop) },
     newId: () => foundry.utils.randomID(),
     bundleOf

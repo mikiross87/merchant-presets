@@ -1181,3 +1181,32 @@ test("a restock that can't run says so without blaming a missing table", async t
   const lang = JSON.parse(readFileSync(new URL("../lang/en.json", import.meta.url)));
   assert.doesNotMatch(lang.MERCHANT_PRESETS.Shop.Settings.Restock.Failed, /table is missing/);
 });
+
+test("a buyer's deal prices the bill as the trade will, so the seal matches (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })], buyerItems: [item("gem", { quantity: 2 })] });
+  shop.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let sent;
+  api.trade = async request => { sent = request; return { status: "sealed" }; };
+  await act(sheet, "seal");
+  assert.deepEqual(sent.lines, [{ itemId: "rope", quantity: 1, expectedBundlePriceCp: 90 }]);
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  await act(sheet, "seal");
+  assert.deepEqual(sent.lines, [{ itemId: "gem", quantity: 1, expectedBundlePriceCp: 60 }]);
+});
+
+test("another buyer's deal, or an ended one, leaves the price at list (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const config = shop.flags["merchant-presets"].shop;
+  config.deals = [{ actor: "Actor.someoneElse", name: "x", buy: -0.5, sell: null, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let sent;
+  api.trade = async request => { sent = request; return { status: "sealed" }; };
+  await act(sheet, "seal");
+  assert.equal(sent.lines[0].expectedBundlePriceCp, 100);
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.5, sell: null, note: "", ends: { at: 0, when: "close" } }];
+  act(sheet, "addLine", { itemId: "rope" });
+  await act(sheet, "seal");
+  assert.equal(sent.lines[0].expectedBundlePriceCp, 100);
+});

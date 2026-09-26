@@ -19,6 +19,7 @@ import {
   applyChange, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
+import { activeDeal } from "./deals.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -384,7 +385,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const chipSellsAt = effectiveRates(world, config.terms).sellsAt.rate;
     const chipBuysAt = effectiveRates(world, config.terms).buysAt.rate;
     const rates = {
-      world, shopTerms: config.terms, chipSellsAt, chipBuysAt
+      world, shopTerms: config.terms, chipSellsAt, chipBuysAt, deal: this.#dealOf(buyer)
     };
     const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies);
 
@@ -565,7 +566,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .map(data => ({ data, stock: safeStockOf(data) }))
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems))
       .map(({ data, stock }) => {
-        const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock(), bundleOf);
+        const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
@@ -787,7 +788,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const matched = stockConfigOf(line);
       // Anything inside counts, gear included: the engine refuses a sale of any non-empty container.
       const hasContents = item.type === "container" && (buyer?.items ?? []).some(i => i.system?.container === item._id);
-      let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line, bundleOf) });
+      let row = sellRow(item, config, matched, rates, rates.deal, currencies, { hasContents, bundle: bundleFor(item, line, bundleOf) });
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
@@ -857,6 +858,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const world = worldOf().rates;
     const config = shopConfigOf(this.document);
     const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
+    const deal = this.#dealOf(this.#resolveBuyer());
     const lines = [];
     for (const [itemId, quantity] of this._baskets[kind]) {
       const item = this.#itemOf(kind, itemId);
@@ -866,7 +868,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // instead — the same rule #102 prices a sale by.
       const line = kind === "buy" ? item : matchingStockLine(item, shopItems);
       const stock = stockConfigOf(line);
-      const rates = effectiveRates(world, config.terms, categoryFor(item, stock));
+      const rates = effectiveRates(world, config.terms, categoryFor(item, stock), deal);
       const rate = kind === "buy" ? rates.sellsAt.rate : rates.buysAt.rate;
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
       const bundle = bundleFor(item, line, bundleOf);
@@ -887,6 +889,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       });
     }
     return lines;
+  }
+
+  /**
+   * `buyer`'s deal at this shop now, or null: the one the GM's trade prices by (deals.mjs
+   * `activeDeal`, at the same world time), so a bill with a deal seals at the price it shows.
+   */
+  #dealOf(buyer) {
+    return activeDeal(shopConfigOf(this.document), buyer?.uuid ?? null, game.time.worldTime);
   }
 
   #billOfSale(lines, totals, currencies, buyer, sealed) {
