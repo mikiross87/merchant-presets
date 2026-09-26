@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "../scripts/casting.mjs";
 import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 
-// Buying a spellcasting service moves gold and nothing else (#70). Item Piles'
-// own trade card already says what was paid, so this message says what was
-// cast and for whom, and hands the GM the spell and its effects.
+// Buying a spellcasting service moves gold and nothing else (#70). The trade's
+// receipt already says what was paid, so this message says what was cast and
+// for whom, and hands the GM the spell and its effects.
 
 const GREATER_RESTORATION = "Compendium.dnd5e.spells24.Item.phbsplGreaterRes";
 const RAISE_DEAD = "Compendium.dnd5e.spells24.Item.phbsplRaiseDead0";
@@ -59,7 +59,7 @@ test("names from the world are escaped", () => {
   assert.ok(html.startsWith("<p><strong>&lt;Shop&gt;</strong> casts a spell for <strong>A &amp; B</strong>"), html);
 });
 
-test("the message goes where Item Piles sends its own trade card", () => {
+test("the message goes to the trade chat's recipients: public (1), or whispered to the GMs (3)", () => {
   const gms = ["gm1", "gm2"];
   assert.deepEqual(chatRecipients(0, gms, "player"), []);
   assert.deepEqual(chatRecipients(1, gms, "player"), []);
@@ -89,57 +89,60 @@ await loadRuntime(world);
 
 const temple = world.merchant("Temple_Faith_Store_Town_", { table: "RollTable.wired00000000001" });
 world.actors.push(temple);
-const aria = { id: "aria", uuid: "Actor.aria", name: "Aria", type: "character", flags: {} };
-world.actors.push(aria);
+const aria = Object.assign(world.character("aria", { currency: { pp: 100000 }, owners: ["p1"] }), { name: "Aria" });
 world.compendium.set(RAISE_DEAD, { uuid: RAISE_DEAD, name: "Raise Dead", effects: [
   { uuid: `${RAISE_DEAD}.ActiveEffect.etY0sDrXe6DcFEzc`, name: "Resurrection Sickness (Day 1)", type: "base" }] });
 
-const shelf = name => structuredClone(temple.items.find(i => i.name === name));
-const buy = (name, quantity = 1) => ({ buyerReceive: [{ quantity, item: shelf(name) }] });
-const posted = async (...args) => {
+const api = globalThis.game.modules.get("merchant-presets").api;
+const tick = async (n = 5) => { for (let i = 0; i < n; i++) await new Promise(resolve => setImmediate(resolve)); };
+/** Buy `name` from the temple through the native trade, as this client; the messages beside the receipt. */
+const posted = async (name, quantity = 1) => {
   const before = world.calls.messages.length;
-  await world.fire("item-piles-tradeItems", ...args);
-  return world.calls.messages.slice(before);
+  const itemId = temple.items.find(i => i.name === name)._id;
+  const result = await api.trade({ tradeId: globalThis.foundry.utils.randomID(), kind: "buy", shopUuid: temple.uuid,
+    buyerUuid: aria.uuid, lines: [{ itemId, quantity }] });
+  assert.equal(result.status, "sealed", JSON.stringify(result));
+  await tick();
+  return world.calls.messages.slice(before).filter(m => !m.content.includes("mp-receipt"));
 };
 
 test("buying a named spell posts one message, spoken by the shop, with the spell and its effects", async () => {
-  const [message, ...more] = await posted(temple, aria, buy("Spellcasting: Raise Dead"), "gm", "i1");
+  const [message, ...more] = await posted("Spellcasting: Raise Dead");
   assert.equal(more.length, 0);
   assert.equal(message.speaker.alias, "Temple & Faith Store (Town)");
   assert.ok(message.content.includes(`casts @UUID[${RAISE_DEAD}]{Raise Dead} for <strong>Aria</strong>.`), message.content);
   assert.ok(message.content.includes(`@UUID[${RAISE_DEAD}.ActiveEffect.etY0sDrXe6DcFEzc]{Resurrection Sickness (Day 1)}`), message.content);
-  assert.ok(!/GP/.test(message.content), "the price is Item Piles' trade card's to show");
+  assert.ok(!/GP/.test(message.content), "the price is the receipt's to show");
 });
 
 test("a spell whose document cannot be fetched is still announced, without effects", async () => {
-  const [message] = await posted(temple, aria, buy("Spellcasting: Greater Restoration"), "gm", "i2");
+  const [message] = await posted("Spellcasting: Greater Restoration");
   assert.ok(message.content.includes(`casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} for <strong>Aria</strong>.`), message.content);
   assert.ok(!message.content.includes("Effects"), message.content);
 });
 
 test("buying a level service asks for the spell", async () => {
-  const [message] = await posted(temple, aria, buy("Spellcasting: Level 3"), "gm", "i3");
+  const [message] = await posted("Spellcasting: Level 3");
   assert.ok(message.content.includes("Spellcasting: Level 3. Tell the GM which spell."), message.content);
 });
 
-test("another user's trade is announced by that user's client, not this one", async () => {
-  assert.deepEqual(await posted(temple, aria, buy("Spellcasting: Raise Dead"), "someone-else", "i4"), []);
+test("another client's trade is announced by that client, not this one", async () => {
+  await posted("Spellcasting: Raise Dead");
+  const [sent] = world.calls.socket.filter(s => s.name === "module.merchant-presets").slice(-1);
+  const before = world.calls.messages.length;
+  world.receive("module.merchant-presets", { ...sent.message, trade: { ...sent.message.trade, tradeId: "elsewhere000001" } });
+  await tick();
+  assert.deepEqual(world.calls.messages.slice(before), []);
 });
 
 test("goods that are not spellcasting post nothing", async () => {
-  assert.deepEqual(await posted(temple, aria, buy("Diamond (300 GP)"), "gm", "i5"), []);
+  assert.deepEqual(await posted("Diamond (300 GP)"), []);
 });
 
-test("the message follows Item Piles' chat visibility", async () => {
-  world.settings["item-piles.outputToChat"] = 2;
-  const [message] = await posted(temple, aria, buy("Spellcasting: Level 3"), "gm", "i6");
-  world.settings["item-piles.outputToChat"] = 1;
-  assert.deepEqual(message.whisper, ["gm"]);
-});
 
 test("with the setting off, nothing is posted", async () => {
   world.settings.spellcastingToChat = false;
-  const messages = await posted(temple, aria, buy("Spellcasting: Raise Dead"), "gm", "i7");
+  const messages = await posted("Spellcasting: Raise Dead");
   world.settings.spellcastingToChat = true;
   assert.deepEqual(messages, []);
 });

@@ -1,9 +1,9 @@
 /**
- * Just enough of Foundry, dnd5e and Item Piles to load the real runtime under
- * plain Node and drive it through its hooks. Not a test file itself.
+ * Just enough of Foundry and dnd5e to load the real runtime under plain Node
+ * and drive it through its hooks. Not a test file itself.
  *
  * Only what merchant-presets.mjs touches on import, at `ready`, and on the way
- * through `rewire` and `migrateShop` (#100) is modelled; settings default to
+ * through `arrive`, `migrateShop` (#100) and the trade desk is modelled; settings default to
  * the module's own defaults with trading hours, restocking and stock weight
  * off so those passes stay out of the way. `game.scenes` starts empty — no
  * test here places a token — so `migrateShop`'s per-scene token pass always
@@ -68,7 +68,7 @@ export function createWorld() {
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
-    spellcastingToChat: true, tradeChat: "public", "item-piles.outputToChat": 1
+    spellcastingToChat: true, tradeChat: "public"
   };
   // No world ever has a stored value in the stub: every setting is at its default.
   const storage = { get: () => ({ find: () => undefined }) };
@@ -158,11 +158,7 @@ export function createWorld() {
       },
       storage
     },
-    modules: new Map([["merchant-presets", { version: "1.3.0" }], ["item-piles", { active: true }]]),
-    itempiles: { API: {
-      ITEM_QUANTITY_ATTRIBUTE: "system.quantity",
-      isItemPileMerchant: actor => actor?.flags?.["item-piles"]?.data?.type === "merchant"
-    } },
+    modules: new Map([["merchant-presets", { version: "1.3.0" }]]),
     time: { worldTime: 0, calendar: { name: "stub", days: { minutesPerHour: 60 } } }
   };
 

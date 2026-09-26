@@ -1,28 +1,13 @@
 /**
- * Merchant Presets — world wiring.
- *
- * The module ships 51 merchants prebuilt from SRD 5.2 (CC-BY-4.0) plus its own
- * goods, so nothing here has to resolve anything at runtime. Two things still
- * have to happen when a merchant is dragged into the world, and both can only
- * be done on the world copy:
- *
- * 1. STOCK TABLES. The shipped merchants point their Item Piles "Populate
- *    Items" tab at stock RollTables in this module's compendium. That tab
- *    rebuilds its list from `Array.from(game.tables)` — world tables only — and
- *    discards anything it cannot find there, silently wiping the merchant's
- *    populate configuration. So import the stock table into the world and
- *    repoint the merchant at it.
- *
- * 2. STOCK COUNTS. The packs ship canonical quantities; how many are actually
- *    on the shelf is rolled per import, from the item's price and the
- *    settlement size, so two copies of the same shop differ.
+ * Merchant Presets — the runtime: the shops arriving in a world (migrated, made visitable, their
+ * first shelf rolled), restocking on the world clock, the GM-side trade desk the shop window asks,
+ * and the listeners that act on a trade (meals, animals, spellcasting).
  */
 
 import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, remapQuantities,
-  STOCK_PREFIX, TIERS, tierOf } from "./shop.mjs";
-import { boughtWith, fromItemPiles, goodFlag, uuidOf } from "./trade.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
+import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
@@ -32,32 +17,13 @@ import {
   receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
-import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, NATIVE_SHOP, needsMigration, packShopCandidates, planActorUpdate,
+import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
   from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
-const TABLE_FOLDER = "Merchant Stock";
-const FLAG_PATH = "flags.item-piles.data.tablesForPopulate";
-
-/**
- * Stock is rolled, not flat: how many a shop has on the shelf depends on what
- * the thing costs and how big the settlement is. A village chandler has piles
- * of candles; a city armourer may or may not have a suit of plate today.
- * Bands are the item's price in gp; each entry is [Village, Town, City].
- */
-const STOCK_BANDS = [
-  { under: 1, formulas: ["2d6+4", "3d6+8", "4d10+20"] },     // candles, chalk, rations
-  { under: 10, formulas: ["1d6+2", "2d6+4", "3d8+8"] },      // rope, torches, daggers
-  { under: 50, formulas: ["1d4+1", "1d6+2", "2d6+4"] },      // shortswords, tools
-  { under: 250, formulas: ["1d2", "1d3+1", "1d4+2"] },       // breastplates, potions
-  { under: 1000, formulas: ["1d2-1", "1d2", "1d3"] },        // half plate, fine goods
-  { under: Infinity, formulas: ["1d3-2", "1d2-1", "1d2-1"] } // plate, ships, warhorses
-];
-const TIER_INDEX = { Village: 0, Town: 1, City: 2 };
-const COIN_IN_GP = { pp: 10, gp: 1, ep: 0.5, sp: 0.1, cp: 0.01 };
 
 const NUTRITION_MODULE = "simple-nutrition-5e";
 /** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
@@ -65,10 +31,7 @@ const NUTRITION_MINIMUM = "1.0.0";
 /** Identifiers on our drinks that should slake thirst rather than hunger. */
 const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
-/** Serialises table imports so dragging several merchants at once cannot duplicate them. */
-const inFlight = new Map();
-
-/** Ids of the merchants `rewire` is working on right now. */
+/** Ids of the shops `setUpShopNow` is building right now: `arrive` leaves them alone. */
 const rewiring = new Set();
 
 /** Closed for the rest of the session if the autoRestock-default write
@@ -97,23 +60,11 @@ const rollStock = async formula =>
  * Whether an item is the shopkeeper's own kit rather than stock.
  *
  * Merchants carry an SRD stat block, and its gear rides along as ordinary
- * embedded items. `overrideItemFilters` keeps it out of the shop window, but
- * the restock helpers below walk `actor.items` directly and match on name — so
- * without this the mage's own Wand would be treated as merchandise.
+ * embedded items. The helpers below walk `actor.items` directly and match on
+ * name, so without this the mage's own Wand would be treated as merchandise.
  */
 const isGear = item =>
   foundry.utils.getProperty(item, "flags.merchant-presets.kind") === "gear";
-
-/** An item's price expressed in gold pieces. */
-function priceInGp(item) {
-  const p = item.system?.price ?? {};
-  return (Number(p.value) || 0) * (COIN_IN_GP[p.denomination] ?? 1);
-}
-
-function stockFormula(item, tierIndex) {
-  const gp = priceInGp(item);
-  return (STOCK_BANDS.find(b => gp < b.under) ?? STOCK_BANDS.at(-1)).formulas[tierIndex];
-}
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -122,227 +73,7 @@ async function ensureFolder(name, type) {
   return existing ?? Folder.implementation.create({ name, type, sorting: "a" });
 }
 
-async function ensureWorldTable(src) {
-  if (inFlight.has(src.uuid)) return inFlight.get(src.uuid);
-  const promise = (async () => {
-    const folder = await ensureFolder(TABLE_FOLDER, "RollTable");
-    const inFolder = game.tables.filter(t => t.folder?.id === folder.id);
-    const plan = planWorldTable(inFolder, src, game.modules.get(MODULE).version);
-    if (plan.existing) {
-      // A copy made before copies were stamped matched on its own results.
-      // Stamp it now, so edits the GM makes to it later don't stop it matching.
-      if (!plan.existing.getFlag(MODULE, "stock")) await plan.existing.setFlag(MODULE, "stock", plan.stamp);
-      return plan.existing;
-    }
-    const data = game.tables.fromCompendium(src, { clearFolder: true, clearOwnership: true });
-    data.folder = folder.id;
-    data.name = plan.name;
-    foundry.utils.setProperty(data, `flags.${MODULE}.stock`, plan.stamp);
-    return RollTable.implementation.create(data);
-  })();
-  inFlight.set(src.uuid, promise);
-  try { return await promise; } finally { inFlight.delete(src.uuid); }
-}
-
-/* -------------------------------------------------------------------------- */
-
-/**
- * Repoint the merchant's populate tables at world copies, and its own
- * `flags.merchant-presets.shop.restock` (#98) along with them: the pack
- * ships that config pointed at the same compendium table, keyed by the same
- * result ids, and Item Piles' own populate tab is not the only thing that
- * would otherwise be left reading a table nothing repoints again (#100
- * review). Only touched when the shop's `restock.table` still names the
- * exact compendium table being wired here — a GM who has already repointed
- * it elsewhere is left alone.
- */
-async function wireTables(actor) {
-  if (!needsWiring(actor)) return false;
-  const tables = foundry.utils.getProperty(actor, FLAG_PATH);
-  const restock = foundry.utils.getProperty(actor, "flags.merchant-presets.shop.restock");
-
-  const next = [];
-  const update = {};
-  for (const entry of tables) {
-    if (!entry?.uuid?.startsWith(STOCK_PREFIX)) { next.push(entry); continue; }
-    const src = await foundry.utils.fromUuid(entry.uuid);
-    if (!src) { console.warn(`${MODULE} | missing stock table ${entry.uuid}`); continue; }
-    const world = await ensureWorldTable(src);
-
-    next.push({ ...entry, uuid: world.uuid, items: remapQuantities(src.results, world.results, entry.items) });
-
-    if (restock?.table === entry.uuid) {
-      update["flags.merchant-presets.shop.restock.table"] = world.uuid;
-      // A plain object merges into what's already stored, so the stale
-      // compendium result ids would survive alongside the new world ones
-      // (and again on every later Replace Actor); _replace overwrites the
-      // whole map instead, the same way setUpShop already has to (#100
-      // review).
-      update["flags.merchant-presets.shop.restock.quantities"] =
-        _replace(remapQuantities(src.results, world.results, restock.quantities));
-    }
-  }
-  if (!next.length) return false;
-  await actor.update({
-    [FLAG_PATH]: next, ...update,
-    // Wired afresh (an import, or Replace Actor writing the pack back over it): the shelf is the
-    // pack's again, unstamped, so the next restock adopts it rather than doubling it (#135 review).
-    [`flags.${MODULE}.shelf`]: null,
-    [`flags.${MODULE}.schedule`]: null,
-    [`flags.${MODULE}.lines`]: null
-  });
-  // And its goods forget the old key: adoption stamps only unstamped goods, so one still carrying
-  // the old key would belong to no shelf and never be replaced (#135 review).
-  const stale = actor.items.filter(i => !isGear(i) && foundry.utils.getProperty(i, `flags.${MODULE}.drawn`) != null)
-    .map(i => ({ _id: i.id, [`flags.${MODULE}.drawn`]: null }));
-  if (stale.length) await actor.updateEmbeddedDocuments("Item", stale);
-  return true;
-}
-
-/**
- * Roll this shop's stock.
- *
- * Services never run out. Containers are left alone: dnd5e pins a container's
- * quantity to exactly 1 (`ContainerData` declares
- * `quantity: new NumberField({min: 1, max: 1})`) because each one is a distinct
- * object holding its own contents, so a count of them cannot be represented —
- * the shop has one, and it sells out. Stock flagged as limited — poisons, spell
- * scrolls, and anything else a shop would not hold in depth — is always rolled;
- * everything else is rolled only when the world is set to finite stock. Anything that rolls zero
- * is simply not in stock today; the next restock may bring it back.
- *
- * Item Piles only: once the shops are native (#104), an import's first restock rolls its shelf
- * instead (`onCreateActor`).
- */
-async function applyStockMode(actor) {
-  const finite = game.settings.get(MODULE, "stockMode") === "finite";
-  const tierIndex = TIER_INDEX[tierOf(actor)];
-  const quantityPath = game.itempiles.API.ITEM_QUANTITY_ATTRIBUTE;
-  const flagPath = "flags.item-piles.item.infiniteQuantity";
-
-  const updates = [];
-  const soldOut = [];
-  for (const item of actor.items) {
-    // The shopkeeper's own kit is not stock: rolling it would put the smith's
-    // armour on a stock band and, on a zero, delete it off the stat block.
-    if (isGear(item)) continue;
-    if (foundry.utils.getProperty(item, "flags.item-piles.item.isService")) continue;
-    if (item.type === "container") continue;
-
-    const alwaysLimited = foundry.utils.getProperty(item, flagPath) === "no";
-    if (!finite && !alwaysLimited) continue;
-
-    // The bundle size, so 3 "Arrows" means 3 bundles of 20 rather than 3 arrows.
-    const bundle = Number(foundry.utils.getProperty(item, "flags.item-piles.system.quantityForPrice")) || 1;
-    const count = await rollStock(stockFormula(item, tierIndex));
-    if (count === 0) { soldOut.push(item.id); continue; }
-    updates.push({ _id: item.id, [quantityPath]: count * bundle, [flagPath]: "no" });
-  }
-
-  // Keep the pile's own switches in step with the world's settings. The purse
-  // only bites when infiniteCurrencies is off: Item Piles short-circuits the
-  // whole affordability check when it is on, which makes the coin decorative.
-  const pileUpdate = {};
-  const infiniteCoin = game.settings.get(MODULE, "merchantPurse") === "unlimited";
-  if (!!foundry.utils.getProperty(actor, "flags.item-piles.data.infiniteQuantity") === finite) {
-    pileUpdate["flags.item-piles.data.infiniteQuantity"] = !finite;
-  }
-  if (!!foundry.utils.getProperty(actor, "flags.item-piles.data.infiniteCurrencies") !== infiniteCoin) {
-    pileUpdate["flags.item-piles.data.infiniteCurrencies"] = infiniteCoin;
-  }
-  if (!foundry.utils.isEmpty(pileUpdate)) await actor.update(pileUpdate);
-  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  if (soldOut.length) {
-    await actor.deleteEmbeddedDocuments("Item", soldOut);
-    log(`"${actor.name}" is out of ${soldOut.length} line(s) today`);
-  }
-  return !!(updates.length || soldOut.length);
-}
-
-/**
- * Bring one imported preset merchant fully into the world.
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether anything changed
- */
-async function rewire(actor) {
-  if (!isPreset(actor)) return false;
-  // One pass per merchant at a time. A merchant can arrive through createActor
-  // and updateActor together, and both would see the compendium table and
-  // roll its stock.
-  if (rewiring.has(actor.id)) return false;
-  rewiring.add(actor.id);
-  try {
-    // Stock is rolled once, in the call that wires the compendium table. A shop
-    // already wired keeps the shelf it has: rewireAll and a duplicated merchant
-    // reach here too, and must not re-roll it.
-    const wired = await wireTables(actor);
-    let changed = wired;
-    if (wired) changed = await applyStockMode(actor) || changed;
-    changed = await releaseStrays(actor) > 0 || changed;
-    changed = await syncStockWeight(actor) || changed;
-    changed = await syncOpenState(actor) || changed;
-    if (changed) log(`prepared "${actor.name}"`);
-    return changed;
-  } finally {
-    rewiring.delete(actor.id);
-  }
-}
-
-/**
- * Wire every merchant of ours still on its compendium stock table.
- *
- * Catches merchants replaced from the compendium while nothing was listening
- * for it (#66), before anyone opens their Populate Items tab and Item Piles
- * drops the table. Unlike rewireAll it leaves wired merchants alone.
- *
- * @returns {Promise<number>} how many merchants were wired
- */
-async function wireReplacedAll() {
-  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
-  let n = 0;
-  for (const actor of game.actors) {
-    if (!needsWiring(actor)) continue;
-    try { if (await rewire(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | failed on "${actor.name}"`, err); }
-  }
-  return n;
-}
-
-/**
- * Fix every preset merchant already sitting in the world.
- * @returns {Promise<number>} how many actors were changed
- */
-async function rewireAll() {
-  let n = 0;
-  for (const actor of game.actors) {
-    try { if (await rewire(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | failed on "${actor.name}"`, err); }
-  }
-  ui.notifications.info(`Merchant Presets: prepared ${n} merchant(s).`);
-  return n;
-}
-
 /* ------------------------------------------------------------------ restock */
-
-/**
- * Calendar-driven restocking, on Foundry's own clock.
- *
- * Item Piles has all of this built in — `openTimes`, `refreshItemsOnOpen`,
- * `refreshItemsDays` — but every trigger runs through its Simple Calendar
- * plugin, and `BasePlugin.initialize()` gates on that module being active by id:
- *
- *   if (!game.modules.get("foundryvtt-simple-calendar")?.active) return;
- *
- * So no API shim can switch it on, and neither Foundry's built-in calendar nor
- * Calendaria can drive it. Everything needed is native in V14 though —
- * `game.time.components` and `game.time.calendar` — and
- * `game.itempiles.API.refreshMerchantInventory()` is public, so this reads the
- * same flags Item Piles would and calls the same refresh. Works with the core
- * calendar and with any module that advances `game.time.worldTime`.
- *
- * Holiday closures and holiday restocks are not supported: they are built on
- * Simple Calendar notes, which core has no equivalent for.
- */
 
 /** Minutes since midnight, using this calendar's own hour length. */
 function minuteOfDay(components) {
@@ -350,96 +81,16 @@ function minuteOfDay(components) {
   return (components.hour * minutesPerHour) + components.minute;
 }
 
-/** Whether `minute` falls inside a merchant's trading hours, wrapping midnight. */
-function isOpenAt(pileData, minute) {
-  const { minutesPerHour } = game.time.calendar.days;
-  const open = (pileData.openTimes?.open?.hour ?? 0) * minutesPerHour + (pileData.openTimes?.open?.minute ?? 0);
-  const close = (pileData.openTimes?.close?.hour ?? 0) * minutesPerHour + (pileData.openTimes?.close?.minute ?? 0);
-  return open > close ? (minute >= open || minute <= close) : (minute >= open && minute <= close);
-}
-
-/**
- * Put back what a restock cannot know.
- *
- * Item Piles rebuilds a restocked shelf from the source compendium, and SRD
- * items carry no Item Piles flags — so a poison or a spell scroll would come
- * back as ordinary unlimited stock, quietly undoing the limited-items rule.
- * Each merchant carries the intended flags keyed by item name; re-apply them.
- *
- * @param {Actor} actor
- * @param {Set<string>|null} [only]  just these item ids (a restock's fresh copies), not the shelf
- * @returns {Promise<number>} how many items were corrected
- */
-async function reapplyItemFlags(actor, only = null) {
-  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.itemFlags");
-  if (!wanted) return 0;
-  const updates = [];
-  for (const item of actor.items) {
-    if (isGear(item) || (only && !only.has(item.id))) continue;
-    const want = wanted[item.name];
-    if (!want) continue;
-    const { quantityForPrice, ...itemFlags } = want;
-    const have = foundry.utils.getProperty(item, "flags.item-piles.item") ?? {};
-    const update = { _id: item.id };
-    let changed = false;
-    for (const [k, v] of Object.entries(itemFlags)) {
-      if (have[k] !== v) { update[`flags.item-piles.item.${k}`] = v; changed = true; }
-    }
-    if (quantityForPrice
-      && foundry.utils.getProperty(item, "flags.item-piles.system.quantityForPrice") !== quantityForPrice) {
-      update["flags.item-piles.system.quantityForPrice"] = quantityForPrice;
-      changed = true;
-    }
-    if (changed) updates.push(update);
-  }
-  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  return updates.length;
-}
-
-/**
- * Put the shop's containers back to their proper number.
- *
- * A container cannot carry a quantity — dnd5e's ContainerData declares
- * `quantity: new NumberField({min: 1, max: 1})`, because each one is a distinct
- * object with its own contents, exactly as two pouches on a character sheet are
- * two items. So the shop stocks them as separate documents. A restock cannot
- * reproduce that on its own: Item Piles' Transaction appends one document per
- * table result and calls setItemQuantity on it, which dnd5e clamps straight
- * back to 1. Each merchant records how many of each it should carry.
- *
- * @param {Actor} actor
- * @returns {Promise<number>} how many container documents were created
- */
-async function reconcileContainers(actor) {
-  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.containers");
-  if (!wanted) return 0;
-  const have = actor.items.filter(i => i.type === "container" && !isGear(i));
-  const creates = [];
-  for (const [name, target] of Object.entries(wanted)) {
-    const existing = have.filter(i => i.name === name);
-    if (!existing.length || existing.length >= target) continue;
-    const template = existing[0].toObject();
-    for (let n = existing.length; n < target; n++) {
-      const copy = foundry.utils.deepClone(template);
-      delete copy._id;
-      creates.push(copy);
-    }
-  }
-  if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
-  return creates.length;
-}
-
 /**
  * Keep the shop's own goods off the shopkeeper's back.
  *
- * A merchant's wares live in its inventory because that is what Item Piles
- * reads, so a shopkeeper is carrying every barrel and anvil on the shelves —
+ * A merchant's wares live in its inventory, so a shopkeeper is carrying every
+ * barrel and anvil on the shelves —
  * 14,775 lb for a city stable, against a capacity of 240. dnd5e ignores this
  * until a world turns encumbrance on, and then the shopkeeper is Exceeding
  * Carrying Capacity for good, which in the 2024 rules means Speed 0.
  *
- * The stock cannot be moved off the actor without hiding it from Item Piles, so
- * cancel its weight instead: an effect raising the thresholds by exactly what
+ * The stock is the shop, so it stays on the actor; cancel its weight instead: an effect raising the thresholds by exactly what
  * the shop holds, leaving the shopkeeper's own kit to count normally. Off by
  * default, because dnd5e ships encumbrance off and then none of this bites.
  *
@@ -489,9 +140,8 @@ async function syncStockWeight(actor) {
   await actor.createEmbeddedDocuments("ActiveEffect", [{
     name: "Shop stock (not carried)",
     img: "icons/commodities/currency/coins-assorted-mix-copper-silver-gold.webp",
-    description: "<p>The shop's goods and till sit in this actor's inventory because that is how "
-      + "Item Piles stocks a merchant. This cancels their weight, so only the shopkeeper's own "
-      + "equipment counts against their carrying capacity.</p>",
+    description: "<p>The shop's goods and till sit in this actor's inventory. This cancels their "
+      + "weight, so only the shopkeeper's own equipment counts against their carrying capacity.</p>",
     changes,
     flags: { [MODULE]: { stockWeight: true } }
   }]);
@@ -514,31 +164,13 @@ async function syncStockWeightAll() {
 }
 
 /**
- * Refill the till. Coin is finite, and buying from the party drains it, so
- * without this a shop that once bought a hoard is poor for the rest of the
- * campaign. A new day's trading starts from the shop's own purse.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether the purse changed
- */
-async function replenishPurse(actor) {
-  const purse = foundry.utils.getProperty(actor, "flags.merchant-presets.purse");
-  if (!Number.isFinite(purse)) return false;
-  if (actor.system?.currency?.gp === purse) return false;
-  await actor.update({ "system.currency.gp": purse });
-  return true;
-}
-
-/**
  * Let go of goods that name a container the merchant does not hold.
  *
  * The SRD kits ship their contents as items of their own, each carrying the
  * kit's id in `system.container`, and earlier builds stocked Rope, Tinderbox
  * and nine more goods from those copies. dnd5e lists such an item as loose,
- * but Item Piles counts it as contained and hides it from the shop window
- * (#89). Merchants dragged in from those builds still hold the copies. A
- * restock or Roll All Tables needs no repair: Item Piles drops
- * `system.container` whenever it adds items from a table.
+ * but the shop window counts it as contained and hides it (#89). Merchants
+ * dragged in from those builds still hold the copies.
  *
  * @param {Actor} actor
  * @returns {Promise<number>} how many items were let go
@@ -649,9 +281,8 @@ const isPlayer = id => { const user = game.users.get(id); return !!user && !user
 
 /**
  * Adopt a shop's shelf, once, before its first native restock: give it a shelf
- * key, stamp its current table goods with it (schedule.mjs `adoptDrawn`), and
- * switch off Item Piles' own restock on open, whose goods would arrive
- * unstamped and double at the next reroll. A shop with a key is adopted
+ * key, and stamp its current table goods with it (schedule.mjs `adoptDrawn`).
+ * A shop with a key is adopted
  * already, so a good the GM adds by hand later, under a table line's name,
  * stays theirs.
  *
@@ -672,10 +303,7 @@ async function adoptOnce(actor, table) {
   const key = foundry.utils.randomID();
   const updates = adoptDrawn(actor.items.map(i => i.toObject()), names, key);
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  await actor.update({
-    [`flags.${MODULE}.shelf`]: key,
-    ...(actor.flags?.["item-piles"]?.data?.refreshItemsOnOpen ? { "flags.item-piles.data.refreshItemsOnOpen": false } : {})
-  });
+  await actor.update({ [`flags.${MODULE}.shelf`]: key });
   return key;
 }
 
@@ -732,22 +360,12 @@ async function restockNow(actor) {
     containers: actor.flags?.[MODULE]?.containers ?? {},
     drawnBy: shelf
   });
-  // Item Piles still shows the shops until #104, and keeps a GM's edits to a line (hidden, say)
-  // in its own flags on the item: a redrawn copy carries them over from the one it replaces.
-  const livePiles = new Map(memory.filter(line => line.piles).map(line => [line.name, line.piles]));
-  for (const create of plan.creates) {
-    if (livePiles.has(create.name)) create.flags = { ...create.flags, "item-piles": structuredClone(livePiles.get(create.name)) };
-  }
   // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
   await actor.update({ [`flags.${MODULE}.lines`]: memory });
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
-  const created = plan.creates.length ? await actor.createEmbeddedDocuments("Item", plan.creates) : [];
+  if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
   if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
-  // Only a fresh copy with nothing to carry over gets the recorded flags: re-applying them to
-  // every item would undo what the GM changed in Item Piles.
-  const fresh = new Set(created.filter(c => !livePiles.has(c.name)).map(c => c.id));
-  if (game.modules.get("item-piles")?.active && fresh.size) await reapplyItemFlags(actor, fresh);
   await syncStockWeight(actor);        // last: the shelf and the till have both just moved
   return plan.restocked;
 }
@@ -820,68 +438,6 @@ async function scheduledRestocks(worldTime, previous) {
     ui.notifications.info(`Merchant Presets: ${restocked.length} shop(s) restocked for the new day.`);
   }
   return restocked.length;
-}
-
-/**
- * Open and close the shops on the world clock.
- *
- * Every merchant ships with trading hours, and Item Piles can act on them —
- * but only through Simple Calendar, which it requires by name. Worse, its
- * `updateOpenCloseStatus` rewrites `status: "auto"` back to `"open"` and saves
- * it when that module is absent, so the hours cannot even be left armed for
- * later. Simple Calendar is unmaintained and does not support v14, which this
- * module requires, so that path is closed for good rather than merely absent.
- *
- * Item Piles documents `open` and `closed` as first-class manual statuses,
- * though, so drive those from Foundry's own clock — the same trick this module
- * already plays for restocking, and using the same `isOpenAt` it reads the
- * hours with. No patching, and any calendar that advances world time works.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether the status changed
- */
-async function syncOpenState(actor) {
-  const pileData = foundry.utils.getProperty(actor, "flags.item-piles.data");
-  if (!pileData?.openTimes?.enabled) return false;
-
-  let wanted = "open";
-  if (game.settings.get(MODULE, "tradingHours")) {
-    const now = minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime));
-    wanted = isOpenAt(pileData, now) ? "open" : "closed";
-  }
-  // Turning the setting off hands the shops back always-open, rather than
-  // leaving whichever ones happened to be shut stuck that way.
-  if (pileData.openTimes.status === wanted) return false;
-  await actor.update({ "flags.item-piles.data.openTimes.status": wanted });
-  return true;
-}
-
-/**
- * Put every merchant in the world on the right side of its own door.
- * @returns {Promise<number>} how many changed
- */
-async function syncOpenStateAll() {
-  // Only Item Piles reads this status. The shop window and the GM's trade read the hours off the
-  // clock themselves (#105), so once the shops are native (#104) there's nothing to write.
-  if (NATIVE_SHOP) return 0;
-  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
-  let n = 0;
-  for (const actor of game.actors) {
-    if (!isPreset(actor)) continue;
-    try { if (await syncOpenState(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | could not set open state on "${actor.name}"`, err); }
-  }
-  return n;
-}
-
-/** Wire trading hours to the world clock. Separate from restocking, which is off by default. */
-function registerTradingHours() {
-  if (!game.settings.get(MODULE, "tradingHours")) return;
-  Hooks.on("updateWorldTime", async () => {
-    if (game.users.activeGM !== game.user) return;
-    await syncOpenStateAll();
-  });
-  log(`trading hours active on the ${game.time.calendar.name ?? "world"} calendar`);
 }
 
 /**
@@ -969,7 +525,7 @@ function warnOutdatedNutrition() {
 /**
  * Offer to eat a meal the moment it is bought.
  *
- * Meals are Item Piles services: paying for one hands nothing over, because
+ * Meals are services: paying for one hands nothing over, because
  * the eating happens at the inn's table. Simple Nutrition 5e can only feed a
  * character from an item in their inventory, so without this the meal would
  * be money for nothing. Instead, when a preset merchant sells a good carrying
@@ -1248,13 +804,7 @@ async function announceSpellcasting(trade, { askedHere, chatMode }) {
 
 /* ------------------------------------------------------------ trade listeners */
 
-/** Item Piles' *Output to chat* setting, which its own trade card follows: 1 (public) if it isn't registered. */
-function itemPilesChatMode() {
-  try { return Number(game.settings.get("item-piles", "outputToChat")) || 0; }
-  catch { return 1; }
-}
-
-/** The `tradeChat` setting on Item Piles' scale, for the messages that sit beside the receipt: GM whisper is its 3. */
+/** The `tradeChat` setting as a chat mode (casting.mjs `chatRecipients`), for the messages beside the receipt: GM whisper is 3. */
 const nativeChatMode = () => (game.settings.get(MODULE, "tradeChat") === "gm" ? 3 : 1);
 
 /**
@@ -1269,25 +819,8 @@ function onTrade(trade, where) {
   }
 }
 
-/**
- * Hear every shop trade, from either source, on every client. Item Piles'
- * trades (while it still runs the shops, #104) fire `item-piles-tradeItems`,
- * with actors rather than the UUIDs it documents (#48); this module's own fire
- * `merchant-presets.trade` (`carryOutTrade`).
- */
+/** Hear every shop trade on every client: `merchant-presets.trade`, fired by `carryOutTrade`. */
 function registerTradeListeners() {
-  Hooks.on("item-piles-tradeItems", (sellerRef, buyerRef, itemPrices, userId) => {
-    Promise.all([fromUuid(uuidOf(sellerRef)), fromUuid(uuidOf(buyerRef))]).then(([seller, buyer]) => {
-      const isMerchant = actor => !!actor && !!game.itempiles?.API?.isItemPileMerchant?.(actor);
-      const trade = fromItemPiles(seller, buyer, itemPrices, userId, isMerchant);
-      if (!trade) return;
-      onTrade(trade, {
-        askedHere: userId === game.user.id,
-        carriedOut: game.user.isGM && game.users.activeGM === game.user,
-        chatMode: itemPilesChatMode()
-      });
-    }).catch(err => console.error(`${MODULE} |`, err));
-  });
   Hooks.on(TRADE_HOOK, (trade, { carriedOut } = {}) => {
     onTrade(trade, { askedHere: askedHere.delete(trade.tradeId), carriedOut: !!carriedOut, chatMode: nativeChatMode() });
   });
@@ -1539,19 +1072,14 @@ async function resolvePackShop(actorData) {
 }
 
 /**
- * Bring one 1.x merchant into its 2.0 shop config (#100): always the data
- * half — `flags.merchant-presets.shop` and each item's `.stock` — and, once
- * `NATIVE_SHOP` is `true`, the cut-over half too: Item Piles switched off
- * everywhere it can still see the shop (#97) — the actor, its prototype
- * token, and every unlinked token, and its delta, on every scene — plus the
- * 2.0 sheet and the ownership default. Until then `next` keeps trading,
- * opening and restocking every shop through Item Piles, unchanged (the #97
- * decision, "Order on next"). Reads stored flags directly, so it works with
- * Item Piles inactive or uninstalled. Once `flags.merchant-presets.shop` is
- * current, a GM's own Item Piles retuning is never read again — our schema
- * is the source of truth from there on, same as everything else the runtime
- * rebuilds from a stored record rather than Item Piles' live state (see
- * `reapplyItemFlags`).
+ * Bring one 1.x merchant into its 2.0 shop config (#100): the data half —
+ * `flags.merchant-presets.shop` and each item's `.stock` — and the cut-over
+ * half: Item Piles switched off everywhere it can still see the shop (#97) —
+ * the actor, its prototype token, and every unlinked token, and its delta, on
+ * every scene — plus the 2.0 sheet and the ownership default. Reads stored
+ * flags directly, so it works with Item Piles inactive or uninstalled. Once
+ * `flags.merchant-presets.shop` is current, a GM's own Item Piles retuning is
+ * never read again: our schema is the source of truth from there on.
  *
  * Does nothing while `migrationGateOpen` is closed (#100 review). The shop
  * and item halves are independent writes: a shop config still invalid after
@@ -1575,12 +1103,12 @@ async function migrateShop(actor) {
   for (const s of scenes) s.tokens = s.docs.map(t => t.toObject());
   const tokens = scenes.flatMap(s => s.tokens);
   const unlinked = scenes.flatMap(s => s.docs).filter(t => !t.actorLink && t.actor);
-  if (!needsMigration(data, NATIVE_SHOP, tokens)
+  if (!needsMigration(data, tokens)
     && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data,
-    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null, isPlayer });
+    { packShop, hasTokenOnScene: tokens.length > 0, worldId: game.world?.id ?? null, isPlayer });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -1639,7 +1167,7 @@ async function migrateShop(actor) {
   }
 
   for (const { scene, tokens: sceneTokens } of scenes) {
-    const tokenUpdates = planTokenUpdates(sceneTokens, NATIVE_SHOP);
+    const tokenUpdates = planTokenUpdates(sceneTokens);
     if (tokenUpdates.length) { await scene.updateEmbeddedDocuments("Token", tokenUpdates); changed = true; }
   }
 
@@ -1704,10 +1232,9 @@ async function applyAutoRestockDefault() {
  * A GM's own shopkeeper — Sister Garaele in Phandelver, say — keeps its name,
  * portrait, stat block and token and becomes the chosen merchant: stock,
  * buying rules, prices, purse and trading hours. The decisions are
- * scripts/shop.mjs's `planShop`; this carries them out, then runs the same
- * import path a merchant dragged out of the compendium does. The source's
- * stock table is still the compendium's at that point, so it is wired and
- * stock is rolled once, for the settlement size on the marker.
+ * scripts/shop.mjs's `planShop`; this carries them out, migrates the result
+ * to the shop window, and rolls its first shelf from the chosen merchant's
+ * stock table.
  *
  * @param {Actor} actor
  * @param {string} sourceUuid  The chosen merchant in this module's compendium.
@@ -1739,8 +1266,8 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
   const plan = planShop({ ...sourceData, uuid: source.uuid }, actor.toObject(), keepIds, sourceShop);
 
   // Hold the merchant while it is half built: the flag update below puts it on
-  // a compendium table, and the updateActor hook would otherwise wire it and
-  // roll a shelf the stock has not reached yet.
+  // a compendium table, and the updateActor hook would otherwise take it for
+  // a fresh arrival and roll a shelf the stock has not reached yet.
   rewiring.add(actor.id);
   try {
     // Out of their containers before the containers go, since dnd5e may take
@@ -1760,19 +1287,15 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
-    // Native (#104): migrated to the shop window here (the plan copies the source's Item Piles
-    // data, still switched on), then the chosen merchant's table draws this shop's first shelf.
-    // Still held: this user's own updates fire updateActor, whose arrival hook would otherwise
-    // roll the shelf a second time (#138 review). Already on the trade queue, so the restock is
-    // called directly.
-    if (NATIVE_SHOP) {
-      await migrateShop(actor);
-      await restockNow(actor);
-    }
+    // Migrated to the shop window here (the plan copies the source's Item Piles data, still
+    // switched on), then the chosen merchant's table draws this shop's first shelf. Still held:
+    // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
+    // a second time (#138 review). Already on the trade queue, so the restock is called directly.
+    await migrateShop(actor);
+    await restockNow(actor);
   } finally {
     rewiring.delete(actor.id);
   }
-  if (!NATIVE_SHOP) await rewire(actor);
   return actor.items.filter(i => !isGear(i)).length;
 }
 
@@ -1840,7 +1363,7 @@ function registerShopSetup() {
     options.push({
       label: "Set up as shop…",
       icon: "fa-solid fa-store",
-      visible: li => game.user.isGM && (NATIVE_SHOP || !!game.modules.get("item-piles")?.active) && actorOf(li)?.type === "npc",
+      visible: li => game.user.isGM && actorOf(li)?.type === "npc",
       onClick: (_event, li) => {
         const actor = actorOf(li);
         if (actor) shopDialog(actor).catch(err => {
@@ -1918,22 +1441,19 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "tradingHours", {
     name: "Shops keep their trading hours",
     hint: "Every merchant ships with hours — a jeweler keeps 09:00-17:00, a dock opens at 05:00, "
-      + "a fence trades 20:00 to 04:00 — and closes to players outside them. Item Piles can do "
-      + "this itself, but only through Simple Calendar, which it requires by name and which is "
-      + "unmaintained and does not support v14; this module drives the same hours off Foundry's "
-      + "own world clock instead, so any calendar that advances time works. Turn it off and every "
-      + "shop stays open around the clock. Takes effect on reload.",
+      + "a fence trades 20:00 to 04:00 — and closes to players outside them, on Foundry's own "
+      + "world clock, so any calendar that advances time works. Turn it off and every shop stays "
+      + "open around the clock.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: true,
-    onChange: () => syncOpenStateAll()
+    default: true
   });
 
   game.settings.register(MODULE, "ignoreStockWeight", {
     name: "Shop stock is not carried",
-    hint: "A merchant's wares and till sit in its own inventory, because that is what Item Piles "
-      + "reads as the shop. dnd5e therefore has the shopkeeper carrying the whole shelf — a city "
+    hint: "A merchant's wares and till sit in its own inventory, so dnd5e has the shopkeeper "
+      + "carrying the whole shelf — a city "
       + "stable holds 14,775 lb against a capacity of 240 — which does nothing until you turn on "
       + "dnd5e's Encumbrance variant, and then leaves every shopkeeper permanently Exceeding "
       + "Carrying Capacity. Turn this on to cancel the weight of the stock and the purse, leaving "
@@ -2010,7 +1530,7 @@ Hooks.once("init", () => {
     hint: "Buying a spellcasting service moves gold and nothing else. With this on, the shop says in "
       + "chat which spell it casts and for whom, linking the spell and any effects to drag onto the "
       + "creature it was cast on; for a service sold by level it asks the buyer to name the spell. "
-      + "Nothing is applied automatically. The message follows Item Piles' own chat visibility.",
+      + "Nothing is applied automatically. Whispered to the GMs when trades are.",
     scope: "world",
     config: true,
     type: Boolean,
@@ -2021,13 +1541,11 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, scheduledRestocks, reapplyItemFlags,
-    reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
-    syncOpenState, syncOpenStateAll, setUpShop, migrateShop, migrateAll,
-    trade, bundleOf: item => bundleOf(item) };
+  game.modules.get(MODULE).api = { registerDrinks, restock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
+    setUpShop, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
-  // players too — and it does not depend on Item Piles.
+  // players too.
   registerDrinks();
   // The buyer's own client answers the meal prompt and posts the spellcasting
   // announcement, so trades are heard by players too.
@@ -2038,124 +1556,68 @@ Hooks.once("ready", async () => {
   if (!game.user.isGM) return;
   warnOutdatedNutrition();
 
-  // The 1.x → 2.0 migration (#100) and the world's one-time autoRestock
-  // decision (#105) read stored flags directly, so both run whether or not
-  // Item Piles is active or even installed — unlike everything below, which
-  // needs it. Awaited: a failed write here must close migrationGateOpen
-  // before anything below can migrate a shop (#100 review).
+  // The world's one-time autoRestock decision (#105), before any shop migrates. Awaited: a failed
+  // write here must close migrationGateOpen before anything below can migrate a shop (#100 review).
   try { await applyAutoRestockDefault(); }
   catch (err) {
     migrationGateOpen = false;
     console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
 
-  // One handler, not two: wiring a fresh merchant to a world stock table
-  // has to finish before the migration reads restock.table/.quantities off
-  // it, or it captures the compendium table's ids, which don't survive the
-  // import (#100 review). `onCreateActor` sequences the two.
   Hooks.on("createActor", (actor, _options, userId) => {
     if (userId !== game.user.id) return;
-    onCreateActor(actor).catch(err => console.error(`${MODULE} |`, err));
+    arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
-  // The shops restock on their own schedule (#105), Item Piles or not.
+  // The shops restock on their own schedule (#105).
   registerRestock();
-  if (NATIVE_SHOP) {
-    // A shop arriving is new to this world, whatever its flags say: one exported after it was made
-    // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
-    Hooks.on("preCreateActor", actor => {
-      if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
-    });
-    Hooks.on("createToken", token => {
-      if (game.users.activeGM !== game.user) return;   // one GM does the writing
-      makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
-    });
-    // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
-    // alone, never createToken for them (#138 review).
-    Hooks.on("createScene", scene => {
-      if (game.users.activeGM !== game.user || scene.pack) return;
-      for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
-    });
-  }
-
-  // Once the shops are native (#104), Item Piles' populate tables and open/closed status have
-  // nothing left to do: a shop arriving from the pack rolls its own shelf instead (`arrive`).
-  if (NATIVE_SHOP) {
-    Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-      if (userId !== game.user.id || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
-      arrive(actor).catch(err => console.error(`${MODULE} |`, err));
-    });
-    releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
-    migrateAll()
-      .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
-      // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
-      // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
-      .then(() => {
-        if (game.users.activeGM !== game.user) return;
-        return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
-      })
-      .catch(err => console.error(`${MODULE} |`, err));
-    return;
-  }
-  if (!game.modules.get("item-piles")?.active) {
-    ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
-    migrateAll().then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
-    return;
-  }
-
-  // Dragging in a shop the world already holds offers Replace Actor, and that
-  // is the default: Foundry keeps the compendium id on import, then writes the
-  // compendium data over the existing actor as an update (#66). Only a
-  // merchant left on its compendium table is touched, so an ordinary edit
-  // never re-rolls a shop or overrides its open/closed status.
-  Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (userId !== game.user.id || !needsWiring(actor)) return;
-    rewire(actor).catch(err => console.error(`${MODULE} |`, err));
+  // A shop arriving is new to this world, whatever its flags say: one exported after it was made
+  // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
+  Hooks.on("preCreateActor", actor => {
+    if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+  });
+  Hooks.on("createToken", token => {
+    if (game.users.activeGM !== game.user) return;   // one GM does the writing
+    makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+  });
+  // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
+  // alone, never createToken for them (#138 review).
+  Hooks.on("createScene", scene => {
+    if (game.users.activeGM !== game.user || scene.pack) return;
+    for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
   });
 
-  registerTradingHours();
-  // Time moves while a world is closed, so put the shops on the right side of
-  // their doors now rather than at the next tick of the clock.
-  syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
-  // wireReplacedAll before migrateAll, same reason as onCreateActor: a
-  // merchant still on its compendium stock table from earlier in the
-  // world's life must be repointed at the world copy before the migration
-  // reads it (#100 review).
-  wireReplacedAll()
-    .then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); })
-    .then(() => migrateAll())
-    .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); });
+  // Dragging in a shop the world already holds offers Replace Actor, and that is the default:
+  // Foundry keeps the compendium id on import, then writes the compendium data over the existing
+  // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
+  // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
+  Hooks.on("updateActor", (actor, _changes, _options, userId) => {
+    if (userId !== game.user.id || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    arrive(actor).catch(err => console.error(`${MODULE} |`, err));
+  });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
+  migrateAll()
+    .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
+    // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
+    // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+    .then(() => {
+      if (game.users.activeGM !== game.user) return;
+      return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+    })
+    .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
 });
-
-/**
- * One merchant just created — dragged from the compendium, or set up as one
- * via #57. Wired to a world stock table first, while Item Piles can still do
- * that, so the migration that follows sees the table it will actually
- * keep — reading `restock.table`/`.quantities` off the actor before wiring
- * repoints it would capture the compendium table's ids, which the import
- * doesn't carry over (#100 review).
- *
- * @param {Actor} actor
- */
-async function onCreateActor(actor) {
-  if (NATIVE_SHOP) return arrive(actor);
-  if (game.modules.get("item-piles")?.active) await rewire(actor);
-  await migrateShop(actor);
-}
-
 /** Ids of the shops `arrive` is working on right now: a create and an update can come together. */
 const arriving = new Set();
 
 /**
- * A shop arriving fresh from the pack (dragged in, or written over an existing actor by Replace
- * Actor, #66) once the shops are native (#104): migrated to its shop window, let go of stray kit
- * ids (#89, which would hide goods from the window), and given its own shelf by a first native
- * restock: the per-import stock roll `applyStockMode` made through Item Piles. Fresh pack data is
- * still on its compendium stock table with no shelf key; a shop that has either been rolled here
- * or wired to a world table by 1.x keeps the shelf it has.
+ * A shop arriving: created in this world (dragged in from the pack, a world compendium or an
+ * Adventure), or fresh pack data written over an existing actor by Replace Actor (#66). Migrated to
+ * its shop window, let go of stray kit ids (#89, which would hide goods from the window), and, when
+ * it's fresh pack data, given its own shelf by a first restock. Fresh pack data is still on its
+ * compendium stock table with no shelf key; a shop that has either been rolled here or wired to a
+ * world table by 1.x keeps the shelf it has.
  *
  * @param {Actor} actor
  */

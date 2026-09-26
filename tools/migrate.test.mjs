@@ -274,8 +274,9 @@ test("a shop config still invalid after repair leaves shopError set; item migrat
   // Unrepairable: 0 is neither "never" nor an integer >= 1 nor a dice formula,
   // and restock.every isn't one of repairShop's rules.
   const packShop = { restock: { every: 0 } };
-  const { update, shopError } = planActorUpdate(store, { packShop, nativeShop: false });
-  assert.equal(update, null);
+  const { update, shopError } = planActorUpdate(store, { packShop });
+  assert.ok(!("flags.merchant-presets.shop" in update));
+  assert.equal(update["flags.item-piles.data.enabled"], false);   // the cut-over half doesn't depend on it
   assert.match(shopError, /restock\.every/);
 
   // The item half is a separate write with nothing to do with the shop's own
@@ -409,65 +410,48 @@ test("Item Piles' own not-overridden filters (false) migrate, not throw (#120 re
 
 test("needsMigration stays true when the shop half landed but items still lack .stock (#100 review)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const shopOnly = applied(store, { "flags.merchant-presets.shop": deriveShop(store) });
-  // Shop half done, as if updateEmbeddedDocuments("Item", …) had then thrown.
-  assert.equal(needsMigration(shopOnly, false), true);
-  // Nothing left for the actor-level update — the shop's current, nativeShop's
-  // off — but planItemUpdates independently still has work, and migrateShop
-  // (scripts/merchant-presets.mjs) calls it regardless of planActorUpdate's result.
-  assert.deepEqual(planActorUpdate(shopOnly, { nativeShop: false }), { update: null, shopError: null, warnings: [] });
+  const shopOnly = applied(store, planActorUpdate(store).update);
+  // Actor half done, as if updateEmbeddedDocuments("Item", …) had then thrown.
+  assert.equal(needsMigration(shopOnly), true);
+  // Nothing left for the actor-level update, but planItemUpdates independently still has work,
+  // and migrateShop (scripts/merchant-presets.mjs) calls it regardless of planActorUpdate's result.
+  assert.deepEqual(planActorUpdate(shopOnly), { update: null, shopError: null, warnings: [] });
   assert.ok(planItemUpdates(shopOnly).updates.length > 0);
 });
 
 test("needsMigration is false only once both the shop and every item are migrated", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const migrated = withItemsMigrated(applied(store, { "flags.merchant-presets.shop": deriveShop(store) }));
-  assert.equal(needsMigration(migrated, false), false);
+  const migrated = withItemsMigrated(applied(store, planActorUpdate(store).update));
+  assert.equal(needsMigration(migrated), false);
 });
 
 test("needsMigration reopens the cut-over for a leftover unlinked token still Item Piles-enabled (#100 review)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update } = planActorUpdate(store, { nativeShop: true });
+  const { update } = planActorUpdate(store);
   const fullyMigrated = withItemsMigrated(applied(store, update));
-  // Actor and every item done, nativeShop on, Item Piles off on the actor
-  // itself: nothing left when there are no tokens to check.
-  assert.equal(needsMigration(fullyMigrated, true), false);
-  assert.equal(needsMigration(fullyMigrated, true, []), false);
+  // Actor and every item done, Item Piles off on the actor itself: nothing left when there are no
+  // tokens to check.
+  assert.equal(needsMigration(fullyMigrated), false);
+  assert.equal(needsMigration(fullyMigrated, []), false);
 
   const staleToken = { _id: "t1", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } };
-  assert.equal(needsMigration(fullyMigrated, true, [staleToken]), true);
+  assert.equal(needsMigration(fullyMigrated, [staleToken]), true);
 
   const disabledToken = { _id: "t2", actorLink: false, flags: { "item-piles": { data: { enabled: false } } } };
-  assert.equal(needsMigration(fullyMigrated, true, [disabledToken]), false);
+  assert.equal(needsMigration(fullyMigrated, [disabledToken]), false);
 
   // A linked token has no Item Piles data of its own — it follows the actor,
   // already disabled — so it's never a reason to reopen the cut-over.
   const linkedToken = { _id: "t3", actorLink: true, flags: { "item-piles": { data: { enabled: true } } } };
-  assert.equal(needsMigration(fullyMigrated, true, [linkedToken]), false);
-
-  // While nativeShop is off, a token's state is irrelevant: the cut-over
-  // hasn't started, so there's nothing for it to leave unfinished.
-  assert.equal(needsMigration(fullyMigrated, false, [staleToken]), false);
+  assert.equal(needsMigration(fullyMigrated, [linkedToken]), false);
 });
 
 /* ------------------------------------------------------------ planActorUpdate */
 
-test("nativeShop off: only the data half is planned, Item Piles and the sheet untouched", () => {
-  const store = legacy(shipped("General_Store_Village_"));
-  const { update, shopError } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: false });
-  assert.ok(update);
-  assert.equal(shopError, null);
-  assert.equal(update["flags.merchant-presets.shop"].version, 1);
-  // next still trades this shop through Item Piles (#97 "Order on next"): none of
-  // the cut-over keys are planned, even with a token placed (which would
-  // otherwise make ownership Limited) and Item Piles still fully enabled.
-  assert.deepEqual(Object.keys(update), ["flags.merchant-presets.shop"]);
-});
-
 test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet and (hidden) ownership", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store._id = "abcdefghijklmnop";
-  const { update } = planActorUpdate(store, { hasTokenOnScene: false, nativeShop: true });
+  const { update } = planActorUpdate(store, { hasTokenOnScene: false });
   assert.ok(update);
   assert.equal(update["flags.merchant-presets.shop"].version, 1);
   assert.equal(update["flags.item-piles.data.enabled"], false);
@@ -479,7 +463,7 @@ test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet 
 
 test("planActorUpdate makes a shop with a placed token visitable (Limited)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true, worldId: "world-a" });
+  const { update } = planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a" });
   assert.equal(update["ownership.default"], 1);
   // Marked with this world, so placing another token here never re-opens it after a GM hides it
   // again (#138 review), while a copy exported to another world starts afresh.
@@ -517,7 +501,7 @@ test("a player the GM made Owner of a shop is the GM's choice, left alone (#138 
   store.ownership = { default: 0, theGmUser000001: 3, rogueUser000001: 3 };
   const isPlayer = id => id === "rogueUser000001";
   assert.equal(planOwnership(store, true, "world-a", isPlayer), null);
-  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true, worldId: "world-a", isPlayer }).update));
+  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a", isPlayer }).update));
   // The GM's own Owner entry alone still isn't.
   store.ownership = { default: 0, theGmUser000001: 3 };
   assert.equal(planOwnership(store, true, "world-a", isPlayer), 1);
@@ -532,52 +516,39 @@ test("a level left for a player since deleted isn't a choice: the shop is made v
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 3 };   // Owner, or any non-default value a GM set
-  const { update } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
+  const { update } = planActorUpdate(store, { hasTokenOnScene: true });
   assert.ok(!("ownership.default" in update));
 });
 
-test("planActorUpdate is idempotent (nativeShop off): applying its own plan leaves nothing to migrate", () => {
+test("planActorUpdate is idempotent: applying its own plan leaves nothing to migrate", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update: first } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: false });
+  const { update: first } = planActorUpdate(store, { hasTokenOnScene: true });
   const migrated = withItemsMigrated(applied(store, first));
-  assert.equal(needsMigration(migrated, false), false);
-  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: false }), { update: null, shopError: null, warnings: [] });
-});
-
-test("planActorUpdate is idempotent (nativeShop on): applying its own plan leaves nothing to migrate", () => {
-  const store = legacy(shipped("General_Store_Village_"));
-  const { update: first } = planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true });
-  const migrated = withItemsMigrated(applied(store, first));
-  assert.equal(needsMigration(migrated, true), false);
-  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true, nativeShop: true }), { update: null, shopError: null, warnings: [] });
+  assert.equal(needsMigration(migrated), false);
+  assert.deepEqual(planActorUpdate(migrated, { hasTokenOnScene: true }), { update: null, shopError: null, warnings: [] });
 });
 
 test("Item Piles left on but shop already current: only the switch-off is planned", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update: first } = planActorUpdate(store, { nativeShop: true });
+  const { update: first } = planActorUpdate(store, {});
   const migrated = applied(store, first);
   // Roll back just the Item Piles switch, as if #97's write had failed partway.
   migrated.flags["item-piles"].data.enabled = true;
-  const { update: second } = planActorUpdate(migrated, { nativeShop: true });
+  const { update: second } = planActorUpdate(migrated, {});
   assert.ok(second);
   assert.ok(!("flags.merchant-presets.shop" in second));   // the GM's already-migrated config is untouched
   assert.equal(second["flags.item-piles.data.enabled"], false);
 });
 
-test("a data-migrated shop is picked up again once nativeShop flips on", () => {
+test("a shop given its 2.0 data before the cut-over existed is picked up for the cut-over alone", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  // nativeShop off: data half only, both actor- and item-level.
-  const dataOnly = withItemsMigrated(applied(store, planActorUpdate(store, { nativeShop: false }).update));
+  // Data half only, both actor- and item-level, as a 2.0 build before #104 left it.
+  const dataOnly = withItemsMigrated(applied(store, { "flags.merchant-presets.shop": deriveShop(store) }));
 
-  // Not re-opened while the cut-over is still off, however many times it runs.
-  assert.equal(needsMigration(dataOnly, false), false);
-  assert.deepEqual(planActorUpdate(dataOnly, { nativeShop: false }), { update: null, shopError: null, warnings: [] });
-
-  // Flip NATIVE_SHOP on (#104): the same shop, still Item Piles' own merchant
-  // underneath, is picked up again to finish the cut-over — no version bump,
-  // no re-deriving the shop config the GM may since have edited by hand.
-  assert.equal(needsMigration(dataOnly, true), true);
-  const { update: second } = planActorUpdate(dataOnly, { nativeShop: true });
+  // The same shop, still Item Piles' own merchant underneath, is picked up to finish the
+  // cut-over: no version bump, no re-deriving the shop config the GM may since have edited.
+  assert.equal(needsMigration(dataOnly), true);
+  const { update: second } = planActorUpdate(dataOnly);
   assert.ok(second);
   assert.ok(!("flags.merchant-presets.shop" in second));
   assert.equal(second["flags.item-piles.data.enabled"], false);
@@ -745,19 +716,11 @@ test("an already-disabled unlinked token plans nothing (idempotent)", () => {
   assert.equal(planTokenDisable(token), null);
 });
 
-test("planTokenUpdates plans nothing while nativeShop is off, however many tokens need it", () => {
-  const tokens = [
-    { _id: "t5", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } },
-    { _id: "t6", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } }
-  ];
-  assert.deepEqual(planTokenUpdates(tokens, false), []);
-});
-
-test("planTokenUpdates disables every token that needs it once nativeShop is on", () => {
+test("planTokenUpdates disables every token that needs it", () => {
   const linked = { _id: "t7", actorLink: true, flags: { "item-piles": { data: { enabled: true } } } };
   const unlinked = { _id: "t8", actorLink: false, flags: { "item-piles": { data: { enabled: true } } } };
   const already = { _id: "t9", actorLink: false, flags: { "item-piles": { data: { enabled: false } } } };
-  assert.deepEqual(planTokenUpdates([linked, unlinked, already], true),
+  assert.deepEqual(planTokenUpdates([linked, unlinked, already]),
     [{ _id: "t8", "flags.item-piles.data.enabled": false }]);
 });
 
@@ -801,11 +764,9 @@ test("a 2.0 'Set up as shop' NPC is never treated as a 1.x shop needing migratio
   };
 
   assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
-  assert.equal(needsMigration(npc, false), false);
-  assert.deepEqual(planActorUpdate(npc, { nativeShop: false }), { update: null, shopError: null, warnings: [] });
-  // With the cut-over live, only its own half is planned: never the shop data, so never the
-  // autoRestock switch-off below either.
-  const { update: cutOver } = planActorUpdate(npc, { nativeShop: true });
+  // Only the cut-over half is planned: never the shop data, so never the autoRestock switch-off
+  // below either.
+  const { update: cutOver } = planActorUpdate(npc);
   assert.ok(!("flags.merchant-presets.shop" in cutOver));
   // The consequence that actually matters: since planActorUpdate never
   // derives a shop key for this actor, migrateShop's autoRestock check

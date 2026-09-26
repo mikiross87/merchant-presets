@@ -23,7 +23,6 @@ function serveStock(world, shop) {
 /** A world whose Item Piles is gone (the cut-over's premise), with General Store (Town) in the pack. */
 async function setUp() {
   const world = createWorld();
-  globalThis.game.modules.set("item-piles", { active: false });
   await loadRuntime(world);
   const shop = world.merchant("General_Store_Town_");
   // As Foundry leaves an imported shop: hidden, and owned by the GM who imported it.
@@ -168,6 +167,27 @@ test("a shop imported from the pack opens as the shop window and rolls its own s
     "every good on the shelf was drawn by it");
 });
 
+test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  await world.fire("createActor", shop, {}, "gm");
+  await tick(40);
+  const first = shop.flags["merchant-presets"].shelf;
+  assert.ok(first);
+  // Replace Actor writes the pack's data over the shop with recursive: false: its flags and items
+  // are the pack's again, the shelf key and every stamp gone, and updateActor fires.
+  const pack = world.merchant("General_Store_Town_");
+  shop.flags = structuredClone(pack.flags);
+  shop.items.splice(0, shop.items.length, ...pack.items);
+  await world.fire("updateActor", shop, {}, {}, "gm");
+  await tick(40);
+  const again = shop.flags["merchant-presets"].shelf;
+  assert.ok(again && again !== first, "adopted afresh under a new key");
+  const goods = shop.items.filter(i => i.flags["merchant-presets"]?.kind !== "gear");
+  assert.ok(goods.every(i => i.flags["merchant-presets"]?.drawn === again));
+  assert.equal(goods.filter(i => i.name === "Bell").length, 1);
+});
+
 test("setting an NPC up as a shop migrates it to the shop window itself, and rolls its shelf once (#138 review)", async () => {
   const { world, shop } = await setUp();
   const npc = world.character("grumm");
@@ -196,7 +216,6 @@ test("setting an NPC up as a shop migrates it to the shop window itself, and rol
 
 test("shops replaced while the world was closed are rolled by the active GM only (#138 review)", async () => {
   const world = createWorld();
-  globalThis.game.modules.set("item-piles", { active: false });
   globalThis.game.users.activeGM = { id: "another-gm", isGM: true };   // this client is a second GM
   const shop = world.merchant("General_Store_Town_");
   serveStock(world, shop);
