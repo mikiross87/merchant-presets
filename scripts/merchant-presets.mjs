@@ -562,15 +562,17 @@ async function daysOf(every) {
 /**
  * The names of the items a stock table's lines point to: what adoption stamps
  * as drawn. The documents' own names, as the shelf carries them, not the
- * results' labels, which a GM's own table may word differently.
+ * results' labels, which a GM's own table may word differently. Null while
+ * any line's document can't be found: adopting by a guessed name could leave
+ * that line's copy unstamped for good (#135 review).
  */
 async function lineNames(table) {
   const names = [];
   for (const result of table.results ?? []) {
     if (!result.documentUuid) continue;   // a text line never puts an item on the shelf
     const doc = await fromUuid(result.documentUuid).catch(() => null);
-    const name = doc?.name ?? result.name ?? result.text;
-    if (name) names.push(name);
+    if (!doc) return null;
+    names.push(doc.name);
   }
   return names;
 }
@@ -619,13 +621,19 @@ const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
  * already, so a good the GM adds by hand later, under a table line's name,
  * stays theirs.
  *
- * @returns {Promise<string>} the shop's shelf key
+ * @returns {Promise<string|null>} the shop's shelf key; null if it can't be
+ *   adopted yet (see `lineNames`)
  */
 async function adoptOnce(actor, table) {
   const known = shelfKeyOf(actor);
   if (known) return known;
+  const names = await lineNames(table);
+  if (!names) {
+    console.warn(`${MODULE} | "${actor.name}": not every line of its stock table resolves; not restocking it yet`);
+    return null;
+  }
   const key = foundry.utils.randomID();
-  const updates = adoptDrawn(actor.items.map(i => i.toObject()), await lineNames(table), key);
+  const updates = adoptDrawn(actor.items.map(i => i.toObject()), names, key);
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   await actor.update({
     [`flags.${MODULE}.shelf`]: key,
@@ -646,7 +654,18 @@ async function adoptOnce(actor, table) {
  *   it couldn't restock at all (no shop config, or its table is gone)
  */
 function restock(actor) {
-  return runTrade(() => restockNow(actor));
+  return runTrade(async () => {
+    const restocked = await restockNow(actor);
+    // A scheduled shop restocked by hand counts its next due day from today, as a scheduled
+    // restock would, or the next opening would reroll the shelf just rolled (#135 review).
+    const state = actor.flags?.[MODULE]?.schedule;
+    const every = safeShopOf(actor)?.restock.every;
+    const days = restocked !== null && state ? await daysOf(every) : null;
+    if (days != null) {
+      await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(game.time.worldTime, days, game.time.calendar.days), every } });
+    }
+    return restocked;
+  });
 }
 
 async function restockNow(actor) {
@@ -659,6 +678,7 @@ async function restockNow(actor) {
     return null;
   }
   const shelf = await adoptOnce(actor, table);
+  if (!shelf) return null;
 
   const items = actor.items.map(i => i.toObject());
   const draws = await drawsFor(table, shop.restock.quantities);
@@ -713,7 +733,7 @@ async function scheduleShop(actor, now, previous, calendar) {
     // would skip the adoption, and its first restock would add a second shelf.
     const table = await fromUuid(shop.restock.table).catch(() => null);
     if (!table) return null;
-    await adoptOnce(actor, table);
+    if (!await adoptOnce(actor, table)) return null;
     await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
     return null;
   }
