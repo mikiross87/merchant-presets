@@ -570,7 +570,11 @@ async function lineNames(table) {
   const names = [];
   for (const result of table.results ?? []) {
     if (!result.documentUuid) continue;   // a text line never puts an item on the shelf
-    const doc = await fromUuid(result.documentUuid).catch(() => null);
+    // The pack's index has the name, without loading the document: a world's first tick adopts
+    // every shop at once, and loading each line made that take seconds per shop (#105 live run).
+    let entry = null;
+    try { entry = fromUuidSync(result.documentUuid, { strict: false }); } catch { /* not indexed */ }
+    const doc = entry?.name ? entry : await fromUuid(result.documentUuid).catch(() => null);
     if (!doc) return null;
     names.push(doc.name);
   }

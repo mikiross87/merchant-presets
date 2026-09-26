@@ -95,6 +95,8 @@ export function createWorld() {
     getSpeaker: ({ actor } = {}) => ({ actor: actor?.id, alias: actor?.name })
   };
   globalThis.fromUuid = globalThis.foundry.utils.fromUuid;
+  // Foundry's sync lookup: a compendium entry comes back as its index data, without loading it.
+  globalThis.fromUuidSync = uuid => compendium.get(uuid) ?? tables.find(t => t.uuid === uuid) ?? actors.find(a => a.uuid === uuid) ?? null;
   // The real _replace forces mergeObject to overwrite a nested object wholesale
   // instead of merging into it; `set` below already overwrites a leaf value
   // outright with no merge step to force past, so unwrapping is a no-op here.
