@@ -87,3 +87,22 @@ test("several 1.x merchants arriving together warn about restocking once (#120 r
   await Promise.all(shops.map(s => world.fire("createActor", s, {}, "gm")));
   assert.equal(told.filter(m => /restock/i.test(m)).length, 1);
 });
+
+test("a shop already on 2.0 still migrates its unlinked token's own traded items (#124)", async () => {
+  const world = createWorld();
+  await loadRuntime(world);
+  const shop = world.merchant("General_Store_Town_");          // current config: nothing of its own to do
+  world.actors.push(shop);
+  // The token's synthetic actor: the shop, plus a good it bought from a player, carrying only Item Piles flags.
+  const synthetic = world.merchant("General_Store_Town_");
+  await synthetic.createEmbeddedDocuments("Item", [{ _id: "tokenBell000001", name: "Brass Bell", type: "equipment",
+    system: { quantity: 1, price: { value: 1, denomination: "gp" } }, flags: { "item-piles": { item: { hidden: true } } } }]);
+  const token = { _id: "tok000000000001", actorId: shop.id, actorLink: false, actor: synthetic,
+    delta: { items: [{ _id: "tokenBell000001" }] },
+    toObject() { return { _id: this._id, actorId: this.actorId, actorLink: false, delta: this.delta, flags: {} }; } };
+  world.scenes.push({ tokens: [token], updateEmbeddedDocuments: async () => {} });
+
+  await globalThis.game.modules.get("merchant-presets").api.migrateShop(shop);
+  const bell = synthetic.items.find(i => i._id === "tokenBell000001");
+  assert.equal(bell.flags["merchant-presets"]?.stock?.hidden, true);
+});
