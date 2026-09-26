@@ -1142,6 +1142,17 @@ test("choosing a category in Add rule adds nothing until Add is pressed (#140 re
   assert.deepEqual(writtenShop(shop).terms.categories.map(r => r.category), ["weapon"]);
 });
 
+test("the category picked in Add rule survives a re-render (#140 review, round 7)", async t => {
+  const { sheet } = openSettings(t);
+  sheet._ruleChoice = "tool";   // what the select's change listener notes
+  const { settings } = await sheet._prepareContext({});
+  assert.deepEqual(settings.terms.ruleChoices.filter(c => c.selected).map(c => c.value), ["tool"]);
+});
+
+test("the Settings tab keeps its scroll position across re-renders (#140 review, round 7)", () => {
+  assert.ok(ShopSheet.PARTS.body.scrollable.includes(".settings-body"));
+});
+
 test("a restock that can't run says so without blaming a missing table", async t => {
   const { sheet, warnings } = openSettings(t);
   api.restock = async () => null;
