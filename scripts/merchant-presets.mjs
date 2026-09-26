@@ -567,7 +567,8 @@ async function daysOf(every) {
 async function lineNames(table) {
   const names = [];
   for (const result of table.results ?? []) {
-    const doc = result.documentUuid ? await fromUuid(result.documentUuid).catch(() => null) : null;
+    if (!result.documentUuid) continue;   // a text line never puts an item on the shelf
+    const doc = await fromUuid(result.documentUuid).catch(() => null);
     const name = doc?.name ?? result.name ?? result.text;
     if (name) names.push(name);
   }
@@ -586,7 +587,9 @@ async function lineNames(table) {
 async function drawsFor(table, quantities) {
   const draws = [];
   for (const result of table.results ?? []) {
-    const doc = result.documentUuid ? await fromUuid(result.documentUuid).catch(() => null) : null;
+    // A text line ("Nothing today") never becomes an item: nothing to draw, nothing to wait for.
+    if (!result.documentUuid) continue;
+    const doc = await fromUuid(result.documentUuid).catch(() => null);
     if (!doc) {
       console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"; restock skipped`);
       return null;
@@ -701,7 +704,7 @@ async function restockNow(actor) {
  */
 async function scheduleShop(actor, now, previous, calendar) {
   const raw = actor.flags[MODULE].shop;
-  const state = actor.flags[MODULE].schedule;
+  let state = actor.flags[MODULE].schedule;
   if (!state) {
     const shop = safeShopOf(actor);
     const days = shop ? await daysOf(shop.restock.every) : null;
@@ -711,8 +714,18 @@ async function scheduleShop(actor, now, previous, calendar) {
     const table = await fromUuid(shop.restock.table).catch(() => null);
     if (!table) return null;
     await adoptOnce(actor, table);
-    await actor.update({ [`flags.${MODULE}.schedule`]: initialSchedule(now, days, calendar) });
+    await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
     return null;
+  }
+  // The GM changed the interval since it was scheduled: count the new one from the last restock,
+  // rather than waiting out the old due date (#135 review).
+  const every = safeShopOf(actor)?.restock.every;
+  if (every !== undefined && state.every !== undefined && state.every !== every) {
+    const days = await daysOf(every);
+    if (days != null) {
+      state = { ...scheduleNext(state.lastRestock, days, calendar), every };
+      await actor.update({ [`flags.${MODULE}.schedule`]: state });
+    }
   }
   const due = dueRestock(raw, state, previous, now, calendar);
   if (!due.due) return null;
@@ -721,7 +734,7 @@ async function scheduleShop(actor, now, previous, calendar) {
   // tries again, rather than the shop skipping a whole cycle.
   if (restocked === null) return null;
   const days = await daysOf(due.nextEvery);
-  await actor.update({ [`flags.${MODULE}.schedule`]: scheduleNext(due.at, days ?? 1, calendar) });
+  await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(due.at, days ?? 1, calendar), every: due.nextEvery } });
   return restocked;
 }
 

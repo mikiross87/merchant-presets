@@ -55,7 +55,7 @@ test("the first tick a shop is seen adopts its shelf as drawn and schedules it, 
   assert.deepEqual(shop.items.map(i => i._id).sort(), ids, "nothing redrawn yet");
   assert.ok(byName(shop, "Bell").every(drawn));
   assert.ok(!byName(shop, "Club").some(drawn), "the shopkeeper's own club is gear, not stock");
-  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(0, 1), dueAt: at(3) });
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(0, 1), dueAt: at(3), every: 3 });
 });
 
 test("on the due day's opening the shelf is redrawn: hand-added goods, gear and a GM's stock edit all survive", async () => {
@@ -77,7 +77,7 @@ test("on the due day's opening the shelf is redrawn: hand-added goods, gear and 
   assert.equal(byName(shop, "Grandma's Locket").length, 1);
   assert.equal(byName(shop, "Club").length, 1);
   assert.equal(byName(shop, "Waterskin").length, 3, "containers come back as their recorded count of documents");
-  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(3, 7), dueAt: at(6) });
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(3, 7), dueAt: at(6), every: 3 });
 });
 
 test("a skipped week restocks once; rewinding the clock never does", async () => {
@@ -86,7 +86,7 @@ test("a skipped week restocks once; rewinding the clock never does", async () =>
   const creates = () => world.calls.writes.filter(w => w.type === "actorUpdate" && w.changes["flags.merchant-presets.schedule"]).length;
   await clock(at(10, 12));
   assert.equal(creates(), 2, "first sight, then one restock");
-  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(10, 7), dueAt: at(13) });
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(10, 7), dueAt: at(13), every: 3 });
   await clock(at(4, 12));   // rewound
   assert.equal(creates(), 2);
 });
@@ -173,11 +173,11 @@ test("a restock that couldn't run keeps the shop due, and it restocks at the nex
   const warn = console.warn;
   console.warn = () => {};
   try { await clock(at(3, 8)); } finally { console.warn = warn; }
-  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(0, 1), dueAt: at(3) }, "still due");
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(0, 1), dueAt: at(3), every: 3 }, "still due");
   restore();
   await clock(at(4, 8));
   assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked a day late rather than a cycle late");
-  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(4, 7), dueAt: at(7) });
+  assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(4, 7), dueAt: at(7), every: 3 });
 });
 
 test("a hidden line that sells out and leaves the shelf comes back hidden (#135 review, round 4)", async () => {
