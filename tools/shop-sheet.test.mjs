@@ -1358,3 +1358,25 @@ test("a player's window can't make, edit or remove a deal", async t => {
   assert.equal(shop.updates.length, 0);
   assert.equal(opened.asked.length, 0);
 });
+
+test("with trading hours off a shop never closes, so no deal can last until it does (#142 review)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer, warnings } = opened;
+  globalThis.game.settings.values.tradingHours = false;
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "close", days: null, note: "" };
+  await act(sheet, "addDeal");
+  assert.match(opened.asked[0].content, /value="close"\s+disabled/);
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 1);
+});
+
+test("the chip promises what the deal really gives once the cap has cut it (#142 review)", async t => {
+  await withLabels(async () => {
+    const { sheet, buyer } = openDeals(t);
+    // Sells at list, buys at half: +150% on offers would pay 125% of list, capped at 100% (+100%).
+    sheet.document.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "Aria", buy: null, sell: 1.5, note: "", ends: null }];
+    const { header, settings } = await sheet._prepareContext({});
+    assert.match(header.termsChip, /YourOffers\(\+100%\)$/);
+    assert.match(settings.preview.deals[0].chip, /YourOffers\(\+100%\)$/);
+  });
+});
