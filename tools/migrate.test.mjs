@@ -962,6 +962,20 @@ test("the same settings stored in another key order are the same shop (#137 revi
   assert.equal(planTokenMigration(token, actor, base).shop, null);
 });
 
+test("a token's shop config from an older version still migrates, as the base's would (#137 review, round 4)", () => {
+  const { token, actor, base } = onToken(migratedStore(), { flags: { "merchant-presets": { shop: { version: 0 } } } },
+    { "item-piles": { data: { enabled: true, openTimes: nineToFive } } });
+  assert.ok(planTokenMigration(token, actor, base).shop);
+});
+
+test("a token plans only its own delta's items, not the base's (#137 review, round 4)", () => {
+  const store = migratedStore();
+  const unmigrated = { _id: "baseOnly0000001", name: "Base-only Lamp", type: "equipment", system: { quantity: 1 }, flags: {} };
+  store.items.push(unmigrated);                                     // the base's own, still to migrate
+  const { token, actor, base } = onToken(store, { items: [tradedBell] });
+  assert.deepEqual(planTokenMigration(token, actor, base).itemUpdates.map(u => u._id), ["tokenBell000001"]);
+});
+
 test("a token already migrated, or one with nothing of its own, or a linked one, needs nothing (#124)", () => {
   const plain = onToken(migratedStore(), {});
   assert.equal(tokenNeedsMigration(plain.token, plain.actor, plain.base), false);
