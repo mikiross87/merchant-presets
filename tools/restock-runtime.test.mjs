@@ -146,6 +146,18 @@ test("Restock now is carried out by the tab holding the trade claim, as a trade 
   assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "the claiming tab restocked it");
 });
 
+test("a restock that throws on the claiming tab reads as failed, not as maybe still running (#140 review, round 10)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  shop.createEmbeddedDocuments = async () => { throw new Error("stub: create refused"); };
+  const warned = console.error;
+  console.error = () => {};
+  try {
+    const answer = await globalThis.game.modules.get("merchant-presets").api.requestRestock(shop);
+    assert.deepEqual(answer, { status: "failed", restocked: null });
+  } finally { console.error = warned; }
+});
+
 test("a player can't restock a shop through the query (#140 review, round 8)", async () => {
   const { shop, clock } = await setUp();
   await clock(at(0, 1));
