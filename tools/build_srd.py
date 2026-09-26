@@ -191,6 +191,10 @@ def is_valuable(item):
 # The module's own stock config (#98/#99), kept beside the Item Piles flags it
 # replaces. scripts/schema.mjs is the schema this must satisfy.
 SHOP_VERSION = 1
+# The world's default rates (#110, the "Shops sell at / buy at" settings): list price, half of
+# value. A preset at exactly these ships on World default (null), so those settings move it (#141);
+# one with its own rates keeps them.
+WORLD_SELLS_AT, WORLD_BUYS_AT = 1, 0.5
 
 def stock_flags(ip_item, bundle=1):
     """flags.merchant-presets.stock for one item, derived from the same
@@ -596,9 +600,11 @@ def main():
             # The #98/#99 config, beside the Item Piles flags below: not read
             # by next's runtime yet (#102-#105), but derived from the same
             # values so the two can never disagree.
+            at_world = shop["buy"] == WORLD_SELLS_AT and shop["sell"] == WORLD_BUYS_AT
             shop_config = {
                 "version": SHOP_VERSION, "tier": label, "source": None, "description": description,
-                "terms": {"sellsAt": shop["buy"], "buysAt": shop["sell"],
+                "terms": {"sellsAt": None if at_world else shop["buy"],
+                         "buysAt": None if at_world else shop["sell"],
                          "categories": ([{"category": VALUABLES, "sellsAt": shop["buy"], "buysAt": 1}]
                                         if price_modifiers else [])},
                 "hours": {"open": {"hour": shop["hours"][0], "minute": 0},

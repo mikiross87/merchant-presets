@@ -812,7 +812,11 @@ test("deriveShop reproduces every shipped merchant's own committed shop config (
     // from the pack merchant and passes it as `packShop`, so pass the
     // committed shop itself as that base — the same contract the runtime uses.
     const derived = deriveShop(legacy(doc), committed);
-    assert.deepEqual(derived, committed, doc.name);
+    // A 1.x shop keeps the rates it had (#141): only a fresh import of a list/half preset ships on
+    // World default, so its migrated twin states list/half outright.
+    const expected = committed.terms.sellsAt === null
+      ? { ...committed, terms: { ...committed.terms, sellsAt: 1, buysAt: 0.5 } } : committed;
+    assert.deepEqual(derived, expected, doc.name);
   }
 });
 

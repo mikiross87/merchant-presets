@@ -6424,8 +6424,8 @@
         "source": null,
         "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>",
         "terms": {
-          "sellsAt": 1.0,
-          "buysAt": 0.5,
+          "sellsAt": null,
+          "buysAt": null,
           "categories": [
             {
               "category": "Valuables",

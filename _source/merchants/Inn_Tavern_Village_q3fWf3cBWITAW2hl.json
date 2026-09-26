@@ -2145,8 +2145,8 @@
         "source": null,
         "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
         "terms": {
-          "sellsAt": 1.0,
-          "buysAt": 0.5,
+          "sellsAt": null,
+          "buysAt": null,
           "categories": []
         },
         "hours": {
