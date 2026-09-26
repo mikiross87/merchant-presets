@@ -199,7 +199,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     body: {
       template: `${TEMPLATES}/shop-sheet.hbs`,
       root: true,
-      scrollable: [".shop-stock", ".sell-rows"],
+      scrollable: [".shop-stock", ".sell-rows", ".settings-body", ".settings-preview"],
       templates: [
         `${TEMPLATES}/parts/bill-of-sale.hbs`,
         `${TEMPLATES}/parts/closed-card.hbs`,
@@ -306,6 +306,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         });
       } else control.addEventListener("change", () => this._onSettingChange(control));
     }
+    // The category picked for a new rule, kept until Add is pressed: a clock tick's re-render
+    // would otherwise put the first choice back, and Add would rule that one.
+    this.element?.querySelector(".settings-add-rule select")
+      ?.addEventListener("change", event => { this._ruleChoice = event.target.value; });
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
       const { dirty, value, selection } = this._settingFocus;
@@ -1034,7 +1038,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const ruled = new Set(shop.terms.categories.map(c => c.category));
     const named = actor.items.map(i => safeStockOf(i)?.category).filter(Boolean);
     const ruleChoices = [...new Set([...WONT_BUY_TYPES, ...named])].filter(c => !ruled.has(c))
-      .map(value => ({ value, label: WONT_BUY_TYPES.includes(value) ? typeLabel(value) : value }));
+      .map(value => ({ value, label: WONT_BUY_TYPES.includes(value) ? typeLabel(value) : value, selected: value === this._ruleChoice }));
 
     const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
     const { chip, formula } = everyChoice(shop.restock);
