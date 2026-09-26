@@ -265,8 +265,16 @@ export function dueRestock(shop, state, previous, now, calendar) {
 
 /** The shopkeeper's own kit, never stock. */
 const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
-/** Something an earlier restock (or the build) drew, as opposed to something the GM added by hand. */
-const isDrawn = item => item.flags?.["merchant-presets"]?.drawn === true;
+/**
+ * Something this shop's restocks drew, as opposed to something the GM added by hand, or a good
+ * another shop drew that was sold here (Item Piles copies every flag). `drawn` names the shop
+ * that drew it (`context.drawnBy`, its actor id); a bare `true` (from before it named one)
+ * counts as this shop's.
+ */
+const isDrawn = (item, drawnBy) => {
+  const by = item.flags?.["merchant-presets"]?.drawn;
+  return by === true || (by != null && by === drawnBy);
+};
 
 /**
  * One fresh embedded copy of `draw`, stamped drawn and carrying its full #98
@@ -281,7 +289,7 @@ function drawnItem(draw, context, system) {
   data.system = { ...data.system, ...system };
   data.flags = {
     ...data.flags,
-    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: true, stock: context.stockFlags[draw.name] }
+    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true, stock: context.stockFlags[draw.name] }
   };
   return data;
 }
@@ -322,9 +330,10 @@ function dedupedByName(draws) {
  * deleted, updated, or counted as sold out (#105).
  *
  * `shop.restock.mode` decides the shape of the change:
- * - `"reroll"` (the default): every drawn item one of this table's lines names
- *   is replaced — the shelf comes back exactly as if the shop had just been
- *   dragged in fresh. A drawn good from some other shop's table stays.
+ * - `"reroll"` (the default): everything this shop drew is replaced, a line
+ *   since dropped from its table included — the shelf comes back exactly as
+ *   if the shop had just been dragged in fresh. A good another shop drew
+ *   stays (see {@link isDrawn}).
  * - `"topup"`: only a drawn line the shop has actually sold through is drawn
  *   again; everything still genuinely in stock is untouched. This is driven
  *   by `draws` — the table's own lines — not by what is sitting on the
@@ -355,7 +364,7 @@ export function planRestock(shop, items, draws, context) {
   if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [] };
 
   const uniqueDraws = dedupedByName(draws);
-  const drawnNow = items.filter(i => !isGear(i) && isDrawn(i));
+  const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
   const currency = refilledPurse(context);
 
   if (restock.mode === "topup") {
@@ -408,10 +417,7 @@ export function planRestock(shop, items, draws, context) {
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  // Only what this shop's own table draws: a drawn good that came from another shop's table (sold
-  // on through Item Piles, which copies every flag) is this shop's stock now, not its draw.
-  const lines = new Set(uniqueDraws.map(d => d.name));
-  return { deletes: drawnNow.filter(i => lines.has(i.name)).map(i => i._id), creates, updates: [], currency, restocked };
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */
@@ -426,13 +432,38 @@ export function planRestock(shop, items, draws, context) {
  *
  * @param {Item[]} items  The shop's embedded items, plainly.
  * @param {string[]} tableNames  The names of its stock table's lines.
- * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": true}` updates.
+ * @param {string} drawnBy  The shop's own id, which `drawn` records.
+ * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": drawnBy}` updates. A good that
+ *   already names a shop (another's, sold here) is left alone.
  */
-export function adoptDrawn(items, tableNames) {
+export function adoptDrawn(items, tableNames, drawnBy) {
   const names = new Set(tableNames);
   return items
-    .filter(i => !isGear(i) && !isDrawn(i) && names.has(i.name))
-    .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": true }));
+    .filter(i => !isGear(i) && i.flags?.["merchant-presets"]?.drawn == null && names.has(i.name))
+    .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": drawnBy }));
+}
+
+/**
+ * What a shop remembers of each line it drew, `name -> {stock, piles}` (its #98 stock config and
+ * Item Piles' own flags), refreshed from the shelf at every restock: a line that rolls 0 or sells
+ * out and leaves the shelf comes back with the GM's settings rather than the defaults (#135
+ * review). Lines no longer on the shelf keep what was remembered before.
+ *
+ * @param {Record<string, {stock?: object, piles?: object}>|undefined} previous
+ * @param {Item[]} items
+ * @param {string} drawnBy
+ * @returns {Record<string, {stock?: object, piles?: object}>}
+ */
+export function lineMemory(previous, items, drawnBy) {
+  const memory = { ...previous };
+  for (const item of items) {
+    if (isGear(item) || !isDrawn(item, drawnBy)) continue;
+    const line = {};
+    if (item.flags?.["merchant-presets"]?.stock) line.stock = item.flags["merchant-presets"].stock;
+    if (item.flags?.["item-piles"]) line.piles = item.flags["item-piles"];
+    memory[item.name] = line;
+  }
+  return memory;
 }
 
 /**

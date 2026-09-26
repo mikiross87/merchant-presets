@@ -25,7 +25,7 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTab
 import { boughtWith, fromItemPiles, goodFlag, uuidOf } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import {
-  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, planRestock, restockStockFlags, scheduleNext
+  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -589,7 +589,7 @@ async function drawsFor(table, quantities) {
 
 /** Stamp a shop's shelf as drawn before its first native restock (schedule.mjs `adoptDrawn`). */
 async function adoptShelf(actor, table) {
-  const updates = adoptDrawn(actor.items.map(i => i.toObject()), tableNames(table));
+  const updates = adoptDrawn(actor.items.map(i => i.toObject()), tableNames(table), actor.id);
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
 }
 
@@ -624,22 +624,29 @@ async function restockNow(actor) {
   const draws = await drawsFor(table, shop.restock.quantities);
   if (!draws) return null;
   const record = actor.flags?.[MODULE]?.itemFlags ?? {};
+  // What the shelf says of each line now, over what it said at earlier restocks: a line that
+  // left the shelf comes back with the GM's settings (schedule.mjs `lineMemory`).
+  const memory = lineMemory(actor.flags?.[MODULE]?.lines, items, actor.id);
   const plan = planRestock(raw, items, draws, {
     purse: actor.flags?.[MODULE]?.purse,
     currentGp: actor.system?.currency?.gp,
-    stockFlags: restockStockFlags(items, draws, name => stockFromRecord(record[name])),
-    containers: actor.flags?.[MODULE]?.containers ?? {}
+    stockFlags: restockStockFlags(items, draws, name => memory[name]?.stock ?? stockFromRecord(record[name])),
+    containers: actor.flags?.[MODULE]?.containers ?? {},
+    drawnBy: actor.id
   });
   // Item Piles still shows the shops until #104, and keeps a GM's edits to a line (hidden, say)
   // in its own flags on the item: a redrawn copy carries them over from the one it replaces.
-  const livePiles = new Map(items.filter(i => !isGear(i) && i.flags?.["item-piles"]).map(i => [i.name, i.flags["item-piles"]]));
+  const livePiles = new Map(Object.entries(memory).filter(([, line]) => line.piles).map(([name, line]) => [name, line.piles]));
   for (const create of plan.creates) {
     if (livePiles.has(create.name)) create.flags = { ...create.flags, "item-piles": structuredClone(livePiles.get(create.name)) };
   }
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   const created = plan.creates.length ? await actor.createEmbeddedDocuments("Item", plan.creates) : [];
-  if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
+  await actor.update({
+    [`flags.${MODULE}.lines`]: memory,
+    ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {})
+  });
   // Only a fresh copy with nothing to carry over gets the recorded flags: re-applying them to
   // every item would undo what the GM changed in Item Piles.
   const fresh = new Set(created.filter(c => !livePiles.has(c.name)).map(c => c.id));
