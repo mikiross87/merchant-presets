@@ -267,8 +267,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
 const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
 /**
  * Something this shop's restocks drew, as opposed to something the GM added by hand, or a good
- * another shop drew that was sold here (Item Piles copies every flag). `drawn` names the shop
- * that drew it (`context.drawnBy`, its actor id); a bare `true` (from before it named one)
+ * another shop drew that was sold here (Item Piles copies every flag). `drawn` holds the shelf
+ * key of the shop that drew it (`context.drawnBy`); a bare `true` (from before it held one)
  * counts as this shop's.
  */
 const isDrawn = (item, drawnBy) => {
@@ -432,7 +432,7 @@ export function planRestock(shop, items, draws, context) {
  *
  * @param {Item[]} items  The shop's embedded items, plainly.
  * @param {string[]} tableNames  The names of its stock table's lines.
- * @param {string} drawnBy  The shop's own id, which `drawn` records.
+ * @param {string} drawnBy  The shop's shelf key, which `drawn` records.
  * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": drawnBy}` updates. A good that
  *   already names a shop (another's, sold here) is left alone.
  */
