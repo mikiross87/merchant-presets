@@ -605,7 +605,9 @@ def main():
                 "version": SHOP_VERSION, "tier": label, "source": None, "description": description,
                 "terms": {"sellsAt": None if at_world else shop["buy"],
                          "buysAt": None if at_world else shop["sell"],
-                         "categories": ([{"category": VALUABLES, "sellsAt": shop["buy"], "buysAt": 1}]
+                         # Valuables state only their full value when bought; selling follows
+                         # the shop's own rate (null), World default included (#143 review).
+                         "categories": ([{"category": VALUABLES, "sellsAt": None, "buysAt": 1}]
                                         if price_modifiers else [])},
                 "hours": {"open": {"hour": shop["hours"][0], "minute": 0},
                          "close": {"hour": shop["hours"][1], "minute": 0}},

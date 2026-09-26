@@ -47,9 +47,9 @@
       <div class="settings-rule">
         <b>{{label}}</b>
         <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Sells"}}
-          <input type="text" inputmode="decimal" value="{{sellsPercent}}" data-op="ruleRate" data-category="{{category}}" data-side="sellsAt" />%</span>
+          <input type="text" inputmode="decimal" value="{{sellsPercent}}" placeholder="{{sellsFollows}}" data-op="ruleRate" data-category="{{category}}" data-side="sellsAt" />%</span>
         <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Buys"}}
-          <input type="text" inputmode="decimal" value="{{buysPercent}}" data-op="ruleRate" data-category="{{category}}" data-side="buysAt" />%</span>
+          <input type="text" inputmode="decimal" value="{{buysPercent}}" placeholder="{{buysFollows}}" data-op="ruleRate" data-category="{{category}}" data-side="buysAt" />%</span>
         <button type="button" class="settings-icon" data-action="removeRule" data-category="{{category}}"
           data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}">
           <i class="fa-solid fa-trash" aria-hidden="true"></i>

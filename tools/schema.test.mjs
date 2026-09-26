@@ -271,8 +271,8 @@ test("rates may be null, meaning the world default (#110)", () => {
   assert.ok(validateShop({ version: SHOP_VERSION, terms: { sellsAt: null, buysAt: null } }).ok);
   assert.equal(SHOP_DEFAULTS.terms.sellsAt, null);
   assert.equal(SHOP_DEFAULTS.terms.buysAt, null);
-  // A category rule is a rule: it always states its own rates.
-  const rule = { category: "Valuables", sellsAt: null, buysAt: 1 };
+  // A category rule states at least one rate of its own; a null side follows the shop (#143 review).
+  const rule = { category: "Valuables", sellsAt: null, buysAt: null };
   assert.equal(validateShop({ version: SHOP_VERSION, terms: { categories: [rule] } }).ok, false);
 });
 

@@ -118,6 +118,13 @@ const deal = (v, path, errors) => {
   if (isObject(v) && !v.buy && !v.sell) errors.push(`${path}: changes no price`);
 };
 
+// A category rule's side may be null: it follows the shop's rate there (and the world's past it),
+// as the Valuables rule does for selling, stating only its full value when bought (#143 review).
+const categoryRule = (v, path, errors) => {
+  shape({ category: name, sellsAt: nullOr(rate(1)), buysAt: nullOr(rate(0)) }, ["category", "sellsAt", "buysAt"])(v, path, errors);
+  if (isObject(v) && v.sellsAt === null && v.buysAt === null) errors.push(`${path}: sets neither rate`);
+};
+
 const time = shape({
   hour: check(v => isInt(v, 0, 23), "must be a whole hour, 0 to 23"),
   minute: check(v => isInt(v, 0, 59), "must be a whole minute, 0 to 59")
@@ -138,8 +145,7 @@ const shopShape = shape({
   terms: shape({
     sellsAt: nullOr(rate(1)),
     buysAt: nullOr(rate(0)),
-    categories: list(shape({ category: name, sellsAt: rate(1), buysAt: rate(0) }, ["category", "sellsAt", "buysAt"]),
-      c => c?.category)
+    categories: list(categoryRule, c => c?.category)
   }),
   hours: nullOr(hours),
   restock: shape({
