@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createWorld, loadRuntime } from "./foundry-stub.mjs";
+import { createWorld, loadRuntime, source } from "./foundry-stub.mjs";
 
 // #105's restock on the world clock, driven through the real merchant-presets.mjs: the
 // schedule (schedule.mjs's dueRestock/planRestock, unit-tested in tools/schedule.test.mjs)
@@ -267,6 +267,19 @@ test("a due opening while no tab held the claim is still restocked once one does
   gm.flags["merchant-presets"].tradeTab = claim;
   await clock(at(3, 9));
   assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked on the day, not a cycle later");
+});
+
+test("setting a shop up again starts its shelf afresh: no second shelf at the next reroll (#135 review, round 7)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));                                    // adopted and scheduled
+  const api = globalThis.game.modules.get("merchant-presets").api;
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  await api.setUpShop(shop, city, []);                      // made over as the City store
+  const flags = shop.flags["merchant-presets"];
+  assert.equal(flags.shelf ?? null, null);
+  assert.equal(flags.schedule ?? null, null);
+  assert.equal(flags.lines ?? null, null);
 });
 
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {

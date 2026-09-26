@@ -364,11 +364,17 @@ test("reroll replaces what this shop drew, even a line its table dropped, and ke
 test("a shop remembers each drawn line's settings, so one that left the shelf comes back with them (#135 review)", () => {
   const hidden = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } }, "item-piles": { item: { hidden: true } } } };
   const theirs = { ...drawn("x1", "Bell", "loot", 1), flags: { "merchant-presets": { drawn: "pawnshop", stock: { hidden: false } } } };
-  const memory = lineMemory({ Rope: { stock: { keep: false } } }, [hidden, theirs, gmAdded, gear], "gs");
-  assert.deepEqual(memory, {
-    Rope: { stock: { keep: false } },
-    Arrows: { stock: { hidden: true }, piles: { item: { hidden: true } } }
-  });
+  const memory = lineMemory([{ name: "Rope", stock: { keep: false } }], [hidden, theirs, gmAdded, gear], "gs");
+  assert.deepEqual(memory, [
+    { name: "Rope", stock: { keep: false } },
+    { name: "Arrows", stock: { hidden: true }, piles: { item: { hidden: true } } }
+  ]);
+});
+
+test("the line memory is a list, so a line named with a dot survives Foundry's path expansion (#135 review, round 7)", () => {
+  const scroll = { ...drawn("s1", "Scroll (Lvl. 1)", "consumable", 1), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } } } };
+  assert.deepEqual(lineMemory(undefined, [scroll], "gs"), [{ name: "Scroll (Lvl. 1)", stock: { hidden: true } }]);
+  assert.deepEqual(lineMemory({ junk: true }, [], "gs"), [], "a stored value of the wrong shape is ignored");
 });
 
 test("reroll replaces the whole drawn shelf, and leaves the GM's own goods and gear alone", () => {
@@ -549,7 +555,16 @@ test("a redrawn line keeps the stock config on the shelf, so a GM's edit survive
   const items = [shelfItem("bell", "Bell", { drawn: true, stock: { infinite: true, hidden: true } }), shelfItem("gear", "Bell", { kind: "gear", stock: { hidden: false } })];
   const draws = [{ name: "Bell" }, { name: "Rope" }, { name: "Lamp" }];
   const fromRecord = name => (name === "Rope" ? { keep: false } : undefined);
-  assert.deepEqual(restockStockFlags(items, draws, fromRecord), { Bell: { infinite: true, hidden: true }, Rope: { keep: false } });
+  assert.deepEqual(restockStockFlags(items, draws, fromRecord, "gs"), { Bell: { infinite: true, hidden: true }, Rope: { keep: false } });
+});
+
+test("only this shop's own drawn copy sets a line's config, not a same-named good added by hand (#135 review, round 7)", () => {
+  const items = [
+    shelfItem("mine", "Torch", { stock: { hidden: true } }),                 // the GM's own torch
+    shelfItem("theirs", "Torch", { drawn: "pawnshop", stock: { infinite: true } }),
+    shelfItem("ours", "Torch", { drawn: "gs", stock: { category: "Light" } })
+  ];
+  assert.deepEqual(restockStockFlags(items, [{ name: "Torch" }], () => undefined, "gs"), { Torch: { category: "Light" } });
 });
 
 test("a shop first seen by the schedule is due a whole interval from that day", () => {
