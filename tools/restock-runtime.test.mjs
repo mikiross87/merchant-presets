@@ -221,6 +221,54 @@ test("a restock that fails part-way has already noted each line's settings (#135
   assert.equal(shop.flags["merchant-presets"].lines?.Bell?.stock?.hidden, true);
 });
 
+test("a duplicated shop still knows its own shelf: one line each, not a second shelf (#135 review, round 6)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));                              // adopted and scheduled
+  const copy = world.merchant("General_Store_Town_");
+  copy._id = copy.id = "copyOfTheStore0";
+  copy.uuid = "Actor.copyOfTheStore0";
+  copy.flags = structuredClone(shop.flags);
+  copy.items.splice(0, copy.items.length);
+  await copy.createEmbeddedDocuments("Item", shop.items.map(i => i.toObject()));
+  world.actors.push(copy);
+  await clock(at(3, 8));
+  assert.equal(byName(copy, "Bell").length, 1);
+  assert.notEqual(byName(copy, "Bell")[0]._id, byName(shop, "Bell")[0]._id);
+});
+
+test("turning the schedule on after a manual restock doesn't adopt a good added by hand since (#135 review, round 6)", async () => {
+  const { world, shop, clock } = await setUp();
+  world.settings.autoRestock = false;
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  await shop.createEmbeddedDocuments("Item", [{ _id: "myOwnRope00001", name: "Rope", type: "consumable", system: { quantity: 2 }, flags: {} }]);
+  world.settings.autoRestock = true;
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.ok(shop.items.some(i => i._id === "myOwnRope00001"), "the GM's own Rope stays");
+});
+
+test("a table line labelled apart from its item still adopts that item (#135 review, round 6)", async () => {
+  const { world, shop, clock } = await setUp();
+  tableOf(world, shop).results.find(r => r.name === "Bell").name = "A bell, brass";
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(byName(shop, "Bell").length, 1);
+});
+
+test("a due opening while no tab held the claim is still restocked once one does (#135 review, round 6)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const gm = globalThis.game.user;
+  const claim = gm.flags["merchant-presets"].tradeTab;
+  const bell = byName(shop, "Bell")[0]._id;
+  gm.flags["merchant-presets"].tradeTab = "tab-mid-handoff";
+  await clock(at(3, 8));
+  assert.equal(byName(shop, "Bell")[0]._id, bell);
+  gm.flags["merchant-presets"].tradeTab = claim;
+  await clock(at(3, 9));
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked on the day, not a cycle later");
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
