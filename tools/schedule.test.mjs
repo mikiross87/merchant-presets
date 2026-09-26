@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, nextDue, nextOpen, planRestock, restockStockFlags, scheduleNext
+  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, restockStockFlags,
+  scheduleNext
 } from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
 
@@ -348,10 +349,26 @@ const drawn = (id, name, type, quantity, extra = {}) =>
 const gmAdded = { _id: "gm1", name: "Rope, Silk", type: "loot", system: { quantity: 5 }, flags: {} };
 const gear = { _id: "gear1", name: "Longsword", type: "weapon", system: { quantity: 1 }, flags: { "merchant-presets": { kind: "gear" } } };
 
-test("reroll never deletes a drawn good this shop's table doesn't name: one sold here from another shop (#135 review)", () => {
-  const soldHere = drawn("x1", "Bell", "loot", 1);   // drawn by the General Store, sold on through Item Piles
-  const plan = planRestock(shop, [drawn("i1", "Arrows", "consumable", 40), soldHere], [{ ...draws[0], quantity: 10 }], context);
-  assert.deepEqual(plan.deletes, ["i1"]);
+test("reroll replaces what this shop drew, even a line its table dropped, and keeps a good another shop drew (#135 review)", () => {
+  const by = (item, shopId) => ({ ...item, flags: { "merchant-presets": { drawn: shopId } } });
+  const items = [
+    by(drawn("i1", "Arrows", "consumable", 40), "gs"),
+    by(drawn("i9", "Rope", "consumable", 5), "gs"),        // the GM took Rope off this table
+    by(drawn("x1", "Bell", "loot", 1), "pawnshop")         // drawn there, sold here through Item Piles
+  ];
+  const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }], { ...context, drawnBy: "gs" });
+  assert.deepEqual(plan.deletes, ["i1", "i9"]);
+  assert.equal(plan.creates[0].flags["merchant-presets"].drawn, "gs", "a fresh copy names the shop that drew it");
+});
+
+test("a shop remembers each drawn line's settings, so one that left the shelf comes back with them (#135 review)", () => {
+  const hidden = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } }, "item-piles": { item: { hidden: true } } } };
+  const theirs = { ...drawn("x1", "Bell", "loot", 1), flags: { "merchant-presets": { drawn: "pawnshop", stock: { hidden: false } } } };
+  const memory = lineMemory({ Rope: { stock: { keep: false } } }, [hidden, theirs, gmAdded, gear], "gs");
+  assert.deepEqual(memory, {
+    Rope: { stock: { keep: false } },
+    Arrows: { stock: { hidden: true }, piles: { item: { hidden: true } } }
+  });
 });
 
 test("reroll replaces the whole drawn shelf, and leaves the GM's own goods and gear alone", () => {
@@ -520,7 +537,12 @@ test("a shop's first native restock adopts the table's lines on its shelf as dra
     shelfItem("club", "Club", { kind: "gear" }),        // the shopkeeper's own: never stock
     shelfItem("rope", "Rope", { drawn: true })          // already drawn: nothing to do
   ];
-  assert.deepEqual(adoptDrawn(items, ["Bell", "Rope", "Club"]), [{ _id: "bell", "flags.merchant-presets.drawn": true }]);
+  assert.deepEqual(adoptDrawn(items, ["Bell", "Rope", "Club"], "gs"), [{ _id: "bell", "flags.merchant-presets.drawn": "gs" }]);
+});
+
+test("adopting never claims a good another shop drew", () => {
+  const theirs = shelfItem("bell", "Bell", { drawn: "pawnshop" });
+  assert.deepEqual(adoptDrawn([theirs], ["Bell"], "gs"), []);
 });
 
 test("a redrawn line keeps the stock config on the shelf, so a GM's edit survives the reroll", () => {

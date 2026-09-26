@@ -46,7 +46,7 @@ function hideTable(world, shop) {
 }
 
 const byName = (shop, name) => shop.items.filter(i => i.name === name);
-const drawn = item => item.flags?.["merchant-presets"]?.drawn === true;
+const drawn = item => !!item.flags?.["merchant-presets"]?.drawn;
 
 test("the first tick a shop is seen adopts its shelf as drawn and schedules it, without restocking", async () => {
   const { shop, clock } = await setUp();
@@ -178,6 +178,20 @@ test("a restock that couldn't run keeps the shop due, and it restocks at the nex
   await clock(at(4, 8));
   assert.notEqual(byName(shop, "Bell")[0]._id, bell, "restocked a day late rather than a cycle late");
   assert.deepEqual(shop.flags["merchant-presets"].schedule, { lastRestock: at(4, 7), dueAt: at(7) });
+});
+
+test("a hidden line that sells out and leaves the shelf comes back hidden (#135 review, round 4)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const bell = byName(shop, "Bell")[0];
+  bell.flags["merchant-presets"].stock.hidden = true;
+  bell.flags["item-piles"] = { ...bell.flags["item-piles"], item: { ...bell.flags["item-piles"]?.item, hidden: true } };
+  await clock(at(3, 8));                                     // restocked: the shop notes each line's settings
+  await shop.deleteEmbeddedDocuments("Item", byName(shop, "Bell").map(b => b._id));   // sold out, keep: false
+  await clock(at(6, 8));
+  const [back] = byName(shop, "Bell");
+  assert.equal(back.flags["merchant-presets"].stock.hidden, true);
+  assert.equal(back.flags["item-piles"]?.item?.hidden, true);
 });
 
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
