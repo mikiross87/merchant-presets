@@ -8,69 +8,91 @@ import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 // Actor* is the default: importDocument then writes the compendium data over
 // the existing actor with updateDocuments, which fires updateActor, not
 // createActor (#66).
+//
+// With the shops native (#104), a merchant arriving either way is migrated to
+// its shop window and rolls its own shelf from its stock table, the native
+// restock; Item Piles' populate tables are no longer wired.
 
 const TEMPLE = "Temple_Faith_Store_Town_";
 const JEWELER = "Jeweler_Town_";
-const COMPENDIUM = "Compendium.merchant-presets.stock.RollTable.";
 
 const world = createWorld();
-const tableOf = actor => actor.flags["item-piles"].data.tablesForPopulate[0].uuid;
-const rolls = actor => world.calls.itemUpdates.filter(c => c.actor === actor.id).length;
+/** Serve every stock table line's document, as the SRD and goods packs would. */
+function stockPack(actor) {
+  const table = world.compendium.get(actor.flags["merchant-presets"].shop.restock.table);
+  for (const result of table?.results ?? []) {
+    if (world.compendium.has(result.documentUuid)) continue;
+    const onShelf = actor.items.find(i => i.name === result.name);
+    const name = result.name;
+    world.compendium.set(result.documentUuid, { name, uuid: result.documentUuid,
+      toObject: () => ({ name, type: onShelf?.type ?? "loot", system: { quantity: 1, price: structuredClone(onShelf?.system.price ?? { value: 1, denomination: "gp" }) }, flags: {} }) });
+  }
+  return actor;
+}
+const merchant = (prefix, opts) => stockPack(world.merchant(prefix, opts));
+/** Whether the shop rolled its own shelf: adopted by a native restock, every good stamped with its key. */
+const rolled = actor => !!actor.flags["merchant-presets"].shelf
+  && actor.items.filter(i => i.flags?.["merchant-presets"]?.kind !== "gear").every(i => i.flags["merchant-presets"]?.drawn);
+const tick = async (n = 40) => { for (let i = 0; i < n; i++) await new Promise(resolve => setImmediate(resolve)); };
 
-// Replaced in place before this session started: still on its compendium
-// table when the world loads.
-const replacedEarlier = world.merchant("Druidic_Store_Town_");
+// Replaced in place before this session started: fresh pack data, never rolled, when the world loads.
+const replacedEarlier = merchant("Druidic_Store_Town_");
 world.actors.push(replacedEarlier);
 await loadRuntime(world);
+await tick();
 
-test("a merchant dragged in as a new actor is wired to a world table and stocked", async () => {
-  const temple = world.merchant(TEMPLE);
+test("a merchant dragged in as a new actor opens as the shop window and rolls its shelf", async () => {
+  const temple = merchant(TEMPLE);
   world.actors.push(temple);
   await world.fire("createActor", temple, {}, "gm");
-  assert.match(tableOf(temple), /^RollTable\./);
-  assert.equal(rolls(temple), 1);
+  await tick();
+  assert.equal(temple.flags.core?.sheetClass, "merchant-presets.ShopSheet");
+  assert.ok(rolled(temple));
 });
 
-test("a merchant replaced in place from the compendium is wired and stocked (#66)", async () => {
-  const jeweler = world.merchant(JEWELER);
+test("a merchant replaced in place from the compendium is migrated and rolls its shelf (#66)", async () => {
+  const jeweler = merchant(JEWELER);
   world.actors.push(jeweler);
   await world.fire("updateActor", jeweler, { flags: {} }, { diff: false, recursive: false }, "gm");
-  assert.match(tableOf(jeweler), /^RollTable\./);
-  assert.equal(rolls(jeweler), 1);
+  await tick();
+  assert.equal(jeweler.flags.core?.sheetClass, "merchant-presets.ShopSheet");
+  assert.ok(rolled(jeweler));
 });
 
-test("a merchant replaced before the world loaded is wired when it loads (#66)", () => {
-  assert.match(tableOf(replacedEarlier), /^RollTable\./);
-  assert.equal(rolls(replacedEarlier), 1);
+test("a merchant replaced before the world loaded rolls its shelf when it loads (#66)", () => {
+  assert.ok(rolled(replacedEarlier));
 });
 
-test("an ordinary update leaves a wired merchant as it is", async () => {
-  const wired = world.merchant("General_Store_Town_", { table: "RollTable.alreadyWired0001" });
-  // Closed by hand. With trading hours off, the open/closed pass would open it.
-  wired.flags["item-piles"].data.openTimes.status = "closed";
-  world.actors.push(wired);
-  await world.fire("updateActor", wired, { name: "Barthen's Provisions" }, {}, "gm");
-  assert.equal(tableOf(wired), "RollTable.alreadyWired0001");
-  assert.equal(rolls(wired), 0);
-  assert.equal(wired.flags["item-piles"].data.openTimes.status, "closed");
+test("an ordinary update leaves a rolled shop as it is", async () => {
+  const shop = merchant("General_Store_Town_");
+  world.actors.push(shop);
+  await world.fire("createActor", shop, {}, "gm");
+  await tick();
+  const shelf = shop.flags["merchant-presets"].shelf;
+  const ids = shop.items.map(i => i._id).join();
+  await world.fire("updateActor", shop, { name: "Barthen's Provisions" }, {}, "gm");
+  await tick();
+  assert.equal(shop.flags["merchant-presets"].shelf, shelf);
+  assert.equal(shop.items.map(i => i._id).join(), ids);
 });
 
 test("another user's update is left to the client that made it", async () => {
-  const theirs = world.merchant("Arcane_Store_Town_");
+  const theirs = merchant("Arcane_Store_Town_");
   world.actors.push(theirs);
   await world.fire("updateActor", theirs, { flags: {} }, {}, "someone-else");
-  assert.ok(tableOf(theirs).startsWith(COMPENDIUM));
-  assert.equal(rolls(theirs), 0);
+  await tick();
+  assert.equal(theirs.flags["merchant-presets"].shelf ?? null, null);
 });
 
-test("a create and an update arriving together wire and stock a merchant once", async () => {
-  const smith = world.merchant("Armourer_Blacksmiths_Town_");
+test("a create and an update arriving together roll a merchant's shelf once", async () => {
+  const smith = merchant("Armourer_Blacksmiths_Town_");
   world.actors.push(smith);
-  const tablesBefore = world.calls.tablesCreated;
+  const creates = () => world.calls.writes.filter(w => w.type === "actorUpdate" && w.actor === smith.id
+    && "flags.merchant-presets.shelf" in w.changes).length;
   const create = world.fire("createActor", smith, {}, "gm");
   const update = world.fire("updateActor", smith, { flags: {} }, {}, "gm");
   await Promise.all([create, update]);
-  assert.match(tableOf(smith), /^RollTable\./);
-  assert.equal(rolls(smith), 1);
-  assert.equal(world.calls.tablesCreated - tablesBefore, 1);
+  await tick();
+  assert.ok(rolled(smith));
+  assert.equal(creates(), 1, "adopted once");
 });
