@@ -152,11 +152,16 @@ Constraints worth knowing before changing the generator:
   the same trading hours and restocks as one dragged from the compendium, and
   `tierOf` reads the config's `tier` before falling back to parsing the name,
   since the NPC's own name carries no `(Village|Town|City)` suffix to parse.
-- **A shop restocks from the table its config names** (`shop.restock.table`).
-  A 2.0 import names the compendium table, so a change to a shop's stock lines
-  reaches shops already in a world at their next restock. A shop migrated from
-  1.x keeps the world copy of the table that 1.x made, so a recipe change's
-  CHANGELOG line should tell those GMs to drag in a fresh merchant.
+- **A shop restocks from the table its config names** (`shop.restock.table`),
+  but only the table's list of items is read live. A 2.0 import names the
+  compendium table; a shop migrated from 1.x keeps the world copy 1.x made. The
+  roll counts (`shop.restock.quantities`, falling back to `"1"`) and each line's
+  settings (`flags.merchant-presets.itemFlags`, by name) are stored on the shop
+  when it arrives. So after a recipe change, a shop already in a world gets a new
+  line at quantity 1 with default settings — a service arrives as an ordinary,
+  limited, sellable item — and keeps its old counts. A recipe change that alters
+  a shop's lines needs its CHANGELOG line to tell GMs to drag in a fresh
+  merchant (#63).
 - **Goods can carry behaviour flags** that the runtime acts on at purchase, via
   this module's own `merchant-presets.trade` hook: `flags.merchant-presets.actor` names the SRD
   stat block an animal good stands for, and buying it copies that actor into the
