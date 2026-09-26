@@ -56,9 +56,9 @@ test("a category rule starts at the rates the shop charges now, and can be edite
   let config = applied(shop({ terms: { sellsAt: 1.1, buysAt: null } }), { op: "addRule", category: "weapon", world: WORLD });
   assert.deepEqual(config.terms.categories, [{ category: "weapon", sellsAt: 1.1, buysAt: 0.5 }]);
   config = applied(config, { op: "addRule", category: "Valuables", world: WORLD });
-  config = applied(config, { op: "ruleRate", index: 1, side: "buysAt", percent: 100 });
+  config = applied(config, { op: "ruleRate", category: "Valuables", side: "buysAt", percent: 100 });
   assert.equal(config.terms.categories[1].buysAt, 1);
-  config = applied(config, { op: "removeRule", index: 0 });
+  config = applied(config, { op: "removeRule", category: "weapon" });
   assert.deepEqual(config.terms.categories.map(c => c.category), ["Valuables"]);
 });
 
@@ -66,9 +66,9 @@ test("a category can only be ruled once, and a rule it doesn't have can't be edi
   const config = applied(shop(), { op: "addRule", category: "weapon", world: WORLD });
   refused(config, { op: "addRule", category: "weapon", world: WORLD });
   refused(config, { op: "addRule", category: "", world: WORLD });
-  refused(config, { op: "ruleRate", index: 3, side: "sellsAt", percent: 100 });
-  refused(config, { op: "removeRule", index: 3 });
-  refused(config, { op: "ruleRate", index: 0, side: "sellsAt", percent: 0 });
+  refused(config, { op: "ruleRate", category: "armor", side: "sellsAt", percent: 100 });
+  refused(config, { op: "removeRule", category: "armor" });
+  refused(config, { op: "ruleRate", category: "weapon", side: "sellsAt", percent: 0 });
 });
 
 /* --------------------------------------------------------------- won't buy */

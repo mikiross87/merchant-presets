@@ -948,9 +948,9 @@ test("each Settings-tab control makes its own edit", async t => {
   await change(sheet, { op: "addRule" }, { value: "weapon" });
   assert.deepEqual(last().terms.categories, [{ category: "weapon", sellsAt: 1, buysAt: 0.5 }]);
   shop.flags["merchant-presets"].shop = last();
-  await change(sheet, { op: "ruleRate", index: "0", side: "buysAt" }, { value: "75" });
+  await change(sheet, { op: "ruleRate", category: "weapon", side: "buysAt" }, { value: "75" });
   assert.equal(last().terms.categories[0].buysAt, 0.75);
-  await act(sheet, "removeRule", { index: "0" });
+  await act(sheet, "removeRule", { category: "weapon" });
   assert.deepEqual(last().terms.categories, []);
   await change(sheet, { op: "wontBuy", list: "kinds", value: "meal" }, { checked: true });
   assert.deepEqual(last().wontBuy.kinds, ["meal"]);
@@ -1059,10 +1059,18 @@ test("a shop whose config can't be read is never overwritten with the defaults",
   assert.equal((await sheet._prepareContext({})).settings.broken, true);
   await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
   await act(sheet, "setEvery", { every: "3" });
-  await act(sheet, "removeRule", { index: "0" });
+  await act(sheet, "removeRule", { category: "weapon" });
   await act(sheet, "resetToPreset");
   assert.equal(shop.updates.length, 0);
   assert.ok(warnings.length >= 3);
+});
+
+test("a double click on a rule's trash removes that rule only (#140 review, round 2)", async t => {
+  const rules = ["weapon", "armor", "loot"].map(category => ({ category, sellsAt: 1, buysAt: 0.5 }));
+  const { sheet, shop } = openSettings(t, { shopConfig: { terms: { sellsAt: null, buysAt: null, categories: rules } } });
+  // Both clicks land on the same button before the window re-renders.
+  await Promise.all([act(sheet, "removeRule", { category: "weapon" }), act(sheet, "removeRule", { category: "weapon" })]);
+  assert.deepEqual(shop.flags["merchant-presets"].shop.terms.categories.map(r => r.category), ["armor", "loot"]);
 });
 
 test("a restock that can't run says so without blaming a missing table", async t => {
