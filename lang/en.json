@@ -169,7 +169,35 @@
           "Remove": "Remove rule"
         },
         "Deals": {
-          "Later": "Special prices for one character come with deals (#111)."
+          "Hint": "Special prices for one character. Only that character sees them.",
+          "None": "No deals yet.",
+          "Cap": "No deal can make selling pay more than buying.",
+          "Add": "Add deal",
+          "Edit": "Edit deal",
+          "Remove": "Remove deal",
+          "Buying": "Buying {percent}",
+          "Selling": "Selling {percent}",
+          "NoEnd": "No end",
+          "UntilClose": "Until the shop closes",
+          "Until": "Until {date}",
+          "Ended": "Ended",
+          "NoCharacters": "Every player character already has a deal here.",
+          "Form": {
+            "AddTitle": "Add a deal",
+            "EditTitle": "Edit deal",
+            "Add": "Add deal",
+            "Save": "Save",
+            "Character": "Character",
+            "Buying": "Buying",
+            "Selling": "Selling",
+            "SidesHint": "Off this shop's own price: −10 buys 10% cheaper, 10 sells for 10% more. Leave a side blank to keep its price.",
+            "Ends": "Ends",
+            "WhenCloses": "When the shop next closes",
+            "AfterDays": "After some days",
+            "Days": "Days",
+            "Note": "Note (GM only)",
+            "NoteHint": "Players never see the note in the shop, but it's saved on the shop actor, so a player could read it from the browser console."
+          }
         },
         "WontBuy": {
           "Hint": "The shop refuses to buy anything of these types or kinds. Its shopkeeper's own gear is never for sale.",
@@ -228,7 +256,8 @@
         "Preview": {
           "Title": "Players see",
           "Everyone": "Everyone",
-          "Note": "Open shop windows refresh for everyone when a change is saved."
+          "Note": "Open shop windows refresh for everyone when a change is saved.",
+          "Only": "Only {name}"
         }
       },
       "Deal": {

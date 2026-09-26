@@ -71,7 +71,30 @@
 
   {{#if section.deals}}
     <h2 class="settings-heading">{{localize "MERCHANT_PRESETS.Shop.Settings.Sections.deals"}}</h2>
-    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Later"}}</p>
+    <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Hint"}}</p>
+    {{#each deals.list}}
+      <div class="settings-deal {{#if ended}}is-ended{{/if}}">
+        <span class="settings-deal-initial" aria-hidden="true">{{initial}}</span>
+        <span class="settings-deal-info">
+          <span><b>{{name}}</b> {{#each badges}}<span class="price-tag tag-deal">{{this}}</span> {{/each}}</span>
+          <span class="settings-hint">{{line}}</span>
+        </span>
+        <button type="button" class="settings-icon" data-action="editDeal" data-actor="{{actor}}"
+          data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Edit'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Edit'}}">
+          <i class="fa-solid fa-pen" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="settings-icon" data-action="removeDeal" data-actor="{{actor}}"
+          data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Remove'}}">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    {{else}}
+      <p class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.None"}}</p>
+    {{/each}}
+    <div class="settings-deals-foot">
+      <span class="settings-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Cap"}}</span>
+      <button type="button" data-action="addDeal"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Add"}}</button>
+    </div>
   {{/if}}
 
   {{#if section.wontBuy}}
@@ -169,5 +192,10 @@
   <span class="chip chip-terms"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{preview.chip}}</span>
   <p class="settings-example">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells"}} {{> coins preview.exampleSell}}</p>
   <p class="settings-example">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleBuys"}} {{> coins preview.exampleBuy}}</p>
+  {{#each preview.deals}}
+    <p class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Only" name=name}}</p>
+    <span class="chip chip-terms"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{chip}}</span>
+    <p class="settings-example">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells"}} {{> coins exampleSell}}</p>
+  {{/each}}
   <p class="settings-footnote">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Note"}}</p>
 </aside>

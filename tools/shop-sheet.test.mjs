@@ -1255,3 +1255,95 @@ test("the GM's note on a deal never reaches the player's window (#111)", async (
   const shown = Object.fromEntries(Object.entries(context).filter(([key]) => key !== "actor" && key !== "config"));
   assert.ok(!JSON.stringify(shown).includes("SECRET-NOTE"));
 });
+
+/* ------------------------------------------------------------ deals section (#111) */
+
+/** The GM's window, with the buyer made a player's character a deal can be for. */
+function openDeals(t, deals = []) {
+  const opened = openSettings(t, { shopConfig: { deals } });
+  opened.buyer.type = "character";
+  opened.buyer.name = "Aria";
+  const DialogV2 = globalThis.foundry.applications.api.DialogV2;
+  const input = DialogV2.input;
+  opened.asked = [];
+  // The form the GM fills in: set `opened.answer` before the action.
+  DialogV2.input = async options => { opened.asked.push(options); return opened.answer; };
+  t.after(() => { DialogV2.input = input; });
+  return opened;
+}
+
+const ARIA_DEAL = uuid => ({ actor: uuid, name: "Aria", buy: -0.1, sell: null, note: "Saved the smith's daughter", ends: null });
+
+test("the Deals section lists each deal with what it changes and when it ends", async t => {
+  await withLabels(async () => {
+    const { sheet, buyer } = openDeals(t);
+    const config = sheet.document.flags["merchant-presets"].shop;
+    config.deals = [ARIA_DEAL(buyer.uuid),
+      { actor: "Actor.tomas", name: "Tomas", buy: null, sell: 0.1, note: "", ends: { at: 50, when: "close" } },
+      { actor: "Actor.old", name: "Old", buy: -0.2, sell: 0.2, note: "", ends: { at: -1, when: "date" } }];
+    const { settings } = await sheet._prepareContext({});
+    assert.deepEqual(settings.deals.list.map(d => [d.name, d.initial, d.badges, d.line, d.ended]), [
+      ["Aria", "A", ["Buying(-10%)"], "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd", false],
+      ["Tomas", "T", ["Selling(+10%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.UntilClose", false],
+      ["Old", "O", ["Buying(-20%)", "Selling(+20%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.Ended", true]
+    ]);
+    // Players see: only the deals in force, each for its own character.
+    assert.deepEqual(settings.preview.deals.map(d => d.name), ["Aria", "Tomas"]);
+    assert.match(settings.preview.deals[0].chip, /YourPrice\(-10%\)/);
+  });
+});
+
+test("adding a deal writes it from the form, for the character picked", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "never", days: null, note: "Saved the smith's daughter" };
+  await act(sheet, "addDeal");
+  assert.deepEqual(writtenShop(shop).deals, [ARIA_DEAL(buyer.uuid)]);
+  assert.match(opened.asked[0].content, new RegExp(buyer.uuid), "the character is offered");
+});
+
+test("a character with a deal isn't offered for another", async t => {
+  const opened = openDeals(t);
+  const { sheet, buyer } = opened;
+  sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  assert.doesNotMatch(opened.asked[0]?.content ?? "", new RegExp(buyer.uuid));
+});
+
+test("a deal is edited in the same form, for the same character, and removed by its button", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  sheet.document.flags["merchant-presets"].shop.deals = [{ ...ARIA_DEAL(buyer.uuid), ends: { at: 999, when: "date" } }];
+  // A form can't swap the character: the edit is for the deal it opened on.
+  opened.answer = { actor: "Actor.someoneElse", buy: -15, sell: 5, ends: "keep", days: null, note: "Paid in advance" };
+  await act(sheet, "editDeal", { actor: buyer.uuid });
+  assert.deepEqual(writtenShop(shop).deals,
+    [{ actor: buyer.uuid, name: "Aria", buy: -0.15, sell: 0.05, note: "Paid in advance", ends: { at: 999, when: "date" } }]);
+  await act(sheet, "removeDeal", { actor: buyer.uuid });
+  assert.deepEqual(writtenShop(shop).deals, []);
+});
+
+test("a cancelled deal form writes nothing, and a bad one warns and writes nothing", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer, warnings } = opened;
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  opened.answer = { actor: buyer.uuid, buy: -100, sell: null, ends: "never", days: null, note: "" };
+  await act(sheet, "addDeal");
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "days", days: 0, note: "" };
+  await act(sheet, "addDeal");
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+});
+
+test("a player's window can't make, edit or remove a deal", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  globalThis.game.user.isGM = false;
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "never", days: null, note: "" };
+  await act(sheet, "addDeal");
+  await act(sheet, "removeDeal", { actor: buyer.uuid });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(opened.asked.length, 0);
+});

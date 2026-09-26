@@ -7,7 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { shopFrom, validateShop } from "../scripts/schema.mjs";
 import { activeDeal, endsAfterDays, nextCloseAt } from "../scripts/deals.mjs";
-import { applyChange } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields } from "../scripts/shop-settings.mjs";
 
 const ARIA = "Actor.aria000000000000";
 const TOMAS = "Actor.tomas000000000000";
@@ -159,4 +159,33 @@ test("reset to preset keeps the shop's deals: they're with a character, not the 
   const config = applied(shop([deal()]), { op: "reset", preset });
   assert.equal(config.terms.sellsAt, 1.25);
   assert.deepEqual(config.deals, [deal()]);
+});
+
+/* ------------------------------------------------------------------ the form */
+
+const form = over => ({ actor: ARIA, buy: -10, sell: null, ends: "never", days: null, note: "", ...over });
+const FORM_AT = { name: "Aria", worldTime: at(3, 10), hours: HOURS, calendar: CAL, previous: null };
+
+test("the deal form reads as the tab's change: sides as percentages, empty as no change", () => {
+  assert.deepEqual(dealFields(form({ note: "  Saved the smith's daughter " }), FORM_AT),
+    { actor: ARIA, name: "Aria", buy: -10, sell: null, note: "Saved the smith's daughter", ends: null });
+  assert.deepEqual(dealFields(form({ buy: "", sell: "15" }), FORM_AT).sell, 15);
+  assert.equal(dealFields(form({ buy: "", sell: "15" }), FORM_AT).buy, null);
+  assert.ok(Number.isNaN(dealFields(form({ buy: "ten" }), FORM_AT).buy), "left for applyChange to refuse");
+});
+
+test("the deal form's end: the shop's next closing, some days from now, or the end it had", () => {
+  assert.deepEqual(dealFields(form({ ends: "close" }), FORM_AT).ends, { at: at(3, 19), when: "close" });
+  assert.deepEqual(dealFields(form({ ends: "days", days: "2" }), FORM_AT).ends, { at: at(5, 10), when: "date" });
+  const previous = { ends: { at: 777, when: "date" } };
+  assert.deepEqual(dealFields(form({ ends: "keep" }), { ...FORM_AT, previous }).ends, { at: 777, when: "date" });
+});
+
+test("a deal form whose end can't be kept is refused", () => {
+  assert.ok(dealFields(form({ ends: "close" }), { ...FORM_AT, hours: null }).error);
+  assert.ok(dealFields(form({ ends: "days", days: "0" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "days", days: "1.5" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "days", days: "" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "keep" }), FORM_AT).error, "nothing to keep on a new deal");
+  assert.ok(dealFields(form({ ends: "someday" }), FORM_AT).error);
 });

@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
 import {
-  applyChange, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
+  applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
@@ -98,6 +98,20 @@ function selectionOf(control) {
 
 /** A number typed into the tab; an emptied field is no number at all, not 0. */
 const typedNumber = text => (String(text).trim() === "" ? NaN : Number(text));
+
+/**
+ * The header chip with a buyer's deal after the shop's terms (#111; design v8ap9 "Sells at list ·
+ * Your price −10%"). Only the character with the deal is ever shown it.
+ */
+function dealChip(termsChip, deal) {
+  return [termsChip,
+    deal?.buy ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: signedPercent(deal.buy) }) : null,
+    deal?.sell ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: signedPercent(deal.sell) }) : null
+  ].filter(Boolean).join(" · ");
+}
+
+/** Text for a form's HTML: the deal form is built as a string (DialogV2.input). */
+const escapeText = text => String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /** Whether a seal is out or its bill is stamped: either way the live checks no longer apply. */
 const isSettled = state => state === "sealing" || state === "sealed";
@@ -192,6 +206,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       setEvery: ShopSheet.#onSetEvery,
       addRule: ShopSheet.#onAddRule,
       removeRule: ShopSheet.#onRemoveRule,
+      addDeal: ShopSheet.#onAddDeal,
+      editDeal: ShopSheet.#onEditDeal,
+      removeDeal: ShopSheet.#onRemoveDeal,
       restockNow: ShopSheet.#onRestockNow,
       resetToPreset: ShopSheet.#onResetToPreset,
       openTable: ShopSheet.#onOpenTable
@@ -423,12 +440,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, deal) {
-    // The buyer's own deal, after the shop's terms (#111; design v8ap9 "Sells at list · Your price
-    // −10%"): only the character with the deal is ever shown it.
-    const dealParts = [
-      deal?.buy ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourPrice", { percent: signedPercent(deal.buy) }) : null,
-      deal?.sell ? game.i18n.localize("MERCHANT_PRESETS.Shop.Deal.YourOffers", { percent: signedPercent(deal.sell) }) : null
-    ].filter(Boolean);
+    const termsChip = game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) });
     const closesAt = config.hours ? this.#formatTime(config.hours.close) : null;
     const opensAt = config.hours ? this.#formatTime(config.hours.open) : null;
     return {
@@ -444,8 +456,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // design/README.md's own mockup ("Sells at list · Buys at ½"): the chip reads sellsAt in
       // words but buysAt as the row-tag fraction glyph — an asymmetry the mockup draws on
       // purpose, unlike the Terms popover below, which spells both out in words.
-      termsChip: [game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: termsWord(chipSellsAt, "sell"), buys: rateFraction(chipBuysAt) }),
-        ...dealParts].join(" · "),
+      termsChip: dealChip(termsChip, deal),
+      // What everyone else sees: the Settings tab's preview (#110).
+      termsChipBase: termsChip,
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
     };
   }
@@ -1131,10 +1144,52 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           ? this.#dateLabel(schedule.dueAt) : null,
         autoOff: !game.settings.get(MODULE, "autoRestock")
       },
+      deals: { list: shop.deals.map(d => this.#dealCard(d)) },
       canReset: !!preset,
-      // What players see at these terms: the header chip, and its worked example.
-      preview: { chip: header.termsChip, exampleSell: header.terms.exampleSell, exampleBuy: header.terms.exampleBuy }
+      // What players see at these terms: the header chip and its worked example, then each deal in
+      // force as its own character sees it.
+      preview: {
+        chip: header.termsChipBase, exampleSell: header.terms.exampleSell, exampleBuy: header.terms.exampleBuy,
+        deals: shop.deals.filter(d => activeDeal(shop, d.actor, game.time.worldTime)).map(d => ({
+          name: d.name,
+          chip: dealChip(header.termsChipBase, d),
+          exampleSell: this.#exampleSell(world, shop, d)
+        }))
+      }
     };
+  }
+
+  /** One deal as the Deals section lists it (design v8ap9): who, what it changes, the note and its end. */
+  #dealCard(deal) {
+    const ended = !!deal.ends && deal.ends.at <= game.time.worldTime;
+    return {
+      actor: deal.actor,
+      name: deal.name,
+      initial: (deal.name || "?").charAt(0).toUpperCase(),
+      badges: [
+        deal.buy ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Deals.Buying", { percent: signedPercent(deal.buy) }) : null,
+        deal.sell ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Deals.Selling", { percent: signedPercent(deal.sell) }) : null
+      ].filter(Boolean),
+      line: [deal.note, this.#endLabel(deal)].filter(Boolean).join(" · "),
+      ended
+    };
+  }
+
+  /** When a deal ends, in words: never, when the shop closes, on a date, or already. */
+  #endLabel(deal) {
+    const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${key}`);
+    if (!deal.ends) return i18n("NoEnd");
+    if (deal.ends.at <= game.time.worldTime) return i18n("Ended");
+    if (deal.ends.when === "close") return i18n("UntilClose");
+    return game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Deals.Until", { date: this.#dateLabel(deal.ends.at) });
+  }
+
+  /** The Terms example (a 15 gp longsword) at a deal's price, for the preview. */
+  #exampleSell(world, shop, deal) {
+    let cp = 0;
+    try { cp = itemPriceCp({ value: 15, denomination: "gp" }, effectiveRates(world, shop.terms, null, deal).sellsAt.rate, 1, CONFIG.DND5E.currencies); }
+    catch { /* no "gp" in this world's currencies */ }
+    return coinBreakdown(cp, CONFIG.DND5E.currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
   }
 
   /**
@@ -1238,6 +1293,84 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static async #onRemoveRule(_event, target) {
     if (!game.user.isGM) return;
     await this.#edit(() => ({ op: "removeRule", category: target.dataset.category }));
+  }
+
+  static async #onAddDeal() {
+    if (!game.user.isGM) return;
+    await this.#dealForm(null);
+  }
+
+  static async #onEditDeal(_event, target) {
+    if (!game.user.isGM) return;
+    const deal = safeShopOf(this.document)?.deals.find(d => d.actor === target.dataset.actor);
+    if (deal) await this.#dealForm(deal);
+  }
+
+  static async #onRemoveDeal(_event, target) {
+    if (!game.user.isGM) return;
+    await this.#edit(() => ({ op: "removeDeal", actor: target.dataset.actor }));
+  }
+
+  /**
+   * Asks the GM for a deal (#111): a new one, or `previous` edited. The form picks the character
+   * only for a new deal; an edit is always for the character it opened on.
+   */
+  async #dealForm(previous) {
+    const shop = safeShopOf(this.document);
+    if (!shop) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
+      return;
+    }
+    const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${key}`);
+    // A player's character, or anything a player owns, that has no deal here yet.
+    const candidates = previous ? [] : game.actors.filter(a => (a.type === "character" || a.hasPlayerOwner)
+      && !shop.deals.some(d => d.actor === a.uuid));
+    if (!previous && !candidates.length) {
+      ui.notifications.warn(i18n("NoCharacters"));
+      return;
+    }
+    const percent = factor => (factor ? percentOf(factor) : "");
+    const endOption = (value, label, { selected = false, disabled = false } = {}) =>
+      `<option value="${value}" ${selected ? "selected" : ""} ${disabled ? "disabled" : ""}>${escapeText(label)}</option>`;
+    const who = previous
+      ? `<input type="hidden" name="actor" value="${escapeText(previous.actor)}" /><p><b>${escapeText(previous.name)}</b></p>`
+      : `<select name="actor">${candidates.map(a => `<option value="${escapeText(a.uuid)}">${escapeText(a.name)}</option>`).join("")}</select>`;
+    const content = `
+      <div class="form-group"><label>${i18n("Form.Character")}</label>${who}</div>
+      <div class="form-group"><label>${i18n("Form.Buying")}</label>
+        <input type="number" name="buy" step="any" value="${percent(previous?.buy)}" placeholder="-10" /> %</div>
+      <div class="form-group"><label>${i18n("Form.Selling")}</label>
+        <input type="number" name="sell" step="any" value="${percent(previous?.sell)}" placeholder="10" /> %</div>
+      <p class="hint">${i18n("Form.SidesHint")}</p>
+      <div class="form-group"><label>${i18n("Form.Ends")}</label><select name="ends">
+        ${previous?.ends ? endOption("keep", this.#endLabel(previous), { selected: true }) : ""}
+        ${endOption("never", i18n("NoEnd"), { selected: !previous?.ends })}
+        ${endOption("close", i18n("Form.WhenCloses"), { disabled: !shop.hours })}
+        ${endOption("days", i18n("Form.AfterDays"))}
+      </select></div>
+      <div class="form-group"><label>${i18n("Form.Days")}</label><input type="number" name="days" min="1" step="1" /></div>
+      <div class="form-group stacked"><label>${i18n("Form.Note")}</label><textarea name="note">${escapeText(previous?.note ?? "")}</textarea></div>
+      <p class="hint">${i18n("Form.NoteHint")}</p>`;
+    const answer = await foundry.applications.api.DialogV2.input({
+      window: { title: i18n(previous ? "Form.EditTitle" : "Form.AddTitle") },
+      content,
+      ok: { label: i18n(previous ? "Form.Save" : "Form.Add") }
+    });
+    if (!answer) return;
+    // An edit stays with its own character, whatever the form sent back.
+    const actor = previous?.actor ?? answer.actor;
+    const name = game.actors.find(a => a.uuid === actor)?.name ?? previous?.name ?? "";
+    await this.#edit(config => {
+      const fields = dealFields({ ...answer, actor }, {
+        name, worldTime: game.time.worldTime, hours: config.hours, calendar: game.time.calendar.days,
+        previous: config.deals.find(d => d.actor === actor) ?? null
+      });
+      if (fields.error) {
+        ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: fields.error }));
+        return null;
+      }
+      return { op: previous ? "editDeal" : "addDeal", ...fields };
+    });
   }
 
   static async #onRestockNow() {

@@ -6,6 +6,7 @@
  * and stored as the factors schema.mjs holds.
  */
 
+import { endsAfterDays, nextCloseAt } from "./deals.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
 
@@ -152,6 +153,42 @@ export function applyChange(shop, change) {
   if (refusal) return { ok: false, errors: [refusal] };
   const { ok, errors } = validateShop(next);
   return ok ? { ok, shop: next } : { ok, errors };
+}
+
+/** A form field as a percentage: blank is no change (null), anything else a number, NaN if it isn't one. */
+const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(v));
+
+/**
+ * The deal form's answer (#111) as the fields of an `addDeal`/`editDeal` change, or `{error}` for
+ * an end that can't be kept. Sides stay percentages, checked by `applyChange` like any other edit.
+ *
+ * @param {{actor: string, buy: unknown, sell: unknown, ends: "never"|"close"|"days"|"keep", days:
+ *   unknown, note: unknown}} form  `ends`: no end, the shop's next closing, `days` whole days from
+ *   now, or (editing) the end the deal already has
+ * @param {{name: string, worldTime: number, hours: object|null, calendar: object, previous:
+ *   object|null}} context  `hours` the shop's own (null: it never closes); `previous` the deal
+ *   being edited
+ * @returns {{actor: string, name: string, buy: number|null, sell: number|null, note: string,
+ *   ends: object|null} | {error: string}}
+ */
+export function dealFields(form, { name, worldTime, hours, calendar, previous }) {
+  let ends = null;
+  if (form.ends === "close") {
+    const at = nextCloseAt(hours, worldTime, calendar);
+    if (at === null) return { error: "this shop never closes" };
+    ends = { at, when: "close" };
+  } else if (form.ends === "days") {
+    const days = percentField(form.days);
+    if (!Number.isInteger(days) || days < 1) return { error: "a deal lasts a whole number of days, 1 or more" };
+    ends = { at: endsAfterDays(days, worldTime, calendar), when: "date" };
+  } else if (form.ends === "keep") {
+    if (!previous?.ends) return { error: "there's no end to keep" };
+    ends = previous.ends;
+  } else if (form.ends !== "never") return { error: "no such end" };
+  return {
+    actor: form.actor, name, buy: percentField(form.buy), sell: percentField(form.sell),
+    note: String(form.note ?? "").trim(), ends
+  };
 }
 
 /**
