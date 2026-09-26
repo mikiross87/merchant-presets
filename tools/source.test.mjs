@@ -118,6 +118,9 @@ test("a stock config that disagrees with its Item Piles flags is caught (negativ
 // (isGear): neither is config, so wontBuy leaves both out.
 const FIXED_TYPES = "background,class,facility,feat,race,spell,subclass";
 
+/** The world's default rates (#110): list price, and half of value. */
+const atWorldDefaults = d => d.buyPriceModifier === 1 && d.sellPriceModifier === 0.5;
+
 /**
  * A merchant's terms/hours/restock/wontBuy, read back out of its Item Piles
  * flags the way tools/build_srd.py derives `flags.merchant-presets.shop` from
@@ -133,8 +136,9 @@ function expectedShop(merchant) {
   return {
     tier: merchant.name.match(/\((Village|Town|City)\)/)[1],
     description: d.description,
-    sellsAt: d.buyPriceModifier,
-    buysAt: d.sellPriceModifier,
+    // At the world's own defaults (list, half) a shop follows the world's rate settings (#141).
+    sellsAt: atWorldDefaults(d) ? null : d.buyPriceModifier,
+    buysAt: atWorldDefaults(d) ? null : d.sellPriceModifier,
     categories: (d.itemTypePriceModifiers ?? []).map(mod =>
       ({ category: mod.category, sellsAt: mod.buyPriceModifier, buysAt: mod.sellPriceModifier })),
     hours: { open: d.openTimes.open, close: d.openTimes.close },
@@ -191,4 +195,13 @@ test("Valuables survives the move: at least one shop prices the category, and so
 
   const goodsAsValuable = goods.filter(g => g.flags["merchant-presets"]?.stock?.category === "Valuables");
   assert.ok(goodsAsValuable.length > 0);
+});
+
+test("the presets at list/half ship on World default; the six with their own rates keep them (#141)", () => {
+  const terms = merchants.map(m => m.flags["merchant-presets"].shop.terms);
+  const following = terms.filter(t => t.sellsAt === null && t.buysAt === null);
+  const own = terms.filter(t => t.sellsAt !== null && t.buysAt !== null);
+  assert.equal(following.length, 45);
+  assert.deepEqual(own.map(t => [t.sellsAt, t.buysAt]).sort(),
+    [[1, 0.6], [1, 0.6], [1, 0.6], [1.25, 0.35], [1.25, 0.35], [1.25, 0.35]]);
 });
