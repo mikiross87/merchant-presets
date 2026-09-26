@@ -111,3 +111,42 @@ test("a restock waits for a trade in progress on the same queue", async () => {
   await restock;
   assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "then it ran");
 });
+
+test("an assistant GM's client never restocks: only the active GM does (#135 review)", async () => {
+  const { shop, clock } = await setUp();
+  globalThis.game.users.activeGM = { id: "other-gm", isGM: true };
+  await clock(at(0, 1));
+  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+});
+
+test("turning restocking off mid-session stops it at the next tick (#135 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  world.settings.autoRestock = false;   // what migrateShop does when a 1.x merchant arrives
+  await clock(at(0, 1));
+  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+});
+
+test("a shop whose stock table is missing isn't scheduled until it's found, so its shelf is adopted first (#135 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  const table = shop.flags["merchant-presets"].shop.restock.table;
+  const saved = world.compendium.get(table);
+  world.compendium.delete(table);
+  await clock(at(0, 1));
+  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+  world.compendium.set(table, saved);
+  await clock(at(0, 2));
+  assert.ok(byName(shop, "Bell").every(drawn));
+  assert.ok(shop.flags["merchant-presets"].schedule);
+});
+
+test("a due shop whose table has gone isn't reported as restocked (#135 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  world.compendium.delete(shop.flags["merchant-presets"].shop.restock.table);
+  const told = [];
+  globalThis.ui.notifications.info = message => told.push(message);
+  const warn = console.warn;
+  console.warn = () => {};
+  try { await clock(at(3, 8)); } finally { console.warn = warn; }
+  assert.deepEqual(told, []);
+});
