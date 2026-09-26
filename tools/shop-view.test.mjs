@@ -267,6 +267,17 @@ test("a buy row prices at the category rate and carries the fallback category", 
   assert.deepEqual(row.stock, { state: "count", text: null, count: 7 });
 });
 
+test("a buy row with no bundle of its own reads it through the runtime's bundleOf, as the trade does (#102)", () => {
+  // A GM dragged SRD Arrows straight onto the shelf: no stock flags, so no stated bundle.
+  const item = { _id: "a1", img: "a.webp", name: "Arrows", type: "consumable", flags: {},
+    _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.arrows" }, system: { price: { value: 1, denomination: "gp" }, quantity: 60 } };
+  const stock = { category: "", service: false, infinite: false, hidden: false, notForSale: false, noBuyback: false, keep: true };
+  const rates = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 1 };
+  const bundleOf = i => (i._stats?.compendiumSource?.endsWith(".arrows") ? 20 : undefined);
+  assert.equal(buyRow(item, stock, rates, null, CURRENCIES5E, false, bundleOf).bundle, 20);
+  assert.equal(buyRow(item, stock, rates, null, CURRENCIES5E, false).bundle, 1);
+});
+
 test("an unpriced item (no price data) reads as unpriced rather than throwing", () => {
   const item = { _id: "i2", img: "img.webp", name: "Trophy", type: "loot", system: { price: { value: 1, denomination: "doubloon" }, quantity: 1 } };
   const stock = { category: "Gear", bundle: 1, service: false, infinite: false };

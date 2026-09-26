@@ -7,14 +7,15 @@
  * This class only ever *reads* Foundry data and turns it into the plain view-model
  * `scripts/shop-view.mjs` builds the pricing and formatting for; it never writes to the shop or
  * the buyer directly. A trade is carried out by calling
- * `game.modules.get("merchant-presets").api.trade(request)` — the #102 runtime, landing
- * separately (PR #122) — and applying whatever it reports back. Until that API exists, every seal
- * attempt reads as `"no-gm"`, which is exactly how the window should behave if #102 were merged
- * but no GM happened to be connected (design/README.md, "Trade states").
+ * `game.modules.get("merchant-presets").api.trade(request)` — the #102 runtime in
+ * merchant-presets.mjs, carried out on the GM's side — and applying whatever it reports back.
+ * Before the runtime's `ready` has set the API, a seal attempt reads as `"no-gm"`, the same as no
+ * GM connected (design/README.md, "Trade states").
  */
 
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS } from "./schema.mjs";
+import { WORLD_RATES } from "./trade-desk.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -26,11 +27,11 @@ const MODULE = "merchant-presets";
 const TEMPLATES = `modules/${MODULE}/templates`;
 
 /**
- * World default rates (#110 hasn't shipped the Configure Settings entry yet). List price / half
- * value match every shipped preset's own starting terms, so an unconfigured world still prices
- * sensibly; #110 replaces this with a read of the real setting.
+ * The runtime's bundle resolver (#102), the same one the GM's trade prices by: a good with no
+ * bundle of its own (SRD Arrows dragged onto a shelf, starting gear) reads it off its compendium
+ * source. Undefined before the runtime's `ready` has run, which `bundleFor` treats as no resolver.
  */
-const PLACEHOLDER_WORLD_RATES = Object.freeze({ sellsAt: 1, buysAt: 0.5 });
+const bundleOf = item => game.modules.get(MODULE)?.api?.bundleOf?.(item);
 /** The world's stock mode: whether a line with no `stock.infinite` of its own never runs out. */
 const worldInfiniteStock = () => game.settings.get(MODULE, "stockMode") === "unlimited";
 
@@ -266,10 +267,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     this.#pruneBaskets();
 
-    const chipSellsAt = effectiveRates(PLACEHOLDER_WORLD_RATES, config.terms).sellsAt.rate;
-    const chipBuysAt = effectiveRates(PLACEHOLDER_WORLD_RATES, config.terms).buysAt.rate;
+    const chipSellsAt = effectiveRates(WORLD_RATES, config.terms).sellsAt.rate;
+    const chipBuysAt = effectiveRates(WORLD_RATES, config.terms).buysAt.rate;
     const rates = {
-      world: PLACEHOLDER_WORLD_RATES, shopTerms: config.terms, chipSellsAt, chipBuysAt
+      world: WORLD_RATES, shopTerms: config.terms, chipSellsAt, chipBuysAt
     };
 
     Object.assign(context, {
@@ -447,7 +448,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .map(data => ({ data, stock: safeStockOf(data) }))
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems))
       .map(({ data, stock }) => {
-        const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock());
+        const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock(), bundleOf);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
@@ -651,7 +652,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!item) return { bundle: 1, available: 0, infinite: false };
     const stock = stockConfigOf(item);
     return {
-      bundle: bundleFor(item, item),
+      bundle: bundleFor(item, item, bundleOf),
       available: item.system?.quantity ?? 0,
       infinite: stock.service || (stock.infinite ?? worldInfiniteStock())
     };
@@ -669,7 +670,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const matched = stockConfigOf(line);
       // Anything inside counts, gear included: the engine refuses a sale of any non-empty container.
       const hasContents = item.type === "container" && (buyer?.items ?? []).some(i => i.system?.container === item._id);
-      let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line) });
+      let row = sellRow(item, config, matched, rates, null, currencies, { hasContents, bundle: bundleFor(item, line, bundleOf) });
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
@@ -736,7 +737,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * itemId/quantity pairs `this._baskets` holds — those carry no price at all on their own.
    */
   #pricedLines(kind, currencies) {
-    const world = PLACEHOLDER_WORLD_RATES;
+    const world = WORLD_RATES;
     const config = shopConfigOf(this.document);
     const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
     const lines = [];
@@ -751,8 +752,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const rates = effectiveRates(world, config.terms, categoryFor(item, stock));
       const rate = kind === "buy" ? rates.sellsAt.rate : rates.buysAt.rate;
       // trade-plan's own chain and line total, so the bill shows exactly what the trade charges.
-      // No bundleOf resolver until the #102 runtime provides one.
-      const bundle = bundleFor(item, line);
+      const bundle = bundleFor(item, line, bundleOf);
       let lineTotal = 0, bundleCp = null;
       try {
         lineTotal = lineTotalCp(item, rate, bundle, quantity, currencies);
