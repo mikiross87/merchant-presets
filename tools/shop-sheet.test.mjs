@@ -1080,6 +1080,47 @@ test("the Terms section words a rate as the shop charges it, capped (#140 review
   assert.equal(settings.terms.buys.word, "40%");
 });
 
+test("a save the server refuses is said, and the field put back (#140 review, round 4)", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  shop.update = async () => { throw new Error("server says no"); };
+  const renders = sheet.renders;
+  const errors = [];
+  const logged = console.error;
+  console.error = (...args) => errors.push(args);
+  t.after(() => { console.error = logged; });
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });   // resolves: nothing left unhandled
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.SaveFailed"]);
+  assert.equal(sheet.renders, renders + 1);
+  assert.equal(errors.length, 1);
+  // The next edit still runs.
+  shop.update = async changes => { shop.updates.push(changes); };
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "130" });
+  assert.equal(writtenShop(shop).terms.sellsAt, 1.3);
+});
+
+test("the next restock date shows only while it's the one the shop will keep (#140 review, round 4)", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { restock: { ...SHOP_DEFAULTS.restock, table: "RollTable.t", every: 1 } } });
+  // Scheduled at 14 days; the GM has just made it daily. The clock recounts it at its next tick.
+  shop.flags["merchant-presets"].schedule = { lastRestock: 0, dueAt: 14 * 86400, every: 14 };
+  assert.equal((await sheet._prepareContext({})).settings.restock.next, null);
+  shop.flags["merchant-presets"].schedule.every = 1;
+  assert.equal((await sheet._prepareContext({})).settings.restock.next, `t${14 * 86400}`);
+  // No table: it never restocks, so there's no next date.
+  shop.flags["merchant-presets"].shop.restock.table = null;
+  assert.equal((await sheet._prepareContext({})).settings.restock.next, null);
+});
+
+test("a render that fails doesn't leave the window deaf to typed fields (#140 review, round 4)", async t => {
+  const { sheet } = openSettings(t);
+  await sheet._preRender({}, {});
+  const base = Object.getPrototypeOf(Object.getPrototypeOf(sheet));
+  const render = base.render;
+  base.render = () => { throw new Error("template broke"); };
+  t.after(() => { base.render = render; });
+  await assert.rejects(Promise.resolve().then(() => sheet.render()));
+  assert.equal(sheet._settingsRendering, false);
+});
+
 test("a restock that can't run says so without blaming a missing table", async t => {
   const { sheet, warnings } = openSettings(t);
   api.restock = async () => null;
