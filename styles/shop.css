@@ -504,7 +504,6 @@
   margin-bottom: 0.5rem;
   border: var(--dnd5e-border-gold);
   border-radius: 0.4rem;
-  background: var(--dnd5e-color-card, var(--color-bg-option));
   font-size: 0.85rem;
 }
 .shop-sheet .settings-visit-row { display: flex; justify-content: space-between; align-items: center; }
