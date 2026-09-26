@@ -777,8 +777,9 @@ async function recordDeed(buyer, good, uuids) {
  * them.
  *
  * @param {import("./trade.mjs").ShopTrade} trade
- * @param {{askedHere: boolean, chatMode: number}} where  `chatMode` is Item
- *   Piles' *Output to chat* scale (casting.mjs `chatRecipients`).
+ * @param {{askedHere: boolean, chatMode: number}} where  `chatMode` is the
+ *   0-3 scale casting.mjs `chatRecipients` takes, from *Trades in chat*
+ *   (`nativeChatMode`).
  */
 async function announceSpellcasting(trade, { askedHere, chatMode }) {
   if (!askedHere) return;

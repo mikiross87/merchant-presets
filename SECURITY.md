@@ -10,25 +10,23 @@ top of it.
 Report it privately through
 [GitHub's advisory form](https://github.com/mikiross87/merchant-presets/security/advisories/new),
 not in a public issue, discussion or pull request. Include the Merchant
-Presets, Foundry, dnd5e and Item Piles versions, and the steps that reproduce
-it.
+Presets, Foundry and dnd5e versions, and the steps that reproduce it.
 
 ## Scope
 
 In scope:
 
 - `scripts/`, the JavaScript that runs in the browser of every GM and player in
-  a world with the module enabled. For example: a purchase or chat message that
-  lets one user act for another, or that renders script from item or actor
-  data.
+  a world with the module enabled, including the shop window and the trades a
+  player's client asks the GM's client to carry out. For example: a trade or
+  chat message that lets one user act for another, such as buying as someone
+  else's character, or that renders script from item or actor data.
 - `.github/workflows/`: anything that would let someone else publish a release,
   read a repository secret, or run their own commands in a workflow — including
   through the text of an issue, which the triage workflow parses.
 
 Report these upstream instead:
 
-- Merchant windows, trading and currency handling:
-  [Item Piles](https://github.com/fantasycalendar/FoundryVTT-ItemPiles).
 - The game system: [dnd5e](https://github.com/foundryvtt/dnd5e).
 - Foundry VTT itself.
 

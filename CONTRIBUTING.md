@@ -11,7 +11,9 @@ Thanks for your interest. Two halves to this repo, with different rules:
   `trade-plan.mjs` (what a trade may do), `trade-desk.mjs` (the one GM tab that
   carries trades out), `schedule.mjs` (hours and restocks), `migrate.mjs` (1.x
   Item Piles data to 2.0), `shop-settings.mjs` (the Settings tab's edits),
-  `shop-view.mjs` (the window's view-model) and `shop.mjs`.
+  `shop-view.mjs` (the window's view-model), `shop.mjs` (recognising and setting
+  up shops), `trade.mjs` (reading a trade for the listeners), `nutrition.mjs`
+  (meals and drink) and `casting.mjs` (the spellcasting message).
 - **Content** — the compendiums in `packs/` are *generated*. They are not
   tracked in git. The tracked source is the JSON in `_source/`.
 

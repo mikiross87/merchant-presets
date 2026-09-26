@@ -3,7 +3,7 @@
  * Foundry so it can be tested with plain Node (tools/casting.test.mjs).
  *
  * A service moves gold and nothing else, so without this nothing in Foundry
- * says a spell was cast. Item Piles' own trade card already says what was
+ * says a spell was cast. The trade's own receipt already says what was
  * paid; this says what was cast and for whom, and hands the GM the spell and
  * any effects to put on whoever it was cast on. It applies nothing: the buyer
  * is often not the target, and a concentration spell would need the shopkeeper
@@ -46,7 +46,7 @@ const times = n => n === 1 ? "" : n === 2 ? " twice" : ` ${n} times`;
  *   spell: string|null, effects: {uuid: string, name: string}[]}[]}} purchase
  *   One entry per service bought. `spell` is the uuid a named service carries
  *   (#55); a level service has none, and the buyer names the spell.
- * @returns {string} The message's HTML. No price: Item Piles' card has it.
+ * @returns {string} The message's HTML. No price: the trade receipt has it.
  */
 export function castingMessage({ shop, buyer, casts }) {
   const who = `<strong>${escape(shop)}</strong>`;
@@ -68,10 +68,10 @@ export function castingMessage({ shop, buyer, casts }) {
 }
 
 /**
- * Who sees the message, following Item Piles' *Output to chat* setting as its
- * own trade card does: 0 off and 1 public are both public here (this module has
- * its own setting to turn the message off), 2 is the GMs and the user who
- * traded, 3 the GMs alone.
+ * Who sees the message, on the 0-3 scale 1.x took from Item Piles' *Output to
+ * chat* (merchant-presets.mjs `nativeChatMode` maps *Trades in chat* onto it):
+ * 0 off and 1 public are both public here (this module has its own setting to
+ * turn the message off), 2 is the GMs and the user who traded, 3 the GMs alone.
  *
  * @param {number} mode
  * @param {string[]} gmIds
