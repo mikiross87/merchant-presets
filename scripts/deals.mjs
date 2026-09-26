@@ -33,8 +33,9 @@ export function activeDeal(shop, actorUuid, worldTime) {
  * When a shop keeping `hours` has next closed, strictly after `worldTime`: the end of a deal made
  * "until the shop closes". schedule.mjs `isOpen` keeps a shop open through its whole closing
  * minute, so a 19:00 close has closed at 19:01, and a deal made at 19:00:30 ends then, not a day
- * later. A shop that's closed now closes next after it reopens. Null for a shop with no hours,
- * which never closes.
+ * later. A shop that's closed now closes next after it reopens. Null for a shop that never
+ * closes: no hours, or hours that run round the whole day (00:00-23:59, 07:00-06:59), which
+ * `isOpen` reads as open throughout (#142 review).
  *
  * @param {{open: {hour: number, minute: number}, close: {hour: number, minute: number}}|null} hours
  * @param {number} worldTime
@@ -43,8 +44,11 @@ export function activeDeal(shop, actorUuid, worldTime) {
  */
 export function nextCloseAt(hours, worldTime, calendar) {
   if (!hours) return null;
+  const minutesPerDay = calendar.minutesPerHour * calendar.hoursPerDay;
+  const closed = hours.close.hour * calendar.minutesPerHour + hours.close.minute + 1;
+  if (closed % minutesPerDay === hours.open.hour * calendar.minutesPerHour + hours.open.minute) return null;
   const day = secondsPerDay(calendar);
-  const offset = (hours.close.hour * calendar.minutesPerHour + hours.close.minute + 1) * calendar.secondsPerMinute;
+  const offset = closed * calendar.secondsPerMinute;
   const today = Math.floor(worldTime / day) * day + offset;
   return today > worldTime ? today : today + day;
 }

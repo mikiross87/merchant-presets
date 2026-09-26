@@ -19,7 +19,7 @@ import {
   applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
-import { activeDeal } from "./deals.mjs";
+import { activeDeal, nextCloseAt } from "./deals.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -1366,7 +1366,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       <div class="form-group"><label>${i18n("Form.Ends")}</label><select name="ends">
         ${previous?.ends ? endOption("keep", this.#endLabel(previous), { selected: true }) : ""}
         ${endOption("never", i18n("NoEnd"), { selected: !previous?.ends })}
-        ${endOption("close", i18n("Form.WhenCloses"), { disabled: !closingHours(shop) })}
+        ${endOption("close", i18n("Form.WhenCloses"), { disabled: nextCloseAt(closingHours(shop), game.time.worldTime, game.time.calendar.days) === null })}
         ${endOption("days", i18n("Form.AfterDays"))}
       </select></div>
       <div class="form-group"><label>${i18n("Form.Days")}</label><input type="number" name="days" min="1" step="1" /></div>
