@@ -6,6 +6,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { SHOP_DEFAULTS } from "../scripts/schema.mjs";
 
 const OWNERSHIP = { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3 };
@@ -855,7 +856,13 @@ function openSettings(t, { gm = true, shopConfig = {}, ownership = 0 } = {}) {
   shop.ownership = { default: ownership };
   shop.flags["merchant-presets"].shop = { ...structuredClone(SHOP_DEFAULTS), source: PRESET_UUID, ...shopConfig };
   shop.updates = [];
-  shop.update = async changes => { shop.updates.push(changes); };
+  // Like a real update: it lands a moment later, and then the document holds it.
+  shop.update = async changes => {
+    shop.updates.push(changes);
+    await new Promise(resolve => setImmediate(resolve));
+    const written = changes["flags.merchant-presets.shop"];
+    if (written) shop.flags["merchant-presets"].shop = structuredClone(written.replaced);
+  };
   const preset = { ...structuredClone(SHOP_DEFAULTS), tier: "City", terms: { sellsAt: 1.25, buysAt: null, categories: [] } };
   const warnings = [];
   const saved = { isGM: globalThis.game.user.isGM, values: { ...globalThis.game.settings.values }, warn: globalThis.ui.notifications.warn };
@@ -1018,4 +1025,52 @@ test("a shop imported from the pack resets to the merchant it was imported from"
   assert.equal((await sheet._prepareContext({})).settings.canReset, true);
   await act(sheet, "resetToPreset");
   assert.deepEqual(writtenShop(shop), { ...preset, source: null });
+});
+
+/* ------------------------------------------------------------ #140 review, round 1 */
+
+test("two quick edits both land: the second reads the config the first wrote", async t => {
+  const { sheet, shop } = openSettings(t);
+  // Not awaited in between: the GM leaves Sells at and ticks a box before the first save lands.
+  const first = change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
+  const second = change(sheet, { op: "rateDefault", side: "buysAt" }, { checked: true });
+  const third = change(sheet, { op: "keepHours" }, { checked: false });
+  await Promise.all([first, second, third]);
+  const written = shop.flags["merchant-presets"].shop;
+  assert.equal(written.terms.sellsAt, 1.2);
+  assert.equal(written.terms.buysAt, null);
+  assert.equal(written.hours, null);
+});
+
+test("only the world settings a shop window shows re-render it, not the restock clock", async t => {
+  const { sheet } = openSettings(t);
+  const renders = sheet.renders;
+  for (const key of ["lastRestockTime", "autoRestockDecided", "spellcastingToChat"]) fire("updateSetting", { key: `merchant-presets.${key}` });
+  assert.equal(sheet.renders, renders);
+  for (const key of ["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock"]) {
+    fire("updateSetting", { key: `merchant-presets.${key}` });
+  }
+  assert.equal(sheet.renders, renders + 6);
+});
+
+test("a shop whose config can't be read is never overwritten with the defaults", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  shop.flags["merchant-presets"].shop = { version: 1, tier: "Hamlet", restock: { table: "RollTable.keep" } };
+  assert.equal((await sheet._prepareContext({})).settings.broken, true);
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
+  await act(sheet, "setEvery", { every: "3" });
+  await act(sheet, "removeRule", { index: "0" });
+  await act(sheet, "resetToPreset");
+  assert.equal(shop.updates.length, 0);
+  assert.ok(warnings.length >= 3);
+});
+
+test("a restock that can't run says so without blaming a missing table", async t => {
+  const { sheet, warnings } = openSettings(t);
+  api.restock = async () => null;
+  t.after(() => { delete api.restock; });
+  await act(sheet, "restockNow");
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.Restock.Failed"]);
+  const lang = JSON.parse(readFileSync(new URL("../lang/en.json", import.meta.url)));
+  assert.doesNotMatch(lang.MERCHANT_PRESETS.Shop.Settings.Restock.Failed, /table is missing/);
 });
