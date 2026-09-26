@@ -87,6 +87,16 @@ test("a shop the GM opened to one player only stays that way when its token is p
   assert.deepEqual(shop.ownership, { default: 0, rogueUser000001: 1 });
 });
 
+test("a shop the GM gave one player Owner of stays that way when its token is placed (#138 review, round 8)", async () => {
+  const { world, shop } = await setUp();
+  globalThis.game.users.push({ id: "rogueUser000001", isGM: false });
+  shop.ownership = { default: 0, gm: 3, rogueUser000001: 3 };
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await tick();
+  assert.deepEqual(shop.ownership, { default: 0, gm: 3, rogueUser000001: 3 });
+});
+
 test("a scene arriving with a shop's token already on it makes the shop visitable (#138 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);

@@ -130,7 +130,7 @@ export function createWorld() {
   const socketHandlers = new Map();
   globalThis.game = {
     user,
-    users: Object.assign([user], { activeGM: user }),
+    users: Object.assign([user], { activeGM: user, get(id) { return this.find(u => u.id === id); } }),
     socket: {
       on: (name, fn) => socketHandlers.set(name, fn),
       emit: (name, message) => calls.socket.push({ name, message })

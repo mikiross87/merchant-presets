@@ -512,6 +512,17 @@ test("a shop the GM opened to one player only is the GM's choice, left alone (#1
   assert.equal(planOwnership(store, true, "world-a"), null);
 });
 
+test("a player the GM made Owner of a shop is the GM's choice, left alone (#138 review, round 8)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  store.ownership = { default: 0, theGmUser000001: 3, rogueUser000001: 3 };
+  const isGm = id => id === "theGmUser000001";
+  assert.equal(planOwnership(store, true, "world-a", isGm), null);
+  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, nativeShop: true, worldId: "world-a", isGm }).update));
+  // The GM's own Owner entry alone still isn't.
+  store.ownership = { default: 0, theGmUser000001: 3 };
+  assert.equal(planOwnership(store, true, "world-a", isGm), 1);
+});
+
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 3 };   // Owner, or any non-default value a GM set
