@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, matchingStockLine, rateFraction, rateTag, sealState, sellRow, stepQuantity, stockLabel, titleParts
+  fitQuantity, matchingStockLine, rateFraction, rateTag, sealState, sellRow, signedPercent, stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -472,4 +472,49 @@ test("a row whose one-bundle price floors to nothing shows the fewest worth a co
   assert.deepEqual([buy.priceFor, buy.priceForCp], [2, 1]);
   const sell = sellRow(chalk, { wontBuy: { types: [], kinds: [] } }, shelf, half, null, CURRENCIES5E);
   assert.deepEqual([sell.priceFor, sell.priceForCp], [2, 1]);
+});
+
+/* -------------------------------------------------------------- deals (#111) */
+
+const LONGSWORD = { _id: "ls", img: "i.webp", name: "Longsword", type: "weapon", system: { price: { value: 15, denomination: "gp" }, quantity: 3 } };
+const PLAIN_STOCK = { category: "", bundle: 1, service: false, infinite: false, hidden: false, notForSale: false, noBuyback: false, keep: true };
+const LIST = { world: { sellsAt: 1, buysAt: 0.5 }, shopTerms: { sellsAt: null, buysAt: null, categories: [] }, chipSellsAt: 1, chipBuysAt: 0.5 };
+
+test("a deal shows on the row as the list price struck and what the deal takes off", () => {
+  const row = buyRow(LONGSWORD, PLAIN_STOCK, LIST, { buy: -0.1, sell: null }, CURRENCIES5E, false);
+  assert.equal(row.bundlePriceCp, 1350);
+  assert.equal(row.listPriceCp, 1500);
+  assert.deepEqual(row.tag, { kind: "deal", text: "-10%" });
+});
+
+test("without a deal, or with one only on the other side, a row has no list price to strike", () => {
+  assert.equal(buyRow(LONGSWORD, PLAIN_STOCK, LIST, null, CURRENCIES5E, false).listPriceCp, null);
+  const row = buyRow(LONGSWORD, PLAIN_STOCK, LIST, { buy: null, sell: 0.1 }, CURRENCIES5E, false);
+  assert.equal(row.listPriceCp, null);
+  assert.deepEqual(row.tag, { kind: null, text: null });
+});
+
+test("a sale with a deal shows the shop's usual offer struck and the deal's lift", () => {
+  const item = { ...LONGSWORD, system: { ...LONGSWORD.system, quantity: 1 } };
+  const row = sellRow(item, shopConfig, PLAIN_STOCK, LIST, { buy: null, sell: 0.2 }, CURRENCIES5E);
+  assert.equal(row.bundlePriceCp, 900);
+  assert.equal(row.listPriceCp, 750);
+  assert.deepEqual(row.tag, { kind: "deal", text: "+20%" });
+  assert.equal(sellRow(item, shopConfig, PLAIN_STOCK, LIST, null, CURRENCIES5E).listPriceCp, null);
+});
+
+test("a deal the cap cuts short shows what it really does, not what it asked for", () => {
+  // The shop buys at 90% and sells at list: a +50% offer deal would pay 135%, capped at 100%.
+  const rates = { ...LIST, shopTerms: { sellsAt: null, buysAt: 0.9, categories: [] }, chipBuysAt: 0.9 };
+  const item = { ...LONGSWORD, system: { ...LONGSWORD.system, quantity: 1 } };
+  const row = sellRow(item, shopConfig, PLAIN_STOCK, rates, { buy: null, sell: 0.5 }, CURRENCIES5E);
+  assert.equal(row.bundlePriceCp, 1500);
+  assert.deepEqual(row.tag, { kind: "deal", text: "+11.11%" });
+});
+
+test("a deal's size reads signed, to a hundredth of a percent", () => {
+  assert.equal(signedPercent(-0.1), "-10%");
+  assert.equal(signedPercent(0.2), "+20%");
+  assert.equal(signedPercent(-0.125), "-12.5%");
+  assert.equal(signedPercent(1 / 9), "+11.11%");
 });

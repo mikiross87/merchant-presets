@@ -1,0 +1,208 @@
+/**
+ * Deals (#111): one character's own price at one shop. The config shape (schema.mjs), which deal
+ * is in force at a moment of the world clock (deals.mjs), and the Settings tab's deal edits
+ * (shop-settings.mjs `applyChange`).
+ */
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { shopFrom, validateShop } from "../scripts/schema.mjs";
+import { activeDeal, endsAfterDays, nextCloseAt } from "../scripts/deals.mjs";
+import { isOpen } from "../scripts/schedule.mjs";
+import { applyChange, dealFields } from "../scripts/shop-settings.mjs";
+
+const ARIA = "Actor.aria000000000000";
+const TOMAS = "Actor.tomas000000000000";
+const deal = (over = {}) => ({ actor: ARIA, name: "Aria", buy: -0.1, sell: null, note: "", ends: null, ...over });
+const shop = (deals = []) => shopFrom({ version: 1, deals });
+
+/* ------------------------------------------------------------------ schema */
+
+test("a shop has no deals until the GM makes one", () => {
+  assert.deepEqual(shopFrom({ version: 1 }).deals, []);
+});
+
+test("a deal names its character and changes buying, selling or both", () => {
+  assert.equal(validateShop({ version: 1, deals: [deal()] }).ok, true);
+  assert.equal(validateShop({ version: 1, deals: [deal({ buy: null, sell: 0.1 })] }).ok, true);
+  assert.equal(validateShop({ version: 1, deals: [deal({ buy: -0.1, sell: 0.1, note: "Saved the smith's daughter" })] }).ok, true);
+  assert.equal(validateShop({ version: 1, deals: [deal({ ends: { at: 86_400, when: "close" } })] }).ok, true);
+  assert.equal(validateShop({ version: 1, deals: [deal({ ends: { at: 86_400.5, when: "date" } })] }).ok, true);
+});
+
+test("a deal that is malformed, free, or changes nothing is refused", () => {
+  const bad = [
+    deal({ actor: "" }),
+    deal({ actor: 7 }),
+    deal({ name: 3 }),
+    deal({ buy: -1 }),              // a deal can't give the goods away
+    deal({ buy: -1.5 }),
+    deal({ sell: -1 }),
+    deal({ buy: "−10%" }),
+    deal({ buy: NaN }),
+    deal({ buy: null, sell: null }),   // changes nothing
+    deal({ buy: 0, sell: null }),
+    deal({ buy: 0, sell: 0 }),
+    deal({ note: null }),
+    deal({ ends: { at: "soon", when: "date" } }),
+    deal({ ends: { at: 5, when: "tuesday" } }),
+    deal({ ends: { at: 5 } }),
+    { ...deal(), extra: true }
+  ];
+  for (const d of bad) assert.equal(validateShop({ version: 1, deals: [d] }).ok, false, JSON.stringify(d));
+  const { actor, ...noActor } = deal();
+  assert.equal(validateShop({ version: 1, deals: [noActor] }).ok, false, `no actor (was ${actor})`);
+});
+
+test("one deal per character at a shop", () => {
+  assert.equal(validateShop({ version: 1, deals: [deal(), deal({ buy: -0.2 })] }).ok, false);
+  assert.equal(validateShop({ version: 1, deals: [deal(), deal({ actor: TOMAS, name: "Tomas" })] }).ok, true);
+});
+
+/* ------------------------------------------------------------------ in force */
+
+test("a character's deal is in force for that character only", () => {
+  const config = shop([deal(), deal({ actor: TOMAS, name: "Tomas", buy: null, sell: 0.1 })]);
+  assert.deepEqual(activeDeal(config, ARIA, 0), { buy: -0.1, sell: null });
+  assert.deepEqual(activeDeal(config, TOMAS, 0), { buy: null, sell: 0.1 });
+  assert.equal(activeDeal(config, "Actor.nobody0000000000", 0), null);
+  assert.equal(activeDeal(config, null, 0), null);
+  assert.equal(activeDeal(shop(), ARIA, 0), null);
+});
+
+test("a deal ends at its end, not a moment before", () => {
+  const config = shop([deal({ ends: { at: 1000, when: "date" } })]);
+  assert.deepEqual(activeDeal(config, ARIA, 999.5), { buy: -0.1, sell: null });
+  assert.equal(activeDeal(config, ARIA, 1000), null);
+  assert.equal(activeDeal(config, ARIA, 5000), null);
+});
+
+/* ------------------------------------------------------------------ ends */
+
+const CAL = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
+const DAY = 86_400;
+const at = (day, hour, minute = 0) => day * DAY + hour * 3600 + minute * 60;
+const HOURS = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } };
+const NIGHT = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
+
+// schedule.mjs `isOpen` keeps a shop open through its whole closing minute (19:00 to 19:00:59),
+// so it has closed at 19:01: that's when a deal "until the shop closes" ends (#142 review).
+test("'until the shop closes' ends when the shop has closed, after now", () => {
+  assert.equal(nextCloseAt(HOURS, at(3, 10), CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 19), CAL), at(3, 19, 1));      // still open, its last minute
+  assert.equal(nextCloseAt(HOURS, at(3, 19) + 30, CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 19, 1), CAL), at(4, 19, 1));   // just closed: the next one
+  assert.equal(nextCloseAt(HOURS, at(3, 20), CAL), at(4, 19, 1));      // closed: the close after it reopens
+  assert.equal(nextCloseAt(HOURS, at(3, 5), CAL), at(3, 19, 1));
+  assert.equal(nextCloseAt(NIGHT, at(3, 23), CAL), at(4, 4, 1));       // runs past midnight
+  assert.equal(nextCloseAt(NIGHT, at(3, 2), CAL), at(3, 4, 1));
+  assert.equal(nextCloseAt(HOURS, at(3, 10) + 0.5, CAL), at(3, 19, 1));
+});
+
+test("a deal until closing is in force while the shop is open, and over once it isn't", () => {
+  const minute = t => Math.floor((t % DAY) / 60);
+  const made = at(3, 10);
+  const config = shop([deal({ ends: { at: nextCloseAt(HOURS, made, CAL), when: "close" } })]);
+  for (const t of [at(3, 18, 59), at(3, 19), at(3, 19) + 59.5]) {
+    assert.equal(isOpen(HOURS, minute(t), CAL), true);
+    assert.ok(activeDeal(config, ARIA, t), `in force at ${t}`);
+  }
+  assert.equal(isOpen(HOURS, minute(at(3, 19, 1)), CAL), false);
+  assert.equal(activeDeal(config, ARIA, at(3, 19, 1)), null);
+});
+
+test("a shop that never closes has no closing for a deal to end at", () => {
+  assert.equal(nextCloseAt(null, at(3, 10), CAL), null);
+});
+
+test("'for N days' ends that many whole days from now", () => {
+  assert.equal(endsAfterDays(3, at(2, 10), CAL), at(5, 10));
+  assert.equal(endsAfterDays(1, 0, { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 10 }), 36_000);
+});
+
+/* ------------------------------------------------------------------ edits */
+
+/** Applies `change` and asserts it was taken; returns the new config. */
+function applied(config, change) {
+  const result = applyChange(config, change);
+  assert.equal(result.ok, true, result.errors?.join("; "));
+  assert.equal(validateShop(result.shop).ok, true);
+  return result.shop;
+}
+
+function refused(config, change) {
+  const result = applyChange(config, change);
+  assert.equal(result.ok, false, JSON.stringify(change));
+  assert.ok(result.errors.length);
+}
+
+const add = over => ({ op: "addDeal", actor: ARIA, name: "Aria", buy: -10, sell: null, note: "", ends: null, ...over });
+
+test("a deal is added from percentages, the way the tab shows it", () => {
+  const config = applied(shop(), add({ note: "Saved the smith's daughter", ends: { at: 500, when: "close" } }));
+  assert.deepEqual(config.deals, [deal({ note: "Saved the smith's daughter", ends: { at: 500, when: "close" } })]);
+  const both = applied(shop(), add({ buy: -12.5, sell: 10 }));
+  assert.equal(both.deals[0].buy, -0.125);
+  assert.equal(both.deals[0].sell, 0.1);
+});
+
+test("a 0% side is no change on that side, and a deal that changes nothing isn't one", () => {
+  assert.equal(applied(shop(), add({ buy: -10, sell: 0 })).deals[0].sell, null);
+  refused(shop(), add({ buy: 0, sell: 0 }));
+  refused(shop(), add({ buy: null, sell: null }));
+});
+
+test("a deal can't make the goods free, or add a second deal for the same character", () => {
+  refused(shop(), add({ buy: -100 }));
+  refused(shop(), add({ buy: NaN }));
+  refused(shop(), add({ actor: "" }));
+  refused(shop([deal()]), add({ buy: -20 }));
+});
+
+test("a deal is edited and removed by its character, never its place in the list", () => {
+  let config = shop([deal(), deal({ actor: TOMAS, name: "Tomas", buy: null, sell: 0.1 })]);
+  config = applied(config, { op: "editDeal", actor: TOMAS, name: "Tomas", buy: null, sell: 15, note: "Ore", ends: null });
+  assert.equal(config.deals[1].sell, 0.15);
+  assert.equal(config.deals[1].note, "Ore");
+  assert.equal(config.deals[0].buy, -0.1);
+  config = applied(config, { op: "removeDeal", actor: ARIA });
+  assert.deepEqual(config.deals.map(d => d.actor), [TOMAS]);
+  // Already gone (a double click): nothing to do.
+  assert.deepEqual(applied(config, { op: "removeDeal", actor: ARIA }).deals.map(d => d.actor), [TOMAS]);
+  refused(config, { op: "editDeal", actor: ARIA, name: "Aria", buy: -5, sell: null, note: "", ends: null });
+});
+
+test("reset to preset keeps the shop's deals: they're with a character, not the preset", () => {
+  const preset = { version: 1, terms: { sellsAt: 1.25, buysAt: 0.35, categories: [] } };
+  const config = applied(shop([deal()]), { op: "reset", preset });
+  assert.equal(config.terms.sellsAt, 1.25);
+  assert.deepEqual(config.deals, [deal()]);
+});
+
+/* ------------------------------------------------------------------ the form */
+
+const form = over => ({ actor: ARIA, buy: -10, sell: null, ends: "never", days: null, note: "", ...over });
+const FORM_AT = { name: "Aria", worldTime: at(3, 10), hours: HOURS, calendar: CAL, previous: null };
+
+test("the deal form reads as the tab's change: sides as percentages, empty as no change", () => {
+  assert.deepEqual(dealFields(form({ note: "  Saved the smith's daughter " }), FORM_AT),
+    { actor: ARIA, name: "Aria", buy: -10, sell: null, note: "Saved the smith's daughter", ends: null });
+  assert.deepEqual(dealFields(form({ buy: "", sell: "15" }), FORM_AT).sell, 15);
+  assert.equal(dealFields(form({ buy: "", sell: "15" }), FORM_AT).buy, null);
+  assert.ok(Number.isNaN(dealFields(form({ buy: "ten" }), FORM_AT).buy), "left for applyChange to refuse");
+});
+
+test("the deal form's end: the shop's next closing, some days from now, or the end it had", () => {
+  assert.deepEqual(dealFields(form({ ends: "close" }), FORM_AT).ends, { at: at(3, 19, 1), when: "close" });
+  assert.deepEqual(dealFields(form({ ends: "days", days: "2" }), FORM_AT).ends, { at: at(5, 10), when: "date" });
+  const previous = { ends: { at: 777, when: "date" } };
+  assert.deepEqual(dealFields(form({ ends: "keep" }), { ...FORM_AT, previous }).ends, { at: 777, when: "date" });
+});
+
+test("a deal form whose end can't be kept is refused", () => {
+  assert.ok(dealFields(form({ ends: "close" }), { ...FORM_AT, hours: null }).error);
+  assert.ok(dealFields(form({ ends: "days", days: "0" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "days", days: "1.5" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "days", days: "" }), FORM_AT).error);
+  assert.ok(dealFields(form({ ends: "keep" }), FORM_AT).error, "nothing to keep on a new deal");
+  assert.ok(dealFields(form({ ends: "someday" }), FORM_AT).error);
+});

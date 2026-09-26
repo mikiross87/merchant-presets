@@ -1181,3 +1181,180 @@ test("a restock that can't run says so without blaming a missing table", async t
   const lang = JSON.parse(readFileSync(new URL("../lang/en.json", import.meta.url)));
   assert.doesNotMatch(lang.MERCHANT_PRESETS.Shop.Settings.Restock.Failed, /table is missing/);
 });
+
+test("a buyer's deal prices the bill as the trade will, so the seal matches (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })], buyerItems: [item("gem", { quantity: 2 })] });
+  shop.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let sent;
+  api.trade = async request => { sent = request; return { status: "sealed" }; };
+  await act(sheet, "seal");
+  assert.deepEqual(sent.lines, [{ itemId: "rope", quantity: 1, expectedBundlePriceCp: 90 }]);
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "gem" });
+  await act(sheet, "seal");
+  assert.deepEqual(sent.lines, [{ itemId: "gem", quantity: 1, expectedBundlePriceCp: 60 }]);
+});
+
+test("another buyer's deal, or an ended one, leaves the price at list (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const config = shop.flags["merchant-presets"].shop;
+  config.deals = [{ actor: "Actor.someoneElse", name: "x", buy: -0.5, sell: null, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let sent;
+  api.trade = async request => { sent = request; return { status: "sealed" }; };
+  await act(sheet, "seal");
+  assert.equal(sent.lines[0].expectedBundlePriceCp, 100);
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.5, sell: null, note: "", ends: { at: 0, when: "close" } }];
+  act(sheet, "addLine", { itemId: "rope" });
+  await act(sheet, "seal");
+  assert.equal(sent.lines[0].expectedBundlePriceCp, 100);
+});
+
+/** Runs `fn` with localize filling in its data, so a test can read what a label says. */
+async function withLabels(fn) {
+  const { localize } = globalThis.game.i18n;
+  globalThis.game.i18n.localize = (key, data) => (data ? `${key.split(".").pop()}(${Object.values(data).join(",")})` : key);
+  try { return await fn(); }
+  finally { globalThis.game.i18n.localize = localize; }
+}
+
+test("the header chip tells the buyer their deal, and only them (#111)", async () => {
+  await withLabels(async () => {
+    const { sheet, shop, buyer } = openShop();
+    const config = shop.flags["merchant-presets"].shop;
+    config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "secret", ends: null }];
+    let { header } = await sheet._prepareContext({});
+    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½) · YourPrice(-10%) · YourOffers(+20%)");
+    config.deals = [{ actor: "Actor.someoneElse", name: "x", buy: -0.1, sell: null, note: "", ends: null }];
+    ({ header } = await sheet._prepareContext({}));
+    assert.equal(header.termsChip, "TermsChip(MERCHANT_PRESETS.Shop.Terms.ListPrice,½)");
+  });
+});
+
+test("a bill line the deal priced is marked as the buyer's deal (#111)", async () => {
+  const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const config = shop.flags["merchant-presets"].shop;
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: null, note: "", ends: null }];
+  act(sheet, "addLine", { itemId: "rope" });
+  let context = await sheet._prepareContext({});
+  assert.equal(context.buy.basket.lines[0].dealt, true);
+  assert.equal(context.buy.sections[0].rows[0].listText, "1 gp");
+  config.deals = [{ actor: buyer.uuid, name: "hero", buy: null, sell: 0.1, note: "", ends: null }];
+  context = await sheet._prepareContext({});
+  assert.equal(context.buy.basket.lines[0].dealt, false);
+  assert.equal(context.buy.sections[0].rows[0].listText, "");
+});
+
+test("the GM's note on a deal never reaches the player's window (#111)", async () => {
+  const { sheet, shop, buyer } = openShop();
+  shop.flags["merchant-presets"].shop.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: null, note: "SECRET-NOTE", ends: null }];
+  // The shop's own documents are in the context whole, as they're on the client anyway; nothing
+  // built for display may carry the note.
+  const context = await sheet._prepareContext({});
+  const shown = Object.fromEntries(Object.entries(context).filter(([key]) => key !== "actor" && key !== "config"));
+  assert.ok(!JSON.stringify(shown).includes("SECRET-NOTE"));
+});
+
+/* ------------------------------------------------------------ deals section (#111) */
+
+/** The GM's window, with the buyer made a player's character a deal can be for. */
+function openDeals(t, deals = []) {
+  const opened = openSettings(t, { shopConfig: { deals } });
+  opened.buyer.type = "character";
+  opened.buyer.name = "Aria";
+  const DialogV2 = globalThis.foundry.applications.api.DialogV2;
+  const input = DialogV2.input;
+  opened.asked = [];
+  // The form the GM fills in: set `opened.answer` before the action.
+  DialogV2.input = async options => { opened.asked.push(options); return opened.answer; };
+  t.after(() => { DialogV2.input = input; });
+  return opened;
+}
+
+const ARIA_DEAL = uuid => ({ actor: uuid, name: "Aria", buy: -0.1, sell: null, note: "Saved the smith's daughter", ends: null });
+
+test("the Deals section lists each deal with what it changes and when it ends", async t => {
+  await withLabels(async () => {
+    const { sheet, buyer } = openDeals(t);
+    const config = sheet.document.flags["merchant-presets"].shop;
+    config.deals = [ARIA_DEAL(buyer.uuid),
+      { actor: "Actor.tomas", name: "Tomas", buy: null, sell: 0.1, note: "", ends: { at: 50, when: "close" } },
+      { actor: "Actor.old", name: "Old", buy: -0.2, sell: 0.2, note: "", ends: { at: -1, when: "date" } }];
+    const { settings } = await sheet._prepareContext({});
+    assert.deepEqual(settings.deals.list.map(d => [d.name, d.initial, d.badges, d.line, d.ended]), [
+      ["Aria", "A", ["Buying(-10%)"], "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd", false],
+      ["Tomas", "T", ["Selling(+10%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.UntilClose", false],
+      ["Old", "O", ["Buying(-20%)", "Selling(+20%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.Ended", true]
+    ]);
+    // Players see: only the deals in force, each for its own character.
+    assert.deepEqual(settings.preview.deals.map(d => d.name), ["Aria", "Tomas"]);
+    assert.match(settings.preview.deals[0].chip, /YourPrice\(-10%\)/);
+  });
+});
+
+test("adding a deal writes it from the form, for the character picked", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "never", days: null, note: "Saved the smith's daughter" };
+  await act(sheet, "addDeal");
+  assert.deepEqual(writtenShop(shop).deals, [ARIA_DEAL(buyer.uuid)]);
+  assert.match(opened.asked[0].content, new RegExp(buyer.uuid), "the character is offered");
+});
+
+test("the deal form offers player characters, not the mounts and shops players own (#111 live run)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  const camel = { uuid: "Actor.camel", name: "Camel", type: "npc", hasPlayerOwner: true };
+  globalThis.game.actors = [shop, buyer, camel];
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  assert.match(opened.asked[0].content, new RegExp(buyer.uuid));
+  assert.doesNotMatch(opened.asked[0].content, /Actor\.camel/);
+});
+
+test("a character with a deal isn't offered for another", async t => {
+  const opened = openDeals(t);
+  const { sheet, buyer } = opened;
+  sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  assert.doesNotMatch(opened.asked[0]?.content ?? "", new RegExp(buyer.uuid));
+});
+
+test("a deal is edited in the same form, for the same character, and removed by its button", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  sheet.document.flags["merchant-presets"].shop.deals = [{ ...ARIA_DEAL(buyer.uuid), ends: { at: 999, when: "date" } }];
+  // A form can't swap the character: the edit is for the deal it opened on.
+  opened.answer = { actor: "Actor.someoneElse", buy: -15, sell: 5, ends: "keep", days: null, note: "Paid in advance" };
+  await act(sheet, "editDeal", { actor: buyer.uuid });
+  assert.deepEqual(writtenShop(shop).deals,
+    [{ actor: buyer.uuid, name: "Aria", buy: -0.15, sell: 0.05, note: "Paid in advance", ends: { at: 999, when: "date" } }]);
+  await act(sheet, "removeDeal", { actor: buyer.uuid });
+  assert.deepEqual(writtenShop(shop).deals, []);
+});
+
+test("a cancelled deal form writes nothing, and a bad one warns and writes nothing", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer, warnings } = opened;
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  opened.answer = { actor: buyer.uuid, buy: -100, sell: null, ends: "never", days: null, note: "" };
+  await act(sheet, "addDeal");
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "days", days: 0, note: "" };
+  await act(sheet, "addDeal");
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+});
+
+test("a player's window can't make, edit or remove a deal", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  globalThis.game.user.isGM = false;
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "never", days: null, note: "" };
+  await act(sheet, "addDeal");
+  await act(sheet, "removeDeal", { actor: buyer.uuid });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(opened.asked.length, 0);
+});

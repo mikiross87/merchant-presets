@@ -6,6 +6,7 @@
  * and stored as the factors schema.mjs holds.
  */
 
+import { endsAfterDays, nextCloseAt } from "./deals.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
 
@@ -55,6 +56,13 @@ export function everyChoice(restock) {
 /** A schedule as the tab sends it: "7" or 7 is seven days, "never" is never, anything else a formula. */
 const everyOf = every => (typeof every === "string" && /^\d+$/.test(every.trim()) ? Number(every) : every);
 
+/** A deal side as the tab sends it, a percentage, as the factor schema.mjs holds; 0% is no change. */
+const adjustmentOf = percent => (percent === 0 || percent === null ? null : rateOf(percent));
+
+/** A deal from the tab's form: its sides as percentages (-10 is 10% off). */
+const dealOf = ({ actor, name, buy, sell, note, ends }) =>
+  ({ actor, name, buy: adjustmentOf(buy), sell: adjustmentOf(sell), note, ends });
+
 /** The edits, each on a fresh copy of the config; an error message refuses the change outright. */
 const CHANGES = {
   rate(shop, { side, percent }) {
@@ -103,6 +111,20 @@ const CHANGES = {
   mode(shop, { mode }) {
     shop.restock.mode = mode;
   },
+  // Deals are named by their character, as rules are by category (see `ruleRate`).
+  addDeal(shop, change) {
+    if (shop.deals.some(d => d.actor === change.actor)) return `${change.name} already has a deal here`;
+    shop.deals.push(dealOf(change));
+  },
+  editDeal(shop, change) {
+    const at = shop.deals.findIndex(d => d.actor === change.actor);
+    if (at < 0) return "no such deal";
+    shop.deals[at] = dealOf(change);
+  },
+  removeDeal(shop, { actor }) {
+    // Already gone (a double click): nothing to do.
+    shop.deals = shop.deals.filter(d => d.actor !== actor);
+  },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);
     if (!result.ok) return result.errors.join("; ");
@@ -118,7 +140,9 @@ const CHANGES = {
  * @param {{op: string}} change  `{op: "rate", side, percent|null}`, `{op: "addRule", category,
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
- *   `{op: "every", every}`, `{op: "mode", mode}` or `{op: "reset", preset}` (`resetToPreset`)
+ *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "addDeal"|"editDeal", actor, name, buy, sell,
+ *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
+ *   (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}
  */
 export function applyChange(shop, change) {
@@ -131,9 +155,45 @@ export function applyChange(shop, change) {
   return ok ? { ok, shop: next } : { ok, errors };
 }
 
+/** A form field as a percentage: blank is no change (null), anything else a number, NaN if it isn't one. */
+const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(v));
+
+/**
+ * The deal form's answer (#111) as the fields of an `addDeal`/`editDeal` change, or `{error}` for
+ * an end that can't be kept. Sides stay percentages, checked by `applyChange` like any other edit.
+ *
+ * @param {{actor: string, buy: unknown, sell: unknown, ends: "never"|"close"|"days"|"keep", days:
+ *   unknown, note: unknown}} form  `ends`: no end, the shop's next closing, `days` whole days from
+ *   now, or (editing) the end the deal already has
+ * @param {{name: string, worldTime: number, hours: object|null, calendar: object, previous:
+ *   object|null}} context  `hours` the shop's own (null: it never closes); `previous` the deal
+ *   being edited
+ * @returns {{actor: string, name: string, buy: number|null, sell: number|null, note: string,
+ *   ends: object|null} | {error: string}}
+ */
+export function dealFields(form, { name, worldTime, hours, calendar, previous }) {
+  let ends = null;
+  if (form.ends === "close") {
+    const at = nextCloseAt(hours, worldTime, calendar);
+    if (at === null) return { error: "this shop never closes" };
+    ends = { at, when: "close" };
+  } else if (form.ends === "days") {
+    const days = percentField(form.days);
+    if (!Number.isInteger(days) || days < 1) return { error: "a deal lasts a whole number of days, 1 or more" };
+    ends = { at: endsAfterDays(days, worldTime, calendar), when: "date" };
+  } else if (form.ends === "keep") {
+    if (!previous?.ends) return { error: "there's no end to keep" };
+    ends = previous.ends;
+  } else if (form.ends !== "never") return { error: "no such end" };
+  return {
+    actor: form.actor, name, buy: percentField(form.buy), sell: percentField(form.sell),
+    note: String(form.note ?? "").trim(), ends
+  };
+}
+
 /**
  * The config the shop was imported with: its preset's own (`sourceShop`, the merchant in the
- * pack), keeping the shop's own `source`, which names that preset.
+ * pack), keeping the shop's own `source`, which names that preset, and its deals (#111).
  *
  * @param {object} shop
  * @param {unknown} sourceShop  the preset merchant's `flags.merchant-presets.shop`
@@ -142,5 +202,6 @@ export function applyChange(shop, change) {
 export function resetToPreset(shop, sourceShop) {
   const { ok, errors } = validateShop(sourceShop);
   if (!ok) return { ok, errors };
-  return { ok, shop: { ...shopFrom(sourceShop), source: shop.source } };
+  // Deals are with a character, not part of the preset: a reset keeps them.
+  return { ok, shop: { ...shopFrom(sourceShop), source: shop.source, deals: shop.deals } };
 }

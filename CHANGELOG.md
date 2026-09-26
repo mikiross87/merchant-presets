@@ -29,6 +29,14 @@ than for the code. Reference the issue or PR it closes.
   settings, *Shops sell at (%)* and *Shops buy at (%)*, set the rates for any
   shop whose terms are on *World default*; the shipped merchants keep their
   own until you tick it. (#110)
+- 2.0: deals — give one character their own price at one shop, from the
+  Settings tab: cheaper when they buy, more when they sell, or both, with an
+  optional note and an end (when the shop next closes, after some days, or
+  never). Only that character sees it: their shop window shows "Your price
+  −10%" up top, the usual price struck beside theirs, and marks the bill's
+  lines the deal changed. No deal can make selling pay more than buying. The
+  note is never shown to players, but it's saved on the shop, so a player
+  could read it from the browser console. (#111)
 - 2.0: sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent

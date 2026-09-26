@@ -300,3 +300,30 @@ test("a write that fails part-way is refused as an error, not reported sealed", 
   } finally { console.error = error; }
   assert.ok(shop);
 });
+
+test("a buyer with a deal pays the deal price, and nobody else does (#111)", async () => {
+  const { world, shop, tess, api, request } = await setUp();
+  shop.ownership = { default: 1 };
+  const kit = world.character("kit", { currency: { gp: 20 }, owners: ["p1"] });
+  shop.flags["merchant-presets"].shop.deals = [{ actor: tess.uuid, name: "tess", buy: -0.1, sell: 0.2, note: "", ends: null }];
+  const bought = await asPlayer(() => api.trade(request([{ itemId: BELL, quantity: 2, expectedBundlePriceCp: 90 }])));
+  assert.equal(bought.status, "sealed", JSON.stringify(bought));
+  assert.deepEqual(bought.lines, [{ itemId: BELL, quantity: 2, lineTotalCp: 180 }]);
+  const bell = named(tess, "Bell")[0];
+  const sold = await asPlayer(() => api.trade(request([{ itemId: bell._id, quantity: 1 }], { kind: "sell" })));
+  assert.equal(sold.status, "sealed", JSON.stringify(sold));
+  assert.deepEqual(sold.lines.map(l => l.lineTotalCp), [60], "half of 1 gp, +20%");
+  const other = await asPlayer(() => api.trade(request([{ itemId: BELL, quantity: 1, expectedBundlePriceCp: 100 }], { buyerUuid: kit.uuid })));
+  assert.equal(other.status, "sealed", JSON.stringify(other));
+  assert.deepEqual(other.lines, [{ itemId: BELL, quantity: 1, lineTotalCp: 100 }]);
+});
+
+test("a deal that has ended prices at list again (#111)", async () => {
+  const { shop, tess, api, request } = await setUp();
+  shop.ownership = { default: 1 };
+  shop.flags["merchant-presets"].shop.deals = [{ actor: tess.uuid, name: "tess", buy: -0.1, sell: null, note: "", ends: { at: 100, when: "date" } }];
+  globalThis.game.time.worldTime = 100;
+  const result = await asPlayer(() => api.trade(request([{ itemId: BELL, quantity: 1, expectedBundlePriceCp: 100 }])));
+  assert.equal(result.status, "sealed", JSON.stringify(result));
+  assert.deepEqual(result.lines, [{ itemId: BELL, quantity: 1, lineTotalCp: 100 }]);
+});
