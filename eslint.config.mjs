@@ -28,6 +28,7 @@ const foundryGlobals = {
   _replace: "readonly",
   foundry: "readonly",
   fromUuid: "readonly",
+  fromUuidSync: "readonly",
   game: "readonly",
   ui: "readonly"
 };

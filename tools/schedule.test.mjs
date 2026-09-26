@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dueRestock, intervalOf, isOpen, nextDue, nextOpen, planRestock, scheduleNext } from "../scripts/schedule.mjs";
+import {
+  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, restockStockFlags,
+  scheduleNext
+} from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
 
 // game.time.calendar.days, as the core calendar reports it. A day is exactly
@@ -346,6 +349,41 @@ const drawn = (id, name, type, quantity, extra = {}) =>
 const gmAdded = { _id: "gm1", name: "Rope, Silk", type: "loot", system: { quantity: 5 }, flags: {} };
 const gear = { _id: "gear1", name: "Longsword", type: "weapon", system: { quantity: 1 }, flags: { "merchant-presets": { kind: "gear" } } };
 
+test("a line with no settings of its own on record keeps the stock config its good ships with (#135 review, round 10)", () => {
+  const service = { name: "Spellcasting: Divination", quantity: 1,
+    data: { type: "loot", name: "Spellcasting: Divination", system: {}, flags: { "merchant-presets": { kind: "spellcasting", stock: { service: true, category: "Services" } } } } };
+  const plan = planRestock(shop, [], [service], { ...context, stockFlags: {} });
+  assert.deepEqual(plan.creates[0].flags["merchant-presets"].stock, { service: true, category: "Services" });
+});
+
+test("reroll replaces what this shop drew, even a line its table dropped, and keeps a good another shop drew (#135 review)", () => {
+  const by = (item, shopId) => ({ ...item, flags: { "merchant-presets": { drawn: shopId } } });
+  const items = [
+    by(drawn("i1", "Arrows", "consumable", 40), "gs"),
+    by(drawn("i9", "Rope", "consumable", 5), "gs"),        // the GM took Rope off this table
+    by(drawn("x1", "Bell", "loot", 1), "pawnshop")         // drawn there, sold here through Item Piles
+  ];
+  const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }], { ...context, drawnBy: "gs" });
+  assert.deepEqual(plan.deletes, ["i1", "i9"]);
+  assert.equal(plan.creates[0].flags["merchant-presets"].drawn, "gs", "a fresh copy names the shop that drew it");
+});
+
+test("a shop remembers each drawn line's settings, so one that left the shelf comes back with them (#135 review)", () => {
+  const hidden = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } }, "item-piles": { item: { hidden: true } } } };
+  const theirs = { ...drawn("x1", "Bell", "loot", 1), flags: { "merchant-presets": { drawn: "pawnshop", stock: { hidden: false } } } };
+  const memory = lineMemory([{ name: "Rope", stock: { keep: false } }], [hidden, theirs, gmAdded, gear], "gs");
+  assert.deepEqual(memory, [
+    { name: "Rope", stock: { keep: false } },
+    { name: "Arrows", stock: { hidden: true }, piles: { item: { hidden: true } } }
+  ]);
+});
+
+test("the line memory is a list, so a line named with a dot survives Foundry's path expansion (#135 review, round 7)", () => {
+  const scroll = { ...drawn("s1", "Scroll (Lvl. 1)", "consumable", 1), flags: { "merchant-presets": { drawn: "gs", stock: { hidden: true } } } };
+  assert.deepEqual(lineMemory(undefined, [scroll], "gs"), [{ name: "Scroll (Lvl. 1)", stock: { hidden: true } }]);
+  assert.deepEqual(lineMemory({ junk: true }, [], "gs"), [], "a stored value of the wrong shape is ignored");
+});
+
 test("reroll replaces the whole drawn shelf, and leaves the GM's own goods and gear alone", () => {
   const items = [
     drawn("i1", "Arrows", "consumable", 40),
@@ -499,4 +537,43 @@ test("a missing or invalid purse leaves the till untouched, rather than writing 
 test("a missing currentGp reads as an empty till, not as already full", () => {
   const plan = planRestock(shop, [], [], { ...context, currentGp: undefined });
   assert.equal(plan.currency, context.purse);
+});
+
+/* ------------------------------------------------------ the runtime's first restock (#105) */
+
+const shelfItem = (id, name, flags = {}) => ({ _id: id, name, type: "loot", system: { quantity: 3 }, flags: { "merchant-presets": flags } });
+
+test("a shop's first native restock adopts the table's lines on its shelf as drawn", () => {
+  const items = [
+    shelfItem("bell", "Bell", { stock: { keep: true } }),
+    shelfItem("mine", "Grandma's Locket"),              // added by hand: not a table line
+    shelfItem("club", "Club", { kind: "gear" }),        // the shopkeeper's own: never stock
+    shelfItem("rope", "Rope", { drawn: true })          // already drawn: nothing to do
+  ];
+  assert.deepEqual(adoptDrawn(items, ["Bell", "Rope", "Club"], "gs"), [{ _id: "bell", "flags.merchant-presets.drawn": "gs" }]);
+});
+
+test("adopting never claims a good another shop drew", () => {
+  const theirs = shelfItem("bell", "Bell", { drawn: "pawnshop" });
+  assert.deepEqual(adoptDrawn([theirs], ["Bell"], "gs"), []);
+});
+
+test("a redrawn line keeps the stock config on the shelf, so a GM's edit survives the reroll", () => {
+  const items = [shelfItem("bell", "Bell", { drawn: true, stock: { infinite: true, hidden: true } }), shelfItem("gear", "Bell", { kind: "gear", stock: { hidden: false } })];
+  const draws = [{ name: "Bell" }, { name: "Rope" }, { name: "Lamp" }];
+  const fromRecord = name => (name === "Rope" ? { keep: false } : undefined);
+  assert.deepEqual(restockStockFlags(items, draws, fromRecord, "gs"), { Bell: { infinite: true, hidden: true }, Rope: { keep: false } });
+});
+
+test("only this shop's own drawn copy sets a line's config, not a same-named good added by hand (#135 review, round 7)", () => {
+  const items = [
+    shelfItem("mine", "Torch", { stock: { hidden: true } }),                 // the GM's own torch
+    shelfItem("theirs", "Torch", { drawn: "pawnshop", stock: { infinite: true } }),
+    shelfItem("ours", "Torch", { drawn: "gs", stock: { category: "Light" } })
+  ];
+  assert.deepEqual(restockStockFlags(items, [{ name: "Torch" }], () => undefined, "gs"), { Torch: { category: "Light" } });
+});
+
+test("a shop first seen by the schedule is due a whole interval from that day", () => {
+  assert.deepEqual(initialSchedule(at(3, 15), 3, calendar), { lastRestock: at(3, 15), dueAt: at(6) });
 });

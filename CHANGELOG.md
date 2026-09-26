@@ -29,6 +29,12 @@ than for the code. Reference the issue or PR it closes.
   receipt in chat, public or whispered to the GMs, or none, set by the new
   *Trades in chat* setting. Meals, bought animals and spellcasting work the
   same way they did through Item Piles. (#102)
+- 2.0: shops restock on their own schedule, now on by default: each kind every
+  so many days (an inn daily, a general store every 3, a jeweler every 14),
+  when its doors open on the due day. A restock redraws only what the shop's
+  stock table put on the shelf. Goods you added by hand stay, and a line you
+  hid or edited keeps your settings. Worlds upgrading from 1.x keep restocking
+  off until you turn it on. (#105)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler
