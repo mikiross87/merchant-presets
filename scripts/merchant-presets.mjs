@@ -182,7 +182,14 @@ async function wireTables(actor) {
     }
   }
   if (!next.length) return false;
-  await actor.update({ [FLAG_PATH]: next, ...update });
+  await actor.update({
+    [FLAG_PATH]: next, ...update,
+    // Wired afresh (an import, or Replace Actor writing the pack back over it): the shelf is the
+    // pack's again, unstamped, so the next restock adopts it rather than doubling it (#135 review).
+    [`flags.${MODULE}.shelf`]: null,
+    [`flags.${MODULE}.schedule`]: null,
+    [`flags.${MODULE}.lines`]: null
+  });
   return true;
 }
 
@@ -1681,7 +1688,13 @@ async function applyAutoRestockDefault() {
  * @param {Iterable<string>} keepIds  Physical items to keep as the NPC's gear.
  * @returns {Promise<number>} how many stock lines the shop holds
  */
-async function setUpShop(actor, sourceUuid, keepIds) {
+function setUpShop(actor, sourceUuid, keepIds) {
+  // On the trade queue: a clock tick between clearing the shelf key and the new stock arriving
+  // would adopt an empty shelf, and a trade would read a half-made shop (#135 review).
+  return runTrade(() => setUpShopNow(actor, sourceUuid, keepIds));
+}
+
+async function setUpShopNow(actor, sourceUuid, keepIds) {
   const source = await foundry.utils.fromUuid(sourceUuid);
   if (!source) throw new Error(`merchant ${sourceUuid} not found`);
   const sourceData = source.toObject();

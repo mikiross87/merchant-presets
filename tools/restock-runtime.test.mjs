@@ -99,7 +99,7 @@ test("with automatic restocking off, the clock redraws nothing", async () => {
   await loadRuntime(world);
   await world.fire("updateWorldTime", at(9, 12), 0);
   await tick();
-  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+  assert.equal(shop.flags["merchant-presets"].schedule ?? null, null);
 });
 
 test("a restock waits for a trade in progress on the same queue", async () => {
@@ -126,21 +126,21 @@ test("an assistant GM's client never restocks: only the active GM does (#135 rev
   const { shop, clock } = await setUp();
   globalThis.game.users.activeGM = { id: "other-gm", isGM: true };
   await clock(at(0, 1));
-  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+  assert.equal(shop.flags["merchant-presets"].schedule ?? null, null);
 });
 
 test("turning restocking off mid-session stops it at the next tick (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
   world.settings.autoRestock = false;   // what migrateShop does when a 1.x merchant arrives
   await clock(at(0, 1));
-  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+  assert.equal(shop.flags["merchant-presets"].schedule ?? null, null);
 });
 
 test("a shop whose stock table is missing isn't scheduled until it's found, so its shelf is adopted first (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
   const restore = hideTable(world, shop);
   await clock(at(0, 1));
-  assert.equal(shop.flags["merchant-presets"].schedule, undefined);
+  assert.equal(shop.flags["merchant-presets"].schedule ?? null, null);
   restore();
   await clock(at(0, 2));
   assert.ok(byName(shop, "Bell").every(drawn));
@@ -352,7 +352,7 @@ test("a line whose item records its own compendium source keeps it (#135 review,
 test("a shop wired afresh (Replace Actor) starts its shelf afresh too (#135 review, round 11)", async () => {
   const { shop, clock } = await setUp();
   await clock(at(0, 1));                                        // adopted and scheduled
-  const packTable = `Compendium.merchant-presets.stock.RollTable.${shop.flags["merchant-presets"].shop.restock.table.split(".").pop()}`;
+  const packTable = `Compendium.merchant-presets.stock.RollTable.${source("stock", "General_Store_Town_")._id}`;
   // Replace Actor writes the pack's data back over the shop: on its compendium table again.
   shop.flags["item-piles"].data.tablesForPopulate[0].uuid = packTable;
   await globalThis.game.modules.get("merchant-presets").api.rewire(shop);
