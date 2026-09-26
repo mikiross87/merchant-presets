@@ -190,6 +190,11 @@ async function wireTables(actor) {
     [`flags.${MODULE}.schedule`]: null,
     [`flags.${MODULE}.lines`]: null
   });
+  // And its goods forget the old key: adoption stamps only unstamped goods, so one still carrying
+  // the old key would belong to no shelf and never be replaced (#135 review).
+  const stale = actor.items.filter(i => !isGear(i) && foundry.utils.getProperty(i, `flags.${MODULE}.drawn`) != null)
+    .map(i => ({ _id: i.id, [`flags.${MODULE}.drawn`]: null }));
+  if (stale.length) await actor.updateEmbeddedDocuments("Item", stale);
   return true;
 }
 
