@@ -1756,8 +1756,8 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "tradeChat", {
     name: "Trades in chat",
     hint: "Each trade made in the shop window posts one receipt in chat: what changed hands and for how "
-      + "much. Public, whispered to the GMs, or off. The spellcasting announcement follows the same "
-      + "choice between public and GM-only.",
+      + "much. Public, whispered to the GMs, or off. Whispered also whispers the spellcasting "
+      + "announcement; to turn that off, use its own setting below.",
     scope: "world",
     config: true,
     type: String,
