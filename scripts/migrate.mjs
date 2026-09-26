@@ -786,6 +786,48 @@ function sameStock(have, want) {
 }
 
 /**
+ * What one unlinked shop token needs of its own (#124). An unlinked token
+ * keeps a synthetic actor: the base actor with the token's `delta` laid over
+ * it. The migration of the base actor never reaches the delta, so:
+ *
+ * - items the token holds of its own (it traded, say) get a stock config the
+ *   same way the base's do (`planItemUpdates`), from their own Item Piles flags;
+ * - a token whose delta re-tuned Item Piles' shop settings (hours, prices, ...)
+ *   gets its own `flags.merchant-presets.shop`, derived from those merged
+ *   settings with the base's config as the pack source. `enabled` alone isn't
+ *   a re-tune: the cut-over itself writes it (`planTokenDisable`), and a token
+ *   given a copy for it would stop following the base shop's config.
+ *
+ * Applied through the token's synthetic actor, so every write lands in its delta.
+ *
+ * @param {{actorLink: boolean, delta?: object}} token  The token's own data.
+ * @param {object} actor  Its synthetic actor's data (`token.actor.toObject()`).
+ * @param {object} [packShop]  The base shop's config, for what Item Piles never held.
+ * @returns {{shop: object|null, itemUpdates: object[], errors: object[], warnings: string[]}}
+ */
+export function planTokenMigration(token, actor, packShop = actor?.flags?.["merchant-presets"]?.shop) {
+  if (token?.actorLink || !isMigratable(actor)) return { shop: null, itemUpdates: [], errors: [], warnings: [] };
+  const { updates: itemUpdates, errors } = planItemUpdates(actor);
+  const own = token.delta?.flags ?? {};
+  const retuned = Object.keys(own["item-piles"]?.data ?? {}).some(k => k !== "enabled");
+  let shop = null;
+  const warnings = [];
+  if (retuned && !own["merchant-presets"]?.shop) {
+    const derived = derivedShop(actor, packShop);
+    if (derived.ok) shop = derived.shop;
+    else warnings.push(`A token of "${actor.name}": its own Item Piles settings don't make a valid shop: ${derived.errors.join("; ")}`);
+    for (const e of derived.repaired) warnings.push(`A token of "${actor.name}": Item Piles setting not carried over, reset to the default: ${e}`);
+  }
+  return { shop, itemUpdates, errors, warnings };
+}
+
+/** Whether an unlinked shop token has anything of its own to migrate (`planTokenMigration`). */
+export function tokenNeedsMigration(token, actor) {
+  const plan = planTokenMigration(token, actor);
+  return plan.shop !== null || plan.itemUpdates.length > 0;
+}
+
+/**
  * The `Scene#updateEmbeddedDocuments("Token", …)` entry to switch Item Piles
  * off on one token, or `null` if there's nothing to do.
  *
