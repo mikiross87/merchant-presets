@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, receiptHtml, recipients,
-  recordedOutcome, resultOf, serial, shouldReclaim, CLAIM_STALE_MS, TRADE_RECORDS, withRecord, WORLD_RATES
+  recordedOutcome, resultOf, serial, shouldReclaim, CLAIM_STALE_MS, TRADE_RECORDS, withRecord, worldTerms
 } from "../scripts/trade-desk.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape (same fixture as tools/pricing.test.mjs). */
@@ -16,9 +16,32 @@ const CURRENCIES = {
 
 const tick = () => new Promise(resolve => setImmediate(resolve));
 
-test("the world rates are list price to buy and half to sell back", () => {
-  assert.deepEqual({ ...WORLD_RATES }, { sellsAt: 1, buysAt: 0.5 });
-  assert.ok(Object.isFrozen(WORLD_RATES));
+/* ------------------------------------------------------------- worldTerms */
+
+/** A `game.settings.get` stand-in over `values`. */
+const settings = values => key => values[key];
+
+test("the world terms read the rates as percentages, and the stock and purse modes", () => {
+  assert.deepEqual(worldTerms(settings({ sellsAt: 110, buysAt: 40, stockMode: "unlimited", merchantPurse: "finite" })), {
+    rates: { sellsAt: 1.1, buysAt: 0.4 }, infiniteStock: true, infinitePurse: false
+  });
+  assert.deepEqual(worldTerms(settings({ sellsAt: 100, buysAt: 50, stockMode: "finite", merchantPurse: "unlimited" })), {
+    rates: { sellsAt: 1, buysAt: 0.5 }, infiniteStock: false, infinitePurse: true
+  });
+});
+
+test("a world rate that isn't a usable number reads as the default: list price, half back", () => {
+  for (const bad of [undefined, null, "100", NaN, Infinity, -5]) {
+    assert.deepEqual(worldTerms(settings({ sellsAt: bad, buysAt: bad })).rates, { sellsAt: 1, buysAt: 0.5 }, String(bad));
+  }
+  // A shop can't give goods away, but it can refuse to pay anything for them.
+  assert.equal(worldTerms(settings({ sellsAt: 0, buysAt: 0 })).rates.sellsAt, 1);
+  assert.equal(worldTerms(settings({ sellsAt: 0, buysAt: 0 })).rates.buysAt, 0);
+});
+
+test("a percentage reads back without float noise", () => {
+  assert.equal(worldTerms(settings({ sellsAt: 115, buysAt: 57 })).rates.sellsAt, 1.15);
+  assert.equal(worldTerms(settings({ sellsAt: 115, buysAt: 57 })).rates.buysAt, 0.57);
 });
 
 /* ------------------------------------------------------------------ serial */

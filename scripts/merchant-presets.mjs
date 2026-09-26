@@ -14,7 +14,7 @@ import {
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
-  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, WORLD_RATES
+  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
@@ -921,11 +921,8 @@ async function carryOutTrade(request, user) {
   const planned = planTrade(request, {
     shop: shop.toObject(),
     buyer: buyer.toObject(),
-    worldSettings: {
-      rates: WORLD_RATES,
-      infiniteStock: game.settings.get(MODULE, "stockMode") === "unlimited",
-      infinitePurse: game.settings.get(MODULE, "merchantPurse") === "unlimited"
-    },
+    // The same terms the window billed from (trade-desk.mjs `worldTerms`).
+    worldSettings: worldTerms(key => game.settings.get(MODULE, key)),
     currencies: CONFIG.DND5E.currencies,
     deal: null,
     now: { isOpen: shopIsOpen(shop) },
@@ -1409,6 +1406,29 @@ Hooks.once("init", () => {
       unlimited: "Unlimited — shops can always pay"
     },
     default: "finite"
+  });
+
+  // The world's default rates (#110), as percentages; a shop's own terms (its Settings tab) and
+  // category rules override them. Read through trade-desk.mjs `worldTerms`, by the window and the
+  // trade alike.
+  game.settings.register(MODULE, "sellsAt", {
+    name: "Shops sell at (%)",
+    hint: "What a shop charges, as a percentage of an item's price, unless its own terms say "
+      + "otherwise: 100 is list price, 120 a markup. Open shop windows reprice at once.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 1, step: 1, initial: 100 }),
+    default: 100
+  });
+
+  game.settings.register(MODULE, "buysAt", {
+    name: "Shops buy at (%)",
+    hint: "What a shop pays for what players sell it, as a percentage of the item's value, unless "
+      + "its own terms say otherwise: 50 is half. A shop never pays more than it would charge.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 0, step: 1, initial: 50 }),
+    default: 50
   });
 
   game.settings.register(MODULE, "autoRestock", {

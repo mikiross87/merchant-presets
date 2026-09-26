@@ -15,7 +15,7 @@
 
 import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS } from "./schema.mjs";
-import { WORLD_RATES } from "./trade-desk.mjs";
+import { worldTerms } from "./trade-desk.mjs";
 import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -32,8 +32,10 @@ const TEMPLATES = `modules/${MODULE}/templates`;
  * source. Undefined before the runtime's `ready` has run, which `bundleFor` treats as no resolver.
  */
 const bundleOf = item => game.modules.get(MODULE)?.api?.bundleOf?.(item);
+/** The world's rates and stock mode, read the way the GM's trade reads them (trade-desk.mjs `worldTerms`). */
+const worldOf = () => worldTerms(key => game.settings.get(MODULE, key));
 /** The world's stock mode: whether a line with no `stock.infinite` of its own never runs out. */
-const worldInfiniteStock = () => game.settings.get(MODULE, "stockMode") === "unlimited";
+const worldInfiniteStock = () => worldOf().infiniteStock;
 
 /*
  * Flags are read the trade engine's way (`safeShopOf`/`safeStockOf`): data some other bug or a
@@ -267,10 +269,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const kind = this.tabGroups.primary;
     this.#pruneBaskets();
 
-    const chipSellsAt = effectiveRates(WORLD_RATES, config.terms).sellsAt.rate;
-    const chipBuysAt = effectiveRates(WORLD_RATES, config.terms).buysAt.rate;
+    const world = worldOf().rates;
+    const chipSellsAt = effectiveRates(world, config.terms).sellsAt.rate;
+    const chipBuysAt = effectiveRates(world, config.terms).buysAt.rate;
     const rates = {
-      world: WORLD_RATES, shopTerms: config.terms, chipSellsAt, chipBuysAt
+      world, shopTerms: config.terms, chipSellsAt, chipBuysAt
     };
 
     Object.assign(context, {
@@ -737,7 +740,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * itemId/quantity pairs `this._baskets` holds — those carry no price at all on their own.
    */
   #pricedLines(kind, currencies) {
-    const world = WORLD_RATES;
+    const world = worldOf().rates;
     const config = shopConfigOf(this.document);
     const shopItems = kind === "sell" ? this.document.items.map(i => i.toObject()) : null;
     const lines = [];
