@@ -80,6 +80,7 @@ test("a shop marked visitable in another world, exported and imported here, is m
 
 test("a shop the GM opened to one player only stays that way when its token is placed (#138 review, round 6)", async () => {
   const { world, shop } = await setUp();
+  globalThis.game.users.push({ id: "rogueUser000001", isGM: false });
   shop.ownership = { default: 0, rogueUser000001: 1 };
   world.actors.push(shop);
   await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");

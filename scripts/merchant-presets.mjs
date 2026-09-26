@@ -642,10 +642,10 @@ async function drawsFor(table, quantities) {
  */
 const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
 /**
- * Whether user `id` is a GM, for `isOwnershipChosen`: a player made Owner is the GM's choice. A
- * user deleted since counts as one: their entry lets nobody in.
+ * Whether user `id` is a player, for `isOwnershipChosen`: a level given to one, Owner included, is
+ * the GM's choice; a GM's own entry, or one left for a user deleted since, lets nobody in.
  */
-const isGm = id => game.users.get(id)?.isGM ?? true;
+const isPlayer = id => { const user = game.users.get(id); return !!user && !user.isGM; };
 
 /**
  * Adopt a shop's shelf, once, before its first native restock: give it a shelf
@@ -1580,7 +1580,7 @@ async function migrateShop(actor) {
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data,
-    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null, isGm });
+    { packShop, hasTokenOnScene: tokens.length > 0, nativeShop: NATIVE_SHOP, worldId: game.world?.id ?? null, isPlayer });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -2061,6 +2061,11 @@ Hooks.once("ready", async () => {
   // The shops restock on their own schedule (#105), Item Piles or not.
   registerRestock();
   if (NATIVE_SHOP) {
+    // A shop arriving is new to this world, whatever its flags say: one exported after it was made
+    // visitable comes back with its ownership cleared but its mark kept (#138 review, round 9).
+    Hooks.on("preCreateActor", actor => {
+      if (actor.flags?.[MODULE]?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    });
     Hooks.on("createToken", token => {
       if (game.users.activeGM !== game.user) return;   // one GM does the writing
       makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
@@ -2192,6 +2197,6 @@ async function makeVisitable(token) {
   // set by hand looks exactly like the untouched default. A GM's own ownership, a player's own
   // level included, holds (#138 review).
   const worldId = game.world?.id ?? null;
-  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor, isGm)) return;
+  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor, isPlayer)) return;
   await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: worldId });
 }
