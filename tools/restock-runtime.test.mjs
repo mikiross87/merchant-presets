@@ -301,6 +301,31 @@ test("a shop given a shorter interval restocks on the new one, not the old due d
   assert.equal(shop.flags["merchant-presets"].schedule.dueAt, at(2));
 });
 
+test("restocking a scheduled shop by hand moves its next due date on (#135 review, round 9)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));                                   // due day 3
+  globalThis.game.time.worldTime = at(2, 12);
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.equal(shop.flags["merchant-presets"].schedule.dueAt, at(5));
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(3, 8));
+  assert.equal(byName(shop, "Bell")[0]._id, bell, "no second reroll the next morning");
+});
+
+test("a shelf isn't adopted while one of its table's items can't be found (#135 review, round 9)", async () => {
+  const { world, shop, clock } = await setUp();
+  const bellUuid = tableOf(world, shop).results.find(r => r.name === "Bell").documentUuid;
+  const bellDoc = world.compendium.get(bellUuid);
+  world.compendium.delete(bellUuid);
+  const warn = console.warn;
+  console.warn = () => {};
+  try { await clock(at(0, 1)); } finally { console.warn = warn; }
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
+  world.compendium.set(bellUuid, bellDoc);
+  await clock(at(0, 2));
+  assert.ok(byName(shop, "Bell").every(drawn));
+});
+
 test("a restocked copy remembers the compendium item it came from (#135 review, round 2)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
