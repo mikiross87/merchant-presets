@@ -93,6 +93,7 @@
   "esmodules": [
     "scripts/merchant-presets.mjs"
   ],
+  "socket": true,
   "styles": [
     "styles/shop.css"
   ],

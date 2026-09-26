@@ -17,13 +17,15 @@ const PREFIX = "Spellcasting: ";
 const escape = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[c]);
 
 /**
- * The spellcasting services a trade's buyer actually bought.
+ * The spellcasting services a trade's buyer actually bought. Selling one back
+ * casts nothing.
  *
- * @param {object|undefined} itemPrices  The item-piles-tradeItems hook's argument.
- * @returns {object[]}  Its `buyerReceive` entries, each with `item` and `quantity`.
+ * @param {import("./trade.mjs").ShopTrade|null|undefined} trade
+ * @returns {{item: object, quantity: number}[]}
  */
-export function castsIn(itemPrices) {
-  return boughtWith(itemPrices, "kind").filter(e => goodFlag(e.item, "kind") === "spellcasting");
+export function castsIn(trade) {
+  if (trade?.kind !== "buy") return [];
+  return boughtWith(trade, "kind").filter(e => goodFlag(e.item, "kind") === "spellcasting");
 }
 
 /**

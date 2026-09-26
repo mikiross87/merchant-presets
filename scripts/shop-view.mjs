@@ -287,9 +287,11 @@ export function stockLabel(stock, quantity, worldInfiniteStock) {
  * @param {object|null} deal
  * @param {Record<string, object>} currencies
  * @param {boolean} worldInfiniteStock
+ * @param {(item: object) => number|undefined} [bundleOf]  the runtime's resolver (`api.bundleOf`), for a
+ *   line with no stated bundle — the same one the trade prices by
  * @returns {BuyRow}
  */
-export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock) {
+export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock, bundleOf) {
   const category = categoryFor(item, stock);
   const { sellsAt } = effectiveRates(rates.world, rates.shopTerms, category, deal);
   let bundleCp = null, unpriced = false;
@@ -298,7 +300,7 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock)
   // The planner refuses a line that floors to 0 at a real price and rate ("worthless"), so the
   // stepper starts at the fewest whole bundles worth a coin, and a shelf that never gets there
   // can't be bought at all.
-  const bundle = bundleFor(item, item);
+  const bundle = bundleFor(item, item, bundleOf);
   const infinite = stock.service || (stock.infinite ?? worldInfiniteStock);
   const available = item.system?.quantity ?? 0;
   // 1 means no floor of its own: `stepQuantity` already lands only on quantities a buy accepts.

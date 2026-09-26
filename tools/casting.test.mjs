@@ -75,9 +75,11 @@ test("only spellcasting actually bought counts, as the GM's client and the playe
     { quantity: 1, item: { name: "Meal, Poor", flags: { "merchant-presets": { kind: "meal" } } } },
     { quantity: 2, item: spell }
   ] };
-  assert.deepEqual(castsIn(prices).map(e => e.quantity), [2]);
-  assert.deepEqual(castsIn(JSON.parse(JSON.stringify(prices))).map(e => e.quantity), [2]);
+  const trade = prices => ({ kind: "buy", lines: prices.buyerReceive });
+  assert.deepEqual(castsIn(trade(prices)).map(e => e.quantity), [2]);
+  assert.deepEqual(castsIn(trade(JSON.parse(JSON.stringify(prices)))).map(e => e.quantity), [2]);
   assert.deepEqual(castsIn(undefined), []);
+  assert.deepEqual(castsIn({ kind: "sell", lines: prices.buyerReceive }), [], "selling a service back casts nothing");
 });
 
 /* ------------------------------------------------ through the real runtime */
