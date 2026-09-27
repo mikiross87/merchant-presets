@@ -689,7 +689,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** The shop's goods players can see, in its own order: the one a GM sets by dragging on the NPC sheet. */
   #shelf(actor) {
-    const shopItems = actor.items.map(i => i.toObject()).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+    // Under the name dnd5e shows: an unidentified good's unidentified one, never its true one.
+    const shopItems = actor.items.map(i => ({ ...i.toObject(), name: i.name })).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
     return shopItems.map(data => ({ data, stock: safeStockOf(data) }))
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems));
   }
@@ -871,8 +872,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** The item a basket line of `kind` names: the shop's for a buy, the buyer's own for a sale. */
   #itemOf(kind, itemId) {
+    return this.#docOf(kind, itemId)?.toObject() ?? null;
+  }
+
+  /** The item document a basket line of `kind` names; its `name` is the one dnd5e shows players. */
+  #docOf(kind, itemId) {
     const owner = kind === "buy" ? this.document : this.#resolveBuyer();
-    return owner?.items?.get(itemId)?.toObject() ?? null;
+    return owner?.items?.get(itemId) ?? null;
   }
 
   /**
@@ -930,6 +936,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
       return {
         ...row,
+        // The shown name; the source data (true name) only prices and matches, as the engine does.
+        name: buyer.items.get(item._id)?.name ?? row.name,
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
         listText: listText(row.listPriceCp, currencies)
       };
@@ -1021,7 +1029,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         listTotal = lineTotalCp(item, listRate, bundle, quantity, currencies);
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
-        itemId, name: item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
+        // The shown name (an unidentified good's unidentified one); the source data prices the line.
+        itemId, name: this.#docOf(kind, itemId)?.name ?? item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
         struck: this._struck[kind].has(itemId),
         // The buyer's deal moved this line's total: the bill marks it as theirs. Compared in coin,
         // since a small deal on cheap goods can floor to the same total (#142 review).
