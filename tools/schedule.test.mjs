@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, restockStockFlags,
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, restockStockFlags,
   scheduleNext
 } from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
@@ -430,6 +430,32 @@ test("a fresh shelf copy never takes a New time from the document it was drawn f
   assert.equal(newAtOf(plan.creates[0]), undefined);
 });
 
+test("a good's New mark goes as it sells out, or as anything but a restock refills it from 0 (#152 review)", () => {
+  const good = (quantity, newAt = T) => ({ system: { quantity }, flags: { "merchant-presets": { newAt } } });
+  assert.equal(dropsNewMark(good(3), 0, false), true, "sold out, by a trade or the GM");
+  assert.equal(dropsNewMark(good(0), 1, false), true, "refilled from 0 by a sale or the GM: second-hand");
+  assert.equal(dropsNewMark(good(0), 5, true), false, "a restock's refill sets its own mark");
+  assert.equal(dropsNewMark(good(3), 2, false), false, "still in stock: still New");
+  assert.equal(dropsNewMark(good(3), undefined, false), false, "not a quantity change");
+  assert.equal(dropsNewMark(good(3, null), 0, false), false, "nothing to drop");
+});
+
+test("a copy players can't see or buy doesn't count as in stock for New (#152 review)", () => {
+  const hidden = { _id: "gm4", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: { "merchant-presets": { stock: { hidden: true } } } };
+  const packed = { _id: "gm5", name: "Arrows", type: "consumable", system: { quantity: 3, container: "bag1" }, flags: {} };
+  const plan = planRestock(shop, [hidden, packed], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), T);
+});
+
+test("a restock is fresh stock only when it brings back something players can see (#152 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const hiddenLine = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: true, stock: { hidden: true } } } };
+  const hiddenStock = { ...context, at: T, stockFlags: { ...context.stockFlags, Arrows: { ...arrowsStock, hidden: true } } };
+  assert.equal(planRestock(topup, [hiddenLine], [{ ...draws[0], quantity: 10 }], hiddenStock).fresh, false);
+  assert.equal(planRestock(topup, [drawn("i1", "Arrows", "consumable", 0)], [{ ...draws[0], quantity: 10 }], { ...context, at: T }).fresh, true);
+  assert.equal(planRestock(shop, [], [{ ...draws[0], quantity: 10 }], { ...context, at: T }).fresh, true, "a reroll's visible lines");
+});
+
 test("a shop's first roll marks nothing New: a shop just placed has nothing back in stock (#152 review)", () => {
   const items = [drawn("i1", "Arrows", "consumable", 0)];
   const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T, markNew: false });
@@ -577,7 +603,7 @@ test("a shop with no stock table assigned plans nothing at all", () => {
   const untabledShop = rawShop({ restock: { mode: "reroll", table: null } });
   const items = [drawn("i1", "Arrows", "consumable", 40), gmAdded];
   const plan = planRestock(untabledShop, items, draws, { ...context, currentGp: 0 });
-  assert.deepEqual(plan, { deletes: [], creates: [], updates: [], currency: null, restocked: [] });
+  assert.deepEqual(plan, { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false });
 });
 
 test("draws sharing a name collapse to the first, in both modes", () => {

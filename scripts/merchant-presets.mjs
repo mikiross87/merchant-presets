@@ -12,7 +12,7 @@ import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
 import { DRINK_IDENTIFIERS, partOfDay } from "./shop-view.mjs";
 import {
-  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
@@ -372,8 +372,8 @@ async function restockNow(actor, { at = game.time.worldTime, markNew = true } = 
   if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
   await syncStockWeight(actor);        // the shelf and the till have both just moved
   // When the shelf was last restocked, whatever did it: the shop window's "Fresh stock today" (#145,
-  // #152). Not a shop's first roll, nor a top-up that brought nothing back.
-  if (markNew && plan.restocked.length) await actor.update({ [`flags.${MODULE}.restockedAt`]: at });
+  // #152). Not a shop's first roll, nor one that brought back nothing players can see.
+  if (markNew && plan.fresh) await actor.update({ [`flags.${MODULE}.restockedAt`]: at });
   return plan.restocked;
 }
 
@@ -1429,6 +1429,16 @@ function registerShopSetup() {
 }
 
 /* ----------------------------------------------------------------- settings */
+
+/**
+ * A shop good's New mark goes as it sells out, or as anything but a restock refills it from 0: a
+ * trade, the GM on the NPC sheet, a drop (#152). One place for every way a quantity moves.
+ */
+Hooks.on("preUpdateItem", (item, changes) => {
+  const quantity = foundry.utils.getProperty(changes, "system.quantity");
+  const setsNewAt = foundry.utils.hasProperty(changes, `flags.${MODULE}.newAt`);
+  if (dropsNewMark(item, quantity, setsNewAt)) foundry.utils.setProperty(changes, `flags.${MODULE}.newAt`, null);
+});
 
 Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;

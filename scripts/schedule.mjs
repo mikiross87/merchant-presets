@@ -39,6 +39,7 @@
  */
 
 import { shopFrom } from "./schema.mjs";
+import { isVisible } from "./trade-plan.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
 /** How many seconds a day of the world's calendar lasts. */
@@ -290,6 +291,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   null if it's already right.
  * @property {string[]} restocked  Names of the lines this restock drew or
  *   topped up — the shop's own log line, and dnd5e's time-passed card (#88).
+ * @property {boolean} fresh  Whether it stocks anything players can see and buy: only then is it
+ *   "Fresh stock today" (#152).
  */
 
 /**
@@ -303,7 +306,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
  */
 function newAtFor(items, context) {
   if (context.markNew === false) return () => undefined;
-  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0).map(i => i.name));
+  // In stock as players see it: a copy they can't see or buy (hidden, delisted, packed away) isn't.
+  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0 && forSale(i)).map(i => i.name));
   // Only from this shop's own goods still in stock: a copy another shop drew keeps its time to
   // itself, and one that sold out again isn't New any more.
   const earlier = new Map();
@@ -312,6 +316,24 @@ function newAtFor(items, context) {
     if (isDrawn(i, context.drawnBy) && i.system?.quantity !== 0 && Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
   }
   return name => (inStock.has(name) ? earlier.get(name) : context.at);
+}
+
+/** Whether players can see and buy `item` on the shelf (trade-plan.mjs `isVisible`). */
+const forSale = item => isVisible(item, item.flags?.["merchant-presets"]?.stock ?? {});
+
+/**
+ * Whether an update to a shop good drops its New mark (#152): it sells out, or anything but a
+ * restock refills it from 0 (a sale stacking onto it, the GM typing a number, a drop): what
+ * comes back that way is second-hand, not a restock's. A restock's own refill sets `newAt` in the
+ * same update (`setsNewAt`) and keeps it. `quantity` is the update's new quantity, if it sets one.
+ *
+ * @param {{system?: {quantity?: number}, flags?: object}} item  the good as it is before the update
+ * @param {number|undefined} quantity
+ * @param {boolean} setsNewAt
+ */
+export function dropsNewMark(item, quantity, setsNewAt) {
+  if (quantity === undefined || setsNewAt || item.flags?.["merchant-presets"]?.newAt == null) return false;
+  return quantity === 0 || item.system?.quantity === 0;
 }
 
 /** The shopkeeper's own kit, never stock. */
@@ -418,7 +440,7 @@ function dedupedByName(draws) {
  */
 export function planRestock(shop, items, draws, context) {
   const { restock } = shopFrom(shop);
-  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [] };
+  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false };
 
   const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
@@ -461,7 +483,8 @@ export function planRestock(shop, items, draws, context) {
     // A container can push its own name once per copy created; every other
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
-    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)] };
+    const refilled = updates.map(u => ({ ...items.find(i => i._id === u._id), flags: { "merchant-presets": { stock: u["flags.merchant-presets.stock"] } } }));
+    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(forSale) };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
@@ -477,7 +500,7 @@ export function planRestock(shop, items, draws, context) {
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked, fresh: creates.some(forSale) };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

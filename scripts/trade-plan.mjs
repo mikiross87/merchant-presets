@@ -436,7 +436,6 @@ function copyOf(item, quantity, containerId = null) {
  */
 function lander(existingItems, isValidTarget = () => true) {
   const updateQuantities = new Map();   // real item id -> its new total quantity
-  const unmarked = new Set();           // lines back in stock from 0, whose New mark goes (#152)
   const pendingCreates = [];            // this basket's own new items, not yet given a real id
 
   // Only the fields given: a full STOCK_DEFAULTS here would state bundle 1 over the carried flag.
@@ -458,9 +457,6 @@ function lander(existingItems, isValidTarget = () => true) {
       if (existing) {
         const id = idOf(existing);
         updateQuantities.set(id, (updateQuantities.get(id) ?? existing.system?.quantity ?? 0) + quantity);
-        // A sold-out line a sale fills again isn't New: whatever sold it out (a trade, the GM), its
-        // restock's mark must not show again on a second-hand good.
-        if (existing.system?.quantity === 0 && existing.flags?.[MODULE]?.newAt != null) unmarked.add(id);
         return;
       }
       create(item, quantity, shelf);
@@ -472,8 +468,7 @@ function lander(existingItems, isValidTarget = () => true) {
     },
     result() {
       return {
-        itemUpdates: [...updateQuantities].map(([_id, quantity]) => ({ _id, "system.quantity": quantity,
-          ...(unmarked.has(_id) ? { [`flags.${MODULE}.newAt`]: null } : {}) })),
+        itemUpdates: [...updateQuantities].map(([_id, quantity]) => ({ _id, "system.quantity": quantity })),
         itemCreates: pendingCreates
       };
     }

@@ -783,17 +783,6 @@ test("buying strips the shop's stock and drawn flags from the copy, keeping kind
   assert.equal("drawn" in created.flags["merchant-presets"], false);
 });
 
-test("a good sold back onto a sold-out line doesn't bring its New badge back, however it sold out (#152 review)", () => {
-  // Sold out by a trade, or by the GM on the NPC sheet: either way the line sits at 0 with its mark.
-  const line = { ...arrows(), _id: "ArrowsLine000001", system: { ...arrows().system, quantity: 0 },
-    flags: { "merchant-presets": { ...arrows().flags["merchant-presets"], drawn: true, newAt: 3600 } } };
-  const result = planTrade(sellRequest("5BtSFZjMcs6csxDO", 20), context({ shop: { items: [line] }, buyer: { items: [arrows()] } }));
-  assert.equal(result.ok, true);
-  const update = result.plan.updates.find(u => u.actorId === "Shop00000000001").itemUpdates.find(u => u._id === "ArrowsLine000001");
-  assert.equal(update["system.quantity"], 20);
-  assert.equal(update["flags.merchant-presets.newAt"], null);
-});
-
 test("a good bought while New leaves its New badge on the shelf (#152)", () => {
   const fresh = drawnDagger("Dagger000000001");
   fresh.flags["merchant-presets"].newAt = 3600;
