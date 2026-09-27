@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -543,7 +543,8 @@ const LABELS = {
   toolTypes: { art: "Artisan's Tools" },
   consumableTypes: { potion: { label: "Potion" } },
   typeLabels: { loot: "Loot", tool: "Tool" },
-  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" } },
+  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
+  weaponProperties: ["lgt", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } }
 };
 const words = { Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
@@ -612,4 +613,25 @@ test("a bill the engine would refuse has no purse after", () => {
   assert.equal(purseAfter("buy", { gp: 1 }, 200, { gp: 100 }, CURRENCIES), null);
   assert.equal(purseAfter("buy", { gp: 1 }, 50, {}, CURRENCIES), null);
   assert.equal(purseAfter("sell", {}, 200, { gp: 1 }, CURRENCIES), null);
+});
+
+/* -------------------------------------------------------------- isFreshToday */
+
+const DAYS = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
+const DAY = 86_400;
+
+test("a shop restocked earlier the same day has fresh stock today (design y6iNf's hero chip)", () => {
+  assert.equal(isFreshToday(10 * DAY + 60, 10 * DAY + 10 * 3600, DAYS), true);
+  assert.equal(isFreshToday(10 * DAY, 10 * DAY, DAYS), true);
+});
+
+test("a restock on an earlier day, or none yet, isn't fresh", () => {
+  assert.equal(isFreshToday(10 * DAY - 1, 10 * DAY + 60, DAYS), false);
+  assert.equal(isFreshToday(null, 10 * DAY, DAYS), false);
+  assert.equal(isFreshToday(undefined, 10 * DAY, DAYS), false);
+});
+
+test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {
+  const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver", "gear"], weight: { value: 3, units: "lb" } });
+  assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · 3 lb");
 });

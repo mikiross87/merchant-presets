@@ -31,6 +31,9 @@
   <div class="mp-identity" data-pen="Identity">
     <div class="mp-title-line" data-pen="Title line">
       <h1 class="mp-shop-name" data-pen="Shop Name">{{header.title}}</h1>
+      {{#if header.fresh}}
+        <span class="mp-hero-chip mp-fresh-chip" data-pen="Fresh Chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh label">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
+      {{/if}}
     </div>
     {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
           this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}

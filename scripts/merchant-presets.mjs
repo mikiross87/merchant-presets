@@ -367,7 +367,9 @@ async function restockNow(actor) {
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
   if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
-  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
+  await syncStockWeight(actor);        // the shelf and the till have both just moved
+  // When the shelf was last drawn, whatever drew it: the shop window's "Fresh stock today" (#145).
+  await actor.update({ [`flags.${MODULE}.restockedAt`]: game.time.worldTime });
   return plan.restocked;
 }
 
@@ -1320,6 +1322,7 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       [`flags.${MODULE}.shelf`]: null,
       [`flags.${MODULE}.schedule`]: null,
       [`flags.${MODULE}.lines`]: null,
+      [`flags.${MODULE}.restockedAt`]: null,
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });

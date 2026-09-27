@@ -430,3 +430,16 @@ test("a topup that found nothing sold isn't reported as a restock (#135 review, 
   await clock(at(3, 8));
   assert.deepEqual(told, []);
 });
+
+test("every restock notes when it ran, scheduled or by hand, for the window's Fresh chip (#145)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "adopting a shelf isn't a restock");
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].restockedAt, at(3, 8));
+
+  world.settings.autoRestock = false;
+  globalThis.game.time.worldTime = at(4, 10);
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.equal(shop.flags["merchant-presets"].restockedAt, at(4, 10));
+});

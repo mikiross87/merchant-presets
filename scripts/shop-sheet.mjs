@@ -25,7 +25,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -74,7 +74,7 @@ function metaLabels() {
   return {
     weaponTypes: D.weaponTypes, armorTypes: D.armorTypes, toolTypes: D.toolTypes, consumableTypes: D.consumableTypes,
     typeLabels: Object.fromEntries(Object.entries(CONFIG.Item.typeLabels ?? {}).map(([k, v]) => [k, game.i18n.localize(v)])),
-    properties: D.itemProperties, weightUnits: D.weightUnits
+    properties: D.itemProperties, weaponProperties: [...(D.validProperties?.weapon ?? [])], weightUnits: D.weightUnits
   };
 }
 
@@ -548,6 +548,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       title,
       tier,
       kindIcon: kindIcon(actor, config),
+      fresh: isFreshToday(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,

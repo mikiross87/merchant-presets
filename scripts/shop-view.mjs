@@ -271,7 +271,7 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
  *
  * @param {object} item  an item's `toObject()`
  * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
- *   typeLabels: object, properties: object, weightUnits: object}} labels  CONFIG.DND5E's, localized
+ *   typeLabels: object, properties: object, weaponProperties: string[], weightUnits: object}} labels  CONFIG.DND5E's, localized
  * @param {(key: string, data?: object) => string} t  the window's localize, for the pieces in words
  * @returns {string}
  */
@@ -284,7 +284,9 @@ export function itemMeta(item, labels, t) {
   const parts = [];
   if (item.type === "weapon") {
     parts.push(sentenceCase(label(labels.weaponTypes?.[sys.type?.value])));
-    const props = [...(sys.properties ?? [])].map(p => label(labels.properties?.[p])).filter(Boolean);
+    // Only a weapon's own rules: dnd5e also tags a compendium copy with properties such as "gear".
+    const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p))
+      .map(p => label(labels.properties?.[p])).filter(Boolean);
     if (props.length) parts.push(sentenceCase(props.join(", ")));
     parts.push(weight);
   } else if (item.type === "equipment" && sys.type?.value === "shield") {
@@ -321,6 +323,23 @@ export function partOfDay(hour, hoursPerDay = 24) {
   if (h < 18) return "afternoon";
   if (h < 22) return "evening";
   return "night";
+}
+
+/* -------------------------------------------------------------- header */
+
+/**
+ * Whether the shop restocked on the world clock's current day: the hero's "Fresh stock today"
+ * chip (design y6iNf). Days start at whole multiples of the calendar's day length, as
+ * schedule.mjs counts them.
+ *
+ * @param {number|null|undefined} lastRestock  when the shelf was last drawn (the shop's `restockedAt`), in world seconds
+ * @param {number} now                          the world time
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function isFreshToday(lastRestock, now, days) {
+  if (lastRestock == null) return false;
+  const perDay = days.secondsPerMinute * days.minutesPerHour * days.hoursPerDay;
+  return Math.floor(lastRestock / perDay) === Math.floor(now / perDay);
 }
 
 /* -------------------------------------------------------------- basket */
