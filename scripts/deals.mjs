@@ -12,7 +12,7 @@
  */
 
 /** Seconds in one day of the world's calendar. */
-const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
+export const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
 
 /**
  * The deal `actorUuid` has at `shop` at `worldTime`, as `effectiveRates` takes it, or null: none,

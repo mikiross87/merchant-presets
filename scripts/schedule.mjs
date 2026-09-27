@@ -252,6 +252,9 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   separate copies the shop should carry (`flags.merchant-presets.containers`,
  *   #63): a container can't hold a quantity, so a count of them is a count of
  *   documents, not a number on one.
+ * @property {number} [at]  When the restock happened: the opening it was due at, or now for one by
+ *   hand. Goods it brings back in stock are New from then (#152).
+ * @property {boolean} [markNew]  False on a shop's first roll, which brings nothing "back" (#152).
  *
  * @typedef {object} RestockPlan
  * @property {string[]} deletes   Item ids to delete.
@@ -264,18 +267,22 @@ export function dueRestock(shop, state, previous, now, calendar) {
  */
 
 /**
- * The "New" badges a restock leaves (#152): a good it stocks is New when nothing of that name was
- * in stock before it, sold out or gone. `stale` clears the badge from every other good still
- * carrying one from an earlier restock, the GM's own included; the shopkeeper's gear never has one.
+ * When each good a restock stocks came back in stock (#152): its `newAt`, which the window shows as
+ * "New" while it's fresh (shop-view.mjs `isNewGood`). A good nothing of that name was in stock
+ * before (sold out, or gone) came back at `context.at`, the restock's own time. One still in stock
+ * keeps the time an earlier restock gave it, so a second restock before closing doesn't take its
+ * badge away. A good with no quantity recorded counts as in stock, as the top-up counts it. On a
+ * shop's first roll (`context.markNew: false`) nothing has come back: a shop just placed has no
+ * New goods. Undefined for a good that isn't New.
  */
-function newBadges(items) {
-  const inStock = new Set(items.filter(i => !isGear(i) && (i.system?.quantity ?? 0) > 0).map(i => i.name));
-  return {
-    isNew: name => !inStock.has(name),
-    stale: (touched) => items
-      .filter(i => !isGear(i) && i.flags?.["merchant-presets"]?.new === true && !touched.has(i._id))
-      .map(i => ({ _id: i._id, "flags.merchant-presets.new": false }))
-  };
+function newAtFor(items, context) {
+  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0).map(i => i.name));
+  const earlier = new Map();
+  for (const i of items) {
+    const at = i.flags?.["merchant-presets"]?.newAt;
+    if (Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
+  }
+  return name => (context.markNew === false ? undefined : inStock.has(name) ? earlier.get(name) : context.at);
 }
 
 /** The shopkeeper's own kit, never stock. */
@@ -296,9 +303,9 @@ const isDrawn = (item, drawnBy) => {
  * stock config — `context.stockFlags[draw.name]`, the shop's own record, not
  * whatever the compendium good's own copy says (#119 point 1). `system`
  * overrides the copy's quantity (and, for a container, drops its `container`
- * pointer — #89). `isNew` is its "New" badge (#152).
+ * pointer — #89). `newAt` is when it came back in stock, if it's New (#152).
  */
-function drawnItem(draw, context, system, isNew) {
+function drawnItem(draw, context, system, newAt) {
   const data = structuredClone(draw.data);
   delete data._id;
   data.system = { ...data.system, ...system };
@@ -306,7 +313,8 @@ function drawnItem(draw, context, system, isNew) {
     ...data.flags,
     // The shop's record wins; a line it has none for keeps the config its good ships with.
     "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true,
-      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock, new: isNew }
+      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock,
+      ...(newAt === undefined ? {} : { newAt }) }
   };
   return data;
 }
@@ -383,7 +391,7 @@ export function planRestock(shop, items, draws, context) {
   const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
   const currency = refilledPurse(context);
-  const badges = newBadges(items);
+  const newAt = newAtFor(items, context);
 
   if (restock.mode === "topup") {
     const updates = [];
@@ -399,7 +407,7 @@ export function planRestock(shop, items, draws, context) {
       if (draw.data.type === "container") {
         const have = drawnNow.filter(i => i.name === draw.name).length;
         const want = context.containers?.[draw.name] ?? 1;
-        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, badges.isNew(draw.name)));
+        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
         if (want > have) restocked.push(draw.name);
         continue;
       }
@@ -409,9 +417,10 @@ export function planRestock(shop, items, draws, context) {
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       if (existing) {
         updates.push({ _id: existing._id, "system.quantity": quantity,
-          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.new": badges.isNew(draw.name) });
+          "flags.merchant-presets.stock": context.stockFlags[draw.name],
+          ...(newAt(draw.name) === undefined ? {} : { "flags.merchant-presets.newAt": newAt(draw.name) }) });
       } else {
-        creates.push(drawnItem(draw, context, { quantity }, badges.isNew(draw.name)));
+        creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name)));
       }
       restocked.push(draw.name);
     }
@@ -419,7 +428,6 @@ export function planRestock(shop, items, draws, context) {
     // A container can push its own name once per copy created; every other
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
-    updates.push(...badges.stale(new Set(updates.map(u => u._id))));
     return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)] };
   }
 
@@ -428,16 +436,15 @@ export function planRestock(shop, items, draws, context) {
   for (const draw of uniqueDraws) {
     if (draw.data.type === "container") {
       const count = context.containers?.[draw.name] ?? 1;
-      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, badges.isNew(draw.name)));
+      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
       continue;
     }
     const quantity = Math.max(0, draw.quantity ?? 0);
-    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, badges.isNew(draw.name)));   // 0: not in stock today
+    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name)));   // 0: not in stock today
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  const deletes = drawnNow.map(i => i._id);
-  return { deletes, creates, updates: badges.stale(new Set(deletes)), currency, restocked };
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

@@ -1,4 +1,4 @@
-import { nextCloseAt } from "./deals.mjs";
+import { nextCloseAt, secondsPerDay } from "./deals.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
@@ -437,9 +437,27 @@ export function partOfDay(hour, hoursPerDay = 24) {
  */
 export function isFresh(lastRestock, now, hours, days) {
   if (lastRestock == null || now < lastRestock) return false;
-  const perDay = days.secondsPerMinute * days.minutesPerHour * days.hoursPerDay;
+  const perDay = secondsPerDay(days);
   const until = nextCloseAt(hours, lastRestock, days) ?? (Math.floor(lastRestock / perDay) + 1) * perDay;
   return now < until;
+}
+
+/**
+ * Whether a good wears "New" (#152): this shop's restock brought it back in stock (its `newAt`,
+ * schedule.mjs `planRestock`) and that's still fresh. Only on the shop that drew it: a good a GM
+ * drags from one shop to another keeps its flags, but not its badge. `drawn: true` is a good drawn
+ * before shelves had keys.
+ *
+ * @param {object} flags   the item's flags
+ * @param {string|undefined} shelf  the shop's shelf key (`flags.merchant-presets.shelf`)
+ * @param {number} now
+ * @param {object|null} hours  the hours the shop keeps, as `isFresh` takes them
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function isNewGood(flags, shelf, now, hours, days) {
+  const own = flags?.["merchant-presets"];
+  const here = own?.drawn === true || (own?.drawn != null && own.drawn === shelf);
+  return here && isFresh(own.newAt, now, hours, days);
 }
 
 /* -------------------------------------------------------------- basket */
@@ -539,8 +557,6 @@ export function stockLabel(stock, quantity, worldInfiniteStock) {
  * @property {string} name
  * @property {string} category
  * @property {StockLabel} stock
- * @property {boolean} isNew  the good's "New" badge (`flags.merchant-presets.new`, set by a restock:
- *   schedule.mjs `planRestock`). The window shows it only while the restock `isFresh` (#152).
  * @property {number|null} bundlePriceCp  null when the item can't be priced (see `unpriced`)
  * @property {boolean} unpriced  true for a missing price or a denomination `currencies` lacks —
  *   shown as "Worthless" per #98's decision (design/README.md is silent on a *shop* price of
@@ -600,7 +616,6 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock,
     name: item.name,
     category,
     stock: stockLabel(stock, item.system?.quantity ?? 0, worldInfiniteStock),
-    isNew: item.flags?.["merchant-presets"]?.new === true,
     service: stock.service,
     bundlePriceCp: bundleCp,
     unpriced,

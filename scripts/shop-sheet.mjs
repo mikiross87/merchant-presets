@@ -26,7 +26,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFresh, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFresh, isNewGood, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -607,7 +607,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       title,
       tier,
       kindIcon: kindIcon(actor, config),
-      fresh: this.#isFresh(actor, config),
+      // "Fresh stock today" until the shop closes after the restock (#152).
+      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -830,17 +831,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems));
   }
 
-  /** Whether the last restock is still fresh: the Fresh chip and the New badges show only until the shop closes (#152). */
-  #isFresh(actor, config) {
-    return isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days);
-  }
-
   #buyContext(actor, config, rates, currencies, buyer, open) {
-    const fresh = this.#isFresh(actor, config);
+    const shelf = actor.flags?.[MODULE]?.shelf;
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
-        row.isNew &&= fresh;
+        // "New" until the shop closes after the restock that brought it back (#152).
+        row.isNew = isNewGood(data.flags, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,

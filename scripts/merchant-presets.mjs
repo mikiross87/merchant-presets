@@ -315,9 +315,9 @@ async function adoptOnce(actor, table) {
  * @returns {Promise<string[]|null>} the lines it drew or topped up; null if
  *   it couldn't restock at all (no shop config, or its table is gone)
  */
-function restock(actor) {
+function restock(actor, options) {
   return runTrade(async () => {
-    const restocked = await restockNow(actor);
+    const restocked = await restockNow(actor, options);
     // A scheduled shop restocked by hand counts its next due day from today, as a scheduled
     // restock would, or the next opening would reroll the shelf just rolled (#135 review).
     const state = actor.flags?.[MODULE]?.schedule;
@@ -330,7 +330,12 @@ function restock(actor) {
   });
 }
 
-async function restockNow(actor) {
+/**
+ * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
+ * even when the clock caught up with it later, or now. `markNew: false` is a shop's first roll,
+ * which brings nothing back in stock (#152).
+ */
+async function restockNow(actor, { at = game.time.worldTime, markNew = true } = {}) {
   const raw = actor.flags?.[MODULE]?.shop;
   const shop = safeShopOf(actor);
   if (!shop?.restock.table) return null;
@@ -355,7 +360,9 @@ async function restockNow(actor) {
     currentGp: actor.system?.currency?.gp,
     stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), shelf),
     containers: actor.flags?.[MODULE]?.containers ?? {},
-    drawnBy: shelf
+    drawnBy: shelf,
+    at,
+    markNew
   });
   // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
   await actor.update({ [`flags.${MODULE}.lines`]: memory });
@@ -364,8 +371,9 @@ async function restockNow(actor) {
   if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
   if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
   await syncStockWeight(actor);        // the shelf and the till have both just moved
-  // When the shelf was last drawn, whatever drew it: the shop window's "Fresh stock today" (#145).
-  await actor.update({ [`flags.${MODULE}.restockedAt`]: game.time.worldTime });
+  // When the shelf was last restocked, whatever did it: the shop window's "Fresh stock today" (#145,
+  // #152). Not a shop's first roll, nor a top-up that brought nothing back.
+  if (markNew && plan.restocked.length) await actor.update({ [`flags.${MODULE}.restockedAt`]: at });
   return plan.restocked;
 }
 
@@ -403,7 +411,7 @@ async function scheduleShop(actor, now, previous, calendar) {
   }
   const due = dueRestock(raw, state, previous, now, calendar);
   if (!due.due) return null;
-  const restocked = await restockNow(actor);
+  const restocked = await restockNow(actor, { at: due.at });
   // Couldn't run (its table or a line's document is missing): still due, so the next opening
   // tries again, rather than the shop skipping a whole cycle.
   if (restocked === null) return null;
@@ -1315,7 +1323,7 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);
-    await restockNow(actor);
+    await restockNow(actor, { markNew: false });
   } finally {
     rewiring.delete(actor.id);
   }
@@ -1684,7 +1692,7 @@ async function arrive(actor) {
     await migrateShop(actor);
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
-    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
+    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor, { markNew: false });
   } finally {
     arriving.delete(actor.id);
   }

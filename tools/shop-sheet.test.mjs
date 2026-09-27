@@ -1582,7 +1582,7 @@ test("the Buyer Picker lists no merchants, and each group alphabetically (design
 });
 
 test("the Fresh chip and New badges show until the shop closes, then clear (#152)", async () => {
-  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { new: true } } })] });
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 8 * 3600, drawn: true } } })] });
   shop.flags["merchant-presets"].restockedAt = 8 * 3600;      // restocked at 8:00; the shop keeps 7:00-19:00
   const before = globalThis.game.time.worldTime;
   const seen = async () => {

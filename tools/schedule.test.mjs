@@ -368,52 +368,52 @@ test("reroll replaces what this shop drew, even a line its table dropped, and ke
   assert.equal(plan.creates[0].flags["merchant-presets"].drawn, "gs", "a fresh copy names the shop that drew it");
 });
 
-/** What a planned create or update says of "New" (#152): true, false, or undefined when it says nothing. */
-const newOf = change => change["flags.merchant-presets.new"] ?? change.flags?.["merchant-presets"]?.new;
+/** When a planned create or update says the good came back in stock (#152): its `newAt`, or undefined. */
+const newAtOf = change => change["flags.merchant-presets.newAt"] ?? change.flags?.["merchant-presets"]?.newAt;
+const T = 3 * 86_400 + 7 * 3600;   // the restock's time: the opening it was due at
 
-test("a reroll marks New only the goods that weren't in stock before it (#152)", () => {
+test("a reroll marks the goods that weren't in stock before it New, as of the restock (#152)", () => {
   const items = [
     drawn("i1", "Arrows", "consumable", 0),                        // sold out, kept at zero
-    drawn("i2", "Spellcasting: Level 1", "loot", 1),               // still in stock
-    { ...drawn("i3", "Bell", "loot", 2), flags: { "merchant-presets": { drawn: true, new: true } } }
+    drawn("i2", "Spellcasting: Level 1", "loot", 1)                // still in stock
   ];
-  const withBell = [...draws, { name: "Bell", quantity: 1, data: { type: "loot", name: "Bell", system: {}, flags: {} } }];
-  const plan = planRestock(shop, items, [{ ...withBell[0], quantity: 10 }, ...withBell.slice(1)], context);
-  const byName = Object.fromEntries(plan.creates.map(c => [c.name, newOf(c)]));
-  assert.equal(byName.Arrows, true, "sold out before: New");
-  assert.equal(byName.Backpack, true, "not on the shelf before: New");
-  assert.equal(byName["Spellcasting: Level 1"], false, "in stock before: not New");
-  assert.equal(byName.Bell, false, "in stock before, New from an earlier restock: not New now");
+  const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T });
+  const byName = Object.fromEntries(plan.creates.map(c => [c.name, newAtOf(c)]));
+  assert.equal(byName.Arrows, T, "sold out before: New");
+  assert.equal(byName.Backpack, T, "not on the shelf before: New");
+  assert.equal(byName["Spellcasting: Level 1"], undefined, "in stock before: not New");
+});
+
+test("a reroll keeps an earlier restock's New on a good it draws again, so a second restock before closing doesn't wipe it (#152 review)", () => {
+  const earlier = { ...drawn("i1", "Arrows", "consumable", 5), flags: { "merchant-presets": { drawn: true, newAt: T - 600 } } };
+  const plan = planRestock(shop, [earlier], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), T - 600);
 });
 
 test("a good the GM has in stock by hand isn't New when the table draws it too (#152)", () => {
   const hand = { _id: "gm2", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: {} };
-  const plan = planRestock(shop, [hand], [{ ...draws[0], quantity: 10 }], context);
-  assert.equal(newOf(plan.creates[0]), false);
+  const plan = planRestock(shop, [hand], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), undefined);
 });
 
-test("a top-up marks what it refills New and clears New from everything else (#152)", () => {
+test("a good with no quantity recorded counts as in stock, as the top-up counts it (#152 review)", () => {
+  const unknown = { _id: "gm3", name: "Arrows", type: "consumable", system: {}, flags: {} };
+  const plan = planRestock(shop, [unknown], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), undefined);
+});
+
+test("a top-up marks what it refills New and leaves every other good as it is (#152 review)", () => {
   const topup = rawShop({ restock: { mode: "topup" } });
-  const stale = (item) => ({ ...item, flags: { "merchant-presets": { ...item.flags["merchant-presets"], new: true } } });
-  const items = [
-    drawn("i1", "Arrows", "consumable", 0),                        // refilled in place
-    stale(drawn("i2", "Spellcasting: Level 1", "loot", 1)),        // New from last time, still in stock
-    stale({ ...gmAdded, flags: { "merchant-presets": {} } }),      // the GM's own, New from a copy's flags
-    gear
-  ];
-  const plan = planRestock(topup, items, [{ ...draws[0], quantity: 10 }, draws[1], draws[2]], { ...context, containers: { Backpack: 1 } });
-  const updates = Object.fromEntries(plan.updates.map(u => [u._id, newOf(u)]));
-  assert.equal(updates.i1, true, "refilled: New");
-  assert.equal(updates.i2, false, "not touched this time: New cleared");
-  assert.equal(updates.gm1, false, "a hand-added good's stale New is cleared too");
-  assert.equal(updates.gear1, undefined, "the shopkeeper's gear is left alone");
-  assert.equal(newOf(plan.creates.find(c => c.name === "Backpack")), true, "a container that was gone: New");
+  const items = [drawn("i1", "Arrows", "consumable", 0), drawn("i2", "Spellcasting: Level 1", "loot", 1), gmAdded, gear];
+  const plan = planRestock(topup, items, [{ ...draws[0], quantity: 10 }, draws[1], draws[2]], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.updates.map(u => [u._id, newAtOf(u)]), [["i1", T]], "only the refilled good is written");
+  assert.equal(newAtOf(plan.creates.find(c => c.name === "Backpack")), T, "a container that was gone: New");
 });
 
-test("a reroll clears a stale New from goods it keeps (#152)", () => {
-  const kept = { ...gmAdded, flags: { "merchant-presets": { new: true } } };
-  const plan = planRestock(shop, [kept], [{ ...draws[0], quantity: 10 }], context);
-  assert.deepEqual(plan.updates, [{ _id: "gm1", "flags.merchant-presets.new": false }]);
+test("a shop's first roll marks nothing New: a shop just placed has nothing back in stock (#152 review)", () => {
+  const items = [drawn("i1", "Arrows", "consumable", 0)];
+  const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T, markNew: false });
+  assert.ok(plan.creates.every(c => newAtOf(c) === undefined));
 });
 
 test("a shop remembers each drawn line's settings, so one that left the shelf comes back with them (#135 review)", () => {
@@ -508,7 +508,7 @@ test("topup redraws a sold-out line whether it's still on the shelf at zero or g
 
   // Still there at zero: refilled in place, not replaced.
   assert.deepEqual(plan.updates, [
-    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock, "flags.merchant-presets.new": true }
+    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock }
   ]);
 
   const backpacks = plan.creates.filter(c => c.name === "Backpack");

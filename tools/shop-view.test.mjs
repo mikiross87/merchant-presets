@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFresh, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, isNewGood, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -642,6 +642,17 @@ test("a shop that never closes keeps its restock fresh until the day ends (#152)
     assert.equal(isFresh(at, 10 * DAY + H(23, 59), hours, DAYS), true);
     assert.equal(isFresh(at, 11 * DAY, hours, DAYS), false);
   }
+});
+
+test("a good is New while the restock that brought it back is fresh, and only on the shop that drew it (#152)", () => {
+  const flags = (newAt, drawn = "shelfA") => ({ "merchant-presets": { newAt, drawn } });
+  const at = 10 * DAY + H(8);
+  assert.equal(isNewGood(flags(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isNewGood(flags(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
+  assert.equal(isNewGood(flags(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
+  assert.equal(isNewGood(flags(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
+  assert.equal(isNewGood(flags(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+  assert.equal(isNewGood({}, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
 });
 
 test("no restock yet, or a clock wound back before it, isn't fresh", () => {

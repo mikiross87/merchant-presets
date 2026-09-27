@@ -188,6 +188,8 @@ test("a shop imported from the pack opens as the shop window and rolls its own s
   assert.ok(shop.flags["merchant-presets"].shelf, "adopted by its first native restock");
   assert.ok(shop.items.filter(i => i.flags["merchant-presets"]?.kind !== "gear").every(i => i.flags["merchant-presets"]?.drawn),
     "every good on the shelf was drawn by it");
+  assert.ok(shop.items.every(i => i.flags["merchant-presets"]?.newAt === undefined), "a shop just placed has nothing New (#152 review)");
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "nor fresh stock");
 });
 
 test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
