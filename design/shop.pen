@@ -11540,6 +11540,77 @@
                     },
                     {
                       "type": "frame",
+                      "id": "EE50c",
+                      "name": "Entry Tomas",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "VsohK",
+                          "name": "Tomas avatar",
+                          "width": 26,
+                          "height": 26,
+                          "fill": "$surface-row-alt",
+                          "cornerRadius": 13,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "M6avr",
+                              "name": "Tomas initial",
+                              "fill": "$text-title",
+                              "content": "T",
+                              "fontFamily": "$font-title",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "K1ZQZ",
+                          "name": "Tomas text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MEC8d",
+                              "name": "Tomas name",
+                              "fill": "$text-primary",
+                              "content": "Tomas",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "fe9hw",
+                              "name": "Tomas sub",
+                              "fill": "$text-secondary",
+                              "content": "Humanoid · 3 gp 4 sp",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
                       "id": "slYjq",
                       "name": "Entry Whisker",
                       "opacity": 0.55,
@@ -11601,78 +11672,7 @@
                               "id": "IaW1K",
                               "name": "Whisker sub",
                               "fill": "$text-secondary",
-                              "content": "Owl familiar · no purse",
-                              "fontFamily": "$font-compact",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "EE50c",
-                      "name": "Entry Tomas",
-                      "width": "fill_container",
-                      "fill": "#00000000",
-                      "cornerRadius": 4,
-                      "gap": 8,
-                      "padding": [
-                        6,
-                        8
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "VsohK",
-                          "name": "Tomas avatar",
-                          "width": 26,
-                          "height": 26,
-                          "fill": "$surface-row-alt",
-                          "cornerRadius": 13,
-                          "stroke": "$accent-gold",
-                          "strokeWidth": 1,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "M6avr",
-                              "name": "Tomas initial",
-                              "fill": "$text-title",
-                              "content": "T",
-                              "fontFamily": "$font-title",
-                              "fontSize": 13,
-                              "fontWeight": "700"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "K1ZQZ",
-                          "name": "Tomas text",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 1,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "MEC8d",
-                              "name": "Tomas name",
-                              "fill": "$text-primary",
-                              "content": "Tomas",
-                              "fontFamily": "$font-body",
-                              "fontSize": 13,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "text",
-                              "id": "fe9hw",
-                              "name": "Tomas sub",
-                              "fill": "$text-secondary",
-                              "content": "Hireling · 3 gp 4 sp",
+                              "content": "Beast · no purse",
                               "fontFamily": "$font-compact",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -12110,7 +12110,79 @@
                               "id": "AlbMU",
                               "name": "Tomas sub",
                               "fill": "$text-secondary",
-                              "content": "Hireling · 3 gp 4 sp",
+                              "content": "Humanoid · 3 gp 4 sp",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CLv5N",
+                      "name": "Entry Whisker",
+                      "opacity": 0.55,
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Epjpz",
+                          "name": "Whisker avatar",
+                          "width": 26,
+                          "height": 26,
+                          "fill": "$surface-row-alt",
+                          "cornerRadius": 13,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MmPnl",
+                              "name": "Whisker initial",
+                              "fill": "$text-title",
+                              "content": "W",
+                              "fontFamily": "$font-title",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "plaTI",
+                          "name": "Whisker text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "i8OWK",
+                              "name": "Whisker name",
+                              "fill": "$text-primary",
+                              "content": "Whisker",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GTr5T",
+                              "name": "Whisker sub",
+                              "fill": "$text-secondary",
+                              "content": "Beast · no purse",
                               "fontFamily": "$font-compact",
                               "fontSize": 11,
                               "fontWeight": "normal"
