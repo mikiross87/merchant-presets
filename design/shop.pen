@@ -17410,7 +17410,6 @@
                   "fill": "#00000000",
                   "cornerRadius": 4,
                   "stroke": "#00000000",
-                  "strokeWidth": 1,
                   "gap": 8,
                   "padding": [
                     7,
@@ -19074,7 +19073,6 @@
                   "fill": "#00000000",
                   "cornerRadius": 4,
                   "stroke": "#00000000",
-                  "strokeWidth": 1,
                   "gap": 8,
                   "padding": [
                     7,
@@ -19152,7 +19150,6 @@
                   "fill": "#00000000",
                   "cornerRadius": 4,
                   "stroke": "#00000000",
-                  "strokeWidth": 1,
                   "gap": 8,
                   "padding": [
                     7,
@@ -22622,7 +22619,7 @@
                       "type": "frame",
                       "id": "pFhUv",
                       "name": "Till used",
-                      "width": 60,
+                      "width": 80,
                       "height": 6,
                       "fill": "$accent-gold",
                       "cornerRadius": 3
@@ -22638,7 +22635,7 @@
               "width": "fill_container",
               "gap": 10,
               "padding": [
-                12,
+                4,
                 0,
                 6,
                 0
@@ -22652,7 +22649,7 @@
                   "fill": "$text-title",
                   "content": "Weapons",
                   "fontFamily": "$font-title",
-                  "fontSize": 17,
+                  "fontSize": 16,
                   "fontWeight": "700"
                 },
                 {
@@ -22750,7 +22747,7 @@
                   "fill": "$text-title",
                   "content": "Armor",
                   "fontFamily": "$font-title",
-                  "fontSize": 17,
+                  "fontSize": 16,
                   "fontWeight": "700"
                 },
                 {
@@ -22834,7 +22831,7 @@
                   "fill": "$text-title",
                   "content": "Gear",
                   "fontFamily": "$font-title",
-                  "fontSize": 17,
+                  "fontSize": 16,
                   "fontWeight": "700"
                 },
                 {
@@ -22963,7 +22960,7 @@
                   "fill": "$text-title",
                   "content": "Food & drink",
                   "fontFamily": "$font-title",
-                  "fontSize": 17,
+                  "fontSize": 16,
                   "fontWeight": "700"
                 },
                 {
