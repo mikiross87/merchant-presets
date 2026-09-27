@@ -390,6 +390,12 @@ test("a reroll keeps an earlier restock's New on a good it draws again, so a sec
   assert.equal(newAtOf(plan.creates[0]), T - 600);
 });
 
+test("a reroll doesn't take a New time from a copy another shop drew (#152 review)", () => {
+  const theirs = { _id: "x1", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: { "merchant-presets": { drawn: "pawnshop", newAt: T - 600 } } };
+  const plan = planRestock(shop, [theirs], [{ ...draws[0], quantity: 10 }], { ...context, at: T, drawnBy: "gs" });
+  assert.equal(newAtOf(plan.creates[0]), undefined);
+});
+
 test("a good the GM has in stock by hand isn't New when the table draws it too (#152)", () => {
   const hand = { _id: "gm2", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: {} };
   const plan = planRestock(shop, [hand], [{ ...draws[0], quantity: 10 }], { ...context, at: T });

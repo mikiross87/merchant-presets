@@ -1,3 +1,5 @@
+import { secondsPerDay } from "./schedule.mjs";
+
 /**
  * Deals (#111): one character's own price at one shop, kept free of Foundry so it can be tested
  * with plain Node (tools/deals.test.mjs).
@@ -10,9 +12,6 @@
  *
  * Times are world seconds; the calendar is the world clock's own numbers, as in schedule.mjs.
  */
-
-/** Seconds in one day of the world's calendar. */
-export const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
 
 /**
  * The deal `actorUuid` has at `shop` at `worldTime`, as `effectiveRates` takes it, or null: none,

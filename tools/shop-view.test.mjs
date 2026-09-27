@@ -645,14 +645,27 @@ test("a shop that never closes keeps its restock fresh until the day ends (#152)
 });
 
 test("a good is New while the restock that brought it back is fresh, and only on the shop that drew it (#152)", () => {
-  const flags = (newAt, drawn = "shelfA") => ({ "merchant-presets": { newAt, drawn } });
+  const good = (newAt, drawn = "shelfA", quantity = 3) => ({ system: { quantity }, flags: { "merchant-presets": { newAt, drawn } } });
   const at = 10 * DAY + H(8);
-  assert.equal(isNewGood(flags(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true);
-  assert.equal(isNewGood(flags(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
-  assert.equal(isNewGood(flags(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
-  assert.equal(isNewGood(flags(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
-  assert.equal(isNewGood(flags(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
-  assert.equal(isNewGood({}, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
+  assert.equal(isNewGood(good(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
+  assert.equal(isNewGood(good(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
+  assert.equal(isNewGood(good(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+  assert.equal(isNewGood({ flags: {} }, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+});
+
+test("a New good that sells out again isn't New: New is for goods back in stock (#152 review)", () => {
+  const soldOut = { system: { quantity: 0 }, flags: { "merchant-presets": { newAt: 10 * DAY + H(8), drawn: "shelfA" } } };
+  assert.equal(isNewGood(soldOut, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+});
+
+test("with trading hours off a shop's restock stays fresh until its own day starts again at its opening (#152 review)", () => {
+  const night = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
+  const at = 3 * DAY + H(20);
+  // No closing (the world keeps every shop open), but the shop's day still starts at 20:00.
+  assert.equal(isFresh(at, 4 * DAY + H(3), null, DAYS, night), true);
+  assert.equal(isFresh(at, 4 * DAY + H(20), null, DAYS, night), false);
 });
 
 test("a shop open round the clock from 7:00 keeps its restock fresh until its own day starts again (#152 review)", () => {

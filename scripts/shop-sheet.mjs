@@ -608,7 +608,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tier,
       kindIcon: kindIcon(actor, config),
       // "Fresh stock today" until the shop closes after the restock (#152).
-      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
+      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days, shopConfigOf(actor).hours),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -833,11 +833,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   #buyContext(actor, config, rates, currencies, buyer, open) {
     const shelf = actor.flags?.[MODULE]?.shelf;
+    // The shop's own day, even while the world's trading hours keep it open round the clock.
+    const dayHours = shopConfigOf(actor).hours;
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
-        row.isNew = row.stock.state !== "soldOut" && isNewGood(data.flags, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
+        row.isNew = isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days, dayHours);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
