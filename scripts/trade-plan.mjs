@@ -257,7 +257,7 @@ const findById = (docs, id) => docs.find(d => idOf(d) === id);
 
 const stockOf = item => stockFrom(item.flags?.[MODULE]?.stock ?? {});
 const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
-const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
+export const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
 export const isGear = item => kindOf(item) === "gear";
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 

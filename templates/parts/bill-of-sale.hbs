@@ -26,7 +26,7 @@
               {{> mpCoins coins=this.lineTotalCoins mode="count"}}
             </div>
             <div class="mp-detail" data-pen="{{this.name}} detail">
-              <span class="mp-each" data-pen="{{this.name}} each">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.showUnit}}{{this.unitText}} {{#if (gt this.bundle 1)}}{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}</span>
+              <span class="mp-each" data-pen="{{this.name}} each">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
               {{#unless (or (eq ../seal.state "sealing") (eq ../seal.state "sealed"))}}
                 <span class="mp-stepper" data-pen="{{this.name}} stepper">
                   <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" data-pen="Minus" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}">{{mpIcon "minus" pen="Minus icon"}}</button>
@@ -47,7 +47,7 @@
         <span class="mp-ink-rule" data-pen="Rule 1"></span><span class="mp-ink-rule" data-pen="Rule 2"></span>
         <div class="mp-total-row" data-pen="Total Row">
           <span class="mp-total-label" data-pen="Total label">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.YouReceive"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.SumOwed"}}{{/if}}</span>
-          <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}">{{> mpCoins coins=basket.sumCoins mode="count"}}</span>
+          <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}" {{#if (gt basket.sumCoins.length 1)}}data-pen="Total coins"{{/if}}>{{> mpCoins coins=basket.sumCoins mode="count"}}</span>
         </div>
       </div>
 

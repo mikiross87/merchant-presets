@@ -1,5 +1,5 @@
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -277,16 +277,15 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
  */
 export function itemMeta(item, labels, t) {
   const sys = item.system ?? {};
-  const label = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
   const parts = [];
   if (item.type === "weapon") {
-    parts.push(sentenceCase(label(labels.weaponTypes?.[sys.type?.value])));
+    parts.push(whatItIs(item, labels));
     // Only a weapon's own rules: dnd5e also tags a compendium copy with properties such as "gear".
     const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p))
-      .map(p => label(labels.properties?.[p])).filter(Boolean);
+      .map(p => labelOf(labels.properties?.[p])).filter(Boolean);
     if (props.length) parts.push(sentenceCase(props.join(", ")));
     parts.push(weight);
   } else if (item.type === "equipment" && sys.type?.value === "shield") {
@@ -296,13 +295,50 @@ export function itemMeta(item, labels, t) {
     const dex = sys.armor?.dex;
     const ac = t("Ac", { ac: sys.armor?.value ?? 0 })
       + (sys.type.value === "heavy" ? "" : dex ? t("DexMax", { max: dex }) : t("Dex"));
-    parts.push(sentenceCase(label(labels.armorTypes[sys.type.value])), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
-  } else if (item.type === "tool") {
-    parts.push(sentenceCase(label(labels.toolTypes?.[sys.type?.value])) || label(labels.typeLabels?.tool), weight);
+    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
   } else {
-    parts.push(label(labels.consumableTypes?.[sys.type?.value]) || label(labels.typeLabels?.[item.type]), weight);
+    parts.push(whatItIs(item, labels), weight);
   }
   return parts.filter(Boolean).join(" · ");
+}
+
+/** A CONFIG.DND5E entry's label: some are plain strings, some `{label}` objects. */
+const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
+
+/** What a good is, as the first part of its meta line says it: "Martial melee", "Medium armor", "Potion". */
+function whatItIs(item, labels) {
+  const type = item.system?.type?.value;
+  if (item.type === "weapon") return sentenceCase(labelOf(labels.weaponTypes?.[type]));
+  if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
+  if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);
+  return labelOf(labels.consumableTypes?.[type]) || labelOf(labels.typeLabels?.[item.type]);
+}
+
+/**
+ * A pack row's line under its name (design TGXBN): what the good is, then what one is worth at
+ * list value ("Martial melee · worth 15 gp"), "each" when the seller holds several.
+ *
+ * @param {object} item  the seller's item's `toObject()`
+ * @param {object} labels  as `itemMeta` takes them
+ * @param {(key: string, data?: object) => string} t
+ * @param {string|null} worthText  one's list value in words ("15 gp"); null for a good with no price
+ */
+export function sellMeta(item, labels, t, worthText) {
+  const worth = worthText ? t((item.system?.quantity ?? 1) > 1 ? "WorthEach" : "Worth", { amount: worthText }) : null;
+  return [whatItIs(item, labels), worth].filter(Boolean).join(" · ");
+}
+
+/**
+ * What a shop that won't deal in `item` won't buy, for the refusal ("Won't buy food and drink"):
+ * the kind it turns away, else the item type, else null (trade-plan `dealtIn`'s own order).
+ *
+ * @returns {{kind: string}|{type: string}|null}
+ */
+export function wontBuyReason(item, shop) {
+  const kind = kindOf(item);
+  if (kind && shop.wontBuy.kinds.includes(kind)) return { kind };
+  if (shop.wontBuy.types.includes(item.type)) return { type: item.type };
+  return null;
 }
 
 /**

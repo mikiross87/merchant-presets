@@ -179,57 +179,75 @@
   {{/if}}
 </section>
 
-<section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}}" data-group="primary" data-tab="sell">
-  <aside class="sell-side-card">
-    <p class="sell-ratio-label">{{localize "MERCHANT_PRESETS.Shop.Sell.BuysAt"}}</p>
-    <p class="sell-ratio">{{sell.ratioLabel}} <span class="sell-ratio-of">{{localize "MERCHANT_PRESETS.Shop.Sell.OfValue"}}</span></p>
-    {{#if sell.tillCapsSales}}<p class="sell-till-note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillHolds" amount=sell.tillText}}</p>{{/if}}
-  </aside>
-  <div class="sell-rows">
+<section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}}" data-group="primary" data-tab="sell" data-pen="Body">
+  <nav class="mp-categories" data-pen="Categories">
+    <div class="mp-offer-card" data-pen="Offer Card">
+      <span class="mp-offer-kicker" data-pen="Offer kicker">{{localize "MERCHANT_PRESETS.Shop.Sell.BuysAt"}}</span>
+      <span class="mp-offer-ratio" data-pen="Offer ratio">{{sell.ratioText}}</span>
+      {{#if sell.tillCapsSales}}
+        <p class="mp-offer-note" data-pen="Offer note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillHolds" amount=sell.tillText}}</p>
+        <span class="mp-meter" data-pen="Purse meter"><span class="mp-meter-used" data-pen="Purse used" style="width: {{sell.meterPercent}}%"></span></span>
+      {{/if}}
+    </div>
+    {{#if sell.packLabel}}<span class="mp-pack-label" data-pen="Pack label">{{sell.packLabel}}</span>{{/if}}
+    {{#each sell.filters}}
+      <button type="button" class="mp-filter {{#if active}}active{{/if}}" data-action="selectSellFilter" data-filter="{{id}}" data-pen="Filter {{pen}}">
+        <span class="mp-nav-label" data-pen="{{pen}} label">{{label}}</span><span class="mp-nav-count" data-pen="{{pen}} count">{{count}}</span>
+      </button>
+    {{/each}}
+  </nav>
+  <div class="mp-stock sell-stock" data-pen="Stock">
     {{#if sell.willBuy.length}}
-      <h2 class="stock-section-header">{{localize "MERCHANT_PRESETS.Shop.Sell.WillBuy"}}</h2>
+      <div class="mp-group" data-pen="Group Pack">
+        <h2 class="mp-group-heading" data-pen="Pack heading">{{localize "MERCHANT_PRESETS.Shop.Sell.WillBuy"}}</h2><span class="mp-rule" data-pen="Pack rule"></span>
+      </div>
       {{#each sell.willBuy}}
-        <div class="item-row {{#unless ../sell.open}}is-dimmed{{/unless}}">
-          <img class="item-art" src="{{img}}" alt="" />
-          <div class="item-info">
-            <span class="item-name">{{name}}{{#if equipped}}<i class="fa-solid fa-shield-halved item-equipped" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Sell.Equipped'}}"></i>{{/if}}</span>
-            <span class="item-meta">×{{owned}}</span>
+        <div class="mp-row {{#unless ../sell.open}}is-dimmed{{/unless}}" data-pen="Sell {{name}}">
+          <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+          <div class="mp-row-text" data-pen="Text">
+            <span class="mp-name-line" data-pen="Name line">
+              <span data-pen="Name">{{name}}</span>
+              {{#if equipped}}{{mpIcon "shield-half" pen="Equipped icon"}}{{/if}}
+            </span>
+            <span class="mp-meta" data-pen="Meta">{{meta}}</span>
           </div>
-          <span class="price-tag tag-neutral">{{ratio}}</span>
-          {{!-- One grid cell, as on the Buy row: the row's grid has five columns whatever tags show. --}}
-          <div class="item-price">
-            {{#if tag.text}}<span class="price-tag tag-deal" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}">{{tag.text}}</span>{{/if}}
-            {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
-            {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
-            <span class="price-stack">{{#if listText}}<s class="price-list" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}<span class="price-coins">{{> coins priceCoins}}</span></span>
+          <span class="mp-stock-state" data-pen="Stock">×{{owned}}</span>
+          <div class="mp-price-block" data-pen="Price Block">
+            {{#if listText}}<s class="mp-list-price" data-pen="List Price" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}
+            <span class="mp-price-line" data-pen="Price Line">
+              {{#if tag.text}}<span class="mp-tag is-good" data-pen="Terms Tag" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"><span data-pen="Terms Tag Text">{{tag.text}}</span></span>
+              {{else}}<span class="mp-tag is-ratio" data-pen="Terms Tag"><span data-pen="Terms Tag Text">{{ratio}}</span></span>{{/if}}
+              {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
+              {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
+              {{> mpCoins coins=priceCoins mode="price"}}
+            </span>
           </div>
-          <button type="button" class="item-add" data-action="addLine" data-item-id="{{id}}"
+          <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
             aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}" {{#unless ../sell.open}}disabled{{/unless}}>
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            {{mpIcon "plus" pen="Add icon"}}
           </button>
         </div>
       {{/each}}
     {{/if}}
     {{#if sell.wontBuy.length}}
-      <h2 class="stock-section-header">{{localize "MERCHANT_PRESETS.Shop.Sell.WontBuy"}}</h2>
+      <div class="mp-group is-refused" data-pen="Group Refused">
+        <h2 class="mp-group-heading" data-pen="Refused heading">{{localize "MERCHANT_PRESETS.Shop.Sell.WontBuy"}}</h2><span class="mp-rule" data-pen="Refused rule"></span>
+      </div>
       {{#each sell.wontBuy}}
-        <div class="item-row is-refused">
-          <img class="item-art" src="{{img}}" alt="" />
-          <div class="item-info">
-            <span class="item-name">{{name}}</span>
-            {{#if (eq refusal "Unidentified")}}
-              <span class="item-meta">{{localize "MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote"}}</span>
-            {{/if}}
+        {{!-- An unidentified good isn't turned away for good: it stays at full strength, in amber. --}}
+        <div class="mp-row {{#unless (eq refusal 'Unidentified')}}is-refused{{/unless}}" data-pen="Refused {{name}}">
+          <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+          <div class="mp-row-text" data-pen="Text">
+            <span class="mp-name-line" data-pen="Name line"><span data-pen="Name">{{name}}</span></span>
+            <span class="mp-meta" data-pen="Meta">{{meta}}</span>
           </div>
-          <span class="refusal-reason refusal-{{refusal}}">
-            {{localize (concat "MERCHANT_PRESETS.Shop.Sell.Reason." refusal)}}
-          </span>
+          <span class="mp-stock-state is-{{#if (eq refusal 'Unidentified')}}unidentified{{else}}soldOut{{/if}}" data-pen="Stock">{{reason}}</span>
         </div>
       {{/each}}
     {{/if}}
-    {{#unless sell.willBuy.length}}{{#unless sell.wontBuy.length}}
+    {{#if sell.empty}}
       <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Sell.Empty"}}</p>
-    {{/unless}}{{/unless}}
+    {{/if}}
   </div>
   {{#if sell.showClosed}}
     {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}

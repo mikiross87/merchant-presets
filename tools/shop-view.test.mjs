@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -547,7 +547,7 @@ const LABELS = {
   weaponProperties: ["lgt", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } }
 };
-const words = { Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+const words = { Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -634,4 +634,30 @@ test("a restock on an earlier day, or none yet, isn't fresh", () => {
 test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {
   const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver", "gear"], weight: { value: 3, units: "lb" } });
   assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · 3 lb");
+});
+
+/* -------------------------------------------------------------- sellMeta */
+
+test("a pack row's meta line says what the good is and what it's worth (design TGXBN)", () => {
+  const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver"], quantity: 1 });
+  assert.equal(sellMeta(sword, LABELS, t, "15 gp"), "Martial melee · worth 15 gp");
+  const shirt = gear("equipment", { type: { value: "medium" }, armor: { value: 13, dex: 2 }, quantity: 1 });
+  assert.equal(sellMeta(shirt, LABELS, t, "50 gp"), "Medium armor · worth 50 gp");
+  const potions = gear("consumable", { type: { value: "potion" }, quantity: 2 });
+  assert.equal(sellMeta(potions, LABELS, t, "50 gp"), "Potion · worth 50 gp each");
+});
+
+test("a shield in the pack reads as a shield, and a good with no price says nothing of worth", () => {
+  assert.equal(sellMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 } }), LABELS, t, "10 gp"), "Shield · worth 10 gp");
+  assert.equal(sellMeta(gear("loot", {}), LABELS, t, null), "Loot");
+});
+
+/* -------------------------------------------------------------- wontBuyReason */
+
+test("a good the shop won't deal in names what it won't buy: its kind, else its type", () => {
+  const shop = { wontBuy: { types: ["loot"], kinds: ["food-drink"] } };
+  const rations = { type: "consumable", flags: { "merchant-presets": { kind: "food-drink" } } };
+  assert.deepEqual(wontBuyReason(rations, shop), { kind: "food-drink" });
+  assert.deepEqual(wontBuyReason({ type: "loot", flags: {} }, shop), { type: "loot" });
+  assert.equal(wontBuyReason({ type: "weapon", flags: {} }, shop), null);
 });

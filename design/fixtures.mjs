@@ -8,7 +8,7 @@
  * Exports are regenerated from the canvas with the Pencil MCP:
  *   Export([id], "html-css", "design/export/<id>.html", {includeLayerIds: true, includeLayerNames: true})
  */
-/* global game, Actor, CONFIG, setTimeout -- `setup` runs in the page */
+/* global game, Actor, CONFIG, foundry, setTimeout -- `setup` runs in the page */
 
 /** The shop every frame draws, as the frames name it. */
 export const SHOP = "Armourer & Blacksmith";
@@ -26,6 +26,8 @@ export const SHOP = "Armourer & Blacksmith";
  *   Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so the nav
  *   counts are the frames' own (All goods 19, Weapons 3, Armor 3, Tools 1, Gear 12);
  * - Aria (P1's character) with 3 pp 47 gp 12 sp 30 cp, and Tomas, a character no one plays;
+ * - Aria's pack as the Sell frames draw it: a Longsword, a Chain Shirt and 2 Potions of Healing
+ *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
  * - no deals: the storefront frames draw Aria at list price. Only the Settings frames list deals,
  *   and their `open` sets them (`withDeals`).
  */
@@ -58,6 +60,22 @@ export async function setup() {
 
   const aria = game.actors.getName("Aria");
   await aria.update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
+  const physical = ["weapon", "equipment", "consumable", "tool", "loot", "container"];
+  await aria.deleteEmbeddedDocuments("Item", aria.items.filter(i => physical.includes(i.type)).map(i => i.id));
+  const packed = async (packId, name, changes = {}) => {
+    const pack = game.packs.get(packId);
+    const entry = (await pack.getIndex()).getName(name);
+    if (!entry) throw new Error(`${packId} has no ${name}`);
+    return foundry.utils.mergeObject((await pack.getDocument(entry._id)).toObject(), changes);
+  };
+  await aria.createEmbeddedDocuments("Item", [
+    await packed("dnd5e.equipment24", "Longsword", { sort: 100 }),
+    await packed("dnd5e.equipment24", "Chain Shirt", { sort: 200 }),
+    await packed("dnd5e.equipment24", "Potion of Healing", { sort: 300, "system.quantity": 2 }),
+    await packed(`${MP}.goods`, "Bread (loaf)", { sort: 400 }),
+    { name: "Ring of Protection", type: "equipment", img: "icons/equipment/finger/ring-band-copper.webp", sort: 500,
+      system: { type: { value: "trinket" }, identified: false, unidentified: { name: "Unidentified Ring" }, price: { value: 3500, denomination: "gp" } } }
+  ]);
   if (!game.actors.getName("Tomas")) await Actor.create({ name: "Tomas", type: "character" });
 
   const name = "Armourer & Blacksmith";
@@ -98,11 +116,11 @@ export async function setup() {
 
 /**
  * An `open` for the shop window: the frame's theme on this client, `before` (an in-page statement,
- * `shop` in scope; the GM's frames only), Aria as the buyer, `basket` ([name, quantity] pairs) on
- * the Buy bill, the window at the frame's size on `tab`, and `then` (an in-page statement, `app`
- * in scope) run after it renders.
+ * `shop` in scope; the GM's frames only), Aria as the buyer, `basket` and `sellBasket` ([name,
+ * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
+ * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], then = "" } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "" } = {}) => `async ({ theme, width, height }) => {
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
@@ -111,6 +129,8 @@ const openShop = ({ tab = "buy", before = "", basket = [], then = "" } = {}) => 
   const app = shop.sheet;
   app._buyerUuid = game.actors.getName("Aria").uuid;
   for (const [name, quantity] of ${JSON.stringify(basket)}) app._baskets.buy.set(shop.items.getName(name).id, quantity);
+  const aria = game.actors.getName("Aria");
+  for (const [name, quantity] of ${JSON.stringify(sellBasket)}) app._baskets.sell.set(aria.items.getName(name).id, quantity);
   await app.render({ force: true, position: { left: 20, top: 20, width, height } });
   app.changeTab(${JSON.stringify(tab)}, "primary");
   ${then}
@@ -140,6 +160,8 @@ const settings = openShop({ tab: "settings", before: withDeals + restocked(1) })
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
+/** The Sell frames: Aria selling the Longsword and both potions, to a shop restocked the day before. */
+const sell = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
 
 export const FRAMES = {
   y6iNf: frame("01 Storefront — Light", "light", 920, 680, "Gamemaster", storefront),
@@ -147,8 +169,8 @@ export const FRAMES = {
   zie5W: frame("01 Storefront — Player (Light)", "light", 920, 680, "P1", storefrontPlayer),
   ChoNd: frame("01 Terms of Trade — Popover (Light)", "light", 340, 251),
   S0ugn: frame("01 Terms of Trade — Popover (Dark)", "dark", 340, 251),
-  TGXBN: frame("02 Sell — Light", "light", 920, 680),
-  BZh1r: frame("02 Sell — Dark", "dark", 920, 680),
+  TGXBN: frame("02 Sell — Light", "light", 920, 680, "Gamemaster", sell),
+  BZh1r: frame("02 Sell — Dark", "dark", 920, 680, "Gamemaster", sell),
   v8ap9: frame("03 Settings (GM) — Light", "light", 920, 760, "Gamemaster", settings),
   dpdpS: frame("03 Settings (GM) — Dark", "dark", 920, 760, "Gamemaster", settings),
   aaJcp: frame("03 Settings (GM) · Restock — Light", "light", 920, 760),

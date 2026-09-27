@@ -13,7 +13,7 @@
  * GM connected (design/README.md, "Trade states").
  */
 
-import { effectiveRates, itemPriceCp, totalCp } from "./pricing.mjs";
+import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
 import {
   applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
@@ -25,7 +25,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -67,6 +67,9 @@ const SETTINGS_SECTIONS = [
   { id: "hours", icon: "lucide:hourglass" },
   { id: "restock", icon: "lucide:refresh-cw" }
 ];
+
+/** The meta line's words (shop-view.mjs `itemMeta`/`sellMeta`). */
+const metaWords = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, data);
 
 /** CONFIG.DND5E's labels a row's meta line reads (shop-view.mjs `itemMeta`). */
 function metaLabels() {
@@ -263,6 +266,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
       selectCategory: ShopSheet.#onSelectCategory,
+      selectSellFilter: ShopSheet.#onSelectSellFilter,
       addLine: ShopSheet.#onAddLine,
       stepLine: ShopSheet.#onStepLine,
       pickBuyer: ShopSheet.#onPickBuyer,
@@ -286,7 +290,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     body: {
       template: `${TEMPLATES}/shop-sheet.hbs`,
       root: true,
-      scrollable: [".shop-stock", ".sell-rows", ".settings-body", ".settings-preview"],
+      scrollable: [".shop-stock", ".sell-stock", ".settings-body", ".settings-preview"],
       templates: [
         `${TEMPLATES}/parts/bill-of-sale.hbs`,
         `${TEMPLATES}/parts/closed-card.hbs`,
@@ -314,6 +318,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
     this._sent = { buy: new Map(), sell: new Map() };
     this._activeCategory = "all";
+    /** The Sell tab's pack filter: "all", "will" (goods the shop buys) or "wont". */
+    this._sellFilter = "all";
     /** Per kind, the fewest of each line worth a coin (`buyRow`/`sellRow`'s `minQuantity`), from the last render. */
     this._minQuantity = { buy: new Map(), sell: new Map() };
     this._buyerUuid = game.user.character?.uuid ?? null;
@@ -708,7 +714,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           group: group.id,
           groupIcon: group.icon,
           groupLabel: group.named ?? game.i18n.localize(`MERCHANT_PRESETS.Shop.Group.${group.id}`),
-          meta: itemMeta(data, metaLabels(), (key, d) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, d)),
+          meta: itemMeta(data, metaLabels(), metaWords),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
@@ -761,6 +767,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       },
       open
     };
+  }
+
+  static #onSelectSellFilter(_event, target) {
+    this._sellFilter = target.dataset.filter;
+    this.render();
   }
 
   static #onSelectCategory(_event, target) {
@@ -924,7 +935,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const shopItems = actor.items.map(i => i.toObject());
     // Goods only: spells, features and the like are never traded, so they aren't "won't buy" rows,
     // and a used-up item (quantity 0) has nothing to sell.
-    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isFixedExcluded(i) && (i.system?.quantity ?? 1) > 0);
+    // In the seller's own order, as their inventory sorts it.
+    const items = (buyer?.items ?? []).map(i => i.toObject()).filter(i => !isFixedExcluded(i) && (i.system?.quantity ?? 1) > 0)
+      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
     const rows = items.map(item => {
       const line = matchingStockLine(item, shopItems);
       const matched = stockConfigOf(line);
@@ -934,16 +947,27 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // A matching shelf line with broken flags: the engine refuses the sale as shop-misconfigured.
       if (line && !safeStockOf(line)) row = { ...row, refusal: "General", bundlePriceCp: null, ratio: null };
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
+      let worthCp = null;
+      try { worthCp = bundlePriceCp(item, 1, currencies); } catch { /* unpriced: no worth to state */ }
       return {
         ...row,
         // The shown name; the source data (true name) only prices and matches, as the engine does.
         name: buyer.items.get(item._id)?.name ?? row.name,
+        meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
+          : row.refusal ? itemMeta(item, metaLabels(), metaWords)
+          : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
+        reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
         listText: listText(row.listPriceCp, currencies)
       };
     });
     const willBuy = rows.filter(r => !r.refusal);
     const wontBuy = rows.filter(r => r.refusal);
+    const filters = [["all", "Everything", rows.length], ["will", "WillBuy", willBuy.length], ["wont", "WontBuy", wontBuy.length]]
+      .map(([id, key, count]) => {
+        const label = game.i18n.localize(`MERCHANT_PRESETS.Shop.Sell.Filter.${key}`);
+        return { id, label, count, active: id === this._sellFilter, pen: label };
+      });
     this.#keepOffered("sell", new Map(willBuy.map(r => [r.id, r.minQuantity ?? 1])));
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
     // Purse-after is the seller's own purse plus the sale; the till only decides till-short, and
@@ -956,16 +980,26 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       : (tillShort ? "till-short" : traded);
     const seal = sealState(state, lines.length > 0);
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
+    const tillCapsSales = game.settings.get(MODULE, "merchantPurse") !== "unlimited";
+    // What the till holds once it has paid this bill exactly (the engine's payExact).
+    const paidOut = tillCapsSales && totals.sumCp > 0 ? payExact(actor.system.currency ?? {}, totals.sumCp, currencies) : null;
     return {
       kind: "sell",
       shopTitle: titleParts(actor.name).title,
-      willBuy, wontBuy,
-      ratioLabel: rateFraction(rates.chipBuysAt),
+      willBuy: this._sellFilter === "wont" ? [] : willBuy,
+      wontBuy: this._sellFilter === "will" ? [] : wontBuy,
+      empty: !rows.length,
+      filters,
+      packLabel: buyer ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Pack", { name: buyer.name }) : null,
+      ratioText: game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.RatioOfValue", { ratio: rateFraction(rates.chipBuysAt) }),
+      // How much of the till this bill takes, for the offer card's meter.
+      meterPercent: tillCapsSales && tillCp > 0 ? Math.min(100, (totals.sumCp / tillCp) * 100) : null,
+      tillAfterText: paidOut?.ok ? coinsText(heldCoins(paidOut.remaining, currencies)) : null,
       tillCp,
       tillCoins: coinBreakdown(tillCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
       // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
-      tillCapsSales: game.settings.get(MODULE, "merchantPurse") !== "unlimited",
+      tillCapsSales,
       basket: this.#billOfSale("sell", lines, totals, currencies, buyer, this._sealed.sell),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.sell),
@@ -1042,10 +1076,30 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         unitText: coinsText(coinBreakdown(bundleCp ?? 0, currencies)),
         // A bundle that floors to nothing has no sticker worth showing beside a real line total.
         showUnit: (bundleCp ?? 0) > 0 || lineTotal === 0,
+        // A sale's detail says what share of the good's worth that is: "(½ of 15 gp)".
+        ofList: kind === "sell" ? this.#ofListText(item, rate, currencies) : null,
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
     }
     return lines;
+  }
+
+  /** "(½ of 15 gp)": a sale's rate over one bundle's list value; null for a good with no price. */
+  #ofListText(item, rate, currencies) {
+    let listCp = 0;
+    try { listCp = bundlePriceCp(item, 1, currencies); } catch { /* unpriced */ }
+    return listCp > 0 ? game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.OfList", {
+      ratio: rateFraction(rate), list: coinsText(coinBreakdown(listCp, currencies))
+    }) : null;
+  }
+
+  /** A pack row's refusal in words; a good the shop turns away names what ("Won't buy food and drink"). */
+  #refusalText(refusal, item, config) {
+    const what = refusal === "General" ? wontBuyReason(item, config) : null;
+    if (!what) return game.i18n.localize(`MERCHANT_PRESETS.Shop.Sell.Reason.${refusal}`);
+    const label = what.kind ? game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Kinds.${what.kind}`)
+      : game.i18n.localize(CONFIG.Item.typeLabels?.[what.type] ?? what.type);
+    return game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.WontBuyWhat", { what: label.toLowerCase() });
   }
 
   /**

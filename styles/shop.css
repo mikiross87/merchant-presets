@@ -101,7 +101,6 @@
   font-weight: 700;
   text-transform: none;
 }
-.shop-sheet .category-link, .shop-sheet .item-name { text-transform: none; }
 
 .shop-sheet .mp-icon { display: block; flex: none; width: 14px; height: 14px; }
 .shop-sheet .mp-visually-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; margin: 0; }
@@ -312,7 +311,6 @@
   min-height: 0;
 }
 
-.shop-sheet .sell-tab.active { grid-template-columns: 180px 1fr 280px; }
 .shop-sheet .buy-tab.active { display: flex; flex-direction: row; gap: 0; }
 
 /* -------------------------------------------------------------- coins */
@@ -395,89 +393,7 @@
 
 /* -------------------------------------------------------------- categories / stock */
 
-.shop-sheet .shop-categories {
-  display: flex;
-  flex-direction: column;
-  border-right: var(--dnd5e-border-gold);
-  padding: 0.5rem;
-  overflow-y: auto;
-  background: var(--dnd5e-color-table-row-even);
-}
-
-.shop-sheet .category-link, .shop-sheet .sell-side-card {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  background: none;
-  border: none;
-  border-radius: 0.3rem;
-  padding: 0.35rem 0.5rem;
-  font-family: var(--dnd5e-font-roboto);
-  font-size: 0.85rem;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  text-align: left;
-}
-
-.shop-sheet .category-link.active { background: var(--dnd5e-color-gold); color: #fff; font-weight: 700; }
-.shop-sheet .category-count { color: var(--color-text-secondary); font-family: var(--dnd5e-font-roboto-condensed); }
-.shop-sheet .category-link.active .category-count { color: rgb(255 255 255 / 80%); }
-
-.shop-sheet .shop-stock, .shop-sheet .sell-rows {
-  overflow-y: auto;
-  padding: 0.5rem 1rem;
-}
-
-.shop-sheet .stock-section-header {
-  font-size: 0.85rem;
-  color: var(--color-text-title);
-  border-bottom: 1px solid var(--border-faint, #bbb);
-  padding-bottom: 0.2rem;
-  margin: 1rem 0 0.4rem;
-}
-
-.shop-sheet .stock-section-header:first-child { margin-top: 0.25rem; }
-
-.shop-sheet .item-row {
-  display: grid;
-  grid-template-columns: 40px 1fr auto auto auto;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 0.3rem;
-  border-radius: 0.3rem;
-}
-
-.shop-sheet .item-row:nth-child(even) { background: var(--dnd5e-color-table-row-even); }
-.shop-sheet .item-row.is-dimmed { opacity: 0.5; }
-.shop-sheet .item-row.is-sold-out .item-name { color: var(--color-text-secondary); }
-.shop-sheet .item-row.is-refused .item-name { color: var(--color-text-secondary); }
-
-.shop-sheet .item-art { width: 36px; height: 36px; border-radius: 0.25rem; object-fit: cover; border: 1px solid var(--border-faint, #bbb); }
-
-.shop-sheet .item-info { display: flex; flex-direction: column; min-width: 0; }
-.shop-sheet .item-name { font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
-.shop-sheet .item-meta { font-size: 0.75rem; color: var(--color-text-secondary); }
-.shop-sheet .item-equipped { font-size: 0.7rem; color: var(--dnd5e-color-gold); }
-
-.shop-sheet .badge-new {
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-size: 0.6rem;
-  background: var(--mp-danger);
-  color: #fff;
-  border-radius: 0.5rem;
-  padding: 0 0.4rem;
-}
-
-.shop-sheet .item-stock { font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.8rem; color: var(--color-text-secondary); white-space: nowrap; }
-.shop-sheet .item-stock.is-last { color: var(--mp-warning); }
-.shop-sheet .item-stock.is-sold-out { color: var(--mp-danger); }
-
-.shop-sheet .item-price { display: flex; align-items: center; gap: 0.4rem; }
 .shop-sheet .price-worthless { font-style: italic; color: var(--mp-success); }
-.shop-sheet .price-coins { display: flex; gap: 0.4rem; }
-/* The price without the buyer's deal (#111), struck small over the one they pay (design AutYE). */
-.shop-sheet .price-stack { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; }
-.shop-sheet .price-list { font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.7rem; color: var(--color-text-secondary); }
 
 .shop-sheet .price-tag {
   font-family: var(--dnd5e-font-roboto-condensed);
@@ -488,42 +404,10 @@
   white-space: nowrap;
 }
 
-.shop-sheet .tag-markup { background: color-mix(in oklab, var(--mp-warning), transparent 80%); color: var(--mp-warning); }
-.shop-sheet .tag-discount, .shop-sheet .tag-full, .shop-sheet .tag-deal { background: color-mix(in oklab, var(--mp-success), transparent 80%); color: var(--mp-success); }
+.shop-sheet .tag-full, .shop-sheet .tag-deal { background: color-mix(in oklab, var(--mp-success), transparent 80%); color: var(--mp-success); }
 .shop-sheet .tag-neutral { background: var(--dnd5e-color-table-row-even); color: var(--color-text-secondary); }
 
-.shop-sheet .item-add {
-  width: 28px;
-  height: 28px;
-  border-radius: 0.3rem;
-  border: var(--dnd5e-border-gold);
-  background: none;
-  color: var(--dnd5e-color-gold);
-  cursor: pointer;
-}
-
-.shop-sheet .item-add:hover:not(:disabled) { background: var(--dnd5e-color-gold); color: #fff; }
-.shop-sheet .item-add:disabled { opacity: 0.35; cursor: not-allowed; }
-
 .shop-sheet .shop-empty { padding: 2rem; text-align: center; color: var(--color-text-secondary); font-style: italic; }
-
-/* -------------------------------------------------------------- sell tab */
-
-.shop-sheet .sell-side-card {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.2rem;
-  cursor: default;
-}
-
-.shop-sheet .sell-ratio-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); }
-.shop-sheet .sell-ratio { font-family: var(--dnd5e-font-modesto); font-size: 1.6rem; color: var(--color-text-title); }
-.shop-sheet .sell-ratio-of { font-size: 0.7rem; color: var(--color-text-secondary); }
-.shop-sheet .sell-till-note { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem; }
-
-.shop-sheet .refusal-reason { font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.8rem; color: var(--mp-danger); text-align: right; }
-.shop-sheet .refusal-Unidentified { color: var(--mp-warning); }
 
 /* -------------------------------------------------------------- buy tab (design y6iNf) */
 
@@ -618,6 +502,55 @@
   scrollbar-width: none;
 }
 
+/* -------------------------------------------------------------- sell tab (design TGXBN) */
+
+.shop-sheet .sell-tab.active { display: flex; flex-direction: row; gap: 0; }
+.shop-sheet .mp-offer-card {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-left: -1.5px;
+  padding: 12px;
+  border: 0 solid var(--mp-gold);
+  border-left-width: 3px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+}
+.shop-sheet .mp-offer-kicker {
+  font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--mp-gold);
+}
+.shop-sheet .mp-offer-ratio { font: 700 22px/30px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-offer-note { align-self: stretch; margin: 0; font: 400 12px/16px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-meter { align-self: stretch; display: flex; height: 6px; border-radius: 3px; background: var(--mp-inset); }
+.shop-sheet .mp-meter-used { height: 6px; border-radius: 3px; background: var(--mp-gold); }
+.shop-sheet .mp-pack-label { align-self: flex-start; font: 700 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-filter {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: var(--mp-text);
+  font: 400 13px/15px Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.shop-sheet .mp-filter:focus-visible { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.shop-sheet .mp-filter.active { background: var(--mp-surface); font-weight: 700; }
+.shop-sheet .mp-group.is-refused { padding-top: 16px; }
+.shop-sheet .mp-row.is-refused { opacity: 0.6; }
+.shop-sheet .mp-stock-state.is-unidentified { color: var(--mp-warning-ink); }
+.shop-sheet .mp-tag.is-ratio { padding: 1px 5px; background: #9f927526; }
+.shop-sheet .mp-tag.is-ratio span { font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+
 /* -------------------------------------------------------------- bill of sale (the slip, #146) */
 
 .shop-sheet .mp-slip {
@@ -674,8 +607,9 @@
   border-bottom-width: 1px;
 }
 .shop-sheet .mp-detail { display: flex; align-items: center; justify-content: space-between; padding-left: 24px; }
-.shop-sheet .mp-each { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
-.shop-sheet .mp-stepper { display: flex; align-items: center; border-radius: 4px; background: var(--mp-surface); outline: 1px solid var(--mp-line); }
+/* A sale's long detail ("… (½ of 3 gp 8 sp 5 cp)") gives way before the stepper does. */
+.shop-sheet .mp-each { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-stepper { flex: none; display: flex; align-items: center; border-radius: 4px; background: var(--mp-surface); outline: 1px solid var(--mp-line); }
 .shop-sheet .mp-stepper button { justify-content: center; width: 28px; height: 28px; color: var(--mp-muted); }
 .shop-sheet .mp-value-box {
   display: flex;
@@ -696,7 +630,7 @@
 .shop-sheet .mp-ink-rule { flex: none; height: 1px; background: var(--mp-paper-ink); }
 .shop-sheet .mp-total-row { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; }
 .shop-sheet .mp-total-label { font: 700 17px/23px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-paper-ink); }
-.shop-sheet .bill-sum { display: flex; align-items: center; gap: 10px; }
+.shop-sheet .bill-sum { display: flex; align-items: center; gap: 8px; }
 
 /* It fills the slip, which keeps the seal at the slip's foot. */
 .shop-sheet .mp-purse-after { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
@@ -1148,23 +1082,10 @@
 /* -------------------------------------------------------------- narrow layout (below ~760px) */
 
 @media (max-width: 760px) {
-  .shop-sheet .tab.active, .shop-sheet .sell-tab.active {
+  .shop-sheet .tab.active {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
   }
-
-  .shop-sheet .shop-categories {
-    flex-direction: row;
-    overflow-x: auto;
-    border-right: none;
-    border-bottom: var(--dnd5e-border-gold);
-  }
-
-  .shop-sheet .category-link { flex: 0 0 auto; }
-
-  .shop-sheet .item-add { border-radius: 50%; }
-  .shop-sheet .item-row.in-basket .item-add { background: var(--dnd5e-color-gold); color: #fff; }
-  .shop-sheet .item-row.in-basket .item-add i::before { content: "\f00c"; }
 
   .shop-sheet .bill-of-sale {
     border-left: none;
