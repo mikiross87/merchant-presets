@@ -1603,7 +1603,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (row.unpriced || row.worthless) continue;
       rows.push({
         name: row.name, img: row.img, meta: stockWords(row.stock), tag: row.tag,
-        isNew: isNewGood(data.flags, shelf, at, hours, game.time.calendar.days),
+        isNew: isNewGood(data, shelf, at, hours, game.time.calendar.days, shop.hours),
         priceCoins: coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
         listText: listText(row.listPriceCp, currencies)
       });

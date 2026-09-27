@@ -1,5 +1,5 @@
 import { nextCloseAt } from "./deals.mjs";
-import { nextOpeningAfter } from "./schedule.mjs";
+import { nextOpeningAfter, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
