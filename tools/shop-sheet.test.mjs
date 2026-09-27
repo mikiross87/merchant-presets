@@ -1524,3 +1524,18 @@ test("the hours read as the frames write them, without a leading zero (#145)", a
     finally { clock.hour = 12; }
   });
 });
+
+test("an unidentified good shows the name dnd5e gives it, never its true one, on the rows and the bill", async () => {
+  // dnd5e prepares an unidentified item's name as its unidentified one; its source data keeps the true name.
+  const unidentified = id => Object.assign(item(id, { price: { value: 20, denomination: "gp" } }), { name: "Unidentified Ring" });
+  const secret = obj => { const toObject = obj.toObject; obj.toObject = function () { return { ...toObject.call(this), name: "Ring of Protection" }; }; return obj; };
+  const { sheet } = openShop({ shopItems: [secret(unidentified("shelfRing"))], buyerItems: [secret(unidentified("packRing"))] });
+  act(sheet, "addLine", { itemId: "shelfRing" });
+  sheet.tabGroups.primary = "sell";
+  act(sheet, "addLine", { itemId: "packRing" });
+  const { buy, sell } = await sheet._prepareContext({});
+  const shown = JSON.stringify({ buy: buy.sections, bill: buy.basket.lines, sell: [...sell.willBuy, ...sell.wontBuy], sellBill: sell.basket.lines });
+  assert.ok(!shown.includes("Ring of Protection"), "the true name never reaches the window");
+  assert.equal(buy.sections[0].rows[0].name, "Unidentified Ring");
+  assert.equal(buy.basket.lines[0].name, "Unidentified Ring");
+});
