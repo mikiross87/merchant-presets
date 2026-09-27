@@ -1861,7 +1861,7 @@
                       "id": "AWacs",
                       "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "48",
+                      "content": "19",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -1910,7 +1910,7 @@
                       "id": "BiEBd",
                       "name": "Weapons count",
                       "fill": "$text-secondary",
-                      "content": "24",
+                      "content": "3",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -1959,7 +1959,7 @@
                       "id": "FINvj",
                       "name": "Armor count",
                       "fill": "$text-secondary",
-                      "content": "7",
+                      "content": "3",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -2057,7 +2057,7 @@
                       "id": "rcde6",
                       "name": "Adventuring gear count",
                       "fill": "$text-secondary",
-                      "content": "16",
+                      "content": "12",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -2982,33 +2982,13 @@
                           "alignItems": "center",
                           "children": [
                             {
-                              "id": "FoAKg",
-                              "type": "ref",
-                              "ref": "uJ3dp",
-                              "name": "platinum 3",
-                              "descendants": {
-                                "e1b2b": {
-                                  "content": "3",
-                                  "fill": "$ink"
-                                },
-                                "B6r81": {
-                                  "fill": {
-                                    "type": "image",
-                                    "enabled": true,
-                                    "url": "assets/platinum.webp",
-                                    "mode": "fill"
-                                  }
-                                }
-                              }
-                            },
-                            {
                               "id": "U7Cbc",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 47",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "17",
+                                  "content": "47",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -4631,6 +4611,9 @@
             },
             "K7PByz": {
               "enabled": false
+            },
+            "RetMP": {
+              "content": "Sells at list · Your price −10%"
             }
           }
         },
@@ -6039,7 +6022,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Updates as you type. Open shop windows refresh for everyone.",
+                  "content": "Open shop windows refresh for everyone when a change is saved.",
                   "fontFamily": "$font-slip",
                   "fontSize": 13,
                   "fontWeight": "normal",
