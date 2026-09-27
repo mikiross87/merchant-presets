@@ -1110,6 +1110,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
         reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
         worthText: worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null,
+        inBasket: this._baskets.sell.has(item._id),
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
         listText: listText(row.listPriceCp, currencies)
       };

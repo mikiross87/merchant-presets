@@ -205,6 +205,14 @@
     {{> mpCategoryLinks categories=sell.categories kind="sell"}}
   </nav>
   <div class="mp-stock sell-stock {{#unless sell.open}}is-closed{{/unless}}" data-pen="Stock">
+    {{!-- A narrow window keeps the till as one line over the list (design PV7Sf). --}}
+    {{#if sell.tillCapsSales}}
+      <div class="mp-till-strip mp-narrow-only" data-pen="Till strip">
+        <span class="mp-till-kicker" data-pen="Till kicker">{{localize "MERCHANT_PRESETS.Shop.Sell.Till"}}</span>
+        {{> mpCoins coins=sell.tillCoins mode="count"}}
+        <span class="mp-meter" data-pen="Till meter"><span class="mp-meter-used" data-pen="Till used" style="width: {{sell.meterPercent}}%"></span></span>
+      </div>
+    {{/if}}
     {{#each sell.sections}}
       <div class="mp-group" data-pen="Group {{pen}}">
         <h2 class="mp-group-heading" data-pen="{{pen}} heading">{{label}}</h2><span class="mp-rule" data-pen="{{pen}} rule"></span>
@@ -222,16 +230,17 @@
             <span class="mp-stock-state is-{{#if (eq refusal 'Unidentified')}}unidentified{{else}}soldOut{{/if}}" data-pen="Stock">{{reason}}</span>
           </div>
         {{else}}
-          <div class="mp-row" data-pen="Sell {{name}}">
+          <div class="mp-row {{#if inBasket}}in-basket{{/if}}" data-pen="Sell {{name}}">
             <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
             <div class="mp-row-text" data-pen="Text">
               <span class="mp-name-line" data-pen="Name line">
                 <span data-pen="Name" data-tooltip="{{name}}">{{name}}</span>
                 {{#if equipped}}{{mpIcon "shield-half" pen="Equipped icon"}}{{/if}}
               </span>
-              <span class="mp-meta" data-pen="Meta">{{meta}}</span>
+              <span class="mp-meta mp-wide-only" data-pen="Meta">{{meta}}</span>
+              <span class="mp-meta mp-narrow-only" data-pen="Meta">{{meta}} · ×{{owned}}</span>
             </div>
-            <span class="mp-stock-state" data-pen="Stock">×{{owned}}</span>
+            <span class="mp-stock-state mp-wide-only" data-pen="Stock">×{{owned}}</span>
             <div class="mp-price-block" data-pen="Price Block">
               {{#if listText}}<s class="mp-list-price" data-pen="List Price" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}
               <span class="mp-price-line" data-pen="Price Line">
@@ -245,7 +254,7 @@
             {{#if ../../sell.open}}
               <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
                 aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}">
-                {{mpIcon "plus" pen="Add icon"}}
+                {{mpIcon "plus" pen="Add icon"}}{{#if inBasket}}{{mpIcon "check" pen="Add icon"}}{{/if}}
               </button>
             {{/if}}
           </div>

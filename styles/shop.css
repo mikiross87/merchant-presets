@@ -1457,6 +1457,9 @@
 
   .shop-sheet .mp-stock { padding: 0 16px; }
   .shop-sheet .mp-stock > .mp-group:first-child { padding-top: 4px; }
+  .shop-sheet .mp-till-strip.mp-narrow-only { display: flex; align-items: center; gap: 10px; padding: 0 0 6px; }
+  .shop-sheet .mp-till-strip .mp-meter { flex: 1 1 0; align-self: center; }
+  .shop-sheet .mp-till-strip + .mp-group { padding-top: 4px; }
   .shop-sheet .mp-group-heading { font-size: 16px; line-height: 22px; }
   .shop-sheet .mp-row { gap: 10px; height: 49.5px; padding: 8px; }
   .shop-sheet .mp-item-icon { width: 34px; height: 34px; }
