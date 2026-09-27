@@ -543,7 +543,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const shop = shopConfigOf(actor);
     const config = game.settings.get(MODULE, "tradingHours") ? shop : { ...shop, hours: null };
     // What a restock's freshness counts by (#152): the shop's own hours, and whether it closes by them.
-    const closingDay = { hours: shop.hours, closes: config.hours !== null };
+    const closingDay = { hours: shop.hours, closes: closingHours(shop) !== null };
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 

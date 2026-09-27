@@ -670,8 +670,11 @@ function planBuy(request, context) {
   const shopItemUpdates = [];
   const shopItemDeletes = [...shopContentsRemoved];
   for (const [id, remaining] of shopRemaining) {
-    const keep = lines.find(l => idOf(l.item) === id).stock.keep;
-    if (remaining > 0 || keep) shopItemUpdates.push({ _id: id, "system.quantity": Math.max(remaining, 0) });
+    const { item, stock } = lines.find(l => idOf(l.item) === id);
+    // Sold out, it isn't New any more (#152): a copy sold back later mustn't bring the badge back.
+    const unmark = item.flags?.[MODULE]?.newAt != null ? { [`flags.${MODULE}.newAt`]: null } : {};
+    if (remaining > 0) shopItemUpdates.push({ _id: id, "system.quantity": remaining });
+    else if (stock.keep) shopItemUpdates.push({ _id: id, "system.quantity": 0, ...unmark });
     else shopItemDeletes.push(id);
   }
 

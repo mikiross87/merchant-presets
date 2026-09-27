@@ -783,6 +783,18 @@ test("buying strips the shop's stock and drawn flags from the copy, keeping kind
   assert.equal("drawn" in created.flags["merchant-presets"], false);
 });
 
+test("buying the last of a kept good drops its New mark, so a copy sold back later isn't New (#152 review)", () => {
+  const last = drawnDagger("Dagger000000001");
+  last.system = { ...last.system, quantity: 1 };
+  last.flags["merchant-presets"].newAt = 3600;
+  last.flags["merchant-presets"].stock = { ...last.flags["merchant-presets"].stock, keep: true };
+  const result = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [last] } }));
+  assert.equal(result.ok, true);
+  const update = result.plan.updates.find(u => u.actorId === "Shop00000000001").itemUpdates.find(u => u._id === "Dagger000000001");
+  assert.equal(update["system.quantity"], 0);
+  assert.equal(update["flags.merchant-presets.newAt"], null);
+});
+
 test("a good bought while New leaves its New badge on the shelf (#152)", () => {
   const fresh = drawnDagger("Dagger000000001");
   fresh.flags["merchant-presets"].newAt = 3600;

@@ -1,5 +1,4 @@
-import { nextCloseAt } from "./deals.mjs";
-import { isDrawn, nextOpeningAfter, secondsPerDay } from "./schedule.mjs";
+import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
@@ -429,18 +428,19 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
  * restock until the shop next closes after it (deals.mjs `nextCloseAt`, through the closing
  * minute). A shop that doesn't close (it keeps no hours, keeps them round the clock, or the world's
- * trading hours are off: `closes` false) starts its own day again at its next opening: midnight
- * for one keeping none. Worked out when the window draws, so nothing is written at closing (#152).
+ * trading hours are off: `closes` false) keeps a restock fresh for a whole day from it, so one just
+ * before its opening or midnight isn't gone in minutes. Worked out when the window draws, so
+ * nothing is written at closing (#152).
  *
  * @param {number|null|undefined} lastRestock  when the shelf was last restocked (the shop's `restockedAt`), in world seconds
  * @param {number} now          the world time
  * @param {object|null} hours   the hours the shop keeps (its own, whatever the world's setting)
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
- * @param {boolean} [closes]    whether the shop closes by its hours: false while trading hours are off
+ * @param {boolean} closes      whether the shop closes by its hours: false while trading hours are off
  */
-export function isFresh(lastRestock, now, hours, days, closes = true) {
+export function isFresh(lastRestock, now, hours, days, closes) {
   if (lastRestock == null || now < lastRestock) return false;
-  return now < ((closes ? nextCloseAt(hours, lastRestock, days) : null) ?? nextOpeningAfter(lastRestock, hours, days));
+  return now < ((closes ? nextCloseAt(hours, lastRestock, days) : null) ?? lastRestock + secondsPerDay(days));
 }
 
 /**
@@ -454,9 +454,9 @@ export function isFresh(lastRestock, now, hours, days, closes = true) {
  * @param {number} now
  * @param {object|null} hours       as `isFresh` takes them
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
- * @param {boolean} [closes]        as `isFresh` takes it
+ * @param {boolean} closes          as `isFresh` takes it
  */
-export function isNewGood(item, shelf, now, hours, days, closes = true) {
+export function isNewGood(item, shelf, now, hours, days, closes) {
   return isDrawn(item, shelf) && item.system?.quantity !== 0
     && isFresh(item.flags?.["merchant-presets"]?.newAt, now, hours, days, closes);
 }

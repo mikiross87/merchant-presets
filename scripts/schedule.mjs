@@ -102,9 +102,28 @@ function lastOpeningAtOrBefore(bound, hours, calendar) {
   return openingOnDay(Math.floor((bound - offset) / day), hours, calendar);
 }
 
-/** The first of `hours`'s daily openings after `time`: midnight for a shop keeping no hours. */
-export function nextOpeningAfter(time, hours, calendar) {
-  return lastOpeningAtOrBefore(time, hours, calendar) + secondsPerDay(calendar);
+/**
+ * When a shop keeping `hours` has next closed, strictly after `worldTime`: the end of a deal made
+ * "until the shop closes". `isOpen` keeps a shop open through its whole closing
+ * minute, so a 19:00 close has closed at 19:01, and a deal made at 19:00:30 ends then, not a day
+ * later. A shop that's closed now closes next after it reopens. Null for a shop that never
+ * closes: no hours, or hours that run round the whole day (00:00-23:59, 07:00-06:59), which
+ * `isOpen` reads as open throughout (#142 review).
+ *
+ * @param {{open: {hour: number, minute: number}, close: {hour: number, minute: number}}|null} hours
+ * @param {number} worldTime
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} calendar
+ * @returns {number|null}
+ */
+export function nextCloseAt(hours, worldTime, calendar) {
+  if (!hours) return null;
+  const minutesPerDay = calendar.minutesPerHour * calendar.hoursPerDay;
+  const closed = hours.close.hour * calendar.minutesPerHour + hours.close.minute + 1;
+  if (closed % minutesPerDay === hours.open.hour * calendar.minutesPerHour + hours.open.minute) return null;
+  const day = secondsPerDay(calendar);
+  const offset = closed * calendar.secondsPerMinute;
+  const today = Math.floor(worldTime / day) * day + offset;
+  return today > worldTime ? today : today + day;
 }
 
 /**
@@ -319,11 +338,14 @@ function drawnItem(draw, context, system, newAt) {
   const data = structuredClone(draw.data);
   delete data._id;
   data.system = { ...data.system, ...system };
+  // Its own New time, or none: never one the drawn document carried from another shelf.
+  const own = { ...data.flags?.["merchant-presets"] };
+  delete own.newAt;
   data.flags = {
     ...data.flags,
     // The shop's record wins; a line it has none for keeps the config its good ships with.
-    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true,
-      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock,
+    "merchant-presets": { ...own, drawn: context.drawnBy ?? true,
+      stock: context.stockFlags[draw.name] ?? own.stock,
       ...(newAt === undefined ? {} : { newAt }) }
   };
   return data;

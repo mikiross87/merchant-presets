@@ -424,6 +424,12 @@ test("a top-up refill that isn't New drops an earlier restock's mark rather than
   assert.equal(plan.updates[0]["flags.merchant-presets.newAt"], null);
 });
 
+test("a fresh shelf copy never takes a New time from the document it was drawn from (#152 review)", () => {
+  const marked = { ...draws[0], quantity: 10, data: { ...draws[0].data, flags: { "merchant-presets": { newAt: T - 600 } } } };
+  const plan = planRestock(shop, [drawn("i1", "Arrows", "consumable", 4)], [marked], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), undefined);
+});
+
 test("a shop's first roll marks nothing New: a shop just placed has nothing back in stock (#152 review)", () => {
   const items = [drawn("i1", "Arrows", "consumable", 0)];
   const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T, markNew: false });
