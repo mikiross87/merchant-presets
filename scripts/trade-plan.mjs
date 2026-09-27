@@ -286,6 +286,16 @@ export function isVisible(item, stock) {
 }
 
 /**
+ * A stock row the Buy tab can show (shop-view.mjs re-exports it), and what a restock counts as
+ * in stock (schedule.mjs): what a buy wouldn't refuse as not visible (gear, the fixed
+ * exclusions, hidden, delisted, inside a container, a container holding any of those) or as
+ * unidentified. `shopItems` is the shop's own items, for that container check.
+ */
+export const isVisibleStock = (item, stock, shopItems = []) => isVisible(item, stock)
+  && item.system?.identified !== false
+  && !(item.type === "container" && hasUngivableContents(item._id, shopItems));
+
+/**
  * Whether `container`'s own contents, recursively, include anything `shop` wouldn't otherwise
  * hand over on its own: shopkeeper gear or a hidden/delisted line. A container holding one is
  * refused whole (`planBuy`) rather than handing over only the rest — there's no request line

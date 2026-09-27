@@ -39,7 +39,7 @@
  */
 
 import { shopFrom } from "./schema.mjs";
-import { isVisible } from "./trade-plan.mjs";
+import { isVisibleStock, safeStockOf } from "./trade-plan.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
 /** How many seconds a day of the world's calendar lasts. */
@@ -307,7 +307,7 @@ export function dueRestock(shop, state, previous, now, calendar) {
 function newAtFor(items, context) {
   if (context.markNew === false) return () => undefined;
   // In stock as players see it: a copy they can't see or buy (hidden, delisted, packed away) isn't.
-  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0 && forSale(i)).map(i => i.name));
+  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0 && forSale(i, items)).map(i => i.name));
   // Only from this shop's own goods still in stock: a copy another shop drew keeps its time to
   // itself, and one that sold out again isn't New any more.
   const earlier = new Map();
@@ -318,8 +318,11 @@ function newAtFor(items, context) {
   return name => (inStock.has(name) ? earlier.get(name) : context.at);
 }
 
-/** Whether players can see and buy `item` on the shelf (trade-plan.mjs `isVisible`). */
-const forSale = item => isVisible(item, item.flags?.["merchant-presets"]?.stock ?? {});
+/** Whether players can see and buy `item` among `items`, as the Buy list decides (trade-plan.mjs `isVisibleStock`). */
+const forSale = (item, items) => {
+  const stock = safeStockOf(item);
+  return !!stock && isVisibleStock(item, stock, items);
+};
 
 /**
  * Whether an update to a shop good drops its New mark (#152): it sells out, or anything but a
@@ -484,7 +487,7 @@ export function planRestock(shop, items, draws, context) {
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
     const refilled = updates.map(u => ({ ...items.find(i => i._id === u._id), flags: { "merchant-presets": { stock: u["flags.merchant-presets.stock"] } } }));
-    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(forSale) };
+    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
@@ -500,7 +503,7 @@ export function planRestock(shop, items, draws, context) {
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked, fresh: creates.some(forSale) };
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked, fresh: creates.some(i => forSale(i, items)) };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

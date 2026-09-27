@@ -443,8 +443,9 @@ test("a good's New mark goes as it sells out, or as anything but a restock refil
 test("a copy players can't see or buy doesn't count as in stock for New (#152 review)", () => {
   const hidden = { _id: "gm4", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: { "merchant-presets": { stock: { hidden: true } } } };
   const packed = { _id: "gm5", name: "Arrows", type: "consumable", system: { quantity: 3, container: "bag1" }, flags: {} };
-  const plan = planRestock(shop, [hidden, packed], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
-  assert.equal(newAtOf(plan.creates[0]), T);
+  const unidentified = { _id: "gm6", name: "Arrows", type: "consumable", system: { quantity: 3, identified: false }, flags: {} };
+  const plan = planRestock(shop, [hidden, packed, unidentified], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), T, "as the Buy list sees it (shop-view.mjs isVisibleStock)");
 });
 
 test("a restock is fresh stock only when it brings back something players can see (#152 review)", () => {

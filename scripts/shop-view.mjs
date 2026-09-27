@@ -1,6 +1,6 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -557,16 +557,8 @@ export function purseAfter(kind, purse, sumCp, till, currencies) {
  * own rules, not copies: a drift would show a row the engine then refuses, or hide one it takes.
  */
 export { dealtIn };
-export { isGear as isGearItem, matchingStockLine, sourceOf } from "./trade-plan.mjs";
+export { isGear as isGearItem, isVisibleStock, matchingStockLine, sourceOf } from "./trade-plan.mjs";
 
-/**
- * A stock row the Buy tab can show: what a buy wouldn't refuse as not visible (gear, the fixed
- * exclusions, hidden, delisted, inside a container, a container holding any of those) or as
- * unidentified. `shopItems` is the shop's own items, for that container check.
- */
-export const isVisibleStock = (item, stock, shopItems = []) => isVisible(item, stock)
-  && item.system?.identified !== false
-  && !(item.type === "container" && hasUngivableContents(item._id, shopItems));
 
 /* -------------------------------------------------------------- stock labels */
 
