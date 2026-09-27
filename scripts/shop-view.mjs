@@ -1,5 +1,5 @@
-import { effectiveRates } from "./pricing.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, dealtIn, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
+import { effectiveRates, pay, payExact } from "./pricing.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -341,6 +341,32 @@ export function basketTotals(lines, purseCp, kind) {
   const afterCp = kind === "buy" ? purseCp - sumCp : purseCp + sumCp;
   const shortfallCp = kind === "buy" ? Math.max(0, sumCp - purseCp) : 0;
   return { sumCp, afterCp: Math.max(0, afterCp), shortfallCp };
+}
+
+/**
+ * The coins `purse` holds once the bill is settled, moved as the trade engine moves them
+ * (trade-plan.mjs): a buyer pays with `pay` (their own coins, overpaying as little as possible,
+ * change from the till); a seller is paid exactly out of the till (`payExact`). So an untouched
+ * denomination stays as it is: 3 pp 47 gp less 30 gp is 3 pp 17 gp, not a re-split total.
+ *
+ * @param {"buy"|"sell"} kind
+ * @param {Record<string, number>} purse  the buyer's (or seller's) coins by denomination
+ * @param {number} sumCp                  the bill's sum, in the finest coin
+ * @param {Record<string, number>|null} till  the shop's coins; null for unlimited merchant coin
+ * @param {Record<string, {conversion: number}>} currencies
+ * @returns {Record<string, number>|null}  null where the engine would refuse the bill
+ */
+export function purseAfter(kind, purse, sumCp, till, currencies) {
+  const shop = till ?? bottomlessTill(currencies);
+  if (kind === "buy") {
+    const paid = pay(purse, sumCp, shop, currencies);
+    return paid.ok ? paid.purse : null;
+  }
+  const paid = payExact(shop, sumCp, currencies);
+  if (!paid.ok) return null;
+  const after = { ...purse };
+  for (const [denomination, count] of Object.entries(paid.given)) after[denomination] = (after[denomination] ?? 0) + count;
+  return after;
 }
 
 /* -------------------------------------------------------------- stock rules */

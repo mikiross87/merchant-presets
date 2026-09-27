@@ -362,7 +362,7 @@ export const categoryFor = (item, stock) => stock.category || item.type;
  * platinum would hand a player 1pp 1gp 1ep for 11.5gp. Any other currency config keeps every
  * denomination.
  */
-function bottomlessTill(currencies) {
+export function bottomlessTill(currencies) {
   const all = Object.keys(currencies);
   const everyday = all.filter(d => ["gp", "sp", "cp"].includes(d));
   const endless = everyday.length ? everyday : all;

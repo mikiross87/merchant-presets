@@ -25,7 +25,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, itemMeta, matchingStockLine, partOfDay, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRow, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -747,7 +747,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       categories,
       // For a buy refused as till-short: the till couldn't make change.
       tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
-      basket: this.#billOfSale(lines, totals, currencies, buyer, this._sealed.buy),
+      basket: this.#billOfSale("buy", lines, totals, currencies, buyer, this._sealed.buy),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.buy),
       seal: {
@@ -957,7 +957,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
       // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
       tillCapsSales: game.settings.get(MODULE, "merchantPurse") !== "unlimited",
-      basket: this.#billOfSale(lines, totals, currencies, buyer, this._sealed.sell),
+      basket: this.#billOfSale("sell", lines, totals, currencies, buyer, this._sealed.sell),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.sell),
       seal: {
@@ -1046,9 +1046,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return activeDeal(shopConfigOf(this.document), buyer?.uuid ?? null, game.time.worldTime);
   }
 
-  #billOfSale(lines, totals, currencies, buyer, sealed) {
+  #billOfSale(kind, lines, totals, currencies, buyer, sealed) {
     const sumCoins = coinBreakdown(totals.sumCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
-    const afterCoins = purseCoins(totals.afterCp, currencies);
+    // The purse as the trade will leave it, coin by coin; a bill the engine would refuse falls
+    // back to the total, and its seal already says why.
+    const till = game.settings.get(MODULE, "merchantPurse") === "unlimited" ? null : this.document.system.currency ?? {};
+    const after = buyer ? purseAfter(kind, buyer.system.currency ?? {}, totals.sumCp, till, currencies) : null;
+    const afterCoins = after ? heldCoins(after, currencies) : purseCoins(totals.afterCp, currencies);
     const shortfallCoins = coinBreakdown(totals.shortfallCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
     return {
       lines,

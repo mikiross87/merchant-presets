@@ -587,10 +587,12 @@ test("the part of the day an hour falls in, on any length of day", () => {
 
 /* -------------------------------------------------------------- purseAfter */
 
-test("a buyer's purse after the bill keeps the coins the payment didn't touch (design y6iNf)", () => {
-  // Aria, 3 pp 47 gp 12 sp 30 cp, owes 30 gp: she hands over 30 of her gold, as the engine's pay() takes it.
+test("a buyer's purse after the bill keeps the coins the payment didn't touch", () => {
+  // Aria, 3 pp 47 gp 12 sp 30 cp, owes 30 gp. The engine's pay() settles it exactly with her 3 pp;
+  // the rest of her purse is as it was, not the total re-split (48 gp 5 sp).
   const aria = { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 };
-  assert.deepEqual(purseAfter("buy", aria, 3000, { gp: 212 }, CURRENCIES), { pp: 3, gp: 17, ep: 0, sp: 12, cp: 30 });
+  assert.deepEqual(purseAfter("buy", aria, 3000, { gp: 212 }, CURRENCIES), { pp: 0, gp: 47, ep: 0, sp: 12, cp: 30 });
+  assert.deepEqual(purseAfter("buy", { gp: 47, sp: 12 }, 3000, { gp: 212 }, CURRENCIES), { gp: 17, sp: 12 });
 });
 
 test("a buyer who has to break a coin gets the change from the till", () => {
