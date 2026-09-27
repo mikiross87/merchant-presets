@@ -369,11 +369,15 @@ async function restockNow(actor, { at = game.time.worldTime, markNew = true } = 
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
-  if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
+  // The till, and when the shelf was last restocked, whatever did it: the shop window's "Fresh stock
+  // today" (#145, #152). Not a shop's first roll, nor one that brought back nothing players can
+  // see. One update, so open windows render the new shelf with its chip at once.
+  const settled = {
+    ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {}),
+    ...(markNew && plan.fresh ? { [`flags.${MODULE}.restockedAt`]: at } : {})
+  };
+  if (Object.keys(settled).length) await actor.update(settled);
   await syncStockWeight(actor);        // the shelf and the till have both just moved
-  // When the shelf was last restocked, whatever did it: the shop window's "Fresh stock today" (#145,
-  // #152). Not a shop's first roll, nor one that brought back nothing players can see.
-  if (markNew && plan.fresh) await actor.update({ [`flags.${MODULE}.restockedAt`]: at });
   return plan.restocked;
 }
 

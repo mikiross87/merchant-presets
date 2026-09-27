@@ -424,9 +424,9 @@ function dedupedByName(draws) {
  *   (a `keep: false` good is deleted outright the moment it sells out, and so
  *   is any good that simply rolled 0 last time). Either way counts as sold
  *   out. One still on the shelf is *updated* (same item, refilled); one
- *   that's gone is a fresh *create*. A container is always a create when
- *   short of its target count — dnd5e pins its quantity to exactly 1, so a
- *   sold one is gone outright, never sitting at zero to update.
+ *   that's gone is a fresh *create*. A container can't be refilled (dnd5e
+ *   pins its quantity to 1): one kept at zero is deleted, and a fresh copy
+ *   is created for each one short of its target count.
  *
  * `restock.table: null` (no stock table assigned) is a no-op: an empty plan,
  * nothing deleted, refilled or drawn.
@@ -491,7 +491,11 @@ export function planRestock(shop, items, draws, context) {
     // A container can push its own name once per copy created; every other
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
-    const refilled = updates.map(u => ({ ...items.find(i => i._id === u._id), flags: { "merchant-presets": { stock: u["flags.merchant-presets.stock"] } } }));
+    // Each refilled good as it will stand, its stock config the refill's, to judge whether players see it.
+    const refilled = updates.map(u => {
+      const item = items.find(i => i._id === u._id);
+      return { ...item, flags: { ...item.flags, "merchant-presets": { ...item.flags?.["merchant-presets"], stock: u["flags.merchant-presets.stock"] } } };
+    });
     return { deletes, creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
