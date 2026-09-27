@@ -538,7 +538,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // The shop's own config, not `config`: the world's trading-hours switch shows no hours, but
       // the GM edits the ones the shop keeps.
       settings: game.user.isGM ? await this.#settingsContext(actor, shop, world, header) : null,
-      closed: !open ? this.#closedContext(config, minute, calendarDays) : null
+      closed: !open ? this.#closedContext(actor, config, minute, calendarDays) : null
     });
     return context;
   }
@@ -618,7 +618,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return `${time.hour}:${String(time.minute).padStart(2, "0")}`;
   }
 
-  #closedContext(config, minute, calendarDays) {
+  #closedContext(actor, config, minute, calendarDays) {
     const { opensAt, inMinutes } = nextOpen(config.hours, minute, calendarDays);
     const perHour = calendarDays.minutesPerHour;
     const hours = perHour ? Math.floor(opensAt / perHour) : 0;
@@ -631,12 +631,37 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const duration = untilHours > 0
       ? game.i18n.localize(`MERCHANT_PRESETS.Shop.Closed.Hours${untilHours === 1 ? "" : "Plural"}`, { count: untilHours })
       : game.i18n.localize(`MERCHANT_PRESETS.Shop.Closed.Minutes${untilMins === 1 ? "" : "Plural"}`, { count: untilMins });
+    // Only a restock the clock will run: scheduled restocks can be off for the whole world.
+    const dueAt = game.settings.get(MODULE, "autoRestock") ? this.#nextRestockAt(actor, config) : null;
     return {
-      opensAtLabel: `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`,
+      opensAtLabel: this.#formatTime({ hour: hours, minute: mins }),
       duration,
       openLabel: config.hours ? this.#formatTime(config.hours.open) : null,
-      closeLabel: config.hours ? this.#formatTime(config.hours.close) : null
+      closeLabel: config.hours ? this.#formatTime(config.hours.close) : null,
+      nextRestock: dueAt != null ? game.i18n.localize("MERCHANT_PRESETS.Shop.Closed.NextRestockAt", { date: this.#dayMonth(dueAt) }) : null
     };
+  }
+
+  /**
+   * When the shop's next scheduled restock falls, or null: only a date the shop will keep. One
+   * counted for another schedule is recounted at the clock's next tick (`scheduleShop`), and a
+   * shop with no table, or set never to restock, never does.
+   */
+  #nextRestockAt(actor, shop) {
+    const schedule = actor.flags?.[MODULE]?.schedule;
+    const { chip } = everyChoice(shop.restock);
+    return chip !== "never" && shop.restock.table && schedule?.dueAt != null
+      && (schedule.every === undefined || schedule.every === shop.restock.every) ? schedule.dueAt : null;
+  }
+
+  /** "21 Mirtul": a day of the month and its name (design x9IX9); the calendar's own date elsewhere. */
+  #dayMonth(time) {
+    try {
+      const calendar = game.time.calendar;
+      const c = calendar.timeToComponents(time);
+      const month = calendar.months?.values?.[c.month];
+      return month ? `${c.dayOfMonth + 1} ${game.i18n.localize(month.name)}` : this.#dateLabel(time);
+    } catch { return this.#dateLabel(time); }
   }
 
   /* -------------------------------------------------------------- buyer */
@@ -1373,11 +1398,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         reroll: shop.restock.mode === "reroll",
         purseGp: actor.flags?.[MODULE]?.purse ?? null,
         last: schedule?.lastRestock != null ? this.#dateLabel(schedule.lastRestock) : null,
-        // Only a date the shop will keep: one counted for another schedule is recounted at the
-        // clock's next tick (`scheduleShop`), and a shop with no table never restocks.
-        next: chip !== "never" && shop.restock.table && schedule?.dueAt != null
-          && (schedule.every === undefined || schedule.every === shop.restock.every)
-          ? this.#dateLabel(schedule.dueAt) : null,
+        next: this.#nextRestockAt(actor, shop) != null ? this.#dateLabel(schedule.dueAt) : null,
         autoOff: !game.settings.get(MODULE, "autoRestock")
       },
       deals: { list: shop.deals.map(d => this.#dealCard(d)) },

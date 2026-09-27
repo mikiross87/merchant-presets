@@ -18,7 +18,8 @@
         "MinutesPlural": "{count} minutes",
         "Open": "Open",
         "Close": "Close",
-        "NextRestock": "Next restock"
+        "NextRestock": "Next restock",
+        "NextRestockAt": "{date}, at opening"
       },
       "ClosedOpensAt": "Closed · opens at {time}",
       "TermsChip": "Sells at {sells} · Buys at {buys}",

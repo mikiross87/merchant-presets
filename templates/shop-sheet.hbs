@@ -104,13 +104,13 @@
 
 <section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}}" data-group="primary" data-tab="buy" data-pen="Body">
   <nav class="mp-categories" data-pen="Categories">{{> mpCategoryLinks categories=buy.categories kind="buy"}}</nav>
-  <div class="mp-stock shop-stock" data-pen="Stock">
+  <div class="mp-stock shop-stock {{#unless open}}is-closed{{/unless}}" data-pen="Stock">
     {{#each buy.sections}}
       <div class="mp-group" data-pen="Group {{pen}}">
         <h2 class="mp-group-heading" data-pen="{{pen}} heading">{{label}}</h2><span class="mp-rule" data-pen="{{pen}} rule"></span>
       </div>
       {{#each rows}}
-        <div class="mp-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#unless ../../open}}is-dimmed{{/unless}} {{#if inBasket}}in-basket{{/if}}" data-pen="Row {{name}}">
+        <div class="mp-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#if inBasket}}in-basket{{/if}}" data-pen="Row {{name}}">
           <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
           <div class="mp-row-text" data-pen="Text">
             <span class="mp-name-line" data-pen="Name line">
@@ -140,14 +140,15 @@
               </span>
             {{/if}}
           </div>
-          {{!-- A sold-out line has nothing to add (design: the Shield row); its row stays, for restock. --}}
-          {{#unless (eq stock.state "soldOut")}}
+          {{!-- A sold-out line has nothing to add (design: the Shield row), and a closed shop nothing at
+                all (x9IX9); the rows stay, to look over. --}}
+          {{#if (and ../../open (not (eq stock.state "soldOut")))}}
             <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
               aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
-              {{#if (or unpriced worthless)}}disabled{{/if}} {{#unless ../../open}}disabled{{/unless}}>
+              {{#if (or unpriced worthless)}}disabled{{/if}}>
               {{mpIcon "plus" pen="Add icon"}}
             </button>
-          {{/unless}}
+          {{/if}}
         </div>
       {{/each}}
     {{else}}
@@ -175,7 +176,7 @@
     {{#if sell.packLabel}}<span class="mp-pack-label" data-pen="Pack label">{{sell.packLabel}}</span>{{/if}}
     {{> mpCategoryLinks categories=sell.categories kind="sell"}}
   </nav>
-  <div class="mp-stock sell-stock" data-pen="Stock">
+  <div class="mp-stock sell-stock {{#unless sell.open}}is-closed{{/unless}}" data-pen="Stock">
     {{#each sell.sections}}
       <div class="mp-group" data-pen="Group {{pen}}">
         <h2 class="mp-group-heading" data-pen="{{pen}} heading">{{label}}</h2><span class="mp-rule" data-pen="{{pen}} rule"></span>
@@ -193,7 +194,7 @@
             <span class="mp-stock-state is-{{#if (eq refusal 'Unidentified')}}unidentified{{else}}soldOut{{/if}}" data-pen="Stock">{{reason}}</span>
           </div>
         {{else}}
-          <div class="mp-row {{#unless ../../sell.open}}is-dimmed{{/unless}}" data-pen="Sell {{name}}">
+          <div class="mp-row" data-pen="Sell {{name}}">
             <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
             <div class="mp-row-text" data-pen="Text">
               <span class="mp-name-line" data-pen="Name line">
@@ -213,10 +214,12 @@
                 {{> mpCoins coins=priceCoins mode="price"}}
               </span>
             </div>
-            <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
-              aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}" {{#unless ../../sell.open}}disabled{{/unless}}>
-              {{mpIcon "plus" pen="Add icon"}}
-            </button>
+            {{#if ../../sell.open}}
+              <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
+                aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}">
+                {{mpIcon "plus" pen="Add icon"}}
+              </button>
+            {{/if}}
           </div>
         {{/if}}
       {{/each}}

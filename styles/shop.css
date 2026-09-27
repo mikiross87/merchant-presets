@@ -730,15 +730,49 @@
 .shop-sheet .seal-button:disabled { background: var(--color-text-secondary); cursor: not-allowed; opacity: 0.7; }
 .shop-sheet .seal-button .fa-spin { animation-duration: 900ms; }
 
-/* -------------------------------------------------------------- closed card */
+/* -------------------------------------------------------------- closed card (design x9IX9) */
 
-.shop-sheet .closed-card { align-items: center; text-align: center; justify-content: center; }
-.shop-sheet .closed-icon { font-size: 1.8rem; color: var(--dnd5e-color-gold); }
-.shop-sheet .closed-opens-in { font-style: italic; color: var(--color-text-secondary); font-size: 0.85rem; }
-.shop-sheet .closed-body { font-size: 0.8rem; color: var(--color-text-secondary); }
-.shop-sheet .closed-hours { width: 100%; font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.8rem; border-top: var(--dnd5e-border-dotted); margin-top: 0.5rem; }
-.shop-sheet .closed-hours td:first-child { color: var(--color-text-secondary); }
-.shop-sheet .closed-hours td:last-child { text-align: right; font-weight: 700; }
+.shop-sheet .mp-stock.is-closed { opacity: 0.5; }
+.shop-sheet .mp-open-chip.is-closed { outline: 1px solid #ffffff40; }
+.shop-sheet .mp-closed-card {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 18px;
+  border-radius: 2px;
+  background: var(--mp-paper);
+  outline: 1px solid var(--mp-paper-line);
+}
+.shop-sheet .mp-moon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: var(--mp-chip);
+  outline: 1px solid var(--mp-gold);
+  color: var(--mp-gold-light);
+}
+.shop-sheet .mp-moon .mp-icon { width: 26px; height: 26px; }
+.shop-sheet .mp-closed-title { margin: 0; border: none; font: 700 20px/27px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-paper-ink); }
+.shop-sheet .mp-closed-when { margin: 0; font: italic 400 15px/17px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-closed-rule { flex: none; align-self: stretch; height: 1px; background: var(--mp-paper-line); }
+.shop-sheet .mp-closed-body { margin: 0; font: 400 13px/18px Roboto, system-ui, sans-serif; text-align: center; color: var(--mp-paper-ink); }
+.shop-sheet .mp-hours {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: var(--mp-inset);
+}
+.shop-sheet .mp-hours-row { display: flex; justify-content: space-between; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-hours-row b { color: var(--mp-paper-ink); }
 
 /* -------------------------------------------------------------- settings tab (#110, design v8ap9) */
 

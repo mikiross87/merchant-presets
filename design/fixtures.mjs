@@ -120,8 +120,15 @@ export async function setup() {
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id" } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
+  // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
+  if (game.user.isGM) {
+    const perDay = game.time.calendar.days.hoursPerDay * game.time.calendar.days.minutesPerHour * game.time.calendar.days.secondsPerMinute;
+    const at = Math.floor(game.time.worldTime / perDay) * perDay + ${hour} * 3600;
+    if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
+    await game.settings.set("merchant-presets", "autoRestock", ${autoRestock});
+  }
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
@@ -152,6 +159,8 @@ const withDeals = `
     { actor: game.actors.getName("Tomas").uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
   ] });`;
 const withoutDeals = `if (shop.flags["merchant-presets"]?.shop?.deals?.length) await shop.update({ "flags.merchant-presets.shop.deals": [] });`;
+/** Whether Javelin and Breastplate wear "New": the Storefront frames draw it; the Closed ones, before the day's opening, don't. */
+const newBadges = on => `await shop.updateEmbeddedDocuments("Item", ["Javelin", "Breastplate"].map(name => ({ _id: shop.items.getName(name).id, "flags.merchant-presets.new": ${on} })));`;
 /** The Storefront frames draw "Fresh stock today"; the Settings frames a shop last restocked the day before. */
 const restocked = daysAgo => `await shop.update({ "flags.merchant-presets.restockedAt": game.time.worldTime - ${daysAgo} * 86400 });`;
 
@@ -159,10 +168,17 @@ const frame = (name, theme, width, height, user = "Gamemaster", open = null) => 
 const settings = openShop({ tab: "settings", before: withDeals + restocked(1) });
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
-const storefront = openShop({ before: withoutDeals + restocked(0), basket: BASKET });
+const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
+/**
+ * The Closed frames: 3:00 on the 14th, four hours before the smith opens, with scheduled restocks
+ * on and the next one due on the 21st (every 7 days); a shop restocked the day before.
+ */
+const nextRestock = `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: game.time.worldTime - 3 * 3600,
+  dueAt: Math.floor(game.time.worldTime / 86400) * 86400 + 7 * 86400, every: 7 } });`;
+const closed = openShop({ before: withoutDeals + restocked(1) + nextRestock + newBadges(false), hour: 3, autoRestock: true });
 /** The Terms popover, open over the GM's storefront; the frame is the popover alone. */
-const terms = openShop({ before: withoutDeals + restocked(0), basket: BASKET, size: { width: 920, height: 680 },
+const terms = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, size: { width: 920, height: 680 },
   then: "app.element.querySelector('.mp-terms-popover').showPopover();", root: "`${app.id}-terms-popover`" });
 /** The Sell frames: Aria selling the Longsword and both potions, to a shop restocked the day before. */
 const sell = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
@@ -179,8 +195,8 @@ export const FRAMES = {
   dpdpS: frame("03 Settings (GM) — Dark", "dark", 920, 760, "Gamemaster", settings),
   aaJcp: frame("03 Settings (GM) · Restock — Light", "light", 920, 760),
   dVt0a: frame("03 Settings (GM) · Restock — Dark", "dark", 920, 760),
-  x9IX9: frame("04 Closed — Light", "light", 920, 680),
-  nnHdO: frame("04 Closed — Dark", "dark", 920, 680),
+  x9IX9: frame("04 Closed — Light", "light", 920, 680, "Gamemaster", closed),
+  nnHdO: frame("04 Closed — Dark", "dark", 920, 680, "Gamemaster", closed),
   mRg3y: frame("05 Inn — Light", "light", 920, 680),
   lvVv2: frame("05 Inn — Dark", "dark", 920, 680),
   r7HIUl: frame("06 Storefront — Narrow (Light)", "light", 480, 780),
