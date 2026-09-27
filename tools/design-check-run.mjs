@@ -123,6 +123,22 @@ function pencilLineHeights() {
   }
 }
 
+/**
+ * Runs in the export's page: strokes that take no room, as on the canvas. Pencil draws a stroke
+ * inside the node over its padding (Button Secondary's label sits 16 px in, its padding), where
+ * the export's border pushes the content in by its width (the notice's 3 px stripe left its text
+ * 171 px of 175, and a line wrapped that Pencil keeps). Each side's padding gives up the border.
+ */
+function pencilStrokes() {
+  for (const el of document.querySelectorAll("[data-pencil-id]")) {
+    const cs = getComputedStyle(el);
+    for (const side of ["Top", "Right", "Bottom", "Left"]) {
+      const border = parseFloat(cs[`border${side}Width`]);
+      if (border) el.style[`padding${side}`] = `${Math.max(0, parseFloat(cs[`padding${side}`]) - border)}px`;
+    }
+  }
+}
+
 const browser = await chromium.launch({ executablePath, args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader",
   "--disable-background-timer-throttling", "--disable-renderer-backgrounding", "--disable-backgrounding-occluded-windows"] });
 /** A page in `context`, joined to the world as `user` and settled. */
@@ -177,6 +193,7 @@ for (const id of WANTED) {
   await dpage.addStyleTag({ content: "[data-pencil-id] { box-sizing: border-box !important; min-height: 0 !important; }" });
   await dpage.evaluate(() => document.fonts.ready);
   await dpage.evaluate(pencilLineHeights);
+  await dpage.evaluate(pencilStrokes);
   const design = await dpage.evaluate(collect, { rootSelector: `[data-pencil-id="${rootId}"]`, attr: "data-pencil-name", iconAttr: "data-icon-name" });
   await dpage.locator(`[data-pencil-id="${rootId}"]`).screenshot({ path: `${OUT}${shot}-design.png` });
 
