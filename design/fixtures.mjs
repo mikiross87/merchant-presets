@@ -349,11 +349,12 @@ const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = ""
 });
 const until = test => `for (let t = 0; t < 60 && !(${test}); t++) await new Promise(r => setTimeout(r, 250));`;
 const sealIt = `app.element.querySelector('.mp-basket [data-action="seal"]').click();`;
-const states = {
-  sealing: tradeState({ act: `app._tradeState.buy = "sealing"; await app.render({ parts: ["body"] });` }),
-  // A real trade, then the goods put back: Aria's purse stays as the trade left it, "purse now".
-  sealed: tradeState({ act: `const kept = [shop, game.actors.getName("Aria")].map(a => ({ a, items: a.items.map(i => i.toObject()) }));
-    ${sealIt} ${until('app._tradeState.buy === "sealed"')}
+/**
+ * A real trade on the `tab` bill, then the goods put back: Aria's purse stays as the trade left it
+ * ("purse now"), and the shelf and her pack are as they were for the frames after it.
+ */
+const sealThenPutBack = tab => `const kept = [shop, game.actors.getName("Aria")].map(a => ({ a, items: a.items.map(i => i.toObject()) }));
+    ${sealIt.replace(".mp-basket", `.tab.active .mp-basket`)} ${until(`app._tradeState.${tab} === "sealed"`)}
     for (const { a, items } of kept) {
       const was = new Set(items.map(i => i._id));
       await a.deleteEmbeddedDocuments("Item", a.items.filter(i => !was.has(i.id)).map(i => i.id));
@@ -361,7 +362,11 @@ const states = {
       await a.createEmbeddedDocuments("Item", items.filter(i => !now.has(i._id)), { keepId: true });
       await a.updateEmbeddedDocuments("Item", items.filter(i => now.has(i._id)).map(i => ({ _id: i._id, "system.quantity": i.system.quantity })));
     }
-    await app.render({ parts: ["body"] });` }),
+    await app.render({ parts: ["body"] });`;
+const states = {
+  sealing: tradeState({ act: `app._tradeState.buy = "sealing"; await app.render({ parts: ["body"] });` }),
+  // A real trade, then the goods put back: Aria's purse stays as the trade left it, "purse now".
+  sealed: tradeState({ act: sealThenPutBack("buy") }),
   cantAfford: tradeState({ basket: [["Breastplate", 1], ["Handaxe", 2], ["Javelin", 10]] }),
   // A player with no GM at the table (the checker logs in no one else) sends the bill. A player
   // can't reset the shelf, so this frame counts on the GM frame run before it (FRAMES order).
@@ -377,6 +382,43 @@ const stateFrames = Object.fromEntries(["light", "dark"].flatMap(theme => PARTS.
   `${theme === "light" ? "WNYhA" : "mWJYP"}:${state}`,
   frame(`08 Trade States — ${theme === "light" ? "Light" : "Dark"} · ${state}`, theme, 1900, 755, state === "noGm" ? "P1" : "Gamemaster", states[state],
     { export: theme === "light" ? "WNYhA" : "mWJYP", part })
+])));
+
+
+/** Settings jumped to `section` at 10:00 on the 14th, restocked the day before, with or without the Settings frames' deals (bands 09 and 11). */
+const settingsAt = (section, deals = false) => openShop({ tab: "settings", before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="${section}"], [data-action="settingsSection"][data-section="${section}"]')?.click();` });
+/** Aria's −10% deal on buying, running (until the shop closes) or ended at yesterday's closing. */
+const ariaDeal = ended => `
+  const perDay = game.time.calendar.days.hoursPerDay * 3600;
+  const close = Math.floor(game.time.worldTime / perDay) * perDay + 19 * 3600 + 60 - (${ended} ? perDay : 0);
+  await shop.update({ "flags.merchant-presets.shop.deals": [
+    { actor: game.actors.getName("Aria").uuid, name: "Aria", buy: -0.1, sell: null, note: "Saved the smith's daughter", ends: { at: close, when: "close" } },
+    { actor: game.actors.getName("Tomas").uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
+  ] });`;
+/** The Deals board (Q6UvA): the deal form filled for Aria, the Deals section with her deal ended, her bill at the deal's price. */
+const dealForm = openShop({ tab: "settings", before: withoutDeals + restocked(1),
+  then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();
+  app.element.querySelector('[data-action="addDeal"]').click();
+  const dealForm = () => document.querySelector(".mp-deal-form") ?? [...document.querySelectorAll(".application.dialog")].at(-1);
+  ${until("dealForm()")}
+  const form = dealForm();
+  form.id = "mp-deal-form-under-check";`, root: '"mp-deal-form-under-check"' });
+const dealEnded = openShop({ tab: "settings", before: ariaDeal(true) + restocked(1),
+  then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();
+  const section = app.element.querySelector('.settings-section[data-section="deals"]');
+  section.id = app.id + "-deals";`, root: "`${app.id}-deals`" });
+const dealBill = tradeState({ before: ariaDeal(false) });
+/** The narrow window's bill, opened from its dock (design mVjRf). */
+const billOpen = openShop({ size: { width: 480, height: 780 }, before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET,
+  then: `app.element.querySelector('.tab.active [data-action="toggleBill"]').click();` });
+const sellNarrow = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
+/** The Sell tab's receipt (design euA99): Aria's sale sealed, then the goods put back. */
+const sellSealed = tradeState({ tab: "sell", basket: [], sellBasket: [["Longsword", 1], ["Potion of Healing", 2]], act: sealThenPutBack("sell") });
+const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill]];
+const dealFrames = Object.fromEntries(["light", "dark"].flatMap(theme => DEAL_PARTS.map(([part, node, open]) => [
+  `${theme === "light" ? "Q6UvA" : "pMFqj"}:${part}`,
+  frame(`10 Deals — ${theme === "light" ? "Light" : "Dark"} · ${part}`, theme, 1192, 690, "Gamemaster", open, { export: theme === "light" ? "Q6UvA" : "pMFqj", part: node })
 ])));
 
 export const FRAMES = {
@@ -405,5 +447,18 @@ export const FRAMES = {
   "z5RBkd:sell": frame("07 Trade Chat Card — Light · Sale", "light", 672, 387, "Gamemaster", receiptSell, { export: "z5RBkd", part: "dZ2NI" }),
   "b4iPYc:buy": frame("07 Trade Chat Card — Dark · Purchase", "dark", 672, 387, "Gamemaster", receiptBuy, { export: "b4iPYc", part: "h3s5G" }),
   "b4iPYc:sell": frame("07 Trade Chat Card — Dark · Sale", "dark", 672, 387, "Gamemaster", receiptSell, { export: "b4iPYc", part: "dZ2NI" }),
-  ...stateFrames
+  ...stateFrames,
+  dYANz: frame("09 Settings (GM) · Won't buy — Light", "light", 920, 760, "Gamemaster", settingsAt("wontBuy")),
+  c3RXO: frame("09 Settings (GM) · Won't buy — Dark", "dark", 920, 760, "Gamemaster", settingsAt("wontBuy")),
+  S2swP: frame("09 Settings (GM) · Hours — Light", "light", 920, 760, "Gamemaster", settingsAt("hours")),
+  tUujD: frame("09 Settings (GM) · Hours — Dark", "dark", 920, 760, "Gamemaster", settingsAt("hours")),
+  mVjRf: frame("06 Storefront — Narrow · Bill open (Light)", "light", 480, 780, "Gamemaster", billOpen),
+  x5BRLd: frame("06 Storefront — Narrow · Bill open (Dark)", "dark", 480, 780, "Gamemaster", billOpen),
+  ...dealFrames,
+  PV7Sf: frame("11 Sell — Narrow (Light)", "light", 480, 780, "Gamemaster", sellNarrow),
+  NipLU: frame("11 Sell — Narrow (Dark)", "dark", 480, 780, "Gamemaster", sellNarrow),
+  bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 780, "Gamemaster", settingsAt("terms", true)),
+  G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 780, "Gamemaster", settingsAt("terms", true)),
+  "euA99:sealed": frame("12 Sell Trade States — Light · sealed", "light", 694, 596, "Gamemaster", sellSealed, { export: "euA99", part: "o05Tqq" }),
+  "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" })
 };
