@@ -4,17 +4,6 @@
       shop-sheet.mjs's _prepareContext comment), and core's native changeTab() toggles which
       .tab[data-tab] section is visible. --}}
 
-{{!-- Coins, the amount before each glyph: `this` is a coinBreakdown() array. --}}
-{{#*inline "coins"}}
-  {{#each this}}
-    <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
-      <img src="{{icon}}" alt="" />
-      <b>{{count}}</b>
-    </span>
-  {{else}}
-    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
-  {{/each}}
-{{/inline}}
 {{!-- A tab's category links (the Buy and Sell navs): `categories` from the sheet, `kind` the tab. --}}
 {{#*inline "mpCategoryLinks"}}
   {{#each categories}}
@@ -53,7 +42,7 @@
       <span class="mp-hero-chip" data-pen="Kind Chip">
         {{mpIcon header.kindIcon pen="Kind icon"}}<span data-pen="Kind Label">{{header.tier}}</span>
       </span>
-      <button type="button" class="mp-hero-chip mp-terms-chip chip-terms" data-pen="Terms Chip" popovertarget="{{appId}}-terms-popover">
+      <button type="button" class="mp-hero-chip mp-terms-chip chip-terms" data-pen="Terms Chip" popovertarget="{{appId}}-terms-popover" style="anchor-name: --{{appId}}-terms">
         {{mpIcon "scale" pen="Terms icon"}}<span data-pen="Terms Label">{{header.termsChip}}</span>{{mpIcon "chevron-down" pen="Terms chevron"}}
       </button>
     </div>
@@ -71,28 +60,19 @@
   </div>
 </header>
 
-<div id="{{appId}}-terms-popover" popover class="shop-popover terms-popover">
-  <h2><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Terms.Title"}}</h2>
-  <p class="term-line"><i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
-    {{localize "MERCHANT_PRESETS.Shop.Terms.SellsAt"}} <b>{{header.terms.sellsAtLabel}}</b>
-  </p>
-  <p class="term-note">{{localize "MERCHANT_PRESETS.Shop.Terms.ExampleSells"}} {{> coins header.terms.exampleSell}}.</p>
-  <p class="term-line"><i class="fa-solid fa-arrow-down-left" aria-hidden="true"></i>
-    {{localize "MERCHANT_PRESETS.Shop.Terms.BuysAt"}} <b>{{header.terms.buysAtLabel}}</b>
-  </p>
-  <p class="term-note">{{localize "MERCHANT_PRESETS.Shop.Terms.ExampleBuys"}} {{> coins header.terms.exampleBuy}}.</p>
-  {{#if header.terms.hasWontBuy}}
-    <p class="term-line"><i class="fa-solid fa-ban" aria-hidden="true"></i>
-      {{localize "MERCHANT_PRESETS.Shop.Terms.WontBuy"}}
-      <b>{{#each header.terms.wontBuyTypes}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{#each header.terms.wontBuyKinds}}{{#if @first}}{{#if ../header.terms.wontBuyTypes.length}}, {{/if}}{{/if}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</b>
-    </p>
-  {{/if}}
-  {{#each header.terms.categories}}
-    <p class="term-line term-line-category"><i class="fa-solid fa-tags" aria-hidden="true"></i>
-      {{this.category}}: {{this.sellsAt}}× / {{this.buysAt}}×
-    </p>
+{{!-- Anchored under its chip (the chip names the anchor, per window). --}}
+<div id="{{appId}}-terms-popover" popover class="mp-terms-popover" style="position-anchor: --{{appId}}-terms">
+  <div class="mp-tp-head" data-pen="TP Head">{{mpIcon "scale" pen="TP icon"}}<h2 class="mp-tp-title" data-pen="TP Title">{{localize "MERCHANT_PRESETS.Shop.Terms.Title"}}</h2></div>
+  {{#each header.terms.rows}}
+    <div class="mp-term" data-pen="Term {{pen}}">
+      {{mpIcon icon pen=(concat pen " icon")}}
+      <div class="mp-term-text" data-pen="{{pen}} text">
+        <span class="mp-term-line" data-pen="{{pen}} line"><span class="mp-term-key" data-pen="{{pen}} key">{{key}}</span><b class="mp-term-value" data-pen="{{pen}} value">{{value}}</b></span>
+        {{#if detail}}<span class="mp-term-detail" data-pen="{{pen}} detail">{{detail}}</span>{{/if}}
+      </div>
+    </div>
   {{/each}}
-  <p class="term-footnote">{{localize "MERCHANT_PRESETS.Shop.Terms.Note"}}</p>
+  <p class="mp-tp-foot" data-pen="TP Foot">{{localize "MERCHANT_PRESETS.Shop.Terms.Note"}}</p>
 </div>
 
 <div id="{{appId}}-buyer-picker" popover class="shop-popover buyer-picker">

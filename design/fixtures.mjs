@@ -120,7 +120,8 @@ export async function setup() {
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "" } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id" } = {}) => `async ({ theme, width, height }) => {
+  ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
@@ -135,7 +136,7 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   app.changeTab(${JSON.stringify(tab)}, "primary");
   ${then}
   await new Promise(r => setTimeout(r, 800));
-  return app.id;
+  return ${root};
 }`;
 
 /**
@@ -160,6 +161,9 @@ const settings = openShop({ tab: "settings", before: withDeals + restocked(1) })
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
+/** The Terms popover, open over the GM's storefront; the frame is the popover alone. */
+const terms = openShop({ before: withoutDeals + restocked(0), basket: BASKET, size: { width: 920, height: 680 },
+  then: "app.element.querySelector('.mp-terms-popover').showPopover();", root: "`${app.id}-terms-popover`" });
 /** The Sell frames: Aria selling the Longsword and both potions, to a shop restocked the day before. */
 const sell = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
 
@@ -167,8 +171,8 @@ export const FRAMES = {
   y6iNf: frame("01 Storefront — Light", "light", 920, 680, "Gamemaster", storefront),
   wvmqF: frame("01 Storefront — Dark", "dark", 920, 680, "Gamemaster", storefront),
   zie5W: frame("01 Storefront — Player (Light)", "light", 920, 680, "P1", storefrontPlayer),
-  ChoNd: frame("01 Terms of Trade — Popover (Light)", "light", 340, 251),
-  S0ugn: frame("01 Terms of Trade — Popover (Dark)", "dark", 340, 251),
+  ChoNd: frame("01 Terms of Trade — Popover (Light)", "light", 340, 251, "Gamemaster", terms),
+  S0ugn: frame("01 Terms of Trade — Popover (Dark)", "dark", 340, 251, "Gamemaster", terms),
   TGXBN: frame("02 Sell — Light", "light", 920, 680, "Gamemaster", sell),
   BZh1r: frame("02 Sell — Dark", "dark", 920, 680, "Gamemaster", sell),
   v8ap9: frame("03 Settings (GM) — Light", "light", 920, 760, "Gamemaster", settings),

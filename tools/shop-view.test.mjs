@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -660,4 +660,24 @@ test("a good the shop won't deal in names what it won't buy: its kind, else its 
   assert.deepEqual(wontBuyReason(rations, shop), { kind: "food-drink" });
   assert.deepEqual(wontBuyReason({ type: "loot", flags: {} }, shop), { type: "loot" });
   assert.equal(wontBuyReason({ type: "weapon", flags: {} }, shop), null);
+});
+
+/* -------------------------------------------------------------- wontBuyTerms */
+
+const NOUNS = { "food-drink": "food", meal: "food", mount: "mounts", service: "services", vehicle: "vehicles", tack: "tack",
+  lodging: "lodging", travel: "passage", spellcasting: "spellcasting", component: "spell components" };
+
+test("the Terms popover leads with three things a shop won't buy and lists the rest after (design ChoNd)", () => {
+  // The smith's own list, in its config order.
+  const smith = ["vehicle", "mount", "tack", "food-drink", "meal", "lodging", "service", "spellcasting", "component", "travel"];
+  assert.deepEqual(wontBuyTerms(smith, [], k => NOUNS[k]), {
+    lead: ["food", "mounts", "services"],
+    rest: ["vehicles", "tack", "lodging", "passage", "spellcasting", "spell components"]
+  });
+});
+
+test("a short list is all lead, item types come after the kinds, and nothing refused is nothing", () => {
+  assert.deepEqual(wontBuyTerms(["travel", "meal"], [], k => NOUNS[k]), { lead: ["food", "passage"], rest: [] });
+  assert.deepEqual(wontBuyTerms(["mount"], ["loot", "tool"], k => NOUNS[k]), { lead: ["mounts", "loot", "tool"], rest: [] });
+  assert.deepEqual(wontBuyTerms([], [], k => NOUNS[k]), { lead: [], rest: [] });
 });

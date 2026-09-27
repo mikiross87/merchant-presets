@@ -328,6 +328,40 @@
 .shop-sheet .coin b { font-size: 0.95rem; }
 .shop-sheet .coin-free { font-style: italic; color: var(--mp-success); font-family: var(--dnd5e-font-roboto); }
 
+/* -------------------------------------------------------------- terms of trade (design ChoNd) */
+
+/* Anchored under the Terms chip; without anchor positioning it sits where a popover does by default. */
+.shop-sheet .mp-terms-popover {
+  position: fixed;
+  inset: auto;
+  top: anchor(bottom);
+  left: anchor(left);
+  margin: 8px 0 0;
+  box-sizing: border-box;
+  width: 340px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: none;
+  border-radius: 6px;
+  outline: 1px solid var(--mp-rule);
+  background: var(--mp-surface);
+  box-shadow: 0 8px 24px #00000033;
+  color: var(--mp-text);
+}
+.shop-sheet .mp-terms-popover:popover-open { display: flex; }
+.shop-sheet .mp-tp-head { align-self: flex-start; display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-tp-head .mp-icon { width: 16px; height: 16px; color: var(--mp-gold); }
+.shop-sheet .mp-tp-title { margin: 0; border: none; font: 700 18px/25px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-heading); }
+.shop-sheet .mp-term { display: flex; align-items: flex-start; gap: 10px; border-radius: 4px; }
+.shop-sheet .mp-term > .mp-icon { width: 15px; height: 15px; color: var(--mp-muted); }
+.shop-sheet .mp-term-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-sheet .mp-term-line { display: flex; gap: 4px; font: 400 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; }
+.shop-sheet .mp-term-key { color: var(--mp-muted); }
+.shop-sheet .mp-term-value { font-weight: 700; color: var(--mp-text); }
+.shop-sheet .mp-term-detail { align-self: stretch; font: 400 12px/16px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-tp-foot { margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+
 /* -------------------------------------------------------------- popovers */
 
 .shop-sheet .shop-popover {
@@ -354,10 +388,6 @@
   margin-bottom: 0.5rem;
 }
 
-.shop-sheet .term-line { display: flex; align-items: baseline; gap: 0.4rem; margin: 0.4rem 0 0; }
-.shop-sheet .term-line i { color: var(--dnd5e-color-gold); width: 1em; }
-.shop-sheet .term-note { display: block; margin: 0 0 0.5rem 1.4em; font-size: 0.8rem; color: var(--color-text-secondary); }
-.shop-sheet .term-footnote { margin-top: 0.75rem; font-size: 0.75rem; font-style: italic; color: var(--color-text-secondary); }
 
 .shop-sheet .buyer-picker { min-width: 320px; }
 .shop-sheet .picker-hint { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0 0 0.5rem; }

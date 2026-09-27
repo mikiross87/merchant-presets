@@ -328,6 +328,27 @@ export function sellMeta(item, labels, t, worthText) {
   return [whatItIs(item, labels), worth].filter(Boolean).join(" · ");
 }
 
+/** The order the Terms popover names refused kinds in: what a traveller most often tries to sell first. */
+const TERMS_KIND_ORDER = ["food-drink", "meal", "mount", "service", "vehicle", "tack", "lodging", "travel", "spellcasting", "component"];
+
+/**
+ * The Terms popover's "Won't buy" (design ChoNd): the first three things named on the line ("food,
+ * mounts or services"), the rest in its detail ("Also turns away …"). Kinds come in a fixed order
+ * and read as nouns (`noun`), several kinds can share one ("food" for food and drink, and meals),
+ * and refused item types (already words) follow them.
+ *
+ * @param {string[]} kinds  the shop's `wontBuy.kinds`
+ * @param {string[]} typeWords  its `wontBuy.types`, as words
+ * @param {(kind: string) => string} noun
+ * @returns {{lead: string[], rest: string[]}}
+ */
+export function wontBuyTerms(kinds, typeWords, noun) {
+  const ordered = [...kinds].sort((a, b) => rank(a) - rank(b));
+  const words = [...new Set([...ordered.map(noun), ...typeWords])];
+  return { lead: words.slice(0, 3), rest: words.slice(3) };
+}
+const rank = kind => (TERMS_KIND_ORDER.includes(kind) ? TERMS_KIND_ORDER.indexOf(kind) : TERMS_KIND_ORDER.length);
+
 /**
  * What a shop that won't deal in `item` won't buy, for the refusal ("Won't buy food and drink"):
  * the kind it turns away, else the item type, else null (trade-plan `dealtIn`'s own order).

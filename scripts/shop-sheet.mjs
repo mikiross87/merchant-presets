@@ -25,7 +25,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -576,35 +576,42 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     };
   }
 
-  /** The Terms of Trade popover's worked example: a 15 gp longsword, at the shop's own chip rates. */
+  /**
+   * The Terms of Trade popover (design ChoNd): what the shop sells at and buys at, each worked on a
+   * 15 gp longsword at its chip rates, and what it won't buy. A category rule adds a line of its own.
+   */
   #termsContext(config, chipSellsAt, chipBuysAt, currencies) {
-    // "gp" is a fixed reference point for the worked example, per design/README.md; a homebrew
-    // currency config that dropped it entirely (unlikely, but itemPriceCp does throw on it)
-    // just shows no worked example rather than breaking the whole popover.
-    const example = { value: 15, denomination: "gp" };
-    let sellCp = 0, buyCp = 0;
-    try {
-      sellCp = itemPriceCp(example, chipSellsAt, 1, currencies);
-      buyCp = itemPriceCp(example, chipBuysAt, 1, currencies);
-    } catch { /* no "gp" in this world's currencies */ }
-    return {
-      sellsAtLabel: termsWord(chipSellsAt, "sell"),
-      buysAtLabel: termsWord(chipBuysAt, "buy"),
-      exampleSell: coinBreakdown(sellCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-      exampleBuy: coinBreakdown(buyCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
-      // What each rule's goods really trade at: the shop's own rate on a side it leaves unset, and
-      // never paying more than it charges (pricing.mjs `effectiveRates`, as trades price them).
-      categories: config.terms.categories.map(c => {
-        const { sellsAt, buysAt } = effectiveRates(worldOf().rates, config.terms, c.category);
-        return { category: c.category, sellsAt: sellsAt.rate, buysAt: buysAt.rate };
-      }),
-      // "food-drink" etc reads as a real word, not the generator's own hyphenated token
-      // (tools/build_srd.py's GOODS_KINDS, per trade-plan.mjs's header) — item types
-      // (CONFIG.Item.typeLabels) are already localized words with no hyphen to fix.
-      wontBuyTypes: config.wontBuy.types.map(t => game.i18n.localize(CONFIG.Item.typeLabels?.[t] ?? t)),
-      wontBuyKinds: config.wontBuy.kinds.map(k => k.replace(/-/g, " ")),
-      hasWontBuy: config.wontBuy.types.length > 0 || config.wontBuy.kinds.length > 0
+    const t = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Terms.${key}`, data);
+    // "gp" is the worked example's fixed reference; a currency set without it shows no example.
+    const example = rate => {
+      try { return coinsText(coinBreakdown(itemPriceCp({ value: 15, denomination: "gp" }, rate, 1, currencies), currencies)); }
+      catch { return null; }
     };
+    const list = (words, joiner) => (words.length > 1 ? t(joiner, { items: words.slice(0, -1).join(", "), last: words.at(-1) }) : words[0]);
+    const sells = example(chipSellsAt);
+    const buys = example(chipBuysAt);
+    const rows = [
+      { pen: "Sells at", icon: "lucide:arrow-up-right", key: t("SellsAt"), value: termsWord(chipSellsAt, "sell"),
+        detail: chipSellsAt === 1 ? t("ListPriceNote") : sells && t("SellsDetail", { price: sells }) },
+      { pen: "Buys at", icon: "lucide:arrow-down-left", key: t("BuysAt"), value: termsWord(chipBuysAt, "buy"),
+        detail: buys && t("BuysDetail", { price: buys }) }
+    ];
+    const typeWords = config.wontBuy.types.map(type => game.i18n.localize(CONFIG.Item.typeLabels?.[type] ?? type).toLowerCase());
+    const refused = wontBuyTerms(config.wontBuy.kinds, typeWords, kind => t(`Nouns.${kind}`));
+    if (refused.lead.length) {
+      rows.push({ pen: "Deals in", icon: "lucide:ban", key: t("WontBuy"), value: list(refused.lead, "ListOr"),
+        detail: refused.rest.length ? t("AlsoTurnsAway", { list: list(refused.rest, "ListAnd") }) : null });
+    }
+    // What each rule's goods really trade at: the shop's own rate on a side it leaves unset, and never
+    // paying more than it charges (pricing.mjs `effectiveRates`, as trades price them). No frame draws
+    // these yet; they take the terms' own look.
+    for (const rule of config.terms.categories) {
+      const { sellsAt, buysAt } = effectiveRates(worldOf().rates, config.terms, rule.category);
+      rows.push({ pen: `Rule ${rule.category}`, icon: "lucide:tag", key: rule.category,
+        rule: { category: rule.category, sellsAt: sellsAt.rate, buysAt: buysAt.rate },
+        value: t("RuleRates", { sells: termsWord(sellsAt.rate, "sell"), buys: termsWord(buysAt.rate, "buy") }), detail: null });
+    }
+    return { rows };
   }
 
   #formatTime(time) {

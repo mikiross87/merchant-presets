@@ -1414,6 +1414,9 @@ test("a bill line whose total the deal didn't move isn't marked as the deal's (#
   assert.equal(context.buy.sections[0].rows[0].listText, "");
 });
 
+/** The Terms popover's category rule lines, as the rates they state. */
+const ruleTerms = header => header.terms.rows.filter(r => r.rule).map(r => r.rule);
+
 test("a rule side left blank follows the shop's rate, shown as its placeholder (#143 review)", async t => {
   const { sheet, shop } = openSettings(t, { shopConfig: { terms: { sellsAt: 1.2, buysAt: null, categories: [{ category: "Valuables", sellsAt: 1.2, buysAt: 1 }] } } });
   await change(sheet, { op: "ruleRate", category: "Valuables", side: "sellsAt" }, { value: "" });
@@ -1423,7 +1426,7 @@ test("a rule side left blank follows the shop's rate, shown as its placeholder (
   assert.equal(rule.sellsPercent, "");
   assert.equal(rule.sellsFollows, 120);
   // The Terms popover says what the rule charges, the shop's rate on its unset side.
-  assert.deepEqual(header.terms.categories[0], { category: "Valuables", sellsAt: 1.2, buysAt: 1 });
+  assert.deepEqual(ruleTerms(header)[0], { category: "Valuables", sellsAt: 1.2, buysAt: 1 });
 });
 
 test("the Terms popover and a rule's placeholders show what trades pay, capped (#143 review)", async t => {
@@ -1435,7 +1438,7 @@ test("the Terms popover and a rule's placeholders show what trades pay, capped (
   globalThis.game.settings.values.sellsAt = 80;
   globalThis.game.settings.values.buysAt = 50;
   const { header, settings } = await sheet._prepareContext({});
-  assert.deepEqual(header.terms.categories, [
+  assert.deepEqual(ruleTerms(header), [
     { category: "Valuables", sellsAt: 0.8, buysAt: 0.8 },
     { category: "weapon", sellsAt: 0.3, buysAt: 0.3 }
   ]);
@@ -1548,12 +1551,12 @@ test("the Sell tab groups the pack by kind of good, and its category narrows onl
     shopItems: [item("rope"), item("sword", { type: "weapon" })],
     buyerItems: [item("axe", { type: "weapon" }), item("gem"), item("dagger", { type: "weapon" })]
   });
-  let { buy, sell } = await sheet._prepareContext({});
-  assert.deepEqual(sell.sections.map(s => [s.group, s.rows.map(r => r.id)]), [["weapons", ["axe", "dagger"]], ["gear", ["gem"]]]);
-  assert.deepEqual(sell.categories.map(c => [c.id, c.count]), [["all", 3], ["weapons", 2], ["gear", 1]]);
+  const { sell: before } = await sheet._prepareContext({});
+  assert.deepEqual(before.sections.map(s => [s.group, s.rows.map(r => r.id)]), [["weapons", ["axe", "dagger"]], ["gear", ["gem"]]]);
+  assert.deepEqual(before.categories.map(c => [c.id, c.count]), [["all", 3], ["weapons", 2], ["gear", 1]]);
 
   act(sheet, "selectCategory", { kind: "sell", category: "gear" });
-  ({ buy, sell } = await sheet._prepareContext({}));
+  const { buy, sell } = await sheet._prepareContext({});
   assert.deepEqual(sell.sections.map(s => s.group), ["gear"]);
   assert.equal(sell.categories.find(c => c.active).id, "gear");
   assert.equal(buy.categories.find(c => c.active).id, "all", "the Buy tab keeps its own category");
