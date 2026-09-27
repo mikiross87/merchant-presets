@@ -1,4 +1,5 @@
-import { nextCloseAt, secondsPerDay } from "./deals.mjs";
+import { nextCloseAt } from "./deals.mjs";
+import { nextOpeningAfter } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
@@ -427,40 +428,39 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * Whether a restock is still fresh: the hero's "Fresh stock today" chip and the goods' "New"
  * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
  * restock until the shop next closes after it (deals.mjs `nextCloseAt`, through the closing
- * minute). A shop that never closes starts its own day again at its next opening: midnight for
- * one keeping no hours, 7:00 for one open 7:00-6:59. Worked out when the window draws, so nothing
- * has to be written at closing (#152).
+ * minute). A shop that never closes, one open round the clock or every shop while the world's
+ * trading hours are off, starts its own day again at its next opening (`dayHours`, the hours the
+ * shop keeps whatever the world says): midnight for one keeping none. Worked out when the window
+ * draws, so nothing has to be written at closing (#152).
  *
- * @param {number|null|undefined} lastRestock  when the shelf was last drawn (the shop's `restockedAt`), in world seconds
+ * @param {number|null|undefined} lastRestock  when the shelf was last restocked (the shop's `restockedAt`), in world seconds
  * @param {number} now                          the world time
- * @param {object|null} hours                   the hours the shop keeps: null when it keeps none, or trading hours are off
+ * @param {object|null} hours     the hours the shop closes by: null when it keeps none, or trading hours are off
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ * @param {object|null} [dayHours]  the hours whose opening starts the shop's day; `hours` by default
  */
-export function isFresh(lastRestock, now, hours, days) {
+export function isFresh(lastRestock, now, hours, days, dayHours = hours) {
   if (lastRestock == null || now < lastRestock) return false;
-  const perDay = secondsPerDay(days);
-  const open = hours?.open ?? { hour: 0, minute: 0 };
-  const opening = Math.floor(lastRestock / perDay) * perDay + (open.hour * days.minutesPerHour + open.minute) * days.secondsPerMinute;
-  const until = nextCloseAt(hours, lastRestock, days) ?? (opening > lastRestock ? opening : opening + perDay);
-  return now < until;
+  return now < (nextCloseAt(hours, lastRestock, days) ?? nextOpeningAfter(lastRestock, dayHours, days));
 }
 
 /**
  * Whether a good wears "New" (#152): this shop's restock brought it back in stock (its `newAt`,
- * schedule.mjs `planRestock`) and that's still fresh. Only on the shop that drew it: a good a GM
- * drags from one shop to another keeps its flags, but not its badge. `drawn: true` is a good drawn
- * before shelves had keys.
+ * schedule.mjs `planRestock`), that's still fresh, and it hasn't sold out again since. Only on the
+ * shop that drew it: a good a GM drags from one shop to another keeps its flags, but not its
+ * badge. `drawn: true` is a good drawn before shelves had keys.
  *
- * @param {object} flags   the item's flags
+ * @param {{system?: {quantity?: number}, flags?: object}} item
  * @param {string|undefined} shelf  the shop's shelf key (`flags.merchant-presets.shelf`)
  * @param {number} now
- * @param {object|null} hours  the hours the shop keeps, as `isFresh` takes them
+ * @param {object|null} hours       as `isFresh` takes them
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ * @param {object|null} [dayHours]  as `isFresh` takes them
  */
-export function isNewGood(flags, shelf, now, hours, days) {
-  const own = flags?.["merchant-presets"];
+export function isNewGood(item, shelf, now, hours, days, dayHours = hours) {
+  const own = item?.flags?.["merchant-presets"];
   const here = own?.drawn === true || (own?.drawn != null && own.drawn === shelf);
-  return here && isFresh(own.newAt, now, hours, days);
+  return here && item.system?.quantity !== 0 && isFresh(own.newAt, now, hours, days, dayHours);
 }
 
 /* -------------------------------------------------------------- Restock section (design aaJcp) */

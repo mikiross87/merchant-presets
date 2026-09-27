@@ -38,10 +38,11 @@
  * @typedef {{lastRestock: number, dueAt: number|null}} ScheduleState  What a shop needs stored between checks.
  */
 
-import { secondsPerDay } from "./deals.mjs";
 import { shopFrom } from "./schema.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
+/** How many seconds a day of the world's calendar lasts. */
+export const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
 
 /**
  * Whether a shop with `hours` is open at `minute` (minutes since midnight).
@@ -99,6 +100,11 @@ function lastOpeningAtOrBefore(bound, hours, calendar) {
   const day = secondsPerDay(calendar);
   const offset = hours ? minutesOf(hours.open, calendar) * calendar.secondsPerMinute : 0;
   return openingOnDay(Math.floor((bound - offset) / day), hours, calendar);
+}
+
+/** The first of `hours`'s daily openings after `time`: midnight for a shop keeping no hours. */
+export function nextOpeningAfter(time, hours, calendar) {
+  return lastOpeningAtOrBefore(time, hours, calendar) + secondsPerDay(calendar);
 }
 
 /**
@@ -275,13 +281,15 @@ export function dueRestock(shop, state, previous, now, calendar) {
  * New goods. Undefined for a good that isn't New.
  */
 function newAtFor(items, context) {
+  if (context.markNew === false) return () => undefined;
   const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0).map(i => i.name));
+  // Only from this shop's own goods: a copy another shop drew keeps its time to itself.
   const earlier = new Map();
   for (const i of items) {
     const at = i.flags?.["merchant-presets"]?.newAt;
-    if (Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
+    if (isDrawn(i, context.drawnBy) && Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
   }
-  return name => (context.markNew === false ? undefined : inStock.has(name) ? earlier.get(name) : context.at);
+  return name => (inStock.has(name) ? earlier.get(name) : context.at);
 }
 
 /** The shopkeeper's own kit, never stock. */
