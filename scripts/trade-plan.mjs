@@ -387,10 +387,11 @@ export function lineTotalCp(item, rate, bundle, quantity, currencies) {
 /**
  * A copy of `item` fit to land on a new actor: at `quantity`, `system.container` set to
  * `containerId` (top-level, `null`, unless the copy is landing *inside* a container a container
- * purchase just created — see `landContainer`), and with `flags.merchant-presets.stock` and
- * `.drawn` stripped — shelf metadata (hidden, infinite, ...) has no business following an item
- * into a pack or another shop, and a drawn item (#105's restock tag) landing anywhere else would
- * otherwise be deleted by that shop's next restock, not the one that actually drew it. The item
+ * purchase just created — see `landContainer`), and with `flags.merchant-presets.stock`, `.drawn`
+ * and `.newAt` stripped — shelf metadata (hidden, infinite, ...) has no business following an item
+ * into a pack or another shop, a drawn item (#105's restock tag) landing anywhere else would
+ * otherwise be deleted by that shop's next restock, not the one that actually drew it, and a New
+ * badge (#152) is the shelf's, not the good's. The item
  * then reads as `STOCK_DEFAULTS` until something (a GM, or landing back on a shop with a matching
  * line) says otherwise. `kind` and the behaviour flags (nutrition/actor/spell) are untouched —
  * the runtime still needs those.

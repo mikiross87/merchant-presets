@@ -416,6 +416,14 @@ test("a top-up marks what it refills New and leaves every other good as it is (#
   assert.equal(newAtOf(plan.creates.find(c => c.name === "Backpack")), T, "a container that was gone: New");
 });
 
+test("a top-up refill that isn't New drops an earlier restock's mark rather than keeping it (#152 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const soldOut = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: true, newAt: T - 3600 } } };
+  const handCopy = { _id: "gm2", name: "Arrows", type: "consumable", system: { quantity: 3 }, flags: {} };
+  const plan = planRestock(topup, [soldOut, handCopy], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(plan.updates[0]["flags.merchant-presets.newAt"], null);
+});
+
 test("a shop's first roll marks nothing New: a shop just placed has nothing back in stock (#152 review)", () => {
   const items = [drawn("i1", "Arrows", "consumable", 0)];
   const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T, markNew: false });
@@ -514,7 +522,7 @@ test("topup redraws a sold-out line whether it's still on the shelf at zero or g
 
   // Still there at zero: refilled in place, not replaced.
   assert.deepEqual(plan.updates, [
-    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock }
+    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock, "flags.merchant-presets.newAt": null }
   ]);
 
   const backpacks = plan.creates.filter(c => c.name === "Backpack");

@@ -664,8 +664,9 @@ test("with trading hours off a shop's restock stays fresh until its own day star
   const night = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
   const at = 3 * DAY + H(20);
   // No closing (the world keeps every shop open), but the shop's day still starts at 20:00.
-  assert.equal(isFresh(at, 4 * DAY + H(3), null, DAYS, night), true);
-  assert.equal(isFresh(at, 4 * DAY + H(20), null, DAYS, night), false);
+  assert.equal(isFresh(at, 4 * DAY + H(3), night, DAYS, false), true);
+  assert.equal(isFresh(at, 4 * DAY + H(5), night, DAYS, false), true, "past the hour it would close at");
+  assert.equal(isFresh(at, 4 * DAY + H(20), night, DAYS, false), false);
 });
 
 test("a shop open round the clock from 7:00 keeps its restock fresh until its own day starts again (#152 review)", () => {

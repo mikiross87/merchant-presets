@@ -230,7 +230,9 @@ export function dueRestock(shop, state, previous, now, calendar) {
  * @property {string} name
  * @property {string} type
  * @property {{quantity?: number, container?: string|null}} system
- * @property {{"merchant-presets"?: {kind?: string, drawn?: boolean}}} flags
+ * @property {{"merchant-presets"?: {kind?: string, drawn?: string|boolean, newAt?: number|null}}} flags
+ *   `drawn`: the shelf key of the shop that drew it (`true` before shelves had keys); `newAt`: when
+ *   a restock brought it back in stock, its "New" badge (#152)
  *
  * @typedef {object} Draw  One of the shop's stock table results, resolved
  *   and pre-rolled by the caller — drawing the table, and rolling its
@@ -283,11 +285,12 @@ export function dueRestock(shop, state, previous, now, calendar) {
 function newAtFor(items, context) {
   if (context.markNew === false) return () => undefined;
   const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0).map(i => i.name));
-  // Only from this shop's own goods: a copy another shop drew keeps its time to itself.
+  // Only from this shop's own goods still in stock: a copy another shop drew keeps its time to
+  // itself, and one that sold out again isn't New any more.
   const earlier = new Map();
   for (const i of items) {
     const at = i.flags?.["merchant-presets"]?.newAt;
-    if (isDrawn(i, context.drawnBy) && Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
+    if (isDrawn(i, context.drawnBy) && i.system?.quantity !== 0 && Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
   }
   return name => (inStock.has(name) ? earlier.get(name) : context.at);
 }
@@ -300,7 +303,7 @@ const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
  * key of the shop that drew it (`context.drawnBy`); a bare `true` (from before it held one)
  * counts as this shop's.
  */
-const isDrawn = (item, drawnBy) => {
+export const isDrawn = (item, drawnBy) => {
   const by = item.flags?.["merchant-presets"]?.drawn;
   return by === true || (by != null && by === drawnBy);
 };
@@ -424,9 +427,9 @@ export function planRestock(shop, items, draws, context) {
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       const back = newAt(draw.name);
       if (existing) {
+        // Not New this time: an earlier restock's mark goes, rather than showing again.
         updates.push({ _id: existing._id, "system.quantity": quantity,
-          "flags.merchant-presets.stock": context.stockFlags[draw.name],
-          ...(back === undefined ? {} : { "flags.merchant-presets.newAt": back }) });
+          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.newAt": back ?? null });
       } else {
         creates.push(drawnItem(draw, context, { quantity }, back));
       }
