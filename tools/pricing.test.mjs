@@ -256,3 +256,23 @@ test("a category rule's unset side follows the shop, and the world past it (#143
   const own = effectiveRates(world, { ...terms, sellsAt: 1.25 }, "Valuables");
   assert.deepEqual(own.sellsAt, { rate: 1.25, layer: "shop" });
 });
+
+test("a broken coin splits into gold, silver and copper, never electrum or platinum (Sell frame TGXBN)", () => {
+  // The till's gold pays 57 gp 5 sp exactly: one gold coin breaks into silver, not 2 ep.
+  const sale = payExact({ pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 }, 5750, DND5E_CURRENCIES);
+  assert.deepEqual(sale.given, { gp: 57, sp: 5 });
+  // Change for a gold coin on a 5 sp price comes back in silver.
+  const buy = pay({ gp: 1 }, 50, { gp: 3 }, DND5E_CURRENCIES);
+  assert.deepEqual(buy.purse, { gp: 0, sp: 5 });
+  // A broken platinum becomes gold.
+  assert.deepEqual(payExact({ pp: 1 }, 500, DND5E_CURRENCIES).given, { gp: 5 });
+});
+
+test("electrum a payer actually holds is still paid out", () => {
+  assert.deepEqual(payExact({ gp: 1, ep: 1 }, 150, DND5E_CURRENCIES).given, { gp: 1, ep: 1 });
+});
+
+test("a currency set without the everyday coins still breaks into whatever is smaller", () => {
+  const shells = { big: { conversion: 1 }, small: { conversion: 4 } };
+  assert.deepEqual(payExact({ big: 1 }, 1, shells).given, { small: 1 });
+});
