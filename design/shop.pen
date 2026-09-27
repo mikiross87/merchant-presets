@@ -3512,14 +3512,11 @@
                 {
                   "type": "frame",
                   "id": "zmGWh",
-                  "name": "Offer Card",
+                  "name": "Till Card",
                   "width": "fill_container",
                   "fill": "$surface-card",
                   "cornerRadius": 4,
-                  "stroke": "$accent-gold",
-                  "strokeWidth": {
-                    "left": 3
-                  },
+                  "stroke": "#00000000",
                   "layout": "vertical",
                   "gap": 6,
                   "padding": 12,
@@ -3527,41 +3524,47 @@
                     {
                       "type": "text",
                       "id": "UGoX3",
-                      "name": "Offer kicker",
+                      "name": "Till kicker",
                       "fill": "$accent-gold",
-                      "content": "BUYS AT",
+                      "content": "THE SHOP'S TILL",
                       "fontFamily": "$font-compact",
                       "fontSize": 10,
                       "fontWeight": "700",
                       "letterSpacing": 1.5
                     },
                     {
-                      "type": "text",
-                      "id": "d3ZWu6",
-                      "name": "Offer ratio",
-                      "fill": "$text-primary",
-                      "content": "½ of value",
-                      "fontFamily": "$font-title",
-                      "fontSize": 22,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "text",
-                      "id": "Rl283",
-                      "name": "Offer note",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "The till holds 212 gp, so no sale today can bring in more.",
-                      "lineHeight": 1.35,
-                      "fontFamily": "$font-compact",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
+                      "type": "frame",
+                      "id": "pR7Gg",
+                      "name": "Till coins",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "K7tKV",
+                          "type": "ref",
+                          "ref": "uJ3dp",
+                          "name": "gold 212",
+                          "descendants": {
+                            "e1b2b": {
+                              "content": "212",
+                              "fill": "$text-primary"
+                            },
+                            "B6r81": {
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "assets/gold.webp",
+                                "mode": "fill"
+                              }
+                            }
+                          }
+                        }
+                      ]
                     },
                     {
                       "type": "frame",
                       "id": "KDDAu",
-                      "name": "Purse meter",
+                      "name": "Till meter",
                       "width": "fill_container",
                       "height": 6,
                       "fill": "$surface-row-alt",
@@ -3570,13 +3573,26 @@
                         {
                           "type": "frame",
                           "id": "ZBqUM",
-                          "name": "Purse used",
-                          "width": 26,
+                          "name": "Till used",
+                          "width": 37,
                           "height": 6,
                           "fill": "$accent-gold",
                           "cornerRadius": 3
                         }
                       ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Rl283",
+                      "name": "Till note",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "No sale can bring in more than this.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3592,11 +3608,15 @@
                 },
                 {
                   "type": "frame",
-                  "id": "zb0TX",
-                  "name": "Filter Everything",
+                  "id": "MdNCE",
+                  "name": "Cat All goods",
                   "width": "fill_container",
                   "fill": "$surface-card",
                   "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
                   "gap": 8,
                   "padding": [
                     7,
@@ -3605,23 +3625,33 @@
                   "alignItems": "center",
                   "children": [
                     {
+                      "type": "icon",
+                      "id": "N3iVel",
+                      "name": "All goods icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "layout-grid",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
                       "type": "text",
-                      "id": "yFI5w",
-                      "name": "Everything label",
+                      "id": "uk65y",
+                      "name": "All goods label",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Everything",
+                      "content": "All goods",
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "700"
                     },
                     {
                       "type": "text",
-                      "id": "oJBDo",
-                      "name": "Everything count",
+                      "id": "mhwD7",
+                      "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "14",
+                      "content": "5",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3630,11 +3660,12 @@
                 },
                 {
                   "type": "frame",
-                  "id": "m2ak5s",
-                  "name": "Filter Will buy",
+                  "id": "mwJvH",
+                  "name": "Cat Weapons",
                   "width": "fill_container",
                   "fill": "#00000000",
                   "cornerRadius": 4,
+                  "stroke": "#00000000",
                   "gap": 8,
                   "padding": [
                     7,
@@ -3643,23 +3674,33 @@
                   "alignItems": "center",
                   "children": [
                     {
+                      "type": "icon",
+                      "id": "P3MJkw",
+                      "name": "Weapons icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "sword",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
                       "type": "text",
-                      "id": "swB45",
-                      "name": "Will buy label",
+                      "id": "ASk5c",
+                      "name": "Weapons label",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Will buy",
+                      "content": "Weapons",
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "normal"
                     },
                     {
                       "type": "text",
-                      "id": "SKT26",
-                      "name": "Will buy count",
+                      "id": "EeuJz",
+                      "name": "Weapons count",
                       "fill": "$text-secondary",
-                      "content": "11",
+                      "content": "1",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3668,11 +3709,12 @@
                 },
                 {
                   "type": "frame",
-                  "id": "phgdq",
-                  "name": "Filter Won't buy",
+                  "id": "We7JB",
+                  "name": "Cat Armor",
                   "width": "fill_container",
                   "fill": "#00000000",
                   "cornerRadius": 4,
+                  "stroke": "#00000000",
                   "gap": 8,
                   "padding": [
                     7,
@@ -3681,23 +3723,131 @@
                   "alignItems": "center",
                   "children": [
                     {
+                      "type": "icon",
+                      "id": "f2hCk",
+                      "name": "Armor icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "shield",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
                       "type": "text",
-                      "id": "LDBxX",
-                      "name": "Won't buy label",
+                      "id": "fHR81",
+                      "name": "Armor label",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Won't buy",
+                      "content": "Armor",
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "normal"
                     },
                     {
                       "type": "text",
-                      "id": "VjIY1",
-                      "name": "Won't buy count",
+                      "id": "ciXHX",
+                      "name": "Armor count",
                       "fill": "$text-secondary",
-                      "content": "4",
+                      "content": "1",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wGVVM",
+                  "name": "Cat Adventuring gear",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "k2HVkR",
+                      "name": "Adventuring gear icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "backpack",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "bqlrW",
+                      "name": "Adventuring gear label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Gear",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "D9DXac",
+                      "name": "Adventuring gear count",
+                      "fill": "$text-secondary",
+                      "content": "2",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JDFKi",
+                  "name": "Cat Food & drink",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "I2uX3",
+                      "name": "Food & drink icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "beer",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "z7vHp",
+                      "name": "Food & drink label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Food & drink",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yGlQR",
+                      "name": "Food & drink count",
+                      "fill": "$text-secondary",
+                      "content": "1",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3722,7 +3872,7 @@
                 {
                   "type": "frame",
                   "id": "yAwbK",
-                  "name": "Group Pack",
+                  "name": "Group Weapons",
                   "width": "fill_container",
                   "gap": 10,
                   "padding": [
@@ -3736,9 +3886,9 @@
                     {
                       "type": "text",
                       "id": "DztXz",
-                      "name": "Pack heading",
+                      "name": "Weapons heading",
                       "fill": "$text-title",
-                      "content": "Will buy",
+                      "content": "Weapons",
                       "fontFamily": "$font-title",
                       "fontSize": 17,
                       "fontWeight": "700"
@@ -3746,7 +3896,7 @@
                     {
                       "type": "rectangle",
                       "id": "vfrNP",
-                      "name": "Pack rule",
+                      "name": "Weapons rule",
                       "fill": "$border",
                       "width": "fill_container",
                       "height": 1
@@ -3805,6 +3955,40 @@
                   }
                 },
                 {
+                  "type": "frame",
+                  "id": "JRska",
+                  "name": "Group Armor",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Grqxn",
+                      "name": "Armor heading",
+                      "fill": "$text-title",
+                      "content": "Armor",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "Crhom",
+                      "name": "Armor rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
                   "id": "pVdRm",
                   "type": "ref",
                   "ref": "wUkvn",
@@ -3848,6 +4032,40 @@
                       }
                     }
                   }
+                },
+                {
+                  "type": "frame",
+                  "id": "Uc2bM",
+                  "name": "Group Adventuring gear",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "JX3Py",
+                      "name": "Adventuring gear heading",
+                      "fill": "$text-title",
+                      "content": "Gear",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "Q6cG9C",
+                      "name": "Adventuring gear rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
                 },
                 {
                   "id": "p6RyR",
@@ -3895,78 +4113,10 @@
                   }
                 },
                 {
-                  "type": "frame",
-                  "id": "Yov1v",
-                  "name": "Group Refused",
-                  "width": "fill_container",
-                  "gap": 10,
-                  "padding": [
-                    16,
-                    0,
-                    6,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "FxqME",
-                      "name": "Refused heading",
-                      "fill": "$text-title",
-                      "content": "Won't buy",
-                      "fontFamily": "$font-title",
-                      "fontSize": 17,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "rectangle",
-                      "id": "RxCp3",
-                      "name": "Refused rule",
-                      "fill": "$border",
-                      "width": "fill_container",
-                      "height": 1
-                    }
-                  ]
-                },
-                {
-                  "id": "j2ig6",
-                  "type": "ref",
-                  "ref": "wUkvn",
-                  "name": "Refused Rations",
-                  "width": "fill_container",
-                  "opacity": 0.6,
-                  "descendants": {
-                    "MY7RE": {
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/items/berries-ration-round-red.webp",
-                        "mode": "fill"
-                      }
-                    },
-                    "BZVOe": {
-                      "content": "Rations (5 days)"
-                    },
-                    "vYzUL": {
-                      "content": "Food · 10 lb"
-                    },
-                    "UB234": {
-                      "content": "Won't buy food",
-                      "fill": "$danger"
-                    },
-                    "pLZSE": {
-                      "enabled": false
-                    },
-                    "xqAHK": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
                   "id": "yQ2Wd",
                   "type": "ref",
                   "ref": "wUkvn",
-                  "name": "Refused Unidentified",
+                  "name": "Refused Unidentified Ring",
                   "width": "fill_container",
                   "descendants": {
                     "MY7RE": {
@@ -3981,11 +4131,79 @@
                       "content": "Unidentified Ring"
                     },
                     "vYzUL": {
-                      "content": "The Arcane Store casts Identify for 150 gp."
+                      "content": "Get it looked at first."
                     },
                     "UB234": {
                       "content": "Unidentified",
                       "fill": "$warning-ink"
+                    },
+                    "pLZSE": {
+                      "enabled": false
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "P9uNeZ",
+                  "name": "Group Food & drink",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XbJy1",
+                      "name": "Food & drink heading",
+                      "fill": "$text-title",
+                      "content": "Food & drink",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "lQuiI",
+                      "name": "Food & drink rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "j2ig6",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Refused Bread (loaf)",
+                  "width": "fill_container",
+                  "opacity": 0.6,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/bread-loaf-boule-rustic-brown.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Bread (loaf)"
+                    },
+                    "vYzUL": {
+                      "content": "Food · 1 lb"
+                    },
+                    "UB234": {
+                      "content": "Won't buy food and drink",
+                      "fill": "$danger"
                     },
                     "pLZSE": {
                       "enabled": false
@@ -4119,7 +4337,7 @@
                                   "id": "UZM3q",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 15",
+                                  "name": "gold 7",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "7",
@@ -4199,7 +4417,7 @@
                         {
                           "type": "frame",
                           "id": "ASQqF",
-                          "name": "Line Javelin",
+                          "name": "Line Potion of Healing",
                           "width": "fill_container",
                           "layout": "vertical",
                           "gap": 3,
@@ -4207,7 +4425,7 @@
                             {
                               "type": "frame",
                               "id": "lVekX",
-                              "name": "Javelin entry",
+                              "name": "Potion of Healing entry",
                               "width": "fill_container",
                               "gap": 6,
                               "alignItems": "end",
@@ -4215,7 +4433,7 @@
                                 {
                                   "type": "text",
                                   "id": "J1bDq",
-                                  "name": "Javelin qty",
+                                  "name": "Potion of Healing qty",
                                   "fill": "$accent-gold",
                                   "content": "2 ×",
                                   "fontFamily": "$font-compact",
@@ -4225,7 +4443,7 @@
                                 {
                                   "type": "text",
                                   "id": "dCc9e",
-                                  "name": "Javelin name",
+                                  "name": "Potion of Healing name",
                                   "fill": "$ink",
                                   "content": "Potion of Healing",
                                   "fontFamily": "$font-slip",
@@ -4235,7 +4453,7 @@
                                 {
                                   "type": "frame",
                                   "id": "bm9q8",
-                                  "name": "Javelin leader",
+                                  "name": "Potion of Healing leader",
                                   "width": "fill_container",
                                   "height": 10,
                                   "stroke": "$slip-edge",
@@ -4247,7 +4465,7 @@
                                   "id": "QWsf8",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 5",
+                                  "name": "gold 50",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "50",
@@ -4268,7 +4486,7 @@
                             {
                               "type": "frame",
                               "id": "IB1r6",
-                              "name": "Javelin detail",
+                              "name": "Potion of Healing detail",
                               "width": "fill_container",
                               "padding": [
                                 0,
@@ -4282,7 +4500,7 @@
                                 {
                                   "type": "text",
                                   "id": "j2uUz4",
-                                  "name": "Javelin each",
+                                  "name": "Potion of Healing each",
                                   "fill": "$text-secondary",
                                   "content": "25 gp each (½ of 50 gp)",
                                   "fontFamily": "$font-compact",
@@ -4293,7 +4511,7 @@
                                   "id": "Ohoiz",
                                   "type": "ref",
                                   "ref": "obOO9",
-                                  "name": "Javelin stepper",
+                                  "name": "Potion of Healing stepper",
                                   "descendants": {
                                     "QRqWk": {
                                       "content": "2"
@@ -4365,7 +4583,7 @@
                                   "id": "R60Yz9",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 30",
+                                  "name": "gold 57",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "57",
@@ -4385,7 +4603,7 @@
                                   "id": "H1i1wb",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "silver 5 total",
+                                  "name": "silver 5",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "5",
@@ -4458,7 +4676,7 @@
                               "id": "bgWqa",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 104",
                               "descendants": {
                                 "e1b2b": {
                                   "content": "104",
@@ -4478,7 +4696,7 @@
                               "id": "cS9yz",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "silver 12",
+                              "name": "silver 17",
                               "descendants": {
                                 "e1b2b": {
                                   "content": "17",

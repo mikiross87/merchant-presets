@@ -115,6 +115,9 @@ function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 }
   };
 }
 
+/** The Sell tab's rows, across its category sections. */
+const packRows = sell => sell.sections.flatMap(s => s.rows);
+
 /** A buyer's purse, as the bill reads it: [denomination, count] pairs. */
 const coins = list => list.map(c => [c.denomination, c.count]);
 
@@ -463,7 +466,7 @@ test("a basket asking for more than is left is cut to what's left", async () => 
 test("the Sell tab lists goods, not the seller's spells and features", async () => {
   const { sheet } = openShop({ buyerItems: [item("gem"), item("fireball", { type: "spell" }), item("rage", { type: "feat" })] });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual([...sell.willBuy, ...sell.wontBuy].map(r => r.id), ["gem"]);
+  assert.deepEqual(packRows(sell).map(r => r.id), ["gem"]);
 });
 
 test("a basket the shelf changed under is reset like any other edit", async () => {
@@ -606,8 +609,8 @@ test("a sale matching a broken shelf line reads as refused, as the engine refuse
   const broken = item("gem", { flags: { "merchant-presets": { stock: { bundle: 0 } } } });
   const { sheet } = openShop({ shopItems: [broken], buyerItems: [item("gem")] });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual(sell.willBuy.map(r => r.id), []);
-  assert.deepEqual(sell.wontBuy.map(r => r.id), ["gem"]);
+  assert.deepEqual(packRows(sell).filter(r => !r.refusal).map(r => r.id), []);
+  assert.deepEqual(packRows(sell).filter(r => r.refusal).map(r => r.id), ["gem"]);
 });
 
 test("selling an equipped or packed item asks first, and a no leaves it off the bill", async () => {
@@ -689,7 +692,7 @@ test("a container holding shopkeeper gear can't be sold, as the engine refuses i
   tongs.system.container = "bag";
   const { sheet } = openShop({ buyerItems: [bag, tongs] });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual(sell.willBuy.map(r => r.id), []);
+  assert.deepEqual(packRows(sell).filter(r => !r.refusal).map(r => r.id), []);
 });
 
 test("picking a buyer closes the picker before the re-render could restore it", () => {
@@ -794,7 +797,7 @@ test("the stamp stays when a shelf change trims a line the sealed trade didn't c
 test("a used-up item (quantity 0) isn't offered for sale", async () => {
   const { sheet } = openShop({ buyerItems: [item("potion", { quantity: 0 }), item("gem")] });
   const { sell } = await sheet._prepareContext({});
-  assert.deepEqual([...sell.willBuy, ...sell.wontBuy].map(r => r.id), ["gem"]);
+  assert.deepEqual(packRows(sell).map(r => r.id), ["gem"]);
 });
 
 test("a basket the shelf emptied drops the unanswered trade id, so a new bill isn't taken for it", async () => {
@@ -1534,8 +1537,24 @@ test("an unidentified good shows the name dnd5e gives it, never its true one, on
   sheet.tabGroups.primary = "sell";
   act(sheet, "addLine", { itemId: "packRing" });
   const { buy, sell } = await sheet._prepareContext({});
-  const shown = JSON.stringify({ buy: buy.sections, bill: buy.basket.lines, sell: [...sell.willBuy, ...sell.wontBuy], sellBill: sell.basket.lines });
+  const shown = JSON.stringify({ buy: buy.sections, bill: buy.basket.lines, sell: packRows(sell), sellBill: sell.basket.lines });
   assert.ok(!shown.includes("Ring of Protection"), "the true name never reaches the window");
   assert.equal(buy.sections[0].rows[0].name, "Unidentified Ring");
   assert.equal(buy.basket.lines[0].name, "Unidentified Ring");
+});
+
+test("the Sell tab groups the pack by kind of good, and its category narrows only the Sell list", async () => {
+  const { sheet } = openShop({
+    shopItems: [item("rope"), item("sword", { type: "weapon" })],
+    buyerItems: [item("axe", { type: "weapon" }), item("gem"), item("dagger", { type: "weapon" })]
+  });
+  let { buy, sell } = await sheet._prepareContext({});
+  assert.deepEqual(sell.sections.map(s => [s.group, s.rows.map(r => r.id)]), [["weapons", ["axe", "dagger"]], ["gear", ["gem"]]]);
+  assert.deepEqual(sell.categories.map(c => [c.id, c.count]), [["all", 3], ["weapons", 2], ["gear", 1]]);
+
+  act(sheet, "selectCategory", { kind: "sell", category: "gear" });
+  ({ buy, sell } = await sheet._prepareContext({}));
+  assert.deepEqual(sell.sections.map(s => s.group), ["gear"]);
+  assert.equal(sell.categories.find(c => c.active).id, "gear");
+  assert.equal(buy.categories.find(c => c.active).id, "all", "the Buy tab keeps its own category");
 });

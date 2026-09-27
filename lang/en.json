@@ -99,24 +99,15 @@
         "Empty": "This shop has nothing left to show here."
       },
       "Sell": {
-        "WillBuy": "Will buy",
-        "WontBuy": "Won't buy",
-        "BuysAt": "Buys at",
-        "OfValue": "of value",
         "Equipped": "Equipped",
         "Empty": "Nothing in your pack this shop has an opinion on yet.",
-        "TillHolds": "The till holds {amount}, so no sale today can bring in more.",
-      "RatioOfValue": "{ratio} of value",
-      "Pack": "{name}'s pack",
-        "Filter": {
-          "Everything": "Everything",
-          "WillBuy": "Will buy",
-          "WontBuy": "Won't buy"
-        },
+        "Till": "The shop's till",
+        "TillNote": "No sale can bring in more than this.",
+        "Pack": "{name}'s pack",
         "Reason": {
           "Unidentified": "Unidentified",
           "UnidentifiedNote": "Get it looked at first.",
-        "WontBuyWhat": "Won't buy {what}",
+          "WontBuyWhat": "Won't buy {what}",
           "General": "Won't buy this",
           "NoBuyback": "No buyback",
           "Unpriced": "Unpriced",
@@ -138,7 +129,7 @@
         "TillDrops": "The till drops to {amount}",
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
-      "OfList": "({ratio} of {list})",
+        "OfList": "({ratio} of {list})",
         "Fewer": "One fewer",
         "More": "One more",
         "ExactChange": "Exact change is counted from your coins."

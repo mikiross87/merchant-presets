@@ -81,6 +81,12 @@ function metaLabels() {
   };
 }
 
+/** A row's group on its tab's list (shop-view.mjs `shelfGroup`): its id, icon and heading. */
+function groupFields(item, stock) {
+  const group = shelfGroup(item, stock, CONFIG.DND5E.armorTypes ?? {});
+  return { group: group.id, groupIcon: group.icon, groupLabel: group.named ?? game.i18n.localize(`MERCHANT_PRESETS.Shop.Group.${group.id}`) };
+}
+
 /** A shelf group's design layer name: the gear group is "Adventuring gear" on the canvas, "Gear" on screen. */
 const groupPen = (id, label) => (id === "all" ? "All goods" : id === "gear" ? "Adventuring gear" : label);
 
@@ -266,7 +272,6 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
       selectCategory: ShopSheet.#onSelectCategory,
-      selectSellFilter: ShopSheet.#onSelectSellFilter,
       addLine: ShopSheet.#onAddLine,
       stepLine: ShopSheet.#onStepLine,
       pickBuyer: ShopSheet.#onPickBuyer,
@@ -318,8 +323,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
     this._sent = { buy: new Map(), sell: new Map() };
     this._activeCategory = "all";
-    /** The Sell tab's pack filter: "all", "will" (goods the shop buys) or "wont". */
-    this._sellFilter = "all";
+    /** The Sell tab's category, as `_activeCategory` is the Buy tab's. */
+    this._sellCategory = "all";
     /** Per kind, the fewest of each line worth a coin (`buyRow`/`sellRow`'s `minQuantity`), from the last render. */
     this._minQuantity = { buy: new Map(), sell: new Map() };
     this._buyerUuid = game.user.character?.uuid ?? null;
@@ -691,6 +696,31 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
+  /* -------------------------------------------------------------- categories */
+
+  /**
+   * A tab's nav and its list's sections (designs y6iNf, TGXBN): the groups in the rows' own order,
+   * each with its count, and the rows under their group's heading, narrowed to the chosen one. A
+   * group that emptied (its last line traded) drops out, and the tab falls back to all goods.
+   */
+  #grouped(kind, rows) {
+    const key = kind === "sell" ? "_sellCategory" : "_activeCategory";
+    if (this[key] !== "all" && !rows.some(r => r.group === this[key])) this[key] = "all";
+    const active = this[key];
+    const categories = groupCategories(rows.map(r => ({ category: r.group }))).map(c => {
+      const first = rows.find(r => r.group === c.id);
+      const label = first?.groupLabel ?? game.i18n.localize("MERCHANT_PRESETS.Shop.Category.All");
+      return { ...c, active: c.id === active, label, icon: first?.groupIcon ?? "lucide:layout-grid", pen: groupPen(c.id, label) };
+    });
+    const sections = [];
+    for (const row of active === "all" ? rows : rows.filter(r => r.group === active)) {
+      let section = sections.find(s => s.group === row.group);
+      if (!section) { section = { group: row.group, label: row.groupLabel, pen: groupPen(row.group, row.groupLabel), rows: [] }; sections.push(section); }
+      section.rows.push(row);
+    }
+    return { categories, sections };
+  }
+
   /* -------------------------------------------------------------- buy tab */
 
   /** The shop's goods players can see, in its own order: the one a GM sets by dragging on the NPC sheet. */
@@ -706,14 +736,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         this._minQuantity.buy.set(row.id, row.minQuantity);
-        const group = shelfGroup(data, stock, CONFIG.DND5E.armorTypes ?? {});
         return {
           ...row,
           // Its place on the list (design y6iNf): a category the GM named, as they wrote it, else
           // its kind of good. The pricing category (`row.category`) stays what rules key on.
-          group: group.id,
-          groupIcon: group.icon,
-          groupLabel: group.named ?? game.i18n.localize(`MERCHANT_PRESETS.Shop.Group.${group.id}`),
+          ...groupFields(data, stock),
           meta: itemMeta(data, metaLabels(), metaWords),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
@@ -724,20 +751,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       });
     // A category that emptied (its last line bought) drops out of the nav; fall back to all goods.
     this.#keepOffered("buy", new Map(rows.filter(r => !r.unpriced && !r.worthless).map(r => [r.id, r.minQuantity])));
-    if (this._activeCategory !== "all" && !rows.some(r => r.group === this._activeCategory)) this._activeCategory = "all";
-    // The nav lists the groups in shelf order, as the list does.
-    const categories = groupCategories(rows.map(r => ({ category: r.group }))).map(c => {
-      const first = rows.find(r => r.group === c.id);
-      const label = first?.groupLabel ?? game.i18n.localize("MERCHANT_PRESETS.Shop.Category.All");
-      return { ...c, active: c.id === this._activeCategory, label, icon: first?.groupIcon ?? "lucide:layout-grid", pen: groupPen(c.id, label) };
-    });
-    const visibleRows = this._activeCategory === "all" ? rows : rows.filter(r => r.group === this._activeCategory);
-    const sections = [];
-    for (const row of visibleRows) {
-      let section = sections.find(s => s.group === row.group);
-      if (!section) { section = { group: row.group, label: row.groupLabel, pen: groupPen(row.group, row.groupLabel), rows: [] }; sections.push(section); }
-      section.rows.push(row);
-    }
+    const { categories, sections } = this.#grouped("buy", rows);
     const purseCp = buyer ? totalCp(buyer.system.currency ?? {}, currencies) : 0;
     const { lines, totals } = this.#bill("buy", purseCp, currencies);
     // A basket the purse can't cover reads as "cant-afford" the moment it goes over, the same
@@ -769,13 +783,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     };
   }
 
-  static #onSelectSellFilter(_event, target) {
-    this._sellFilter = target.dataset.filter;
-    this.render();
-  }
-
   static #onSelectCategory(_event, target) {
-    this._activeCategory = target.dataset.category;
+    if (target.dataset.kind === "sell") this._sellCategory = target.dataset.category;
+    else this._activeCategory = target.dataset.category;
     this.render({ parts: ["body"] });
   }
 
@@ -953,6 +963,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         ...row,
         // The shown name; the source data (true name) only prices and matches, as the engine does.
         name: buyer.items.get(item._id)?.name ?? row.name,
+        // Grouped as a shelf groups its goods (design TGXBN): by kind of good.
+        ...groupFields(item, null),
         meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
           : row.refusal ? itemMeta(item, metaLabels(), metaWords)
           : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
@@ -962,12 +974,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       };
     });
     const willBuy = rows.filter(r => !r.refusal);
-    const wontBuy = rows.filter(r => r.refusal);
-    const filters = [["all", "Everything", rows.length], ["will", "WillBuy", willBuy.length], ["wont", "WontBuy", wontBuy.length]]
-      .map(([id, key, count]) => {
-        const label = game.i18n.localize(`MERCHANT_PRESETS.Shop.Sell.Filter.${key}`);
-        return { id, label, count, active: id === this._sellFilter, pen: label };
-      });
+    const { categories, sections } = this.#grouped("sell", rows);
     this.#keepOffered("sell", new Map(willBuy.map(r => [r.id, r.minQuantity ?? 1])));
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
     // Purse-after is the seller's own purse plus the sale; the till only decides till-short, and
@@ -986,17 +993,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return {
       kind: "sell",
       shopTitle: titleParts(actor.name).title,
-      willBuy: this._sellFilter === "wont" ? [] : willBuy,
-      wontBuy: this._sellFilter === "will" ? [] : wontBuy,
+      sections,
+      categories,
       empty: !rows.length,
-      filters,
       packLabel: buyer ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Pack", { name: buyer.name }) : null,
-      ratioText: game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.RatioOfValue", { ratio: rateFraction(rates.chipBuysAt) }),
       // How much of the till this bill takes, for the offer card's meter.
       meterPercent: tillCapsSales && tillCp > 0 ? Math.min(100, (totals.sumCp / tillCp) * 100) : null,
       tillAfterText: paidOut?.ok ? coinsText(heldCoins(paidOut.remaining, currencies)) : null,
       tillCp,
-      tillCoins: coinBreakdown(tillCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+      // The coins the merchant holds, as the hero shows a purse: not the total re-split.
+      tillCoins: heldCoins(actor.system.currency ?? {}, currencies),
       tillText: coinsText(coinBreakdown(tillCp, currencies)),
       // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
       tillCapsSales,

@@ -505,47 +505,28 @@
 /* -------------------------------------------------------------- sell tab (design TGXBN) */
 
 .shop-sheet .sell-tab.active { display: flex; flex-direction: row; gap: 0; }
-.shop-sheet .mp-offer-card {
+.shop-sheet .mp-till-card {
   flex: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  margin-left: -1.5px;
   padding: 12px;
-  border: 0 solid var(--mp-gold);
-  border-left-width: 3px;
   border-radius: 4px;
   background: var(--mp-surface);
 }
-.shop-sheet .mp-offer-kicker {
+.shop-sheet .mp-till-kicker {
   font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--mp-gold);
 }
-.shop-sheet .mp-offer-ratio { font: 700 22px/30px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
-.shop-sheet .mp-offer-note { align-self: stretch; margin: 0; font: 400 12px/16px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-till-coins { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.shop-sheet .mp-till-note { align-self: stretch; margin: 0; font: 400 12px/16px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-meter { align-self: stretch; display: flex; height: 6px; border-radius: 3px; background: var(--mp-inset); }
 .shop-sheet .mp-meter-used { height: 6px; border-radius: 3px; background: var(--mp-gold); }
 .shop-sheet .mp-pack-label { align-self: flex-start; font: 700 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
-.shop-sheet .mp-filter {
-  all: unset;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-  border-radius: 4px;
-  color: var(--mp-text);
-  font: 400 13px/15px Roboto, system-ui, sans-serif;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.shop-sheet .mp-filter:focus-visible { box-shadow: 0 0 0 2px var(--mp-gold-light); }
-.shop-sheet .mp-filter.active { background: var(--mp-surface); font-weight: 700; }
-.shop-sheet .mp-group.is-refused { padding-top: 16px; }
 .shop-sheet .mp-row.is-refused { opacity: 0.6; }
 .shop-sheet .mp-stock-state.is-unidentified { color: var(--mp-warning-ink); }
 .shop-sheet .mp-tag.is-ratio { padding: 1px 5px; background: #9f927526; }
