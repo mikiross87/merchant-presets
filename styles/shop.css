@@ -10,6 +10,8 @@
 .shop-sheet, .chat-message:has(> .message-content > .mp-receipt) {
   /* Theme-independent: the maroon hero and what sits on it, the window bar, state colours. */
   --mp-gold: #9f9275;
+  --mp-red: #ce0707;
+  --mp-amber: #ee9b3a;
   --mp-gold-light: #e3ce9e;
   --mp-bar: #191813;
   --mp-bar-ink: #c9c7b8;
@@ -643,7 +645,6 @@
   from, 98% { opacity: 1; }
   to { opacity: 0; }
 }
-.shop-sheet .mp-ledger.is-dimmed { opacity: 0.55; }
 .shop-sheet .mp-line { display: flex; flex-direction: column; gap: 3px; animation: mp-line-in 150ms ease-out; }
 .shop-sheet .mp-line.is-struck .mp-line-name { text-decoration: line-through; color: var(--mp-danger-ink); animation: mp-flash 400ms ease-out; }
 /* A name too long for its line keeps the line, and the leader and coins wrap below it (design mRg3y). */
@@ -697,7 +698,8 @@
 
 /* It fills the slip, which keeps the seal at the slip's foot. */
 .shop-sheet .mp-purse-after { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
-.shop-sheet .mp-slip-fill { flex: 1 1 0; }
+/* With nothing to fill (a refused sale shows no purse), it takes no gap of its own either. */
+.shop-sheet .mp-slip-fill { flex: 1 1 0; margin-top: -8px; }
 .shop-sheet .mp-after-label { font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-after-coins { display: flex; align-items: center; gap: 10px; }
 
@@ -713,7 +715,8 @@
   transition: transform 120ms ease;
 }
 .shop-sheet .mp-seal-button:active:not(:disabled) { transform: scale(0.97); }
-.shop-sheet .mp-seal-button:disabled { cursor: not-allowed; }
+.shop-sheet .mp-seal-button:disabled { cursor: not-allowed; background: var(--mp-inset); outline-color: var(--mp-line); color: var(--mp-muted); }
+.shop-sheet .mp-seal-button:disabled .mp-wax { background: var(--mp-line); outline: 1px solid var(--mp-line); color: var(--mp-muted); }
 .shop-sheet .mp-wax {
   flex: none;
   display: flex;
@@ -729,35 +732,77 @@
 .shop-sheet .mp-seal-label { flex: 1 1 0; font: 700 14px/16px Roboto, system-ui, sans-serif; text-align: center; }
 .shop-sheet .mp-slip-foot { margin: 0; font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; text-align: center; color: var(--mp-muted); }
 
-.shop-sheet .bill-seal-stamp {
-  align-self: center;
-  border: 3px solid var(--mp-danger);
-  color: var(--mp-danger);
-  border-radius: 0.3rem;
-  padding: 0.3rem 1rem;
-  text-align: center;
-  transform: rotate(-8deg);
-  font-family: var(--dnd5e-font-modesto);
-  margin: 0.5rem 0;
+.shop-sheet .bill-sum.is-danger .mp-coin b, .shop-sheet .mp-after-coins.is-short .mp-coin b { color: var(--mp-red); }
+.shop-sheet .mp-after-coins.is-short { gap: 8px; }
+
+/* The Trade States (design WNYhA). A slip holds its stamp over the ledger. */
+.shop-sheet .mp-slip { position: relative; }
+.shop-sheet .mp-line.is-gone :is(.mp-qty, .mp-line-name) { color: var(--mp-muted); }
+.shop-sheet .mp-each.is-sold-out { color: var(--mp-red); }
+.shop-sheet .mp-notice {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+  width: calc(100% - 1.5px);
+  margin-left: -1.5px;
+  padding: 8px 10px;
+  border: 0 solid;
+  border-left-width: 3px;
+  border-radius: 4px;
+}
+.shop-sheet .mp-notice .mp-icon { flex: none; width: 15px; height: 15px; }
+.shop-sheet .mp-notice span { flex: 1 1 0; min-width: 0; font: 400 12px/16px "Roboto Condensed", system-ui, sans-serif; }
+.shop-sheet .mp-notice.is-warning { background: #ee9b3a1f; border-color: var(--mp-amber); }
+.shop-sheet .mp-notice.is-warning .mp-icon { color: var(--mp-amber); }
+.shop-sheet .mp-notice.is-warning span { color: var(--mp-warning-ink); }
+.shop-sheet .mp-notice.is-danger { background: #ce07071a; border-color: var(--mp-red); }
+.shop-sheet .mp-notice.is-danger .mp-icon { color: var(--mp-red); }
+.shop-sheet .mp-notice.is-danger span { color: var(--mp-danger-ink); }
+.shop-sheet .mp-delivered { flex: none; display: flex; align-items: flex-start; gap: 8px; }
+.shop-sheet .mp-delivered .mp-icon { flex: none; width: 16px; height: 16px; color: var(--mp-green); }
+.shop-sheet .mp-delivered span { flex: 1 1 0; min-width: 0; font: 400 12px/14px Roboto, system-ui, sans-serif; color: var(--mp-paper-ink); }
+.shop-sheet .mp-stamp {
+  position: absolute;
+  top: 118px;
+  left: 88px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  outline: 2px solid #b3262680;
+  outline-offset: -1px;
+  opacity: 0.9;
+  transform: rotate(-14deg);
+  transform-origin: top left;
+  pointer-events: none;
   animation: mp-stamp 180ms ease-out;
 }
-
-.shop-sheet .bill-seal-stamp span { display: block; font-size: 1.1rem; letter-spacing: 0.1em; }
-.shop-sheet .bill-seal-stamp small { font-size: 0.65rem; }
-
-.shop-sheet .bill-sum.is-danger .mp-coin b { color: var(--mp-danger-ink); }
-
-.shop-sheet .bill-notice {
-  font-size: 0.75rem;
-  border-radius: 0.3rem;
-  padding: 0.4rem 0.5rem;
+.shop-sheet .mp-stamp span:first-child { font: 700 22px/30px "Alegreya SC", system-ui, sans-serif; letter-spacing: 3px; white-space: nowrap; color: #b32626b3; }
+.shop-sheet .mp-stamp span:last-child { font: 400 10px/12px "Roboto Condensed", system-ui, sans-serif; letter-spacing: 1px; white-space: nowrap; color: #b32626b3; }
+.shop-sheet .mp-keep-shopping {
+  flex: none;
+  text-transform: none;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  outline-offset: -0.5px;
+  font: 500 14px/16px Roboto, system-ui, sans-serif;
+  color: var(--mp-text);
+  cursor: pointer;
 }
-
-.shop-sheet .bill-notice.is-danger { background: color-mix(in oklab, var(--mp-danger), transparent 85%); color: var(--mp-danger); }
-.shop-sheet .bill-notice.is-warning { background: color-mix(in oklab, var(--mp-warning), transparent 85%); color: var(--mp-warning); }
 
 .shop-sheet .bill-empty { text-align: center; color: var(--color-text-secondary); font-style: italic; padding: 2rem 0; }
 

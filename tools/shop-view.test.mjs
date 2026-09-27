@@ -185,10 +185,15 @@ for (const [reason, labelKey] of [
   });
 }
 
-test("no GM keeps the seal live, so the bill can be sent again once one connects", () => {
+test("an unanswered bill keeps the seal live while a GM is online, so it can be sent again", () => {
   assert.deepEqual(sealState("no-gm", true),
     { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "lucide:hourglass" });
   assert.equal(sealState("no-gm", false).disabled, true);
+});
+
+test("with no GM at the table the seal waits for one (design WNYhA, state 4)", () => {
+  assert.deepEqual(sealState("no-gm", true, { gmOnline: false }),
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGmWaiting", disabled: true, icon: "lucide:hourglass" });
 });
 
 test("stock-changed stays active, recomputed, unless it emptied the basket", () => {

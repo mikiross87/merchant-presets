@@ -6261,6 +6261,17 @@
       "y": 1600,
       "theme": {
         "mode": "dark"
+      },
+      "descendants": {
+        "PkCo2/uYCYY": {
+          "enabled": false
+        },
+        "PkCo2/amGqh": {
+          "enabled": false
+        },
+        "PkCo2/K7PByz": {
+          "enabled": false
+        }
       }
     },
     {
@@ -13235,7 +13246,7 @@
               "type": "frame",
               "id": "ctjxd",
               "name": "State 1 · Sealing",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -13738,33 +13749,13 @@
                           "alignItems": "center",
                           "children": [
                             {
-                              "id": "B3VtGe",
-                              "type": "ref",
-                              "ref": "uJ3dp",
-                              "name": "platinum 3",
-                              "descendants": {
-                                "e1b2b": {
-                                  "content": "3",
-                                  "fill": "$ink"
-                                },
-                                "B6r81": {
-                                  "fill": {
-                                    "type": "image",
-                                    "enabled": true,
-                                    "url": "assets/platinum.webp",
-                                    "mode": "fill"
-                                  }
-                                }
-                              }
-                            },
-                            {
                               "id": "hCdXn",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 47",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "17",
+                                  "content": "47",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -13822,13 +13813,6 @@
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "eYZHy",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
-                    },
-                    {
                       "id": "L2gOjQ",
                       "type": "ref",
                       "ref": "UFsFb",
@@ -13873,7 +13857,7 @@
               "type": "frame",
               "id": "m7CiU",
               "name": "State 2 · Sealed",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -14383,33 +14367,13 @@
                           "alignItems": "center",
                           "children": [
                             {
-                              "id": "BRtIe",
-                              "type": "ref",
-                              "ref": "uJ3dp",
-                              "name": "platinum 3",
-                              "descendants": {
-                                "e1b2b": {
-                                  "content": "3",
-                                  "fill": "$ink"
-                                },
-                                "B6r81": {
-                                  "fill": {
-                                    "type": "image",
-                                    "enabled": true,
-                                    "url": "assets/platinum.webp",
-                                    "mode": "fill"
-                                  }
-                                }
-                              }
-                            },
-                            {
                               "id": "dBvj7",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 47",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "17",
+                                  "content": "47",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -14468,13 +14432,6 @@
                     },
                     {
                       "type": "frame",
-                      "id": "cCPiu",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
-                    },
-                    {
-                      "type": "frame",
                       "id": "sD90g",
                       "name": "Delivered",
                       "width": "fill_container",
@@ -14497,7 +14454,7 @@
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "1 Longsword, 2 Handaxes and 10 Javelins are in Aria's pack.",
+                          "content": "1 × Longsword, 2 × Handaxe and 10 × Javelin are in Aria's pack.",
                           "fontFamily": "$font-body",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -14567,7 +14524,7 @@
               "type": "frame",
               "id": "F0SgMj",
               "name": "State 3 · Can't afford",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -14647,7 +14604,7 @@
                         {
                           "type": "frame",
                           "id": "RA4iN",
-                          "name": "Line Longsword",
+                          "name": "Line Breastplate",
                           "width": "fill_container",
                           "layout": "vertical",
                           "gap": 3,
@@ -14655,7 +14612,7 @@
                             {
                               "type": "frame",
                               "id": "X90aY",
-                              "name": "Longsword entry",
+                              "name": "Breastplate entry",
                               "width": "fill_container",
                               "gap": 6,
                               "alignItems": "end",
@@ -14663,7 +14620,7 @@
                                 {
                                   "type": "text",
                                   "id": "UD4x4",
-                                  "name": "Longsword qty",
+                                  "name": "Breastplate qty",
                                   "fill": "$accent-gold",
                                   "content": "1 ×",
                                   "fontFamily": "$font-compact",
@@ -14673,7 +14630,7 @@
                                 {
                                   "type": "text",
                                   "id": "mUgGw",
-                                  "name": "Longsword name",
+                                  "name": "Breastplate name",
                                   "fill": "$ink",
                                   "content": "Breastplate",
                                   "fontFamily": "$font-slip",
@@ -14683,7 +14640,7 @@
                                 {
                                   "type": "frame",
                                   "id": "zgbvp",
-                                  "name": "Longsword leader",
+                                  "name": "Breastplate leader",
                                   "width": "fill_container",
                                   "height": 10,
                                   "stroke": "$slip-edge",
@@ -14695,7 +14652,7 @@
                                   "id": "vAmRP",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 15",
+                                  "name": "gold 400",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "400",
@@ -14716,7 +14673,7 @@
                             {
                               "type": "frame",
                               "id": "JO4kj",
-                              "name": "Longsword detail",
+                              "name": "Breastplate detail",
                               "width": "fill_container",
                               "padding": [
                                 0,
@@ -14730,7 +14687,7 @@
                                 {
                                   "type": "text",
                                   "id": "x4r9bB",
-                                  "name": "Longsword each",
+                                  "name": "Breastplate each",
                                   "fill": "$text-secondary",
                                   "content": "400 gp each",
                                   "fontFamily": "$font-compact",
@@ -14741,7 +14698,7 @@
                                   "id": "aqVim",
                                   "type": "ref",
                                   "ref": "obOO9",
-                                  "name": "Longsword stepper",
+                                  "name": "Breastplate stepper",
                                   "descendants": {
                                     "QRqWk": {
                                       "content": "1"
@@ -15022,10 +14979,10 @@
                               "id": "nBs7W",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 30",
+                              "name": "gold 415",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "425",
+                                  "content": "415",
                                   "fill": "$danger"
                                 },
                                 "B6r81": {
@@ -15164,10 +15121,10 @@
                               "id": "Xby7r",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold short",
+                              "name": "gold 336",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "346",
+                                  "content": "336",
                                   "fill": "$danger"
                                 },
                                 "B6r81": {
@@ -15184,7 +15141,7 @@
                               "id": "rw7vV",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "silver short",
+                              "name": "silver 5",
                               "descendants": {
                                 "e1b2b": {
                                   "content": "5",
@@ -15203,13 +15160,6 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "B4Dmm",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
                     },
                     {
                       "id": "cEL0g",
@@ -15256,7 +15206,7 @@
               "type": "frame",
               "id": "u9PFr",
               "name": "State 4 · No GM connected",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -15758,33 +15708,13 @@
                           "alignItems": "center",
                           "children": [
                             {
-                              "id": "DukgT",
-                              "type": "ref",
-                              "ref": "uJ3dp",
-                              "name": "platinum 3",
-                              "descendants": {
-                                "e1b2b": {
-                                  "content": "3",
-                                  "fill": "$ink"
-                                },
-                                "B6r81": {
-                                  "fill": {
-                                    "type": "image",
-                                    "enabled": true,
-                                    "url": "assets/platinum.webp",
-                                    "mode": "fill"
-                                  }
-                                }
-                              }
-                            },
-                            {
                               "id": "o7jXXl",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 47",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "17",
+                                  "content": "47",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -15843,16 +15773,9 @@
                     },
                     {
                       "type": "frame",
-                      "id": "pg3po",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
-                    },
-                    {
-                      "type": "frame",
                       "id": "djLbZ",
                       "name": "Notice",
-                      "width": "fill_container",
+                      "width": 218,
                       "fill": "#ee9b3a1f",
                       "cornerRadius": 4,
                       "stroke": "#ee9b3a",
@@ -15922,7 +15845,7 @@
               "type": "frame",
               "id": "q917o",
               "name": "State 5 · Till too low",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -16055,7 +15978,7 @@
                                   "id": "bA0HC",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 15",
+                                  "name": "gold 7",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "7",
@@ -16135,7 +16058,7 @@
                         {
                           "type": "frame",
                           "id": "g6fwNd",
-                          "name": "Line Javelin",
+                          "name": "Line Potion of Healing",
                           "width": "fill_container",
                           "layout": "vertical",
                           "gap": 3,
@@ -16143,7 +16066,7 @@
                             {
                               "type": "frame",
                               "id": "mc8Mb",
-                              "name": "Javelin entry",
+                              "name": "Potion of Healing entry",
                               "width": "fill_container",
                               "gap": 6,
                               "alignItems": "end",
@@ -16151,7 +16074,7 @@
                                 {
                                   "type": "text",
                                   "id": "ThnFt",
-                                  "name": "Javelin qty",
+                                  "name": "Potion of Healing qty",
                                   "fill": "$accent-gold",
                                   "content": "2 ×",
                                   "fontFamily": "$font-compact",
@@ -16161,7 +16084,7 @@
                                 {
                                   "type": "text",
                                   "id": "a3u3pq",
-                                  "name": "Javelin name",
+                                  "name": "Potion of Healing name",
                                   "fill": "$ink",
                                   "content": "Potion of Healing",
                                   "fontFamily": "$font-slip",
@@ -16171,7 +16094,7 @@
                                 {
                                   "type": "frame",
                                   "id": "s7vg5J",
-                                  "name": "Javelin leader",
+                                  "name": "Potion of Healing leader",
                                   "width": "fill_container",
                                   "height": 10,
                                   "stroke": "$slip-edge",
@@ -16183,7 +16106,7 @@
                                   "id": "qNeXn",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 5",
+                                  "name": "gold 50",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "50",
@@ -16204,7 +16127,7 @@
                             {
                               "type": "frame",
                               "id": "NYGgZ",
-                              "name": "Javelin detail",
+                              "name": "Potion of Healing detail",
                               "width": "fill_container",
                               "padding": [
                                 0,
@@ -16218,7 +16141,7 @@
                                 {
                                   "type": "text",
                                   "id": "yXAgD",
-                                  "name": "Javelin each",
+                                  "name": "Potion of Healing each",
                                   "fill": "$text-secondary",
                                   "content": "25 gp each (½ of 50 gp)",
                                   "fontFamily": "$font-compact",
@@ -16229,7 +16152,7 @@
                                   "id": "kRH9Z",
                                   "type": "ref",
                                   "ref": "obOO9",
-                                  "name": "Javelin stepper",
+                                  "name": "Potion of Healing stepper",
                                   "descendants": {
                                     "QRqWk": {
                                       "content": "2"
@@ -16301,7 +16224,7 @@
                                   "id": "uNBK0",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "gold 30",
+                                  "name": "gold 57",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "57",
@@ -16321,11 +16244,11 @@
                                   "id": "E5jN6",
                                   "type": "ref",
                                   "ref": "uJ3dp",
-                                  "name": "silver 5 total",
+                                  "name": "silver 5",
                                   "descendants": {
                                     "e1b2b": {
                                       "content": "5",
-                                      "fill": "$ink"
+                                      "fill": "$danger"
                                     },
                                     "B6r81": {
                                       "fill": {
@@ -16345,16 +16268,9 @@
                     },
                     {
                       "type": "frame",
-                      "id": "p13JK4",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
-                    },
-                    {
-                      "type": "frame",
                       "id": "J6rJb",
                       "name": "Notice",
-                      "width": "fill_container",
+                      "width": 218,
                       "fill": "#ce07071a",
                       "cornerRadius": 4,
                       "stroke": "#ce0707",
@@ -16424,7 +16340,7 @@
               "type": "frame",
               "id": "SvBDF",
               "name": "State 6 · Stock changed",
-              "width": 280,
+              "width": 251.5,
               "layout": "vertical",
               "gap": 8,
               "children": [
@@ -16489,7 +16405,7 @@
                       "type": "frame",
                       "id": "J5jBLG",
                       "name": "Notice",
-                      "width": "fill_container",
+                      "width": 218,
                       "fill": "#ee9b3a1f",
                       "cornerRadius": 4,
                       "stroke": "#ee9b3a",
@@ -16924,7 +16840,7 @@
                               "id": "uLgRK",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 30",
+                              "name": "gold 15",
                               "descendants": {
                                 "e1b2b": {
                                   "content": "15",
@@ -16974,10 +16890,10 @@
                               "id": "kYw2p",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "platinum 3",
+                              "name": "platinum 2",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "3",
+                                  "content": "2",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -16994,10 +16910,10 @@
                               "id": "qdr0P",
                               "type": "ref",
                               "ref": "uJ3dp",
-                              "name": "gold 17",
+                              "name": "gold 42",
                               "descendants": {
                                 "e1b2b": {
-                                  "content": "32",
+                                  "content": "42",
                                   "fill": "$ink"
                                 },
                                 "B6r81": {
@@ -17053,13 +16969,6 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "c4C3q",
-                      "name": "Spacer",
-                      "width": "fill_container",
-                      "height": 6
                     },
                     {
                       "id": "FYUNF",

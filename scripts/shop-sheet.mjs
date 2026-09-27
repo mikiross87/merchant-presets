@@ -354,6 +354,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._sealed = { buy: null, sell: null };
     /** Per kind, the item ids a `stock-changed` refusal re-priced, struck on the bill until the basket changes. */
     this._struck = { buy: new Set(), sell: new Set() };
+    /** Per kind, lines that sold out while on the bill: struck off as "Sold out" until the next edit (design WNYhA, state 6). */
+    this._gone = { buy: [], sell: [] };
+    /** Per kind, each line as the bill last priced it, by item id: what a line that sells out is struck off as. */
+    this._priced = { buy: new Map(), sell: new Map() };
     /** Per kind, the id of a trade that may still land (unconfirmed, or never answered): every seal resends it until one is answered (sealed or refused) or the buyer changes, so the GM's side can't carry it out twice. */
     this._tradeId = { buy: null, sell: null };
     /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
@@ -866,8 +870,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const traded = this._tradeState.buy;
     const state = isSettled(traded) ? traded : !open ? "closed" : !buyer ? "no-buyer"
       : (totals.shortfallCp > 0 ? "cant-afford" : traded);
-    const seal = sealState(state, lines.length > 0);
+    const seal = sealState(state, lines.length > 0, { gmOnline: !!game.users?.activeGM });
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
+    const basket = this.#billOfSale("buy", lines, totals, currencies, buyer, this._sealed.buy);
     return {
       kind: "buy",
       shopTitle: titleParts(actor.name).title,
@@ -876,7 +881,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       activeCategory: categories.find(c => c.active),
       // For a buy refused as till-short: the till couldn't make change.
       tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
-      basket: this.#billOfSale("buy", lines, totals, currencies, buyer, this._sealed.buy),
+      basket,
+      slip: this.#slip("buy", state, seal, basket, buyer),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.buy),
       seal: {
@@ -1003,6 +1009,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._tradeState[kind] = this._tradeId[kind] ? "no-gm" : "idle";
     this._sealed[kind] = null;
     this._struck[kind].clear();
+    this._gone[kind] = [];
   }
 
   /** The item a basket line of `kind` names: the shop's for a buy, the buyer's own for a sale. */
@@ -1028,15 +1035,26 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (isSettled(this._tradeState[kind])) continue;
       const basket = this._baskets[kind];
       let changed = false;
+      const gone = [];
       for (const [itemId, quantity] of basket) {
         const fit = this.#itemOf(kind, itemId) ? fitQuantity(quantity, this.#shelfOf(kind, itemId)) : 0;
         if (fit === quantity) continue;
         if (fit > 0) basket.set(itemId, fit);
-        else basket.delete(itemId);
+        else {
+          basket.delete(itemId);
+          // Someone else bought the last of it: the bill strikes it off rather than dropping it unseen.
+          // Not while a trade of ours may have landed (unanswered): that could be its own doing.
+          const priced = this._priced[kind].get(itemId);
+          if (kind === "buy" && priced && !this._tradeId[kind]) gone.push(priced);
+        }
         changed = true;
       }
       // A changed basket is a new bill: the last refusal and unanswered trade id were the old one's.
       if (changed) this.#shelfChanged(kind);
+      if (gone.length) {
+        this._gone[kind] = gone;
+        this._tradeState[kind] = "stock-changed";
+      }
     }
   }
 
@@ -1099,7 +1117,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const traded = this._tradeState.sell;
     const state = isSettled(traded) ? traded : !open ? "closed" : !buyer ? "no-buyer"
       : (tillShort ? "till-short" : traded);
-    const seal = sealState(state, lines.length > 0);
+    const seal = sealState(state, lines.length > 0, { gmOnline: !!game.users?.activeGM });
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     const tillCapsSales = game.settings.get(MODULE, "merchantPurse") !== "unlimited";
     // What the till holds once it has paid this bill exactly (the engine's payExact).
@@ -1122,6 +1140,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // Under unlimited merchant coin the till is bottomless (the engine's own rule), so it caps nothing.
       tillCapsSales,
       basket: this.#billOfSale("sell", lines, totals, currencies, buyer, this._sealed.sell),
+      slip: this.#slip("sell", state, seal, null, buyer, {
+        tillText: coinsText(coinBreakdown(tillCp, currencies)),
+        tillAfterText: paidOut?.ok ? coinsText(heldCoins(paidOut.remaining, currencies)) : null
+      }),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.sell),
       seal: {
@@ -1204,6 +1226,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
       });
     }
+    this._priced[kind] = new Map(lines.map(l => [l.itemId, l]));
     return lines;
   }
 
@@ -1238,21 +1261,70 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // The purse as the trade will leave it, coin by coin; a bill the engine would refuse falls
     // back to the total, and its seal already says why.
     const till = game.settings.get(MODULE, "merchantPurse") === "unlimited" ? null : this.document.system.currency ?? {};
-    const after = buyer ? purseAfter(kind, buyer.system.currency ?? {}, totals.sumCp, till, currencies) : null;
+    // A sealed bill's purse is the purse now: the trade has already moved its coins.
+    const after = buyer ? (sealed ? buyer.system.currency ?? {} : purseAfter(kind, buyer.system.currency ?? {}, totals.sumCp, till, currencies)) : null;
     const afterCoins = after ? heldCoins(after, currencies) : purseCoins(totals.afterCp, currencies);
     const shortfallCoins = coinBreakdown(totals.shortfallCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
+    // Lines that sold out while on the bill, struck off at the top: "—" in place of their price.
+    const gone = sealed ? [] : this._gone[kind].map(l => ({
+      name: l.name, quantity: l.quantity,
+      pen: l.lineTotalCoins[0] ? `${COIN_METALS[l.lineTotalCoins[0].denomination] ?? l.lineTotalCoins[0].denomination} ${l.lineTotalCoins[0].count}` : "Price"
+    }));
     return {
-      lines,
+      lines, gone,
       sumCoins, afterCoins, shortfallCoins,
       sumText: coinsText(sumCoins),
       afterText: coinsText(afterCoins),
       shortfallText: coinsText(shortfallCoins),
       buyerName: buyer?.name ?? null,
-      hasLines: lines.length > 0,
+      hasLines: lines.length > 0 || gone.length > 0,
       // The docked bill's one line in a narrow window (design r7HIUl).
       summary: billSummary(lines),
       // A stamped bill keeps the date it sealed on; a live one reads the clock.
       dateLabel: sealed?.dateLabel ?? this.#worldDateLabel()
+    };
+  }
+
+  /**
+   * What the Bill of Sale shows around its lines in each Trade State (design WNYhA): its kicker, the
+   * purse block (after the bargain, now, or short by), a notice and where it sits, what was
+   * delivered, the stamp's date, and the foot.
+   */
+  #slip(kind, state, seal, basket, buyer, { tillText = null, tillAfterText = null } = {}) {
+    const i18n = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.${key}`, data);
+    const name = buyer?.name ?? null;
+    const sealed = this._sealed[kind];
+    const gmOnline = !!game.users?.activeGM;
+    let notice = null;
+    if (state === "no-gm") notice = { tone: "warning", icon: "lucide:wifi-off", text: i18n(gmOnline ? "Seal.NoAnswerNotice" : "Seal.NoGmNotice") };
+    else if (state === "till-short") notice = { tone: "danger", icon: "lucide:coins", text: i18n(kind === "sell" ? "Seal.TillShortNotice" : "Seal.TillShortBuyNotice", { amount: tillText }) };
+    else if (state === "stock-changed") {
+      const gone = this._gone[kind];
+      notice = { tone: "warning", icon: "lucide:triangle-alert", first: true,
+        text: gone.length === 1 ? i18n("Seal.SoldOutNotice", { name: gone[0].name }) : i18n("Seal.StockChangedNotice") };
+    }
+    const purse = !name ? null : state === "sealed" ? "now" : state === "cant-afford" ? "short"
+      : (!seal.disabled || state === "sealing" || state === "no-gm") ? "after" : null;
+    const foot = state === "sealing" ? i18n("Seal.WaitingFoot") : state === "cant-afford" ? i18n("Seal.CantAffordFoot")
+      : ["sealed", "no-gm", "till-short"].includes(state) ? null
+        : kind === "sell" ? (tillAfterText ? `${i18n("Bill.TillDrops", { amount: tillAfterText })}.` : null) : i18n("Bill.ExactChange");
+    let delivered = null;
+    if (state === "sealed" && sealed) {
+      const goods = sealed.lines.map(l => `${l.quantity} × ${l.name}`);
+      const list = goods.length > 1 ? i18n("Bill.ListLast", { rest: goods.slice(0, -1).join(", "), last: goods.at(-1) }) : goods[0] ?? "";
+      const one = sealed.lines.length === 1 && sealed.lines[0].quantity === 1;
+      delivered = kind === "buy" ? i18n(one ? "Bill.DeliveredBuyOne" : "Bill.DeliveredBuyMany", { goods: list, name })
+        : i18n(one ? "Bill.DeliveredSellOne" : "Bill.DeliveredSellMany", { goods: list, shop: titleParts(this.document.name).title });
+    }
+    return {
+      kicker: state === "sealed" ? i18n("Bill.TitleSealed") : i18n(kind === "sell" ? "Bill.TitleSell" : "Bill.TitleBuy"),
+      totalLabel: state === "sealed" ? i18n(kind === "sell" ? "Bill.Received" : "Bill.Paid") : i18n(kind === "sell" ? "Bill.YouReceive" : "Bill.SumOwed"),
+      purse,
+      purseLabel: purse === "now" ? i18n("Bill.PurseNow", { name }) : purse === "short" ? i18n("Bill.ShortLabel", { name }) : i18n("Bill.PurseAfter", { name }),
+      notice,
+      delivered,
+      stampDate: sealed?.at != null ? this.#dayMonth(sealed.at) : "",
+      foot
     };
   }
 
@@ -1294,6 +1366,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!lines.length) { this.render({ parts: ["body"] }); return; }
     this._tradeState[kind] = "sealing";
     this._struck[kind].clear();
+    this._gone[kind] = [];
     this.render({ parts: ["body"] });
 
     // The GM's side resolves both actors by uuid (a shop can be an unlinked token's), and checks
@@ -1327,7 +1400,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         this._tradeState[kind] = "sealed";
         this._sealed[kind] = {
           lines: carried, sumCp: basketTotals(carried, 0, kind).sumCp, receipt: result.receipt ?? null,
-          dateLabel: this.#worldDateLabel()
+          dateLabel: this.#worldDateLabel(), at: game.time.worldTime
         };
         for (const line of carried) {
           const left = (this._baskets[kind].get(line.itemId) ?? 0) - line.quantity;
@@ -1951,6 +2024,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     for (const hook of ["createSetting", "updateSetting"]) {
       Hooks.on(hook, setting => { if (shown.has(setting.key)) ShopSheet.#liveDataChanged(() => true); });
     }
+    // A bill waiting for a GM (design WNYhA, state 4) can be sealed again once one connects.
+    Hooks.on("userConnected", user => {
+      if (user?.isGM) ShopSheet.#liveDataChanged(app => app._tradeState.buy === "no-gm" || app._tradeState.sell === "no-gm");
+    });
     // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
     for (const hook of ["createItem", "updateItem", "deleteItem"]) {
       Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));

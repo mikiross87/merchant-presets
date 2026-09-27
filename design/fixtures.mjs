@@ -178,6 +178,9 @@ export async function setup() {
   return shop.id;
 }
 
+/** The frames' shelf rows and their stock (setup draws the same; it can't see this module's names). */
+const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, Breastplate: 1, "Chain Mail": 4, Shield: 0, "Smith's Tools": 4 };
+
 /**
  * An `open` for the shop window: the frame's theme on this client, `before` (an in-page statement,
  * `shop` in scope; the GM's frames only), Aria as the buyer, `basket` and `sellBasket` ([name,
@@ -192,6 +195,13 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     const at = Math.floor(game.time.worldTime / perDay) * perDay + ${hour} * 3600;
     if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
     await game.settings.set("merchant-presets", "autoRestock", ${autoRestock});
+    // Every frame starts from the setup's purses and shelf: a Trade States frame trades, or sells
+    // a line out, and the frames after it must not see that.
+    const smith = game.actors.getName(${JSON.stringify(SHOP)});
+    await smith.update({ "system.currency": { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 } });
+    await smith.updateEmbeddedDocuments("Item", Object.entries(${JSON.stringify(ROWS)})
+      .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
+    await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
   }
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
@@ -311,6 +321,64 @@ const receipt = ({ kind, lines, chat }) => `async ({ theme }) => {
 const receiptBuy = receipt({ kind: "buy", lines: BASKET, chat: "public" });
 const receiptSell = receipt({ kind: "sell", lines: [["Longsword", 1], ["Potion of Healing", 2]], chat: "gm" });
 
+/**
+ * A Trade States part (design WNYhA): the Buy tab's Bill of Sale (the Sell tab's for `tab: "sell"`)
+ * in one state, reached as the window reaches it; `act` runs after it renders. The frame is the
+ * slip, and the window's height is fitted so the slip is as tall as its contents, as the board draws
+ * each one (the slip fills the column in a taller window).
+ */
+const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = "", act = "", gm = true }) => openShop({
+  tab, basket, sellBasket, size: { width: 920, height: 680 },
+  before: gm ? withoutDeals + restocked(0) + newBadges(true) + before : "",
+  then: `${act}
+  await new Promise(r => setTimeout(r, 500));
+  const slipOf = () => app.element.querySelector(".tab.active .mp-basket .mp-slip");
+  for (let pass = 0; pass < 3; pass++) {
+    const fill = slipOf().querySelector(":scope > .mp-purse-after, :scope > .mp-slip-fill");
+    const ledger = slipOf().querySelector(".mp-ledger");
+    const kids = fill ? [...fill.children] : [];
+    const natural = kids.reduce((sum, k) => sum + k.getBoundingClientRect().height, 0) + 5 * Math.max(0, kids.length - 1);
+    // Room to spare in the fill, less any lines the ledger had to scroll out of view.
+    const slack = (fill ? fill.getBoundingClientRect().height - natural : 0) - (ledger ? ledger.scrollHeight - ledger.clientHeight : 0);
+    if (Math.abs(slack) < 0.5) break;
+    app.setPosition({ height: app.position.height - slack });
+    await new Promise(r => setTimeout(r, 400));
+  }
+  slipOf().id = app.id + "-slip";`,
+  root: "`${app.id}-slip`"
+});
+const until = test => `for (let t = 0; t < 60 && !(${test}); t++) await new Promise(r => setTimeout(r, 250));`;
+const sealIt = `app.element.querySelector('.mp-basket [data-action="seal"]').click();`;
+const states = {
+  sealing: tradeState({ act: `app._tradeState.buy = "sealing"; await app.render({ parts: ["body"] });` }),
+  // A real trade, then the goods put back: Aria's purse stays as the trade left it, "purse now".
+  sealed: tradeState({ act: `const kept = [shop, game.actors.getName("Aria")].map(a => ({ a, items: a.items.map(i => i.toObject()) }));
+    ${sealIt} ${until('app._tradeState.buy === "sealed"')}
+    for (const { a, items } of kept) {
+      const was = new Set(items.map(i => i._id));
+      await a.deleteEmbeddedDocuments("Item", a.items.filter(i => !was.has(i.id)).map(i => i.id));
+      const now = new Set(a.items.map(i => i.id));
+      await a.createEmbeddedDocuments("Item", items.filter(i => !now.has(i._id)), { keepId: true });
+      await a.updateEmbeddedDocuments("Item", items.filter(i => now.has(i._id)).map(i => ({ _id: i._id, "system.quantity": i.system.quantity })));
+    }
+    await app.render({ parts: ["body"] });` }),
+  cantAfford: tradeState({ basket: [["Breastplate", 1], ["Handaxe", 2], ["Javelin", 10]] }),
+  // A player with no GM at the table (the checker logs in no one else) sends the bill. A player
+  // can't reset the shelf, so this frame counts on the GM frame run before it (FRAMES order).
+  noGm: tradeState({ gm: false, act: `${sealIt} ${until('app._tradeState.buy === "no-gm"')} await app.render({ parts: ["body"] });` }),
+  tillShort: tradeState({ tab: "sell", basket: [], sellBasket: [["Longsword", 1], ["Potion of Healing", 2]],
+    before: `await shop.update({ "system.currency": { pp: 0, gp: 40, ep: 0, sp: 0, cp: 0 } });` }),
+  // Someone else buys the last Longsword while the bill is open.
+  stockChanged: tradeState({ act: `await shop.items.getName("Longsword").update({ "system.quantity": 0 });
+    ${until('app._tradeState.buy === "stock-changed"')}` })
+};
+const PARTS = [["sealing", "y38HX"], ["sealed", "q1Q9B"], ["cantAfford", "wrhJy"], ["noGm", "ytVnE"], ["tillShort", "KcFV1"], ["stockChanged", "Aa3sm"]];
+const stateFrames = Object.fromEntries(["light", "dark"].flatMap(theme => PARTS.map(([state, part]) => [
+  `${theme === "light" ? "WNYhA" : "mWJYP"}:${state}`,
+  frame(`08 Trade States — ${theme === "light" ? "Light" : "Dark"} · ${state}`, theme, 1900, 755, state === "noGm" ? "P1" : "Gamemaster", states[state],
+    { export: theme === "light" ? "WNYhA" : "mWJYP", part })
+])));
+
 export const FRAMES = {
   y6iNf: frame("01 Storefront — Light", "light", 920, 680, "Gamemaster", storefront),
   wvmqF: frame("01 Storefront — Dark", "dark", 920, 680, "Gamemaster", storefront),
@@ -337,6 +405,5 @@ export const FRAMES = {
   "z5RBkd:sell": frame("07 Trade Chat Card — Light · Sale", "light", 672, 387, "Gamemaster", receiptSell, { export: "z5RBkd", part: "dZ2NI" }),
   "b4iPYc:buy": frame("07 Trade Chat Card — Dark · Purchase", "dark", 672, 387, "Gamemaster", receiptBuy, { export: "b4iPYc", part: "h3s5G" }),
   "b4iPYc:sell": frame("07 Trade Chat Card — Dark · Sale", "dark", 672, 387, "Gamemaster", receiptSell, { export: "b4iPYc", part: "dZ2NI" }),
-  WNYhA: frame("08 Trade States — Light", "light", 1900, 755),
-  mWJYP: frame("08 Trade States — Dark", "dark", 1900, 755)
+  ...stateFrames
 };

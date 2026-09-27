@@ -797,15 +797,19 @@ export function fitQuantity(quantity, { bundle, available, infinite }) {
  *
  * @param {"idle"|"sealing"|"sealed"|string} state  "idle", "sealing", "sealed", or a `planTrade` refusal reason
  * @param {boolean} hasLines  whether the basket holds anything at all
+ * @param {{gmOnline?: boolean}} [where]  whether a GM is at the table: a "no-gm" bill with none waits
+ *   for one (the window re-renders when one connects); with one, the trade went unanswered and the
+ *   bill can be sent again
  * @returns {{labelKey: string, disabled: boolean, icon: string}}
  */
-export function sealState(state, hasLines) {
+export function sealState(state, hasLines, { gmOnline = true } = {}) {
   switch (state) {
     case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "lucide:loader" };
     case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "lucide:store" };
     case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "lucide:circle-slash" };
-    // Live, not waiting: nothing tells the window a GM has arrived, so the player sends it again.
-    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "lucide:hourglass" };
+    // With no GM at the table the bill waits for one: the window re-renders when one connects.
+    case "no-gm": return gmOnline ? { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "lucide:hourglass" }
+      : { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGmWaiting", disabled: true, icon: "lucide:hourglass" };
     case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "lucide:circle-slash" };
     case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "lucide:stamp" };
     case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "lucide:circle-slash" };

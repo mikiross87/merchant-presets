@@ -71,6 +71,8 @@ globalThis.fromUuid = async () => null;
 const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
+  // A GM is at the table unless a test says otherwise.
+  users: { activeGM: { id: "gm", isGM: true } },
   modules: { get: () => ({ api }) },
   settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite" }, get(_module, key) { return this.values[key]; } },
   actors: [],
@@ -1636,4 +1638,58 @@ test("with trading hours off a restock's New lasts a whole day, not until closin
     globalThis.game.time.worldTime = before;
     globalThis.game.settings.values.tradingHours = true;
   }
+});
+
+/* ------------------------------------------------------------- trade states (design WNYhA) */
+
+test("a line that sells out while on the bill is struck off as sold out, and the bill says so (design WNYhA, state 6)", async () => {
+  const sword = item("sword", { quantity: 1, price: { value: 15, denomination: "gp" } });
+  const { sheet } = openShop({ shopItems: [sword, item("axe", { quantity: 5, price: { value: 5, denomination: "gp" } })] });
+  act(sheet, "addLine", { itemId: "sword" });
+  act(sheet, "addLine", { itemId: "axe" });
+  await sheet._prepareContext({});
+  sword.system.quantity = 0;      // someone else bought the last one
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.state, "stock-changed");
+  assert.deepEqual(buy.basket.gone, [{ name: "sword", quantity: 1, pen: "gold 15" }]);
+  assert.deepEqual(buy.basket.lines.map(l => l.itemId), ["axe"], "struck off, it isn't on the sum");
+  assert.equal(buy.slip.notice.text, "MERCHANT_PRESETS.Shop.Seal.SoldOutNotice");
+  assert.equal(buy.slip.notice.first, true, "the notice sits under the slip's head");
+  act(sheet, "stepLine", { itemId: "axe", delta: "1" });
+  assert.deepEqual((await sheet._prepareContext({})).buy.basket.gone, [], "the next edit is a new bill");
+});
+
+test("with no GM at the table a sent bill waits for one, and says so (design WNYhA, state 4)", async () => {
+  const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+  const users = globalThis.game.users;
+  globalThis.game.users = { activeGM: null };
+  api.trade = async () => ({ status: "no-gm" });
+  try {
+    act(sheet, "addLine", { itemId: "rope" });
+    await act(sheet, "seal");
+    const { buy } = await sheet._prepareContext({});
+    assert.equal(buy.seal.labelKey, "MERCHANT_PRESETS.Shop.Seal.NoGmWaiting");
+    assert.equal(buy.seal.disabled, true);
+    assert.equal(buy.slip.notice.text, "MERCHANT_PRESETS.Shop.Seal.NoGmNotice");
+    assert.equal(buy.slip.purse, "after", "the purse after still shows while it waits");
+  } finally {
+    globalThis.game.users = users;
+  }
+});
+
+test("a sealed bill shows the purse now and what was delivered (design WNYhA, state 2)", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("rope", { quantity: 5, price: { value: 1, denomination: "gp" } })] });
+  act(sheet, "addLine", { itemId: "rope" });
+  act(sheet, "stepLine", { itemId: "rope", delta: "1" });
+  api.trade = async () => { buyer.system.currency = { gp: 98 }; return { status: "sealed", lines: [{ itemId: "rope", quantity: 2, lineTotalCp: 200 }] }; };
+  await withLabels(async () => {
+    await act(sheet, "seal");
+    const { buy } = await sheet._prepareContext({});
+    assert.equal(buy.seal.state, "sealed");
+    assert.equal(buy.slip.purse, "now");
+    assert.deepEqual(buy.basket.afterCoins.map(c => [c.denomination, c.count]), [["gp", 98]], "the coins it left, not a second payment");
+    assert.equal(buy.slip.delivered, "DeliveredBuyMany(2 × rope,hero)");
+    assert.equal(buy.slip.totalLabel, "MERCHANT_PRESETS.Shop.Bill.Paid");
+    assert.equal(buy.slip.foot, null);
+  });
 });
