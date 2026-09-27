@@ -9,17 +9,8 @@
     <span class="mp-wax" data-pen="Wax Seal">{{mpIcon icon pen="Seal mark"}}</span><span class="mp-seal-label" data-pen="Seal label">{{label}}</span>
   </button>
 {{/inline}}
-<aside class="mp-basket" data-pen="Basket">
-  <div class="mp-slip trade-state-{{seal.state}}" data-pen="Bill of Sale">
-    <header class="mp-slip-head" data-pen="Slip Head">
-      <span class="mp-slip-kicker" data-pen="Slip Kicker">{{slip.kicker}}</span>
-      <h2 class="mp-slip-title" data-pen="Slip Title">{{shopTitle}}</h2>
-      <span class="mp-slip-date" data-pen="Slip Date">{{basket.dateLabel}}</span>
-    </header>
-    {{#if slip.notice.first}}{{> notice slip.notice}}{{/if}}
-    <span class="mp-head-rule" data-pen="Head Rule"></span>
-
-    {{#if basket.hasLines}}
+{{!-- The bill's lines, its sum and the purse block: the slip's, and the narrow dock's when opened (design mVjRf). --}}
+{{#*inline "slipBody"}}
       <div class="mp-ledger" data-pen="Ledger">
         {{#each basket.gone}}
           <div class="mp-line is-gone" data-pen="Line {{this.name}}">
@@ -87,6 +78,19 @@
       {{else}}
         <span class="mp-slip-fill"></span>
       {{/if}}
+{{/inline}}
+<aside class="mp-basket" data-pen="Basket">
+  <div class="mp-slip trade-state-{{seal.state}}" data-pen="Bill of Sale">
+    <header class="mp-slip-head" data-pen="Slip Head">
+      <span class="mp-slip-kicker" data-pen="Slip Kicker">{{slip.kicker}}</span>
+      <h2 class="mp-slip-title" data-pen="Slip Title">{{shopTitle}}</h2>
+      <span class="mp-slip-date" data-pen="Slip Date">{{basket.dateLabel}}</span>
+    </header>
+    {{#if slip.notice.first}}{{> notice slip.notice}}{{/if}}
+    <span class="mp-head-rule" data-pen="Head Rule"></span>
+
+    {{#if basket.hasLines}}
+      {{> slipBody}}
 
       {{#if (eq seal.state "sealed")}}
         {{#if slip.delivered}}<div class="mp-delivered" data-pen="Delivered">{{mpIcon "package-check" pen="Delivered icon"}}<span data-pen="Delivered text">{{slip.delivered}}</span></div>{{/if}}
@@ -108,11 +112,19 @@
   <div class="mp-dock-summary" data-pen="Dock summary">
     <div class="mp-dock-text" data-pen="Dock text">
       <span class="mp-slip-kicker" data-pen="Dock kicker">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleSell"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleBuy"}}{{/if}}</span>
-      <span class="mp-dock-lines" data-pen="Dock lines">{{#if basket.hasLines}}{{basket.summary}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}{{/if}}</span>
+      <span class="mp-dock-lines" data-pen="Dock lines">{{#if basket.hasLines}}{{#if @root.billOpen}}{{basket.lineCount}}{{else}}{{basket.summary}}{{/if}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}{{/if}}</span>
     </div>
-    {{#if basket.hasLines}}{{> mpCoins coins=basket.sumCoins mode="count"}}{{/if}}
-    <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Open'}}">{{mpIcon "chevron-up" pen="Expand"}}</button>
+    {{#if @root.billOpen}}
+      <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Close'}}">{{mpIcon "chevron-down" pen="Collapse"}}</button>
+    {{else}}
+      {{#if basket.hasLines}}{{> mpCoins coins=basket.sumCoins mode="count"}}{{/if}}
+      <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Open'}}">{{mpIcon "chevron-up" pen="Expand"}}</button>
+    {{/if}}
   </div>
+  {{#if (and @root.billOpen basket.hasLines)}}
+    <span class="mp-head-rule" data-pen="Head Rule"></span>
+    <div class="mp-dock-slip">{{> slipBody}}</div>
+  {{/if}}
   {{#if basket.hasLines}}
     {{#if (eq seal.state "sealed")}}
       {{> sealButton action="keepShopping" icon="lucide:store" label=(localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping")}}

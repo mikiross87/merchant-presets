@@ -1309,6 +1309,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       hasLines: lines.length > 0 || gone.length > 0,
       // The docked bill's one line in a narrow window (design r7HIUl).
       summary: billSummary(lines),
+      // The opened dock's heading (design mVjRf): how many lines the bill holds.
+      lineCount: game.i18n.localize(`MERCHANT_PRESETS.Shop.Bill.${lines.length === 1 ? "OneLine" : "Lines"}`, { count: lines.length }),
       // A stamped bill keeps the date it sealed on; a live one reads the clock.
       dateLabel: sealed?.dateLabel ?? this.#worldDateLabel()
     };

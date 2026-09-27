@@ -1468,11 +1468,9 @@
   .shop-sheet .mp-row.in-basket .mp-add .mp-icon:first-child { display: none; }
   .shop-sheet .mp-row.in-basket .mp-add .mp-icon + .mp-icon { display: block; color: #ffffff; }
 
-  /* The full slip, over the list, while the dock is open. */
+  /* The slip lives in the dock: opened, it grows to hold the lines, and the list shrinks above it (design mVjRf). */
   .shop-sheet .mp-basket { display: none; }
-  .shop-sheet .is-bill-open > .mp-stock { display: none; }
-  .shop-sheet .is-bill-open > .mp-basket { display: flex; flex: 1 1 0; width: auto; margin: 0; border: none; }
-  .shop-sheet .is-bill-open .mp-dock-expand .mp-icon { transform: rotate(180deg); }
+  .shop-sheet .mp-dock-slip { display: contents; }
 
   .shop-sheet .mp-dock.mp-narrow-only {
     flex: none;
