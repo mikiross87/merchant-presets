@@ -1614,3 +1614,24 @@ test("a New good that sells out again loses its badge: New is for goods back in 
     globalThis.game.time.worldTime = before;
   }
 });
+
+test("with trading hours off a restock's New lasts until the shop's own next opening, not midnight (#152 review)", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 20 * 3600, drawn: true } } })] });
+  shop.flags["merchant-presets"].shop.hours = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
+  shop.flags["merchant-presets"].restockedAt = 20 * 3600;
+  globalThis.game.settings.values.tradingHours = false;
+  const before = globalThis.game.time.worldTime;
+  const seen = async () => {
+    const { header, buy } = await sheet._prepareContext({});
+    return [header.fresh, buy.sections[0].rows[0].isNew];
+  };
+  try {
+    globalThis.game.time.worldTime = 24 * 3600 + 3 * 3600;   // 3:00 the next day: past midnight
+    assert.deepEqual(await seen(), [true, true]);
+    globalThis.game.time.worldTime = 24 * 3600 + 20 * 3600;  // its next opening
+    assert.deepEqual(await seen(), [false, false]);
+  } finally {
+    globalThis.game.time.worldTime = before;
+    globalThis.game.settings.values.tradingHours = true;
+  }
+});

@@ -1,5 +1,5 @@
 import { nextCloseAt } from "./deals.mjs";
-import { nextOpeningAfter } from "./schedule.mjs";
+import { isDrawn, nextOpeningAfter } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
@@ -428,39 +428,37 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * Whether a restock is still fresh: the hero's "Fresh stock today" chip and the goods' "New"
  * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
  * restock until the shop next closes after it (deals.mjs `nextCloseAt`, through the closing
- * minute). A shop that never closes, one open round the clock or every shop while the world's
- * trading hours are off, starts its own day again at its next opening (`dayHours`, the hours the
- * shop keeps whatever the world says): midnight for one keeping none. Worked out when the window
- * draws, so nothing has to be written at closing (#152).
+ * minute). A shop that doesn't close (it keeps no hours, keeps them round the clock, or the world's
+ * trading hours are off: `closes` false) starts its own day again at its next opening: midnight
+ * for one keeping none. Worked out when the window draws, so nothing is written at closing (#152).
  *
  * @param {number|null|undefined} lastRestock  when the shelf was last restocked (the shop's `restockedAt`), in world seconds
- * @param {number} now                          the world time
- * @param {object|null} hours     the hours the shop closes by: null when it keeps none, or trading hours are off
+ * @param {number} now          the world time
+ * @param {object|null} hours   the hours the shop keeps (its own, whatever the world's setting)
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
- * @param {object|null} [dayHours]  the hours whose opening starts the shop's day; `hours` by default
+ * @param {boolean} [closes]    whether the shop closes by its hours: false while trading hours are off
  */
-export function isFresh(lastRestock, now, hours, days, dayHours = hours) {
+export function isFresh(lastRestock, now, hours, days, closes = true) {
   if (lastRestock == null || now < lastRestock) return false;
-  return now < (nextCloseAt(hours, lastRestock, days) ?? nextOpeningAfter(lastRestock, dayHours, days));
+  return now < ((closes ? nextCloseAt(hours, lastRestock, days) : null) ?? nextOpeningAfter(lastRestock, hours, days));
 }
 
 /**
  * Whether a good wears "New" (#152): this shop's restock brought it back in stock (its `newAt`,
  * schedule.mjs `planRestock`), that's still fresh, and it hasn't sold out again since. Only on the
- * shop that drew it: a good a GM drags from one shop to another keeps its flags, but not its
- * badge. `drawn: true` is a good drawn before shelves had keys.
+ * shop that drew it (schedule.mjs `isDrawn`): a good a GM drags from one shop to another keeps its
+ * flags, but not its badge.
  *
  * @param {{system?: {quantity?: number}, flags?: object}} item
  * @param {string|undefined} shelf  the shop's shelf key (`flags.merchant-presets.shelf`)
  * @param {number} now
  * @param {object|null} hours       as `isFresh` takes them
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
- * @param {object|null} [dayHours]  as `isFresh` takes them
+ * @param {boolean} [closes]        as `isFresh` takes it
  */
-export function isNewGood(item, shelf, now, hours, days, dayHours = hours) {
-  const own = item?.flags?.["merchant-presets"];
-  const here = own?.drawn === true || (own?.drawn != null && own.drawn === shelf);
-  return here && item.system?.quantity !== 0 && isFresh(own.newAt, now, hours, days, dayHours);
+export function isNewGood(item, shelf, now, hours, days, closes = true) {
+  return isDrawn(item, shelf) && item.system?.quantity !== 0
+    && isFresh(item.flags?.["merchant-presets"]?.newAt, now, hours, days, closes);
 }
 
 /* -------------------------------------------------------------- basket */
