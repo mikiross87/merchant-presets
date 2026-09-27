@@ -138,6 +138,8 @@ export function createWorld() {
       emit: (name, message) => calls.socket.push({ name, message })
     },
     packs: [],
+    // The key itself: a test reads which text was asked for, not an English translation.
+    i18n: { lang: "en", localize: key => key },
     world: { id: "stub-world" },
     actors,
     scenes,

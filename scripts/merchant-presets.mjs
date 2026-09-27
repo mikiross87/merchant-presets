@@ -4,18 +4,19 @@
  * and the listeners that act on a trade (meals, animals, spellcasting).
  */
 
-import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
+import { DRINK_IDENTIFIERS, partOfDay } from "./shop-view.mjs";
 import {
-  adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
-  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
+  receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
@@ -26,11 +27,6 @@ import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnership
 
 const MODULE = "merchant-presets";
 
-const NUTRITION_MODULE = "simple-nutrition-5e";
-/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
-const NUTRITION_MINIMUM = "1.0.0";
-/** Identifiers on our drinks that should slake thirst rather than hunger. */
-const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
 /** Ids of the shops `setUpShopNow` is building right now: `arrive` leaves them alone. */
 const rewiring = new Set();
@@ -319,9 +315,9 @@ async function adoptOnce(actor, table) {
  * @returns {Promise<string[]|null>} the lines it drew or topped up; null if
  *   it couldn't restock at all (no shop config, or its table is gone)
  */
-function restock(actor) {
+function restock(actor, options) {
   return runTrade(async () => {
-    const restocked = await restockNow(actor);
+    const restocked = await restockNow(actor, options);
     // A scheduled shop restocked by hand counts its next due day from today, as a scheduled
     // restock would, or the next opening would reroll the shelf just rolled (#135 review).
     const state = actor.flags?.[MODULE]?.schedule;
@@ -334,7 +330,12 @@ function restock(actor) {
   });
 }
 
-async function restockNow(actor) {
+/**
+ * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
+ * even when the clock caught up with it later, or now. `markNew: false` is a shop's first roll,
+ * which brings nothing back in stock (#152).
+ */
+async function restockNow(actor, { at = game.time.worldTime, markNew = true } = {}) {
   const raw = actor.flags?.[MODULE]?.shop;
   const shop = safeShopOf(actor);
   if (!shop?.restock.table) return null;
@@ -359,15 +360,25 @@ async function restockNow(actor) {
     currentGp: actor.system?.currency?.gp,
     stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), shelf),
     containers: actor.flags?.[MODULE]?.containers ?? {},
-    drawnBy: shelf
+    drawnBy: shelf,
+    at,
+    markNew
   });
   // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
   await actor.update({ [`flags.${MODULE}.lines`]: memory });
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
-  if (plan.currency != null) await actor.update({ "system.currency.gp": plan.currency });
-  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
+  // The till; when the shelf was last restocked, whatever did it, for Settings' Last restock; and
+  // when it last brought fresh stock, for the shop window's "Fresh stock today" (#145, #152): not a
+  // shop's first roll, nor one that brought back nothing players can see. One update, so open
+  // windows render the new shelf with its chip at once.
+  await actor.update({
+    ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {}),
+    [`flags.${MODULE}.lastRestockAt`]: at,
+    ...(markNew && plan.fresh ? { [`flags.${MODULE}.restockedAt`]: at } : {})
+  });
+  await syncStockWeight(actor);        // the shelf and the till have both just moved
   return plan.restocked;
 }
 
@@ -405,7 +416,7 @@ async function scheduleShop(actor, now, previous, calendar) {
   }
   const due = dueRestock(raw, state, previous, now, calendar);
   if (!due.due) return null;
-  const restocked = await restockNow(actor);
+  const restocked = await restockNow(actor, { at: due.at });
   // Couldn't run (its table or a line's document is missing): still due, so the next opening
   // tries again, rather than the shop skipping a whole cycle.
   if (restocked === null) return null;
@@ -496,20 +507,8 @@ async function registerDrinks() {
   }
 }
 
-/**
- * Can we feed characters through the active Simple Nutrition?
- *
- * Meals and sheet consumption write straight into its daily tally, and the
- * unit of that tally changed in 1.0: before it, the same flag held pounds and
- * gallons. Writing fractions of a day into 0.5 would credit every creature
- * that is not Medium wrongly, and still pass the export checks below, so an
- * older version gets no meals rather than wrong ones. Drinks are unaffected —
- * WATER_IDENTIFIERS means the same in both.
- */
-function nutritionFeeds() {
-  const sn = game.modules.get(NUTRITION_MODULE);
-  return !!sn?.active && !foundry.utils.isNewerVersion(NUTRITION_MINIMUM, sn.version);
-}
+/** Can we feed characters through the active Simple Nutrition? (nutrition.mjs `mealsFeed`) */
+const nutritionFeeds = () => mealsFeed(game.modules.get(NUTRITION_MODULE), foundry.utils.isNewerVersion);
 
 /** Tell the GM once, at load, when a Simple Nutrition too old to feed is why meals do nothing. */
 function warnOutdatedNutrition() {
@@ -960,7 +959,11 @@ async function carryOutTrade(request, user) {
     if (whisper) {
       await ChatMessage.create({
         speaker: ChatMessage.getSpeaker({ actor: shop }),
-        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies),
+        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies, {
+          t: (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.${key}`, data),
+          when: receiptWhen(game.time.worldTime),
+          whispered: whisper.length > 0
+        }),
         whisper
       });
     }
@@ -968,6 +971,24 @@ async function carryOutTrade(request, user) {
     console.error(`${MODULE} | trade ${plan.tradeId} landed, but telling the table failed`, err);
   }
   return result;
+}
+
+/** A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs `receiptIcons`). */
+Hooks.on("renderChatMessageHTML", (_message, html) => {
+  const receipt = html?.querySelector?.(".message-content .mp-receipt");
+  if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
+});
+
+/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. */
+function receiptWhen(time) {
+  try {
+    const calendar = game.time.calendar;
+    const c = calendar.timeToComponents(time);
+    const month = calendar.months?.values?.[c.month];
+    const date = month ? `${c.dayOfMonth + 1} ${game.i18n.localize(month.name)}` : calendar.format(time, "timestamp");
+    const part = game.i18n.localize(`MERCHANT_PRESETS.Shop.Day.${partOfDay(c.hour, calendar.days.hoursPerDay)}`);
+    return game.i18n.localize("MERCHANT_PRESETS.Shop.Receipt.When", { date, part });
+  } catch { return ""; }
 }
 
 /**
@@ -1320,6 +1341,8 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       [`flags.${MODULE}.shelf`]: null,
       [`flags.${MODULE}.schedule`]: null,
       [`flags.${MODULE}.lines`]: null,
+      [`flags.${MODULE}.restockedAt`]: null,
+      [`flags.${MODULE}.lastRestockAt`]: null,
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
@@ -1328,7 +1351,7 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);
-    await restockNow(actor);
+    await restockNow(actor, { markNew: false });
   } finally {
     rewiring.delete(actor.id);
   }
@@ -1412,6 +1435,16 @@ function registerShopSetup() {
 }
 
 /* ----------------------------------------------------------------- settings */
+
+/**
+ * A shop good's New mark goes as it sells out, or as anything but a restock refills it from 0: a
+ * trade, the GM on the NPC sheet, a drop (#152). One place for every way a quantity moves.
+ */
+Hooks.on("preUpdateItem", (item, changes) => {
+  const quantity = foundry.utils.getProperty(changes, "system.quantity");
+  const setsNewAt = foundry.utils.hasProperty(changes, `flags.${MODULE}.newAt`);
+  if (dropsNewMark(item, quantity, setsNewAt)) foundry.utils.setProperty(changes, `flags.${MODULE}.newAt`, null);
+});
 
 Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
@@ -1697,7 +1730,7 @@ async function arrive(actor) {
     await migrateShop(actor);
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
-    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
+    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor, { markNew: false });
   } finally {
     arriving.delete(actor.id);
   }

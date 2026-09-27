@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SHOP_DEFAULTS, shopFrom, validateShop } from "../scripts/schema.mjs";
-import { applyChange, everyChoice, parseTime, percentOf, resetToPreset, timeText } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText } from "../scripts/shop-settings.mjs";
 
 const WORLD = { sellsAt: 1, buysAt: 0.5 };
 const shop = (over = {}) => shopFrom({ version: 1, ...over });
@@ -185,4 +185,47 @@ test("a rule's side can be handed back to the shop's rate, but not both sides (#
   config = applied(config, { op: "ruleRate", category: "Valuables", side: "sellsAt", percent: null });
   assert.deepEqual(config.terms.categories[0], { category: "Valuables", sellsAt: null, buysAt: 0.5 });
   refused(config, { op: "ruleRate", category: "Valuables", side: "buysAt", percent: null });
+});
+
+/* ---------------------------------------------------------- Hours preview (design S2swP) */
+
+const DAYS = { minutesPerHour: 60, hoursPerDay: 24, secondsPerMinute: 60 };
+const SMITH = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } };
+
+test("Players see an open hour and a closed one: now for whichever the shop is, the other beside it", () => {
+  // 10:00, open: now, and four hours before it opens (3:00, the Closed frame's hour).
+  assert.deepEqual(hoursSamples(SMITH, 600, DAYS), { open: 600, closed: 180 });
+  // 3:00, closed: now, and its opening.
+  assert.deepEqual(hoursSamples(SMITH, 180, DAYS), { open: 420, closed: 180 });
+  // Past midnight: a tavern open 18:00-02:00, at 20:00, closed at 14:00.
+  assert.deepEqual(hoursSamples({ open: { hour: 18, minute: 0 }, close: { hour: 2, minute: 0 } }, 1200, DAYS), { open: 1200, closed: 840 });
+});
+
+test("a shop open around the clock has no closed hour to show", () => {
+  assert.deepEqual(hoursSamples(null, 600, DAYS), { open: 600, closed: null });
+  assert.deepEqual(hoursSamples({ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }, 600, DAYS), { open: 600, closed: null });
+});
+
+test("how long the shop is open a day, past midnight too", () => {
+  assert.equal(openMinutes(SMITH, DAYS), 720);
+  assert.equal(openMinutes({ open: { hour: 18, minute: 0 }, close: { hour: 2, minute: 30 } }, DAYS), 510);
+  assert.equal(openMinutes(null, DAYS), null);
+});
+
+/* ---------------------------------------------------------- the deal form (design Q6UvA) */
+
+test("a deal side reads in plain words beside its field", () => {
+  assert.deepEqual(dealReading("buy", "−10"), { key: "BuyLess", percent: 10 });
+  assert.deepEqual(dealReading("buy", "15"), { key: "BuyMore", percent: 15 });
+  assert.deepEqual(dealReading("sell", "20"), { key: "SellMore", percent: 20 });
+  assert.deepEqual(dealReading("sell", "-5"), { key: "SellLess", percent: 5 });
+  // Blank, zero or not a number: the shop's own price.
+  for (const blank of ["", "0", "abc", null]) assert.deepEqual(dealReading("buy", blank), { key: "ShopPrice", percent: null });
+});
+
+test("a deal's percent takes a true minus as typed or pasted (design Q6UvA)", () => {
+  const fields = dealFields({ actor: "Actor.a", buy: "−10", sell: "", ends: "never", days: null, note: "" },
+    { name: "Aria", worldTime: 0, hours: null, calendar: DAYS, previous: null });
+  assert.equal(fields.buy, -10);
+  assert.equal(fields.sell, null);
 });

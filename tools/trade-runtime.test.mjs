@@ -257,7 +257,8 @@ test("a trade is heard on this client and sent to every other, then posts one re
   const receipts = world.calls.messages.filter(m => m.content.includes("mp-receipt"));
   assert.equal(receipts.length, 1);
   assert.deepEqual(receipts[0].whisper, []);
-  assert.match(receipts[0].content, /bought from/);
+  assert.match(receipts[0].content, /Receipt\.Bought/, "the design's kicker: who bought (z5RBkd)");
+  assert.match(receipts[0].content, /Receipt\.Public/, "posted for everyone, it says so");
 });
 
 test("the receipt follows the trade chat setting", async () => {

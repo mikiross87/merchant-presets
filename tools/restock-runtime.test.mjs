@@ -430,3 +430,49 @@ test("a topup that found nothing sold isn't reported as a restock (#135 review, 
   await clock(at(3, 8));
   assert.deepEqual(told, []);
 });
+
+test("every restock notes when it ran, scheduled or by hand, for the window's Fresh chip (#145)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "adopting a shelf isn't a restock");
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].restockedAt, at(3, 7), "the opening it was due at");
+
+  world.settings.autoRestock = false;
+  globalThis.game.time.worldTime = at(4, 10);
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.equal(shop.flags["merchant-presets"].restockedAt, at(4, 10));
+});
+
+test("every restock notes when it ran, even one that brought nothing back, for Settings' last restock (#154 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].lastRestockAt, at(3, 7));
+  shop.flags["merchant-presets"].shop.restock.mode = "topup";
+  for (const item of shop.items) if (item.system.quantity === 0) item.system.quantity = 1;
+  world.settings.autoRestock = false;
+  globalThis.game.time.worldTime = at(4, 10);
+  const freshAt = shop.flags["merchant-presets"].restockedAt ?? null;
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.equal(shop.flags["merchant-presets"].lastRestockAt, at(4, 10));
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, freshAt, "nothing came back, so nothing is New");
+});
+
+test("a restock the clock catches up on is stamped at the opening it was due, New goods too (#152 review)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  for (const bell of byName(shop, "Bell")) bell.system.quantity = 0;
+  await clock(at(3, 20));   // one jump from before opening to after closing
+  assert.equal(shop.flags["merchant-presets"].restockedAt, at(3, 7));
+  assert.ok(byName(shop, "Bell").every(b => b.flags["merchant-presets"].newAt === at(3, 7)), JSON.stringify(byName(shop, "Bell").map(b => b.flags)));
+});
+
+test("a top-up that brought nothing back isn't fresh stock (#152 review)", async () => {
+  const { shop, clock } = await setUp();
+  shop.flags["merchant-presets"].shop.restock.mode = "topup";
+  for (const item of shop.items) if (item.system.quantity === 0) item.system.quantity = 1;
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null);
+});

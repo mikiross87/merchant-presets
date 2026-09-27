@@ -16,18 +16,22 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 03 | Settings (GM) — Light / Dark; Settings (GM) · Restock — Light / Dark |
 | 04 | Closed — Light / Dark |
 | 05 | Inn — Light / Dark |
-| 06 | Storefront — Narrow (Light) / (Dark) |
+| 06 | Storefront — Narrow (Light) / (Dark); Storefront — Narrow · Bill open (Light) / (Dark) |
 | 07 | Buyer Picker and Trade Chat Card, light and dark |
 | 08 | Trade States boards, light and dark |
+| 09 | Settings (GM) · Won't buy — Light / Dark; Settings (GM) · Hours — Light / Dark |
+| 10 | Deals boards, light and dark: the deal form, an ended deal, a bill at a deal's price |
+| 11 | Sell — Narrow (Light) / (Dark); Settings (GM) — Narrow (Light) / (Dark) |
+| 12 | Sell Trade States boards, light and dark |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (09, at y 6405) and gets a row here.
+A new agreed screen goes in the next band (13, at y 9711) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
 **Edit the light frames only.** Each light frame is a reusable master. Every dark frame is an instance of its light frame with the theme set to dark, and the Player storefront is an instance of **01 Storefront — Light** with the Settings tab and the NPC sheet button switched off. An edit to a light frame reaches its dark twin and the player view on its own. That's why the screens show up in Pencil's component list beside the parts in band 00. A new screen follows the same pattern: build the light frame, mark it reusable, and add the dark frame as an instance with `theme: {mode: "dark"}`.
 
-The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
+The six 920 px screens draw their window bar, hero and tabs as instances of the **Window Parts** components, and every Bill of Sale draws its heading from **Slip Head** and its button from **Seal Button**. A screen overrides only what differs: its active tab, the Inn's name and portrait, the Closed chip, or the slip's kicker. The narrow screen's header is built differently and stays its own drawing.
 
 ### Explore lane
 
@@ -162,6 +166,10 @@ A third tab, **Settings**, marked with a `GM` badge. Only GMs see it. Players' c
 - **Terms:** "Sells at" and "Buys at" as percentages, each with its plain reading ("list price", "½ of value") and a "World default" box. A live example underneath ("Longsword (15 gp) sells for 15 gp · buys back for 7 gp 5 sp") recomputes as the GM types. Category rules are listed here, with "+ Add rule".
 - **Deals:** one card per character, holding the adjustment tag (green), the GM's note, the end ("Until the shop closes", "No end"), and edit and delete. The footer states the cap: no deal can make selling pay more than buying.
 - **Right, "Players see":** a live preview. "Everyone" shows the terms chip and a sample row. "Only Aria" shows a deal as that character sees it: the chip reads "Your price −10%", and the row shows the list price struck through with a `−10%` tag (15 gp → 13 gp 5 sp).
+- **Won't buy:** checkboxes in three columns, "Item types" then "Kinds of goods". Players see the Sell tab: a refused good stays listed, dimmed, with the reason on its second line.
+- **Hours:** "Keeps trading hours", then the open and close times with a plain reading ("12 hours a day"). Players see the chip at an open hour and at a closed one.
+- The page scrolls as one, so a frame jumped to a section also shows the start of the next one.
+- **Deals board (band 10):** the add/edit form is the shop's own dialog (Character, Buying and Selling with a plain reading, Ends, and a GM-only note with the console warning). An ended deal stays, dimmed, "Ended at closing, 13 Mirtul", until the GM edits or removes it. On the character's bill, each line carries the green deal tag beside its name, and "Your deal saves you 3 gp." sits under the sum.
 - World-wide defaults (rates, trade chat mode) stay in Foundry's Configure Settings.
 
 ## Restock (#105)
@@ -199,6 +207,8 @@ The Bill of Sale carries the whole trade. The "Trade States" board shows it in e
 | Till too low (selling) | the sum in red; a red notice: "The till holds 40 gp…"; no purse-after line | "The till can't cover this", disabled |
 | Stock changed | an amber notice at the top; the sold-out line struck and dimmed; the sum recomputed | active, with the new sum |
 
+The Sell Trade States board (band 12) draws where the Sell tab differs: its Sealed slip reads "Received", shows the purse now, and says where the goods went ("…are with Armourer & Blacksmith now").
+
 A disabled seal always says why, in the button itself. The slip never shows a purse-after figure for a trade that can't happen.
 
 **Closed:** the stock stays visible but dimmed, with no add buttons. The slip becomes a "Shutters are down" card showing when it opens ("Opens at 7:00, in about 4 hours") and the hours table (open, close, restock).
@@ -225,6 +235,9 @@ The world setting from #102 chooses off, GM only or public.
   - the category column becomes a dropdown
   - rows already on the bill show a filled check instead of "+"
   - the Bill of Sale docks at the bottom as a summary bar (the lines as text, the sum, an expand chevron) with the seal button always visible
+  - the chevron opens the dock into the whole slip (lines with steppers, the sum, the purse after, the seal); the list shrinks above it, and the chevron turns down to close it
+  - Sell shows the till as a one-line strip at the top of the list (kicker, coins, meter)
+  - Settings turns its section list into a dropdown like the categories, puts "Players can visit" at the top of the form, and docks "Players see" at the bottom as a collapsed bar, like the bill
 
 ## Components
 
@@ -236,6 +249,7 @@ Reusable in `shop.pen` (the Components frame):
 - Quantity Stepper
 - Item Row: art, name, meta, stock, a price block with an optional struck list price, a terms tag and a second coin, and an add button
 - Slip Head: the Bill of Sale's kicker, title and date
+- Seal Button: the wax seal pinned left and the label centred in the space beside it; the waiting and refusal states override the fill, stroke, icon and label colour
 
 Reusable in the Window Parts frame:
 

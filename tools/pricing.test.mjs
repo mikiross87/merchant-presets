@@ -157,15 +157,15 @@ test("paying with small coins first doesn't force a needlessly big top-up on top
   assert.equal(result.purse.sp, 9);   // the silver never had to move
 });
 
-test("change that needs electrum comes from breaking the till's coins as needed", () => {
+test("change the till doesn't hold comes from breaking its coins as needed", () => {
   const purse = { pp: 0, gp: 1, ep: 0, sp: 0, cp: 0 };   // pays a 30cp price, wants 70cp change
   const till = { pp: 1, gp: 0, ep: 0, sp: 0, cp: 0 };    // only a platinum piece (1000cp) on hand
   const result = pay(purse, 30, till, DND5E_CURRENCIES);
   assert.equal(result.ok, true);
   assert.equal(result.changeCp, 70);
-  // 70cp breaks down as 1 ep (50cp) + 2 sp (20cp): the smallest coin count that hits it exactly.
-  assert.equal(result.purse.ep, 1);
-  assert.equal(result.purse.sp, 2);
+  // 70cp comes back as 7 sp: a broken coin splits into everyday coins, not 1 ep 2 sp.
+  assert.equal(result.purse.ep, 0);
+  assert.equal(result.purse.sp, 7);
 });
 
 test("a till with enough total value but none of the needed coin still pays out", () => {
@@ -255,4 +255,24 @@ test("a category rule's unset side follows the shop, and the world past it (#143
   assert.deepEqual(rates.buysAt, { rate: 1, layer: "category" });
   const own = effectiveRates(world, { ...terms, sellsAt: 1.25 }, "Valuables");
   assert.deepEqual(own.sellsAt, { rate: 1.25, layer: "shop" });
+});
+
+test("a broken coin splits into gold, silver and copper, never electrum or platinum (Sell frame TGXBN)", () => {
+  // The till's gold pays 57 gp 5 sp exactly: one gold coin breaks into silver, not 2 ep.
+  const sale = payExact({ pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 }, 5750, DND5E_CURRENCIES);
+  assert.deepEqual(sale.given, { gp: 57, sp: 5 });
+  // Change for a gold coin on a 5 sp price comes back in silver.
+  const buy = pay({ gp: 1 }, 50, { gp: 3 }, DND5E_CURRENCIES);
+  assert.deepEqual(buy.purse, { gp: 0, sp: 5 });
+  // A broken platinum becomes gold.
+  assert.deepEqual(payExact({ pp: 1 }, 500, DND5E_CURRENCIES).given, { gp: 5 });
+});
+
+test("electrum a payer actually holds is still paid out", () => {
+  assert.deepEqual(payExact({ gp: 1, ep: 1 }, 150, DND5E_CURRENCIES).given, { gp: 1, ep: 1 });
+});
+
+test("a currency set without the everyday coins still breaks into whatever is smaller", () => {
+  const shells = { big: { conversion: 1 }, small: { conversion: 4 } };
+  assert.deepEqual(payExact({ big: 1 }, 1, shells).given, { small: 1 });
 });

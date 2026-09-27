@@ -7,6 +7,7 @@
       "About": "About",
       "AlwaysOpen": "Open",
       "OpenUntil": "Open · closes at {time}",
+      "OpenUntilShort": "Open until {time}",
       "Closed": {
         "Label": "Closed",
         "Title": "Shutters are down",
@@ -18,10 +19,12 @@
         "MinutesPlural": "{count} minutes",
         "Open": "Open",
         "Close": "Close",
-        "NextRestock": "Next restock"
+        "NextRestock": "Next restock",
+        "NextRestockAt": "{date}, at opening"
       },
       "ClosedOpensAt": "Closed · opens at {time}",
       "TermsChip": "Sells at {sells} · Buys at {buys}",
+      "TermsChipSells": "Sells at {sells}",
       "FreshStockToday": "Fresh stock today",
       "BuyingAs": "Buying as",
       "NoBuyer": "Pick a buyer",
@@ -34,6 +37,53 @@
       },
       "Category": {
         "All": "All goods"
+      },
+      "Group": {
+        "weapons": "Weapons",
+        "armor": "Armor",
+        "tools": "Tools",
+        "gear": "Gear",
+        "meal": "Meals",
+        "lodging": "Lodging",
+        "food-drink": "Food & drink",
+        "service": "Services",
+        "spellcasting": "Spellcasting",
+        "component": "Spell components",
+        "mount": "Mounts",
+        "tack": "Tack",
+        "vehicle": "Vehicles",
+        "travel": "Travel"
+      },
+      "Meta": {
+        "Weight": "{weight} {units}",
+        "Ac": "AC {ac}",
+        "Dex": " + Dex",
+        "DexMax": " + Dex (max {max})",
+        "Str": "Str {str}",
+        "ShieldAc": "+{ac} AC",
+        "Service": "Service",
+        "FeedsBuyer": "feeds the buyer",
+        "Drink": "Drink",
+        "CountsAsWater": "counts as water",
+        "Worth": "worth {amount}",
+        "WorthEach": "worth {amount} each"
+      },
+      "Day": {
+        "night": "night",
+        "dawn": "dawn",
+        "morning": "morning",
+        "midMorning": "mid-morning",
+        "midday": "midday",
+        "afternoon": "afternoon",
+        "evening": "evening"
+      },
+      "Ordinal": {
+        "one": "{n}st",
+        "two": "{n}nd",
+        "few": "{n}rd",
+        "other": "{n}th",
+        "zero": "{n}th",
+        "many": "{n}th"
       },
       "Stock": {
         "Left": "{count} left",
@@ -55,21 +105,15 @@
         "Empty": "This shop has nothing left to show here."
       },
       "Sell": {
-        "WillBuy": "Will buy",
-        "WontBuy": "Won't buy",
-        "BuysAt": "Buys at",
-        "OfValue": "of value",
         "Equipped": "Equipped",
         "Empty": "Nothing in your pack this shop has an opinion on yet.",
-        "TillHolds": "The till holds {amount}, so no sale today can bring in more.",
-        "Filter": {
-          "Everything": "Everything",
-          "WillBuy": "Will buy",
-          "WontBuy": "Won't buy"
-        },
+        "Till": "The shop's till",
+        "TillNote": "No sale can bring in more than this.",
+        "Pack": "{name}'s pack",
         "Reason": {
           "Unidentified": "Unidentified",
-          "UnidentifiedNote": "Unidentified. Get it looked at first.",
+          "UnidentifiedNote": "Get it looked at first.",
+          "WontBuyWhat": "Won't buy {what}",
           "General": "Won't buy this",
           "NoBuyback": "No buyback",
           "Unpriced": "Unpriced",
@@ -82,6 +126,7 @@
       },
       "Bill": {
         "TitleBuy": "Bill of Sale",
+        "Date": "{day} of {month} · {part}",
         "TitleSell": "Bill of Sale · Selling",
         "SumOwed": "Sum owed",
         "YouReceive": "You receive",
@@ -90,50 +135,88 @@
         "TillDrops": "The till drops to {amount}",
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
+        "Open": "Show the whole bill",
+        "Close": "Show the list",
+        "Lines": "{count} lines",
+        "OneLine": "1 line",
+        "OfList": "({ratio} of {list})",
+        "Feeds": "Feeds {name}",
+        "FromTonight": "From tonight",
         "Fewer": "One fewer",
-        "More": "One more"
+        "More": "One more",
+        "ExactChange": "Exact change is counted from your coins.",
+        "TitleSealed": "Bill of Sale · Sealed",
+        "Paid": "Paid",
+        "Received": "Received",
+        "PurseNow": "{name}'s purse now",
+        "ShortLabel": "{name} is short by",
+        "SoldOut": "Sold out",
+        "ListLast": "{rest} and {last}",
+        "DeliveredBuyOne": "{goods} is in {name}'s pack.",
+        "DeliveredBuyMany": "{goods} are in {name}'s pack.",
+        "DeliveredSellOne": "{goods} is with {shop} now.",
+        "DeliveredSellMany": "{goods} are with {shop} now."
       },
       "Seal": {
         "Bargain": "Seal the bargain · {price}",
+        "BargainShort": "Seal it · {price}",
         "BargainSell": "Seal it · take {price}",
         "Sealing": "Counting coin…",
         "Sealed": "SEALED",
         "KeepShopping": "Keep shopping",
         "CantAfford": "Not enough coin",
-        "NoGm": "No GM yet · Try again",
+        "NoGm": "No answer yet · Try again",
         "TillShort": "The till can't cover this",
         "Closed": "The shop is closed",
         "NoBuyer": "No character to trade as",
         "OutOfStock": "Not that many left",
         "StockChangedNotice": "Stock changed while this bill was open. Prices below are current.",
-        "NoGmNotice": "No GM is at the table. Trades are carried out by the GM's client. Your bill is kept: seal it again once one connects.",
+        "NoGmNotice": "No GM is at the table. Trades are carried out by the GM's client. Your bill is kept until one connects.",
         "TillShortNotice": "The till holds {amount}, less than this sale. Take lines off the bill until it fits.",
         "TillShortBuyNotice": "The till holds {amount} and can't make change for this. Pay closer to the sum, or take lines off.",
         "Worthless": "Worth nothing here",
         "NotEmpty": "Empty it first",
         "Unpriced": "Can't price this",
-        "Invalid": "Can't trade that"
+        "Invalid": "Can't trade that",
+        "NoGmWaiting": "Waiting for a GM",
+        "NoAnswerNotice": "The GM's client didn't answer. Your bill is kept: seal it again.",
+        "SoldOutNotice": "The last {name} sold while this bill was open. It has been struck off.",
+        "WaitingFoot": "Waiting on the GM's table. Don't close the window.",
+        "CantAffordFoot": "Take lines off the bill, or sell something first."
       },
       "Terms": {
         "Title": "Terms of trade",
         "SellsAt": "Sells at",
         "BuysAt": "Buys at",
         "ListPrice": "list price",
+        "List": "list",
         "ListPriceNote": "The price in the book is the price you pay.",
         "HalfValue": "half value",
-        "SellExample": "A {price} item sells here for {sellPrice}",
-        "BuyExample": "and buys back for {buyPrice}.",
-        "ExampleSells": "A 15 gp item sells here for",
-        "ExampleBuys": "A 15 gp item buys back here for",
+        "SellsDetail": "A 15 gp longsword costs {price} here.",
+        "BuysDetail": "A 15 gp longsword sells here for {price}.",
         "WontBuy": "Won't buy",
+        "AlsoTurnsAway": "Also turns away {list}.",
+        "ListOr": "{items} or {last}",
+        "ListAnd": "{items} and {last}",
+        "RuleRates": "sells at {sells} · buys at {buys}",
+        "Nouns": {
+          "food-drink": "food",
+          "meal": "food",
+          "mount": "mounts",
+          "service": "services",
+          "vehicle": "vehicles",
+          "tack": "tack",
+          "lodging": "lodging",
+          "travel": "passage",
+          "spellcasting": "spellcasting",
+          "component": "spell components"
+        },
         "Note": "Set by the GM on the shop. Prices below already include these terms."
       },
       "BuyerPicker": {
         "Search": "Find an actor…",
         "PlayerCharacters": "Player characters",
-        "OtherActors": "Other actors",
-        "PlayerHint": "Only actors you own. The assigned character is the default.",
-        "GmHint": "Any actor. Coins come from, and goods go to, whoever is picked."
+        "OtherActors": "Other actors"
       },
       "Settings": {
         "Invalid": "That change wasn't saved: {errors}",
@@ -149,20 +232,24 @@
         "Visit": {
           "Label": "Players can visit",
           "Hint": "Off hides the shop from players, except any you gave their own access to it.",
+          "HintAll": "Off hides the shop from players entirely.",
           "Others": "Players with their own access: {count}. Change it in the shop's Ownership."
         },
         "Terms": {
-          "Hint": "Rates apply to every item unless a category rule says otherwise.",
+          "Hint": "Rates apply to every item unless a category rule or a deal says otherwise.",
           "SellsAt": "Sells at",
           "BuysAt": "Buys at",
           "WorldDefault": "World default",
           "ExampleSells": "A 15 gp longsword sells for",
-          "ExampleBuys": "buys back for"
+          "ExampleItem": "{item} ({price}) sells for",
+          "ExampleBuys": "· buys back for",
+          "OfValue": "{fraction} of value"
         },
         "Rules": {
           "Title": "Category rules",
           "None": "None. Every category trades at the rates above.",
-          "Add": "Add rule",
+          "Add": "+ Add rule",
+          "AddTitle": "Add a category rule",
           "Category": "Category to add a rule for",
           "Sells": "Sells",
           "Buys": "Buys",
@@ -172,7 +259,7 @@
           "Hint": "Special prices for one character. Only that character sees them.",
           "None": "No deals yet.",
           "Cap": "No deal can make selling pay more than buying.",
-          "Add": "Add deal",
+          "Add": "+ Add deal",
           "Edit": "Edit deal",
           "Remove": "Remove deal",
           "Buying": "Buying {percent}",
@@ -180,7 +267,8 @@
           "NoEnd": "No end",
           "UntilClose": "Until the shop closes",
           "Until": "Until {date}",
-          "Ended": "Ended",
+          "EndedClose": "Ended at closing, {date}",
+          "EndedOn": "Ended {date}",
           "NoCharacters": "Every player character already has a deal here.",
           "Form": {
             "AddTitle": "Add a deal",
@@ -190,13 +278,21 @@
             "Character": "Character",
             "Buying": "Buying",
             "Selling": "Selling",
-            "SidesHint": "Off this shop's own price: −10 buys 10% cheaper, 10 sells for 10% more. Leave a side blank to keep its price.",
             "Ends": "Ends",
-            "WhenCloses": "When the shop next closes",
+            "WhenCloses": "When the shop closes",
             "AfterDays": "After some days",
             "Days": "Days",
-            "Note": "Note (GM only)",
-            "NoteHint": "Players never see the note in the shop, but it's saved on the shop actor, so a player could read it from the browser console."
+            "NoteLabel": "Note",
+            "GmOnly": "GM only",
+            "NoteHint": "Players never see the note in the shop. It's saved on the shop, so a player could still read it from the browser console.",
+            "Cancel": "Cancel",
+            "Reading": {
+              "ShopPrice": "the shop's price",
+              "BuyLess": "{percent}% off the shop's price",
+              "BuyMore": "{percent}% over the shop's price",
+              "SellLess": "{percent}% less than the shop pays",
+              "SellMore": "{percent}% more than the shop pays"
+            }
           }
         },
         "WontBuy": {
@@ -218,7 +314,12 @@
         },
         "Hours": {
           "Keeps": "Keeps trading hours",
-          "Hint": "Closes to players outside these hours, on the world clock. A close before the open runs past midnight.",
+          "Hint": "Players can trade only while the shop is open, on the world clock.",
+          "Opens": "Opens",
+          "Closes": "Closes",
+          "PerDay": "{hours} hours a day",
+          "PerDayMinutes": "{hours} hours {minutes} minutes a day",
+          "Note": "A close before the open runs past midnight: a tavern open 18:00–02:00 closes at 2 the next morning.",
           "AlwaysOpen": "Open around the clock.",
           "WorldOff": "Trading hours are off for the whole world (Configure Settings), so every shop is open around the clock."
         },
@@ -234,7 +335,7 @@
           "Dice": "Dice…",
           "Never": "Never",
           "Formula": "Days, as a dice formula",
-          "Preset": "Preset default: {every}.",
+          "Preset": "Preset default: {every}. Days follow the world calendar.",
           "What": "What a restock does",
           "Reroll": "Re-roll the shelf",
           "RerollHint": "Everything the table drew is drawn again at fresh quantities. Goods you added by hand stay.",
@@ -242,10 +343,18 @@
           "TopupHint": "Only drawn goods that sold out come back. Goods you added by hand stay.",
           "Till": "Either way, the till is refilled to {gp} gp.",
           "Last": "Last restocked {date}",
-          "Next": "Next: {date}",
+          "Next": "Next: {date}, {when}",
           "Now": "Restock now",
           "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console of the GM tab that runs trades says which.",
-          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment."
+          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment.",
+          "PresetTier": "Preset default for a {tier} shop: {every}{others}. Days follow the world calendar.",
+          "PresetOther": "{tier}: {every}",
+          "TableMeta": "{count} goods · every good stocked, quantity rolled (e.g. {formula})",
+          "TableMetaOne": "{count} goods · every good stocked, one of each",
+          "At": "{date} at {time}",
+          "InDays": "in {count} days",
+          "Tomorrow": "tomorrow",
+          "Today": "later today"
         },
         "Reset": {
           "Label": "Reset to preset",
@@ -257,14 +366,39 @@
           "Title": "Players see",
           "Everyone": "Everyone",
           "Note": "Open shop windows refresh for everyone when a change is saved.",
-          "Only": "Only {name}"
+          "Only": "Only {name}",
+          "At": "At {time}",
+          "SellTab": "On {name}'s Sell tab",
+          "Worth": "Worth {price}",
+          "WontBuyNote": "Refused goods stay on the Sell tab, dimmed, with the reason, and never get an offer.",
+          "HoursNote": "While closed, players can look over the goods, dimmed, and see when the shop opens. Nothing can be bought or sold.",
+          "AfterRestock": "After a restock, until closing",
+          "AfterRestockDay": "After a restock, until the day ends",
+          "RestockNote": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the shop closes.",
+          "RestockNoteDay": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the day ends."
         }
       },
       "Deal": {
         "YourPrice": "Your price {percent}",
         "YourOffers": "Your offers {percent}",
         "Yours": "Your deal",
+        "Saves": "Your deal saves you {amount}.",
+        "Adds": "Your deal adds {amount}.",
         "ListPrice": "Price without your deal"
+      },
+      "Receipt": {
+        "When": "{date} · {part}",
+        "Public": "Public",
+        "GmOnly": "GM only",
+        "Bought": "{name} bought",
+        "Sold": "{name} sold",
+        "Paid": "Paid",
+        "Received": "Received",
+        "Free": "free",
+        "Exact": "Exact change, counted from {name}'s coins.",
+        "Change": "Counted from {name}'s coins, with {change} back in change.",
+        "AtRate": "At {fraction} of value.",
+        "Till": "The till holds {coins}."
       }
     }
   }

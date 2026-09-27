@@ -48,6 +48,11 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
+- 2.0: after a restock, the goods that came back in stock wear a *New* badge
+  and the shop shows *Fresh stock today*, until the shop next closes. A shop
+  that doesn't close (no hours, open round the clock, or *Shops keep their
+  trading hours* off) keeps them for a day. A restock while the shop is closed
+  is fresh for its next opening. A good that sells out loses its badge. (#152)
 - 2.0: each shop's own window — its portrait, hours, tier and terms of trade
   up top, a Buy tab with categories and stock, a Sell tab that shows what the
   shop deals in and what it won't touch, and a running Bill of Sale that
@@ -72,18 +77,23 @@ trades out itself. For GMs upgrading a world:
   Settings tab: cheaper when they buy, more when they sell, or both, with an
   optional note and an end (when the shop next closes, after some days, or
   never). Only that character sees it: their shop window shows "Your price
-  −10%" up top, the usual price struck beside theirs, and marks the bill's
-  lines the deal changed. No deal can make selling pay more than buying. The
-  note is never shown to players, but it's saved on the shop, so a player
-  could read it from the browser console. (#111)
+  −10%" up top, the usual price struck beside theirs, tags each bill line the
+  deal changed with its "−10%", and says what the deal saved them. An ended
+  deal stays in the list, dimmed, saying when it ended, until you edit or
+  remove it. No deal can make selling pay more than buying. The note is never
+  shown to players, but it's saved on the shop, so a player could read it
+  from the browser console. (#111, #145)
 - 2.0: sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent
   twice over a flaky connection only happens once. A GM has to be logged in;
   with none, the window says so and keeps the bill. Each trade posts one
   receipt in chat, public or whispered to the GMs, or none, set by the new
-  *Trades in chat* setting. Meals, bought animals and spellcasting work the
-  same way they did through Item Piles. (#102)
+  *Trades in chat* setting. The receipt shows the shop, the in-world date and
+  who can see it, each good with its picture and price, the total, and a note
+  on the coins: exact change or the change given, or for a sale the rate paid
+  and what the till has left. Meals, bought animals and spellcasting work the
+  same way they did through Item Piles. (#102, #145)
 - 2.0: shops restock on their own schedule, now on by default: each kind every
   so many days (an inn daily, a general store every 3, a jeweler every 14),
   when its doors open on the due day. A restock redraws only what the shop's

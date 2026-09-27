@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, matchingStockLine, rateFraction, rateTag, sealState, sellRow, signedPercent, stepQuantity, stockLabel, titleParts
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -86,7 +87,7 @@ test("a row priced above the chip is an amber markup", () => {
 });
 
 test("a row priced below the chip is a green discount", () => {
-  assert.deepEqual(rateTag({ rate: 0.9, layer: "deal" }, 1), { kind: "discount", text: "-10%" });
+  assert.deepEqual(rateTag({ rate: 0.9, layer: "deal" }, 1), { kind: "discount", text: "−10%" });
 });
 
 test("a category layer landing on full value tags 'Full value', not a percentage", () => {
@@ -98,7 +99,7 @@ test("a category layer at full value that matches the chip needs no tag", () => 
 });
 
 test("a category layer away from full value is an ordinary markup or discount", () => {
-  assert.deepEqual(rateTag({ rate: 0.75, layer: "category" }, 1), { kind: "discount", text: "-25%" });
+  assert.deepEqual(rateTag({ rate: 0.75, layer: "category" }, 1), { kind: "discount", text: "−25%" });
 });
 
 /* -------------------------------------------------------------- groupCategories */
@@ -143,18 +144,18 @@ test("a sell basket's purse-after is what's gained, with no shortfall", () => {
 
 test("an idle basket with lines reads as ready to seal", () => {
   assert.deepEqual(sealState("idle", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: false, icon: "fa-solid fa-stamp" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: false, icon: "lucide:stamp" });
 });
 
 test("out-of-stock says there aren't that many left, and waits for the bill to change", () => {
   assert.deepEqual(sealState("out-of-stock", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "lucide:circle-slash" });
 });
 
 test("a refusal the window has no words for still reads as one, not as ready to seal", () => {
   for (const reason of ["not-visible", "shop-misconfigured", "wont-buy", "no-buyback", "unidentified"]) {
     assert.deepEqual(sealState(reason, true),
-      { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" }, reason);
+      { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" }, reason);
   }
 });
 
@@ -164,12 +165,12 @@ test("an idle, empty basket disables the seal without a refusal reason", () => {
 
 test("sealing shows a spinner and is disabled", () => {
   assert.deepEqual(sealState("sealing", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "fa-solid fa-spinner fa-spin" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "lucide:loader" });
 });
 
 test("sealed offers to keep shopping and is never disabled", () => {
   assert.deepEqual(sealState("sealed", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "fa-solid fa-store" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "lucide:store" });
 });
 
 for (const [reason, labelKey] of [
@@ -184,10 +185,15 @@ for (const [reason, labelKey] of [
   });
 }
 
-test("no GM keeps the seal live, so the bill can be sent again once one connects", () => {
+test("an unanswered bill keeps the seal live while a GM is online, so it can be sent again", () => {
   assert.deepEqual(sealState("no-gm", true),
-    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "fa-solid fa-rotate-right" });
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: false, icon: "lucide:hourglass" });
   assert.equal(sealState("no-gm", false).disabled, true);
+});
+
+test("with no GM at the table the seal waits for one (design WNYhA, state 4)", () => {
+  assert.deepEqual(sealState("no-gm", true, { gmOnline: false }),
+    { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGmWaiting", disabled: true, icon: "lucide:hourglass" });
 });
 
 test("stock-changed stays active, recomputed, unless it emptied the basket", () => {
@@ -484,7 +490,7 @@ test("a deal shows on the row as the list price struck and what the deal takes o
   const row = buyRow(LONGSWORD, PLAIN_STOCK, LIST, { buy: -0.1, sell: null }, CURRENCIES5E, false);
   assert.equal(row.bundlePriceCp, 1350);
   assert.equal(row.listPriceCp, 1500);
-  assert.deepEqual(row.tag, { kind: "deal", text: "-10%" });
+  assert.deepEqual(row.tag, { kind: "deal", text: "−10%" });
 });
 
 test("without a deal, or with one only on the other side, a row has no list price to strike", () => {
@@ -513,9 +519,9 @@ test("a deal the cap cuts short shows what it really does, not what it asked for
 });
 
 test("a deal's size reads signed, to a hundredth of a percent", () => {
-  assert.equal(signedPercent(-0.1), "-10%");
+  assert.equal(signedPercent(-0.1), "−10%");
   assert.equal(signedPercent(0.2), "+20%");
-  assert.equal(signedPercent(-0.125), "-12.5%");
+  assert.equal(signedPercent(-0.125), "−12.5%");
   assert.equal(signedPercent(1 / 9), "+11.11%");
 });
 
@@ -531,4 +537,265 @@ test("a deal too small to move a cheap row's coins claims nothing on it (#142 re
   assert.equal(sold.bundlePriceCp, 10);
   assert.equal(sold.listPriceCp, null);
   assert.equal(sold.tag, null);
+});
+
+/* -------------------------------------------------------------- shelf groups and meta (#145) */
+
+/** CONFIG.DND5E's labels a row's meta line reads, 6.0.5 shape (weaponTypes etc. already localized). */
+const LABELS = {
+  weaponTypes: { simpleM: "Simple Melee", martialM: "Martial Melee" },
+  armorTypes: { light: "Light Armor", medium: "Medium Armor", heavy: "Heavy Armor", natural: "Natural Armor", shield: "Shield" },
+  toolTypes: { art: "Artisan's Tools" },
+  consumableTypes: { potion: { label: "Potion" }, food: { label: "Food" } },
+  typeLabels: { loot: "Loot", tool: "Tool" },
+  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
+  weaponProperties: ["lgt", "thr", "ver"],
+  weightUnits: { lb: { abbreviation: "lb" } }
+};
+const words = { Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
+const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
+
+test("a row's meta line says what the good is, then what matters about it (design y6iNf)", () => {
+  const lb = value => ({ weight: { value, units: "lb" } });
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t), "Martial melee · Versatile · 3 lb");
+  assert.equal(itemMeta(gear("weapon", { type: { value: "simpleM" }, properties: ["lgt", "thr"], ...lb(2) }), LABELS, t), "Simple melee · Light, thrown · 2 lb");
+  // Armour: its AC and what wearing it asks, not its weight.
+  assert.equal(itemMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t), "Medium armor · AC 14 + Dex (max 2)");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "heavy" }, armor: { value: 16, dex: 0 }, strength: 13, ...lb(55) }), LABELS, t), "Heavy armor · AC 16 · Str 13");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "light" }, armor: { value: 11, dex: null }, ...lb(10) }), LABELS, t), "Light armor · AC 11 + Dex");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t), "+2 AC · 6 lb");
+  assert.equal(itemMeta(gear("tool", { type: { value: "art" }, ...lb(8) }), LABELS, t), "Artisan's tools · 8 lb");
+  // Anything else by its own type; a weightless good says nothing of weight.
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
+  assert.equal(itemMeta(gear("loot", {}), LABELS, t), "Loot");
+});
+
+test("a good sits under the category its line names, else its kind of good", () => {
+  const armorTypes = LABELS.armorTypes;
+  const weapon = { type: "weapon", system: {}, flags: {} };
+  assert.deepEqual(shelfGroup(weapon, { category: "" }, armorTypes), { id: "weapons", named: null, icon: "lucide:sword" });
+  assert.deepEqual(shelfGroup(weapon, { category: "Heirlooms" }, armorTypes), { id: "named:Heirlooms", named: "Heirlooms", icon: "lucide:tag" });
+  assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "shield" } } }, {}, armorTypes).id, "armor");
+  assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "trinket" } } }, {}, armorTypes).id, "gear");
+  assert.equal(shelfGroup({ type: "tool", system: {} }, {}, armorTypes).id, "tools");
+  // The module's own goods, by their kind (design mRg3y): an inn's meals and rooms.
+  assert.deepEqual(shelfGroup({ type: "loot", system: {}, flags: { "merchant-presets": { kind: "meal" } } }, {}, armorTypes),
+    { id: "meal", named: null, icon: "lucide:soup" });
+  assert.equal(shelfGroup({ type: "loot", system: {}, flags: { "merchant-presets": { kind: "lodging" } } }, {}, armorTypes).id, "lodging");
+});
+
+test("the part of the day an hour falls in, on any length of day", () => {
+  assert.deepEqual([3, 6, 8, 10, 12, 15, 19, 23].map(h => partOfDay(h)),
+    ["night", "dawn", "morning", "midMorning", "midday", "afternoon", "evening", "night"]);
+  assert.equal(partOfDay(5, 12), "midMorning");
+});
+
+/* -------------------------------------------------------------- purseAfter */
+
+test("a buyer's purse after the bill keeps the coins the payment didn't touch", () => {
+  // Aria, 3 pp 47 gp 12 sp 30 cp, owes 30 gp. The engine's pay() settles it exactly with her 3 pp;
+  // the rest of her purse is as it was, not the total re-split (48 gp 5 sp).
+  const aria = { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 };
+  assert.deepEqual(purseAfter("buy", aria, 3000, { gp: 212 }, CURRENCIES), { pp: 0, gp: 47, ep: 0, sp: 12, cp: 30 });
+  assert.deepEqual(purseAfter("buy", { gp: 47, sp: 12 }, 3000, { gp: 212 }, CURRENCIES), { gp: 17, sp: 12 });
+});
+
+test("a buyer who has to break a coin gets the change from the till", () => {
+  assert.deepEqual(purseAfter("buy", { gp: 1 }, 50, { sp: 10 }, CURRENCIES), { gp: 0, sp: 5 });
+});
+
+test("a seller's purse gains exactly the coins the till pays out", () => {
+  assert.deepEqual(purseAfter("sell", { gp: 2 }, 150, { gp: 3, sp: 9 }, CURRENCIES), { gp: 3, sp: 5 });
+});
+
+test("a bottomless till (null) pays and changes anything", () => {
+  assert.deepEqual(purseAfter("sell", {}, 1250, null, CURRENCIES), { gp: 12, sp: 5 });
+  assert.deepEqual(purseAfter("buy", { pp: 1 }, 50, null, CURRENCIES), { pp: 0, gp: 9, sp: 5 });
+});
+
+test("a bill the engine would refuse has no purse after", () => {
+  assert.equal(purseAfter("buy", { gp: 1 }, 200, { gp: 100 }, CURRENCIES), null);
+  assert.equal(purseAfter("buy", { gp: 1 }, 50, {}, CURRENCIES), null);
+  assert.equal(purseAfter("sell", {}, 200, { gp: 1 }, CURRENCIES), null);
+});
+
+/* -------------------------------------------------------------- isFresh */
+
+const DAYS = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
+const DAY = 86_400;
+const H = (h, m = 0) => h * 3600 + m * 60;
+const SMITH_HOURS = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } };
+
+test("a restock stays fresh until the shop closes: through its closing minute, not after (#152, design aaJcp)", () => {
+  const at = 10 * DAY + H(8);
+  assert.equal(isFresh(at, at, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(18, 59), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19) + 30, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
+});
+
+test("a restock while the shop is closed stays fresh until it next closes (#152)", () => {
+  const at = 10 * DAY + H(21);
+  assert.equal(isFresh(at, 11 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
+});
+
+test("a shop that never closes keeps a restock fresh for a whole day from it (#152, review round 5)", () => {
+  const at = 10 * DAY + H(8);
+  for (const hours of [null, { open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }]) {
+    assert.equal(isFresh(at, 11 * DAY + H(7, 59), hours, DAYS), true, "past midnight");
+    assert.equal(isFresh(at, 11 * DAY + H(8), hours, DAYS), false);
+  }
+});
+
+test("a hand restock just before a never-closing shop's opening stays fresh a day, not minutes (#152 review)", () => {
+  const at = 10 * DAY + H(6, 55);
+  assert.equal(isFresh(at, 10 * DAY + H(12), null, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(6, 55), null, DAYS), false);
+});
+
+test("a good is New while the restock that brought it back is fresh, and only on the shop that drew it (#152)", () => {
+  const good = (newAt, drawn = "shelfA", quantity = 3) => ({ system: { quantity }, flags: { "merchant-presets": { newAt, drawn } } });
+  const at = 10 * DAY + H(8);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
+  assert.equal(isNewGood(good(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
+  assert.equal(isNewGood(good(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
+  assert.equal(isNewGood(good(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+  assert.equal(isNewGood({ flags: {} }, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+});
+
+test("a New good that sells out again isn't New: New is for goods back in stock (#152 review)", () => {
+  const soldOut = { system: { quantity: 0 }, flags: { "merchant-presets": { newAt: 10 * DAY + H(8), drawn: "shelfA" } } };
+  assert.equal(isNewGood(soldOut, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+});
+
+test("a shop with no closing hours (trading hours off) keeps a restock fresh a whole day (#152 review)", () => {
+  const at = 3 * DAY + H(20);
+  assert.equal(isFresh(at, 4 * DAY + H(3), null, DAYS), true);
+  assert.equal(isFresh(at, 4 * DAY + H(5), null, DAYS), true, "past the hour it would close at");
+  assert.equal(isFresh(at, 4 * DAY + H(20), null, DAYS), false, "a whole day on");
+});
+
+test("a shop open round the clock from 7:00 keeps its restock fresh until its own day starts again (#152 review)", () => {
+  const hours = { open: { hour: 7, minute: 0 }, close: { hour: 6, minute: 59 } };
+  const at = 10 * DAY + H(7);
+  assert.equal(isFresh(at, 11 * DAY + H(6, 59), hours, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(7), hours, DAYS), false);
+});
+
+test("no restock yet, or a clock wound back before it, isn't fresh", () => {
+  assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
+  assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);
+  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS), false);
+});
+
+/* -------------------------------------------------------------- Restock section (design aaJcp) */
+
+test("the next restock counts whole calendar days from today, not 24-hour spans", () => {
+  const now = 14 * DAY + H(10);
+  assert.equal(daysUntil(now, 21 * DAY + H(7), DAYS), 7);
+  assert.equal(daysUntil(now, 15 * DAY + H(7), DAYS), 1);
+  assert.equal(daysUntil(now, 14 * DAY + H(18), DAYS), 0);
+});
+
+test("the preset line names the preset's tier and only the tiers that restock on another schedule", () => {
+  const line = presetSchedule({ tier: "Town", every: "7 days" },
+    [{ tier: "City", every: "7 days" }, { tier: "Town", every: "7 days" }, { tier: "Village", every: "14 days" }]);
+  assert.deepEqual(line, { tier: "Town", every: "7 days", others: [{ tier: "Village", every: "14 days" }] });
+  assert.deepEqual(presetSchedule({ tier: null, every: "Daily" }, []), { tier: null, every: "Daily", others: [] });
+});
+
+test("a stock table's quantities read as the formula most of its goods roll, or none when all are one", () => {
+  assert.equal(commonFormula({ a: "2d6+4", b: "2d6+4", c: "1d4" }), "2d6+4");
+  assert.equal(commonFormula({ a: "1", b: "1" }), null);
+  assert.equal(commonFormula({}), null);
+});
+
+test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {
+  const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver", "gear"], weight: { value: 3, units: "lb" } });
+  assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · 3 lb");
+});
+
+/* -------------------------------------------------------------- sellMeta */
+
+test("a pack row's meta line says what the good is and what it's worth (design TGXBN)", () => {
+  const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver"], quantity: 1 });
+  assert.equal(sellMeta(sword, LABELS, t, "15 gp"), "Martial melee · worth 15 gp");
+  const shirt = gear("equipment", { type: { value: "medium" }, armor: { value: 13, dex: 2 }, quantity: 1 });
+  assert.equal(sellMeta(shirt, LABELS, t, "50 gp"), "Medium armor · worth 50 gp");
+  const potions = gear("consumable", { type: { value: "potion" }, quantity: 2 });
+  assert.equal(sellMeta(potions, LABELS, t, "50 gp"), "Potion · worth 50 gp each");
+});
+
+test("a shield in the pack reads as a shield, and a good with no price says nothing of worth", () => {
+  assert.equal(sellMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 } }), LABELS, t, "10 gp"), "Shield · worth 10 gp");
+  assert.equal(sellMeta(gear("loot", {}), LABELS, t, null), "Loot");
+});
+
+/* -------------------------------------------------------------- wontBuyReason */
+
+test("a good the shop won't deal in names what it won't buy: its kind, else its type", () => {
+  const shop = { wontBuy: { types: ["loot"], kinds: ["food-drink"] } };
+  const rations = { type: "consumable", flags: { "merchant-presets": { kind: "food-drink" } } };
+  assert.deepEqual(wontBuyReason(rations, shop), { kind: "food-drink" });
+  assert.deepEqual(wontBuyReason({ type: "loot", flags: {} }, shop), { type: "loot" });
+  assert.equal(wontBuyReason({ type: "weapon", flags: {} }, shop), null);
+});
+
+/* -------------------------------------------------------------- wontBuyTerms */
+
+const NOUNS = { "food-drink": "food", meal: "food", mount: "mounts", service: "services", vehicle: "vehicles", tack: "tack",
+  lodging: "lodging", travel: "passage", spellcasting: "spellcasting", component: "spell components" };
+
+test("the Terms popover leads with three things a shop won't buy and lists the rest after (design ChoNd)", () => {
+  // The smith's own list, in its config order.
+  const smith = ["vehicle", "mount", "tack", "food-drink", "meal", "lodging", "service", "spellcasting", "component", "travel"];
+  assert.deepEqual(wontBuyTerms(smith, [], k => NOUNS[k]), {
+    lead: ["food", "mounts", "services"],
+    rest: ["vehicles", "tack", "lodging", "passage", "spellcasting", "spell components"]
+  });
+});
+
+test("a short list is all lead, item types come after the kinds, and nothing refused is nothing", () => {
+  assert.deepEqual(wontBuyTerms(["travel", "meal"], [], k => NOUNS[k]), { lead: ["food", "passage"], rest: [] });
+  assert.deepEqual(wontBuyTerms(["mount"], ["loot", "tool"], k => NOUNS[k]), { lead: ["mounts", "loot", "tool"], rest: [] });
+  assert.deepEqual(wontBuyTerms([], [], k => NOUNS[k]), { lead: [], rest: [] });
+});
+
+/* -------------------------------------------------------------- itemMeta: services and drinks (design mRg3y) */
+
+const meal = gear("loot", { quantity: 1 });
+meal.flags = { "merchant-presets": { kind: "meal", nutrition: { food: 1, water: 0.25 } } };
+const room = gear("loot", { quantity: 1 });
+room.flags = { "merchant-presets": { kind: "lodging" } };
+const drink = identifier => gear("consumable", { type: { value: "food" }, identifier, weight: { value: 0.5, units: "lb" } });
+
+test("a service says so, and a meal says it feeds the buyer only where meals do", () => {
+  assert.equal(itemMeta(meal, LABELS, t, { service: true, feeds: true }), "Service · feeds the buyer");
+  assert.equal(itemMeta(meal, LABELS, t, { service: true, feeds: false }), "Service");
+  assert.equal(itemMeta(room, LABELS, t, { service: true, feeds: true }), "Service");
+});
+
+test("a drink reads as one, and ale or wine counts as water only where drinks hydrate", () => {
+  assert.equal(itemMeta(drink("ale"), LABELS, t, { hydrates: true }), "Drink · counts as water");
+  assert.equal(itemMeta(drink("wine-fine"), LABELS, t, { hydrates: false }), "Drink");
+  assert.equal(itemMeta(drink("water-pint"), LABELS, t, { hydrates: true }), "Drink");
+  assert.equal(itemMeta(drink("bread"), LABELS, t, { hydrates: true }), "Food · 0.5 lb");
+});
+
+/* -------------------------------------------------------------- narrow rows and dock (design r7HIUl) */
+
+test("a narrow row's meta says what the good is, its weight and its stock, in one line", () => {
+  const lb = value => ({ weight: { value, units: "lb" } });
+  assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t, "7 left"), "Martial melee · 3 lb · 7 left");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t, "Last one"), "Medium armor · Last one");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t, "Sold out"), "+2 AC · Sold out");
+});
+
+test("the docked bill sums its lines up in one line", () => {
+  assert.equal(billSummary([{ name: "Longsword", quantity: 1 }, { name: "Handaxe", quantity: 2 }, { name: "Javelin", quantity: 10 }]),
+    "Longsword, 2 × Handaxe, 10 × Javelin");
+  assert.equal(billSummary([]), "");
 });

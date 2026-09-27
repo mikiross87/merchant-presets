@@ -39,8 +39,11 @@
  */
 
 import { shopFrom } from "./schema.mjs";
+import { isVisibleStock, safeStockOf } from "./trade-plan.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
+/** How many seconds a day of the world's calendar lasts. */
+export const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
 
 /**
  * Whether a shop with `hours` is open at `minute` (minutes since midnight).
@@ -78,8 +81,6 @@ export function nextOpen(hours, minute, calendar) {
   return { opensAt, inMinutes };
 }
 
-const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
-
 /**
  * A shop with `hours` opens exactly once a day: at `hours.open`, or at
  * midnight when always open. An overnight window (20:00-04:00) still opens
@@ -100,6 +101,30 @@ function lastOpeningAtOrBefore(bound, hours, calendar) {
   const day = secondsPerDay(calendar);
   const offset = hours ? minutesOf(hours.open, calendar) * calendar.secondsPerMinute : 0;
   return openingOnDay(Math.floor((bound - offset) / day), hours, calendar);
+}
+
+/**
+ * When a shop keeping `hours` has next closed, strictly after `worldTime`: the end of a deal made
+ * "until the shop closes". `isOpen` keeps a shop open through its whole closing
+ * minute, so a 19:00 close has closed at 19:01, and a deal made at 19:00:30 ends then, not a day
+ * later. A shop that's closed now closes next after it reopens. Null for a shop that never
+ * closes: no hours, or hours that run round the whole day (00:00-23:59, 07:00-06:59), which
+ * `isOpen` reads as open throughout (#142 review).
+ *
+ * @param {{open: {hour: number, minute: number}, close: {hour: number, minute: number}}|null} hours
+ * @param {number} worldTime
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} calendar
+ * @returns {number|null}
+ */
+export function nextCloseAt(hours, worldTime, calendar) {
+  if (!hours) return null;
+  const minutesPerDay = calendar.minutesPerHour * calendar.hoursPerDay;
+  const closed = hours.close.hour * calendar.minutesPerHour + hours.close.minute + 1;
+  if (closed % minutesPerDay === hours.open.hour * calendar.minutesPerHour + hours.open.minute) return null;
+  const day = secondsPerDay(calendar);
+  const offset = closed * calendar.secondsPerMinute;
+  const today = Math.floor(worldTime / day) * day + offset;
+  return today > worldTime ? today : today + day;
 }
 
 /**
@@ -225,7 +250,9 @@ export function dueRestock(shop, state, previous, now, calendar) {
  * @property {string} name
  * @property {string} type
  * @property {{quantity?: number, container?: string|null}} system
- * @property {{"merchant-presets"?: {kind?: string, drawn?: boolean}}} flags
+ * @property {{"merchant-presets"?: {kind?: string, drawn?: string|boolean, newAt?: number|null}}} flags
+ *   `drawn`: the shelf key of the shop that drew it (`true` before shelves had keys); `newAt`: when
+ *   a restock brought it back in stock, its "New" badge (#152)
  *
  * @typedef {object} Draw  One of the shop's stock table results, resolved
  *   and pre-rolled by the caller — drawing the table, and rolling its
@@ -252,6 +279,9 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   separate copies the shop should carry (`flags.merchant-presets.containers`,
  *   #63): a container can't hold a quantity, so a count of them is a count of
  *   documents, not a number on one.
+ * @property {number} [at]  When the restock happened: the opening it was due at, or now for one by
+ *   hand. Goods it brings back in stock are New from then (#152).
+ * @property {boolean} [markNew]  False on a shop's first roll, which brings nothing "back" (#152).
  *
  * @typedef {object} RestockPlan
  * @property {string[]} deletes   Item ids to delete.
@@ -261,7 +291,53 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   null if it's already right.
  * @property {string[]} restocked  Names of the lines this restock drew or
  *   topped up — the shop's own log line, and dnd5e's time-passed card (#88).
+ * @property {boolean} fresh  Whether it stocks anything players can see and buy: only then is it
+ *   "Fresh stock today" (#152).
  */
+
+/**
+ * When each good a restock stocks came back in stock (#152): its `newAt`, which the window shows as
+ * "New" while it's fresh (shop-view.mjs `isNewGood`). A good nothing of that name was in stock
+ * before (sold out, or gone) came back at `context.at`, the restock's own time. One still in stock
+ * keeps the time an earlier restock gave it, so a second restock before closing doesn't take its
+ * badge away. A good with no quantity recorded counts as in stock, as the top-up counts it. On a
+ * shop's first roll (`context.markNew: false`) nothing has come back: a shop just placed has no
+ * New goods. Undefined for a good that isn't New.
+ */
+function newAtFor(items, context) {
+  if (context.markNew === false) return () => undefined;
+  // In stock as players see it: a copy they can't see or buy (hidden, delisted, packed away) isn't.
+  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0 && forSale(i, items)).map(i => i.name));
+  // Only from this shop's own goods still in stock: a copy another shop drew keeps its time to
+  // itself, and one that sold out again isn't New any more.
+  const earlier = new Map();
+  for (const i of items) {
+    const at = i.flags?.["merchant-presets"]?.newAt;
+    if (isDrawn(i, context.drawnBy) && i.system?.quantity !== 0 && Number.isFinite(at) && !(earlier.get(i.name) >= at)) earlier.set(i.name, at);
+  }
+  return name => (inStock.has(name) ? earlier.get(name) : context.at);
+}
+
+/** Whether players can see and buy `item` among `items`, as the Buy list decides (trade-plan.mjs `isVisibleStock`). */
+const forSale = (item, items) => {
+  const stock = safeStockOf(item);
+  return !!stock && isVisibleStock(item, stock, items);
+};
+
+/**
+ * Whether an update to a shop good drops its New mark (#152): it sells out, or anything but a
+ * restock refills it from 0 (a sale stacking onto it, the GM typing a number, a drop): what
+ * comes back that way is second-hand, not a restock's. A restock's own refill sets `newAt` in the
+ * same update (`setsNewAt`) and keeps it. `quantity` is the update's new quantity, if it sets one.
+ *
+ * @param {{system?: {quantity?: number}, flags?: object}} item  the good as it is before the update
+ * @param {number|undefined} quantity
+ * @param {boolean} setsNewAt
+ */
+export function dropsNewMark(item, quantity, setsNewAt) {
+  if (quantity === undefined || setsNewAt || item.flags?.["merchant-presets"]?.newAt == null) return false;
+  return quantity === 0 || item.system?.quantity === 0;
+}
 
 /** The shopkeeper's own kit, never stock. */
 const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
@@ -271,7 +347,7 @@ const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
  * key of the shop that drew it (`context.drawnBy`); a bare `true` (from before it held one)
  * counts as this shop's.
  */
-const isDrawn = (item, drawnBy) => {
+export const isDrawn = (item, drawnBy) => {
   const by = item.flags?.["merchant-presets"]?.drawn;
   return by === true || (by != null && by === drawnBy);
 };
@@ -281,17 +357,21 @@ const isDrawn = (item, drawnBy) => {
  * stock config — `context.stockFlags[draw.name]`, the shop's own record, not
  * whatever the compendium good's own copy says (#119 point 1). `system`
  * overrides the copy's quantity (and, for a container, drops its `container`
- * pointer — #89).
+ * pointer — #89). `newAt` is when it came back in stock, if it's New (#152).
  */
-function drawnItem(draw, context, system) {
+function drawnItem(draw, context, system, newAt) {
   const data = structuredClone(draw.data);
   delete data._id;
   data.system = { ...data.system, ...system };
+  // Its own New time, or none: never one the drawn document carried from another shelf.
+  const own = { ...data.flags?.["merchant-presets"] };
+  delete own.newAt;
   data.flags = {
     ...data.flags,
     // The shop's record wins; a line it has none for keeps the config its good ships with.
-    "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true,
-      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock }
+    "merchant-presets": { ...own, drawn: context.drawnBy ?? true,
+      stock: context.stockFlags[draw.name] ?? own.stock,
+      ...(newAt === undefined ? {} : { newAt }) }
   };
   return data;
 }
@@ -344,9 +424,9 @@ function dedupedByName(draws) {
  *   (a `keep: false` good is deleted outright the moment it sells out, and so
  *   is any good that simply rolled 0 last time). Either way counts as sold
  *   out. One still on the shelf is *updated* (same item, refilled); one
- *   that's gone is a fresh *create*. A container is always a create when
- *   short of its target count — dnd5e pins its quantity to exactly 1, so a
- *   sold one is gone outright, never sitting at zero to update.
+ *   that's gone is a fresh *create*. A container can't be refilled (dnd5e
+ *   pins its quantity to 1): one kept at zero is deleted, and a fresh copy
+ *   is created for each one short of its target count.
  *
  * `restock.table: null` (no stock table assigned) is a no-op: an empty plan,
  * nothing deleted, refilled or drawn.
@@ -363,15 +443,17 @@ function dedupedByName(draws) {
  */
 export function planRestock(shop, items, draws, context) {
   const { restock } = shopFrom(shop);
-  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [] };
+  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false };
 
   const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
   const currency = refilledPurse(context);
+  const newAt = newAtFor(items, context);
 
   if (restock.mode === "topup") {
     const updates = [];
     const creates = [];
+    const deletes = [];
     const restocked = [];
 
     // Driven by the table's own lines, not shelf presence: a sold-out line
@@ -381,9 +463,13 @@ export function planRestock(shop, items, draws, context) {
     // due; only a line still genuinely in stock is skipped.
     for (const draw of uniqueDraws) {
       if (draw.data.type === "container") {
-        const have = drawnNow.filter(i => i.name === draw.name).length;
+        // A container sold down to 0 (kept on the shelf, dnd5e pins its quantity) can't be
+        // refilled: it goes, and a fresh copy takes its place.
+        const copies = drawnNow.filter(i => i.name === draw.name);
+        for (const gone of copies.filter(i => i.system?.quantity === 0)) deletes.push(gone._id);
+        const have = copies.filter(i => i.system?.quantity !== 0).length;
         const want = context.containers?.[draw.name] ?? 1;
-        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
+        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
         if (want > have) restocked.push(draw.name);
         continue;
       }
@@ -391,11 +477,13 @@ export function planRestock(shop, items, draws, context) {
       if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
       const quantity = Math.max(0, draw.quantity ?? 0);
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
+      const back = newAt(draw.name);
       if (existing) {
+        // Not New this time: an earlier restock's mark goes, rather than showing again.
         updates.push({ _id: existing._id, "system.quantity": quantity,
-          "flags.merchant-presets.stock": context.stockFlags[draw.name] });
+          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.newAt": back ?? null });
       } else {
-        creates.push(drawnItem(draw, context, { quantity }));
+        creates.push(drawnItem(draw, context, { quantity }, back));
       }
       restocked.push(draw.name);
     }
@@ -403,7 +491,12 @@ export function planRestock(shop, items, draws, context) {
     // A container can push its own name once per copy created; every other
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
-    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)] };
+    // Each refilled good as it will stand, its stock config the refill's, to judge whether players see it.
+    const refilled = updates.map(u => {
+      const item = items.find(i => i._id === u._id);
+      return { ...item, flags: { ...item.flags, "merchant-presets": { ...item.flags?.["merchant-presets"], stock: u["flags.merchant-presets.stock"] } } };
+    });
+    return { deletes, creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
@@ -411,15 +504,15 @@ export function planRestock(shop, items, draws, context) {
   for (const draw of uniqueDraws) {
     if (draw.data.type === "container") {
       const count = context.containers?.[draw.name] ?? 1;
-      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
+      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
       continue;
     }
     const quantity = Math.max(0, draw.quantity ?? 0);
-    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }));   // 0: not in stock today
+    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name)));   // 0: not in stock today
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
+  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked, fresh: creates.some(i => forSale(i, items)) };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

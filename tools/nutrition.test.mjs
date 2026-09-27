@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { applyMeal } from "../scripts/nutrition.mjs";
+import { applyMeal, mealsFeed } from "../scripts/nutrition.mjs";
 
 const needs = { food: 1, water: 1 };          // a Medium creature's day
 const large = { food: 4, water: 4 };
@@ -166,4 +166,17 @@ test("different actors do not wait for each other", async () => {
   const quick = oneAtATime("Actor.b", async () => { order.push("b"); });
   await Promise.all([slow, quick]);
   assert.deepEqual(order, ["b", "a"]);
+});
+
+test("meals feed only through an active Simple Nutrition 1.0 or later", () => {
+  // foundry.utils.isNewerVersion, for plain dotted versions.
+  const newer = (a, b) => {
+    const [x, y] = [a, b].map(v => v.split(".").map(Number));
+    for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i];
+    return false;
+  };
+  assert.equal(mealsFeed({ active: true, version: "1.2.0" }, newer), true);
+  assert.equal(mealsFeed({ active: true, version: "0.9.3" }, newer), false);
+  assert.equal(mealsFeed({ active: false, version: "1.2.0" }, newer), false);
+  assert.equal(mealsFeed(undefined, newer), false);
 });

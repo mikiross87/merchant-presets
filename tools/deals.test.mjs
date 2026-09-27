@@ -6,8 +6,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { shopFrom, validateShop } from "../scripts/schema.mjs";
-import { activeDeal, endsAfterDays, nextCloseAt } from "../scripts/deals.mjs";
-import { isOpen } from "../scripts/schedule.mjs";
+import { activeDeal, endsAfterDays } from "../scripts/deals.mjs";
+import { isOpen, nextCloseAt } from "../scripts/schedule.mjs";
 import { applyChange, dealFields } from "../scripts/shop-settings.mjs";
 
 const ARIA = "Actor.aria000000000000";

@@ -1,76 +1,135 @@
-{{!-- The Bill of Sale (design/README.md), in every Trade State the board shows. `this` is the
-      active tab's own context (buy or sell): {kind, shopTitle, basket, seal, open, tillText?}. --}}
-{{#*inline "coins"}}
-  {{#each this}}
-    <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
-      <img src="{{icon}}" alt="" /><b>{{count}}</b>
-    </span>
-  {{else}}
-    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
-  {{/each}}
+{{!-- The Bill of Sale (design/README.md; the revised slip of #146, design y6iNf), in every Trade
+      State the board shows. `this` is the active tab's own context (buy or sell):
+      {kind, shopTitle, basket, seal, open, tillText?, tillAfterText?}. --}}
+{{#*inline "notice"}}
+  <div class="mp-notice is-{{tone}}" data-pen="Notice">{{mpIcon icon pen="Notice icon"}}<span data-pen="Notice text">{{text}}</span></div>
 {{/inline}}
-<aside class="bill-of-sale trade-state-{{seal.state}}">
-  <header class="bill-header">
-    <p class="bill-kicker">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleSell"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleBuy"}}{{/if}}</p>
-    <h2 class="bill-shop-name">{{shopTitle}}</h2>
-    <p class="bill-date">{{basket.dateLabel}}</p>
-  </header>
-
-  {{#if basket.hasLines}}
-    <div class="bill-lines {{#if (eq seal.state "sealing")}}is-dimmed{{/if}} {{#if (eq seal.state "sealed")}}is-dimmed{{/if}}">
-      {{#each basket.lines}}
-        <div class="bill-line {{#if this.struck}}is-struck{{/if}}">
-          <div class="bill-line-top">
-            <span class="bill-line-name">{{this.quantity}} × {{this.name}}</span>
-            <span class="bill-line-total">{{> coins this.lineTotalCoins}}</span>
+{{#*inline "sealButton"}}
+  <button type="button" class="mp-seal-button" data-action="{{action}}" data-pen="Seal Button" {{#if disabled}}disabled{{/if}}>
+    <span class="mp-wax" data-pen="Wax Seal">{{mpIcon icon pen="Seal mark"}}</span><span class="mp-seal-label" data-pen="Seal label">{{label}}</span>
+  </button>
+{{/inline}}
+{{!-- The bill's lines, its sum and the purse block: the slip's, and the narrow dock's when opened (design mVjRf). --}}
+{{#*inline "slipBody"}}
+      <div class="mp-ledger" data-pen="Ledger">
+        {{#each basket.gone}}
+          <div class="mp-line is-gone" data-pen="Line {{this.name}}">
+            <div class="mp-entry" data-pen="{{this.name}} entry">
+              <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
+              <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
+              <span class="mp-leader" data-pen="{{this.name}} leader"></span>
+              <span class="mp-line-coins" data-pen="{{this.name}} coins"><span class="mp-coin" data-pen="{{this.pen}}"><b data-pen="Amount">—</b></span></span>
+            </div>
+            <div class="mp-detail" data-pen="{{this.name}} detail">
+              <span class="mp-each is-sold-out" data-pen="{{this.name}} each">{{localize "MERCHANT_PRESETS.Shop.Bill.SoldOut"}}</span>
+            </div>
           </div>
-          <div class="bill-line-bottom">
-            <span class="bill-line-unit">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.showUnit}}{{> coins this.unitCoins}} {{#if (gt this.bundle 1)}}{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}</span>
-            {{#unless (or (eq ../seal.state "sealing") (eq ../seal.state "sealed"))}}
-              <span class="bill-stepper">
-                <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
-                <span class="bill-stepper-count">{{this.quantity}}</span>
-                <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="1" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.More'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+        {{/each}}
+        {{#each basket.lines}}
+          <div class="mp-line {{#if this.struck}}is-struck{{/if}}" data-pen="Line {{this.name}}">
+            <div class="mp-entry" data-pen="{{this.name}} entry">
+              <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
+              <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
+              {{#if this.dealTag}}<span class="mp-tag is-good" data-pen="{{this.name}} deal tag" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"><span data-pen="{{this.name}} deal tag text">{{this.dealTag}}</span></span>{{/if}}
+              <span class="mp-leader" data-pen="{{this.name}} leader"></span>
+              <span class="mp-line-coins" data-pen="{{this.name}} coins">{{> mpCoins coins=this.lineTotalCoins mode="count"}}</span>
+            </div>
+            <div class="mp-detail" data-pen="{{this.name}} detail">
+              <span class="mp-detail-left" data-pen="{{this.name}} detail left">
+                {{#if this.noteIcon}}{{mpIcon this.noteIcon pen=(concat this.name " svc icon")}}{{/if}}
+                <span class="mp-each" data-pen="{{this.name}} each">{{#if this.note}}{{this.note}}{{else if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
               </span>
-            {{/unless}}
+              {{#unless (eq ../seal.state "sealed")}}
+                <span class="mp-stepper" data-pen="{{this.name}} stepper">
+                  <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" data-pen="Minus" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}" {{#if (eq ../seal.state "sealing")}}disabled{{/if}}>{{mpIcon "minus" pen="Minus icon"}}</button>
+                  <span class="mp-value-box" data-pen="Value box"><span data-pen="Value">{{this.quantity}}</span></span>
+                  <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="1" data-pen="Plus" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.More'}}" {{#if (eq ../seal.state "sealing")}}disabled{{/if}}>{{mpIcon "plus" pen="Plus icon"}}</button>
+                </span>
+              {{/unless}}
+            </div>
           </div>
+        {{/each}}
+      </div>
+
+      {{#if (eq seal.state "sealed")}}
+        <div class="mp-stamp" data-pen="Sealed Stamp"><span data-pen="Stamp word">{{localize "MERCHANT_PRESETS.Shop.Seal.Sealed"}}</span><span data-pen="Stamp date">{{slip.stampDate}}</span></div>
+      {{/if}}
+
+      <div class="mp-total-block" data-pen="Total Block">
+        <span class="mp-ink-rule" data-pen="Rule 1"></span><span class="mp-ink-rule" data-pen="Rule 2"></span>
+        <div class="mp-total-row" data-pen="Total Row">
+          <span class="mp-total-label" data-pen="Total label">{{slip.totalLabel}}</span>
+          <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}" {{#if (gt basket.sumCoins.length 1)}}data-pen="Total coins"{{/if}}>{{> mpCoins coins=basket.sumCoins mode="count"}}</span>
         </div>
-      {{/each}}
-    </div>
+      </div>
 
-    {{#if (eq seal.state "sealed")}}
-      <div class="bill-seal-stamp"><span>{{localize "MERCHANT_PRESETS.Shop.Seal.Sealed"}}</span><small>{{basket.dateLabel}}</small></div>
-    {{/if}}
+      {{#if basket.dealText}}<p class="mp-deal-saving" data-pen="Deal saving">{{basket.dealText}}</p>{{/if}}
 
-    <div class="bill-sum-row">
-      <span>{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.YouReceive"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.SumOwed"}}{{/if}}</span>
-      <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}">{{> coins basket.sumCoins}}</span>
-    </div>
-
-    {{#if (eq seal.state "cant-afford")}}
-      <p class="bill-notice is-danger">{{localize "MERCHANT_PRESETS.Shop.Bill.ShortBy" name=basket.buyerName amount=basket.shortfallText}}</p>
-    {{else if (eq seal.state "till-short")}}
-      <p class="bill-notice is-danger">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortNotice" amount=tillText}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Seal.TillShortBuyNotice" amount=tillText}}{{/if}}</p>
-    {{else}}
-      {{#if (eq seal.state "no-gm")}}
-        <p class="bill-notice is-warning"><i class="fa-solid fa-user-slash" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.NoGmNotice"}}</p>
-      {{else if (eq seal.state "stock-changed")}}
-        <p class="bill-notice is-warning"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.StockChangedNotice"}}</p>
+      {{!-- The purse block fills the slip, which keeps the seal at its foot (#146). --}}
+      {{#if slip.purse}}
+        <div class="mp-purse-after" data-pen="Purse After">
+          <span class="mp-after-label" data-pen="After label">{{slip.purseLabel}}</span>
+          {{#if (eq slip.purse "short")}}
+            <div class="mp-after-coins is-short" data-pen="Short coins">{{> mpCoins coins=basket.shortfallCoins mode="count"}}</div>
+          {{else}}
+            <div class="mp-after-coins" data-pen="After coins">{{> mpCoins coins=basket.afterCoins mode="count"}}</div>
+          {{/if}}
+        </div>
+      {{else}}
+        <span class="mp-slip-fill"></span>
       {{/if}}
-      {{#if (and basket.buyerName (not seal.disabled))}}
-        <p class="bill-purse-after">{{localize "MERCHANT_PRESETS.Shop.Bill.PurseAfter" name=basket.buyerName}}</p>
-        <div class="bill-purse">{{> coins basket.afterCoins}}</div>
-      {{/if}}
-    {{/if}}
+{{/inline}}
+<aside class="mp-basket" data-pen="Basket">
+  <div class="mp-slip trade-state-{{seal.state}}" data-pen="Bill of Sale">
+    <header class="mp-slip-head" data-pen="Slip Head">
+      <span class="mp-slip-kicker" data-pen="Slip Kicker">{{slip.kicker}}</span>
+      <h2 class="mp-slip-title" data-pen="Slip Title">{{shopTitle}}</h2>
+      <span class="mp-slip-date" data-pen="Slip Date">{{basket.dateLabel}}</span>
+    </header>
+    {{#if slip.notice.first}}{{> notice slip.notice}}{{/if}}
+    <span class="mp-head-rule" data-pen="Head Rule"></span>
 
-    {{#if (eq seal.state "sealed")}}
-      <button type="button" class="seal-button" data-action="keepShopping"><i class="fa-solid fa-store" aria-hidden="true"></i> {{localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping"}}</button>
+    {{#if basket.hasLines}}
+      {{> slipBody}}
+
+      {{#if (eq seal.state "sealed")}}
+        {{#if slip.delivered}}<div class="mp-delivered" data-pen="Delivered">{{mpIcon "package-check" pen="Delivered icon"}}<span data-pen="Delivered text">{{slip.delivered}}</span></div>{{/if}}
+        <button type="button" class="mp-keep-shopping" data-action="keepShopping" data-pen="Keep shopping"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping"}}</span></button>
+      {{else}}
+        {{#if slip.notice}}{{#unless slip.notice.first}}{{> notice slip.notice}}{{/unless}}{{/if}}
+        {{> sealButton action="seal" icon=seal.icon label=seal.label disabled=seal.disabled}}
+      {{/if}}
+      {{#if slip.foot}}<p class="mp-slip-foot" data-pen="Slip foot">{{slip.foot}}</p>{{/if}}
     {{else}}
-      <button type="button" class="seal-button" data-action="seal" {{#if seal.disabled}}disabled{{/if}}>
-        <i class="{{seal.icon}}" aria-hidden="true"></i> {{seal.label}}
-      </button>
+      <p class="bill-empty">{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}</p>
     {{/if}}
-  {{else}}
-    <p class="bill-empty">{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}</p>
-  {{/if}}
+  </div>
 </aside>
+{{!-- A narrow window docks the bill at the bottom (design r7HIUl): the lines as text, the sum, a
+      chevron that opens the full slip above, and the seal, always in view. --}}
+<div class="mp-dock mp-narrow-only" data-pen="Bill dock">
+  <div class="mp-grip-row" data-pen="Grip row"><span class="mp-grip" data-pen="Grip"></span></div>
+  <div class="mp-dock-summary" data-pen="Dock summary">
+    <div class="mp-dock-text" data-pen="Dock text">
+      <span class="mp-slip-kicker" data-pen="Dock kicker">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleSell"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleBuy"}}{{/if}}</span>
+      <span class="mp-dock-lines" data-pen="Dock lines">{{#if basket.hasLines}}{{#if @root.billOpen}}{{basket.lineCount}}{{else}}{{basket.summary}}{{/if}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}{{/if}}</span>
+    </div>
+    {{#if @root.billOpen}}
+      <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Close'}}">{{mpIcon "chevron-down" pen="Collapse"}}</button>
+    {{else}}
+      {{#if basket.hasLines}}{{> mpCoins coins=basket.sumCoins mode="count"}}{{/if}}
+      <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Open'}}">{{mpIcon "chevron-up" pen="Expand"}}</button>
+    {{/if}}
+  </div>
+  {{#if (and @root.billOpen basket.hasLines)}}
+    <span class="mp-head-rule" data-pen="Head Rule"></span>
+    <div class="mp-dock-slip">{{> slipBody}}</div>
+  {{/if}}
+  {{#if basket.hasLines}}
+    {{#if (eq seal.state "sealed")}}
+      {{> sealButton action="keepShopping" icon="lucide:store" label=(localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping")}}
+    {{else}}
+      {{> sealButton action="seal" icon=seal.icon label=seal.label disabled=seal.disabled}}
+    {{/if}}
+  {{/if}}
+</div>

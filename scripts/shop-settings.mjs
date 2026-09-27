@@ -6,7 +6,8 @@
  * and stored as the factors schema.mjs holds.
  */
 
-import { endsAfterDays, nextCloseAt } from "./deals.mjs";
+import { endsAfterDays } from "./deals.mjs";
+import { isOpen, nextCloseAt } from "./schedule.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
 
@@ -157,7 +158,22 @@ export function applyChange(shop, change) {
 }
 
 /** A form field as a percentage: blank is no change (null), anything else a number, NaN if it isn't one. */
-const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(v));
+/** A typed percent, blank as null; a true minus (U+2212, as the window writes them) reads as one. */
+const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(String(v).trim().replace("\u2212", "-")));
+
+/**
+ * What a deal side typed into the form comes to, in words (design Q6UvA): `key` names the reading
+ * (Deals.Form.Reading.<key>) and `percent` its size. Blank, zero or unreadable is the shop's price.
+ *
+ * @param {"buy"|"sell"} side  buy: what the character pays; sell: what the shop pays them
+ * @param {unknown} value  the field as typed
+ * @returns {{key: string, percent: number|null}}
+ */
+export function dealReading(side, value) {
+  const n = percentField(value);
+  if (!Number.isFinite(n) || n === 0) return { key: "ShopPrice", percent: null };
+  return { key: `${side === "buy" ? "Buy" : "Sell"}${n < 0 ? "Less" : "More"}`, percent: Math.abs(n) };
+}
 
 /**
  * The deal form's answer (#111) as the fields of an `addDeal`/`editDeal` change, or `{error}` for
@@ -205,4 +221,36 @@ export function resetToPreset(shop, sourceShop) {
   if (!ok) return { ok, errors };
   // Deals are with a character, not part of the preset: a reset keeps them.
   return { ok, shop: { ...shopFrom(sourceShop), source: shop.source, deals: shop.deals } };
+}
+
+/** A time of day as minutes past midnight on `calendar`'s clock. */
+const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
+
+/**
+ * The two moments Players see beside Hours (design S2swP): an open minute and a closed one. The
+ * shop's present state is shown as it is now; the other is its opening, or four hours before it
+ * (the Closed frame's 3:00 for a 7:00 opening). Null for closed when the shop never closes.
+ *
+ * @param {{open: {hour: number, minute: number}, close: {hour: number, minute: number}}|null} hours
+ * @param {number} minute  The minute of day now.
+ * @param {{minutesPerHour: number, hoursPerDay: number}} calendar
+ * @returns {{open: number, closed: number|null}}  Minutes of day.
+ */
+export function hoursSamples(hours, minute, calendar) {
+  if (!isOpen(hours, minute, calendar)) return { open: minutesOf(hours.open, calendar), closed: minute };
+  if (!hours) return { open: minute, closed: null };
+  const day = calendar.minutesPerHour * calendar.hoursPerDay;
+  const opens = minutesOf(hours.open, calendar);
+  const closed = [opens - 4 * calendar.minutesPerHour, minutesOf(hours.close, calendar) + 1]
+    .map(m => ((m % day) + day) % day).find(m => !isOpen(hours, m, calendar));
+  return { open: minute, closed: closed ?? null };
+}
+
+/** How many minutes a day `hours` keeps the shop open, past midnight too; null for no hours. */
+export function openMinutes(hours, calendar) {
+  if (!hours) return null;
+  const day = calendar.minutesPerHour * calendar.hoursPerDay;
+  const open = minutesOf(hours.open, calendar);
+  const close = minutesOf(hours.close, calendar);
+  return open <= close ? close - open : day - open + close;
 }

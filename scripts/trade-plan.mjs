@@ -238,7 +238,7 @@
  *   earlier sale created carries only the flag.
  */
 
-import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
+import { EVERYDAY_COINS, effectiveRates, itemPriceCp, pay, payExact, totalCp as coinsCp } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 
 const MODULE = "merchant-presets";
@@ -257,7 +257,7 @@ const findById = (docs, id) => docs.find(d => idOf(d) === id);
 
 const stockOf = item => stockFrom(item.flags?.[MODULE]?.stock ?? {});
 const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
-const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
+export const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
 export const isGear = item => kindOf(item) === "gear";
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
@@ -284,6 +284,16 @@ function isShelfHidden(item, stock) {
 export function isVisible(item, stock) {
   return !isShelfHidden(item, stock) && (item.system?.container ?? null) === null;
 }
+
+/**
+ * A stock row the Buy tab can show (shop-view.mjs re-exports it), and what a restock counts as
+ * in stock (schedule.mjs): what a buy wouldn't refuse as not visible (gear, the fixed
+ * exclusions, hidden, delisted, inside a container, a container holding any of those) or as
+ * unidentified. `shopItems` is the shop's own items, for that container check.
+ */
+export const isVisibleStock = (item, stock, shopItems = []) => isVisible(item, stock)
+  && item.system?.identified !== false
+  && !(item.type === "container" && hasUngivableContents(item._id, shopItems));
 
 /**
  * Whether `container`'s own contents, recursively, include anything `shop` wouldn't otherwise
@@ -362,9 +372,9 @@ export const categoryFor = (item, stock) => stock.category || item.type;
  * platinum would hand a player 1pp 1gp 1ep for 11.5gp. Any other currency config keeps every
  * denomination.
  */
-function bottomlessTill(currencies) {
+export function bottomlessTill(currencies) {
   const all = Object.keys(currencies);
-  const everyday = all.filter(d => ["gp", "sp", "cp"].includes(d));
+  const everyday = all.filter(d => EVERYDAY_COINS.includes(d));
   const endless = everyday.length ? everyday : all;
   return Object.fromEntries(all.map(d => [d, endless.includes(d) ? Number.MAX_SAFE_INTEGER : 0]));
 }
@@ -387,10 +397,11 @@ export function lineTotalCp(item, rate, bundle, quantity, currencies) {
 /**
  * A copy of `item` fit to land on a new actor: at `quantity`, `system.container` set to
  * `containerId` (top-level, `null`, unless the copy is landing *inside* a container a container
- * purchase just created — see `landContainer`), and with `flags.merchant-presets.stock` and
- * `.drawn` stripped — shelf metadata (hidden, infinite, ...) has no business following an item
- * into a pack or another shop, and a drawn item (#105's restock tag) landing anywhere else would
- * otherwise be deleted by that shop's next restock, not the one that actually drew it. The item
+ * purchase just created — see `landContainer`), and with `flags.merchant-presets.stock`, `.drawn`
+ * and `.newAt` stripped — shelf metadata (hidden, infinite, ...) has no business following an item
+ * into a pack or another shop, a drawn item (#105's restock tag) landing anywhere else would
+ * otherwise be deleted by that shop's next restock, not the one that actually drew it, and a New
+ * badge (#152) is the shelf's, not the good's. The item
  * then reads as `STOCK_DEFAULTS` until something (a GM, or landing back on a shop with a matching
  * line) says otherwise. `kind` and the behaviour flags (nutrition/actor/spell) are untouched —
  * the runtime still needs those.
@@ -410,6 +421,7 @@ function copyOf(item, quantity, containerId = null) {
     base.flags[MODULE] = { ...base.flags[MODULE] };
     delete base.flags[MODULE].stock;
     delete base.flags[MODULE].drawn;
+    delete base.flags[MODULE].newAt;
   }
   if (bundle > 1) base.flags = { ...base.flags, [MODULE]: { ...base.flags?.[MODULE], bundle } };
   return base;
@@ -746,7 +758,7 @@ function planSell(request, context) {
     // A copy the sale creates is finite, whatever the world's infinite-stock default (one sold
     // Flame Tongue must not become endless), and keeps a matched line's hidden or delisted.
     const shelf = { infinite: false, ...(matched && (stock.hidden || stock.notForSale) ? { hidden: stock.hidden, notForSale: stock.notForSale } : {}) };
-    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, owned, shelf });
+    lines.push({ item, stock, quantity: requested.quantity, bundlePriceCp: bundleCp, lineTotalCp: totalLineCp, category, layer: buysAt.layer, rate: buysAt.rate, owned, shelf });
   }
 
   if (staleLines(request.lines, fresh)) return { ok: false, reason: "stock-changed", lines: fresh };
@@ -761,7 +773,8 @@ function planSell(request, context) {
   for (const [denomination, count] of Object.entries(paid.given)) {
     buyerCurrency[denomination] = (buyerCurrency[denomination] ?? 0) + count;
   }
-  const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0 };
+  // What the till holds once it has paid, for the receipt (design z5RBkd); a bottomless one holds no sum.
+  const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0, tillCp: worldSettings.infinitePurse ? null : coinsCp(paid.remaining, currencies) };
 
   // Never stacks onto shopkeeper gear, so a sold item can't disappear into the merchant's own kit.
   // A hidden or delisted line is a target, though: the GM's choice holds for what joins it, and
@@ -810,7 +823,11 @@ function buildPlan(request, kind, shop, buyer, lines, totalCp, payment, updates)
       lines: hookLines.map(l => ({ icon: l.item.img, label: l.item.name, quantity: l.quantity, lineTotalCp: l.lineTotalCp })),
       totalCp,
       direction: kind === "buy" ? "Paid" : "Received",
-      footnote: { changeCp: payment.changeCp, exact: payment.changeCp === 0 }
+      footnote: { changeCp: payment.changeCp, exact: payment.changeCp === 0 },
+      // A sale's receipt says the rate the shop paid at, when every line sold at the same one, and
+      // what its till holds after (design z5RBkd, "At ½ of value. The till holds 154 gp 5 sp.").
+      rate: kind === "sell" && new Set(lines.map(l => l.rate)).size === 1 ? lines[0].rate : null,
+      tillCp: payment.tillCp ?? null
     }
   };
 }

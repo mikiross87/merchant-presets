@@ -21,6 +21,7 @@ const foundryGlobals = {
   CONST: "readonly",
   ChatMessage: "readonly",
   Folder: "readonly",
+  Handlebars: "readonly",
   Hooks: "readonly",
   Item: "readonly",
   Roll: "readonly",

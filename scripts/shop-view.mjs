@@ -1,5 +1,6 @@
-import { effectiveRates } from "./pricing.mjs";
-import { bundleFor, bundlePriceCp, categoryFor, dealtIn, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
+import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
+import { effectiveRates, pay, payExact } from "./pricing.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, lineTotalCp } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -56,6 +57,9 @@ export function titleParts(name) {
 }
 
 /* -------------------------------------------------------------- coins */
+
+/** Each coin's metal, as the design names a coin layer ("gold 15"). */
+export const COIN_METALS = { pp: "platinum", gp: "gold", ep: "electrum", sp: "silver", cp: "copper" };
 
 /** `[denomination, cpValue]` pairs, largest coin first — mirrors pricing.mjs's own ordering. */
 function denominationsByValue(currencies) {
@@ -151,6 +155,9 @@ export function rateFraction(rate) {
  * @typedef {{kind: "markup"|"discount"|"full"|"deal"|null, text: string|null}} RateTag
  */
 
+/** A true minus sign (U+2212), as the design sets every negative figure; a hyphen is shorter and sits lower. */
+export const MINUS = "\u2212";
+
 /**
  * The tag a Buy-tab row shows beside its price, comparing the row's own
  * effective rate against the shop's chip (world/shop layers only — never a
@@ -169,18 +176,18 @@ export function rateTag(effective, chipRate) {
   if (Math.abs(diff) < 1e-9) return { kind: null, text: null };
   if (effective.layer === "category" && Math.abs(effective.rate - 1) < 1e-9) return { kind: "full", text: null };
   const pct = Math.round(Math.abs(diff / chipRate) * 100);
-  return diff > 0 ? { kind: "markup", text: `+${pct}%` } : { kind: "discount", text: `-${pct}%` };
+  return diff > 0 ? { kind: "markup", text: `+${pct}%` } : { kind: "discount", text: `${MINUS}${pct}%` };
 }
 
 /**
- * A deal's size as the window shows it: signed, to a hundredth of a percent ("-10%", "+12.5%").
+ * A deal's size as the window shows it: signed, to a hundredth of a percent ("−10%", "+12.5%").
  *
  * @param {number} factor  -0.1 is 10% off
  * @returns {string}
  */
 export function signedPercent(factor) {
   const percent = Math.round(factor * 10_000) / 100;
-  return `${percent < 0 ? "-" : "+"}${Math.abs(percent)}%`;
+  return `${percent < 0 ? MINUS : "+"}${Math.abs(percent)}%`;
 }
 
 /**
@@ -225,6 +232,278 @@ export function groupCategories(rows) {
   ];
 }
 
+/* -------------------------------------------------------------- shelf groups (#145) */
+
+/**
+ * The Buy list's groups when the GM named no category: the module's own kinds of goods (the inn's
+ * meals, lodging, food and drink; design mRg3y), else a good's kind by item type (the smith's
+ * weapons, armour, tools and gear; design y6iNf), each with its nav icon.
+ */
+export const SHELF_GROUP_ICONS = Object.freeze({
+  weapons: "lucide:sword", armor: "lucide:shield", tools: "lucide:wrench", gear: "lucide:backpack",
+  meal: "lucide:soup", lodging: "lucide:bed-double", "food-drink": "lucide:beer", service: "lucide:concierge-bell",
+  spellcasting: "lucide:sparkles", component: "lucide:gem", mount: "lucide:fence", tack: "lucide:link",
+  vehicle: "lucide:caravan", travel: "lucide:map"
+});
+
+/**
+ * Where a good sits on the Buy list: under a category the GM named on its line, else its kind of
+ * good. For display only; category rules still price by `categoryFor`.
+ *
+ * @param {object} item  an item's `toObject()`
+ * @param {object} stock  its completed stock config
+ * @param {Record<string, unknown>} armorTypes  CONFIG.DND5E.armorTypes: the equipment types that are armour (a shield too)
+ * @returns {{id: string, named: string|null, icon: string}}  `named`: the GM's own name for it, if theirs
+ */
+export function shelfGroup(item, stock, armorTypes = {}) {
+  if (stock?.category) return { id: `named:${stock.category}`, named: stock.category, icon: "lucide:tag" };
+  const kind = item.flags?.["merchant-presets"]?.kind;
+  if (kind && kind !== "gear" && kind in SHELF_GROUP_ICONS) return { id: kind, named: null, icon: SHELF_GROUP_ICONS[kind] };
+  const id = item.type === "weapon" ? "weapons"
+    : item.type === "equipment" && Object.hasOwn(armorTypes, item.system?.type?.value ?? "") ? "armor"
+      : item.type === "tool" ? "tools" : "gear";
+  return { id, named: null, icon: SHELF_GROUP_ICONS[id] };
+}
+
+/** "Martial Melee" as the design writes it in a row: "Martial melee". */
+const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase() : "");
+
+/**
+ * A good's line under its name (design y6iNf): what it is, then what matters about it.
+ * "Martial melee · Versatile · 3 lb", "Medium armor · AC 14 + Dex (max 2)", "+2 AC · 6 lb",
+ * "Artisan's tools · 8 lb"; anything else by its type, then its weight.
+ *
+ * @param {object} item  an item's `toObject()`
+ * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
+ *   typeLabels: object, properties: object, weaponProperties: string[], weightUnits: object}} labels  CONFIG.DND5E's, localized
+ * @param {(key: string, data?: object) => string} t  the window's localize, for the pieces in words
+ * @param {{service?: boolean, feeds?: boolean, hydrates?: boolean}} [world]  whether the line is a
+ *   service, meals feed the buyer (Simple Nutrition takes them), and ale and wine hydrate
+ * @returns {string}
+ */
+export function itemMeta(item, labels, t, { service = false, feeds = false, hydrates = false } = {}) {
+  const sys = item.system ?? {};
+  // What it does for the buyer, where that holds (design mRg3y): a meal feeds them only where
+  // Simple Nutrition takes meals, and ale or wine counts as water only where drinks hydrate.
+  if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : null].filter(Boolean).join(" · ");
+  if (DRINKS.includes(sys.identifier)) return [t("Drink"), hydrates && DRINK_IDENTIFIERS.includes(sys.identifier) ? t("CountsAsWater") : null].filter(Boolean).join(" · ");
+  const weight = sys.weight?.value > 0
+    ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
+    : null;
+  const parts = [];
+  if (item.type === "weapon") {
+    parts.push(whatItIs(item, labels));
+    // Only a weapon's own rules: dnd5e also tags a compendium copy with properties such as "gear".
+    const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p))
+      .map(p => labelOf(labels.properties?.[p])).filter(Boolean);
+    if (props.length) parts.push(sentenceCase(props.join(", ")));
+    parts.push(weight);
+  } else if (item.type === "equipment" && sys.type?.value === "shield") {
+    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), weight);
+  } else if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, sys.type?.value ?? "")) {
+    // Armour's weight goes unsaid: its AC and what wearing it asks are what a buyer weighs.
+    const dex = sys.armor?.dex;
+    const ac = t("Ac", { ac: sys.armor?.value ?? 0 })
+      + (sys.type.value === "heavy" ? "" : dex ? t("DexMax", { max: dex }) : t("Dex"));
+    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
+  } else {
+    parts.push(whatItIs(item, labels), weight);
+  }
+  return parts.filter(Boolean).join(" · ");
+}
+
+/** The ale and wines the module registers with Simple Nutrition as hydration (merchant-presets.mjs `registerDrinks`). */
+export const DRINK_IDENTIFIERS = Object.freeze(["ale", "wine-common", "wine-fine"]);
+/** The goods that read as drinks, not food, though dnd5e types them all as food: those, and water. */
+const DRINKS = [...DRINK_IDENTIFIERS, "water-pint"];
+
+/**
+ * A row's one line in a narrow window (design r7HIUl), where the stock column folds into it: what
+ * the good is, its weight (armour's goes unsaid, as in `itemMeta`), then its stock ("7 left").
+ * A shield reads by what it adds to AC.
+ *
+ * @param {object} item
+ * @param {object} labels  as `itemMeta` takes them
+ * @param {(key: string, data?: object) => string} t
+ * @param {string} stockText  the row's stock in words
+ */
+export function compactMeta(item, labels, t, stockText) {
+  const sys = item.system ?? {};
+  const type = sys.type?.value;
+  const weight = sys.weight?.value > 0
+    ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
+    : null;
+  const parts = item.type === "equipment" && type === "shield" ? [t("ShieldAc", { ac: sys.armor?.value ?? 0 })]
+    : item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "") ? [whatItIs(item, labels)]
+      : [whatItIs(item, labels), weight];
+  return [...parts, stockText].filter(Boolean).join(" · ");
+}
+
+/** The docked bill's one line (design r7HIUl): each line by name, with its count past one. */
+export function billSummary(lines) {
+  return lines.map(line => (line.quantity > 1 ? `${line.quantity} × ${line.name}` : line.name)).join(", ");
+}
+
+/** A CONFIG.DND5E entry's label: some are plain strings, some `{label}` objects. */
+const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
+
+/** What a good is, as the first part of its meta line says it: "Martial melee", "Medium armor", "Potion". */
+function whatItIs(item, labels) {
+  const type = item.system?.type?.value;
+  if (item.type === "weapon") return sentenceCase(labelOf(labels.weaponTypes?.[type]));
+  if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
+  if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);
+  return labelOf(labels.consumableTypes?.[type]) || labelOf(labels.typeLabels?.[item.type]);
+}
+
+/**
+ * A pack row's line under its name (design TGXBN): what the good is, then what one is worth at
+ * list value ("Martial melee · worth 15 gp"), "each" when the seller holds several.
+ *
+ * @param {object} item  the seller's item's `toObject()`
+ * @param {object} labels  as `itemMeta` takes them
+ * @param {(key: string, data?: object) => string} t
+ * @param {string|null} worthText  one's list value in words ("15 gp"); null for a good with no price
+ */
+export function sellMeta(item, labels, t, worthText) {
+  const worth = worthText ? t((item.system?.quantity ?? 1) > 1 ? "WorthEach" : "Worth", { amount: worthText }) : null;
+  return [whatItIs(item, labels), worth].filter(Boolean).join(" · ");
+}
+
+/** The order the Terms popover names refused kinds in: what a traveller most often tries to sell first. */
+const TERMS_KIND_ORDER = ["food-drink", "meal", "mount", "service", "vehicle", "tack", "lodging", "travel", "spellcasting", "component"];
+
+/**
+ * The Terms popover's "Won't buy" (design ChoNd): the first three things named on the line ("food,
+ * mounts or services"), the rest in its detail ("Also turns away …"). Kinds come in a fixed order
+ * and read as nouns (`noun`), several kinds can share one ("food" for food and drink, and meals),
+ * and refused item types (already words) follow them.
+ *
+ * @param {string[]} kinds  the shop's `wontBuy.kinds`
+ * @param {string[]} typeWords  its `wontBuy.types`, as words
+ * @param {(kind: string) => string} noun
+ * @returns {{lead: string[], rest: string[]}}
+ */
+export function wontBuyTerms(kinds, typeWords, noun) {
+  const ordered = [...kinds].sort((a, b) => rank(a) - rank(b));
+  const words = [...new Set([...ordered.map(noun), ...typeWords])];
+  return { lead: words.slice(0, 3), rest: words.slice(3) };
+}
+const rank = kind => (TERMS_KIND_ORDER.includes(kind) ? TERMS_KIND_ORDER.indexOf(kind) : TERMS_KIND_ORDER.length);
+
+/**
+ * What a shop that won't deal in `item` won't buy, for the refusal ("Won't buy food and drink"):
+ * the kind it turns away, else the item type, else null (trade-plan `dealtIn`'s own order).
+ *
+ * @returns {{kind: string}|{type: string}|null}
+ */
+export function wontBuyReason(item, shop) {
+  const kind = kindOf(item);
+  if (kind && shop.wontBuy.kinds.includes(kind)) return { kind };
+  if (shop.wontBuy.types.includes(item.type)) return { type: item.type };
+  return null;
+}
+
+/**
+ * The part of the day an hour falls in, as the bill dates itself ("mid-morning"): a key under
+ * MERCHANT_PRESETS.Shop.Day. On a calendar whose day isn't 24 hours, the hour is scaled to one.
+ *
+ * @param {number} hour
+ * @param {number} [hoursPerDay]
+ * @returns {"night"|"dawn"|"morning"|"midMorning"|"midday"|"afternoon"|"evening"}
+ */
+export function partOfDay(hour, hoursPerDay = 24) {
+  const h = (hour * 24) / hoursPerDay;
+  if (h < 5) return "night";
+  if (h < 7) return "dawn";
+  if (h < 9) return "morning";
+  if (h < 12) return "midMorning";
+  if (h < 14) return "midday";
+  if (h < 18) return "afternoon";
+  if (h < 22) return "evening";
+  return "night";
+}
+
+/* -------------------------------------------------------------- header */
+
+/**
+ * Whether a restock is still fresh: the hero's "Fresh stock today" chip and the goods' "New"
+ * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
+ * restock until the shop next closes after it (schedule.mjs `nextCloseAt`, through the closing
+ * minute). A shop that doesn't close (it keeps no hours, keeps them round the clock, or the world's
+ * trading hours are off, so `hours` is null) keeps a restock fresh for a whole day from it, so one
+ * just before its opening or midnight isn't gone in minutes. Worked out when the window draws, so
+ * nothing is written at closing (#152).
+ *
+ * @param {number|null|undefined} lastRestock  when the shelf was last restocked (the shop's `restockedAt`), in world seconds
+ * @param {number} now          the world time
+ * @param {object|null} hours   the hours the shop closes by: null when it keeps none or trading hours are off
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function isFresh(lastRestock, now, hours, days) {
+  if (lastRestock == null || now < lastRestock) return false;
+  return now < (nextCloseAt(hours, lastRestock, days) ?? lastRestock + secondsPerDay(days));
+}
+
+/**
+ * Whether a good wears "New" (#152): this shop's restock brought it back in stock (its `newAt`,
+ * schedule.mjs `planRestock`), that's still fresh, and it hasn't sold out again since. Only on the
+ * shop that drew it (schedule.mjs `isDrawn`): a good a GM drags from one shop to another keeps its
+ * flags, but not its badge.
+ *
+ * @param {{system?: {quantity?: number}, flags?: object}} item
+ * @param {string|undefined} shelf  the shop's shelf key (`flags.merchant-presets.shelf`)
+ * @param {number} now
+ * @param {object|null} hours       as `isFresh` takes them
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function isNewGood(item, shelf, now, hours, days) {
+  return isDrawn(item, shelf) && item.system?.quantity !== 0
+    && isFresh(item.flags?.["merchant-presets"]?.newAt, now, hours, days);
+}
+
+/* -------------------------------------------------------------- Restock section (design aaJcp) */
+
+/**
+ * How many days of the world's calendar from `now` to `dueAt`: "Next: 21 Mirtul at 7:00, in 7
+ * days" counts calendar days, so a restock due at 7:00 tomorrow is a day off at 10:00 today.
+ *
+ * @param {number} now
+ * @param {number} dueAt
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function daysUntil(now, dueAt, days) {
+  const perDay = secondsPerDay(days);
+  return Math.floor(dueAt / perDay) - Math.floor(now / perDay);
+}
+
+/**
+ * The Restock section's preset line: the preset's tier and schedule, then each other tier of the
+ * same merchant that restocks on another schedule ("Town: 7 days (Village: 14 days)").
+ *
+ * @param {{tier: string|null, every: string}} preset  the schedule as a label
+ * @param {{tier: string, every: string}[]} tiers      every tier of the merchant, the preset's included
+ * @returns {{tier: string|null, every: string, others: {tier: string, every: string}[]}}
+ */
+export function presetSchedule(preset, tiers) {
+  return { ...preset, others: tiers.filter(t => t.tier !== preset.tier && t.every !== preset.every) };
+}
+
+/**
+ * The quantity formula most of a stock table's goods roll (`restock.quantities`), for the table
+ * card's "quantity rolled (e.g. 2d6+4)"; null when every good comes one at a time.
+ *
+ * @param {Record<string, string>} quantities
+ * @returns {string|null}
+ */
+export function commonFormula(quantities) {
+  const counts = new Map();
+  for (const f of Object.values(quantities ?? {})) if (String(f).trim() !== "1") counts.set(f, (counts.get(f) ?? 0) + 1);
+  let best = null;
+  for (const [f, n] of counts) if (best === null || n > counts.get(best)) best = f;
+  return best;
+}
+
 /* -------------------------------------------------------------- basket */
 
 /**
@@ -245,6 +524,32 @@ export function basketTotals(lines, purseCp, kind) {
   return { sumCp, afterCp: Math.max(0, afterCp), shortfallCp };
 }
 
+/**
+ * The coins `purse` holds once the bill is settled, moved as the trade engine moves them
+ * (trade-plan.mjs): a buyer pays with `pay` (their own coins, overpaying as little as possible,
+ * change from the till); a seller is paid exactly out of the till (`payExact`). So an untouched
+ * denomination stays as it is: 3 pp 47 gp less 30 gp is 3 pp 17 gp, not a re-split total.
+ *
+ * @param {"buy"|"sell"} kind
+ * @param {Record<string, number>} purse  the buyer's (or seller's) coins by denomination
+ * @param {number} sumCp                  the bill's sum, in the finest coin
+ * @param {Record<string, number>|null} till  the shop's coins; null for unlimited merchant coin
+ * @param {Record<string, {conversion: number}>} currencies
+ * @returns {Record<string, number>|null}  null where the engine would refuse the bill
+ */
+export function purseAfter(kind, purse, sumCp, till, currencies) {
+  const shop = till ?? bottomlessTill(currencies);
+  if (kind === "buy") {
+    const paid = pay(purse, sumCp, shop, currencies);
+    return paid.ok ? paid.purse : null;
+  }
+  const paid = payExact(shop, sumCp, currencies);
+  if (!paid.ok) return null;
+  const after = { ...purse };
+  for (const [denomination, count] of Object.entries(paid.given)) after[denomination] = (after[denomination] ?? 0) + count;
+  return after;
+}
+
 /* -------------------------------------------------------------- stock rules */
 
 /*
@@ -252,16 +557,8 @@ export function basketTotals(lines, purseCp, kind) {
  * own rules, not copies: a drift would show a row the engine then refuses, or hide one it takes.
  */
 export { dealtIn };
-export { isGear as isGearItem, matchingStockLine, sourceOf } from "./trade-plan.mjs";
+export { isGear as isGearItem, isVisibleStock, matchingStockLine, sourceOf } from "./trade-plan.mjs";
 
-/**
- * A stock row the Buy tab can show: what a buy wouldn't refuse as not visible (gear, the fixed
- * exclusions, hidden, delisted, inside a container, a container holding any of those) or as
- * unidentified. `shopItems` is the shop's own items, for that container check.
- */
-export const isVisibleStock = (item, stock, shopItems = []) => isVisible(item, stock)
-  && item.system?.identified !== false
-  && !(item.type === "container" && hasUngivableContents(item._id, shopItems));
 
 /* -------------------------------------------------------------- stock labels */
 
@@ -296,8 +593,6 @@ export function stockLabel(stock, quantity, worldInfiniteStock) {
  * @property {string} name
  * @property {string} category
  * @property {StockLabel} stock
- * @property {boolean} isNew  placeholder for #105's restock badge (`flags.merchant-presets.new`);
- *   unset until the restock runtime sets that flag, per #103's scope.
  * @property {number|null} bundlePriceCp  null when the item can't be priced (see `unpriced`)
  * @property {boolean} unpriced  true for a missing price or a denomination `currencies` lacks —
  *   shown as "Worthless" per #98's decision (design/README.md is silent on a *shop* price of
@@ -357,7 +652,6 @@ export function buyRow(item, stock, rates, deal, currencies, worldInfiniteStock,
     name: item.name,
     category,
     stock: stockLabel(stock, item.system?.quantity ?? 0, worldInfiniteStock),
-    isNew: item.flags?.["merchant-presets"]?.new === true,
     service: stock.service,
     bundlePriceCp: bundleCp,
     unpriced,
@@ -503,27 +797,31 @@ export function fitQuantity(quantity, { bundle, available, infinite }) {
  *
  * @param {"idle"|"sealing"|"sealed"|string} state  "idle", "sealing", "sealed", or a `planTrade` refusal reason
  * @param {boolean} hasLines  whether the basket holds anything at all
+ * @param {{gmOnline?: boolean}} [where]  whether a GM is at the table: a "no-gm" bill with none waits
+ *   for one (the window re-renders when one connects); with one, the trade went unanswered and the
+ *   bill can be sent again
  * @returns {{labelKey: string, disabled: boolean, icon: string}}
  */
-export function sealState(state, hasLines) {
+export function sealState(state, hasLines, { gmOnline = true } = {}) {
   switch (state) {
-    case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "fa-solid fa-spinner fa-spin" };
-    case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "fa-solid fa-store" };
-    case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "fa-solid fa-ban" };
-    // Live, not waiting: nothing tells the window a GM has arrived, so the player sends it again.
-    case "no-gm": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "fa-solid fa-rotate-right" };
-    case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "fa-solid fa-ban" };
-    case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
-    case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "fa-solid fa-ban" };
-    case "idle": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "fa-solid fa-stamp" };
-    case "out-of-stock": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "fa-solid fa-ban" };
-    case "no-buyer": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoBuyer", disabled: true, icon: "fa-solid fa-user-slash" };
-    case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "fa-solid fa-ban" };
-    case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "fa-solid fa-box-open" };
-    case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "fa-solid fa-ban" };
-    case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
+    case "sealing": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Sealing", disabled: true, icon: "lucide:loader" };
+    case "sealed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.KeepShopping", disabled: false, icon: "lucide:store" };
+    case "cant-afford": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.CantAfford", disabled: true, icon: "lucide:circle-slash" };
+    // With no GM at the table the bill waits for one: the window re-renders when one connects.
+    case "no-gm": return gmOnline ? { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGm", disabled: !hasLines, icon: "lucide:hourglass" }
+      : { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoGmWaiting", disabled: true, icon: "lucide:hourglass" };
+    case "till-short": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.TillShort", disabled: true, icon: "lucide:circle-slash" };
+    case "stock-changed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "lucide:stamp" };
+    case "closed": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Closed", disabled: true, icon: "lucide:circle-slash" };
+    case "idle": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Bargain", disabled: !hasLines, icon: "lucide:stamp" };
+    case "out-of-stock": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.OutOfStock", disabled: true, icon: "lucide:circle-slash" };
+    case "no-buyer": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NoBuyer", disabled: true, icon: "lucide:user-x" };
+    case "worthless": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Worthless", disabled: true, icon: "lucide:circle-slash" };
+    case "container-not-empty": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.NotEmpty", disabled: true, icon: "lucide:package-open" };
+    case "unpriced": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Unpriced", disabled: true, icon: "lucide:circle-slash" };
+    case "invalid-request": return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" };
     // Any other refusal (not-visible, wont-buy, shop-misconfigured, ...) still reads as one: the
     // bill has to change before the same request could go through.
-    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "fa-solid fa-ban" };
+    default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" };
   }
 }
