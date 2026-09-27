@@ -75,15 +75,9 @@
     {{#if plain}}<em class="mp-plain" data-pen="{{label}} plain">{{plain}}</em>{{/if}}
   </div>
 {{/inline}}
-{{#*inline "check"}}
-  <label class="mp-check" data-pen="Check {{label}}">
-    <input type="checkbox" class="mp-visually-hidden" data-op="{{op}}" data-side="{{side}}" {{checked checked}} />
-    <span class="mp-box" data-pen="Box">{{mpIcon "check" pen="Tick"}}</span><span data-pen="Check label">{{label}}</span>
-  </label>
-{{/inline}}
-
-<nav class="mp-section-nav" data-pen="Section Nav">
-  <label class="mp-visit" data-pen="Visit toggle">
+{{!-- "Players can visit": atop the nav, or atop the form when the window is narrow (design bXBEW). --}}
+{{#*inline "visitToggle"}}
+  <label class="mp-visit {{class}}" data-pen="Visit toggle">
     <span class="mp-visit-row" data-pen="Visit row">
       <b data-pen="Visit label">{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Label"}}</b>
       <input type="checkbox" class="mp-visually-hidden" data-op="visit" {{checked visit}} />
@@ -92,6 +86,25 @@
     <span class="mp-visit-hint" data-pen="Visit hint">{{visitHint}}</span>
     {{#if visitOthers}}<span class="mp-visit-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Visit.Others" count=visitOthers}}</span>{{/if}}
   </label>
+{{/inline}}
+{{#*inline "check"}}
+  <label class="mp-check" data-pen="Check {{label}}">
+    <input type="checkbox" class="mp-visually-hidden" data-op="{{op}}" data-side="{{side}}" {{checked checked}} />
+    <span class="mp-box" data-pen="Box">{{mpIcon "check" pen="Tick"}}</span><span data-pen="Check label">{{label}}</span>
+  </label>
+{{/inline}}
+
+{{!-- A narrow window's way around (design bXBEW): the sections as a dropdown, like the categories. --}}
+<div class="mp-category-bar mp-narrow-only" data-pen="Section bar">
+  <label class="mp-category-select" data-pen="Section select">
+    {{mpIcon activeSection.icon pen="Section icon"}}<span class="mp-cat-value" data-pen="Section value">{{activeSection.label}}</span>{{mpIcon "chevron-down" pen="Section chevron"}}
+    <select class="mp-category-native mp-section-native" aria-label="{{activeSection.label}}">
+      {{#each sections}}<option value="{{id}}" {{#if active}}selected{{/if}}>{{label}}</option>{{/each}}
+    </select>
+  </label>
+</div>
+<nav class="mp-section-nav mp-wide-only" data-pen="Section Nav">
+  {{> visitToggle}}
   <span class="mp-visit-gap" data-pen="Visit gap"></span>
   {{#each sections}}
     <button type="button" class="mp-nav-link {{#if active}}active{{/if}}" data-action="settingsSection" data-section="{{id}}" data-pen="Nav {{label}}">
@@ -106,6 +119,7 @@
 </nav>
 
 <div class="mp-form settings-body" data-pen="Form">
+  {{> visitToggle class="mp-narrow-only"}}
   {{#if broken}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Broken"}}</p>{{/if}}
 
   <section class="settings-section" data-section="terms" data-pen="Section Terms">
@@ -249,10 +263,14 @@
       </button>
     </div>
   </section>
+  {{!-- The nav's reset, for a narrow window, which hides the nav. --}}
+  <button type="button" class="mp-reset mp-narrow-only" data-action="resetToPreset" {{disabled (not canReset)}}>
+    {{mpIcon "rotate-ccw"}}<span>{{localize "MERCHANT_PRESETS.Shop.Settings.Reset.Label"}}</span>
+  </button>
   </div>
 </div>
 
-<aside class="mp-players-see settings-preview" data-pen="Players See">
+<aside class="mp-players-see settings-preview mp-wide-only" data-pen="Players See">
   <div class="mp-preview-head" data-pen="Preview head">
     {{mpIcon "eye" pen="Eye"}}<h2 class="mp-section-title" data-pen="Preview title">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Title"}}</h2>
   </div>
@@ -284,3 +302,16 @@
     <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Note"}}</p>
   {{/if}}
 </aside>
+{{!-- A narrow window docks Players see at the bottom, like the bill (design bXBEW); the chevron shows it in place of the form. --}}
+<div class="mp-dock mp-preview-dock mp-narrow-only" data-pen="Preview dock">
+  <div class="mp-grip-row" data-pen="Grip row"><span class="mp-grip" data-pen="Grip"></span></div>
+  <div class="mp-dock-summary" data-pen="Preview summary">
+    <div class="mp-dock-text" data-pen="Preview text">
+      <span class="mp-slip-kicker" data-pen="Preview kicker">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Title"}}</span>
+      <span class="mp-dock-lines" data-pen="Preview line">{{preview.line}}</span>
+    </div>
+    <button type="button" class="mp-dock-expand" data-action="togglePreview" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Preview.Title'}}">
+      {{#if previewOpen}}{{mpIcon "chevron-down" pen="Collapse"}}{{else}}{{mpIcon "chevron-up" pen="Expand"}}{{/if}}
+    </button>
+  </div>
+</div>

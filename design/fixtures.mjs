@@ -386,8 +386,8 @@ const stateFrames = Object.fromEntries(["light", "dark"].flatMap(theme => PARTS.
 
 
 /** Settings jumped to `section` at 10:00 on the 14th, restocked the day before, with or without the Settings frames' deals (bands 09 and 11). */
-const settingsAt = (section, deals = false) => openShop({ tab: "settings", autoRestock: true, before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
-  then: `app.element.querySelector('.mp-nav-link[data-section="${section}"], [data-action="settingsSection"][data-section="${section}"]')?.click();` });
+const settingsAt = (section, deals = false, jump = true) => openShop({ tab: "settings", autoRestock: true, before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
+  then: jump ? `app.element.querySelector('.mp-nav-link[data-section="${section}"]').click();` : "" });
 /** Aria's −10% deal on buying, running (until the shop closes) or ended at yesterday's closing. */
 const ariaDeal = ended => `
   const perDay = game.time.calendar.days.hoursPerDay * 3600;
@@ -457,8 +457,8 @@ export const FRAMES = {
   ...dealFrames,
   PV7Sf: frame("11 Sell — Narrow (Light)", "light", 480, 780, "Gamemaster", sellNarrow),
   NipLU: frame("11 Sell — Narrow (Dark)", "dark", 480, 780, "Gamemaster", sellNarrow),
-  bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 780, "Gamemaster", settingsAt("terms", true)),
-  G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 780, "Gamemaster", settingsAt("terms", true)),
+  bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 780, "Gamemaster", settingsAt("terms", true, false)),
+  G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 780, "Gamemaster", settingsAt("terms", true, false)),
   "euA99:sealed": frame("12 Sell Trade States — Light · sealed", "light", 694, 596, "Gamemaster", sellSealed, { export: "euA99", part: "o05Tqq" }),
   "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" })
 };

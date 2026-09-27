@@ -273,7 +273,7 @@
 </section>
 
 {{#if settings}}
-  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}}" data-group="primary" data-tab="settings" data-pen="Body">
+  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}} {{#if settings.previewOpen}}is-preview-open{{/if}}" data-group="primary" data-tab="settings" data-pen="Body">
     {{> "modules/merchant-presets/templates/parts/settings-tab.hbs" settings}}
   </section>
 {{/if}}

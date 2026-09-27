@@ -212,6 +212,8 @@ function dealChip(termsChip, deal, world, terms) {
  * The price without the buyer's deal, as the small struck text over theirs (design AutYE, "2 gp"):
  * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
  */
+/** Which Players see view a Settings section has: its own, or the terms and deals one. */
+const previewOf = section => (["restock", "wontBuy", "hours"].includes(section) ? section : "terms");
 /** `items` in rows of `size`, each numbered from 1 for its layer name. */
 const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) },
   (_, i) => ({ number: i + 1, items: items.slice(i * size, (i + 1) * size) }));
@@ -315,6 +317,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       seal: ShopSheet.#onSeal,
       keepShopping: ShopSheet.#onKeepShopping,
       settingsSection: ShopSheet.#onSettingsSection,
+      togglePreview: ShopSheet.#onTogglePreview,
       setEvery: ShopSheet.#onSetEvery,
       addRule: ShopSheet.#onAddRule,
       removeRule: ShopSheet.#onRemoveRule,
@@ -373,6 +376,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._buyerUuid = game.user.character?.uuid ?? null;
     /** The GM Settings tab's open section (#110). */
     this._settingsSection = "terms";
+    /** Whether a narrow window shows Players see in place of the Settings form (its dock's chevron). */
+    this._previewOpen = false;
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
     this._everyDice = false;
   }
@@ -468,6 +473,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A narrow window's category dropdown: a native select, which reports a change, not a click.
     for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
       select.addEventListener("change", () => {
+        if (select.classList.contains("mp-section-native")) return this.#jumpToSection(select.value, { fromDropdown: true });
         if (select.dataset.kind === "sell") this._sellCategory = select.value;
         else this._activeCategory = select.value;
         this.render();
@@ -1588,6 +1594,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       broken: !safeShopOf(actor),
       // One page: the nav jumps to a section, and marks the one last jumped to.
       sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
+      // The narrow window's section dropdown shows the one jumped to (design bXBEW).
+      get activeSection() { return this.sections.find(s => s.active) ?? this.sections[0]; },
+      previewOpen: this._previewOpen,
       visit: (actor.ownership?.default ?? NONE) >= LIMITED,
       // "Entirely" holds only while no player has access of their own; then the hint says so.
       visitHint: i18n(visitOthers ? "Visit.Hint" : "Visit.HintAll"),
@@ -1650,6 +1659,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         restock: this._settingsSection === "restock" ? this.#restockPreview(actor, shop, world, currencies) : null,
         hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
         chip: header.termsChipBase,
+        // The narrow window's docked Players see, in one line: the chip, then each deal in force.
+        line: [header.termsChipBase, ...shop.deals.filter(d => d.buy && activeDeal(shop, d.actor, game.time.worldTime))
+          .map(d => `${d.name} ${signedPercent(d.buy)}`)].join(" · "),
         item: sample,
         example,
         // Only a deal that moves a Buy-list price: the preview's row is one (design: Aria's, not
@@ -1884,9 +1896,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** Settings is one page (design v8ap9): the nav scrolls its section into view and marks it. */
   static #onSettingsSection(_event, target) {
-    const wasRestock = this._settingsSection === "restock";
-    this._settingsSection = target.dataset.section;
-    for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link === target);
+    this.#jumpToSection(target.dataset.section);
+  }
+
+  /** A narrow window's Players see, shown in place of the form or put back in its dock (design bXBEW). */
+  static #onTogglePreview() {
+    this._previewOpen = !this._previewOpen;
+    this.render({ parts: ["body"] });
+  }
+
+  /** Scrolls the form to `section` and marks it in the nav and the narrow dropdown. */
+  #jumpToSection(sectionId, { fromDropdown = false } = {}) {
+    const previous = this._settingsSection;
+    const changed = previous !== sectionId;
+    this._settingsSection = sectionId;
+    for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link.dataset.section === sectionId);
     // Only the form scrolls: scrollIntoView would scroll the window's own content too, and take
     // its bar and hero off the top.
     const form = this.element.querySelector(".settings-body");
@@ -1895,8 +1919,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
       form.scrollTop += section.getBoundingClientRect().top - form.getBoundingClientRect().top - pad;
     }
-    // Players see shows the shelf after a restock while Restock is the section (design aaJcp).
-    if (wasRestock !== (this._settingsSection === "restock")) this.render({ parts: ["body"] });
+    // Players see has its own view for some sections (design aaJcp, dYANz, S2swP), and the narrow
+    // dropdown names the section it jumped to: either re-renders.
+    if (changed && (fromDropdown || previewOf(previous) !== previewOf(sectionId))) this.render({ parts: ["body"] });
   }
 
   static async #onSetEvery(_event, target) {

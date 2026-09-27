@@ -1457,6 +1457,13 @@
 
   .shop-sheet .mp-stock { padding: 0 16px; }
   .shop-sheet .mp-stock > .mp-group:first-child { padding-top: 4px; }
+  /* Settings, narrow (design bXBEW): the dropdown over one column, Players see docked below. */
+  .shop-sheet .settings-tab.active { flex-direction: column; }
+  .shop-sheet .settings-tab .mp-form { padding: 4px 16px 16px; }
+  .shop-sheet .mp-visit.mp-narrow-only { display: flex; }
+  .shop-sheet .mp-reset.mp-narrow-only { display: flex; align-self: flex-start; }
+  .shop-sheet .settings-tab.is-preview-open .mp-form { display: none; }
+  .shop-sheet .settings-tab.is-preview-open .mp-players-see.mp-wide-only { display: flex; flex: 1 1 0; width: auto; }
   .shop-sheet .mp-till-strip.mp-narrow-only { display: flex; align-items: center; gap: 10px; padding: 0 0 6px; }
   .shop-sheet .mp-till-strip .mp-meter { flex: 1 1 0; align-self: center; }
   .shop-sheet .mp-till-strip + .mp-group { padding-top: 4px; }
