@@ -6305,16 +6305,16 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": false
+              "enabled": true
             },
             "amGqh": {
-              "enabled": false
+              "enabled": true
             },
             "K7PByz": {
-              "enabled": false
+              "enabled": true
             },
             "PmOUn": {
-              "fill": "$text-secondary"
+              "fill": "$accent-on-dark"
             }
           }
         },
@@ -6455,9 +6455,6 @@
                   "fill": "#00000000",
                   "cornerRadius": 4,
                   "stroke": "#00000000",
-                  "strokeWidth": {
-                    "left": 3
-                  },
                   "gap": 8,
                   "padding": [
                     7,
@@ -6473,7 +6470,7 @@
                       "height": 14,
                       "icon": "scale",
                       "library": "lucide",
-                      "fill": "$accent-strong"
+                      "fill": "$text-secondary"
                     },
                     {
                       "type": "text",
@@ -6741,7 +6738,7 @@
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Restocking draws the shelf from these tables and refills the till.",
+                      "content": "Restocking draws the shelf from the stock table and refills the till.",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7069,7 +7066,7 @@
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Preset default for a Town smith: 7 days (Village: 14). Days follow the world calendar.",
+                          "content": "Preset default for a Town shop: 7 days (Village: 14 days). Days follow the world calendar.",
                           "fontFamily": "$font-compact",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -7148,7 +7145,7 @@
                               "fill": "$text-secondary",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Everything the tables drew is drawn again at fresh quantities. Goods you added by hand stay.",
+                              "content": "Everything the table drew is drawn again at fresh quantities. Goods you added by hand stay.",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -7383,57 +7380,6 @@
                   ]
                 },
                 {
-                  "id": "Cg9oe",
-                  "type": "ref",
-                  "ref": "wUkvn",
-                  "name": "Preview Breastplate",
-                  "width": "fill_container",
-                  "padding": [
-                    6,
-                    8
-                  ],
-                  "gap": 8,
-                  "descendants": {
-                    "MY7RE": {
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/items/breastplate-collared-steel-grey.webp",
-                        "mode": "fill"
-                      },
-                      "width": 32,
-                      "height": 32
-                    },
-                    "BZVOe": {
-                      "content": "Breastplate",
-                      "fontSize": 13
-                    },
-                    "p7o2oz": {
-                      "enabled": true
-                    },
-                    "vYzUL": {
-                      "content": "1 left"
-                    },
-                    "UB234": {
-                      "enabled": false
-                    },
-                    "CZ7Dq/e1b2b": {
-                      "content": "400"
-                    },
-                    "CZ7Dq/B6r81": {
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/gold.webp",
-                        "mode": "fill"
-                      }
-                    },
-                    "xqAHK": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
                   "id": "VX9DZ",
                   "type": "ref",
                   "ref": "wUkvn",
@@ -7476,6 +7422,57 @@
                         "type": "image",
                         "enabled": true,
                         "url": "assets/silver.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "Cg9oe",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Preview Breastplate",
+                  "width": "fill_container",
+                  "padding": [
+                    6,
+                    8
+                  ],
+                  "gap": 8,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/breastplate-collared-steel-grey.webp",
+                        "mode": "fill"
+                      },
+                      "width": 32,
+                      "height": 32
+                    },
+                    "BZVOe": {
+                      "content": "Breastplate",
+                      "fontSize": 13
+                    },
+                    "p7o2oz": {
+                      "enabled": true
+                    },
+                    "vYzUL": {
+                      "content": "Last one"
+                    },
+                    "UB234": {
+                      "enabled": false
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "400"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
                         "mode": "fill"
                       }
                     },
@@ -10255,7 +10252,7 @@
             {
               "type": "ellipse",
               "id": "Py0BY",
-              "name": "Portrait",
+              "name": "Merchant Portrait",
               "fill": {
                 "type": "image",
                 "enabled": true,
@@ -10498,7 +10495,7 @@
                   "id": "nuv49",
                   "type": "ref",
                   "ref": "uJ3dp",
-                  "name": "platinum 3",
+                  "name": "platinum",
                   "descendants": {
                     "e1b2b": {
                       "content": "3",
@@ -10518,7 +10515,7 @@
                   "id": "E67YM",
                   "type": "ref",
                   "ref": "uJ3dp",
-                  "name": "gold 47",
+                  "name": "gold",
                   "descendants": {
                     "e1b2b": {
                       "content": "47",
@@ -10538,7 +10535,7 @@
                   "id": "DKlFQ",
                   "type": "ref",
                   "ref": "uJ3dp",
-                  "name": "silver 12",
+                  "name": "silver",
                   "descendants": {
                     "e1b2b": {
                       "content": "12",
@@ -10558,7 +10555,7 @@
                   "id": "pWxiT",
                   "type": "ref",
                   "ref": "uJ3dp",
-                  "name": "copper 30",
+                  "name": "copper",
                   "descendants": {
                     "e1b2b": {
                       "content": "30",
@@ -10794,7 +10791,7 @@
                   "id": "eBj6W",
                   "name": "Cat count",
                   "fill": "$text-secondary",
-                  "content": "48",
+                  "content": "19",
                   "fontFamily": "$font-compact",
                   "fontSize": 12,
                   "fontWeight": "normal"
@@ -10853,7 +10850,7 @@
                 {
                   "type": "rectangle",
                   "id": "QYXzK",
-                  "name": "rule",
+                  "name": "Weapons rule",
                   "fill": "$border",
                   "width": "fill_container",
                   "height": 1
@@ -10980,6 +10977,9 @@
                 "BZVOe": {
                   "content": "Javelin"
                 },
+                "p7o2oz": {
+                  "enabled": true
+                },
                 "vYzUL": {
                   "content": "Simple melee · 2 lb · 21 left"
                 },
@@ -11004,47 +11004,6 @@
                 "R8Rhev": {
                   "icon": "check",
                   "fill": "#ffffff"
-                }
-              }
-            },
-            {
-              "id": "b0yjql",
-              "type": "ref",
-              "ref": "wUkvn",
-              "name": "Row Dagger",
-              "width": "fill_container",
-              "padding": 8,
-              "gap": 10,
-              "descendants": {
-                "MY7RE": {
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/items/dagger-straight-blue.webp",
-                    "mode": "fill"
-                  },
-                  "width": 34,
-                  "height": 34
-                },
-                "BZVOe": {
-                  "content": "Dagger"
-                },
-                "vYzUL": {
-                  "content": "Simple melee · 1 lb · 7 left"
-                },
-                "UB234": {
-                  "enabled": false
-                },
-                "CZ7Dq/e1b2b": {
-                  "content": "2"
-                },
-                "CZ7Dq/B6r81": {
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "assets/gold.webp",
-                    "mode": "fill"
-                  }
                 }
               }
             },
@@ -11075,7 +11034,7 @@
                 {
                   "type": "rectangle",
                   "id": "ps0gW",
-                  "name": "rule",
+                  "name": "Armor rule",
                   "fill": "$border",
                   "width": "fill_container",
                   "height": 1
@@ -11225,6 +11184,88 @@
                   "enabled": false
                 }
               }
+            },
+            {
+              "type": "frame",
+              "id": "yH7Cb",
+              "name": "Group Tools",
+              "width": "fill_container",
+              "gap": 10,
+              "padding": [
+                12,
+                0,
+                6,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "TyYHc",
+                  "name": "Tools heading",
+                  "fill": "$text-title",
+                  "content": "Tools",
+                  "fontFamily": "$font-title",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "eVLjI",
+                  "name": "Tools rule",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            },
+            {
+              "id": "deSZF",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Smith's Tools",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/smithing-tongs-metal-red.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Smith's Tools"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Artisan's tools · 8 lb · 4 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "20"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": true
+                }
+              }
             }
           ]
         },
@@ -11307,7 +11348,7 @@
                       "id": "A6fcz",
                       "name": "Dock lines",
                       "fill": "$ink",
-                      "content": "Longsword, 2 Handaxes, 10 Javelins",
+                      "content": "Longsword, 2 × Handaxe, 10 × Javelin",
                       "fontFamily": "$font-slip",
                       "fontSize": 15,
                       "fontWeight": "600"
@@ -12245,7 +12286,7 @@
               "type": "frame",
               "id": "uvkg5",
               "name": "Col Purchase · public",
-              "width": 300,
+              "width": 292,
               "layout": "vertical",
               "gap": 6,
               "children": [
@@ -12705,7 +12746,7 @@
               "type": "frame",
               "id": "X6JgtZ",
               "name": "Col Sale · whispered to GM",
-              "width": 300,
+              "width": 292,
               "layout": "vertical",
               "gap": 6,
               "children": [
