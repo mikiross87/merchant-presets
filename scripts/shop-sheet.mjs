@@ -979,6 +979,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const seal = sealState(state, lines.length > 0, { gmOnline: !!game.users?.activeGM });
     const sumText = coinsText(coinBreakdown(totals.sumCp, currencies));
     const basket = this.#billOfSale("buy", lines, totals, currencies, buyer, this._sealed.buy);
+    const tillText = coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies));
     return {
       kind: "buy",
       shopTitle: titleParts(actor.name).title,
@@ -986,9 +987,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       categories,
       activeCategory: categories.find(c => c.active),
       // For a buy refused as till-short: the till couldn't make change.
-      tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
+      tillText,
       basket,
-      slip: this.#slip("buy", state, seal, basket, buyer),
+      slip: this.#slip("buy", state, seal, basket, buyer, { tillText }),
       // A seal that's out or stamped stays on screen past closing, so its answer is seen.
       showClosed: !open && !isSettled(this._tradeState.buy),
       seal: {
@@ -1658,8 +1659,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
     const schedule = actor.flags?.[MODULE]?.schedule;
-    // Whatever drew the shelf last, Restock now included; the schedule's own record before #145.
-    const lastRestock = actor.flags?.[MODULE]?.restockedAt ?? schedule?.lastRestock ?? null;
+    // Whatever drew the shelf last, Restock now included, fresh stock or not; the schedule's own
+    // record before #145.
+    const lastRestock = actor.flags?.[MODULE]?.lastRestockAt ?? schedule?.lastRestock ?? null;
     // Players the GM gave their own level: the switch sets only the default, so they keep it.
     const visitOthers = Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
       const user = id !== "default" && game.users?.get(id);
@@ -1670,7 +1672,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // The first good on the Buy list, the design's Longsword: the Terms example prices it, and
     // Players see shows it as everyone sees it and as each deal's character does.
     const sample = this.#previewRow(actor, shop, world, null, currencies);
-    let example = { text: i18n("Terms.ExampleSells"), sell: header.terms.exampleSell, buy: header.terms.exampleBuy };
+    // With no good to price, the Terms popover's 15 gp longsword at the shop's own rates.
+    const fixed = rate => {
+      try { return coins(itemPriceCp({ value: 15, denomination: "gp" }, rate, 1, currencies)); }
+      catch { return []; }
+    };
+    let example = { text: i18n("Terms.ExampleSells"), sell: fixed(effective.sellsAt.rate), buy: fixed(effective.buysAt.rate) };
     if (sample) {
       try {
         example = {
