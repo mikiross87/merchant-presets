@@ -1290,12 +1290,12 @@ function openDeals(t, deals = []) {
   const opened = openSettings(t, { shopConfig: { deals } });
   opened.buyer.type = "character";
   opened.buyer.name = "Aria";
-  const DialogV2 = globalThis.foundry.applications.api.DialogV2;
-  const input = DialogV2.input;
+  const Sheet = opened.sheet.constructor;
+  const ask = Sheet.askDeal;
   opened.asked = [];
-  // The form the GM fills in: set `opened.answer` before the action.
-  DialogV2.input = async options => { opened.asked.push(options); return opened.answer; };
-  t.after(() => { DialogV2.input = input; });
+  // The form the GM fills in (DealForm): set `opened.answer` before the action.
+  Sheet.askDeal = async context => { opened.asked.push(context); return opened.answer; };
+  t.after(() => { Sheet.askDeal = ask; });
   return opened;
 }
 
@@ -1334,7 +1334,7 @@ test("adding a deal writes it from the form, for the character picked", async t 
   opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "never", days: null, note: "Saved the smith's daughter" };
   await act(sheet, "addDeal");
   assert.deepEqual(writtenShop(shop).deals, [ARIA_DEAL(buyer.uuid)]);
-  assert.match(opened.asked[0].content, new RegExp(buyer.uuid), "the character is offered");
+  assert.ok(opened.asked[0].characters.some(c => c.uuid === buyer.uuid), "the character is offered");
 });
 
 test("the deal form offers player characters, not the mounts and shops players own (#111 live run)", async t => {
@@ -1344,8 +1344,9 @@ test("the deal form offers player characters, not the mounts and shops players o
   globalThis.game.actors = [shop, buyer, camel];
   opened.answer = null;
   await act(sheet, "addDeal");
-  assert.match(opened.asked[0].content, new RegExp(buyer.uuid));
-  assert.doesNotMatch(opened.asked[0].content, /Actor\.camel/);
+  const offered = opened.asked[0].characters.map(c => c.uuid);
+  assert.ok(offered.includes(buyer.uuid));
+  assert.ok(!offered.includes("Actor.camel"));
 });
 
 test("a character with a deal isn't offered for another", async t => {
@@ -1354,7 +1355,7 @@ test("a character with a deal isn't offered for another", async t => {
   sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
   opened.answer = null;
   await act(sheet, "addDeal");
-  assert.doesNotMatch(opened.asked[0]?.content ?? "", new RegExp(buyer.uuid));
+  assert.ok(!(opened.asked[0]?.characters ?? []).some(c => c.uuid === buyer.uuid));
 });
 
 test("a deal is edited in the same form, for the same character, and removed by its button", async t => {
@@ -1400,7 +1401,7 @@ test("with trading hours off a shop never closes, so no deal can last until it d
   globalThis.game.settings.values.tradingHours = false;
   opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "close", days: null, note: "" };
   await act(sheet, "addDeal");
-  assert.match(opened.asked[0].content, /value="close"\s+disabled/);
+  assert.equal(opened.asked[0].ends.find(e => e.value === "close").disabled, true);
   assert.equal(shop.updates.length, 0);
   assert.equal(warnings.length, 1);
 });

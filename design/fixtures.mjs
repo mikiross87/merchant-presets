@@ -403,6 +403,12 @@ const dealForm = openShop({ tab: "settings", size: { width: 920, height: 760 }, 
   const dealForm = () => document.querySelector(".mp-deal-form") ?? [...document.querySelectorAll(".application.dialog")].at(-1);
   ${until("dealForm()")}
   const form = dealForm();
+  // Filled in as the frame draws it: Aria, 10% off, until the shop closes, and the note.
+  const set = (name, value, event = "change") => { const el = form.querySelector('[name="' + name + '"]'); el.value = value; el.dispatchEvent(new Event(event, { bubbles: true })); };
+  set("actor", game.actors.getName("Aria").uuid);
+  set("buy", "\u221210", "input");
+  set("ends", "close");
+  set("note", "Saved the smith's daughter", "input");
   form.id = "mp-deal-form-under-check";`, root: '"mp-deal-form-under-check"' });
 const dealEnded = openShop({ tab: "settings", size: { width: 920, height: 760 }, before: ariaDeal(true) + restocked(1),
   then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();

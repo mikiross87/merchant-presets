@@ -1507,3 +1507,35 @@
   .shop-sheet .mp-dock .mp-coin b { color: var(--mp-paper-ink); }
   .shop-sheet .mp-dock-expand .mp-icon { width: 16px; height: 16px; color: var(--mp-muted); }
 }
+
+/* -------------------------------------------------------------- the deal form (#111, design Q6UvA) */
+
+.shop-sheet .mp-form-body { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.shop-sheet .mp-form-body .mp-select { flex: 1 1 0; width: auto; }
+.shop-sheet .mp-form-body .mp-select .mp-icon { width: 13px; height: 13px; color: var(--mp-muted); }
+.shop-sheet .mp-form-body .mp-rate-row[hidden] { display: none; }
+.shop-sheet .mp-field input::placeholder { color: var(--mp-muted); opacity: 1; }
+.shop-sheet .mp-note-head { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-note-label { font: 500 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-note-field {
+  display: flex;
+  box-sizing: border-box;
+  height: 52px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-note-field:focus-within { outline-color: var(--mp-accent); }
+.shop-sheet .mp-note-field textarea {
+  all: unset;
+  flex: 1 1 0;
+  height: 100%;
+  font: 400 13px/15px Roboto, system-ui, sans-serif;
+  white-space: pre-wrap;
+  color: var(--mp-text);
+}
+.shop-sheet .mp-form-foot { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+.shop-sheet .mp-button.is-large { padding: 8px 16px; font: 500 14px/16px Roboto, system-ui, sans-serif; }
+.shop-sheet .mp-button.is-primary { background: var(--mp-seal); outline-color: var(--mp-gold); color: var(--mp-on-dark); }
+.shop-sheet .mp-button.is-primary .mp-icon { width: 16px; height: 16px; }

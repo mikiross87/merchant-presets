@@ -278,13 +278,21 @@
             "Character": "Character",
             "Buying": "Buying",
             "Selling": "Selling",
-            "SidesHint": "Off this shop's own price: −10 buys 10% cheaper, 10 sells for 10% more. Leave a side blank to keep its price.",
             "Ends": "Ends",
-            "WhenCloses": "When the shop next closes",
+            "WhenCloses": "When the shop closes",
             "AfterDays": "After some days",
             "Days": "Days",
-            "Note": "Note (GM only)",
-            "NoteHint": "Players never see the note in the shop, but it's saved on the shop actor, so a player could read it from the browser console."
+            "NoteLabel": "Note",
+            "GmOnly": "GM only",
+            "NoteHint": "Players never see the note in the shop. It's saved on the shop, so a player could still read it from the browser console.",
+            "Cancel": "Cancel",
+            "Reading": {
+              "ShopPrice": "the shop's price",
+              "BuyLess": "{percent}% off the shop's price",
+              "BuyMore": "{percent}% over the shop's price",
+              "SellLess": "{percent}% less than the shop pays",
+              "SellMore": "{percent}% more than the shop pays"
+            }
           }
         },
         "WontBuy": {

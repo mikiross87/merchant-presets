@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SHOP_DEFAULTS, shopFrom, validateShop } from "../scripts/schema.mjs";
-import { applyChange, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText } from "../scripts/shop-settings.mjs";
 
 const WORLD = { sellsAt: 1, buysAt: 0.5 };
 const shop = (over = {}) => shopFrom({ version: 1, ...over });
@@ -210,4 +210,22 @@ test("how long the shop is open a day, past midnight too", () => {
   assert.equal(openMinutes(SMITH, DAYS), 720);
   assert.equal(openMinutes({ open: { hour: 18, minute: 0 }, close: { hour: 2, minute: 30 } }, DAYS), 510);
   assert.equal(openMinutes(null, DAYS), null);
+});
+
+/* ---------------------------------------------------------- the deal form (design Q6UvA) */
+
+test("a deal side reads in plain words beside its field", () => {
+  assert.deepEqual(dealReading("buy", "−10"), { key: "BuyLess", percent: 10 });
+  assert.deepEqual(dealReading("buy", "15"), { key: "BuyMore", percent: 15 });
+  assert.deepEqual(dealReading("sell", "20"), { key: "SellMore", percent: 20 });
+  assert.deepEqual(dealReading("sell", "-5"), { key: "SellLess", percent: 5 });
+  // Blank, zero or not a number: the shop's own price.
+  for (const blank of ["", "0", "abc", null]) assert.deepEqual(dealReading("buy", blank), { key: "ShopPrice", percent: null });
+});
+
+test("a deal's percent takes a true minus as typed or pasted (design Q6UvA)", () => {
+  const fields = dealFields({ actor: "Actor.a", buy: "−10", sell: "", ends: "never", days: null, note: "" },
+    { name: "Aria", worldTime: 0, hours: null, calendar: DAYS, previous: null });
+  assert.equal(fields.buy, -10);
+  assert.equal(fields.sell, null);
 });

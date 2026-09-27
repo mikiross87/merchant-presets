@@ -1,0 +1,51 @@
+{{!-- The deal form (#111), built to design Q6UvA: `this` is ShopSheet#dealForm's context. --}}
+<div class="mp-form-body" data-pen="Form body">
+  <div class="mp-rate-row" data-pen="Row Character">
+    <span class="mp-rate-label" data-pen="Character label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Character"}}</span>
+    <label class="mp-select" data-pen="Character select">
+      <span class="mp-select-value" data-pen="Character value">{{characterName}}</span>{{mpIcon "chevron-down" pen="Character chevron"}}
+      <select class="mp-select-native" name="actor" {{#if edit}}disabled{{/if}} aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Form.Character'}}">
+        {{#each characters}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+      </select>
+    </label>
+  </div>
+  <div class="mp-rate-row" data-pen="Row Buying">
+    <span class="mp-rate-label" data-pen="Buying label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Buying"}}</span>
+    <label class="mp-field" data-pen="Buying field">
+      <input type="text" inputmode="decimal" name="buy" value="{{buy}}" placeholder="—" data-side="buy" data-pen="Buying value" />
+      <span data-pen="Buying suffix">%</span>
+    </label>
+    <em class="mp-plain" data-pen="Buying plain">{{buyReading}}</em>
+  </div>
+  <div class="mp-rate-row" data-pen="Row Selling">
+    <span class="mp-rate-label" data-pen="Selling label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Selling"}}</span>
+    <label class="mp-field" data-pen="Selling field">
+      <input type="text" inputmode="decimal" name="sell" value="{{sell}}" placeholder="—" data-side="sell" data-pen="Selling value" />
+      <span data-pen="Selling suffix">%</span>
+    </label>
+    <em class="mp-plain" data-pen="Selling plain">{{sellReading}}</em>
+  </div>
+  <div class="mp-rate-row" data-pen="Row Ends">
+    <span class="mp-rate-label" data-pen="Ends label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Ends"}}</span>
+    <label class="mp-select" data-pen="Ends select">
+      <span class="mp-select-value" data-pen="Ends value">{{endsLabel}}</span>{{mpIcon "chevron-down" pen="Ends chevron"}}
+      <select class="mp-select-native" name="ends" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Form.Ends'}}">
+        {{#each ends}}<option value="{{value}}" {{#if selected}}selected{{/if}} {{#if disabled}}disabled{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </label>
+  </div>
+  <div class="mp-rate-row mp-days-row" hidden>
+    <span class="mp-rate-label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Days"}}</span>
+    <label class="mp-field"><input type="number" name="days" min="1" step="1" /></label>
+  </div>
+  <div class="mp-note-head" data-pen="Note head">
+    <span class="mp-note-label" data-pen="Note label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.NoteLabel"}}</span>
+    <span class="mp-kicker" data-pen="Note only">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.GmOnly"}}</span>
+  </div>
+  <label class="mp-note-field" data-pen="Note field"><textarea name="note" data-pen="Note value">{{note}}</textarea></label>
+  <p class="mp-hint" data-pen="Note hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.NoteHint"}}</p>
+  <div class="mp-form-foot" data-pen="Form foot">
+    <button type="button" class="mp-button is-large" data-action="cancel" data-pen="Cancel"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Form.Cancel"}}</span></button>
+    <button type="submit" class="mp-button is-large is-primary" data-pen="Add deal">{{mpIcon "check" pen="Icon"}}<span data-pen="Label">{{submitLabel}}</span></button>
+  </div>
+</div>

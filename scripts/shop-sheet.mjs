@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, everyChoice, hoursSamples, openMinutes, percentOf, timeText } from "./shop-settings.mjs";
+import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { icon } from "./icons.mjs";
@@ -296,6 +296,122 @@ function actorSubtitle(actor) {
 const hasApplicationsApi = !!(globalThis.foundry?.applications?.sheets?.ActorSheetV2
   && globalThis.foundry?.applications?.api?.HandlebarsApplicationMixin);
 
+/**
+ * The design's own Window Bar (#145) on core's header, so core's dragging and closing still work:
+ * the title, then (with `npcSheet`, for a GM) a button to the NPC sheet, then close. No icon, no id
+ * link and no controls menu; the NPC sheet has its own, and it's the one a GM configures.
+ */
+function windowBar(frame, { npcSheet }) {
+  const header = frame.querySelector(":scope > .window-header");
+  if (!header) return frame;
+  header.dataset.pen = "Window Bar";
+  header.querySelector(":scope > .window-title")?.setAttribute("data-pen", "Window Title");
+  for (const el of header.querySelectorAll(":scope > .window-icon, :scope > .document-id-link, :scope > [data-action='toggleControls'], :scope > .controls-dropdown")) el.remove();
+  const right = document.createElement("div");
+  right.className = "mp-bar-right";
+  right.dataset.pen = "Bar right";
+  if (npcSheet) {
+    right.insertAdjacentHTML("beforeend", `<button type="button" class="mp-npc-sheet" data-action="npcSheet" data-pen="NPC sheet button">`
+      + `${icon("user-round", { "data-pen": "NPC sheet icon" })}<span data-pen="NPC sheet label">${escapeText(game.i18n.localize("MERCHANT_PRESETS.Shop.NpcSheet"))}</span></button>`);
+  }
+  const close = header.querySelector(":scope > [data-action='close']");
+  if (close) {
+    close.className = "mp-close";
+    close.innerHTML = icon("x", { "data-pen": "Close" });
+    right.append(close);
+  }
+  // Core's own header buttons (the token's): the NPC sheet has them.
+  for (const el of header.querySelectorAll(":scope > .header-control")) el.remove();
+  header.append(right);
+  return frame;
+}
+
+/** A deal side's plain reading beside its field (design Q6UvA): "10% off the shop's price". */
+const dealReadingText = (side, value) => {
+  const { key, percent } = dealReading(side, value);
+  return game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.Form.Reading.${key}`, { percent });
+};
+
+/**
+ * The deal form (#111, design Q6UvA): the shop's own dialog under the design's Window Bar. `ask`
+ * resolves with the form's fields as typed, or null when it's closed without them.
+ */
+const DealForm = hasApplicationsApi && globalThis.foundry.applications.api.ApplicationV2 ? class DealForm extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  /** @override */
+  static DEFAULT_OPTIONS = {
+    tag: "form",
+    classes: ["merchant-presets", "shop-sheet", "dnd5e2", "mp-deal-form"],
+    position: { width: 360, height: "auto" },
+    window: { minimizable: false },
+    form: { handler: DealForm.#onSubmit, closeOnSubmit: true },
+    actions: { cancel: DealForm.#onCancel }
+  };
+
+  /** @override */
+  static PARTS = { form: { template: `${TEMPLATES}/deal-form.hbs` } };
+
+  #context;
+  #resolve;
+
+  constructor({ context, resolve }) {
+    super({ window: { title: context.title } });
+    this.#context = context;
+    this.#resolve = resolve;
+  }
+
+  /** Opens the form on `context` (ShopSheet#dealForm's) and waits for its answer. */
+  static ask(context) {
+    return new Promise(resolve => new DealForm({ context, resolve }).render({ force: true }));
+  }
+
+  /** @override */
+  async _prepareContext() {
+    return this.#context;
+  }
+
+  /** @override */
+  async _renderFrame(options) {
+    return windowBar(await super._renderFrame(options), { npcSheet: false });
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    // A select shows its choice in its own box; "After some days" asks how many.
+    for (const select of this.element.querySelectorAll(".mp-select-native")) {
+      select.addEventListener("change", () => {
+        select.closest(".mp-select").querySelector(".mp-select-value").textContent = select.selectedOptions[0]?.text ?? "";
+        if (select.name === "ends") this.element.querySelector(".mp-days-row").hidden = select.value !== "days";
+      });
+    }
+    // Each side reads in words as it's typed.
+    for (const input of this.element.querySelectorAll("input[data-side]")) {
+      input.addEventListener("input", () => {
+        input.closest(".mp-rate-row").querySelector(".mp-plain").textContent = dealReadingText(input.dataset.side, input.value);
+      });
+    }
+  }
+
+  static #onSubmit(_event, _form, formData) {
+    const resolve = this.#resolve;
+    this.#resolve = null;
+    resolve?.(formData.object);
+  }
+
+  static #onCancel() {
+    this.close();
+  }
+
+  /** @override */
+  _onClose(options) {
+    super._onClose(options);
+    this.#resolve?.(null);
+    this.#resolve = null;
+  }
+} : null;
+
 const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.sheets.ActorSheetV2
 ) {
@@ -388,35 +504,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   /**
-   * The design's own Window Bar (#145) on core's header, so core's dragging and closing still
-   * work: the title, then (for a GM) a button to the NPC sheet, then close. No icon, no id link
-   * and no controls menu; the NPC sheet has its own, and it's the one a GM configures.
+   * The design's own Window Bar (#145) on core's header (see `windowBar`), with the NPC sheet button.
    * @override
    */
   async _renderFrame(options) {
-    const frame = await super._renderFrame(options);
-    const header = frame.querySelector(":scope > .window-header");
-    if (!header) return frame;
-    header.dataset.pen = "Window Bar";
-    header.querySelector(":scope > .window-title")?.setAttribute("data-pen", "Window Title");
-    for (const el of header.querySelectorAll(":scope > .window-icon, :scope > .document-id-link, :scope > [data-action='toggleControls'], :scope > .controls-dropdown")) el.remove();
-    const right = document.createElement("div");
-    right.className = "mp-bar-right";
-    right.dataset.pen = "Bar right";
-    if (game.user.isGM) {
-      right.insertAdjacentHTML("beforeend", `<button type="button" class="mp-npc-sheet" data-action="npcSheet" data-pen="NPC sheet button">`
-        + `${icon("user-round", { "data-pen": "NPC sheet icon" })}<span data-pen="NPC sheet label">${escapeText(game.i18n.localize("MERCHANT_PRESETS.Shop.NpcSheet"))}</span></button>`);
-    }
-    const close = header.querySelector(":scope > [data-action='close']");
-    if (close) {
-      close.className = "mp-close";
-      close.innerHTML = icon("x", { "data-pen": "Close" });
-      right.append(close);
-    }
-    // Core's own header buttons (the token's): the NPC sheet has them.
-    for (const el of header.querySelectorAll(":scope > .header-control")) el.remove();
-    header.append(right);
-    return frame;
+    return windowBar(await super._renderFrame(options), { npcSheet: game.user.isGM });
   }
 
   /**
@@ -1959,6 +2051,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     await this.#edit(() => ({ op: "removeRule", category: target.dataset.category }));
   }
 
+  /** Asks for a deal (the form, DealForm): its fields as typed, or null. A seam the tests replace. */
+  static askDeal(context) {
+    return DealForm.ask(context);
+  }
+
   static async #onAddDeal() {
     if (!game.user.isGM) return;
     await this.#dealForm(null);
@@ -1993,31 +2090,25 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     const percent = factor => (factor ? percentOf(factor) : "");
-    const endOption = (value, label, { selected = false, disabled = false } = {}) =>
-      `<option value="${value}" ${selected ? "selected" : ""} ${disabled ? "disabled" : ""}>${escapeText(label)}</option>`;
-    const who = previous
-      ? `<input type="hidden" name="actor" value="${escapeText(previous.actor)}" /><p><b>${escapeText(previous.name)}</b></p>`
-      : `<select name="actor">${candidates.map(a => `<option value="${escapeText(a.uuid)}">${escapeText(a.name)}</option>`).join("")}</select>`;
-    const content = `
-      <div class="form-group"><label>${i18n("Form.Character")}</label>${who}</div>
-      <div class="form-group"><label>${i18n("Form.Buying")}</label>
-        <input type="number" name="buy" step="any" value="${percent(previous?.buy)}" placeholder="-10" /> %</div>
-      <div class="form-group"><label>${i18n("Form.Selling")}</label>
-        <input type="number" name="sell" step="any" value="${percent(previous?.sell)}" placeholder="10" /> %</div>
-      <p class="hint">${i18n("Form.SidesHint")}</p>
-      <div class="form-group"><label>${i18n("Form.Ends")}</label><select name="ends">
-        ${previous?.ends ? endOption("keep", this.#endLabel(previous), { selected: true }) : ""}
-        ${endOption("never", i18n("NoEnd"), { selected: !previous?.ends })}
-        ${endOption("close", i18n("Form.WhenCloses"), { disabled: nextCloseAt(closingHours(shop), game.time.worldTime, game.time.calendar.days) === null })}
-        ${endOption("days", i18n("Form.AfterDays"))}
-      </select></div>
-      <div class="form-group"><label>${i18n("Form.Days")}</label><input type="number" name="days" min="1" step="1" /></div>
-      <div class="form-group stacked"><label>${i18n("Form.Note")}</label><textarea name="note">${escapeText(previous?.note ?? "")}</textarea></div>
-      <p class="hint">${i18n("Form.NoteHint")}</p>`;
-    const answer = await foundry.applications.api.DialogV2.input({
-      window: { title: i18n(previous ? "Form.EditTitle" : "Form.AddTitle") },
-      content,
-      ok: { label: i18n(previous ? "Form.Save" : "Form.Add") }
+    const buy = percent(previous?.buy);
+    const sell = percent(previous?.sell);
+    const characters = previous ? [{ uuid: previous.actor, name: previous.name, selected: true }]
+      : candidates.map((a, i) => ({ uuid: a.uuid, name: a.name, selected: i === 0 }));
+    const closes = nextCloseAt(closingHours(shop), game.time.worldTime, game.time.calendar.days) !== null;
+    const ends = [
+      previous?.ends ? { value: "keep", label: this.#endLabel(previous), selected: true } : null,
+      { value: "never", label: i18n("NoEnd"), selected: !previous?.ends },
+      { value: "close", label: i18n("Form.WhenCloses"), disabled: !closes },
+      { value: "days", label: i18n("Form.AfterDays") }
+    ].filter(Boolean);
+    const answer = await ShopSheet.askDeal({
+      title: i18n(previous ? "Form.EditTitle" : "Form.AddTitle"),
+      submitLabel: i18n(previous ? "Form.Save" : "Form.Add"),
+      edit: !!previous,
+      characters, characterName: characters[0]?.name ?? "",
+      buy, sell, buyReading: dealReadingText("buy", buy), sellReading: dealReadingText("sell", sell),
+      ends, endsLabel: ends.find(e => e.selected)?.label ?? "",
+      note: previous?.note ?? ""
     });
     if (!answer) return;
     // An edit stays with its own character, whatever the form sent back.

@@ -158,7 +158,22 @@ export function applyChange(shop, change) {
 }
 
 /** A form field as a percentage: blank is no change (null), anything else a number, NaN if it isn't one. */
-const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(v));
+/** A typed percent, blank as null; a true minus (U+2212, as the window writes them) reads as one. */
+const percentField = v => (v === null || v === undefined || String(v).trim() === "" ? null : Number(String(v).trim().replace("\u2212", "-")));
+
+/**
+ * What a deal side typed into the form comes to, in words (design Q6UvA): `key` names the reading
+ * (Deals.Form.Reading.<key>) and `percent` its size. Blank, zero or unreadable is the shop's price.
+ *
+ * @param {"buy"|"sell"} side  buy: what the character pays; sell: what the shop pays them
+ * @param {unknown} value  the field as typed
+ * @returns {{key: string, percent: number|null}}
+ */
+export function dealReading(side, value) {
+  const n = percentField(value);
+  if (!Number.isFinite(n) || n === 0) return { key: "ShopPrice", percent: null };
+  return { key: `${side === "buy" ? "Buy" : "Sell"}${n < 0 ? "Less" : "More"}`, percent: Math.abs(n) };
+}
 
 /**
  * The deal form's answer (#111) as the fields of an `addDeal`/`editDeal` change, or `{error}` for
