@@ -345,6 +345,20 @@
         "YourOffers": "Your offers {percent}",
         "Yours": "Your deal",
         "ListPrice": "Price without your deal"
+      },
+      "Receipt": {
+        "When": "{date} · {part}",
+        "Public": "Public",
+        "GmOnly": "GM only",
+        "Bought": "{name} bought",
+        "Sold": "{name} sold",
+        "Paid": "Paid",
+        "Received": "Received",
+        "Free": "free",
+        "Exact": "Exact change, counted from {name}'s coins.",
+        "Change": "Counted from {name}'s coins, with {change} back in change.",
+        "AtRate": "At {fraction} of value.",
+        "Till": "The till holds {coins}."
       }
     }
   }

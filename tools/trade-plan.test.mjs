@@ -850,6 +850,24 @@ test("a plain buy: currency both ways, one item create, the hook and chat card f
   assert.equal(plan.chatCard.totalCp, 200);
 });
 
+test("a sale's chat card says the rate it paid at and what the till holds after (design z5RBkd)", () => {
+  const ctx = context({ buyer: { items: [dagger()] } });
+  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
+  assert.equal(result.ok, true);
+  assert.equal(result.plan.chatCard.rate, 0.5);
+  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
+  const tillCp = Object.entries(shopUpdate.currency).reduce((sum, [d, n]) => sum + n * { pp: 1000, gp: 100, ep: 50, sp: 10, cp: 1 }[d], 0);
+  assert.equal(result.plan.chatCard.tillCp, tillCp);
+});
+
+test("a sale to a shop with bottomless coin says nothing of its till, and a purchase names no rate", () => {
+  const sold = planTrade(sellRequest("Dagger000000001", 1), context({ buyer: { items: [dagger()] }, worldSettings: { ...WORLD, infinitePurse: true } }));
+  assert.equal(sold.plan.chatCard.tillCp, null);
+  const bought = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [dagger()] } }));
+  assert.equal(bought.plan.chatCard.rate, null);
+  assert.equal(bought.plan.chatCard.tillCp, null);
+});
+
 test("an infinite purse leaves the shop's own currency out of the plan", () => {
   const ctx = context({ shop: { items: [dagger()] }, worldSettings: { ...WORLD, infinitePurse: true } });
   const result = planTrade(buyRequest("Dagger000000001", 1), ctx);

@@ -87,8 +87,11 @@ trades out itself. For GMs upgrading a world:
   twice over a flaky connection only happens once. A GM has to be logged in;
   with none, the window says so and keeps the bill. Each trade posts one
   receipt in chat, public or whispered to the GMs, or none, set by the new
-  *Trades in chat* setting. Meals, bought animals and spellcasting work the
-  same way they did through Item Piles. (#102)
+  *Trades in chat* setting. The receipt shows the shop, the in-world date and
+  who can see it, each good with its picture and price, the total, and a note
+  on the coins: exact change or the change given, or for a sale the rate paid
+  and what the till has left. Meals, bought animals and spellcasting work the
+  same way they did through Item Piles. (#102, #145)
 - 2.0: shops restock on their own schedule, now on by default: each kind every
   so many days (an inn daily, a general store every 3, a jeweler every 14),
   when its doors open on the due day. A restock redraws only what the shop's

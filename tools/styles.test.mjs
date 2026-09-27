@@ -1,13 +1,17 @@
 /**
  * styles/shop.css loads for every window in the world, not just the shop's: a bare `.tab` or
  * `.item-row` rule would re-lay-out dnd5e's own sheets. Every selector has to sit under the
- * shop window's own class.
+ * shop window's own class, or under a trade receipt's (design z5RBkd): the `.mp-receipt` block,
+ * or the chat message that holds one, never a chat message as such.
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const SCOPE = ".shop-sheet";
+const RECEIPT = ".chat-message:has(> .message-content > .mp-receipt)";
+/** A receipt selector: the receipt's own block, or the message holding one (maybe under a theme). */
+const receiptScoped = s => /^\.mp-receipt[\s.:-]|^\.mp-receipt$/.test(s) || s.includes(RECEIPT);
 
 /** Every style rule's selector list in `css`, looking inside @media/@supports but not @keyframes. */
 function selectors(css) {
@@ -56,7 +60,7 @@ test("a selector list splits at its own commas only", () => {
 test("every shop stylesheet selector is scoped to the shop window", () => {
   const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8");
   const unscoped = selectors(css).flatMap(split)
-    .filter(s => s !== SCOPE && !s.startsWith(`${SCOPE} `) && !s.startsWith(`${SCOPE}.`) && !s.startsWith(`${SCOPE}:`));
+    .filter(s => s !== SCOPE && !s.startsWith(`${SCOPE} `) && !s.startsWith(`${SCOPE}.`) && !s.startsWith(`${SCOPE}:`) && !receiptScoped(s));
   assert.deepEqual(unscoped, []);
 });
 

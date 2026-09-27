@@ -7,7 +7,7 @@
  * Crimson Pro italic for asides (bundled, styles/fonts.css).
  */
 
-.shop-sheet {
+.shop-sheet, .chat-message:has(> .message-content > .mp-receipt) {
   /* Theme-independent: the maroon hero and what sits on it, the window bar, state colours. */
   --mp-gold: #9f9275;
   --mp-gold-light: #e3ce9e;
@@ -42,8 +42,12 @@
   --mp-danger: var(--color-level-error);
 }
 
-/* Core puts colorScheme.applications on <body>; a sheet configured with its own theme is .themed. */
-.shop-sheet.theme-dark, .shop-sheet:not(.themed):is(body.theme-dark *) {
+/*
+ * Core puts colorScheme.applications on <body>; a sheet configured with its own theme is .themed.
+ * A trade receipt (#145, design z5RBkd) takes the chat's: #interface's, or a popped-out log's.
+ */
+.shop-sheet.theme-dark, .shop-sheet:not(.themed):is(body.theme-dark *),
+:is(#interface.theme-dark, .application.theme-dark, .application:not(.themed):is(body.theme-dark *)) .chat-message:has(> .message-content > .mp-receipt) {
   --mp-window: #0d0b0b;
   --mp-surface: #252830;
   --mp-inset: #212329;
@@ -1253,6 +1257,51 @@
 }
 .shop-sheet .mp-restock-now .mp-icon { width: 16px; height: 16px; }
 .shop-sheet .mp-restock-now:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* -------------------------------------------------------------- trade receipt (design z5RBkd) */
+
+/* The receipt is the whole message: it draws its own speaker, so Foundry's header goes. */
+.chat-message:has(> .message-content > .mp-receipt) {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background: var(--mp-paper);
+  outline: 1px solid var(--mp-paper-line);
+  outline-offset: -1px;
+  box-shadow: none;
+  color: var(--mp-paper-ink);
+}
+.chat-message:has(> .message-content > .mp-receipt) > .message-header { display: none; }
+.chat-message:has(> .message-content > .mp-receipt) > .message-content { margin: 0; padding: 0; }
+.mp-receipt { display: flex; flex-direction: column; gap: 10px; }
+.mp-receipt-speaker { display: flex; align-items: center; gap: 8px; }
+.mp-receipt-portrait { flex: none; width: 32px; height: 32px; margin: 0; border: none; border-radius: 50%; outline: 1px solid var(--mp-gold); object-fit: cover; }
+.mp-receipt-who { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+/* A browser sets Alegreya SC a hair wider than Pencil does: 2px into the gap before the chip lets a
+   name the frame fits on one line stay on one line, and a longer one still wraps. */
+.mp-receipt-who b { margin-right: -2px; font: 700 15px/21px "Alegreya SC", system-ui, sans-serif; color: var(--mp-paper-ink); }
+.mp-receipt-who span { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.mp-receipt-vis { flex: none; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 3px; background: var(--mp-inset); }
+.mp-receipt-vis .mp-icon { width: 11px; height: 11px; color: var(--mp-muted); }
+.mp-receipt-vis span { font: 400 10px/12px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.mp-receipt-head { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 3px; background: var(--mp-hero); }
+.mp-receipt-head .mp-icon { flex: none; width: 14px; height: 14px; color: var(--mp-gold-light); }
+.mp-receipt-head b { font: 700 13px/15px Roboto, system-ui, sans-serif; color: #ffffff; }
+.mp-receipt-lines { display: flex; flex-direction: column; gap: 6px; }
+.mp-receipt-line { display: flex; align-items: center; gap: 8px; }
+.mp-receipt-art { flex: none; width: 24px; height: 24px; margin: 0; border: none; border-radius: 3px; outline: 1px solid var(--mp-gold); object-fit: cover; }
+.mp-receipt-good { flex: 1 1 0; min-width: 0; font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-paper-ink); }
+.mp-receipt-coins { flex: none; display: flex; align-items: center; gap: 6px; }
+.mp-receipt .mp-coin { display: flex; align-items: center; gap: 4px; }
+.mp-receipt .mp-coin b { font: 700 15px/18px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-paper-ink); }
+.mp-receipt .mp-coin b.is-free { color: var(--mp-green); }
+.mp-receipt .mp-coin img { flex: none; width: 16px; height: 16px; margin: 0; border: none; border-radius: 50%; }
+.mp-receipt-rule { flex: none; height: 1px; margin: 0; border: none; background: var(--mp-paper-ink); }
+.mp-receipt-total { display: flex; align-items: center; justify-content: space-between; }
+.mp-receipt-total b { font: 700 15px/21px "Alegreya SC", system-ui, sans-serif; color: var(--mp-paper-ink); }
+.mp-receipt-foot { margin: 0; font: italic 400 12px/13px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* -------------------------------------------------------------- motion */
 

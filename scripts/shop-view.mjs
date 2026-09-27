@@ -58,6 +58,9 @@ export function titleParts(name) {
 
 /* -------------------------------------------------------------- coins */
 
+/** Each coin's metal, as the design names a coin layer ("gold 15"). */
+export const COIN_METALS = { pp: "platinum", gp: "gold", ep: "electrum", sp: "silver", cp: "copper" };
+
 /** `[denomination, cpValue]` pairs, largest coin first — mirrors pricing.mjs's own ordering. */
 function denominationsByValue(currencies) {
   const base = Object.keys(currencies).reduce((b, k) =>

@@ -26,7 +26,7 @@ import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -124,7 +124,6 @@ function groupFields(item, stock) {
 const groupPen = (id, label) => (id === "all" ? "All goods" : id === "gear" ? "Adventuring gear" : label);
 
 /** The design names a coin by its metal ("gold 15"); a homebrew coin by its own label. */
-const COIN_METALS = { pp: "platinum", gp: "gold", ep: "electrum", sp: "silver", cp: "copper" };
 
 /**
  * The hero's kind chip icon for each shipped shop (design: the smith's hammer, the inn's beer),

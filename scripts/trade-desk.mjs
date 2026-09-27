@@ -18,7 +18,8 @@
  *   2026-09-25).
  */
 
-import { coinBreakdown } from "./shop-view.mjs";
+import { COIN_METALS, coinBreakdown, rateFraction } from "./shop-view.mjs";
+import { ICONS, icon } from "./icons.mjs";
 
 /**
  * The world's own trade terms (#110): the Configure Settings default rates, stored as percentages
@@ -253,22 +254,70 @@ function coins(amountCp, currencies) {
 }
 
 /**
- * The one chat message a trade posts: `planTrade`'s `chatCard`, as HTML. The meal, animal and
- * spellcasting messages still post beside it on their own.
+ * Where a receipt's icon goes: an empty slot, since Foundry strips <svg> from a message's content
+ * when it's saved. `receiptIcons` draws the icon in when the message renders.
+ */
+const iconSlot = (name, pen) => `<span class="mp-icon-slot" data-icon="${name}" data-pen="${escape(pen)}"></span>`;
+
+/**
+ * A receipt's HTML with its icon slots drawn in (the `renderChatMessageHTML` hook's work): each
+ * slot becomes the Lucide icon it names, keeping its layer name. A slot naming no icon stays.
+ *
+ * @param {string} html
+ * @returns {string}
+ */
+export function receiptIcons(html) {
+  return html.replace(/<span class="mp-icon-slot" data-icon="([a-z0-9-]+)" data-pen="([^"]*)"><\/span>/g,
+    (slot, name, pen) => (ICONS[name] ? icon(name, { "data-pen": pen.replace(/&amp;/g, "&") }) : slot));
+}
+
+/** `amountCp` as the window draws coins (templates/shop-sheet.hbs "mpCoins"): each a count and its coin, named "gold 15". */
+function coinsHtml(amountCp, currencies, free) {
+  const parts = coinBreakdown(amountCp, currencies);
+  if (!parts.length) return `<span class="mp-coin" data-pen="Free"><b class="is-free" data-pen="Amount">${escape(free)}</b></span>`;
+  return parts.map(c => `<span class="mp-coin coin-${c.denomination}" data-pen="${COIN_METALS[c.denomination] ?? c.denomination} ${c.count}">`
+    + `<b data-pen="Amount">${c.count}</b><img data-pen="Coin" src="${escape(c.icon)}" alt="${escape(c.abbreviation)}" /></span>`).join("");
+}
+
+/**
+ * The one chat message a trade posts (design z5RBkd): the shop speaking, when in the world and who
+ * sees it, then what changed hands, the total and a word on the coins. `planTrade`'s `chatCard`,
+ * as HTML; the meal, animal and spellcasting messages still post beside it on their own. Foundry's
+ * own message header is hidden for it (styles/shop.css): the receipt draws its own speaker.
  *
  * @param {object} card  `plan.chatCard`
  * @param {object} currencies  `CONFIG.DND5E.currencies`
+ * @param {{t: (key: string, data?: object) => string, when: string, whispered: boolean}} options
+ *   `t` localizes a key under `MERCHANT_PRESETS.Shop`; `when` is the trade's world date and part of
+ *   day; `whispered`, whether only the GM sees it.
  */
-export function receiptHtml(card, currencies) {
-  const verb = card.kind === "buy" ? "bought from" : "sold to";
-  const rows = card.lines.map(l => `<li>${l.quantity > 1 ? `${l.quantity} × ` : ""}${escape(l.label)}`
-    + ` <span class="mp-receipt-price">${coins(l.lineTotalCp, currencies)}</span></li>`).join("");
-  const change = card.footnote?.changeCp > 0 ? `<p class="mp-receipt-change">Change given: ${coins(card.footnote.changeCp, currencies)}</p>` : "";
+export function receiptHtml(card, currencies, { t, when, whispered }) {
+  const lines = card.lines.map(l => {
+    const name = escape(l.label);
+    return `<div class="mp-receipt-line" data-pen="Line ${name}">`
+      + `<img class="mp-receipt-art" data-pen="${name} img" src="${escape(l.icon ?? "")}" alt="" />`
+      + `<span class="mp-receipt-good" data-pen="${name} text">${l.quantity} × ${name}</span>`
+      + `<span class="mp-receipt-coins" data-pen="${name} coins">${coinsHtml(l.lineTotalCp, currencies, t("Receipt.Free"))}</span></div>`;
+  }).join("");
+  const foot = card.kind === "buy"
+    ? (card.footnote?.changeCp > 0 ? t("Receipt.Change", { name: card.buyerName, change: coins(card.footnote.changeCp, currencies) })
+      : t("Receipt.Exact", { name: card.buyerName }))
+    : [card.rate != null && t("Receipt.AtRate", { fraction: rateFraction(card.rate) }),
+      card.tillCp != null && t("Receipt.Till", { coins: coins(card.tillCp, currencies) })].filter(Boolean).join(" ");
   return `<div class="merchant-presets mp-receipt">`
-    + `<p><strong>${escape(card.buyerName)}</strong> ${verb} <strong>${escape(card.shopName)}</strong>:</p>`
-    + `<ul>${rows}</ul>`
-    + `<p class="mp-receipt-total">${escape(card.direction)}: <strong>${coins(card.totalCp, currencies)}</strong></p>`
-    + change
+    + `<div class="mp-receipt-speaker" data-pen="Speaker">`
+    + `<img class="mp-receipt-portrait" data-pen="Speaker img" src="${escape(card.shopImg ?? "")}" alt="" />`
+    + `<span class="mp-receipt-who" data-pen="Speaker text"><b data-pen="Speaker name">${escape(card.shopName)}</b>`
+    + `<span data-pen="Speaker time">${escape(when)}</span></span>`
+    + `<span class="mp-receipt-vis" data-pen="Visibility">${whispered ? iconSlot("eye-off", "Vis icon") : iconSlot("globe", "Vis icon")}`
+    + `<span data-pen="Vis text">${escape(t(whispered ? "Receipt.GmOnly" : "Receipt.Public"))}</span></span></div>`
+    + `<div class="mp-receipt-head" data-pen="Card header">${card.kind === "buy" ? iconSlot("shopping-bag", "Kicker icon") : iconSlot("hand-coins", "Kicker icon")}`
+    + `<b data-pen="Kicker">${escape(t(card.kind === "buy" ? "Receipt.Bought" : "Receipt.Sold", { name: card.buyerName }))}</b></div>`
+    + `<div class="mp-receipt-lines" data-pen="Lines">${lines}</div>`
+    + `<hr class="mp-receipt-rule" data-pen="Rule" />`
+    + `<div class="mp-receipt-total" data-pen="Total"><b data-pen="Total label">${escape(t(card.kind === "buy" ? "Receipt.Paid" : "Receipt.Received"))}</b>`
+    + `<span class="mp-receipt-coins" data-pen="Total coins">${coinsHtml(card.totalCp, currencies, t("Receipt.Free"))}</span></div>`
+    + (foot ? `<p class="mp-receipt-foot" data-pen="Foot">${escape(foot)}</p>` : "")
     + `</div>`;
 }
 

@@ -10,13 +10,13 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierO
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
-import { DRINK_IDENTIFIERS } from "./shop-view.mjs";
+import { DRINK_IDENTIFIERS, partOfDay } from "./shop-view.mjs";
 import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
-  receiptHtml, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
+  receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
@@ -954,7 +954,11 @@ async function carryOutTrade(request, user) {
     if (whisper) {
       await ChatMessage.create({
         speaker: ChatMessage.getSpeaker({ actor: shop }),
-        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies),
+        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies, {
+          t: (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.${key}`, data),
+          when: receiptWhen(game.time.worldTime),
+          whispered: whisper.length > 0
+        }),
         whisper
       });
     }
@@ -962,6 +966,24 @@ async function carryOutTrade(request, user) {
     console.error(`${MODULE} | trade ${plan.tradeId} landed, but telling the table failed`, err);
   }
   return result;
+}
+
+/** A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs `receiptIcons`). */
+Hooks.on("renderChatMessageHTML", (_message, html) => {
+  const receipt = html?.querySelector?.(".message-content .mp-receipt");
+  if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
+});
+
+/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. */
+function receiptWhen(time) {
+  try {
+    const calendar = game.time.calendar;
+    const c = calendar.timeToComponents(time);
+    const month = calendar.months?.values?.[c.month];
+    const date = month ? `${c.dayOfMonth + 1} ${game.i18n.localize(month.name)}` : calendar.format(time, "timestamp");
+    const part = game.i18n.localize(`MERCHANT_PRESETS.Shop.Day.${partOfDay(c.hour, calendar.days.hoursPerDay)}`);
+    return game.i18n.localize("MERCHANT_PRESETS.Shop.Receipt.When", { date, part });
+  } catch { return ""; }
 }
 
 /**

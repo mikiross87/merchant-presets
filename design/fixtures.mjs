@@ -267,6 +267,50 @@ const terms = openShop({ before: withoutDeals + restocked(0) + newBadges(true), 
 /** The Sell frames: Aria selling the Longsword and both potions, to a shop restocked the day before. */
 const sell = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
 
+/**
+ * A Trade Chat Card part (design z5RBkd): a real trade through the API at 10:00 on the 14th, the
+ * receipt posted as the `tradeChat` setting says (`chat`), then Aria's and the shop's goods and
+ * coins put back as they were, so the frames after it (and the next run) find the world unchanged.
+ * `lines` are [name, quantity] pairs of the shop's goods (a purchase) or Aria's (a sale). The
+ * frame is the posted message, in the sidebar's chat log.
+ */
+const receipt = ({ kind, lines, chat }) => `async ({ theme }) => {
+  const cfg = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
+  cfg.colorScheme = { applications: theme, interface: theme };
+  await game.settings.set("core", "uiConfig", cfg);
+  const perDay = game.time.calendar.days.hoursPerDay * game.time.calendar.days.minutesPerHour * game.time.calendar.days.secondsPerMinute;
+  const at = Math.floor(game.time.worldTime / perDay) * perDay + 10 * 3600;
+  if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
+  await game.settings.set("merchant-presets", "tradeChat", ${JSON.stringify(chat)});
+  const shop = game.actors.getName(${JSON.stringify(SHOP)});
+  const aria = game.actors.getName("Aria");
+  ${withoutDeals}
+  const snapshot = [shop, aria].map(actor => ({ actor, currency: { ...actor.system.currency }, items: actor.items.map(i => i.toObject()) }));
+  const from = ${kind === "buy" ? "shop" : "aria"};
+  const result = await game.modules.get("merchant-presets").api.trade({ tradeId: foundry.utils.randomID(16), kind: ${JSON.stringify(kind)},
+    shopUuid: shop.uuid, buyerUuid: aria.uuid, lines: ${JSON.stringify(lines)}.map(([name, quantity]) => ({ itemId: from.items.getName(name).id, quantity })) });
+  if (result?.status !== "sealed") throw new Error("the fixture's trade didn't seal: " + JSON.stringify(result));
+  for (const { actor, currency, items } of snapshot) {
+    const was = new Set(items.map(i => i._id));
+    await actor.deleteEmbeddedDocuments("Item", actor.items.filter(i => !was.has(i.id)).map(i => i.id));
+    const now = new Set(actor.items.map(i => i.id));
+    await actor.createEmbeddedDocuments("Item", items.filter(i => !now.has(i._id)), { keepId: true });
+    await actor.updateEmbeddedDocuments("Item", items.filter(i => now.has(i._id)).map(i => ({ _id: i._id, "system.quantity": i.system.quantity })));
+    await actor.update({ "system.currency": currency });
+  }
+  await game.settings.set("merchant-presets", "tradeChat", "public");
+  ui.sidebar.expand();
+  ui.sidebar.changeTab("chat", "primary");
+  await new Promise(r => setTimeout(r, 800));
+  const message = game.messages.contents.filter(m => m.content.includes("mp-receipt")).at(-1);
+  const li = document.querySelector('#sidebar [data-message-id="' + message.id + '"]');
+  li.scrollIntoView({ block: "center" });
+  li.id = "mp-receipt-under-check";
+  return li.id;
+}`;
+const receiptBuy = receipt({ kind: "buy", lines: BASKET, chat: "public" });
+const receiptSell = receipt({ kind: "sell", lines: [["Longsword", 1], ["Potion of Healing", 2]], chat: "gm" });
+
 export const FRAMES = {
   y6iNf: frame("01 Storefront — Light", "light", 920, 680, "Gamemaster", storefront),
   wvmqF: frame("01 Storefront — Dark", "dark", 920, 680, "Gamemaster", storefront),
@@ -289,8 +333,10 @@ export const FRAMES = {
   "n9I5aQ:player": frame("07 Buyer Picker — Light · Player", "light", 656, 470, "P1", picker, { export: "n9I5aQ", part: "V6UiM" }),
   "JNHkU:gm": frame("07 Buyer Picker — Dark · GM", "dark", 656, 470, "Gamemaster", picker, { export: "JNHkU", part: "YA8h7" }),
   "JNHkU:player": frame("07 Buyer Picker — Dark · Player", "dark", 656, 470, "P1", picker, { export: "JNHkU", part: "V6UiM" }),
-  z5RBkd: frame("07 Trade Chat Card — Light", "light", 688, 387),
-  b4iPYc: frame("07 Trade Chat Card — Dark", "dark", 688, 387),
+  "z5RBkd:buy": frame("07 Trade Chat Card — Light · Purchase", "light", 672, 387, "Gamemaster", receiptBuy, { export: "z5RBkd", part: "h3s5G" }),
+  "z5RBkd:sell": frame("07 Trade Chat Card — Light · Sale", "light", 672, 387, "Gamemaster", receiptSell, { export: "z5RBkd", part: "dZ2NI" }),
+  "b4iPYc:buy": frame("07 Trade Chat Card — Dark · Purchase", "dark", 672, 387, "Gamemaster", receiptBuy, { export: "b4iPYc", part: "h3s5G" }),
+  "b4iPYc:sell": frame("07 Trade Chat Card — Dark · Sale", "dark", 672, 387, "Gamemaster", receiptSell, { export: "b4iPYc", part: "dZ2NI" }),
   WNYhA: frame("08 Trade States — Light", "light", 1900, 755),
   mWJYP: frame("08 Trade States — Dark", "dark", 1900, 755)
 };

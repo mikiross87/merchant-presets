@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, receiptHtml, recipients,
+  bundleResolver, checkParties, claimsTrades, clientOutcome, hookPayload, outcomes, receiptHtml, receiptIcons, recipients,
   recordedOutcome, resultOf, serial, shouldReclaim, CLAIM_STALE_MS, TRADE_RECORDS, withRecord, worldTerms
 } from "../scripts/trade-desk.mjs";
 
@@ -223,28 +223,59 @@ test("the trade chat mode picks who sees the receipt", () => {
 
 /* ---------------------------------------------------------------- receiptHtml */
 
-test("the receipt names the shop, the buyer, each line and the total in coins", () => {
-  const html = receiptHtml({
-    kind: "buy", shopName: "General Store", buyerName: "Tess <the bold>",
-    lines: [{ icon: "rope.webp", label: "Rope", quantity: 1, lineTotalCp: 100 }, { icon: "a.webp", label: "Arrows", quantity: 20, lineTotalCp: 150 }],
-    totalCp: 250, direction: "Paid", footnote: { changeCp: 50, exact: false }
-  }, CURRENCIES);
-  assert.match(html, /General Store/);
-  assert.match(html, /Tess &lt;the bold&gt;/, "names are escaped");
-  assert.match(html, /20 × Arrows/);
-  assert.match(html, /1 gp 5 sp/);
-  assert.match(html, /Paid[^<]*<[^>]*>?\s*2 gp 5 sp/);
-  assert.match(html, /5 sp/, "the change given is named");
+/** Localize as the tests read it: the key's last part and its data. */
+const t = (key, data) => (data ? `${key}(${Object.values(data).join(",")})` : key);
+const BOUGHT = {
+  kind: "buy", shopName: "Armourer & Blacksmith", shopImg: "smith.webp", buyerName: "Aria <the bold>",
+  lines: [{ icon: "sword.webp", label: "Longsword", quantity: 1, lineTotalCp: 1500 }, { icon: "axe.webp", label: "Handaxe", quantity: 2, lineTotalCp: 1000 }],
+  totalCp: 2500, direction: "Paid", footnote: { changeCp: 0, exact: true }, rate: null, tillCp: null
+};
+const layer = (html, name) => new RegExp(`data-pen="${name}"`).test(html);
+
+test("the receipt is the design's message: speaker, when and who sees it, the kicker, each line, the total (design z5RBkd)", () => {
+  const html = receiptHtml(BOUGHT, CURRENCIES, { t, when: "14 Mirtul · mid-morning", whispered: false });
+  for (const name of ["Speaker", "Speaker img", "Speaker name", "Speaker time", "Visibility", "Vis text", "Card header", "Kicker",
+    "Lines", "Line Longsword", "Longsword img", "Longsword text", "Longsword coins", "Rule", "Total", "Total label", "Total coins", "Foot"]) {
+    assert.ok(layer(html, name), name);
+  }
+  assert.match(html, /14 Mirtul · mid-morning/);
+  assert.match(html, /Receipt\.Public/);
+  assert.match(html, /Receipt\.Bought\(Aria &lt;the bold&gt;\)/, "names are escaped");
+  assert.match(html, /1 × Longsword/, "a single good still says one");
+  assert.match(html, /2 × Handaxe/);
+  assert.match(html, /data-pen="gold 25"/, "coins are named as the window names them");
+  assert.match(html, /Receipt\.Paid/);
+  assert.match(html, /Receipt\.Exact\(Aria &lt;the bold&gt;\)/);
 });
 
-test("a sale's receipt says received, and a free line reads as free", () => {
-  const html = receiptHtml({
-    kind: "sell", shopName: "Shop", buyerName: "Tess",
-    lines: [{ label: "Pebble", quantity: 1, lineTotalCp: 0 }], totalCp: 0, direction: "Received", footnote: { changeCp: 0, exact: true }
-  }, CURRENCIES);
-  assert.match(html, /sold/i);
-  assert.match(html, /Received/);
-  assert.match(html, /free/i);
+test("a whispered receipt says GM only, and change given is named in the foot", () => {
+  const html = receiptHtml({ ...BOUGHT, footnote: { changeCp: 50, exact: false } }, CURRENCIES, { t, when: "", whispered: true });
+  assert.match(html, /Receipt\.GmOnly/);
+  assert.match(html, /Receipt\.Change\(Aria &lt;the bold&gt;,5 sp\)/);
+});
+
+test("a sale's receipt says received, the rate it paid at and what the till holds (design z5RBkd)", () => {
+  const html = receiptHtml({ ...BOUGHT, kind: "sell", direction: "Received", rate: 0.5, tillCp: 15450 }, CURRENCIES, { t, when: "", whispered: true });
+  assert.match(html, /Receipt\.Sold/);
+  assert.match(html, /Receipt\.Received/);
+  assert.match(html, /Receipt\.AtRate\(½\) Receipt\.Till\(154 gp 5 sp\)/);
+  const bottomless = receiptHtml({ ...BOUGHT, kind: "sell", direction: "Received", rate: null, tillCp: null }, CURRENCIES, { t, when: "", whispered: true });
+  assert.doesNotMatch(bottomless, /AtRate|Till/, "mixed rates, or a bottomless till, go unsaid");
+});
+
+test("a receipt's icons survive chat: slots in the saved message, drawn in when it renders (design z5RBkd)", () => {
+  // Foundry strips <svg> from a message's content when it's saved: the receipt carries empty slots.
+  const html = receiptHtml(BOUGHT, CURRENCIES, { t, when: "", whispered: false });
+  assert.doesNotMatch(html, /<svg/);
+  const drawn = receiptIcons(html);
+  assert.match(drawn, /<svg[^>]*data-icon="globe"[^>]*data-pen="Vis icon"/);
+  assert.match(drawn, /<svg[^>]*data-icon="shopping-bag"[^>]*data-pen="Kicker icon"/);
+  assert.equal(receiptIcons('<span class="mp-icon-slot" data-icon="no-such" data-pen="X"></span>'), '<span class="mp-icon-slot" data-icon="no-such" data-pen="X"></span>', "an unknown icon stays a slot");
+});
+
+test("a free line reads as free", () => {
+  const html = receiptHtml({ ...BOUGHT, lines: [{ label: "Pebble", quantity: 1, lineTotalCp: 0 }], totalCp: 0 }, CURRENCIES, { t, when: "", whispered: false });
+  assert.match(html, /Receipt\.Free/);
 });
 
 /* ---------------------------------------------------------------- hookPayload */
