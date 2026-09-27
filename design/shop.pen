@@ -3369,7 +3369,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Also turns away tack, lodging, passage, spellcasting and spell components.",
+                  "content": "Also turns away vehicles, tack, lodging, passage, spellcasting and spell components.",
                   "lineHeight": 1.35,
                   "fontFamily": "$font-compact",
                   "fontSize": 12,
@@ -7701,7 +7701,7 @@
                       "id": "dItrz",
                       "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "48",
+                      "content": "19",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7750,7 +7750,7 @@
                       "id": "tANrl",
                       "name": "Weapons count",
                       "fill": "$text-secondary",
-                      "content": "24",
+                      "content": "3",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7799,7 +7799,7 @@
                       "id": "J8BBbk",
                       "name": "Armor count",
                       "fill": "$text-secondary",
-                      "content": "7",
+                      "content": "3",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7897,7 +7897,7 @@
                       "id": "g5y5vB",
                       "name": "Adventuring gear count",
                       "fill": "$text-secondary",
-                      "content": "16",
+                      "content": "12",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
