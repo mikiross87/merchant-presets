@@ -655,6 +655,13 @@ test("a good is New while the restock that brought it back is fresh, and only on
   assert.equal(isNewGood({}, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
 });
 
+test("a shop open round the clock from 7:00 keeps its restock fresh until its own day starts again (#152 review)", () => {
+  const hours = { open: { hour: 7, minute: 0 }, close: { hour: 6, minute: 59 } };
+  const at = 10 * DAY + H(7);
+  assert.equal(isFresh(at, 11 * DAY + H(6, 59), hours, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(7), hours, DAYS), false);
+});
+
 test("no restock yet, or a clock wound back before it, isn't fresh", () => {
   assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
   assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);

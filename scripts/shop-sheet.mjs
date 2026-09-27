@@ -836,8 +836,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
-        // "New" until the shop closes after the restock that brought it back (#152).
-        row.isNew = isNewGood(data.flags, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
+        // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
+        row.isNew = row.stock.state !== "soldOut" && isNewGood(data.flags, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,

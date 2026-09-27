@@ -427,8 +427,9 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * Whether a restock is still fresh: the hero's "Fresh stock today" chip and the goods' "New"
  * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
  * restock until the shop next closes after it (deals.mjs `nextCloseAt`, through the closing
- * minute), or, for a shop that never closes, until that day ends. Worked out when the window
- * draws, so nothing has to be written at closing (#152).
+ * minute). A shop that never closes starts its own day again at its next opening: midnight for
+ * one keeping no hours, 7:00 for one open 7:00-6:59. Worked out when the window draws, so nothing
+ * has to be written at closing (#152).
  *
  * @param {number|null|undefined} lastRestock  when the shelf was last drawn (the shop's `restockedAt`), in world seconds
  * @param {number} now                          the world time
@@ -438,7 +439,9 @@ export function partOfDay(hour, hoursPerDay = 24) {
 export function isFresh(lastRestock, now, hours, days) {
   if (lastRestock == null || now < lastRestock) return false;
   const perDay = secondsPerDay(days);
-  const until = nextCloseAt(hours, lastRestock, days) ?? (Math.floor(lastRestock / perDay) + 1) * perDay;
+  const open = hours?.open ?? { hour: 0, minute: 0 };
+  const opening = Math.floor(lastRestock / perDay) * perDay + (open.hour * days.minutesPerHour + open.minute) * days.secondsPerMinute;
+  const until = nextCloseAt(hours, lastRestock, days) ?? (opening > lastRestock ? opening : opening + perDay);
   return now < until;
 }
 

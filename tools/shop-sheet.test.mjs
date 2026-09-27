@@ -1598,3 +1598,19 @@ test("the Fresh chip and New badges show until the shop closes, then clear (#152
     globalThis.game.time.worldTime = before;
   }
 });
+
+test("a New good that sells out again loses its badge: New is for goods back in stock (#152 review)", async () => {
+  const flags = { "merchant-presets": { newAt: 8 * 3600, drawn: true, stock: { keep: true } } };
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 0, flags })] });
+  shop.flags["merchant-presets"].restockedAt = 8 * 3600;
+  const before = globalThis.game.time.worldTime;
+  try {
+    globalThis.game.time.worldTime = 12 * 3600;
+    const { buy } = await sheet._prepareContext({});
+    const row = buy.sections.flatMap(s => s.rows).find(r => r.id === "rope");
+    assert.ok(row, "the sold-out line is still listed");
+    assert.equal(row.isNew, false);
+  } finally {
+    globalThis.game.time.worldTime = before;
+  }
+});

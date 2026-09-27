@@ -38,6 +38,7 @@
  * @typedef {{lastRestock: number, dueAt: number|null}} ScheduleState  What a shop needs stored between checks.
  */
 
+import { secondsPerDay } from "./deals.mjs";
 import { shopFrom } from "./schema.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
@@ -77,8 +78,6 @@ export function nextOpen(hours, minute, calendar) {
   const inMinutes = opensAt > minute ? opensAt - minute : minutesPerDay - minute + opensAt;
   return { opensAt, inMinutes };
 }
-
-const secondsPerDay = calendar => calendar.secondsPerMinute * calendar.minutesPerHour * calendar.hoursPerDay;
 
 /**
  * A shop with `hours` opens exactly once a day: at `hours.open`, or at
@@ -415,12 +414,13 @@ export function planRestock(shop, items, draws, context) {
       if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
       const quantity = Math.max(0, draw.quantity ?? 0);
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
+      const back = newAt(draw.name);
       if (existing) {
         updates.push({ _id: existing._id, "system.quantity": quantity,
           "flags.merchant-presets.stock": context.stockFlags[draw.name],
-          ...(newAt(draw.name) === undefined ? {} : { "flags.merchant-presets.newAt": newAt(draw.name) }) });
+          ...(back === undefined ? {} : { "flags.merchant-presets.newAt": back }) });
       } else {
-        creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name)));
+        creates.push(drawnItem(draw, context, { quantity }, back));
       }
       restocked.push(draw.name);
     }
