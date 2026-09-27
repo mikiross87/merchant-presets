@@ -457,6 +457,15 @@ test("a restock is fresh stock only when it brings back something players can se
   assert.equal(planRestock(shop, [], [{ ...draws[0], quantity: 10 }], { ...context, at: T }).fresh, true, "a reroll's visible lines");
 });
 
+test("a top-up replaces a container bought down to 0, and the new one is New (#152 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const bought = drawn("i3", "Backpack", "container", 0, { container: null });
+  const plan = planRestock(topup, [bought], [draws[2]], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.deletes, ["i3"], "the sold-out copy goes: a container can't be refilled");
+  assert.equal(plan.creates.filter(c => c.name === "Backpack").length, 1);
+  assert.equal(newAtOf(plan.creates[0]), T);
+});
+
 test("a shop's first roll marks nothing New: a shop just placed has nothing back in stock (#152 review)", () => {
   const items = [drawn("i1", "Arrows", "consumable", 0)];
   const plan = planRestock(shop, items, [{ ...draws[0], quantity: 10 }, ...draws.slice(1)], { ...context, at: T, markNew: false });

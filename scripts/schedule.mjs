@@ -453,6 +453,7 @@ export function planRestock(shop, items, draws, context) {
   if (restock.mode === "topup") {
     const updates = [];
     const creates = [];
+    const deletes = [];
     const restocked = [];
 
     // Driven by the table's own lines, not shelf presence: a sold-out line
@@ -462,7 +463,11 @@ export function planRestock(shop, items, draws, context) {
     // due; only a line still genuinely in stock is skipped.
     for (const draw of uniqueDraws) {
       if (draw.data.type === "container") {
-        const have = drawnNow.filter(i => i.name === draw.name).length;
+        // A container sold down to 0 (kept on the shelf, dnd5e pins its quantity) can't be
+        // refilled: it goes, and a fresh copy takes its place.
+        const copies = drawnNow.filter(i => i.name === draw.name);
+        for (const gone of copies.filter(i => i.system?.quantity === 0)) deletes.push(gone._id);
+        const have = copies.filter(i => i.system?.quantity !== 0).length;
         const want = context.containers?.[draw.name] ?? 1;
         for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
         if (want > have) restocked.push(draw.name);
@@ -487,7 +492,7 @@ export function planRestock(shop, items, draws, context) {
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
     const refilled = updates.map(u => ({ ...items.find(i => i._id === u._id), flags: { "merchant-presets": { stock: u["flags.merchant-presets.stock"] } } }));
-    return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
+    return { deletes, creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
