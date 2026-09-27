@@ -273,10 +273,16 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
  * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
  *   typeLabels: object, properties: object, weaponProperties: string[], weightUnits: object}} labels  CONFIG.DND5E's, localized
  * @param {(key: string, data?: object) => string} t  the window's localize, for the pieces in words
+ * @param {{service?: boolean, feeds?: boolean, hydrates?: boolean}} [world]  whether the line is a
+ *   service, meals feed the buyer (Simple Nutrition takes them), and ale and wine hydrate
  * @returns {string}
  */
-export function itemMeta(item, labels, t) {
+export function itemMeta(item, labels, t, { service = false, feeds = false, hydrates = false } = {}) {
   const sys = item.system ?? {};
+  // What it does for the buyer, where that holds (design mRg3y): a meal feeds them only where
+  // Simple Nutrition takes meals, and ale or wine counts as water only where drinks hydrate.
+  if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : null].filter(Boolean).join(" · ");
+  if (DRINKS.includes(sys.identifier)) return [t("Drink"), hydrates && DRINK_IDENTIFIERS.includes(sys.identifier) ? t("CountsAsWater") : null].filter(Boolean).join(" · ");
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
@@ -301,6 +307,11 @@ export function itemMeta(item, labels, t) {
   }
   return parts.filter(Boolean).join(" · ");
 }
+
+/** The ale and wines the module registers with Simple Nutrition as hydration (merchant-presets.mjs `registerDrinks`). */
+export const DRINK_IDENTIFIERS = Object.freeze(["ale", "wine-common", "wine-fine"]);
+/** The goods that read as drinks, not food, though dnd5e types them all as food: those, and water. */
+const DRINKS = [...DRINK_IDENTIFIERS, "water-pint"];
 
 /** A CONFIG.DND5E entry's label: some are plain strings, some `{label}` objects. */
 const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? "");

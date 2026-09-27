@@ -23,10 +23,13 @@
               <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
               <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
               <span class="mp-leader" data-pen="{{this.name}} leader"></span>
-              {{> mpCoins coins=this.lineTotalCoins mode="count"}}
+              <span class="mp-line-coins" data-pen="{{this.name}} coins">{{> mpCoins coins=this.lineTotalCoins mode="count"}}</span>
             </div>
             <div class="mp-detail" data-pen="{{this.name}} detail">
-              <span class="mp-each" data-pen="{{this.name}} each">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
+              <span class="mp-detail-left" data-pen="{{this.name}} detail left">
+                {{#if this.noteIcon}}{{mpIcon this.noteIcon pen=(concat this.name " svc icon")}}{{/if}}
+                <span class="mp-each" data-pen="{{this.name}} each">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.note}}{{this.note}}{{else if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
+              </span>
               {{#unless (or (eq ../seal.state "sealing") (eq ../seal.state "sealed"))}}
                 <span class="mp-stepper" data-pen="{{this.name}} stepper">
                   <button type="button" data-action="stepLine" data-item-id="{{this.itemId}}" data-delta="-1" data-pen="Minus" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Fewer'}}">{{mpIcon "minus" pen="Minus icon"}}</button>

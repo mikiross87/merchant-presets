@@ -4,12 +4,13 @@
  * and the listeners that act on a trade (meals, animals, spellcasting).
  */
 
-import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
+import { DRINK_IDENTIFIERS } from "./shop-view.mjs";
 import {
   adoptDrawn, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
@@ -26,11 +27,6 @@ import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnership
 
 const MODULE = "merchant-presets";
 
-const NUTRITION_MODULE = "simple-nutrition-5e";
-/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
-const NUTRITION_MINIMUM = "1.0.0";
-/** Identifiers on our drinks that should slake thirst rather than hunger. */
-const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
 
 /** Ids of the shops `setUpShopNow` is building right now: `arrive` leaves them alone. */
 const rewiring = new Set();
@@ -498,20 +494,8 @@ async function registerDrinks() {
   }
 }
 
-/**
- * Can we feed characters through the active Simple Nutrition?
- *
- * Meals and sheet consumption write straight into its daily tally, and the
- * unit of that tally changed in 1.0: before it, the same flag held pounds and
- * gallons. Writing fractions of a day into 0.5 would credit every creature
- * that is not Medium wrongly, and still pass the export checks below, so an
- * older version gets no meals rather than wrong ones. Drinks are unaffected —
- * WATER_IDENTIFIERS means the same in both.
- */
-function nutritionFeeds() {
-  const sn = game.modules.get(NUTRITION_MODULE);
-  return !!sn?.active && !foundry.utils.isNewerVersion(NUTRITION_MINIMUM, sn.version);
-}
+/** Can we feed characters through the active Simple Nutrition? (nutrition.mjs `mealsFeed`) */
+const nutritionFeeds = () => mealsFeed(game.modules.get(NUTRITION_MODULE), foundry.utils.isNewerVersion);
 
 /** Tell the GM once, at load, when a Simple Nutrition too old to feed is why meals do nothing. */
 function warnOutdatedNutrition() {

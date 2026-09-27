@@ -260,6 +260,8 @@
 .shop-sheet .mp-coin { display: flex; align-items: center; gap: 4px; }
 .shop-sheet .mp-coin b { font: 700 15px/18px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-coin img { flex: none; width: 16px; height: 16px; border: none; border-radius: 50%; }
+/* "Free" in place of a price: the same green in both themes. */
+.shop-sheet .mp-coin b.is-free { color: var(--mp-green); }
 
 /* -------------------------------------------------------------- tabs */
 
@@ -495,6 +497,9 @@
 .shop-sheet .mp-item-icon { flex: none; width: 40px; height: 40px; border: none; border-radius: 4px; outline: 1px solid var(--mp-gold); object-fit: cover; }
 .shop-sheet .mp-row-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .shop-sheet .mp-row .mp-name-line { font-size: 14px; line-height: 16px; }
+/* A name longer than its row gives way before the stock and price do. */
+.shop-sheet .mp-row .mp-name-line { max-width: 100%; }
+.shop-sheet .mp-row .mp-name-line > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .shop-sheet .mp-meta { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-new-badge { display: flex; padding: 1px 5px; border-radius: 3px; background: #9f927533; }
 .shop-sheet .mp-new-badge span {
@@ -528,8 +533,7 @@
   border: 0 solid var(--mp-line);
   border-left-width: 1px;
   background: var(--mp-window);
-  overflow-y: auto;
-  scrollbar-width: none;
+  overflow: hidden;
 }
 
 /* -------------------------------------------------------------- sell tab (design TGXBN) */
@@ -566,6 +570,7 @@
 
 .shop-sheet .mp-slip {
   flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -594,11 +599,41 @@
 .shop-sheet .mp-slip-date { font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-head-rule { flex: none; height: 1px; background: var(--mp-paper-line); }
 
-.shop-sheet .mp-ledger { display: flex; flex-direction: column; gap: 8px; }
+/* A bill longer than the slip scrolls its lines inside it: the total, the purse after and the seal
+   stay in view. No scrollbar takes the slip's width; a fade says there is more below. */
+.shop-sheet .mp-ledger {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+/* Shown while lines remain below (its scroll timeline is inactive when nothing overflows); it takes
+   no room: the gap before it and its own height are cancelled by its margin. */
+.shop-sheet .mp-ledger::after {
+  content: "";
+  flex: none;
+  position: sticky;
+  bottom: 0;
+  height: 14px;
+  margin-top: -22px;
+  background: linear-gradient(to bottom, transparent, var(--mp-paper));
+  pointer-events: none;
+  opacity: 0;
+  animation: mp-more-below linear both;
+  animation-timeline: scroll(self);
+}
+@keyframes mp-more-below {
+  from, 98% { opacity: 1; }
+  to { opacity: 0; }
+}
 .shop-sheet .mp-ledger.is-dimmed { opacity: 0.55; }
 .shop-sheet .mp-line { display: flex; flex-direction: column; gap: 3px; animation: mp-line-in 150ms ease-out; }
 .shop-sheet .mp-line.is-struck .mp-line-name { text-decoration: line-through; color: var(--mp-danger-ink); animation: mp-flash 400ms ease-out; }
-.shop-sheet .mp-entry { display: flex; align-items: flex-end; gap: 6px; }
+/* A name too long for its line keeps the line, and the leader and coins wrap below it (design mRg3y). */
+.shop-sheet .mp-entry { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 6px; }
 .shop-sheet .mp-qty { font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-gold); }
 .shop-sheet .mp-line-name {
   min-width: 0;
@@ -618,6 +653,9 @@
   border-bottom-width: 1px;
 }
 .shop-sheet .mp-detail { display: flex; align-items: center; justify-content: space-between; padding-left: 24px; }
+.shop-sheet .mp-detail-left { min-width: 0; display: flex; align-items: center; gap: 5px; }
+.shop-sheet .mp-detail-left .mp-icon { width: 12px; height: 12px; color: var(--mp-gold); }
+.shop-sheet .mp-line-coins { flex: none; display: flex; align-items: center; gap: 5px; }
 /* A sale's long detail ("… (½ of 3 gp 8 sp 5 cp)") gives way before the stepper does. */
 .shop-sheet .mp-each { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-stepper { flex: none; display: flex; align-items: center; border-radius: 4px; background: var(--mp-surface); outline: 1px solid var(--mp-line); }

@@ -10,8 +10,10 @@
  */
 /* global game, Actor, CONFIG, foundry, setTimeout -- `setup` runs in the page */
 
-/** The shop every frame draws, as the frames name it. */
+/** The shop every frame draws but the Inn's, as the frames name it. */
 export const SHOP = "Armourer & Blacksmith";
+/** The Inn frames' shop. */
+export const INN = "Inn & Tavern";
 
 /**
  * Runs in the page as the GM (`design-check-run.mjs --setup`): puts the world into the frames'
@@ -28,6 +30,9 @@ export const SHOP = "Armourer & Blacksmith";
  * - Aria (P1's character) with 3 pp 47 gp 12 sp 30 cp, and Tomas, a character no one plays;
  * - Aria's pack as the Sell frames draw it: a Longsword, a Chain Shirt and 2 Potions of Healing
  *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
+ * - *Inn & Tavern*: a fresh import of the Town inn, with the goods the Inn frames don't draw hidden
+ *   (as a GM hides them): three meals, two rooms, and ale, bread and cheese, in the frame's order
+ *   (water until #150 kinds it as food and drink);
  * - no deals: the storefront frames draw Aria at list price. Only the Settings frames list deals,
  *   and their `open` sets them (`withDeals`).
  */
@@ -111,6 +116,28 @@ export async function setup() {
     [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
     [`flags.${MP}.shop.deals`]: []
   });
+
+  // The Inn frames' shop (INN; this runs in the page, which can't see this module's names).
+  const innName = "Inn & Tavern";
+  for (const a of game.actors.filter(a => a.name === innName)) await a.delete();
+  const inn = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName("Inn & Tavern (Town)")._id);
+  for (let t = 0; t < 60 && inn.flags[MP]?.restockedAt == null; t++) await new Promise(r => setTimeout(r, 500));
+  if (inn.flags[MP]?.restockedAt == null) throw new Error("the inn's arrival restock never finished");
+  const shown = { "Meal, Modest": [], "Meal, Comfortable": [], "Meal, Wealthy": [], "Inn Stay, Modest (per day)": [],
+    "Inn Stay, Comfortable (per day)": [], "Ale (mug)": [17], "Bread (loaf)": [20], "Cheese (wedge)": [19] };
+  const innOrder = Object.keys(shown);
+  await inn.updateEmbeddedDocuments("Item", inn.items.filter(i => i.flags[MP]?.drawn).map(i => (i.name in shown
+    ? { _id: i.id, sort: (innOrder.indexOf(i.name) + 1) * 100, [`flags.${MP}.stock.hidden`]: false,
+      ...(shown[i.name].length ? { "system.quantity": shown[i.name][0] } : {}) }
+    : { _id: i.id, [`flags.${MP}.stock.hidden`]: true })));
+  await inn.update({
+    name: innName,
+    "ownership.default": 1,
+    [`flags.${MP}.visibility`]: true,
+    [`flags.${MP}.shop.description`]: "Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.",
+    [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
+    [`flags.${MP}.shop.deals`]: []
+  });
   return shop.id;
 }
 
@@ -120,7 +147,7 @@ export async function setup() {
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, name = SHOP } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
   if (game.user.isGM) {
@@ -132,7 +159,7 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
-  const shop = game.actors.getName(${JSON.stringify(SHOP)});
+  const shop = game.actors.getName(${JSON.stringify(name)});
   ${before}
   const app = shop.sheet;
   app._buyerUuid = game.actors.getName("Aria").uuid;
@@ -177,6 +204,9 @@ const storefrontPlayer = openShop({ basket: BASKET });
 const nextRestock = `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: game.time.worldTime - 3 * 3600,
   dueAt: Math.floor(game.time.worldTime / 86400) * 86400 + 7 * 86400, every: 7 } });`;
 const closed = openShop({ before: withoutDeals + restocked(1) + nextRestock + newBadges(false), hour: 3, autoRestock: true });
+/** The Inn frames: evening, a meal, two nights and three ales on the bill, fresh stock today. */
+const inn = openShop({ name: INN, before: restocked(0), hour: 19,
+  basket: [["Meal, Comfortable", 1], ["Inn Stay, Comfortable (per day)", 2], ["Ale (mug)", 3]] });
 /** The Terms popover, open over the GM's storefront; the frame is the popover alone. */
 const terms = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, size: { width: 920, height: 680 },
   then: "app.element.querySelector('.mp-terms-popover').showPopover();", root: "`${app.id}-terms-popover`" });
@@ -197,8 +227,8 @@ export const FRAMES = {
   dVt0a: frame("03 Settings (GM) · Restock — Dark", "dark", 920, 760),
   x9IX9: frame("04 Closed — Light", "light", 920, 680, "Gamemaster", closed),
   nnHdO: frame("04 Closed — Dark", "dark", 920, 680, "Gamemaster", closed),
-  mRg3y: frame("05 Inn — Light", "light", 920, 680),
-  lvVv2: frame("05 Inn — Dark", "dark", 920, 680),
+  mRg3y: frame("05 Inn — Light", "light", 920, 680, "Gamemaster", inn),
+  lvVv2: frame("05 Inn — Dark", "dark", 920, 680, "Gamemaster", inn),
   r7HIUl: frame("06 Storefront — Narrow (Light)", "light", 480, 780),
   grlFX: frame("06 Storefront — Narrow (Dark)", "dark", 480, 780),
   n9I5aQ: frame("07 Buyer Picker — Light", "light", 656, 430),

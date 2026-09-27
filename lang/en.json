@@ -60,6 +60,10 @@
         "DexMax": " + Dex (max {max})",
         "Str": "Str {str}",
         "ShieldAc": "+{ac} AC",
+        "Service": "Service",
+        "FeedsBuyer": "feeds the buyer",
+        "Drink": "Drink",
+        "CountsAsWater": "counts as water",
         "Worth": "worth {amount}",
         "WorthEach": "worth {amount} each"
       },
@@ -131,12 +135,15 @@
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
         "OfList": "({ratio} of {list})",
+      "Feeds": "Feeds {name}",
+      "FromTonight": "From tonight",
         "Fewer": "One fewer",
         "More": "One more",
         "ExactChange": "Exact change is counted from your coins."
       },
       "Seal": {
         "Bargain": "Seal the bargain · {price}",
+        "BargainShort": "Seal it · {price}",
         "BargainSell": "Seal it · take {price}",
         "Sealing": "Counting coin…",
         "Sealed": "SEALED",

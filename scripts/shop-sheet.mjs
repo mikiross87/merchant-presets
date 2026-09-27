@@ -14,6 +14,7 @@
  */
 
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
+import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
 import {
   applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
@@ -68,8 +69,31 @@ const SETTINGS_SECTIONS = [
   { id: "restock", icon: "lucide:refresh-cw" }
 ];
 
+/**
+ * A bought service's note on the bill (design mRg3y): a meal feeds the buyer where meals do, and a
+ * room is theirs from tonight. `note` replaces the unit price; null for anything else.
+ */
+function serviceNote(kind, item, stock, buyer) {
+  if (kind !== "buy" || !stock?.service) return { note: null, noteIcon: null };
+  const goodKind = item.flags?.[MODULE]?.kind;
+  if (goodKind === "meal" && goodsWorld().feeds && buyer) {
+    return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.Feeds", { name: buyer.name }), noteIcon: "lucide:utensils" };
+  }
+  if (goodKind === "lodging") return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.FromTonight"), noteIcon: "lucide:bed-double" };
+  return { note: null, noteIcon: null };
+}
+
 /** The meta line's words (shop-view.mjs `itemMeta`/`sellMeta`). */
 const metaWords = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, data);
+
+/**
+ * What this world's goods do for a buyer (shop-view.mjs `itemMeta`): meals feed through Simple
+ * Nutrition, and ale and wine hydrate where the module registers them (merchant-presets.mjs).
+ */
+function goodsWorld() {
+  const sn = game.modules.get(NUTRITION_MODULE);
+  return { feeds: mealsFeed(sn, foundry.utils.isNewerVersion), hydrates: !!sn?.active && game.settings.get(MODULE, "drinksHydrate") };
+}
 
 /** CONFIG.DND5E's labels a row's meta line reads (shop-view.mjs `itemMeta`). */
 function metaLabels() {
@@ -773,7 +797,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // Its place on the list (design y6iNf): a category the GM named, as they wrote it, else
           // its kind of good. The pricing category (`row.category`) stays what rules key on.
           ...groupFields(data, stock),
-          meta: itemMeta(data, metaLabels(), metaWords),
+          meta: itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: !!stock.service }),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
@@ -807,8 +831,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       seal: {
         ...seal,
         state,
+        // A price of three coins or more takes the short label, so it fits the button (design mRg3y).
         label: seal.labelKey === "MERCHANT_PRESETS.Shop.Seal.Bargain"
-          ? game.i18n.localize(seal.labelKey, { price: sumText })
+          ? game.i18n.localize(coinBreakdown(totals.sumCp, currencies).length >= 3 ? "MERCHANT_PRESETS.Shop.Seal.BargainShort" : seal.labelKey, { price: sumText })
           : game.i18n.localize(seal.labelKey)
       },
       open
@@ -998,7 +1023,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // Grouped as a shelf groups its goods (design TGXBN): by kind of good.
         ...groupFields(item, null),
         meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
-          : row.refusal ? itemMeta(item, metaLabels(), metaWords)
+          : row.refusal ? itemMeta(item, metaLabels(), metaWords, goodsWorld())
           : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
         reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
@@ -1114,6 +1139,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         unitText: coinsText(coinBreakdown(bundleCp ?? 0, currencies)),
         // A bundle that floors to nothing has no sticker worth showing beside a real line total.
         showUnit: (bundleCp ?? 0) > 0 || lineTotal === 0,
+        // What a service line does, in place of its unit price (design mRg3y).
+        ...serviceNote(kind, item, stock, this.#resolveBuyer()),
         // A sale's detail says what share of the good's worth that is: "(½ of 15 gp)".
         ofList: kind === "sell" ? this.#ofListText(item, rate, currencies) : null,
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))

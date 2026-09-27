@@ -1,3 +1,24 @@
+export const NUTRITION_MODULE = "simple-nutrition-5e";
+/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
+export const NUTRITION_MINIMUM = "1.0.0";
+
+/**
+ * Whether meals can feed characters through Simple Nutrition (`sn`, its module entry, or none).
+ *
+ * Meals and sheet consumption write straight into its daily tally, and the
+ * unit of that tally changed in 1.0: before it, the same flag held pounds and
+ * gallons. Writing fractions of a day into 0.5 would credit every creature
+ * that is not Medium wrongly, and still pass its export checks, so an older
+ * version gets no meals rather than wrong ones. Drinks are unaffected:
+ * WATER_IDENTIFIERS means the same in both.
+ *
+ * @param {{active: boolean, version: string}|undefined} sn
+ * @param {(a: string, b: string) => boolean} isNewerVersion  foundry.utils.isNewerVersion
+ */
+export function mealsFeed(sn, isNewerVersion) {
+  return !!sn?.active && !isNewerVersion(NUTRITION_MINIMUM, sn.version);
+}
+
 /**
  * The arithmetic of eating a meal, kept free of Foundry so it can be tested
  * with plain Node (tools/nutrition.test.mjs).

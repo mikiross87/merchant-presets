@@ -541,13 +541,13 @@ const LABELS = {
   weaponTypes: { simpleM: "Simple Melee", martialM: "Martial Melee" },
   armorTypes: { light: "Light Armor", medium: "Medium Armor", heavy: "Heavy Armor", natural: "Natural Armor", shield: "Shield" },
   toolTypes: { art: "Artisan's Tools" },
-  consumableTypes: { potion: { label: "Potion" } },
+  consumableTypes: { potion: { label: "Potion" }, food: { label: "Food" } },
   typeLabels: { loot: "Loot", tool: "Tool" },
   properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
   weaponProperties: ["lgt", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } }
 };
-const words = { Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+const words = { Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -680,4 +680,25 @@ test("a short list is all lead, item types come after the kinds, and nothing ref
   assert.deepEqual(wontBuyTerms(["travel", "meal"], [], k => NOUNS[k]), { lead: ["food", "passage"], rest: [] });
   assert.deepEqual(wontBuyTerms(["mount"], ["loot", "tool"], k => NOUNS[k]), { lead: ["mounts", "loot", "tool"], rest: [] });
   assert.deepEqual(wontBuyTerms([], [], k => NOUNS[k]), { lead: [], rest: [] });
+});
+
+/* -------------------------------------------------------------- itemMeta: services and drinks (design mRg3y) */
+
+const meal = gear("loot", { quantity: 1 });
+meal.flags = { "merchant-presets": { kind: "meal", nutrition: { food: 1, water: 0.25 } } };
+const room = gear("loot", { quantity: 1 });
+room.flags = { "merchant-presets": { kind: "lodging" } };
+const drink = identifier => gear("consumable", { type: { value: "food" }, identifier, weight: { value: 0.5, units: "lb" } });
+
+test("a service says so, and a meal says it feeds the buyer only where meals do", () => {
+  assert.equal(itemMeta(meal, LABELS, t, { service: true, feeds: true }), "Service · feeds the buyer");
+  assert.equal(itemMeta(meal, LABELS, t, { service: true, feeds: false }), "Service");
+  assert.equal(itemMeta(room, LABELS, t, { service: true, feeds: true }), "Service");
+});
+
+test("a drink reads as one, and ale or wine counts as water only where drinks hydrate", () => {
+  assert.equal(itemMeta(drink("ale"), LABELS, t, { hydrates: true }), "Drink · counts as water");
+  assert.equal(itemMeta(drink("wine-fine"), LABELS, t, { hydrates: false }), "Drink");
+  assert.equal(itemMeta(drink("water-pint"), LABELS, t, { hydrates: true }), "Drink");
+  assert.equal(itemMeta(drink("bread"), LABELS, t, { hydrates: true }), "Food · 0.5 lb");
 });
