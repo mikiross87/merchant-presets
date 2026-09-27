@@ -20,9 +20,9 @@ import {
   applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
 } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
-import { activeDeal, nextCloseAt } from "./deals.mjs";
+import { activeDeal } from "./deals.mjs";
 import { icon } from "./icons.mjs";
-import { isOpen, nextOpen } from "./schedule.mjs";
+import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
@@ -542,8 +542,6 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // the window reads it as a shop with no hours: always open, in the header too.
     const shop = shopConfigOf(actor);
     const config = game.settings.get(MODULE, "tradingHours") ? shop : { ...shop, hours: null };
-    // What a restock's freshness counts by (#152): the shop's own hours, and whether it closes by them.
-    const closingDay = { hours: shop.hours, closes: closingHours(shop) !== null };
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 
@@ -563,7 +561,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rates = {
       world, shopTerms: config.terms, chipSellsAt, chipBuysAt, deal: this.#dealOf(buyer)
     };
-    const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, rates.deal, closingDay);
+    const header = this.#headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, rates.deal);
 
     Object.assign(context, {
       appId: this.id,
@@ -583,7 +581,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // `changeTab` (application.mjs) just toggles which already-rendered `.tab` section is
       // visible, with no re-render in between, so a tab switched to cold would otherwise show
       // whatever it held (or didn't) at the last full render.
-      buy: this.#buyContext(actor, config, rates, currencies, buyer, open, closingDay),
+      buy: this.#buyContext(actor, config, rates, currencies, buyer, open),
       sell: this.#sellContext(actor, config, rates, currencies, buyer, open),
       // The shop's own config, not `config`: the world's trading-hours switch shows no hours, but
       // the GM edits the ones the shop keeps.
@@ -600,7 +598,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     return c.hour * calendar.days.minutesPerHour + c.minute;
   }
 
-  #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, deal, closingDay) {
+  #headerContext(actor, title, tier, config, open, chipSellsAt, chipBuysAt, currencies, deal) {
     const termsChip = game.i18n.localize("MERCHANT_PRESETS.Shop.TermsChip", { sells: chipWord(chipSellsAt), buys: rateFraction(chipBuysAt) });
     const closesAt = config.hours ? this.#formatTime(config.hours.close) : null;
     const opensAt = config.hours ? this.#formatTime(config.hours.open) : null;
@@ -610,7 +608,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tier,
       kindIcon: kindIcon(actor, config),
       // "Fresh stock today" until the shop closes after the restock (#152).
-      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, closingDay.hours, game.time.calendar.days, closingDay.closes),
+      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -833,13 +831,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems));
   }
 
-  #buyContext(actor, config, rates, currencies, buyer, open, closingDay) {
+  #buyContext(actor, config, rates, currencies, buyer, open) {
     const shelf = actor.flags?.[MODULE]?.shelf;
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
-        row.isNew = isNewGood(data, shelf, game.time.worldTime, closingDay.hours, game.time.calendar.days, closingDay.closes);
+        row.isNew = isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,

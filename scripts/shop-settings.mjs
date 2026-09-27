@@ -6,7 +6,8 @@
  * and stored as the factors schema.mjs holds.
  */
 
-import { endsAfterDays, nextCloseAt } from "./deals.mjs";
+import { endsAfterDays } from "./deals.mjs";
+import { nextCloseAt } from "./schedule.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
 

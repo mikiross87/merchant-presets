@@ -624,68 +624,66 @@ const SMITH_HOURS = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0
 
 test("a restock stays fresh until the shop closes: through its closing minute, not after (#152, design aaJcp)", () => {
   const at = 10 * DAY + H(8);
-  assert.equal(isFresh(at, at, SMITH_HOURS, DAYS, true), true);
-  assert.equal(isFresh(at, 10 * DAY + H(18, 59), SMITH_HOURS, DAYS, true), true);
-  assert.equal(isFresh(at, 10 * DAY + H(19) + 30, SMITH_HOURS, DAYS, true), true);
-  assert.equal(isFresh(at, 10 * DAY + H(19, 1), SMITH_HOURS, DAYS, true), false);
+  assert.equal(isFresh(at, at, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(18, 59), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19) + 30, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
 });
 
 test("a restock while the shop is closed stays fresh until it next closes (#152)", () => {
   const at = 10 * DAY + H(21);
-  assert.equal(isFresh(at, 11 * DAY + H(12), SMITH_HOURS, DAYS, true), true);
-  assert.equal(isFresh(at, 11 * DAY + H(19, 1), SMITH_HOURS, DAYS, true), false);
+  assert.equal(isFresh(at, 11 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
 });
 
 test("a shop that never closes keeps a restock fresh for a whole day from it (#152, review round 5)", () => {
   const at = 10 * DAY + H(8);
   for (const hours of [null, { open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }]) {
-    assert.equal(isFresh(at, 11 * DAY + H(7, 59), hours, DAYS, true), true, "past midnight");
-    assert.equal(isFresh(at, 11 * DAY + H(8), hours, DAYS, true), false);
+    assert.equal(isFresh(at, 11 * DAY + H(7, 59), hours, DAYS), true, "past midnight");
+    assert.equal(isFresh(at, 11 * DAY + H(8), hours, DAYS), false);
   }
 });
 
 test("a hand restock just before a never-closing shop's opening stays fresh a day, not minutes (#152 review)", () => {
   const at = 10 * DAY + H(6, 55);
-  assert.equal(isFresh(at, 10 * DAY + H(12), SMITH_HOURS, DAYS, false), true);
-  assert.equal(isFresh(at, 11 * DAY + H(6, 55), SMITH_HOURS, DAYS, false), false);
+  assert.equal(isFresh(at, 10 * DAY + H(12), null, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(6, 55), null, DAYS), false);
 });
 
 test("a good is New while the restock that brought it back is fresh, and only on the shop that drew it (#152)", () => {
   const good = (newAt, drawn = "shelfA", quantity = 3) => ({ system: { quantity }, flags: { "merchant-presets": { newAt, drawn } } });
   const at = 10 * DAY + H(8);
-  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), true);
-  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS, true), false, "cleared at closing");
-  assert.equal(isNewGood(good(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), true, "drawn before shelves had keys");
-  assert.equal(isNewGood(good(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), false, "dragged in from another shop");
-  assert.equal(isNewGood(good(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), false);
-  assert.equal(isNewGood({ flags: {} }, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), false);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
+  assert.equal(isNewGood(good(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
+  assert.equal(isNewGood(good(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
+  assert.equal(isNewGood(good(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
+  assert.equal(isNewGood({ flags: {} }, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
 });
 
 test("a New good that sells out again isn't New: New is for goods back in stock (#152 review)", () => {
   const soldOut = { system: { quantity: 0 }, flags: { "merchant-presets": { newAt: 10 * DAY + H(8), drawn: "shelfA" } } };
-  assert.equal(isNewGood(soldOut, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS, true), false);
+  assert.equal(isNewGood(soldOut, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
 });
 
-test("with trading hours off a shop's restock stays fresh until its own day starts again at its opening (#152 review)", () => {
-  const night = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
+test("a shop with no closing hours (trading hours off) keeps a restock fresh a whole day (#152 review)", () => {
   const at = 3 * DAY + H(20);
-  // No closing (the world keeps every shop open), but the shop's day still starts at 20:00.
-  assert.equal(isFresh(at, 4 * DAY + H(3), night, DAYS, false), true);
-  assert.equal(isFresh(at, 4 * DAY + H(5), night, DAYS, false), true, "past the hour it would close at");
-  assert.equal(isFresh(at, 4 * DAY + H(20), night, DAYS, false), false, "a whole day on");
+  assert.equal(isFresh(at, 4 * DAY + H(3), null, DAYS), true);
+  assert.equal(isFresh(at, 4 * DAY + H(5), null, DAYS), true, "past the hour it would close at");
+  assert.equal(isFresh(at, 4 * DAY + H(20), null, DAYS), false, "a whole day on");
 });
 
 test("a shop open round the clock from 7:00 keeps its restock fresh until its own day starts again (#152 review)", () => {
   const hours = { open: { hour: 7, minute: 0 }, close: { hour: 6, minute: 59 } };
   const at = 10 * DAY + H(7);
-  assert.equal(isFresh(at, 11 * DAY + H(6, 59), hours, DAYS, true), true);
-  assert.equal(isFresh(at, 11 * DAY + H(7), hours, DAYS, true), false);
+  assert.equal(isFresh(at, 11 * DAY + H(6, 59), hours, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(7), hours, DAYS), false);
 });
 
 test("no restock yet, or a clock wound back before it, isn't fresh", () => {
-  assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS, true), false);
-  assert.equal(isFresh(undefined, 10 * DAY, null, DAYS, true), false);
-  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS, true), false);
+  assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
+  assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);
+  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS), false);
 });
 
 /* -------------------------------------------------------------- Restock section (design aaJcp) */

@@ -1617,10 +1617,10 @@ test("a New good that sells out again loses its badge: New is for goods back in 
   }
 });
 
-test("with trading hours off a restock's New lasts until the shop's own next opening, not midnight (#152 review)", async () => {
-  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 20 * 3600, drawn: true } } })] });
+test("with trading hours off a restock's New lasts a whole day, not until closing or midnight (#152 review)", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 18 * 3600, drawn: true } } })] });
   shop.flags["merchant-presets"].shop.hours = { open: { hour: 20, minute: 0 }, close: { hour: 4, minute: 0 } };
-  shop.flags["merchant-presets"].restockedAt = 20 * 3600;
+  shop.flags["merchant-presets"].restockedAt = 18 * 3600;   // before its 20:00 opening
   globalThis.game.settings.values.tradingHours = false;
   const before = globalThis.game.time.worldTime;
   const seen = async () => {
@@ -1628,9 +1628,9 @@ test("with trading hours off a restock's New lasts until the shop's own next ope
     return [header.fresh, buy.sections[0].rows[0].isNew];
   };
   try {
-    globalThis.game.time.worldTime = 24 * 3600 + 3 * 3600;   // 3:00 the next day: past midnight
+    globalThis.game.time.worldTime = 24 * 3600 + 17 * 3600 + 59 * 60;   // 17:59 the next day: past its closing, midnight and opening
     assert.deepEqual(await seen(), [true, true]);
-    globalThis.game.time.worldTime = 24 * 3600 + 20 * 3600;  // its next opening
+    globalThis.game.time.worldTime = 24 * 3600 + 18 * 3600;             // a day on
     assert.deepEqual(await seen(), [false, false]);
   } finally {
     globalThis.game.time.worldTime = before;

@@ -436,6 +436,7 @@ function copyOf(item, quantity, containerId = null) {
  */
 function lander(existingItems, isValidTarget = () => true) {
   const updateQuantities = new Map();   // real item id -> its new total quantity
+  const unmarked = new Set();           // lines back in stock from 0, whose New mark goes (#152)
   const pendingCreates = [];            // this basket's own new items, not yet given a real id
 
   // Only the fields given: a full STOCK_DEFAULTS here would state bundle 1 over the carried flag.
@@ -457,6 +458,9 @@ function lander(existingItems, isValidTarget = () => true) {
       if (existing) {
         const id = idOf(existing);
         updateQuantities.set(id, (updateQuantities.get(id) ?? existing.system?.quantity ?? 0) + quantity);
+        // A sold-out line a sale fills again isn't New: whatever sold it out (a trade, the GM), its
+        // restock's mark must not show again on a second-hand good.
+        if (existing.system?.quantity === 0 && existing.flags?.[MODULE]?.newAt != null) unmarked.add(id);
         return;
       }
       create(item, quantity, shelf);
@@ -468,7 +472,8 @@ function lander(existingItems, isValidTarget = () => true) {
     },
     result() {
       return {
-        itemUpdates: [...updateQuantities].map(([_id, quantity]) => ({ _id, "system.quantity": quantity })),
+        itemUpdates: [...updateQuantities].map(([_id, quantity]) => ({ _id, "system.quantity": quantity,
+          ...(unmarked.has(_id) ? { [`flags.${MODULE}.newAt`]: null } : {}) })),
         itemCreates: pendingCreates
       };
     }
@@ -670,11 +675,8 @@ function planBuy(request, context) {
   const shopItemUpdates = [];
   const shopItemDeletes = [...shopContentsRemoved];
   for (const [id, remaining] of shopRemaining) {
-    const { item, stock } = lines.find(l => idOf(l.item) === id);
-    // Sold out, it isn't New any more (#152): a copy sold back later mustn't bring the badge back.
-    const unmark = item.flags?.[MODULE]?.newAt != null ? { [`flags.${MODULE}.newAt`]: null } : {};
-    if (remaining > 0) shopItemUpdates.push({ _id: id, "system.quantity": remaining });
-    else if (stock.keep) shopItemUpdates.push({ _id: id, "system.quantity": 0, ...unmark });
+    const keep = lines.find(l => idOf(l.item) === id).stock.keep;
+    if (remaining > 0 || keep) shopItemUpdates.push({ _id: id, "system.quantity": Math.max(remaining, 0) });
     else shopItemDeletes.push(id);
   }
 

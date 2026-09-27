@@ -1,4 +1,4 @@
-import { nextCloseAt, secondsPerDay } from "./schedule.mjs";
+import { secondsPerDay } from "./schedule.mjs";
 
 /**
  * Deals (#111): one character's own price at one shop, kept free of Foundry so it can be tested
@@ -28,8 +28,6 @@ export function activeDeal(shop, actorUuid, worldTime) {
   return { buy: deal.buy, sell: deal.sell };
 }
 
-/** When a shop keeping `hours` next closes: schedule.mjs keeps the shop day's arithmetic. */
-export { nextCloseAt };
 
 /**
  * The end of a deal made "for `days` days": that many whole days of the world's calendar from now.
