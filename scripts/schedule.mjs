@@ -263,6 +263,21 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   topped up — the shop's own log line, and dnd5e's time-passed card (#88).
  */
 
+/**
+ * The "New" badges a restock leaves (#152): a good it stocks is New when nothing of that name was
+ * in stock before it, sold out or gone. `stale` clears the badge from every other good still
+ * carrying one from an earlier restock, the GM's own included; the shopkeeper's gear never has one.
+ */
+function newBadges(items) {
+  const inStock = new Set(items.filter(i => !isGear(i) && (i.system?.quantity ?? 0) > 0).map(i => i.name));
+  return {
+    isNew: name => !inStock.has(name),
+    stale: (touched) => items
+      .filter(i => !isGear(i) && i.flags?.["merchant-presets"]?.new === true && !touched.has(i._id))
+      .map(i => ({ _id: i._id, "flags.merchant-presets.new": false }))
+  };
+}
+
 /** The shopkeeper's own kit, never stock. */
 const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
 /**
@@ -281,9 +296,9 @@ const isDrawn = (item, drawnBy) => {
  * stock config — `context.stockFlags[draw.name]`, the shop's own record, not
  * whatever the compendium good's own copy says (#119 point 1). `system`
  * overrides the copy's quantity (and, for a container, drops its `container`
- * pointer — #89).
+ * pointer — #89). `isNew` is its "New" badge (#152).
  */
-function drawnItem(draw, context, system) {
+function drawnItem(draw, context, system, isNew) {
   const data = structuredClone(draw.data);
   delete data._id;
   data.system = { ...data.system, ...system };
@@ -291,7 +306,7 @@ function drawnItem(draw, context, system) {
     ...data.flags,
     // The shop's record wins; a line it has none for keeps the config its good ships with.
     "merchant-presets": { ...data.flags?.["merchant-presets"], drawn: context.drawnBy ?? true,
-      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock }
+      stock: context.stockFlags[draw.name] ?? data.flags?.["merchant-presets"]?.stock, new: isNew }
   };
   return data;
 }
@@ -368,6 +383,7 @@ export function planRestock(shop, items, draws, context) {
   const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
   const currency = refilledPurse(context);
+  const badges = newBadges(items);
 
   if (restock.mode === "topup") {
     const updates = [];
@@ -383,7 +399,7 @@ export function planRestock(shop, items, draws, context) {
       if (draw.data.type === "container") {
         const have = drawnNow.filter(i => i.name === draw.name).length;
         const want = context.containers?.[draw.name] ?? 1;
-        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
+        for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, badges.isNew(draw.name)));
         if (want > have) restocked.push(draw.name);
         continue;
       }
@@ -393,9 +409,9 @@ export function planRestock(shop, items, draws, context) {
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       if (existing) {
         updates.push({ _id: existing._id, "system.quantity": quantity,
-          "flags.merchant-presets.stock": context.stockFlags[draw.name] });
+          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.new": badges.isNew(draw.name) });
       } else {
-        creates.push(drawnItem(draw, context, { quantity }));
+        creates.push(drawnItem(draw, context, { quantity }, badges.isNew(draw.name)));
       }
       restocked.push(draw.name);
     }
@@ -403,6 +419,7 @@ export function planRestock(shop, items, draws, context) {
     // A container can push its own name once per copy created; every other
     // line pushes at most once already. Same rule either way: one mention
     // per line, in the order it was first touched.
+    updates.push(...badges.stale(new Set(updates.map(u => u._id))));
     return { deletes: [], creates, updates, currency, restocked: [...new Set(restocked)] };
   }
 
@@ -411,15 +428,16 @@ export function planRestock(shop, items, draws, context) {
   for (const draw of uniqueDraws) {
     if (draw.data.type === "container") {
       const count = context.containers?.[draw.name] ?? 1;
-      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }));
+      for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, badges.isNew(draw.name)));
       continue;
     }
     const quantity = Math.max(0, draw.quantity ?? 0);
-    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }));   // 0: not in stock today
+    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, badges.isNew(draw.name)));   // 0: not in stock today
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked };
+  const deletes = drawnNow.map(i => i._id);
+  return { deletes, creates, updates: badges.stale(new Set(deletes)), currency, restocked };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

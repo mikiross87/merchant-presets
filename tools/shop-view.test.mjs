@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -615,20 +615,39 @@ test("a bill the engine would refuse has no purse after", () => {
   assert.equal(purseAfter("sell", {}, 200, { gp: 1 }, CURRENCIES), null);
 });
 
-/* -------------------------------------------------------------- isFreshToday */
+/* -------------------------------------------------------------- isFresh */
 
 const DAYS = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
 const DAY = 86_400;
+const H = (h, m = 0) => h * 3600 + m * 60;
+const SMITH_HOURS = { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } };
 
-test("a shop restocked earlier the same day has fresh stock today (design y6iNf's hero chip)", () => {
-  assert.equal(isFreshToday(10 * DAY + 60, 10 * DAY + 10 * 3600, DAYS), true);
-  assert.equal(isFreshToday(10 * DAY, 10 * DAY, DAYS), true);
+test("a restock stays fresh until the shop closes: through its closing minute, not after (#152, design aaJcp)", () => {
+  const at = 10 * DAY + H(8);
+  assert.equal(isFresh(at, at, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(18, 59), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19) + 30, SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
 });
 
-test("a restock on an earlier day, or none yet, isn't fresh", () => {
-  assert.equal(isFreshToday(10 * DAY - 1, 10 * DAY + 60, DAYS), false);
-  assert.equal(isFreshToday(null, 10 * DAY, DAYS), false);
-  assert.equal(isFreshToday(undefined, 10 * DAY, DAYS), false);
+test("a restock while the shop is closed stays fresh until it next closes (#152)", () => {
+  const at = 10 * DAY + H(21);
+  assert.equal(isFresh(at, 11 * DAY + H(12), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(at, 11 * DAY + H(19, 1), SMITH_HOURS, DAYS), false);
+});
+
+test("a shop that never closes keeps its restock fresh until the day ends (#152)", () => {
+  const at = 10 * DAY + H(8);
+  for (const hours of [null, { open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }]) {
+    assert.equal(isFresh(at, 10 * DAY + H(23, 59), hours, DAYS), true);
+    assert.equal(isFresh(at, 11 * DAY, hours, DAYS), false);
+  }
+});
+
+test("no restock yet, or a clock wound back before it, isn't fresh", () => {
+  assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
+  assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);
+  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS), false);
 });
 
 test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {

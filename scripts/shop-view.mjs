@@ -1,3 +1,4 @@
+import { nextCloseAt } from "./deals.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, hasUngivableContents, isVisible, lineTotalCp } from "./trade-plan.mjs";
 
@@ -423,18 +424,22 @@ export function partOfDay(hour, hoursPerDay = 24) {
 /* -------------------------------------------------------------- header */
 
 /**
- * Whether the shop restocked on the world clock's current day: the hero's "Fresh stock today"
- * chip (design y6iNf). Days start at whole multiples of the calendar's day length, as
- * schedule.mjs counts them.
+ * Whether a restock is still fresh: the hero's "Fresh stock today" chip and the goods' "New"
+ * badges (designs y6iNf, aaJcp: "Badges and the chip clear when the shop closes"). Fresh from the
+ * restock until the shop next closes after it (deals.mjs `nextCloseAt`, through the closing
+ * minute), or, for a shop that never closes, until that day ends. Worked out when the window
+ * draws, so nothing has to be written at closing (#152).
  *
  * @param {number|null|undefined} lastRestock  when the shelf was last drawn (the shop's `restockedAt`), in world seconds
  * @param {number} now                          the world time
+ * @param {object|null} hours                   the hours the shop keeps: null when it keeps none, or trading hours are off
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
  */
-export function isFreshToday(lastRestock, now, days) {
-  if (lastRestock == null) return false;
+export function isFresh(lastRestock, now, hours, days) {
+  if (lastRestock == null || now < lastRestock) return false;
   const perDay = days.secondsPerMinute * days.minutesPerHour * days.hoursPerDay;
-  return Math.floor(lastRestock / perDay) === Math.floor(now / perDay);
+  const until = nextCloseAt(hours, lastRestock, days) ?? (Math.floor(lastRestock / perDay) + 1) * perDay;
+  return now < until;
 }
 
 /* -------------------------------------------------------------- basket */
@@ -534,8 +539,8 @@ export function stockLabel(stock, quantity, worldInfiniteStock) {
  * @property {string} name
  * @property {string} category
  * @property {StockLabel} stock
- * @property {boolean} isNew  placeholder for #105's restock badge (`flags.merchant-presets.new`);
- *   unset until the restock runtime sets that flag, per #103's scope.
+ * @property {boolean} isNew  the good's "New" badge (`flags.merchant-presets.new`, set by a restock:
+ *   schedule.mjs `planRestock`). The window shows it only while the restock `isFresh` (#152).
  * @property {number|null} bundlePriceCp  null when the item can't be priced (see `unpriced`)
  * @property {boolean} unpriced  true for a missing price or a denomination `currencies` lacks —
  *   shown as "Worthless" per #98's decision (design/README.md is silent on a *shop* price of

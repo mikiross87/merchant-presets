@@ -410,6 +410,7 @@ function copyOf(item, quantity, containerId = null) {
     base.flags[MODULE] = { ...base.flags[MODULE] };
     delete base.flags[MODULE].stock;
     delete base.flags[MODULE].drawn;
+    delete base.flags[MODULE].new;
   }
   if (bundle > 1) base.flags = { ...base.flags, [MODULE]: { ...base.flags?.[MODULE], bundle } };
   return base;

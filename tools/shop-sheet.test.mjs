@@ -1580,3 +1580,21 @@ test("the Buyer Picker lists no merchants, and each group alphabetically (design
   const { buyerPicker } = await sheet._prepareContext({});
   assert.equal(buyerPicker.actors[0].uuid, buyer.uuid);
 });
+
+test("the Fresh chip and New badges show until the shop closes, then clear (#152)", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { new: true } } })] });
+  shop.flags["merchant-presets"].restockedAt = 8 * 3600;      // restocked at 8:00; the shop keeps 7:00-19:00
+  const before = globalThis.game.time.worldTime;
+  const seen = async () => {
+    const { header, buy } = await sheet._prepareContext({});
+    return [header.fresh, buy.sections[0].rows[0].isNew];
+  };
+  try {
+    globalThis.game.time.worldTime = 12 * 3600;
+    assert.deepEqual(await seen(), [true, true]);
+    globalThis.game.time.worldTime = 19 * 3600 + 60;
+    assert.deepEqual(await seen(), [false, false]);
+  } finally {
+    globalThis.game.time.worldTime = before;
+  }
+});

@@ -48,6 +48,9 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
+- 2.0: after a restock, the goods that came back in stock wear a *New* badge
+  and the shop shows *Fresh stock today*, both until the shop next closes (or
+  the day ends, for a shop that keeps no hours). (#152)
 - 2.0: each shop's own window — its portrait, hours, tier and terms of trade
   up top, a Buy tab with categories and stock, a Sell tab that shows what the
   shop deals in and what it won't touch, and a running Bill of Sale that

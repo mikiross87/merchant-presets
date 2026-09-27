@@ -783,6 +783,15 @@ test("buying strips the shop's stock and drawn flags from the copy, keeping kind
   assert.equal("drawn" in created.flags["merchant-presets"], false);
 });
 
+test("a good bought while New leaves its New badge on the shelf (#152)", () => {
+  const fresh = drawnDagger("Dagger000000001");
+  fresh.flags["merchant-presets"].new = true;
+  const result = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [fresh] } }));
+  assert.equal(result.ok, true);
+  const created = result.plan.updates.find(u => u.actorId === "Buyer000000001").itemCreates[0];
+  assert.equal("new" in created.flags["merchant-presets"], false);
+});
+
 test("a drawn item bought then sold back carries no drawn tag onto the next shop", () => {
   const buyCtx = context({ shop: { items: [drawnDagger("Dagger000000001")] } });
   const bought = planTrade(buyRequest("Dagger000000001", 1), buyCtx);
