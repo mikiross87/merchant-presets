@@ -315,21 +315,6 @@
 
 .shop-sheet .buy-tab.active { display: flex; flex-direction: row; gap: 0; }
 
-/* -------------------------------------------------------------- coins */
-
-.shop-sheet .coin {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  font-family: var(--dnd5e-font-roboto-condensed);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.shop-sheet .coin img { width: 16px; height: 16px; }
-.shop-sheet .coin b { font-size: 0.95rem; }
-.shop-sheet .coin-free { font-style: italic; color: var(--mp-success); font-family: var(--dnd5e-font-roboto); }
-
 /* -------------------------------------------------------------- terms of trade (design ChoNd) */
 
 /* Anchored under the Terms chip; without anchor positioning it sits where a popover does by default. */
@@ -366,62 +351,85 @@
 
 /* -------------------------------------------------------------- popovers */
 
-.shop-sheet .shop-popover {
+/* The Buyer Picker (design n9I5aQ), anchored under the Buying as row. */
+.shop-sheet .mp-picker {
   position: fixed;
-  inset: unset;
-  margin: auto;
-  max-width: 360px;
-  background: var(--dnd5e-background-card);
-  color: var(--color-text-primary);
-  border: var(--dnd5e-border-gold);
-  border-radius: 0.5rem;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
-  padding: 1rem 1.25rem;
-}
-
-.shop-sheet .shop-popover::backdrop { background: rgb(0 0 0 / 10%); }
-
-.shop-sheet .shop-popover h2, .shop-sheet .shop-popover h3 {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--color-text-title);
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-
-.shop-sheet .buyer-picker { min-width: 320px; }
-.shop-sheet .picker-hint { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0 0 0.5rem; }
-.shop-sheet .buyer-search {
-  width: 100%;
-  margin-bottom: 0.5rem;
-  font-family: var(--dnd5e-font-roboto);
-  border: 1px solid var(--border-faint, #bbb);
-}
-
-.shop-sheet .buyer-entry {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  background: none;
+  inset: auto;
+  top: anchor(bottom);
+  left: anchor(left);
+  margin: 6px 0 0;
+  box-sizing: border-box;
+  width: 280px;
+  max-height: 420px;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  overflow-y: auto;
   border: none;
-  border-bottom: var(--dnd5e-border-dotted);
-  padding: 0.4rem 0.2rem;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font-family: var(--dnd5e-font-roboto);
+  border-radius: 6px;
+  outline: 1px solid var(--mp-rule);
+  background: var(--mp-surface);
+  box-shadow: 0 6px 18px #00000030;
+  color: var(--mp-text);
 }
-
-.shop-sheet .buyer-entry.is-dimmed { opacity: 0.5; }
-.shop-sheet .buyer-entry.is-current { background: color-mix(in oklab, var(--dnd5e-color-gold), transparent 80%); }
-.shop-sheet .buyer-entry-img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.shop-sheet .buyer-entry-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.shop-sheet .buyer-entry-name { font-weight: 700; }
-.shop-sheet .buyer-entry-subtitle { font-size: 0.75rem; color: var(--color-text-secondary); display: flex; gap: 0.3rem; align-items: center; }
-.shop-sheet .buyer-entry-check { color: var(--mp-danger); }
+.shop-sheet .mp-picker:popover-open { display: flex; }
+.shop-sheet .mp-picker-search {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  outline: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-picker-search .mp-icon { width: 13px; height: 13px; color: var(--mp-muted); }
+.shop-sheet .mp-picker-search input {
+  all: unset;
+  flex: 1 1 0;
+  min-width: 0;
+  font: 400 12px/14px Roboto, system-ui, sans-serif;
+  color: var(--mp-text);
+}
+.shop-sheet .mp-picker-search input::placeholder { color: var(--mp-muted); }
+.shop-sheet .mp-picker-group { flex: none; display: flex; padding: 8px 8px 2px; }
+.shop-sheet .mp-picker-group span {
+  font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--mp-muted);
+}
+.shop-sheet .buyer-entry {
+  all: unset;
+  box-sizing: border-box;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.shop-sheet .buyer-entry:hover, .shop-sheet .buyer-entry:focus-visible { background: var(--mp-inset); }
+.shop-sheet .buyer-entry.is-current { background: var(--mp-inset); }
+.shop-sheet .buyer-entry.is-dimmed { opacity: 0.55; }
+.shop-sheet .buyer-entry > .mp-icon { width: 14px; height: 14px; color: var(--mp-accent); }
+.shop-sheet .mp-picker-avatar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--mp-inset);
+  outline: 1px solid var(--mp-gold);
+  font: 700 13px/18px "Alegreya SC", system-ui, sans-serif;
+  color: var(--mp-heading);
+}
+.shop-sheet .buyer-entry-info { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+.shop-sheet .buyer-entry-name { font: 700 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .buyer-entry-subtitle { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 
 /* -------------------------------------------------------------- categories / stock */
 

@@ -105,9 +105,10 @@ function item(id, { quantity = 1, price = { value: 1, denomination: "gp" }, flag
   };
 }
 
-function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 } } = {}) {
+/** A stub actor; only a shop (`shop: true`, the default for the id "shop") carries a shop config. */
+function actor(id, items, { permission = OWNERSHIP.OWNER, currency = { gp: 100 }, shop = id === "shop" } = {}) {
   return {
-    id, uuid: `Actor.${id}`, name: id, type: "npc", flags: { "merchant-presets": { shop: structuredClone(SHOP_DEFAULTS) } },
+    id, uuid: `Actor.${id}`, name: id, type: "npc", flags: shop ? { "merchant-presets": { shop: structuredClone(SHOP_DEFAULTS) } } : {},
     system: { currency },
     items: collection(items),
     // Foundry takes a level's number or its name ("OWNER").
@@ -1560,4 +1561,22 @@ test("the Sell tab groups the pack by kind of good, and its category narrows onl
   assert.deepEqual(sell.sections.map(s => s.group), ["gear"]);
   assert.equal(sell.categories.find(c => c.active).id, "gear");
   assert.equal(buy.categories.find(c => c.active).id, "all", "the Buy tab keeps its own category");
+});
+
+test("the Buyer Picker lists no merchants, and each group alphabetically (design n9I5aQ)", async () => {
+  const { sheet, buyer } = openShop();
+  const pc = name => Object.assign(actor(name, []), { type: "character" });
+  const inn = actor("inn", [], { shop: true });
+  const [kess, brom] = [pc("kess"), pc("brom")];
+  const tomas = actor("tomas", []);
+  globalThis.game.actors.push(inn, kess, brom, tomas);
+  globalThis.game.user.isGM = true;
+  try {
+    const { buyerPicker } = await sheet._prepareContext({});
+    assert.deepEqual(buyerPicker.characters.map(e => e.name), ["brom", "kess"]);
+    assert.deepEqual(buyerPicker.others.map(e => e.name), ["hero", "tomas"], "no shop, the inn included");
+  } finally { globalThis.game.user.isGM = false; }
+  // A player sees their own, their assigned character first.
+  const { buyerPicker } = await sheet._prepareContext({});
+  assert.equal(buyerPicker.actors[0].uuid, buyer.uuid);
 });

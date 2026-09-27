@@ -43,7 +43,8 @@ const executablePath = process.env.MP_CHROMIUM
  */
 function collect({ rootSelector, attr, iconAttr }) {
   const textOf = (el, cs) => {
-    let text = el.tagName === "INPUT" ? el.value
+    // A field shows its value, or its placeholder while empty.
+    let text = el.tagName === "INPUT" ? (el.value || el.placeholder)
       : [...el.childNodes].filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent).join(" ");
     if (!text.trim() && el.children.length && !el.querySelector(`[${attr}]`) && !el.querySelector("svg")) text = el.textContent;
     return cs.textTransform === "uppercase" ? text.toUpperCase() : text;
@@ -62,20 +63,28 @@ function collect({ rootSelector, attr, iconAttr }) {
     return false;
   };
   const nodes = [root, ...[...root.querySelectorAll(`[${attr}]`)].filter(el => el.getClientRects().length > 0 && !clipped(el))];
+  // An empty field shows its placeholder: measured as that text, its width and its colour.
+  const placeholder = el => el.tagName === "INPUT" && !el.value && el.placeholder;
+  const textWidth = (text, cs) => {
+    const ctx = document.createElement("canvas").getContext("2d");
+    ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    return ctx.measureText(text).width;
+  };
   return nodes.map(el => {
     const r = el.getBoundingClientRect();
     const cs = getComputedStyle(el);
+    const shown = placeholder(el);
     const inline = el.getAttribute("style") ?? "";
     const outline = cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0;
     const sets = [...inline.matchAll(/(?:^|;)\s*([a-z-]+)\s*:/g)].map(m => m[1]);
     // An icon's colour: the export fills its outlined paths; the window strokes in currentColor.
     const icon = el.getAttribute(iconAttr) || null;
     const fill = icon && el.querySelector("path")?.getAttribute("fill");
-    const color = icon && fill && fill !== "none" ? fill : cs.color;
+    const color = icon && fill && fill !== "none" ? fill : shown ? getComputedStyle(el, "::placeholder").color : cs.color;
     if (icon) sets.push("color");
     return {
       name: el === root ? "(frame)" : el.getAttribute(attr).trim(),
-      box: { x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height },
+      box: { x: r.left - origin.left, y: r.top - origin.top, w: shown ? textWidth(el.placeholder, cs) : r.width, h: r.height },
       sets,
       style: {
         color, "background-color": cs.backgroundColor, "border-radius": cs.borderTopLeftRadius,
@@ -146,6 +155,11 @@ const results = [];
 for (const id of WANTED) {
   const frame = FRAMES[id];
   if (!frame) { console.log(`unknown frame ${id}`); continue; }
+  // A frame that is a board of several parts (the Buyer Picker's two menus) is measured part by
+  // part: `export` names the frame's export, `part` the node in it the window is held to.
+  const file = frame.export ?? id;
+  const rootId = frame.part ?? id;
+  const shot = id.replace(/[^\w-]/g, "-");
   if (!frame.open) { console.log(`SKIP ${id} ${frame.name}: no fixture yet`); results.push({ id, name: frame.name, score: null }); continue; }
 
   // The design, as exported.
@@ -153,7 +167,7 @@ for (const id of WANTED) {
   // The export names its art relative to the canvas (design/assets/); it's written into design/export/.
   await dctx.route(/\/design\/export\/assets\//, route => route.fulfill({ path: new globalThis.URL(route.request().url().replace("/export/assets/", "/assets/")).pathname }));
   const dpage = await dctx.newPage();
-  await dpage.goto(new globalThis.URL(`../design/export/${id}.html`, import.meta.url).href);
+  await dpage.goto(new globalThis.URL(`../design/export/${file}.html`, import.meta.url).href);
   // The export writes its stroked nodes as content-box, so a browser adds their padding and
   // border to the size Pencil gave them (Section Nav 200.5 wide, not the canvas's 179.5). The
   // canvas is the spec: its sizes hold padding and stroke, as border-box does. Pencil's layout
@@ -163,8 +177,8 @@ for (const id of WANTED) {
   await dpage.addStyleTag({ content: "[data-pencil-id] { box-sizing: border-box !important; min-height: 0 !important; }" });
   await dpage.evaluate(() => document.fonts.ready);
   await dpage.evaluate(pencilLineHeights);
-  const design = await dpage.evaluate(collect, { rootSelector: `[data-pencil-id="${id}"]`, attr: "data-pencil-name", iconAttr: "data-icon-name" });
-  await dpage.locator(`[data-pencil-id="${id}"]`).screenshot({ path: `${OUT}${id}-design.png` });
+  const design = await dpage.evaluate(collect, { rootSelector: `[data-pencil-id="${rootId}"]`, attr: "data-pencil-name", iconAttr: "data-icon-name" });
+  await dpage.locator(`[data-pencil-id="${rootId}"]`).screenshot({ path: `${OUT}${shot}-design.png` });
 
   // The window, in the frame's fixture state.
   const actx = await browser.newContext({ viewport: { width: 1600, height: 1000 } });
@@ -173,7 +187,7 @@ for (const id of WANTED) {
   await apage.waitForTimeout(1500);
   await apage.evaluate(() => document.fonts.ready);
   const app = await apage.evaluate(collect, { rootSelector: `#${appId}`, attr: "data-pen", iconAttr: "data-icon" });
-  await apage.locator(`#${appId}`).screenshot({ path: `${OUT}${id}-app.png` });
+  await apage.locator(`#${appId}`).screenshot({ path: `${OUT}${shot}-app.png` });
   await dctx.close();
   await actx.close();
 
@@ -187,7 +201,7 @@ for (const id of WANTED) {
       console.log(`   ${p.design.name}#${p.index} design ${box(p.design.box)} app ${box(p.app?.box)}`);
     }
   }
-  writeFileSync(`${OUT}${id}.json`, JSON.stringify({ id, name: frame.name, ...result }, null, 2));
+  writeFileSync(`${OUT}${shot}.json`, JSON.stringify({ id, name: frame.name, ...result }, null, 2));
   results.push({ id, name: frame.name, score: result.score, total: result.total, passed: result.passed });
   console.log(`${result.score >= BAR ? "PASS" : "FAIL"} ${id} ${frame.name}: ${(result.score * 100).toFixed(1)}% (${result.passed}/${result.total})`);
   for (const f of result.failures.slice(0, Number(args.show ?? 25))) {

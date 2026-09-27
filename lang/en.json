@@ -195,9 +195,7 @@
       "BuyerPicker": {
         "Search": "Find an actor…",
         "PlayerCharacters": "Player characters",
-        "OtherActors": "Other actors",
-        "PlayerHint": "Only actors you own. The assigned character is the default.",
-        "GmHint": "Any actor. Coins come from, and goods go to, whoever is picked."
+        "OtherActors": "Other actors"
       },
       "Settings": {
         "Invalid": "That change wasn't saved: {errors}",

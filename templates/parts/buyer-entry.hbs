@@ -1,27 +1,12 @@
-{{!-- One row of the Buyer Picker popover (design/README.md, "Buying as"). `this` is one
-      buyerPicker entry {id, uuid, name, img, subtitle, purse, hasPurse, current}. Picking one
-      closes the picker in ShopSheet's own pickBuyer action. --}}
-{{!-- Redeclared per-file (matches shop-sheet.hbs's own "coins" inline) rather than assumed
-      visible across a partial-file boundary — Handlebars inline-partial scoping through a
-      separately-loaded `{{> "path"}}` include isn't worth gambling on. --}}
-{{#*inline "coins"}}
-  {{#each this}}
-    <span class="coin coin-{{denomination}}" data-tooltip="{{aria}}" aria-label="{{aria}}">
-      <img src="{{icon}}" alt="" /><b>{{count}}</b>
-    </span>
-  {{else}}
-    <span class="coin coin-free">{{localize "MERCHANT_PRESETS.Shop.Free"}}</span>
-  {{/each}}
-{{/inline}}
+{{!-- One row of the Buyer Picker (design n9I5aQ). `this` is one buyerPicker entry
+      {id, uuid, name, initial, subtitle, hasPurse, current}; picking one closes the picker (the
+      sheet's pickBuyer action). One with no coin is dimmed: it has nothing to trade with. --}}
 <button type="button" class="buyer-entry {{#if current}}is-current{{/if}} {{#unless hasPurse}}is-dimmed{{/unless}}"
-  data-action="pickBuyer" data-actor-uuid="{{uuid}}">
-  <img class="buyer-entry-img" src="{{img}}" alt="" />
-  <span class="buyer-entry-info">
-    <span class="buyer-entry-name">{{name}}</span>
-    <span class="buyer-entry-subtitle">
-      {{#if subtitle}}{{subtitle}} · {{/if}}
-      {{#if hasPurse}}<span class="buyer-entry-purse">{{> coins purse}}</span>{{else}}{{localize "MERCHANT_PRESETS.Shop.NoPurse"}}{{/if}}
-    </span>
+  data-action="pickBuyer" data-actor-uuid="{{uuid}}" data-pen="Entry {{name}}">
+  <span class="mp-picker-avatar" data-pen="{{name}} avatar"><span data-pen="{{name}} initial">{{initial}}</span></span>
+  <span class="buyer-entry-info" data-pen="{{name}} text">
+    <span class="buyer-entry-name" data-pen="{{name}} name">{{name}}</span>
+    <span class="buyer-entry-subtitle" data-pen="{{name}} sub">{{subtitle}}</span>
   </span>
-  {{#if current}}<i class="fa-solid fa-check buyer-entry-check" aria-hidden="true"></i>{{/if}}
+  {{#if current}}{{mpIcon "check" pen=(concat name " check")}}{{/if}}
 </button>

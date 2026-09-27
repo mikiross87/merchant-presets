@@ -270,6 +270,9 @@ function actorSubtitle(actor) {
     const level = cls?.system?.levels ?? actor.system?.details?.level;
     if (cls?.name && level) return `${cls.name} ${level}`;
   }
+  // A creature's kind: "Beast", "Humanoid".
+  const creature = CONFIG.DND5E?.creatureTypes?.[actor.system?.details?.type?.value];
+  if (creature) return game.i18n.localize(creature.label ?? creature);
   return game.i18n.localize(CONFIG.Actor?.typeLabels?.[actor.type] ?? actor.type);
 }
 
@@ -693,7 +696,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** Every actor this window could trade as: the user's own owned actors, or, for a GM, every actor. */
   #candidateBuyers() {
     const shopId = this.document.id;
-    return game.actors.filter(a => a.id !== shopId && a.testUserPermission(game.user, "OWNER"));
+    // Merchants aren't buyers: a shop's own coin is its till.
+    return game.actors.filter(a => a.id !== shopId && !a.flags?.[MODULE]?.shop && a.testUserPermission(game.user, "OWNER"));
   }
 
   #resolveBuyer() {
@@ -723,23 +727,36 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.#basketChanged("sell");
   }
 
+  /**
+   * The Buyer Picker (design n9I5aQ): who this window can trade as, with a class or creature and what
+   * they carry. A player sees what they own, their assigned character first; a GM sees every actor,
+   * characters and then the rest. Merchants aren't buyers. Each group reads alphabetically.
+   */
   #buyerPickerContext(buyer, currencies) {
-    const candidates = this.#candidateBuyers();
-    const entry = actor => ({
-      id: actor.id,
-      uuid: actor.uuid,
-      name: actor.name,
-      img: actor.img,
-      subtitle: actorSubtitle(actor),
-      purse: heldCoins(actor.system.currency, currencies),
-      hasPurse: totalCp(actor.system.currency ?? {}, currencies) > 0,
-      current: actor.uuid === buyer?.uuid
-    });
-    if (!game.user.isGM) return { gm: false, actors: candidates.map(entry) };
+    const byName = (a, b) => a.name.localeCompare(b.name, game.i18n.lang);
+    const candidates = this.#candidateBuyers().sort(byName);
+    const entry = actor => {
+      const cp = totalCp(actor.system.currency ?? {}, currencies);
+      const purse = cp > 0 ? coinsText(coinBreakdown(cp, currencies)) : game.i18n.localize("MERCHANT_PRESETS.Shop.NoPurse");
+      return {
+        id: actor.id,
+        uuid: actor.uuid,
+        name: actor.name,
+        initial: (actor.name || "?").charAt(0).toUpperCase(),
+        subtitle: [actorSubtitle(actor), purse].filter(Boolean).join(" · "),
+        hasPurse: cp > 0,
+        current: actor.uuid === buyer?.uuid
+      };
+    };
+    if (!game.user.isGM) {
+      const own = game.user.character?.uuid;
+      return { gm: false, actors: [...candidates.filter(a => a.uuid === own), ...candidates.filter(a => a.uuid !== own)].map(entry) };
+    }
     const characters = candidates.filter(a => a.type === "character");
     const others = candidates.filter(a => a.type !== "character");
     return { gm: true, characters: characters.map(entry), others: others.map(entry) };
   }
+
 
   static #onPickBuyer(_event, target) {
     if (this._tradeState.buy === "sealing" || this._tradeState.sell === "sealing") return;

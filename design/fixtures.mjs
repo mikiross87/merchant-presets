@@ -27,7 +27,10 @@ export const INN = "Inn & Tavern";
  *   Storefront draws (Longsword 7, Handaxe 11, Javelin 21 new, Breastplate 1 new, Chain Mail 4,
  *   Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so the nav
  *   counts are the frames' own (All goods 19, Weapons 3, Armor 3, Tools 1, Gear 12);
- * - Aria (P1's character) with 3 pp 47 gp 12 sp 30 cp, and Tomas, a character no one plays;
+ * - the Buyer Picker's cast, and no other actors but the shops (setup deletes the rest, strays
+ *   from earlier checks included): Aria, P1's character, a Fighter 5 with 3 pp 47 gp 12 sp 30 cp;
+ *   Tomas (a humanoid, 3 gp 4 sp) and Whisker (a beast, no purse), NPCs P1 owns; Brom (P2's
+ *   character, Cleric 5, 212 gp) and Kess (a Rogue 5 no one plays, 41 gp 7 sp);
  * - Aria's pack as the Sell frames draw it: a Longsword, a Chain Shirt and 2 Potions of Healing
  *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
  * - *Inn & Tavern*: a fresh import of the Town inn, with the goods the Inn frames don't draw hidden
@@ -81,7 +84,32 @@ export async function setup() {
     { name: "Ring of Protection", type: "equipment", img: "icons/equipment/finger/ring-band-copper.webp", sort: 500,
       system: { type: { value: "trinket" }, identified: false, unidentified: { name: "Unidentified Ring" }, price: { value: 3500, denomination: "gp" } } }
   ]);
-  if (!game.actors.getName("Tomas")) await Actor.create({ name: "Tomas", type: "character" });
+
+  // The Buyer Picker's cast: every other actor goes, but the shops (remade below).
+  const p1 = game.users.getName("P1");
+  const p2 = game.users.getName("P2");
+  const keep = new Set(["Aria", "Armourer & Blacksmith", "Inn & Tavern"]);
+  await Actor.deleteDocuments(game.actors.filter(a => !keep.has(a.name) && p2?.character?.id !== a.id).map(a => a.id));
+  const classPack = game.packs.find(p => p.documentName === "Item" && p.index.some(e => e.type === "class" && e.name === "Fighter"))
+    ?? game.packs.get("dnd5e.classes24") ?? game.packs.get("dnd5e.classes");
+  await classPack.getIndex({ fields: ["type"] });
+  const withClass = async (actor, className, levels) => {
+    await actor.deleteEmbeddedDocuments("Item", actor.items.filter(i => i.type === "class").map(i => i.id));
+    const entry = classPack.index.find(e => e.type === "class" && e.name === className);
+    const data = (await classPack.getDocument(entry._id)).toObject();
+    data.system.levels = levels;
+    await actor.createEmbeddedDocuments("Item", [data]);
+  };
+  await withClass(aria, "Fighter", 5);
+  const brom = p2?.character ?? await Actor.create({ name: "Brom", type: "character" });
+  await brom.update({ name: "Brom", "system.currency": { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 } });
+  await withClass(brom, "Cleric", 5);
+  const kess = await Actor.create({ name: "Kess", type: "character", "system.currency": { pp: 0, gp: 41, ep: 0, sp: 7, cp: 0 } });
+  await withClass(kess, "Rogue", 5);
+  const ownedBy = user => ({ default: 0, ...(user ? { [user.id]: 3 } : {}) });
+  await Actor.create({ name: "Tomas", type: "npc", ownership: ownedBy(p1), "system.details.type.value": "humanoid",
+    "system.currency": { pp: 0, gp: 3, ep: 0, sp: 4, cp: 0 } });
+  await Actor.create({ name: "Whisker", type: "npc", ownership: ownedBy(p1), "system.details.type.value": "beast" });
 
   const name = "Armourer & Blacksmith";
   for (const a of game.actors.filter(a => a.name === name)) await a.delete();
@@ -191,7 +219,7 @@ const newBadges = on => `await shop.updateEmbeddedDocuments("Item", ["Javelin", 
 /** The Storefront frames draw "Fresh stock today"; the Settings frames a shop last restocked the day before. */
 const restocked = daysAgo => `await shop.update({ "flags.merchant-presets.restockedAt": game.time.worldTime - ${daysAgo} * 86400 });`;
 
-const frame = (name, theme, width, height, user = "Gamemaster", open = null) => ({ name, theme, width, height, user, open });
+const frame = (name, theme, width, height, user = "Gamemaster", open = null, board = {}) => ({ name, theme, width, height, user, open, ...board });
 const settings = openShop({ tab: "settings", before: withDeals + restocked(1) });
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
@@ -207,6 +235,9 @@ const closed = openShop({ before: withoutDeals + restocked(1) + nextRestock + ne
 /** The Inn frames: evening, a meal, two nights and three ales on the bill, fresh stock today. */
 const inn = openShop({ name: INN, before: restocked(0), hour: 19,
   basket: [["Meal, Comfortable", 1], ["Inn Stay, Comfortable (per day)", 2], ["Ale (mug)", 3]] });
+/** The Buyer Picker, open over the storefront; each menu on the board is measured on its own. */
+const picker = openShop({ size: { width: 920, height: 680 },
+  then: "app.element.querySelector('.buyer-picker').showPopover();", root: "`${app.id}-buyer-picker`" });
 /** The Terms popover, open over the GM's storefront; the frame is the popover alone. */
 const terms = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, size: { width: 920, height: 680 },
   then: "app.element.querySelector('.mp-terms-popover').showPopover();", root: "`${app.id}-terms-popover`" });
@@ -231,8 +262,10 @@ export const FRAMES = {
   lvVv2: frame("05 Inn — Dark", "dark", 920, 680, "Gamemaster", inn),
   r7HIUl: frame("06 Storefront — Narrow (Light)", "light", 480, 780),
   grlFX: frame("06 Storefront — Narrow (Dark)", "dark", 480, 780),
-  n9I5aQ: frame("07 Buyer Picker — Light", "light", 656, 430),
-  JNHkU: frame("07 Buyer Picker — Dark", "dark", 656, 430),
+  "n9I5aQ:gm": frame("07 Buyer Picker — Light · GM", "light", 656, 470, "Gamemaster", picker, { export: "n9I5aQ", part: "YA8h7" }),
+  "n9I5aQ:player": frame("07 Buyer Picker — Light · Player", "light", 656, 470, "P1", picker, { export: "n9I5aQ", part: "V6UiM" }),
+  "JNHkU:gm": frame("07 Buyer Picker — Dark · GM", "dark", 656, 470, "Gamemaster", picker, { export: "JNHkU", part: "YA8h7" }),
+  "JNHkU:player": frame("07 Buyer Picker — Dark · Player", "dark", 656, 470, "P1", picker, { export: "JNHkU", part: "V6UiM" }),
   z5RBkd: frame("07 Trade Chat Card — Light", "light", 688, 387),
   b4iPYc: frame("07 Trade Chat Card — Dark", "dark", 688, 387),
   WNYhA: frame("08 Trade States — Light", "light", 1900, 755),

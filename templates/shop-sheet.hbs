@@ -49,7 +49,7 @@
   </div>
   <div class="mp-purse" data-pen="Purse">
     <span class="mp-purse-label" data-pen="Purse Label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
-    <button type="button" class="mp-buyer-row buying-as-toggle" data-pen="Buyer row" popovertarget="{{appId}}-buyer-picker">
+    <button type="button" class="mp-buyer-row buying-as-toggle" data-pen="Buyer row" popovertarget="{{appId}}-buyer-picker" style="anchor-name: --{{appId}}-buyer">
       {{#if buyer}}<span class="mp-buyer-avatar" data-pen="Buyer avatar"><span data-pen="Buyer initial">{{buyerInitial}}</span></span>{{/if}}
       <span class="mp-buyer-name" data-pen="Buyer name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
       {{mpIcon "chevron-down" pen="Buyer chevron"}}
@@ -75,20 +75,23 @@
   <p class="mp-tp-foot" data-pen="TP Foot">{{localize "MERCHANT_PRESETS.Shop.Terms.Note"}}</p>
 </div>
 
-<div id="{{appId}}-buyer-picker" popover class="shop-popover buyer-picker">
+{{!-- Anchored under the Buying as row, as the Terms popover is under its chip. --}}
+<div id="{{appId}}-buyer-picker" popover class="mp-picker buyer-picker" style="position-anchor: --{{appId}}-buyer"
+  data-pen="{{#if buyerPicker.gm}}Menu GM{{else}}Menu Player{{/if}}">
   {{#if buyerPicker.gm}}
-    <p class="picker-hint">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.GmHint"}}</p>
-    <input type="search" class="buyer-search" id="{{appId}}-buyer-search" placeholder="{{localize 'MERCHANT_PRESETS.Shop.BuyerPicker.Search'}}" />
+    <label class="mp-picker-search" data-pen="Search">
+      {{mpIcon "search" pen="Search icon"}}
+      <input type="search" class="buyer-search" id="{{appId}}-buyer-search" data-pen="Search text" placeholder="{{localize 'MERCHANT_PRESETS.Shop.BuyerPicker.Search'}}" />
+    </label>
     {{#if buyerPicker.characters.length}}
-      <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerCharacters"}}</h3>
+      <div class="mp-picker-group" data-pen="Group PLAYER CHARACTERS"><span data-pen="Group PLAYER CHARACTERS">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerCharacters"}}</span></div>
       {{#each buyerPicker.characters}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
     {{/if}}
     {{#if buyerPicker.others.length}}
-      <h3>{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.OtherActors"}}</h3>
+      <div class="mp-picker-group" data-pen="Group OTHER ACTORS"><span data-pen="Group OTHER ACTORS">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.OtherActors"}}</span></div>
       {{#each buyerPicker.others}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
     {{/if}}
   {{else}}
-    <p class="picker-hint">{{localize "MERCHANT_PRESETS.Shop.BuyerPicker.PlayerHint"}}</p>
     {{#each buyerPicker.actors}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
   {{/if}}
 </div>
