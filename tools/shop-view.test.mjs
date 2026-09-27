@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, itemMeta, matchingStockLine, partOfDay, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -583,4 +583,31 @@ test("the part of the day an hour falls in, on any length of day", () => {
   assert.deepEqual([3, 6, 8, 10, 12, 15, 19, 23].map(h => partOfDay(h)),
     ["night", "dawn", "morning", "midMorning", "midday", "afternoon", "evening", "night"]);
   assert.equal(partOfDay(5, 12), "midMorning");
+});
+
+/* -------------------------------------------------------------- purseAfter */
+
+test("a buyer's purse after the bill keeps the coins the payment didn't touch (design y6iNf)", () => {
+  // Aria, 3 pp 47 gp 12 sp 30 cp, owes 30 gp: she hands over 30 of her gold, as the engine's pay() takes it.
+  const aria = { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 };
+  assert.deepEqual(purseAfter("buy", aria, 3000, { gp: 212 }, CURRENCIES), { pp: 3, gp: 17, ep: 0, sp: 12, cp: 30 });
+});
+
+test("a buyer who has to break a coin gets the change from the till", () => {
+  assert.deepEqual(purseAfter("buy", { gp: 1 }, 50, { sp: 10 }, CURRENCIES), { gp: 0, sp: 5 });
+});
+
+test("a seller's purse gains exactly the coins the till pays out", () => {
+  assert.deepEqual(purseAfter("sell", { gp: 2 }, 150, { gp: 3, sp: 9 }, CURRENCIES), { gp: 3, sp: 5 });
+});
+
+test("a bottomless till (null) pays and changes anything", () => {
+  assert.deepEqual(purseAfter("sell", {}, 1250, null, CURRENCIES), { gp: 12, sp: 5 });
+  assert.deepEqual(purseAfter("buy", { pp: 1 }, 50, null, CURRENCIES), { pp: 0, gp: 9, sp: 5 });
+});
+
+test("a bill the engine would refuse has no purse after", () => {
+  assert.equal(purseAfter("buy", { gp: 1 }, 200, { gp: 100 }, CURRENCIES), null);
+  assert.equal(purseAfter("buy", { gp: 1 }, 50, {}, CURRENCIES), null);
+  assert.equal(purseAfter("sell", {}, 200, { gp: 1 }, CURRENCIES), null);
 });
