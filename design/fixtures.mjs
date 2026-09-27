@@ -111,15 +111,25 @@ export async function setup() {
     "system.currency": { pp: 0, gp: 3, ep: 0, sp: 4, cp: 0 } });
   await Actor.create({ name: "Whisker", type: "npc", ownership: ownedBy(p1), "system.details.type.value": "beast" });
 
+  // A shop's arrival roll (#104) isn't a restock, so it notes no restockedAt (#152): wait for its shelf
+  // to be drawn and to settle, or the edits below race the draw. The opens stamp the frames' restocks.
+  const rolled = async (actor, what) => {
+    const drawnHere = () => actor.items.filter(i => i.flags[MP]?.drawn != null && i.flags[MP].drawn === actor.flags[MP]?.shelf).length;
+    let seen = -1, steady = 0;
+    for (let t = 0; t < 60 && steady < 3; t++) {
+      await new Promise(r => setTimeout(r, 500));
+      const now = drawnHere();
+      steady = now > 0 && now === seen ? steady + 1 : 0;
+      seen = now;
+    }
+    if (steady < 3) throw new Error(`${what}'s arrival roll never finished`);
+  };
   const name = "Armourer & Blacksmith";
   for (const a of game.actors.filter(a => a.name === name)) await a.delete();
   const pack = game.packs.get(`${MP}.merchants`);
   const entry = (await pack.getIndex()).getName("Armourer & Blacksmiths (Town)");
   const shop = await game.actors.importFromCompendium(pack, entry._id);
-  // The arrival restock notes its end last (restockedAt): wait for all of it, not only the adoption,
-  // or the edits below race the draw. It also lights the frames' "Fresh stock today".
-  for (let t = 0; t < 60 && shop.flags[MP]?.restockedAt == null; t++) await new Promise(r => setTimeout(r, 500));
-  if (shop.flags[MP]?.restockedAt == null) throw new Error("the shop's arrival restock never finished");
+  await rolled(shop, "the shop");
 
   const rows = { Longsword: [7], Handaxe: [11], Javelin: [21, true], Breastplate: [1, true], "Chain Mail": [4], Shield: [0], "Smith's Tools": [4] };
   const drawn = shop.items.filter(i => i.flags[MP]?.drawn);
@@ -130,7 +140,7 @@ export async function setup() {
   // The frame's rows first, in its order (the window lists the shelf by sort), then the gear.
   const order = Object.keys(rows);
   await shop.updateEmbeddedDocuments("Item", shop.items.filter(i => i.flags[MP]?.drawn).map(i => (i.name in rows
-    ? { _id: i.id, sort: (order.indexOf(i.name) + 1) * 100, "system.quantity": rows[i.name][0], [`flags.${MP}.new`]: rows[i.name][1] === true }
+    ? { _id: i.id, sort: (order.indexOf(i.name) + 1) * 100, "system.quantity": rows[i.name][0], [`flags.${MP}.newAt`]: null }
     : { _id: i.id, sort: 10_000 + i.sort })));
 
   await shop.update({
@@ -149,8 +159,7 @@ export async function setup() {
   const innName = "Inn & Tavern";
   for (const a of game.actors.filter(a => a.name === innName)) await a.delete();
   const inn = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName("Inn & Tavern (Town)")._id);
-  for (let t = 0; t < 60 && inn.flags[MP]?.restockedAt == null; t++) await new Promise(r => setTimeout(r, 500));
-  if (inn.flags[MP]?.restockedAt == null) throw new Error("the inn's arrival restock never finished");
+  await rolled(inn, "the inn");
   const shown = { "Meal, Modest": [], "Meal, Comfortable": [], "Meal, Wealthy": [], "Inn Stay, Modest (per day)": [],
     "Inn Stay, Comfortable (per day)": [], "Ale (mug)": [17], "Bread (loaf)": [20], "Cheese (wedge)": [19] };
   const innOrder = Object.keys(shown);
@@ -214,13 +223,27 @@ const withDeals = `
     { actor: game.actors.getName("Tomas").uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
   ] });`;
 const withoutDeals = `if (shop.flags["merchant-presets"]?.shop?.deals?.length) await shop.update({ "flags.merchant-presets.shop.deals": [] });`;
-/** Whether Javelin and Breastplate wear "New": the Storefront frames draw it; the Closed ones, before the day's opening, don't. */
-const newBadges = on => `await shop.updateEmbeddedDocuments("Item", ["Javelin", "Breastplate"].map(name => ({ _id: shop.items.getName(name).id, "flags.merchant-presets.new": ${on} })));`;
-/** The Storefront frames draw "Fresh stock today"; the Settings frames a shop last restocked the day before. */
-const restocked = daysAgo => `await shop.update({ "flags.merchant-presets.restockedAt": game.time.worldTime - ${daysAgo} * 86400 });`;
+/** 7:00, the smith's opening, `daysAgo` days back: when the frames' restocks ran (design aaJcp: "Last restocked 14 Mirtul at 7:00"). */
+const opening = daysAgo => `(Math.floor(game.time.worldTime / 86400) - ${daysAgo}) * 86400 + 7 * 3600`;
+/**
+ * Whether Javelin and Breastplate wear "New": this morning's restock brought them back (#152). The
+ * Storefront frames draw it; the Closed ones, before the day's opening, don't.
+ */
+const newBadges = on => `await shop.updateEmbeddedDocuments("Item", ["Javelin", "Breastplate"].map(name => ({ _id: shop.items.getName(name).id, "flags.merchant-presets.newAt": ${on ? opening(0) : "null"} })));`;
+/** The Storefront frames draw "Fresh stock today": restocked at this morning's opening; the Settings frames the day before. */
+const restocked = daysAgo => `await shop.update({ "flags.merchant-presets.restockedAt": ${opening(daysAgo)} });`;
 
 const frame = (name, theme, width, height, user = "Gamemaster", open = null, board = {}) => ({ name, theme, width, height, user, open, ...board });
-const settings = openShop({ tab: "settings", before: withDeals + restocked(1) });
+const settings = openShop({ tab: "settings", before: withDeals + restocked(1) + `shop.sheet._settingsSection = "terms";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="terms"]').click();` });
+/**
+ * The Restock frames: Settings jumped to Restock at 10:00 on the 14th. This morning's 7:00 restock
+ * brought Javelin and Breastplate back (New); it restocks every 7 days, next on the 21st at 7:00.
+ */
+const restockTab = openShop({ tab: "settings", autoRestock: true,
+  before: withoutDeals + restocked(0) + newBadges(true) + `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: ${opening(0)}, dueAt: ${opening(-7)}, every: 7 } });
+  shop.sheet._settingsSection = "restock";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="restock"]').click();` });
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
@@ -254,14 +277,14 @@ export const FRAMES = {
   BZh1r: frame("02 Sell — Dark", "dark", 920, 680, "Gamemaster", sell),
   v8ap9: frame("03 Settings (GM) — Light", "light", 920, 760, "Gamemaster", settings),
   dpdpS: frame("03 Settings (GM) — Dark", "dark", 920, 760, "Gamemaster", settings),
-  aaJcp: frame("03 Settings (GM) · Restock — Light", "light", 920, 760),
-  dVt0a: frame("03 Settings (GM) · Restock — Dark", "dark", 920, 760),
+  aaJcp: frame("03 Settings (GM) · Restock — Light", "light", 920, 760, "Gamemaster", restockTab),
+  dVt0a: frame("03 Settings (GM) · Restock — Dark", "dark", 920, 760, "Gamemaster", restockTab),
   x9IX9: frame("04 Closed — Light", "light", 920, 680, "Gamemaster", closed),
   nnHdO: frame("04 Closed — Dark", "dark", 920, 680, "Gamemaster", closed),
   mRg3y: frame("05 Inn — Light", "light", 920, 680, "Gamemaster", inn),
   lvVv2: frame("05 Inn — Dark", "dark", 920, 680, "Gamemaster", inn),
-  r7HIUl: frame("06 Storefront — Narrow (Light)", "light", 480, 780),
-  grlFX: frame("06 Storefront — Narrow (Dark)", "dark", 480, 780),
+  r7HIUl: frame("06 Storefront — Narrow (Light)", "light", 480, 780, "Gamemaster", storefront),
+  grlFX: frame("06 Storefront — Narrow (Dark)", "dark", 480, 780, "Gamemaster", storefront),
   "n9I5aQ:gm": frame("07 Buyer Picker — Light · GM", "light", 656, 470, "Gamemaster", picker, { export: "n9I5aQ", part: "YA8h7" }),
   "n9I5aQ:player": frame("07 Buyer Picker — Light · Player", "light", 656, 470, "P1", picker, { export: "n9I5aQ", part: "V6UiM" }),
   "JNHkU:gm": frame("07 Buyer Picker — Dark · GM", "dark", 656, 470, "Gamemaster", picker, { export: "JNHkU", part: "YA8h7" }),

@@ -463,6 +463,48 @@ export function isNewGood(flags, shelf, now, hours, days) {
   return here && isFresh(own.newAt, now, hours, days);
 }
 
+/* -------------------------------------------------------------- Restock section (design aaJcp) */
+
+/**
+ * How many days of the world's calendar from `now` to `dueAt`: "Next: 21 Mirtul at 7:00, in 7
+ * days" counts calendar days, so a restock due at 7:00 tomorrow is a day off at 10:00 today.
+ *
+ * @param {number} now
+ * @param {number} dueAt
+ * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
+ */
+export function daysUntil(now, dueAt, days) {
+  const perDay = secondsPerDay(days);
+  return Math.floor(dueAt / perDay) - Math.floor(now / perDay);
+}
+
+/**
+ * The Restock section's preset line: the preset's tier and schedule, then each other tier of the
+ * same merchant that restocks on another schedule ("Town: 7 days (Village: 14 days)").
+ *
+ * @param {{tier: string|null, every: string}} preset  the schedule as a label
+ * @param {{tier: string, every: string}[]} tiers      every tier of the merchant, the preset's included
+ * @returns {{tier: string|null, every: string, others: {tier: string, every: string}[]}}
+ */
+export function presetSchedule(preset, tiers) {
+  return { ...preset, others: tiers.filter(t => t.tier !== preset.tier && t.every !== preset.every) };
+}
+
+/**
+ * The quantity formula most of a stock table's goods roll (`restock.quantities`), for the table
+ * card's "quantity rolled (e.g. 2d6+4)"; null when every good comes one at a time.
+ *
+ * @param {Record<string, string>} quantities
+ * @returns {string|null}
+ */
+export function commonFormula(quantities) {
+  const counts = new Map();
+  for (const f of Object.values(quantities ?? {})) if (String(f).trim() !== "1") counts.set(f, (counts.get(f) ?? 0) + 1);
+  let best = null;
+  for (const [f, n] of counts) if (best === null || n > counts.get(best)) best = f;
+  return best;
+}
+
 /* -------------------------------------------------------------- basket */
 
 /**

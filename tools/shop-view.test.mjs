@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -666,6 +666,28 @@ test("no restock yet, or a clock wound back before it, isn't fresh", () => {
   assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
   assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);
   assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS), false);
+});
+
+/* -------------------------------------------------------------- Restock section (design aaJcp) */
+
+test("the next restock counts whole calendar days from today, not 24-hour spans", () => {
+  const now = 14 * DAY + H(10);
+  assert.equal(daysUntil(now, 21 * DAY + H(7), DAYS), 7);
+  assert.equal(daysUntil(now, 15 * DAY + H(7), DAYS), 1);
+  assert.equal(daysUntil(now, 14 * DAY + H(18), DAYS), 0);
+});
+
+test("the preset line names the preset's tier and only the tiers that restock on another schedule", () => {
+  const line = presetSchedule({ tier: "Town", every: "7 days" },
+    [{ tier: "City", every: "7 days" }, { tier: "Town", every: "7 days" }, { tier: "Village", every: "14 days" }]);
+  assert.deepEqual(line, { tier: "Town", every: "7 days", others: [{ tier: "Village", every: "14 days" }] });
+  assert.deepEqual(presetSchedule({ tier: null, every: "Daily" }, []), { tier: null, every: "Daily", others: [] });
+});
+
+test("a stock table's quantities read as the formula most of its goods roll, or none when all are one", () => {
+  assert.equal(commonFormula({ a: "2d6+4", b: "2d6+4", c: "1d4" }), "2d6+4");
+  assert.equal(commonFormula({ a: "1", b: "1" }), null);
+  assert.equal(commonFormula({}), null);
 });
 
 test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {

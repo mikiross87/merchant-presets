@@ -10,7 +10,10 @@
 {{#*inline "previewRow"}}
   <div class="mp-preview-row" data-pen="Preview {{name}}">
     <img class="mp-preview-icon" data-pen="Item Icon" src="{{img}}" alt="" />
-    <span class="mp-preview-text" data-pen="Text"><span class="mp-name-line" data-pen="Name line"><span data-pen="Name">{{name}}</span></span></span>
+    <span class="mp-preview-text" data-pen="Text">
+      <span class="mp-name-line" data-pen="Name line"><span data-pen="Name">{{name}}</span>{{#if isNew}}<span class="mp-new-badge" data-pen="New badge"><span data-pen="New badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span></span>{{/if}}</span>
+      {{#if showStock}}<span class="mp-meta" data-pen="Meta">{{meta}}</span>{{/if}}
+    </span>
     <span class="mp-price-block" data-pen="Price Block">
       {{#if listText}}<span class="mp-list-price" data-pen="List Price">{{listText}}</span>{{/if}}
       <span class="mp-price-line" data-pen="Price Line">
@@ -31,6 +34,17 @@
     <em class="mp-plain" data-pen="{{label}} plain">{{rate.word}}</em>
     {{> check label=(localize "MERCHANT_PRESETS.Shop.Settings.Terms.WorldDefault") op="rateDefault" side=side checked=rate.worldDefault}}
   </div>
+{{/inline}}
+{{!-- One of the two things a restock can do (design "Option <title>"): a radio card. --}}
+{{#*inline "restockOption"}}
+  <label class="mp-option" data-pen="Option {{title}}">
+    <input type="radio" class="mp-visually-hidden" name="restock-mode" value="{{value}}" data-op="mode" {{checked checked}} />
+    <span class="mp-radio" data-pen="{{title}} radio"><span class="mp-radio-dot" data-pen="Dot"></span></span>
+    <span class="mp-option-text" data-pen="{{title}} text">
+      <b data-pen="{{title}} title">{{title}}</b>
+      <span data-pen="{{title}} desc">{{desc}}</span>
+    </span>
+  </label>
 {{/inline}}
 {{#*inline "check"}}
   <label class="mp-check" data-pen="Check {{label}}">
@@ -163,72 +177,84 @@
     {{/if}}
   </section>
 
+  {{!-- The last section, on a page-tall wrapper: jumped to, it scrolls to the top (design aaJcp). --}}
+  <div class="mp-form-last">
   <section class="settings-section" data-section="restock" data-pen="Section Restock">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.restock")}}
-    <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
+    <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
     {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
     {{#if restock.table}}
-      <button type="button" class="settings-table" data-action="openTable">
-        {{mpIcon "dices"}} <b>{{restock.table.name}}</b> {{mpIcon "external-link"}}
+      <button type="button" class="mp-table-card" data-action="openTable" data-pen="Table card">
+        {{mpIcon "dices" pen="Table icon"}}
+        <span class="mp-table-text" data-pen="Table text">
+          <b data-pen="Table name">{{restock.table.name}}</b>
+          <span data-pen="Table meta">{{restock.table.meta}}</span>
+        </span>
+        {{mpIcon "external-link" pen="Table open"}}
       </button>
     {{else}}
       <p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTable"}}</p>
     {{/if}}
-    <div class="settings-rate">
-      <span>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Restocks"}}</span>
-      <b>{{restock.current}}</b>
-      <em>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WhenOpens"}}</em>
-    </div>
-    <div class="settings-chips">
-      {{#each restock.chips}}
-        <button type="button" class="settings-chip {{#if active}}active{{/if}}" data-action="setEvery" data-every="{{id}}">{{label}}</button>
-      {{/each}}
-    </div>
-    {{#if restock.showFormula}}
-      <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
-        <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" /></label>
-    {{/if}}
-    {{#if restock.presetEvery}}
-      <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Preset" every=restock.presetEvery}}</p>
-    {{/if}}
-    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.What"}}</h3>
-    <label class="settings-radio">
-      <input type="radio" name="restock-mode" value="reroll" data-op="mode" {{checked restock.reroll}} />
-      <span><b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Reroll"}}</b>
-        <span class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.RerollHint"}}</span></span>
-    </label>
-    <label class="settings-radio">
-      <input type="radio" name="restock-mode" value="topup" data-op="mode" {{checked (not restock.reroll)}} />
-      <span><b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Topup"}}</b>
-        <span class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.TopupHint"}}</span></span>
-    </label>
-    {{#if restock.purseGp}}
-      <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Till" gp=restock.purseGp}}</p>
-    {{/if}}
-    <div class="settings-restock-now">
-      <div>
-        {{#if restock.last}}<b>{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Last" date=restock.last}}</b>{{/if}}
-        {{#if restock.next}}<span class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Next" date=restock.next}}</span>{{/if}}
+    <div class="mp-schedule" data-pen="Schedule">
+      <div class="mp-schedule-row" data-pen="Schedule row">
+        <span class="mp-rate-label" data-pen="Schedule label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Restocks"}}</span>
+        <label class="mp-select" data-pen="Schedule select">
+          <span class="mp-select-value" data-pen="Schedule value">{{restock.current}}</span>{{mpIcon "chevron-down" pen="Schedule chevron"}}
+          <select class="mp-select-native" data-op="everyChoice" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Restocks'}}">
+            {{#each restock.chips}}<option value="{{id}}" {{#if active}}selected{{/if}}>{{label}}</option>{{/each}}
+          </select>
+        </label>
+        <em class="mp-plain" data-pen="Schedule when">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WhenOpens"}}</em>
       </div>
-      <button type="button" class="seal-button" data-action="restockNow" {{disabled (not restock.table)}}>
-        {{mpIcon "refresh-cw"}} {{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Now"}}
+      <div class="mp-pills" data-pen="Schedule pills">
+        {{#each restock.chips}}
+          <button type="button" class="mp-pill {{#if active}}active{{/if}}" data-action="setEvery" data-every="{{id}}" data-pen="Pill {{label}}"><span data-pen="{{label}} text">{{label}}</span></button>
+        {{/each}}
+      </div>
+      {{#if restock.showFormula}}
+        <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
+          <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" /></label>
+      {{/if}}
+      {{#if restock.presetLine}}<p class="mp-hint" data-pen="Schedule default">{{restock.presetLine}}</p>{{/if}}
+    </div>
+    <span class="mp-how" data-pen="How label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.What"}}</span>
+    {{> restockOption value="reroll" checked=restock.reroll title=(localize "MERCHANT_PRESETS.Shop.Settings.Restock.Reroll") desc=(localize "MERCHANT_PRESETS.Shop.Settings.Restock.RerollHint")}}
+    {{> restockOption value="topup" checked=(not restock.reroll) title=(localize "MERCHANT_PRESETS.Shop.Settings.Restock.Topup") desc=(localize "MERCHANT_PRESETS.Shop.Settings.Restock.TopupHint")}}
+    {{#if restock.purseGp}}
+      <p class="mp-hint mp-till-note" data-pen="Till note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Till" gp=restock.purseGp}}</p>
+    {{/if}}
+    <div class="mp-last-row" data-pen="Last row">
+      <div class="mp-last-text" data-pen="Last text">
+        {{#if restock.last}}<span class="mp-last-line" data-pen="Last line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Last" date=restock.last}}</span>{{/if}}
+        {{#if restock.next}}<span class="mp-hint" data-pen="Next line">{{restock.next}}</span>{{/if}}
+      </div>
+      <button type="button" class="mp-restock-now" data-action="restockNow" data-pen="Restock now" {{disabled (not restock.table)}}>
+        {{mpIcon "refresh-cw" pen="Icon"}}<span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Now"}}</span>
       </button>
     </div>
   </section>
+  </div>
 </div>
 
 <aside class="mp-players-see settings-preview" data-pen="Players See">
   <div class="mp-preview-head" data-pen="Preview head">
     {{mpIcon "eye" pen="Eye"}}<h2 class="mp-section-title" data-pen="Preview title">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Title"}}</h2>
   </div>
-  <span class="mp-kicker" data-pen="Everyone label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Everyone"}}</span>
-  <span class="mp-chip" data-pen="Chip {{preview.chip}}">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{preview.chip}}</span></span>
-  {{#if preview.item}}{{> previewRow preview.item}}{{/if}}
-  {{#each preview.deals}}
-    <hr class="mp-divider" data-pen="Preview divider" />
-    <span class="mp-kicker" data-pen="{{name}} label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Only" name=name}}</span>
-    <span class="mp-chip" data-pen="Chip {{chip}}">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{chip}}</span></span>
-    {{#if item}}{{> previewRow item}}{{/if}}
-  {{/each}}
-  <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Note"}}</p>
+  {{#if preview.restock}}
+    <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>
+    <span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
+    {{#each preview.restock.rows}}{{> previewRow this showStock=true}}{{/each}}
+    <p class="mp-preview-foot" data-pen="Preview foot">{{preview.restock.note}}</p>
+  {{else}}
+    <span class="mp-kicker" data-pen="Everyone label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Everyone"}}</span>
+    <span class="mp-chip" data-pen="Chip {{preview.chip}}">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{preview.chip}}</span></span>
+    {{#if preview.item}}{{> previewRow preview.item}}{{/if}}
+    {{#each preview.deals}}
+      <hr class="mp-divider" data-pen="Preview divider" />
+      <span class="mp-kicker" data-pen="{{name}} label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Only" name=name}}</span>
+      <span class="mp-chip" data-pen="Chip {{chip}}">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{chip}}</span></span>
+      {{#if item}}{{> previewRow item}}{{/if}}
+    {{/each}}
+    <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Note"}}</p>
+  {{/if}}
 </aside>

@@ -135,10 +135,10 @@
         "TillDrops": "The till drops to {amount}",
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
-      "Open": "Show the whole bill",
+        "Open": "Show the whole bill",
         "OfList": "({ratio} of {list})",
-      "Feeds": "Feeds {name}",
-      "FromTonight": "From tonight",
+        "Feeds": "Feeds {name}",
+        "FromTonight": "From tonight",
         "Fewer": "One fewer",
         "More": "One more",
         "ExactChange": "Exact change is counted from your coins."
@@ -302,7 +302,7 @@
           "Dice": "Dice…",
           "Never": "Never",
           "Formula": "Days, as a dice formula",
-          "Preset": "Preset default: {every}.",
+          "Preset": "Preset default: {every}. Days follow the world calendar.",
           "What": "What a restock does",
           "Reroll": "Re-roll the shelf",
           "RerollHint": "Everything the table drew is drawn again at fresh quantities. Goods you added by hand stay.",
@@ -310,10 +310,18 @@
           "TopupHint": "Only drawn goods that sold out come back. Goods you added by hand stay.",
           "Till": "Either way, the till is refilled to {gp} gp.",
           "Last": "Last restocked {date}",
-          "Next": "Next: {date}",
+          "Next": "Next: {date}, {when}",
           "Now": "Restock now",
           "Failed": "The shop couldn't restock: its stock table, or some of the goods on it, couldn't be found. The console of the GM tab that runs trades says which.",
-          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment."
+          "NoAnswer": "No answer yet from the GM tab that runs trades. The restock may be waiting behind others and still run; check the shelf in a moment.",
+          "PresetTier": "Preset default for a {tier} shop: {every}{others}. Days follow the world calendar.",
+          "PresetOther": "{tier}: {every}",
+          "TableMeta": "{count} goods · every good stocked, quantity rolled (e.g. {formula})",
+          "TableMetaOne": "{count} goods · every good stocked, one of each",
+          "At": "{date} at {time}",
+          "InDays": "in {count} days",
+          "Tomorrow": "tomorrow",
+          "Today": "later today"
         },
         "Reset": {
           "Label": "Reset to preset",
@@ -325,7 +333,11 @@
           "Title": "Players see",
           "Everyone": "Everyone",
           "Note": "Open shop windows refresh for everyone when a change is saved.",
-          "Only": "Only {name}"
+          "Only": "Only {name}",
+          "AfterRestock": "After a restock, until closing",
+          "AfterRestockDay": "After a restock, until the day ends",
+          "RestockNote": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the shop closes.",
+          "RestockNoteDay": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the day ends."
         }
       },
       "Deal": {

@@ -898,6 +898,9 @@
 
 /* One scrolling page; the nav is its way around, so no scrollbar takes the design's width. */
 .shop-sheet .mp-form {
+  /* A size container, so the last section's wrapper can be a whole page tall and scroll to the top (design aaJcp). */
+  container-type: size;
+  scroll-padding-top: 16px;
   flex: 1 1 0;
   min-width: 0;
   display: flex;
@@ -1115,40 +1118,141 @@
 .shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
 
-.shop-sheet .settings-table {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--mp-line);
-  border-radius: 0.4rem;
-}
-.shop-sheet .settings-table b { flex: 1; }
-.shop-sheet .settings-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-.shop-sheet .settings-chip {
-  width: auto;
-  color: var(--mp-text);
-  background: none;
-  border: 1px solid var(--mp-line);
-}
-.shop-sheet .settings-chip.active { background: var(--mp-accent); border-color: var(--mp-accent); color: var(--mp-on-dark); }
 .shop-sheet .settings-formula { width: 8rem; }
 
-.shop-sheet .settings-radio {
+/* Restock (design aaJcp). */
+.shop-sheet .mp-form-last { flex: none; display: flex; flex-direction: column; min-height: 100cqh; }
+.shop-sheet .mp-table-card {
+  text-transform: none;
   display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--mp-line);
-  border-radius: 0.4rem;
-  font-size: 0.85rem;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  text-align: left;
+  cursor: pointer;
 }
-.shop-sheet .settings-radio:has(input:checked) { border-color: var(--mp-accent); }
-.shop-sheet .settings-radio > span { display: flex; flex-direction: column; }
-.shop-sheet .settings-restock-now { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.85rem; }
-.shop-sheet .settings-restock-now > div { display: flex; flex-direction: column; }
-.shop-sheet .settings-restock-now .seal-button { width: auto; padding: 0.4rem 1rem; }
+.shop-sheet .mp-table-card > .mp-icon:first-child { width: 18px; height: 18px; color: var(--mp-gold); }
+.shop-sheet .mp-table-card > .mp-icon:last-child { width: 14px; height: 14px; color: var(--mp-muted); }
+.shop-sheet .mp-table-text { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+.shop-sheet .mp-table-text b { font: 700 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-table-text span { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-schedule { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; align-self: stretch; }
+.shop-sheet .mp-schedule-row { display: flex; align-items: center; gap: 10px; align-self: stretch; }
+.shop-sheet .mp-select {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 150px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  cursor: pointer;
+}
+.shop-sheet .mp-select:focus-within { outline-color: var(--mp-accent); }
+.shop-sheet .mp-select-value { flex: 1 1 0; font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-select .mp-icon { width: 13px; height: 13px; color: var(--mp-muted); }
+.shop-sheet .mp-select-native { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.shop-sheet .mp-pills { display: flex; align-items: center; gap: 6px; padding-left: 90px; }
+.shop-sheet .mp-pill {
+  text-transform: none;
+  flex: none;
+  display: flex;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 3px 9px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  outline: 1px solid var(--mp-line);
+  font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif;
+  white-space: nowrap;
+  color: var(--mp-muted);
+  cursor: pointer;
+}
+.shop-sheet .mp-pill.active { background: var(--mp-accent); outline-color: var(--mp-accent); font-weight: 700; color: #ffffff; }
+.shop-sheet .mp-schedule > .mp-hint { align-self: stretch; }
+.shop-sheet .mp-how { align-self: flex-start; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-option {
+  display: flex;
+  gap: 10px;
+  box-sizing: border-box;
+  align-self: stretch;
+  padding: 8px 10px;
+  border-radius: 4px;
+  outline: 1px solid var(--mp-line);
+  cursor: pointer;
+}
+.shop-sheet .mp-option:has(input:checked) { background: var(--mp-surface); outline-color: var(--mp-gold); }
+.shop-sheet .mp-radio {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  outline: 2px solid var(--mp-line);
+  outline-offset: -1px;
+}
+.shop-sheet .mp-option input:checked + .mp-radio { outline-color: var(--mp-accent); }
+.shop-sheet .mp-option input:focus-visible + .mp-radio { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.shop-sheet .mp-radio-dot { display: none; width: 8px; height: 8px; border-radius: 50%; background: var(--mp-accent); }
+.shop-sheet .mp-option input:checked + .mp-radio .mp-radio-dot { display: block; }
+.shop-sheet .mp-option-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-sheet .mp-option-text span { align-self: stretch; }
+.shop-sheet .mp-option-text b { font: 700 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-option-text span { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-last-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  align-self: stretch;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: var(--mp-inset);
+}
+.shop-sheet .mp-last-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-sheet .mp-till-note { align-self: flex-start; }
+.shop-sheet .mp-last-line { font: 400 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-last-text .mp-hint { white-space: nowrap; }
+.shop-sheet .mp-restock-now {
+  text-transform: none;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--mp-seal);
+  outline: 1px solid var(--mp-gold);
+  font: 500 14px/16px Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+  color: #ffffff;
+  cursor: pointer;
+}
+.shop-sheet .mp-restock-now .mp-icon { width: 16px; height: 16px; }
+.shop-sheet .mp-restock-now:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* -------------------------------------------------------------- motion */
 

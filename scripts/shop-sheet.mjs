@@ -26,7 +26,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -1388,17 +1388,57 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * it can't be found or read.
    */
   async #presetShop(shop) {
+    return (await this.#preset(shop))?.shop ?? null;
+  }
+
+  /** The merchant this shop was made from, and its shop config: null when it has none, or it's gone or broken. */
+  async #preset(shop) {
     const uuid = shop.source ?? this.document._stats?.compendiumSource;
     if (!uuid) return null;
     const merchant = await Promise.resolve(fromUuid(uuid)).catch(() => null);
     const preset = merchant?.flags?.[MODULE]?.shop;
-    return validateShop(preset).ok ? shopFrom(preset) : null;
+    return validateShop(preset).ok ? { merchant, shop: shopFrom(preset) } : null;
+  }
+
+  /**
+   * The Restock section's preset line (design aaJcp): "Preset default for a Town shop: 7 days
+   * (Village: 14 days)". The other tiers are the same merchant's in its compendium, read off the
+   * pack's index; a preset whose name carries no tier reads "Preset default: 7 days".
+   */
+  async #presetLine(merchant, preset, pillLabel) {
+    const label = restock => pillLabel(restock?.onOpen === false ? "never" : restock?.every ?? "never");
+    const { title, tierFromName: tier } = titleParts(merchant.name);
+    let tiers = [];
+    const pack = merchant.pack ? game.packs?.get(merchant.pack) : null;
+    if (tier && pack) {
+      try {
+        const index = await pack.getIndex({ fields: [`flags.${MODULE}.shop.restock`] });
+        tiers = [...index].map(e => ({ ...titleParts(e.name), restock: foundry.utils.getProperty(e, `flags.${MODULE}.shop.restock`) }))
+          .filter(e => e.title === title && e.tierFromName && e.restock)
+          .map(e => ({ tier: e.tierFromName, every: label(e.restock) }));
+      } catch { /* the line names the preset's own schedule alone */ }
+    }
+    const line = presetSchedule({ tier, every: label(preset.restock) }, tiers);
+    const key = "MERCHANT_PRESETS.Shop.Settings.Restock";
+    const others = line.others.map(o => game.i18n.localize(`${key}.PresetOther`, o)).join(", ");
+    return tier
+      ? game.i18n.localize(`${key}.PresetTier`, { tier, every: line.every, others: others ? ` (${others})` : "" })
+      : game.i18n.localize(`${key}.Preset`, { every: line.every });
+  }
+
+  /** "14 Mirtul at 7:00" (design aaJcp): the day, its month and the time of day. */
+  #dayMonthTime(time) {
+    try {
+      const c = game.time.calendar.timeToComponents(time);
+      return game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.At", { date: this.#dayMonth(time), time: this.#formatTime({ hour: c.hour, minute: c.minute }) });
+    } catch { return this.#dateLabel(time); }
   }
 
   /** The GM's Settings tab: `shop` is the shop's own config, `world` the world's rates. */
   async #settingsContext(actor, shop, world, header) {
     const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.${key}`);
-    const preset = await this.#presetShop(shop);
+    const presetOf = await this.#preset(shop);
+    const preset = presetOf?.shop ?? null;
     const typeLabel = type => game.i18n.localize(CONFIG.Item.typeLabels?.[type] ?? type);
     const effective = effectiveRates(world, shop.terms);
     const rate = side => ({
@@ -1410,10 +1450,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
     const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
     const { chip, formula } = everyChoice(shop.restock);
+    // As the schedule's pills name it ("7 days"): the preset line (design aaJcp).
+    const pillLabel = every => (every === "never" ? i18n("Restock.Never") : every === 1 ? i18n("Restock.Daily")
+      : Number.isInteger(every) ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: every }) : String(every));
     const everyLabel = every => (every === "never" ? i18n("Restock.Never")
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
     const schedule = actor.flags?.[MODULE]?.schedule;
+    // Whatever drew the shelf last, Restock now included; the schedule's own record before #145.
+    const lastRestock = actor.flags?.[MODULE]?.restockedAt ?? schedule?.lastRestock ?? null;
     // Players the GM gave their own level: the switch sets only the default, so they keep it.
     const visitOthers = Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
       const user = id !== "default" && game.users?.get(id);
@@ -1472,7 +1517,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         worldOff: !game.settings.get(MODULE, "tradingHours")
       },
       restock: {
-        table: table ? { name: table.name, uuid: table.uuid } : null,
+        table: table ? { name: table.name, uuid: table.uuid, meta: this.#tableMeta(table, shop) } : null,
         chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
           // "Dice…" just picked, no formula saved yet: it's the one lit.
           id, active: this._everyDice ? id === "dice" : id === chip,
@@ -1482,11 +1527,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         showFormula: chip === "dice" || this._everyDice,
         formula,
         current: chip === "never" ? everyLabel("never") : everyLabel(shop.restock.every),
-        presetEvery: preset ? everyLabel(preset.restock.onOpen ? preset.restock.every : "never") : null,
+        presetLine: presetOf ? await this.#presetLine(presetOf.merchant, preset, pillLabel) : null,
         reroll: shop.restock.mode === "reroll",
         purseGp: actor.flags?.[MODULE]?.purse ?? null,
-        last: schedule?.lastRestock != null ? this.#dateLabel(schedule.lastRestock) : null,
-        next: this.#nextRestockAt(actor, shop) != null ? this.#dateLabel(schedule.dueAt) : null,
+        last: lastRestock != null ? this.#dayMonthTime(lastRestock) : null,
+        next: this.#nextRestockAt(actor, shop) != null ? this.#nextLine(schedule.dueAt) : null,
         autoOff: !game.settings.get(MODULE, "autoRestock")
       },
       deals: { list: shop.deals.map(d => this.#dealCard(d)) },
@@ -1494,6 +1539,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // What players see at these terms: the header chip and its worked example, then each deal in
       // force as its own character sees it.
       preview: {
+        // Jumped to Restock, Players see shows the shelf after one (design aaJcp).
+        restock: this._settingsSection === "restock" ? this.#restockPreview(actor, shop, world, currencies) : null,
         chip: header.termsChipBase,
         item: sample,
         example,
@@ -1534,6 +1581,57 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       };
     }
     return null;
+  }
+
+  /**
+   * Players see, jumped to Restock (design aaJcp): the Fresh chip, how long it lasts, and the goods
+   * marked New with the first good after them, each with its stock, as players see them after a
+   * restock (#152).
+   */
+  #restockPreview(actor, shop, world, currencies) {
+    const hours = closingHours(shop);
+    // New as the last restock left the shelf: the goods it brought back, and any still New then.
+    const at = actor.flags?.[MODULE]?.restockedAt ?? game.time.worldTime;
+    const shelf = actor.flags?.[MODULE]?.shelf;
+    const keepsHours = nextCloseAt(hours, game.time.worldTime, game.time.calendar.days) !== null;
+    const rates = { world, shopTerms: shop.terms, chipSellsAt: effectiveRates(world, shop.terms).sellsAt.rate };
+    const rows = [];
+    for (const { data, stock } of this.#shelf(actor)) {
+      const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock(), bundleOf);
+      if (row.unpriced || row.worthless) continue;
+      rows.push({
+        name: row.name, img: row.img, meta: stockWords(row.stock), tag: row.tag,
+        isNew: isNewGood(data.flags, shelf, at, hours, game.time.calendar.days),
+        priceCoins: coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
+        listText: listText(row.listPriceCp, currencies)
+      });
+    }
+    const shown = rows.filter(r => r.isNew).slice(0, 2);
+    const first = rows[0];
+    if (first && !shown.includes(first)) shown.push(first);
+    const key = "MERCHANT_PRESETS.Shop.Settings.Preview";
+    return {
+      label: game.i18n.localize(`${key}.${keepsHours ? "AfterRestock" : "AfterRestockDay"}`),
+      rows: shown,
+      note: game.i18n.localize(`${key}.${keepsHours ? "RestockNote" : "RestockNoteDay"}`)
+    };
+  }
+
+  /** The stock table card's second line (design aaJcp): how many goods it lists, and how many of each a restock stocks. */
+  #tableMeta(table, shop) {
+    const count = table.results?.size ?? table.results?.length ?? 0;
+    const formula = commonFormula(shop.restock.quantities);
+    const key = "MERCHANT_PRESETS.Shop.Settings.Restock";
+    return formula ? game.i18n.localize(`${key}.TableMeta`, { count, formula }) : game.i18n.localize(`${key}.TableMetaOne`, { count });
+  }
+
+  /** "Next: 21 Mirtul at 7:00, in 7 days" (design aaJcp). */
+  #nextLine(dueAt) {
+    const days = daysUntil(game.time.worldTime, dueAt, game.time.calendar.days);
+    const key = "MERCHANT_PRESETS.Shop.Settings.Restock";
+    const when = days <= 0 ? game.i18n.localize(`${key}.Today`) : days === 1 ? game.i18n.localize(`${key}.Tomorrow`)
+      : game.i18n.localize(`${key}.InDays`, { count: days });
+    return game.i18n.localize(`${key}.Next`, { date: this.#dayMonthTime(dueAt), when });
   }
 
   /** One deal as the Deals section lists it (design v8ap9): who, what it changes, the note and its end. */
@@ -1596,6 +1694,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       every: () => ({ op, every: value.trim() }),
       mode: () => ({ op, mode: value })
     }[op];
+    // The schedule's select (design aaJcp) offers what its pills do: the same choice.
+    if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
     if (change) await this.#edit(change, settingSelector(control));
   }
 
@@ -1647,9 +1747,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** Settings is one page (design v8ap9): the nav scrolls its section into view and marks it. */
   static #onSettingsSection(_event, target) {
+    const wasRestock = this._settingsSection === "restock";
     this._settingsSection = target.dataset.section;
     for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link === target);
-    this.element.querySelector(`.settings-section[data-section="${this._settingsSection}"]`)?.scrollIntoView({ block: "start" });
+    // Only the form scrolls: scrollIntoView would scroll the window's own content too, and take
+    // its bar and hero off the top.
+    const form = this.element.querySelector(".settings-body");
+    const section = form?.querySelector(`.settings-section[data-section="${this._settingsSection}"]`);
+    if (section) {
+      const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
+      form.scrollTop += section.getBoundingClientRect().top - form.getBoundingClientRect().top - pad;
+    }
+    // Players see shows the shelf after a restock while Restock is the section (design aaJcp).
+    if (wasRestock !== (this._settingsSection === "restock")) this.render({ parts: ["body"] });
   }
 
   static async #onSetEvery(_event, target) {

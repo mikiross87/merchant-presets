@@ -1116,7 +1116,9 @@ test("the next restock date shows only while it's the one the shop will keep (#1
   shop.flags["merchant-presets"].schedule = { lastRestock: 0, dueAt: 14 * 86400, every: 14 };
   assert.equal((await sheet._prepareContext({})).settings.restock.next, null);
   shop.flags["merchant-presets"].schedule.every = 1;
-  assert.equal((await sheet._prepareContext({})).settings.restock.next, `t${14 * 86400}`);
+  // "Next: <date> at <time>, in 14 days" (design aaJcp), on the date the schedule keeps.
+  const next = await withLabels(async () => (await sheet._prepareContext({})).settings.restock.next);
+  assert.equal(next, `Next(At(t${14 * 86400},12:00),InDays(14))`);
   // No table: it never restocks, so there's no next date.
   shop.flags["merchant-presets"].shop.restock.table = null;
   assert.equal((await sheet._prepareContext({})).settings.restock.next, null);
