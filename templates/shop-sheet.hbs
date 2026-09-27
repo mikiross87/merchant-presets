@@ -23,6 +23,28 @@
   {{/each}}
 {{/inline}}
 
+{{!-- Who the window trades as: in the hero's purse, or a narrow window's buyer strip. --}}
+{{#*inline "buyerRow"}}
+  <button type="button" class="mp-buyer-row buying-as-toggle" data-pen="Buyer row" popovertarget="{{appId}}-buyer-picker" style="anchor-name: --{{appId}}-buyer">
+    {{#if buyer}}<span class="mp-buyer-avatar" data-pen="Buyer avatar"><span data-pen="Buyer initial">{{buyerInitial}}</span></span>{{/if}}
+    <span class="mp-buyer-name" data-pen="Buyer name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
+    {{mpIcon "chevron-down" pen="Buyer chevron"}}
+  </button>
+  {{#if buyer}}
+    <div class="mp-purse-coins" data-pen="Purse Coins">{{> mpCoins coins=buyerPurse mode="metal"}}</div>
+  {{/if}}
+{{/inline}}
+{{!-- A narrow window's category dropdown (design r7HIUl): the chosen one, and a native select over it. --}}
+{{#*inline "categoryBar"}}
+  <div class="mp-category-bar mp-narrow-only" data-pen="Category bar">
+    <label class="mp-category-select" data-pen="Category select">
+      {{mpIcon active.icon pen="Cat icon"}}<span class="mp-cat-value" data-pen="Cat value">{{active.label}}</span><span class="mp-nav-count" data-pen="Cat count">{{active.count}}</span>{{mpIcon "chevron-down" pen="Cat chevron"}}
+      <select class="mp-category-native" data-kind="{{kind}}" aria-label="{{active.label}}">
+        {{#each categories}}<option value="{{id}}" {{#if active}}selected{{/if}}>{{label}} ({{count}})</option>{{/each}}
+      </select>
+    </label>
+  </div>
+{{/inline}}
 <header class="mp-hero" data-pen="Hero">
   <img class="mp-portrait" data-pen="Merchant Portrait" src="{{header.img}}" alt="" />
   <div class="mp-identity" data-pen="Identity">
@@ -34,8 +56,8 @@
     </div>
     {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
           this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}
-    <div class="mp-description" data-pen="Shop Description">{{{header.description}}}</div>
-    <div class="mp-chips" data-pen="Chips">
+    <div class="mp-description mp-wide-only" data-pen="Shop Description">{{{header.description}}}</div>
+    <div class="mp-chips mp-wide-only" data-pen="Chips">
       <span class="mp-hero-chip mp-open-chip {{#if header.open}}is-open{{else}}is-closed{{/if}}" data-pen="Open Chip">
         <span class="mp-dot" data-pen="Dot"></span><span data-pen="Open Label">{{header.openLabel}}</span>
       </span>
@@ -46,19 +68,24 @@
         {{mpIcon "scale" pen="Terms icon"}}<span data-pen="Terms Label">{{header.termsChip}}</span>{{mpIcon "chevron-down" pen="Terms chevron"}}
       </button>
     </div>
+    {{!-- A narrow window's short chips (design r7HIUl). --}}
+    <div class="mp-chips mp-narrow-only" data-pen="Chips">
+      <span class="mp-nchip {{#if header.open}}is-open{{else}}is-closed{{/if}}" data-pen="Chip {{#if header.shortOpen}}{{header.shortOpen}}{{else}}{{header.openLabel}}{{/if}}">
+        <span class="mp-dot" data-pen="Dot"></span><span data-pen="Chip text">{{#if header.shortOpen}}{{header.shortOpen}}{{else}}{{header.openLabel}}{{/if}}</span>
+      </span>
+      <span class="mp-nchip" data-pen="Chip {{header.tier}}">{{mpIcon header.kindIcon pen="Chip icon"}}<span data-pen="Chip text">{{header.tier}}</span></span>
+      <button type="button" class="mp-nchip" data-pen="Chip {{header.shortTerms}}" popovertarget="{{appId}}-terms-popover">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{header.shortTerms}}</span></button>
+    </div>
   </div>
-  <div class="mp-purse" data-pen="Purse">
+  {{#if header.descriptionText}}
+    <button type="button" class="mp-info mp-narrow-only" data-tooltip="{{header.descriptionText}}" aria-label="{{header.descriptionText}}">{{mpIcon "info" pen="Info"}}</button>
+  {{/if}}
+  <div class="mp-purse mp-wide-only" data-pen="Purse">
     <span class="mp-purse-label" data-pen="Purse Label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
-    <button type="button" class="mp-buyer-row buying-as-toggle" data-pen="Buyer row" popovertarget="{{appId}}-buyer-picker" style="anchor-name: --{{appId}}-buyer">
-      {{#if buyer}}<span class="mp-buyer-avatar" data-pen="Buyer avatar"><span data-pen="Buyer initial">{{buyerInitial}}</span></span>{{/if}}
-      <span class="mp-buyer-name" data-pen="Buyer name">{{#if buyer}}{{buyer.name}}{{else}}{{localize "MERCHANT_PRESETS.Shop.NoBuyer"}}{{/if}}</span>
-      {{mpIcon "chevron-down" pen="Buyer chevron"}}
-    </button>
-    {{#if buyer}}
-      <div class="mp-purse-coins" data-pen="Purse Coins">{{> mpCoins coins=buyerPurse mode="metal"}}</div>
-    {{/if}}
+    {{> buyerRow}}
   </div>
 </header>
+<div class="mp-buyer-strip mp-narrow-only" data-pen="Buyer strip">{{> buyerRow}}</div>
 
 {{!-- Anchored under its chip (the chip names the anchor, per window). --}}
 <div id="{{appId}}-terms-popover" popover class="mp-terms-popover" style="position-anchor: --{{appId}}-terms">
@@ -105,8 +132,9 @@
   {{/each}}
 </nav>
 
-<section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}}" data-group="primary" data-tab="buy" data-pen="Body">
-  <nav class="mp-categories" data-pen="Categories">{{> mpCategoryLinks categories=buy.categories kind="buy"}}</nav>
+<section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}} {{#if billOpen}}is-bill-open{{/if}}" data-group="primary" data-tab="buy" data-pen="Body">
+  {{> categoryBar categories=buy.categories active=buy.activeCategory kind="buy"}}
+  <nav class="mp-categories mp-wide-only" data-pen="Categories">{{> mpCategoryLinks categories=buy.categories kind="buy"}}</nav>
   <div class="mp-stock shop-stock {{#unless open}}is-closed{{/unless}}" data-pen="Stock">
     {{#each buy.sections}}
       <div class="mp-group" data-pen="Group {{pen}}">
@@ -120,14 +148,10 @@
               <span data-pen="Name" data-tooltip="{{name}}">{{name}}</span>
               {{#if isNew}}<span class="mp-new-badge" data-pen="New badge"><span data-pen="New badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span></span>{{/if}}
             </span>
-            <span class="mp-meta" data-pen="Meta">{{meta}}</span>
+            <span class="mp-meta mp-wide-only" data-pen="Meta">{{meta}}</span>
+            <span class="mp-meta mp-narrow-only" data-pen="Meta">{{metaShort}}</span>
           </div>
-          <span class="mp-stock-state is-{{stock.state}}" data-pen="Stock">
-            {{#if (eq stock.state "count")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Left" count=stock.count}}
-            {{else if (eq stock.state "last")}}{{localize "MERCHANT_PRESETS.Shop.Stock.Last"}}
-            {{else if (eq stock.state "soldOut")}}{{localize "MERCHANT_PRESETS.Shop.Stock.SoldOut"}}
-            {{else}}{{localize "MERCHANT_PRESETS.Shop.Stock.Always"}}{{/if}}
-          </span>
+          <span class="mp-stock-state mp-wide-only is-{{stock.state}}" data-pen="Stock">{{stockText}}</span>
           <div class="mp-price-block" data-pen="Price Block">
             {{#if (or unpriced worthless)}}
               <span class="price-worthless">{{localize "MERCHANT_PRESETS.Shop.Worthless"}}</span>
@@ -149,7 +173,7 @@
             <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
               aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
               {{#if (or unpriced worthless)}}disabled{{/if}}>
-              {{mpIcon "plus" pen="Add icon"}}
+              {{mpIcon "plus" pen="Add icon"}}{{#if inBasket}}{{mpIcon "check" pen="Add icon"}}{{/if}}
             </button>
           {{/if}}
         </div>
@@ -165,8 +189,9 @@
   {{/if}}
 </section>
 
-<section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}}" data-group="primary" data-tab="sell" data-pen="Body">
-  <nav class="mp-categories" data-pen="Categories">
+<section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}} {{#if billOpen}}is-bill-open{{/if}}" data-group="primary" data-tab="sell" data-pen="Body">
+  {{> categoryBar categories=sell.categories active=sell.activeCategory kind="sell"}}
+  <nav class="mp-categories mp-wide-only" data-pen="Categories">
     {{!-- The till caps what a sale can bring in; under unlimited merchant coin there is none to show. --}}
     {{#if sell.tillCapsSales}}
       <div class="mp-till-card" data-pen="Till Card">

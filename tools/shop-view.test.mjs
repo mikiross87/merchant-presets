@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts
 } from "../scripts/shop-view.mjs";
 
@@ -701,4 +701,19 @@ test("a drink reads as one, and ale or wine counts as water only where drinks hy
   assert.equal(itemMeta(drink("wine-fine"), LABELS, t, { hydrates: false }), "Drink");
   assert.equal(itemMeta(drink("water-pint"), LABELS, t, { hydrates: true }), "Drink");
   assert.equal(itemMeta(drink("bread"), LABELS, t, { hydrates: true }), "Food · 0.5 lb");
+});
+
+/* -------------------------------------------------------------- narrow rows and dock (design r7HIUl) */
+
+test("a narrow row's meta says what the good is, its weight and its stock, in one line", () => {
+  const lb = value => ({ weight: { value, units: "lb" } });
+  assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t, "7 left"), "Martial melee · 3 lb · 7 left");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t, "Last one"), "Medium armor · Last one");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t, "Sold out"), "+2 AC · Sold out");
+});
+
+test("the docked bill sums its lines up in one line", () => {
+  assert.equal(billSummary([{ name: "Longsword", quantity: 1 }, { name: "Handaxe", quantity: 2 }, { name: "Javelin", quantity: 10 }]),
+    "Longsword, 2 × Handaxe, 10 × Javelin");
+  assert.equal(billSummary([]), "");
 });

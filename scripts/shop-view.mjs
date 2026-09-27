@@ -313,6 +313,33 @@ export const DRINK_IDENTIFIERS = Object.freeze(["ale", "wine-common", "wine-fine
 /** The goods that read as drinks, not food, though dnd5e types them all as food: those, and water. */
 const DRINKS = [...DRINK_IDENTIFIERS, "water-pint"];
 
+/**
+ * A row's one line in a narrow window (design r7HIUl), where the stock column folds into it: what
+ * the good is, its weight (armour's goes unsaid, as in `itemMeta`), then its stock ("7 left").
+ * A shield reads by what it adds to AC.
+ *
+ * @param {object} item
+ * @param {object} labels  as `itemMeta` takes them
+ * @param {(key: string, data?: object) => string} t
+ * @param {string} stockText  the row's stock in words
+ */
+export function compactMeta(item, labels, t, stockText) {
+  const sys = item.system ?? {};
+  const type = sys.type?.value;
+  const weight = sys.weight?.value > 0
+    ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
+    : null;
+  const parts = item.type === "equipment" && type === "shield" ? [t("ShieldAc", { ac: sys.armor?.value ?? 0 })]
+    : item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "") ? [whatItIs(item, labels)]
+      : [whatItIs(item, labels), weight];
+  return [...parts, stockText].filter(Boolean).join(" · ");
+}
+
+/** The docked bill's one line (design r7HIUl): each line by name, with its count past one. */
+export function billSummary(lines) {
+  return lines.map(line => (line.quantity > 1 ? `${line.quantity} × ${line.name}` : line.name)).join(", ");
+}
+
 /** A CONFIG.DND5E entry's label: some are plain strings, some `{label}` objects. */
 const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
 

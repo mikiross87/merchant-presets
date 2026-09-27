@@ -7,6 +7,7 @@
       "About": "About",
       "AlwaysOpen": "Open",
       "OpenUntil": "Open · closes at {time}",
+      "OpenUntilShort": "Open until {time}",
       "Closed": {
         "Label": "Closed",
         "Title": "Shutters are down",
@@ -134,6 +135,7 @@
         "TillDrops": "The till drops to {amount}",
         "Empty": "Add goods to start a bill of sale.",
         "Each": "each",
+      "Open": "Show the whole bill",
         "OfList": "({ratio} of {list})",
       "Feeds": "Feeds {name}",
       "FromTonight": "From tonight",

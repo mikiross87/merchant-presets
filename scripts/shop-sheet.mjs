@@ -26,7 +26,7 @@ import { isOpen, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, shelfGroup, signedPercent, stepQuantity, titleParts
+  fitQuantity, isFreshToday, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -82,6 +82,15 @@ function serviceNote(kind, item, stock, buyer) {
   if (goodKind === "lodging") return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.FromTonight"), noteIcon: "lucide:bed-double" };
   return { note: null, noteIcon: null };
 }
+
+/** A row's stock in words: "7 left", "Last one", "Sold out", "Always". */
+function stockWords(stock) {
+  const key = { count: "Left", last: "Last", soldOut: "SoldOut" }[stock?.state] ?? "Always";
+  return game.i18n.localize(`MERCHANT_PRESETS.Shop.Stock.${key}`, { count: stock?.count });
+}
+
+/** "list" as a chip starts it: "List". */
+const sentence = text => (text ? text.charAt(0).toUpperCase() + text.slice(1) : text);
 
 /** The meta line's words (shop-view.mjs `itemMeta`/`sellMeta`). */
 const metaWords = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, data);
@@ -299,6 +308,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
       selectCategory: ShopSheet.#onSelectCategory,
+      toggleBill: ShopSheet.#onToggleBill,
       addLine: ShopSheet.#onAddLine,
       stepLine: ShopSheet.#onStepLine,
       pickBuyer: ShopSheet.#onPickBuyer,
@@ -350,6 +360,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     /** Per kind, every priced line sent under the current `_tradeId`, by item id: what a sealed answer's own lines are named and pictured from. */
     this._sent = { buy: new Map(), sell: new Map() };
     this._activeCategory = "all";
+    /** Whether a narrow window shows the whole bill over the list (its dock's chevron). */
+    this._billOpen = false;
     /** The Sell tab's category, as `_activeCategory` is the Buy tab's. */
     this._sellCategory = "all";
     /** Per kind, the fewest of each line worth a coin (`buyRow`/`sellRow`'s `minQuantity`), from the last render. */
@@ -449,6 +461,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
+    // A narrow window's category dropdown: a native select, which reports a change, not a click.
+    for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
+      select.addEventListener("change", () => {
+        if (select.dataset.kind === "sell") this._sellCategory = select.value;
+        else this._activeCategory = select.value;
+        this.render();
+      });
+    }
     // The GM's Settings tab (#110). A field saves when it's left (Enter leaves it): a time input
     // fires `change` on each part typed, and saving 01:00 would re-render before the 9 of 19:00.
     // Boxes, radios and selects save on change. Enter would otherwise submit the sheet's form.
@@ -556,6 +576,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       buyerPurse: buyer ? heldCoins(buyer.system.currency, currencies) : [],
       currencies,
       kind,
+      billOpen: this._billOpen,
       // Every tab's content is built on every render, not only the active one: core's own
       // `changeTab` (application.mjs) just toggles which already-rendered `.tab` section is
       // visible, with no re-render in between, so a tab switched to cold would otherwise show
@@ -599,6 +620,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       termsChip: dealChip(termsChip, deal, worldOf().rates, config.terms),
       // What everyone else sees: the Settings tab's preview (#110).
       termsChipBase: termsChip,
+      // A narrow window's short chips (design r7HIUl): "Open until 19:00", "List · ½".
+      shortOpen: open && config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntilShort", { time: closesAt }) : null,
+      shortTerms: `${sentence(chipWord(chipSellsAt))} · ${rateFraction(chipBuysAt)}`,
+      // The description, as text, behind a narrow window's info button.
+      descriptionText: foundry.utils.cleanHTML(config.description ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
     };
   }
@@ -815,6 +841,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // its kind of good. The pricing category (`row.category`) stays what rules key on.
           ...groupFields(data, stock),
           meta: itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: !!stock.service }),
+          stockText: stockWords(row.stock),
+          // A narrow window folds the stock into the meta line (design r7HIUl).
+          metaShort: stock.service ? itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: true })
+            : compactMeta(data, metaLabels(), metaWords, stockWords(row.stock)),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
           inBasket: this._baskets.buy.has(row.id),
@@ -840,6 +870,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shopTitle: titleParts(actor.name).title,
       sections,
       categories,
+      activeCategory: categories.find(c => c.active),
       // For a buy refused as till-short: the till couldn't make change.
       tillText: coinsText(coinBreakdown(totalCp(actor.system.currency ?? {}, currencies), currencies)),
       basket: this.#billOfSale("buy", lines, totals, currencies, buyer, this._sealed.buy),
@@ -855,6 +886,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       },
       open
     };
+  }
+
+  /** A narrow window's docked bill opens to the full slip above it, and closes again. */
+  static #onToggleBill() {
+    this._billOpen = !this._billOpen;
+    this.render();
   }
 
   static #onSelectCategory(_event, target) {
@@ -1069,6 +1106,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shopTitle: titleParts(actor.name).title,
       sections,
       categories,
+      activeCategory: categories.find(c => c.active),
       empty: !rows.length,
       packLabel: buyer ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Pack", { name: buyer.name }) : null,
       // How much of the till this bill takes, for the offer card's meter.
@@ -1208,6 +1246,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shortfallText: coinsText(shortfallCoins),
       buyerName: buyer?.name ?? null,
       hasLines: lines.length > 0,
+      // The docked bill's one line in a narrow window (design r7HIUl).
+      summary: billSummary(lines),
       // A stamped bill keeps the date it sealed on; a live one reads the clock.
       dateLabel: sealed?.dateLabel ?? this.#worldDateLabel()
     };

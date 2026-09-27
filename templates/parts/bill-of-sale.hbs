@@ -84,3 +84,23 @@
     {{/if}}
   </div>
 </aside>
+{{!-- A narrow window docks the bill at the bottom (design r7HIUl): the lines as text, the sum, a
+      chevron that opens the full slip above, and the seal, always in view. --}}
+<div class="mp-dock mp-narrow-only" data-pen="Bill dock">
+  <div class="mp-grip-row" data-pen="Grip row"><span class="mp-grip" data-pen="Grip"></span></div>
+  <div class="mp-dock-summary" data-pen="Dock summary">
+    <div class="mp-dock-text" data-pen="Dock text">
+      <span class="mp-slip-kicker" data-pen="Dock kicker">{{#if (eq kind "sell")}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleSell"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.TitleBuy"}}{{/if}}</span>
+      <span class="mp-dock-lines" data-pen="Dock lines">{{#if basket.hasLines}}{{basket.summary}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Bill.Empty"}}{{/if}}</span>
+    </div>
+    {{#if basket.hasLines}}{{> mpCoins coins=basket.sumCoins mode="count"}}{{/if}}
+    <button type="button" class="mp-dock-expand" data-action="toggleBill" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Bill.Open'}}">{{mpIcon "chevron-up" pen="Expand"}}</button>
+  </div>
+  {{#if basket.hasLines}}
+    {{#if (eq seal.state "sealed")}}
+      {{> sealButton action="keepShopping" icon="lucide:store" label=(localize "MERCHANT_PRESETS.Shop.Seal.KeepShopping")}}
+    {{else}}
+      {{> sealButton action="seal" icon=seal.icon label=seal.label disabled=seal.disabled}}
+    {{/if}}
+  {{/if}}
+</div>
