@@ -12,12 +12,12 @@
     <img class="mp-preview-icon" data-pen="Item Icon" src="{{img}}" alt="" />
     <span class="mp-preview-text" data-pen="Text">
       <span class="mp-name-line" data-pen="Name line"><span data-pen="Name">{{name}}</span>{{#if isNew}}<span class="mp-new-badge" data-pen="New badge"><span data-pen="New badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span></span>{{/if}}</span>
-      {{#if showStock}}<span class="mp-meta" data-pen="Meta">{{meta}}</span>{{/if}}
+      {{#if showStock}}<span class="mp-meta {{#if metaDanger}}is-danger{{/if}}" data-pen="Meta">{{meta}}</span>{{/if}}
     </span>
     <span class="mp-price-block" data-pen="Price Block">
       {{#if listText}}<span class="mp-list-price" data-pen="List Price">{{listText}}</span>{{/if}}
       <span class="mp-price-line" data-pen="Price Line">
-        {{#if tag.text}}<span class="mp-tag is-good" data-pen="Terms Tag"><span data-pen="Terms Tag Text">{{tag.text}}</span></span>{{/if}}
+        {{#if tag.text}}<span class="mp-tag is-{{#if tag.tone}}{{tag.tone}}{{else}}good{{/if}}" data-pen="Terms Tag"><span data-pen="Terms Tag Text">{{tag.text}}</span></span>{{/if}}
         {{> mpCoins coins=priceCoins mode="price"}}
       </span>
     </span>
@@ -45,6 +45,35 @@
       <span data-pen="{{title}} desc">{{desc}}</span>
     </span>
   </label>
+{{/inline}}
+{{!-- A checkbox with its label as an option (design "Check <label>", 13 px): `pen` names its box. --}}
+{{#*inline "optionCheck"}}
+  <label class="mp-check is-option" data-pen="Check {{label}}">
+    <input type="checkbox" class="mp-visually-hidden" data-op="{{op}}" {{#if list}}data-list="{{list}}" data-value="{{value}}"{{/if}} {{checked checked}} />
+    <span class="mp-box" data-pen="{{pen}} box">{{#if checked}}{{mpIcon "check" pen="Tick"}}{{/if}}</span><span data-pen="{{pen}} label">{{label}}</span>
+  </label>
+{{/inline}}
+{{!-- Won't buy's two lists (design dYANz): a label, then the checks three to a row. --}}
+{{#*inline "checkGrid"}}
+  <span class="mp-how" data-pen="{{title}} label">{{title}}</span>
+  <div class="mp-check-grid" data-pen="{{title}} grid">
+    {{#each items}}
+      <div class="mp-check-row" data-pen="{{../title}} row {{number}}">
+        {{#each items}}{{> optionCheck label=label pen=label op="wontBuy" list=../../list value=value checked=checked}}{{/each}}
+      </div>
+    {{/each}}
+  </div>
+{{/inline}}
+{{!-- An opening or closing time (design S2swP): the field, and what the hours come to. --}}
+{{#*inline "hourRow"}}
+  <div class="mp-rate-row" data-pen="Row {{label}}">
+    <span class="mp-rate-label" data-pen="{{label}} label">{{label}}</span>
+    <label class="mp-field is-time" data-pen="Field {{value}}">
+      <input type="time" data-pen="Value" value="{{value}}" data-op="hour" data-end="{{end}}" />
+      {{mpIcon "clock" pen="Clock"}}
+    </label>
+    {{#if plain}}<em class="mp-plain" data-pen="{{label}} plain">{{plain}}</em>{{/if}}
+  </div>
 {{/inline}}
 {{#*inline "check"}}
   <label class="mp-check" data-pen="Check {{label}}">
@@ -145,35 +174,22 @@
 
   <section class="settings-section" data-section="wontBuy" data-pen="Section Won't buy">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.wontBuy")}}
-    <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Hint"}}</p>
-    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Types"}}</h3>
-    <div class="settings-checks">
-      {{#each wontBuy.types}}
-        <label><input type="checkbox" data-op="wontBuy" data-list="types" data-value="{{value}}" {{checked checked}} /> {{label}}</label>
-      {{/each}}
-    </div>
-    <h3 class="settings-subheading">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Kinds"}}</h3>
-    <div class="settings-checks">
-      {{#each wontBuy.kinds}}
-        <label><input type="checkbox" data-op="wontBuy" data-list="kinds" data-value="{{value}}" {{checked checked}} /> {{label}}</label>
-      {{/each}}
-    </div>
+    <p class="mp-hint" data-pen="Won't buy hint">{{localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Hint"}}</p>
+    {{> checkGrid title=(localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Types") list="types" items=wontBuy.types}}
+    {{> checkGrid title=(localize "MERCHANT_PRESETS.Shop.Settings.WontBuy.Kinds") list="kinds" items=wontBuy.kinds}}
   </section>
 
   <section class="settings-section" data-section="hours" data-pen="Section Hours">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.hours")}}
+    <p class="mp-hint" data-pen="Hours hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Hint"}}</p>
     {{#if hours.worldOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.WorldOff"}}</p>{{/if}}
-    <label class="settings-line"><input type="checkbox" data-op="keepHours" {{checked hours.keeps}} /> {{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Keeps"}}</label>
+    {{> optionCheck label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Keeps") pen="Keeps" op="keepHours" checked=hours.keeps}}
     {{#if hours.keeps}}
-      <div class="settings-rate">
-        <span>{{localize "MERCHANT_PRESETS.Shop.Closed.Open"}}</span>
-        <input type="time" value="{{hours.open}}" data-op="hour" data-end="open" />
-        <span>{{localize "MERCHANT_PRESETS.Shop.Closed.Close"}}</span>
-        <input type="time" value="{{hours.close}}" data-op="hour" data-end="close" />
-      </div>
-      <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Hint"}}</p>
+      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Opens") end="open" value=hours.open}}
+      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Closes") end="close" value=hours.close plain=hours.length}}
+      <p class="mp-hint" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Note"}}</p>
     {{else}}
-      <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.AlwaysOpen"}}</p>
+      <p class="mp-hint" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.AlwaysOpen"}}</p>
     {{/if}}
   </section>
 
@@ -240,7 +256,17 @@
   <div class="mp-preview-head" data-pen="Preview head">
     {{mpIcon "eye" pen="Eye"}}<h2 class="mp-section-title" data-pen="Preview title">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Title"}}</h2>
   </div>
-  {{#if preview.restock}}
+  {{#if preview.wontBuy}}
+    <span class="mp-kicker" data-pen="Sell tab label">{{preview.wontBuy.label}}</span>
+    {{#each preview.wontBuy.rows}}{{> previewRow this showStock=true}}{{/each}}
+    <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.WontBuyNote"}}</p>
+  {{else if preview.hours}}
+    {{#each preview.hours.samples}}
+      <span class="mp-kicker" data-pen="{{pen}} label">{{label}}</span>
+      <span class="mp-chip is-{{state}}" data-pen="Chip {{chip}}"><span class="mp-chip-dot" data-pen="{{chip}} dot"></span><span data-pen="{{chip}} text">{{chip}}</span></span>
+    {{/each}}
+    <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.HoursNote"}}</p>
+  {{else if preview.restock}}
     <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>
     <span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
     {{#each preview.restock.rows}}{{> previewRow this showStock=true}}{{/each}}

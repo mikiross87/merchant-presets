@@ -77,10 +77,12 @@ trades out itself. For GMs upgrading a world:
   Settings tab: cheaper when they buy, more when they sell, or both, with an
   optional note and an end (when the shop next closes, after some days, or
   never). Only that character sees it: their shop window shows "Your price
-  −10%" up top, the usual price struck beside theirs, and marks the bill's
-  lines the deal changed. No deal can make selling pay more than buying. The
-  note is never shown to players, but it's saved on the shop, so a player
-  could read it from the browser console. (#111)
+  −10%" up top, the usual price struck beside theirs, tags each bill line the
+  deal changed with its "−10%", and says what the deal saved them. An ended
+  deal stays in the list, dimmed, saying when it ended, until you edit or
+  remove it. No deal can make selling pay more than buying. The note is never
+  shown to players, but it's saved on the shop, so a player could read it
+  from the browser console. (#111, #145)
 - 2.0: sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent

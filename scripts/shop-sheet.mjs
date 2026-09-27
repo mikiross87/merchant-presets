@@ -16,9 +16,7 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import {
-  applyChange, dealFields, EVERY_CHOICES, everyChoice, percentOf, timeText, WONT_BUY_KINDS, WONT_BUY_TYPES
-} from "./shop-settings.mjs";
+import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, everyChoice, hoursSamples, openMinutes, percentOf, timeText } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { icon } from "./icons.mjs";
@@ -214,6 +212,9 @@ function dealChip(termsChip, deal, world, terms) {
  * The price without the buyer's deal, as the small struck text over theirs (design AutYE, "2 gp"):
  * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
  */
+/** `items` in rows of `size`, each numbered from 1 for its layer name. */
+const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) },
+  (_, i) => ({ number: i + 1, items: items.slice(i * size, (i + 1) * size) }));
 const listText = (cp, currencies) => coinBreakdown(cp ?? 0, currencies).map(c => `${c.count} ${c.abbreviation ?? c.denomination}`).join(" ");
 
 /**
@@ -591,6 +592,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       settings: game.user.isGM ? await this.#settingsContext(actor, shop, world, header) : null,
       closed: !open ? this.#closedContext(actor, config, minute, calendarDays) : null
     });
+    // Jumped to Won't buy, Players see is the buyer's Sell tab: a good it takes, one it refuses (design dYANz).
+    if (context.settings && this._settingsSection === "wontBuy" && buyer && context.sell.preview.length) {
+      context.settings.preview.wontBuy = {
+        label: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Preview.SellTab", { name: buyer.name }),
+        rows: context.sell.preview
+      };
+    }
     return context;
   }
 
@@ -1101,11 +1109,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           : row.refusal ? itemMeta(item, metaLabels(), metaWords, goodsWorld())
           : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
         reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
+        worthText: worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null,
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
         listText: listText(row.listPriceCp, currencies)
       };
     });
     const willBuy = rows.filter(r => !r.refusal);
+    // Settings' Won't buy preview (design dYANz): the first good taken, at its price and worth,
+    // and the first turned away for what it is, with the reason.
+    const taken = willBuy[0];
+    const refused = rows.find(r => r.refusal === "General");
+    const preview = [
+      taken && { ...taken, showStock: true, tag: { text: taken.tag?.text ?? taken.ratio, tone: taken.tag?.text ? "good" : "ratio" },
+        meta: taken.worthText ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Preview.Worth", { price: taken.worthText }) : null },
+      refused && { ...refused, showStock: true, meta: refused.reason, metaDanger: true, priceCoins: [], tag: null, listText: null }
+    ].filter(Boolean);
     const { categories, sections } = this.#grouped("sell", rows);
     this.#keepOffered("sell", new Map(willBuy.map(r => [r.id, r.minQuantity ?? 1])));
     const tillCp = totalCp(actor.system.currency ?? {}, currencies);
@@ -1124,6 +1142,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const paidOut = tillCapsSales && totals.sumCp > 0 ? payExact(actor.system.currency ?? {}, totals.sumCp, currencies) : null;
     return {
       kind: "sell",
+      preview,
       shopTitle: titleParts(actor.name).title,
       sections,
       categories,
@@ -1212,6 +1231,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // The buyer's deal moved this line's total: the bill marks it as theirs. Compared in coin,
         // since a small deal on cheap goods can floor to the same total (#142 review).
         dealt: lineTotal !== listTotal,
+        // The deal's real effect on this line, as the row's tag says it ("−10%", design Q6UvA), and
+        // what the line would cost without it, for what the deal saves.
+        dealTag: lineTotal !== listTotal && listRate ? signedPercent(rate / listRate - 1) : null,
+        listTotalCp: listTotal,
         // The sticker price per bundle ("4 cp per 20"): a unit price would floor cheap goods to nothing.
         bundle,
         unitCoins: coinBreakdown(bundleCp ?? 0, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
@@ -1270,8 +1293,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       name: l.name, quantity: l.quantity,
       pen: l.lineTotalCoins[0] ? `${COIN_METALS[l.lineTotalCoins[0].denomination] ?? l.lineTotalCoins[0].denomination} ${l.lineTotalCoins[0].count}` : "Price"
     }));
+    // What the buyer's deal saved them on a purchase, or added to a sale (design Q6UvA).
+    const listCp = lines.reduce((sum, l) => sum + (l.listTotalCp ?? l.lineTotalCp ?? 0), 0);
+    const dealCp = kind === "buy" ? listCp - totals.sumCp : totals.sumCp - listCp;
+    const dealText = dealCp > 0 ? game.i18n.localize(`MERCHANT_PRESETS.Shop.Deal.${kind === "buy" ? "Saves" : "Adds"}`,
+      { amount: coinsText(coinBreakdown(dealCp, currencies)) }) : null;
     return {
-      lines, gone,
+      lines, gone, dealText,
       sumCoins, afterCoins, shortfallCoins,
       sumText: coinsText(sumCoins),
       afterText: coinsText(afterCoins),
@@ -1578,14 +1606,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         }),
         ruleChoices
       },
+      // Three to a row, as the checks are drawn (design dYANz).
       wontBuy: {
-        types: WONT_BUY_TYPES.map(value => ({ value, label: typeLabel(value), checked: shop.wontBuy.types.includes(value) })),
-        kinds: WONT_BUY_KINDS.map(value => ({ value, label: i18n(`Kinds.${value}`), checked: shop.wontBuy.kinds.includes(value) }))
+        types: inRows(WONT_BUY_TYPES.map(value => ({ value, label: typeLabel(value), checked: shop.wontBuy.types.includes(value) })), 3),
+        kinds: inRows(WONT_BUY_KINDS.map(value => ({ value, label: i18n(`Kinds.${value}`), checked: shop.wontBuy.kinds.includes(value) })), 3)
       },
       hours: {
         keeps: shop.hours !== null,
         open: shop.hours ? timeText(shop.hours.open) : "",
         close: shop.hours ? timeText(shop.hours.close) : "",
+        length: this.#openLength(shop.hours),
         worldOff: !game.settings.get(MODULE, "tradingHours")
       },
       restock: {
@@ -1611,8 +1641,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // What players see at these terms: the header chip and its worked example, then each deal in
       // force as its own character sees it.
       preview: {
-        // Jumped to Restock, Players see shows the shelf after one (design aaJcp).
+        // Jumped to Restock, Players see shows the shelf after one (design aaJcp); to Hours, the
+        // header chip at an open hour and a closed one (design S2swP). Won't buy's is Aria's Sell
+        // tab, added once that is built (_prepareContext).
         restock: this._settingsSection === "restock" ? this.#restockPreview(actor, shop, world, currencies) : null,
+        hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
         chip: header.termsChipBase,
         item: sample,
         example,
@@ -1626,6 +1659,32 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         }))
       }
     };
+  }
+
+  /** "12 hours a day" (design S2swP): how long the shop keeps open; null without hours. */
+  #openLength(hours) {
+    const minutes = openMinutes(hours, game.time.calendar.days);
+    if (!minutes) return null;
+    const perHour = game.time.calendar.days.minutesPerHour;
+    const key = "MERCHANT_PRESETS.Shop.Settings.Hours";
+    return minutes % perHour ? game.i18n.localize(`${key}.PerDayMinutes`, { hours: Math.floor(minutes / perHour), minutes: minutes % perHour })
+      : game.i18n.localize(`${key}.PerDay`, { hours: minutes / perHour });
+  }
+
+  /** Players see, jumped to Hours (design S2swP): the open chip at an open hour, the closed chip at a closed one. */
+  #hoursPreview(hours) {
+    if (!hours) return null;
+    const calendar = game.time.calendar.days;
+    const { open, closed } = hoursSamples(hours, this.#minuteOfDay(), calendar);
+    const at = minute => {
+      const time = { hour: Math.floor(minute / calendar.minutesPerHour), minute: minute % calendar.minutesPerHour };
+      return game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Preview.At", { time: timeText(time) });
+    };
+    const samples = [{ pen: "Open", state: "open", label: at(open),
+      chip: game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntil", { time: this.#formatTime(hours.close) }) }];
+    if (closed !== null) samples.push({ pen: "Closed", state: "closed", label: at(closed),
+      chip: game.i18n.localize("MERCHANT_PRESETS.Shop.ClosedOpensAt", { time: this.#formatTime(hours.open) }) });
+    return { samples };
   }
 
   /** What a new category rule can price: an item type, or a category the GM named on a shelf line, with no rule yet. */
@@ -1722,11 +1781,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     };
   }
 
-  /** When a deal ends, in words: never, when the shop closes, on a date, or already. */
+  /** When a deal ends, in words: never, when the shop closes, on a date, or when it did (design Q6UvA). */
   #endLabel(deal) {
     const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${key}`);
     if (!deal.ends) return i18n("NoEnd");
-    if (deal.ends.at <= game.time.worldTime) return i18n("Ended");
+    if (deal.ends.at <= game.time.worldTime) {
+      return game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${deal.ends.when === "close" ? "EndedClose" : "EndedOn"}`,
+        { date: this.#dayMonth(deal.ends.at) });
+    }
     if (deal.ends.when === "close") return i18n("UntilClose");
     return game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Deals.Until", { date: this.#dateLabel(deal.ends.at) });
   }

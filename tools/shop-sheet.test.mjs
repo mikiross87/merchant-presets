@@ -1307,13 +1307,21 @@ test("the Deals section lists each deal with what it changes and when it ends", 
     const config = sheet.document.flags["merchant-presets"].shop;
     config.deals = [ARIA_DEAL(buyer.uuid),
       { actor: "Actor.tomas", name: "Tomas", buy: null, sell: 0.1, note: "", ends: { at: 50, when: "close" } },
-      { actor: "Actor.old", name: "Old", buy: -0.2, sell: 0.2, note: "", ends: { at: -1, when: "date" } }];
+      { actor: "Actor.old", name: "Old", buy: -0.2, sell: 0.2, note: "", ends: { at: -1, when: "date" } },
+      { actor: "Actor.bram", name: "Bram", buy: -0.1, sell: null, note: "", ends: { at: -1, when: "close" } }];
     const { settings } = await sheet._prepareContext({});
-    assert.deepEqual(settings.deals.list.map(d => [d.name, d.initial, d.badges, d.line, d.ended]), [
-      ["Aria", "A", ["Buying(−10%)"], "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd", false],
-      ["Tomas", "T", ["Selling(+10%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.UntilClose", false],
-      ["Old", "O", ["Buying(−20%)", "Selling(+20%)"], "MERCHANT_PRESETS.Shop.Settings.Deals.Ended", true]
+    assert.deepEqual(settings.deals.list.map(d => [d.name, d.initial, d.badges, d.ended]), [
+      ["Aria", "A", ["Buying(−10%)"], false],
+      ["Tomas", "T", ["Selling(+10%)"], false],
+      ["Old", "O", ["Buying(−20%)", "Selling(+20%)"], true],
+      ["Bram", "B", ["Buying(−10%)"], true]
     ]);
+    const [aria, tomas, old, bram] = settings.deals.list.map(d => d.line);
+    assert.equal(aria, "Saved the smith's daughter · MERCHANT_PRESETS.Shop.Settings.Deals.NoEnd");
+    assert.equal(tomas, "MERCHANT_PRESETS.Shop.Settings.Deals.UntilClose");
+    // An ended deal says when it ended: on its date, or at that day's closing (design Q6UvA).
+    assert.match(old, /^EndedOn\(.+\)$/);
+    assert.match(bram, /^EndedClose\(.+\)$/);
     // Players see: only the deals in force that move a Buy-list price, each for its own character.
     assert.deepEqual(settings.preview.deals.map(d => d.name), ["Aria"]);
     assert.match(settings.preview.deals[0].chip, /YourPrice\(−10%\)/);
@@ -1406,6 +1414,29 @@ test("the chip promises what the deal really gives once the cap has cut it (#142
     assert.match(header.termsChip, /YourOffers\(\+100%\)$/);
     // Offers aren't a Buy-list price, so Players see has no row for it.
     assert.deepEqual(settings.preview.deals, []);
+  });
+});
+
+test("a bill at a deal's price tags each line with the deal and says what it saved (design Q6UvA)", async () => {
+  await withLabels(async () => {
+    const { sheet, shop, buyer } = openShop({ shopItems: [item("rope", { quantity: 5 })], buyerItems: [item("gem", { quantity: 2 })] });
+    const config = shop.flags["merchant-presets"].shop;
+    config.deals = [{ actor: buyer.uuid, name: "hero", buy: -0.1, sell: 0.2, note: "", ends: null }];
+    act(sheet, "addLine", { itemId: "rope" });
+    act(sheet, "addLine", { itemId: "rope" });
+    sheet.tabGroups.primary = "sell";
+    act(sheet, "addLine", { itemId: "gem" });
+    const { buy, sell } = await sheet._prepareContext({});
+    // Two ropes at 90 cp instead of 100: the line wears −10%, and the bill says 20 cp saved.
+    assert.equal(buy.basket.lines[0].dealTag, "−10%");
+    assert.equal(buy.basket.dealText, "Saves(2 sp)");
+    // A sale at the deal's +20%: what the deal added.
+    assert.equal(sell.basket.lines[0].dealTag, "+20%");
+    assert.match(sell.basket.dealText, /^Adds\(/);
+    config.deals = [];
+    const plain = await sheet._prepareContext({});
+    assert.equal(plain.buy.basket.lines[0].dealTag, null);
+    assert.equal(plain.buy.basket.dealText, null);
   });
 });
 

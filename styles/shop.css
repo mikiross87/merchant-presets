@@ -1016,6 +1016,16 @@
 .shop-sheet .mp-check input:checked + .mp-box .mp-icon { visibility: visible; }
 .shop-sheet .mp-check input:focus-visible + .mp-box { box-shadow: 0 0 0 2px var(--mp-gold-light); }
 .shop-sheet .mp-check > span:last-child { font: 400 12px/14px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+/* A check as an option in its own right (design dYANz, S2swP): the label at body size. */
+.shop-sheet .mp-check.is-option { align-self: flex-start; gap: 8px; }
+.shop-sheet .mp-check.is-option > span:last-child { font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-check-grid { align-self: stretch; display: flex; flex-direction: column; gap: 8px; }
+.shop-sheet .mp-check-row { display: flex; gap: 10px; }
+.shop-sheet .mp-check-row .mp-check.is-option { flex: 1 1 0; min-width: 0; }
+.shop-sheet .mp-field.is-time input { height: 16px; font: 700 14px/16px "Roboto Condensed", system-ui, sans-serif; }
+.shop-sheet .mp-field.is-time input::-webkit-calendar-picker-indicator { display: none; }
+.shop-sheet .mp-field.is-time input::-webkit-datetime-edit { padding: 0; }
+.shop-sheet .mp-field.is-time .mp-icon { flex: none; width: 13px; height: 13px; color: var(--mp-muted); }
 
 .shop-sheet .mp-live-example {
   display: flex;
@@ -1114,6 +1124,11 @@
   color: var(--mp-on-dark);
 }
 .shop-sheet .mp-chip .mp-icon { width: 12px; height: 12px; color: var(--mp-gold-light); }
+.shop-sheet .mp-chip.is-open { outline: 1px solid #26b23180; outline-offset: -1px; }
+.shop-sheet .mp-chip.is-closed { outline: 1px solid #ffffff40; outline-offset: -1px; }
+.shop-sheet .mp-chip-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--mp-green); }
+.shop-sheet .mp-chip.is-closed .mp-chip-dot { background: var(--mp-muted); }
+.shop-sheet .mp-preview-text .mp-meta.is-danger { color: var(--mp-red); }
 .shop-sheet .mp-preview-row {
   align-self: stretch;
   display: flex;
@@ -1133,6 +1148,9 @@
 .shop-sheet .mp-list-price { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-price-line { display: flex; align-items: center; gap: 6px; }
 .shop-sheet .mp-price-line .mp-tag { padding: 1px 5px; }
+.shop-sheet .mp-entry .mp-tag { flex: none; padding: 1px 5px; }
+.shop-sheet .mp-entry .mp-tag span { font-size: 10px; line-height: 12px; }
+.shop-sheet .mp-deal-saving { align-self: flex-start; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
 .shop-sheet .mp-price-line .mp-tag span { font-size: 10px; line-height: 12px; }
 .shop-sheet .mp-divider { flex: none; align-self: stretch; height: 1px; margin: 0; border: none; background: var(--mp-line); }
 .shop-sheet .mp-preview-foot { align-self: stretch; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }

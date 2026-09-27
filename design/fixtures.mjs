@@ -386,7 +386,7 @@ const stateFrames = Object.fromEntries(["light", "dark"].flatMap(theme => PARTS.
 
 
 /** Settings jumped to `section` at 10:00 on the 14th, restocked the day before, with or without the Settings frames' deals (bands 09 and 11). */
-const settingsAt = (section, deals = false) => openShop({ tab: "settings", before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
+const settingsAt = (section, deals = false) => openShop({ tab: "settings", autoRestock: true, before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="${section}"], [data-action="settingsSection"][data-section="${section}"]')?.click();` });
 /** Aria's −10% deal on buying, running (until the shop closes) or ended at yesterday's closing. */
 const ariaDeal = ended => `
@@ -397,14 +397,14 @@ const ariaDeal = ended => `
     { actor: game.actors.getName("Tomas").uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
   ] });`;
 /** The Deals board (Q6UvA): the deal form filled for Aria, the Deals section with her deal ended, her bill at the deal's price. */
-const dealForm = openShop({ tab: "settings", before: withoutDeals + restocked(1),
+const dealForm = openShop({ tab: "settings", size: { width: 920, height: 760 }, before: withoutDeals + restocked(1),
   then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();
   app.element.querySelector('[data-action="addDeal"]').click();
   const dealForm = () => document.querySelector(".mp-deal-form") ?? [...document.querySelectorAll(".application.dialog")].at(-1);
   ${until("dealForm()")}
   const form = dealForm();
   form.id = "mp-deal-form-under-check";`, root: '"mp-deal-form-under-check"' });
-const dealEnded = openShop({ tab: "settings", before: ariaDeal(true) + restocked(1),
+const dealEnded = openShop({ tab: "settings", size: { width: 920, height: 760 }, before: ariaDeal(true) + restocked(1),
   then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();
   const section = app.element.querySelector('.settings-section[data-section="deals"]');
   section.id = app.id + "-deals";`, root: "`${app.id}-deals`" });

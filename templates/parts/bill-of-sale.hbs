@@ -39,13 +39,14 @@
             <div class="mp-entry" data-pen="{{this.name}} entry">
               <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
               <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
+              {{#if this.dealTag}}<span class="mp-tag is-good" data-pen="{{this.name}} deal tag" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"><span data-pen="{{this.name}} deal tag text">{{this.dealTag}}</span></span>{{/if}}
               <span class="mp-leader" data-pen="{{this.name}} leader"></span>
               <span class="mp-line-coins" data-pen="{{this.name}} coins">{{> mpCoins coins=this.lineTotalCoins mode="count"}}</span>
             </div>
             <div class="mp-detail" data-pen="{{this.name}} detail">
               <span class="mp-detail-left" data-pen="{{this.name}} detail left">
                 {{#if this.noteIcon}}{{mpIcon this.noteIcon pen=(concat this.name " svc icon")}}{{/if}}
-                <span class="mp-each" data-pen="{{this.name}} each">{{#if this.dealt}}<span class="price-tag tag-deal">{{localize "MERCHANT_PRESETS.Shop.Deal.Yours"}}</span> {{/if}}{{#if this.note}}{{this.note}}{{else if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
+                <span class="mp-each" data-pen="{{this.name}} each">{{#if this.note}}{{this.note}}{{else if this.showUnit}}{{this.unitText}}{{#if (gt this.bundle 1)}} {{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=this.bundle}}{{else if (or (eq ../kind "buy") (gt this.quantity 1))}} {{localize "MERCHANT_PRESETS.Shop.Bill.Each"}}{{/if}}{{/if}}{{#if this.ofList}} {{this.ofList}}{{/if}}</span>
               </span>
               {{#unless (eq ../seal.state "sealed")}}
                 <span class="mp-stepper" data-pen="{{this.name}} stepper">
@@ -70,6 +71,8 @@
           <span class="bill-sum {{#if (eq seal.state 'cant-afford')}}is-danger{{/if}} {{#if (eq seal.state 'till-short')}}is-danger{{/if}}" {{#if (gt basket.sumCoins.length 1)}}data-pen="Total coins"{{/if}}>{{> mpCoins coins=basket.sumCoins mode="count"}}</span>
         </div>
       </div>
+
+      {{#if basket.dealText}}<p class="mp-deal-saving" data-pen="Deal saving">{{basket.dealText}}</p>{{/if}}
 
       {{!-- The purse block fills the slip, which keeps the seal at its foot (#146). --}}
       {{#if slip.purse}}

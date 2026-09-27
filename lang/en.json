@@ -264,7 +264,8 @@
           "NoEnd": "No end",
           "UntilClose": "Until the shop closes",
           "Until": "Until {date}",
-          "Ended": "Ended",
+          "EndedClose": "Ended at closing, {date}",
+          "EndedOn": "Ended {date}",
           "NoCharacters": "Every player character already has a deal here.",
           "Form": {
             "AddTitle": "Add a deal",
@@ -302,7 +303,12 @@
         },
         "Hours": {
           "Keeps": "Keeps trading hours",
-          "Hint": "Closes to players outside these hours, on the world clock. A close before the open runs past midnight.",
+          "Hint": "Players can trade only while the shop is open, on the world clock.",
+          "Opens": "Opens",
+          "Closes": "Closes",
+          "PerDay": "{hours} hours a day",
+          "PerDayMinutes": "{hours} hours {minutes} minutes a day",
+          "Note": "A close before the open runs past midnight: a tavern open 18:00–02:00 closes at 2 the next morning.",
           "AlwaysOpen": "Open around the clock.",
           "WorldOff": "Trading hours are off for the whole world (Configure Settings), so every shop is open around the clock."
         },
@@ -350,6 +356,11 @@
           "Everyone": "Everyone",
           "Note": "Open shop windows refresh for everyone when a change is saved.",
           "Only": "Only {name}",
+          "At": "At {time}",
+          "SellTab": "On {name}'s Sell tab",
+          "Worth": "Worth {price}",
+          "WontBuyNote": "Refused goods stay on the Sell tab, dimmed, with the reason, and never get an offer.",
+          "HoursNote": "While closed, players can look over the goods, dimmed, and see when the shop opens. Nothing can be bought or sold.",
           "AfterRestock": "After a restock, until closing",
           "AfterRestockDay": "After a restock, until the day ends",
           "RestockNote": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the shop closes.",
@@ -360,6 +371,8 @@
         "YourPrice": "Your price {percent}",
         "YourOffers": "Your offers {percent}",
         "Yours": "Your deal",
+        "Saves": "Your deal saves you {amount}.",
+        "Adds": "Your deal adds {amount}.",
         "ListPrice": "Price without your deal"
       },
       "Receipt": {
