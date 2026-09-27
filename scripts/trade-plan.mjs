@@ -238,7 +238,7 @@
  *   earlier sale created carries only the flag.
  */
 
-import { effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
+import { EVERYDAY_COINS, effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 
 const MODULE = "merchant-presets";
@@ -364,7 +364,7 @@ export const categoryFor = (item, stock) => stock.category || item.type;
  */
 export function bottomlessTill(currencies) {
   const all = Object.keys(currencies);
-  const everyday = all.filter(d => ["gp", "sp", "cp"].includes(d));
+  const everyday = all.filter(d => EVERYDAY_COINS.includes(d));
   const endless = everyday.length ? everyday : all;
   return Object.fromEntries(all.map(d => [d, endless.includes(d) ? Number.MAX_SAFE_INTEGER : 0]));
 }

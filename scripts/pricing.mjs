@@ -90,6 +90,13 @@ export function totalCp(coins, currencies) {
     .reduce((sum, [denomination, value]) => sum + (coins[denomination] ?? 0) * value, 0);
 }
 
+/**
+ * The coins people make change in. A coin broken for change or an exact payout splits into these,
+ * never electrum or platinum (Sell frame TGXBN: 57 gp 5 sp, not 57 gp 1 ep), as the unlimited
+ * till pays (trade-plan.mjs `bottomlessTill`). Electrum a purse actually holds is still spent.
+ */
+export const EVERYDAY_COINS = ["gp", "sp", "cp"];
+
 /** `amountCp` built from `denominations` (`[denomination, value]` pairs, largest first). */
 function breakIntoCoins(amountCp, denominations) {
   const coins = {};
@@ -246,7 +253,10 @@ function makeChange(holdings, amountCp, currencies) {
     const [breakDenomination, breakValue] = breakable[breakable.length - 1];   // the smallest still too big
     available[breakDenomination] -= 1;
     const smaller = byValue.filter(([, v]) => v < breakValue);
-    for (const [denomination, count] of Object.entries(breakIntoCoins(breakValue, smaller))) {
+    // Everyday coins when they make the value exactly; a currency set without them, whatever is smaller.
+    const everyday = breakIntoCoins(breakValue, smaller.filter(([d]) => EVERYDAY_COINS.includes(d)));
+    const split = totalCp(everyday, currencies) === breakValue ? everyday : breakIntoCoins(breakValue, smaller);
+    for (const [denomination, count] of Object.entries(split)) {
       available[denomination] = (available[denomination] ?? 0) + count;
     }
   }
