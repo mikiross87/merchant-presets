@@ -320,6 +320,18 @@ test("with unlimited merchant coin an empty till still buys", async () => {
   }
 });
 
+test("a buy refused till-short names what the till holds (#154 review)", async () => {
+  await withLabels(async () => {
+    const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
+    sheet.document.system.currency = { gp: 3 };
+    act(sheet, "addLine", { itemId: "rope" });
+    api.trade = async () => ({ status: "refused", reason: "till-short" });
+    await act(sheet, "seal");
+    const { buy } = await sheet._prepareContext({});
+    assert.equal(buy.slip.notice.text, "TillShortBuyNotice(3 gp)");
+  });
+});
+
 test("a refusal on live data stays on the bill until that data changes", async () => {
   const { sheet } = openShop({ shopItems: [item("rope", { quantity: 5 })] });
   act(sheet, "addLine", { itemId: "rope" });
@@ -1532,6 +1544,28 @@ test("an empty shelf keeps the fixed 15 gp example and shows no preview row (#14
   const { settings } = await opened.sheet._prepareContext({});
   assert.equal(settings.terms.example.text, "MERCHANT_PRESETS.Shop.Settings.Terms.ExampleSells");
   assert.equal(settings.preview.item, null);
+});
+
+test("the fixed 15 gp example is priced at the shop's own rates (#154 review)", async t => {
+  const opened = openSettings(t);
+  opened.shop.items = [];
+  const { settings } = await opened.sheet._prepareContext({});
+  const coins = list => list.map(c => `${c.count} ${c.denomination}`);
+  // The defaults: sold at list, bought back at half.
+  assert.deepEqual(coins(settings.terms.example.sell), ["15 gp"]);
+  assert.deepEqual(coins(settings.terms.example.buy), ["7 gp", "5 sp"]);
+});
+
+test("Settings' last restock is the last one that ran, fresh stock or not (#154 review)", async t => {
+  await withLabels(async () => {
+    const { sheet, shop } = openSettings(t);
+    // Fresh stock came back on day 5; a top-up on day 12 brought nothing back but still ran.
+    shop.flags["merchant-presets"].restockedAt = 5 * 86400;
+    shop.flags["merchant-presets"].lastRestockAt = 12 * 86400;
+    shop.flags["merchant-presets"].schedule = { lastRestock: 12 * 86400, dueAt: null };
+    const { settings } = await sheet._prepareContext({});
+    assert.match(settings.restock.last, new RegExp(`t${12 * 86400}\\b`));
+  });
 });
 
 test("the visit hint says \"entirely\" only while no player has access of their own (#145)", async t => {

@@ -444,6 +444,21 @@ test("every restock notes when it ran, scheduled or by hand, for the window's Fr
   assert.equal(shop.flags["merchant-presets"].restockedAt, at(4, 10));
 });
 
+test("every restock notes when it ran, even one that brought nothing back, for Settings' last restock (#154 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].lastRestockAt, at(3, 7));
+  shop.flags["merchant-presets"].shop.restock.mode = "topup";
+  for (const item of shop.items) if (item.system.quantity === 0) item.system.quantity = 1;
+  world.settings.autoRestock = false;
+  globalThis.game.time.worldTime = at(4, 10);
+  const freshAt = shop.flags["merchant-presets"].restockedAt ?? null;
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.equal(shop.flags["merchant-presets"].lastRestockAt, at(4, 10));
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, freshAt, "nothing came back, so nothing is New");
+});
+
 test("a restock the clock catches up on is stamped at the opening it was due, New goods too (#152 review)", async () => {
   const { shop, clock } = await setUp();
   await clock(at(0, 1));
