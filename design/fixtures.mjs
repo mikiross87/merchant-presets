@@ -23,12 +23,15 @@ export const SHOP = "Armourer & Blacksmith";
  * - *Armourer & Blacksmith*: a fresh import of the Town smith, renamed, with the frames'
  *   description, 07:00-19:00, the world's list/half, a 212 gp till, and exactly the stock rows the
  *   Storefront draws (Longsword 7, Handaxe 11, Javelin 21 new, Breastplate 1 new, Chain Mail 4,
- *   Shield sold out, Smith's Tools 4) beside the drawn gear;
+ *   Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so the nav
+ *   counts are the frames' own (All goods 19, Weapons 3, Armor 3, Tools 1, Gear 12);
  * - Aria (P1's character) with 3 pp 47 gp 12 sp 30 cp, and Tomas, a character no one plays;
- * - the deals: Aria buying at −10% until the shop closes, Tomas selling at +10% with no end.
+ * - no deals: the storefront frames draw Aria at list price. Only the Settings frames list deals,
+ *   and their `open` sets them (`withDeals`).
  */
 export async function setup() {
   const MP = "merchant-presets";
+  const GEAR = 12;
   if (game.settings.get("dnd5e", "calendar") !== "harptos") {
     await game.settings.set("dnd5e", "calendar", "harptos");
     return "reload";
@@ -55,26 +58,30 @@ export async function setup() {
 
   const aria = game.actors.getName("Aria");
   await aria.update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
-  const tomas = game.actors.getName("Tomas") ?? await Actor.create({ name: "Tomas", type: "character" });
+  if (!game.actors.getName("Tomas")) await Actor.create({ name: "Tomas", type: "character" });
 
   const name = "Armourer & Blacksmith";
   for (const a of game.actors.filter(a => a.name === name)) await a.delete();
   const pack = game.packs.get(`${MP}.merchants`);
   const entry = (await pack.getIndex()).getName("Armourer & Blacksmiths (Town)");
   const shop = await game.actors.importFromCompendium(pack, entry._id);
-  for (let t = 0; t < 40 && !shop.flags[MP]?.shelf; t++) await new Promise(r => setTimeout(r, 500));
+  // The arrival restock notes its end last (restockedAt): wait for all of it, not only the adoption,
+  // or the edits below race the draw. It also lights the frames' "Fresh stock today".
+  for (let t = 0; t < 60 && shop.flags[MP]?.restockedAt == null; t++) await new Promise(r => setTimeout(r, 500));
+  if (shop.flags[MP]?.restockedAt == null) throw new Error("the shop's arrival restock never finished");
 
   const rows = { Longsword: [7], Handaxe: [11], Javelin: [21, true], Breastplate: [1, true], "Chain Mail": [4], Shield: [0], "Smith's Tools": [4] };
   const drawn = shop.items.filter(i => i.flags[MP]?.drawn);
   const armsOrTools = i => i.type === "weapon" || i.type === "tool" || (i.type === "equipment" && i.system.type?.value in (CONFIG.DND5E.armorTypes ?? {}));
-  await shop.deleteEmbeddedDocuments("Item", drawn.filter(i => armsOrTools(i) && !(i.name in rows)).map(i => i.id));
+  const gear = drawn.filter(i => !armsOrTools(i)).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
+  if (gear.length < GEAR) throw new Error(`the shelf drew ${gear.length} gear lines; the frames count ${GEAR}`);
+  await shop.deleteEmbeddedDocuments("Item", [...drawn.filter(i => armsOrTools(i) && !(i.name in rows)), ...gear.slice(GEAR)].map(i => i.id));
   // The frame's rows first, in its order (the window lists the shelf by sort), then the gear.
   const order = Object.keys(rows);
   await shop.updateEmbeddedDocuments("Item", shop.items.filter(i => i.flags[MP]?.drawn).map(i => (i.name in rows
     ? { _id: i.id, sort: (order.indexOf(i.name) + 1) * 100, "system.quantity": rows[i.name][0], [`flags.${MP}.new`]: rows[i.name][1] === true }
     : { _id: i.id, sort: 10_000 + i.sort })));
 
-  const closes = Math.floor(game.time.worldTime / perDay) * perDay + (19 * cal.days.minutesPerHour + 1) * cal.days.secondsPerMinute;
   await shop.update({
     name,
     img: "icons/environment/settlement/blacksmith.webp",
@@ -84,24 +91,26 @@ export async function setup() {
     [`flags.${MP}.shop.description`]: "Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.",
     [`flags.${MP}.shop.hours`]: { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } },
     [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
-    [`flags.${MP}.shop.deals`]: [
-      { actor: aria.uuid, name: "Aria", buy: -0.1, sell: null, note: "Saved the smith's daughter", ends: { at: closes, when: "close" } },
-      { actor: tomas.uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
-    ]
+    [`flags.${MP}.shop.deals`]: []
   });
   return shop.id;
 }
 
 /**
- * An `open` for the shop window: the frame's theme on this client, Aria as the buyer, the window at
- * the frame's size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
+ * An `open` for the shop window: the frame's theme on this client, `before` (an in-page statement,
+ * `shop` in scope; the GM's frames only), Aria as the buyer, `basket` ([name, quantity] pairs) on
+ * the Buy bill, the window at the frame's size on `tab`, and `then` (an in-page statement, `app`
+ * in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", then = "" } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], then = "" } = {}) => `async ({ theme, width, height }) => {
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
-  const app = game.actors.getName(${JSON.stringify(SHOP)}).sheet;
+  const shop = game.actors.getName(${JSON.stringify(SHOP)});
+  ${before}
+  const app = shop.sheet;
   app._buyerUuid = game.actors.getName("Aria").uuid;
+  for (const [name, quantity] of ${JSON.stringify(basket)}) app._baskets.buy.set(shop.items.getName(name).id, quantity);
   await app.render({ force: true, position: { left: 20, top: 20, width, height } });
   app.changeTab(${JSON.stringify(tab)}, "primary");
   ${then}
@@ -109,13 +118,33 @@ const openShop = ({ tab = "buy", then = "" } = {}) => `async ({ theme, width, he
   return app.id;
 }`;
 
+/**
+ * The Settings frames' deals: Aria buying at −10% until the shop closes (19:00 today), Tomas
+ * selling at +10% with no end. The storefront frames' `open` clears them.
+ */
+const withDeals = `
+  const cal = game.time.calendar;
+  const perDay = cal.days.hoursPerDay * cal.days.minutesPerHour * cal.days.secondsPerMinute;
+  const closes = Math.floor(game.time.worldTime / perDay) * perDay + (19 * cal.days.minutesPerHour + 1) * cal.days.secondsPerMinute;
+  await shop.update({ "flags.merchant-presets.shop.deals": [
+    { actor: game.actors.getName("Aria").uuid, name: "Aria", buy: -0.1, sell: null, note: "Saved the smith's daughter", ends: { at: closes, when: "close" } },
+    { actor: game.actors.getName("Tomas").uuid, name: "Tomas", buy: null, sell: 0.1, note: "Regular supplier of ore", ends: null }
+  ] });`;
+const withoutDeals = `if (shop.flags["merchant-presets"]?.shop?.deals?.length) await shop.update({ "flags.merchant-presets.shop.deals": [] });`;
+/** The Storefront frames draw "Fresh stock today"; the Settings frames a shop last restocked the day before. */
+const restocked = daysAgo => `await shop.update({ "flags.merchant-presets.restockedAt": game.time.worldTime - ${daysAgo} * 86400 });`;
+
 const frame = (name, theme, width, height, user = "Gamemaster", open = null) => ({ name, theme, width, height, user, open });
-const settings = openShop({ tab: "settings" });
+const settings = openShop({ tab: "settings", before: withDeals + restocked(1) });
+/** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
+const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
+const storefront = openShop({ before: withoutDeals + restocked(0), basket: BASKET });
+const storefrontPlayer = openShop({ basket: BASKET });
 
 export const FRAMES = {
-  y6iNf: frame("01 Storefront — Light", "light", 920, 680),
-  wvmqF: frame("01 Storefront — Dark", "dark", 920, 680),
-  zie5W: frame("01 Storefront — Player (Light)", "light", 920, 680, "P1"),
+  y6iNf: frame("01 Storefront — Light", "light", 920, 680, "Gamemaster", storefront),
+  wvmqF: frame("01 Storefront — Dark", "dark", 920, 680, "Gamemaster", storefront),
+  zie5W: frame("01 Storefront — Player (Light)", "light", 920, 680, "P1", storefrontPlayer),
   ChoNd: frame("01 Terms of Trade — Popover (Light)", "light", 340, 251),
   S0ugn: frame("01 Terms of Trade — Popover (Dark)", "dark", 340, 251),
   TGXBN: frame("02 Sell — Light", "light", 920, 680),

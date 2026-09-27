@@ -107,18 +107,20 @@
 .shop-sheet .mp-visually-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; margin: 0; }
 
 /* Every control the design draws starts from nothing: core's and dnd5e's button styles set sizes,
-   borders and fonts the frames don't have. */
-.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button) {
+   borders and fonts the frames don't have. Only single classes go in this list: :is() takes its
+   most specific argument's weight, and a heavier one would unset every control's own rules. */
+.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-seal-button),
+.shop-sheet .mp-stepper button {
   all: unset;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button):focus-visible {
+.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-seal-button, .mp-stepper button):focus-visible {
   box-shadow: 0 0 0 2px var(--mp-gold-light);
 }
-.shop-sheet :is(.mp-reset, .mp-button, .mp-icon-button):disabled { opacity: 0.5; cursor: not-allowed; }
+.shop-sheet :is(.mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-stepper button):disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Window Bar: core's header, as the design draws it. */
 .shop-sheet > .window-header {
@@ -211,6 +213,7 @@
 .shop-sheet .mp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mp-muted); }
 .shop-sheet .mp-open-chip.is-open .mp-dot { background: var(--mp-green); }
 .shop-sheet .mp-terms-chip { outline: 1px solid #e3ce9e66; cursor: pointer; }
+.shop-sheet .mp-fresh-chip { background: #e3ce9e33; outline: 1px solid #e3ce9e80; }
 
 .shop-sheet .mp-purse {
   flex: none;
@@ -310,6 +313,7 @@
 }
 
 .shop-sheet .sell-tab.active { grid-template-columns: 180px 1fr 280px; }
+.shop-sheet .buy-tab.active { display: flex; flex-direction: row; gap: 0; }
 
 /* -------------------------------------------------------------- coins */
 
@@ -521,38 +525,212 @@
 .shop-sheet .refusal-reason { font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.8rem; color: var(--mp-danger); text-align: right; }
 .shop-sheet .refusal-Unidentified { color: var(--mp-warning); }
 
-/* -------------------------------------------------------------- bill of sale */
+/* -------------------------------------------------------------- buy tab (design y6iNf) */
 
-.shop-sheet .bill-of-sale {
-  border-left: var(--dnd5e-border-gold);
-  background: var(--dnd5e-color-table-row-even);
-  padding: 1rem;
-  overflow-y: auto;
+.shop-sheet .mp-categories {
+  flex: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 2px;
+  box-sizing: border-box;
+  width: 179.5px;
+  margin-right: -0.5px;
+  padding: 16px 10px;
+  border: 0 solid var(--mp-line);
+  border-right-width: 1px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.shop-sheet .mp-nav-label { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.shop-sheet .mp-nav-count { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+
+/* The shelf scrolls; like the Settings page, without a scrollbar taking the design's width. */
+.shop-sheet .mp-stock {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.shop-sheet .mp-group { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 0 6px; }
+.shop-sheet .mp-group-heading {
+  margin: 0;
+  border: none;
+  font: 700 17px/23px "Alegreya SC", system-ui, sans-serif;
+  white-space: nowrap;
+  color: var(--mp-heading);
+}
+.shop-sheet .mp-row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  height: 55.5px;
+  margin-bottom: -0.5px;
+  padding: 8px 12px;
+  /* The frame's stroke straddles the row's edge rather than adding to its height. */
+  border: 0 solid var(--mp-line);
+  box-shadow: inset 0 -1px var(--mp-line);
+  background: var(--mp-surface);
+}
+.shop-sheet .mp-row.is-sold-out { opacity: 0.55; }
+.shop-sheet .mp-row.is-dimmed { opacity: 0.55; }
+.shop-sheet .mp-item-icon { flex: none; width: 40px; height: 40px; border: none; border-radius: 4px; outline: 1px solid var(--mp-gold); object-fit: cover; }
+.shop-sheet .mp-row-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.shop-sheet .mp-row .mp-name-line { font-size: 14px; line-height: 16px; }
+.shop-sheet .mp-meta { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-new-badge { display: flex; padding: 1px 5px; border-radius: 3px; background: #9f927533; }
+.shop-sheet .mp-new-badge span {
+  font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  color: var(--mp-accent);
+}
+.shop-sheet .mp-stock-state { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+/* The same in both themes. */
+.shop-sheet .mp-stock-state.is-last { font-weight: 700; color: #b86a12; }
+.shop-sheet .mp-stock-state.is-soldOut { color: #ce0707; }
+.shop-sheet .mp-add {
+  flex: none;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  outline: 1px solid var(--mp-gold);
+  color: var(--mp-gold);
 }
 
-.shop-sheet .bill-header { text-align: center; border-bottom: var(--dnd5e-border-dotted); padding-bottom: 0.5rem; margin-bottom: 0.25rem; }
-.shop-sheet .bill-kicker { font-family: var(--dnd5e-font-roboto-condensed); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-secondary); }
-.shop-sheet .bill-shop-name { font-size: 1.1rem; color: var(--color-text-title); }
-.shop-sheet .bill-date { font-size: 0.75rem; font-style: italic; color: var(--color-text-secondary); }
-
-.shop-sheet .bill-lines { display: flex; flex-direction: column; gap: 0.5rem; }
-.shop-sheet .bill-lines.is-dimmed { opacity: 0.55; }
-
-.shop-sheet .bill-line { border-bottom: var(--dnd5e-border-dotted); padding-bottom: 0.35rem; animation: mp-line-in 150ms ease-out; }
-.shop-sheet .bill-line.is-struck .bill-line-name { text-decoration: line-through; color: var(--mp-danger); animation: mp-flash 400ms ease-out; }
-
-.shop-sheet .bill-line-top { display: flex; justify-content: space-between; gap: 0.5rem; font-weight: 600; }
-.shop-sheet .bill-line-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 0.15rem; font-size: 0.75rem; color: var(--color-text-secondary); }
-
-.shop-sheet .bill-stepper { display: inline-flex; align-items: center; gap: 0.3rem; }
-.shop-sheet .bill-stepper button {
-  width: 20px; height: 20px; line-height: 1; border-radius: 0.2rem;
-  border: 1px solid var(--border-faint, #bbb); background: none; cursor: pointer; color: inherit;
+.shop-sheet .mp-basket {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 279.5px;
+  margin-left: -0.5px;
+  padding: 14px;
+  border: 0 solid var(--mp-line);
+  border-left-width: 1px;
+  background: var(--mp-window);
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-.shop-sheet .bill-stepper-count { min-width: 1.2em; text-align: center; font-weight: 700; }
+
+/* -------------------------------------------------------------- bill of sale (the slip, #146) */
+
+.shop-sheet .mp-slip {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px 14px;
+  border-radius: 2px;
+  background: var(--mp-paper);
+  outline: 1px solid var(--mp-paper-line);
+  box-shadow: 0 2px 6px #0000002e;
+}
+.shop-sheet .mp-slip .mp-coin b { color: var(--mp-paper-ink); }
+.shop-sheet .mp-slip-head { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.shop-sheet .mp-slip-kicker {
+  font: 700 10px/12px "Roboto Condensed", system-ui, sans-serif;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--mp-gold);
+}
+.shop-sheet .mp-slip-title {
+  margin: 0;
+  border: none;
+  font: 700 17px/23px "Alegreya SC", system-ui, sans-serif;
+  white-space: nowrap;
+  color: var(--mp-paper-ink);
+}
+.shop-sheet .mp-slip-date { font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-head-rule { flex: none; height: 1px; background: var(--mp-paper-line); }
+
+.shop-sheet .mp-ledger { display: flex; flex-direction: column; gap: 8px; }
+.shop-sheet .mp-ledger.is-dimmed { opacity: 0.55; }
+.shop-sheet .mp-line { display: flex; flex-direction: column; gap: 3px; animation: mp-line-in 150ms ease-out; }
+.shop-sheet .mp-line.is-struck .mp-line-name { text-decoration: line-through; color: var(--mp-danger-ink); animation: mp-flash 400ms ease-out; }
+.shop-sheet .mp-entry { display: flex; align-items: flex-end; gap: 6px; }
+.shop-sheet .mp-qty { font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-gold); }
+.shop-sheet .mp-line-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: 600 15px/17px "Crimson Pro", system-ui, sans-serif;
+  white-space: nowrap;
+  color: var(--mp-paper-ink);
+}
+.shop-sheet .mp-leader {
+  flex: 1 1 0;
+  min-width: 8px;
+  box-sizing: border-box;
+  height: 9.5px;
+  margin-bottom: -0.5px;
+  border: 0 solid var(--mp-paper-line);
+  border-bottom-width: 1px;
+}
+.shop-sheet .mp-detail { display: flex; align-items: center; justify-content: space-between; padding-left: 24px; }
+.shop-sheet .mp-each { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-stepper { display: flex; align-items: center; border-radius: 4px; background: var(--mp-surface); outline: 1px solid var(--mp-line); }
+.shop-sheet .mp-stepper button { justify-content: center; width: 28px; height: 28px; color: var(--mp-muted); }
+.shop-sheet .mp-value-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 35px;
+  height: 28px;
+  margin: 0 -0.5px;
+  border: 0 solid var(--mp-line);
+  border-left-width: 1px;
+  border-right-width: 1px;
+  font: 700 14px/16px "Roboto Condensed", system-ui, sans-serif;
+  color: var(--mp-text);
+}
+
+.shop-sheet .mp-total-block { display: flex; flex-direction: column; gap: 2px; }
+.shop-sheet .mp-ink-rule { flex: none; height: 1px; background: var(--mp-paper-ink); }
+.shop-sheet .mp-total-row { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; }
+.shop-sheet .mp-total-label { font: 700 17px/23px "Alegreya SC", system-ui, sans-serif; white-space: nowrap; color: var(--mp-paper-ink); }
+.shop-sheet .bill-sum { display: flex; align-items: center; gap: 10px; }
+
+/* It fills the slip, which keeps the seal at the slip's foot. */
+.shop-sheet .mp-purse-after { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.shop-sheet .mp-slip-fill { flex: 1 1 0; }
+.shop-sheet .mp-after-label { font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.shop-sheet .mp-after-coins { display: flex; align-items: center; gap: 10px; }
+
+/* The Seal Button component: the wax seal pinned left, the label centred in the space beside it. */
+.shop-sheet .mp-seal-button {
+  flex: none;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: var(--mp-seal);
+  outline: 1px solid var(--mp-gold);
+  color: var(--mp-on-dark);
+  transition: transform 120ms ease;
+}
+.shop-sheet .mp-seal-button:active:not(:disabled) { transform: scale(0.97); }
+.shop-sheet .mp-seal-button:disabled { cursor: not-allowed; }
+.shop-sheet .mp-wax {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, #c23a3a 0%, #7a1414 100%);
+  outline: 1.5px solid var(--mp-gold-light);
+  color: #e7d1b1;
+}
+.shop-sheet .mp-seal-label { flex: 1 1 0; font: 700 14px/16px Roboto, system-ui, sans-serif; text-align: center; }
+.shop-sheet .mp-slip-foot { margin: 0; font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; text-align: center; color: var(--mp-muted); }
 
 .shop-sheet .bill-seal-stamp {
   align-self: center;
@@ -570,8 +748,7 @@
 .shop-sheet .bill-seal-stamp span { display: block; font-size: 1.1rem; letter-spacing: 0.1em; }
 .shop-sheet .bill-seal-stamp small { font-size: 0.65rem; }
 
-.shop-sheet .bill-sum-row { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--dnd5e-color-gold); padding-top: 0.4rem; font-family: var(--dnd5e-font-roboto-condensed); font-weight: 700; }
-.shop-sheet .bill-sum.is-danger { color: var(--mp-danger); }
+.shop-sheet .bill-sum.is-danger .mp-coin b { color: var(--mp-danger-ink); }
 
 .shop-sheet .bill-notice {
   font-size: 0.75rem;
@@ -585,8 +762,6 @@
 .shop-sheet .bill-notice.is-danger { background: color-mix(in oklab, var(--mp-danger), transparent 85%); color: var(--mp-danger); }
 .shop-sheet .bill-notice.is-warning { background: color-mix(in oklab, var(--mp-warning), transparent 85%); color: var(--mp-warning); }
 
-.shop-sheet .bill-purse-after { font-size: 0.7rem; font-style: italic; color: var(--color-text-secondary); margin-bottom: 0; }
-.shop-sheet .bill-purse { display: flex; gap: 0.4rem; }
 .shop-sheet .bill-empty { text-align: center; color: var(--color-text-secondary); font-style: italic; padding: 2rem 0; }
 
 .shop-sheet .seal-button {
@@ -966,8 +1141,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-sheet .bill-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button { animation: none !important; transition: none !important; }
-  .shop-sheet .bill-line.is-struck .bill-line-name { animation: none; }
+  .shop-sheet .mp-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button, .shop-sheet .mp-seal-button { animation: none !important; transition: none !important; }
+  .shop-sheet .mp-line.is-struck .mp-line-name { animation: none; }
 }
 
 /* -------------------------------------------------------------- narrow layout (below ~760px) */

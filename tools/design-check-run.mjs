@@ -34,7 +34,8 @@ const executablePath = process.env.MP_CHROMIUM
  * Runs in the page: `root`, then every rendered element under it carrying `attr`, in document
  * order, as the scoring core's Node. The root is named "(frame)" on both sides, since the frame's
  * layer name ("03 Settings (GM) — Light") is no name a window could carry. An element with no box
- * (a hidden tab's) is left out, so it can't take a namesake's place. Boxes are from `root`'s
+ * (a hidden tab's), or one wholly outside an ancestor that clips it (a shelf row scrolled below
+ * the fold, which the frame doesn't draw either), is left out, so it can't take a namesake's place. Boxes are from `root`'s
  * top-left; styles are computed, so both sides compare alike. Layer names are trimmed (the canvas
  * keeps a stray trailing space on some). An element's text is what it shows: its own text, a
  * field's value, or all of a rich-text block's (a description's paragraphs) when nothing inside it
@@ -50,7 +51,17 @@ function collect({ rootSelector, attr, iconAttr }) {
   const root = document.querySelector(rootSelector);
   if (!root) return { error: `no ${rootSelector}` };
   const origin = root.getBoundingClientRect();
-  const nodes = [root, ...[...root.querySelectorAll(`[${attr}]`)].filter(el => el.getClientRects().length > 0)];
+  const clipped = el => {
+    const r = el.getBoundingClientRect();
+    for (let a = el.parentElement; a && a !== root.parentElement; a = a.parentElement) {
+      const cs = getComputedStyle(a);
+      if (cs.overflowX === "visible" && cs.overflowY === "visible") continue;
+      const c = a.getBoundingClientRect();
+      if (r.bottom <= c.top || r.top >= c.bottom || r.right <= c.left || r.left >= c.right) return true;
+    }
+    return false;
+  };
+  const nodes = [root, ...[...root.querySelectorAll(`[${attr}]`)].filter(el => el.getClientRects().length > 0 && !clipped(el))];
   return nodes.map(el => {
     const r = el.getBoundingClientRect();
     const cs = getComputedStyle(el);
@@ -145,8 +156,11 @@ for (const id of WANTED) {
   await dpage.goto(new globalThis.URL(`../design/export/${id}.html`, import.meta.url).href);
   // The export writes its stroked nodes as content-box, so a browser adds their padding and
   // border to the size Pencil gave them (Section Nav 200.5 wide, not the canvas's 179.5). The
-  // canvas is the spec: its sizes hold padding and stroke, as border-box does.
-  await dpage.addStyleTag({ content: "[data-pencil-id] { box-sizing: border-box !important; }" });
+  // canvas is the spec: its sizes hold padding and stroke, as border-box does. Pencil's layout
+  // has no min-content floor either: a `flex: 1 1 0` body stays the frame's size and clips what
+  // overflows, where a browser's `min-height: auto` grows it to its content (Storefront's Body
+  // 532 px tall in a 680 px frame).
+  await dpage.addStyleTag({ content: "[data-pencil-id] { box-sizing: border-box !important; min-height: 0 !important; }" });
   await dpage.evaluate(() => document.fonts.ready);
   await dpage.evaluate(pencilLineHeights);
   const design = await dpage.evaluate(collect, { rootSelector: `[data-pencil-id="${id}"]`, attr: "data-pencil-name", iconAttr: "data-icon-name" });
