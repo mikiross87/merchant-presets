@@ -2132,7 +2132,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       previous?.ends ? { value: "keep", label: this.#endLabel(previous), selected: true } : null,
       { value: "never", label: i18n("NoEnd"), selected: !previous?.ends },
       { value: "close", label: i18n("Form.WhenCloses"), disabled: !closes },
-      { value: "days", label: i18n("Form.AfterDays") }
+      // Nor after some days where shops don't follow the world clock (#149): none would pass.
+      { value: "days", label: i18n("Form.AfterDays"), disabled: !worldFollowsClock() }
     ].filter(Boolean);
     const answer = await ShopSheet.askDeal({
       title: i18n(previous ? "Form.EditTitle" : "Form.AddTitle"),
@@ -2150,7 +2151,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     await this.#edit(config => {
       const fields = dealFields({ ...answer, actor }, {
         name, worldTime: game.time.worldTime, hours: closingHours(config), calendar: game.time.calendar.days,
-        previous: config.deals.find(d => d.actor === actor) ?? null
+        previous: config.deals.find(d => d.actor === actor) ?? null, clock: worldFollowsClock()
       });
       if (fields.error) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: fields.error }));

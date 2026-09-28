@@ -183,18 +183,20 @@ export function dealReading(side, value) {
  *   unknown, note: unknown}} form  `ends`: no end, the shop's next closing, `days` whole days from
  *   now, or (editing) the end the deal already has
  * @param {{name: string, worldTime: number, hours: object|null, calendar: object, previous:
- *   object|null}} context  `hours` the shop's own (null: it never closes); `previous` the deal
- *   being edited
+ *   object|null, clock?: boolean}} context  `hours` the shop's own (null: it never closes);
+ *   `previous` the deal being edited; `clock` false where shops don't follow the world clock
+ *   (#149), where nothing would ever carry a deal to its end days from now
  * @returns {{actor: string, name: string, buy: number|null, sell: number|null, note: string,
  *   ends: object|null} | {error: string}}
  */
-export function dealFields(form, { name, worldTime, hours, calendar, previous }) {
+export function dealFields(form, { name, worldTime, hours, calendar, previous, clock = true }) {
   let ends = null;
   if (form.ends === "close") {
     const at = nextCloseAt(hours, worldTime, calendar);
     if (at === null) return { error: "this shop never closes" };
     ends = { at, when: "close" };
   } else if (form.ends === "days") {
+    if (!clock) return { error: "shops don't follow the world clock, so no day would ever come" };
     const days = percentField(form.days);
     if (!Number.isInteger(days) || days < 1) return { error: "a deal lasts a whole number of days, 1 or more" };
     ends = { at: endsAfterDays(days, worldTime, calendar), when: "date" };

@@ -1460,6 +1460,19 @@ test("a player's window can't make, edit or remove a deal", async t => {
   assert.equal(opened.asked.length, 0);
 });
 
+test("without a world clock no deal can end after some days: nothing would ever move it on (#149, #161 review)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer, warnings } = opened;
+  globalThis.game.settings.values.followClock = "never";
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "days", days: 3, note: "" };
+  await act(sheet, "addDeal");
+  const ends = opened.asked[0].ends;
+  assert.equal(ends.find(e => e.value === "days").disabled, true);
+  assert.equal(ends.find(e => e.value === "close").disabled, true);
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 1);
+});
+
 test("with trading hours off a shop never closes, so no deal can last until it does (#142 review)", async t => {
   const opened = openDeals(t);
   const { sheet, shop, buyer, warnings } = opened;
