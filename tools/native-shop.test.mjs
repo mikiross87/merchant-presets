@@ -211,6 +211,35 @@ test("of one GM's tabs only the one that claims trades takes in a shop that GM r
   assert.equal(shop.flags["merchant-presets"].shelf ?? null, null, "left to the claiming tab");
 });
 
+test("a shop another GM drags in is taken in by the active GM's claiming tab, where the restocks run (#157 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  globalThis.game.users.push({ id: "gm2", isGM: true });
+  await world.fire("createActor", shop, {}, "gm2");
+  await tick(40);
+  assert.ok(shop.flags["merchant-presets"].shelf, "rolled here, on the one queue the scheduled restocks share");
+  assert.equal(shop.flags.core?.sheetClass, "merchant-presets.ShopSheet");
+});
+
+test("a GM who isn't the active GM leaves the shop they drag in to the active GM (#157 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  globalThis.game.users.activeGM = { id: "gm2", isGM: true };
+  await world.fire("createActor", shop, {}, "gm");
+  await world.fire("updateActor", shop, {}, {}, "gm");
+  await tick(40);
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
+});
+
+test("a shop a player's client creates isn't taken in: only a GM's arrival is (#157 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  globalThis.game.users.push({ id: "player", isGM: false });
+  await world.fire("createActor", shop, {}, "player");
+  await tick(40);
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
+});
+
 test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);
