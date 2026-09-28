@@ -543,8 +543,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._buyerUuid = game.user.character?.uuid ?? null;
     /** The GM Settings tab's open section (#110). */
     this._settingsSection = "terms";
-    /** When the nav last jumped the form (`performance.now()`): the scroll it made marks nothing else (#172). */
-    this._jumpedAt = 0;
+    /** The section a nav click jumped to, marked until the GM scrolls by hand (#172, #173 review); null: follow the scroll. */
+    this._pinnedSection = null;
+    /** Whether a section change is waiting for scrolling to stop to re-render Players see (#172). */
+    this._settlePending = false;
     /** Whether a narrow window shows Players see in place of the Settings form (its dock's chevron). */
     this._previewOpen = false;
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
@@ -629,9 +631,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (settingsForm) {
       let frame = null;
       settingsForm.addEventListener("scroll", () => {
+        // Scrolling still: the settled re-render waits for it to stop (#173 review).
+        this.#deferSettle();
         if (frame) return;
-        frame = requestAnimationFrame(() => { frame = null; this.#followScroll(settingsForm); });
+        frame = requestAnimationFrame(() => {
+          frame = null;
+          // A render may have replaced this form since: a detached one measures all zeros (#173 review).
+          if (settingsForm.isConnected) this.#followScroll(settingsForm);
+        });
       }, { passive: true });
+      // The GM scrolling by hand lets go of a section a click pinned (#173 review).
+      const unpin = () => { this._pinnedSection = null; };
+      for (const type of ["wheel", "touchstart", "pointerdown"]) settingsForm.addEventListener(type, unpin, { passive: true });
+      settingsForm.addEventListener("keydown", event => {
+        if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) unpin();
+      });
     }
     // The GM's Settings tab (#110). A field saves when it's left (Enter leaves it): a time input
     // fires `change` on each part typed, and saving 01:00 would re-render before the 9 of 19:00.
@@ -2169,12 +2183,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /**
    * The GM scrolled the Settings form (#172): mark the section now being read (shop-view.mjs
-   * `currentSection`) in the nav and the narrow dropdown straight away, and once the scroll
-   * settles, re-render so Players see shows that section's own view and the dropdown its icon. The
-   * scroll a click's jump makes is the jump's own: it marks nothing else.
+   * `currentSection`) in the nav and the narrow dropdown straight away, and once scrolling stops,
+   * re-render so Players see shows that section's own view and the dropdown its icon. A section a
+   * click pinned stays marked until the GM scrolls by hand: the jump's own scroll, and the scroll
+   * a render puts back, mark nothing else (#173 review).
    */
   #followScroll(form) {
-    if (performance.now() - this._jumpedAt < 250) return;
+    if (this._pinnedSection) return;
     const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
     const formTop = form.getBoundingClientRect().top;
     const sections = [...form.querySelectorAll(".settings-section[data-section]")]
@@ -2183,8 +2198,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!id || id === this._settingsSection) return;
     this._settingsSection = id;
     this.#markSection(id);
+    this._settlePending = true;
+    this.#deferSettle();
+  }
+
+  /**
+   * (Re)starts the wait before the settled re-render (#172): every scroll event pushes it back, so
+   * it runs once scrolling has stopped for 200 ms, never mid-momentum (#173 review). Nothing to
+   * catch up, nothing to wait for.
+   */
+  #deferSettle() {
+    if (!this._settlePending) return;
     clearTimeout(this._settleTimer);
     this._settleTimer = setTimeout(() => {
+      this._settlePending = false;
       // Never under a GM's typing: the next render catches the preview up.
       if (!this.rendered || this.element.querySelector(".settings-tab")?.contains(document.activeElement)) return;
       this.render({ parts: ["body"] });
@@ -2208,7 +2235,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const previous = this._settingsSection;
     const changed = previous !== sectionId;
     this._settingsSection = sectionId;
-    this._jumpedAt = performance.now();
+    // Marked until the GM scrolls by hand, however long this jump's scroll and render take (#173 review).
+    this._pinnedSection = sectionId;
+    this._settlePending = false;
+    clearTimeout(this._settleTimer);
     for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link.dataset.section === sectionId);
     // Only the form scrolls: scrollIntoView would scroll the window's own content too, and take
     // its bar and hero off the top.
