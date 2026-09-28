@@ -35,7 +35,7 @@ const CURRENCIES = {
 };
 
 globalThis.Actor = class {};
-globalThis.CONFIG = { DND5E: { currencies: CURRENCIES }, Item: { typeLabels: {} }, Actor: {} };
+globalThis.CONFIG = { DND5E: { currencies: CURRENCIES, spellSchools: { abj: { label: "Abjuration" } } }, Item: { typeLabels: {} }, Actor: {} };
 /** How the stubbed confirmation dialog answers. */
 const dialog = { answer: true, asked: 0 };
 
@@ -1933,4 +1933,51 @@ test("under unlimited merchant coin the till fields write nothing (#147, design 
   await change(sheet, { op: "till", denomination: "gp" }, { value: "4" });
   await change(sheet, { op: "purse" }, { value: "4" });
   assert.deepEqual(shop.updates, []);
+});
+
+/* -------------------------------------------------------------- service shops (#151, design IeGac / pI7Yd) */
+
+const spellGood = (id, name, spell = null) => item(id, { price: { value: 75, denomination: "gp" },
+  flags: { "merchant-presets": { kind: "spellcasting", ...(spell ? { spell } : {}), stock: { service: true, infinite: true } } } });
+
+test("a named spell's row and bill line show the spell by name, its level and school, cast for the buyer (#151)", async t => {
+  const protection = spellGood("prot", "x", "Compendium.dnd5e.spells24.Item.prot");
+  protection.name = "Spellcasting: Protection from Evil and Good";
+  const { sheet, buyer } = openShop({ shopItems: [protection] });
+  buyer.system.currency = { gp: 200 };
+  const saved = globalThis.fromUuid;
+  globalThis.fromUuid = async uuid => (uuid === "Compendium.dnd5e.spells24.Item.prot" ? { system: { level: 1, school: "abj" } } : null);
+  t.after(() => { globalThis.fromUuid = saved; });
+  act(sheet, "addLine", { itemId: "prot" });
+  const { buy } = await sheet._prepareContext({});
+  const row = buy.sections.flatMap(s => s.rows)[0];
+  assert.equal(row.name, "Protection from Evil and Good");
+  assert.equal(row.meta, "MERCHANT_PRESETS.Shop.Meta.Service · MERCHANT_PRESETS.Shop.Meta.SpellOf");
+  const [line] = buy.basket.lines;
+  assert.equal(line.name, "Protection from Evil and Good");
+  assert.deepEqual([line.note, line.noteIcon], ["MERCHANT_PRESETS.Shop.Bill.CastFor", "lucide:sparkles"]);
+});
+
+test("a bought mount's bill line says it joins the buyer, where bought animals spawn (#151, design pI7Yd)", async t => {
+  const horse = item("horse", { price: { value: 75, denomination: "gp" }, quantity: 4,
+    flags: { "merchant-presets": { kind: "mount", actor: "Compendium.dnd5e.actors24.Actor.h", stock: {} } } });
+  const { sheet, buyer } = openShop({ shopItems: [horse] });
+  buyer.system.currency = { gp: 200 };
+  const saved = { ...globalThis.game.settings.values };
+  t.after(() => { globalThis.game.settings.values = saved; });
+  globalThis.game.settings.values.animalsSpawn = true;
+  act(sheet, "addLine", { itemId: "horse" });
+  let [line] = (await sheet._prepareContext({})).buy.basket.lines;
+  assert.deepEqual([line.note, line.noteIcon], ["MERCHANT_PRESETS.Shop.Bill.Joins", "lucide:paw-print"]);
+  globalThis.game.settings.values.animalsSpawn = false;
+  [line] = (await sheet._prepareContext({})).buy.basket.lines;
+  assert.equal(line.note, null);
+});
+
+test("a three-digit price takes the seal's short label (#151, design IeGac: Seal it · 105 gp)", async () => {
+  const { sheet, buyer } = openShop({ shopItems: [item("idol", { price: { value: 105, denomination: "gp" } })] });
+  buyer.system.currency = { gp: 200 };
+  act(sheet, "addLine", { itemId: "idol" });
+  const { buy } = await sheet._prepareContext({});
+  assert.equal(buy.seal.label, "MERCHANT_PRESETS.Shop.Seal.BargainShort");
 });

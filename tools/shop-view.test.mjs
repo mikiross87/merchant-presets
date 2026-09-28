@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
   fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
-  stepQuantity, stockLabel, titleParts
+  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -565,9 +565,11 @@ const LABELS = {
   typeLabels: { loot: "Loot", tool: "Tool" },
   properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
   weaponProperties: ["lgt", "thr", "ver"],
-  weightUnits: { lb: { abbreviation: "lb" } }
+  weightUnits: { lb: { abbreviation: "lb" } },
+  goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" }
 };
-const words = { Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
+  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -822,4 +824,56 @@ test("the docked bill sums its lines up in one line", () => {
   assert.equal(billSummary([{ name: "Longsword", quantity: 1 }, { name: "Handaxe", quantity: 2 }, { name: "Javelin", quantity: 10 }]),
     "Longsword, 2 × Handaxe, 10 × Javelin");
   assert.equal(billSummary([]), "");
+});
+
+/* -------------------------------------------------------------- service shops (#151, design IeGac / pI7Yd) */
+
+const good = (kind, name, flags = {}, system = {}) => ({ type: "loot", name, system: { weight: { value: 0, units: "lb" }, ...system }, flags: { "merchant-presets": { kind, ...flags } } });
+
+test("a named spell's row says its level and school; a cantrip says so (#151, design IeGac)", () => {
+  const named = good("spellcasting", "Spellcasting: Protection from Evil and Good", { spell: "Compendium.dnd5e.spells24.Item.x" });
+  assert.equal(itemMeta(named, LABELS, t, { service: true, spell: { level: 1, school: "Abjuration" } }), "Service · Level 1 Abjuration");
+  assert.equal(itemMeta(named, LABELS, t, { service: true, spell: { level: 0, school: "Evocation" } }), "Service · Evocation cantrip");
+  // A spell that can't be found reads as the service it is.
+  assert.equal(itemMeta(named, LABELS, t, { service: true, spell: null }), "Service");
+});
+
+test("a level service says the buyer picks any spell of its level (#151, design IeGac)", () => {
+  const svc = name => itemMeta(good("spellcasting", name), LABELS, t, { service: true });
+  assert.equal(svc("Spellcasting: Cantrip"), "Service · any cantrip");
+  assert.equal(svc("Spellcasting: Level 1"), "Service · any Level 1 spell");
+  assert.equal(svc("Spellcasting: Level 4-5"), "Service · any Level 4 or 5 spell");
+  assert.equal(svc("Hired Spellcaster"), "Service", "a GM's own spellcasting good says only that");
+  assert.deepEqual([levelService("Spellcasting: Cantrip"), levelService("Spellcasting: Level 3"), levelService("Spellcasting: Level 4-5"), levelService("Spellcasting: Revivify")],
+    [{ min: 0, max: 0 }, { min: 3, max: 3 }, { min: 4, max: 5 }, null]);
+});
+
+test("a named spell shows the spell's name alone; everything else keeps its own (#151, design IeGac)", () => {
+  assert.equal(goodName(good("spellcasting", "Spellcasting: Revivify", { spell: "uuid" })), "Revivify");
+  assert.equal(goodName(good("spellcasting", "Spellcasting: Level 1")), "Spellcasting: Level 1");
+  assert.equal(goodName(good("mount", "Horse, Riding")), "Horse, Riding");
+  assert.equal(goodName({ name: "Rope", flags: {} }), "Rope");
+});
+
+test("a mount joins the buyer only where bought animals spawn and it has a stat block (#151, design pI7Yd)", () => {
+  const horse = good("mount", "Horse, Riding", { actor: "Compendium.dnd5e.actors24.Actor.h" });
+  assert.equal(itemMeta(horse, LABELS, t, { spawns: true }), "Mount · joins the buyer");
+  assert.equal(itemMeta(horse, LABELS, t, { spawns: false }), "Mount");
+  assert.equal(itemMeta(good("mount", "Statue Horse"), LABELS, t, { spawns: true }), "Mount");
+});
+
+test("tack and vehicles read by what they are, not as loot (#151, design pI7Yd)", () => {
+  const saddle = good("tack", "Saddle, Riding", {}, { weight: { value: 25, units: "lb" }, quantity: 1 });
+  const cart = good("vehicle", "Cart", {}, { weight: { value: 200, units: "lb" }, quantity: 2 });
+  assert.equal(itemMeta(saddle, LABELS, t), "Tack · 25 lb");
+  assert.equal(itemMeta(cart, LABELS, t), "Vehicle · 200 lb");
+  assert.equal(compactMeta(saddle, LABELS, t, "3 left"), "Tack · 25 lb · 3 left");
+  assert.equal(sellMeta(cart, LABELS, t, "15 gp"), "Vehicle · worth 15 gp each");
+});
+
+test("the seal takes its short label once the price is longer than a few characters (#151, design IeGac)", () => {
+  assert.equal(sealsShort("76 gp", 1), false);
+  assert.equal(sealsShort("105 gp", 1), true);
+  assert.equal(sealsShort("1 gp 9 sp 2 cp", 3), true);
+  assert.equal(sealsShort("30 gp", 1), false);
 });
