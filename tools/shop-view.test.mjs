@@ -890,8 +890,8 @@ test("a player hovering a good sees its compendium card, and a click opens that 
   assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: BELL_SRC, open: BELL_SRC });
 });
 
-test("a GM's click opens the shop's own copy, to edit; the card is still the compendium's (#168)", () => {
-  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: true, uuid: SHOP_ITEM }), { tip: BELL_SRC, open: SHOP_ITEM });
+test("a GM sees and opens the shop's own copy, as it stands, edits included (#168, #169 review)", () => {
+  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: true, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: SHOP_ITEM });
 });
 
 test("a good with no compendium source shows the shop's copy, and opens only for the GM (#168)", () => {
