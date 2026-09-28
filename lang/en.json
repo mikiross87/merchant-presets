@@ -321,11 +321,14 @@
           "PerDayMinutes": "{hours} hours {minutes} minutes a day",
           "Note": "A close before the open runs past midnight: a tavern open 18:00–02:00 closes at 2 the next morning.",
           "AlwaysOpen": "Open around the clock.",
-          "WorldOff": "Trading hours are off for the whole world (Configure Settings), so every shop is open around the clock."
+          "WorldOff": "Trading hours are off for the whole world (Configure Settings), so every shop is open around the clock.",
+          "NoClock": "Shops don't keep time in this world, so this shop is always open. To change that: Configure Settings › Shops follow the world clock."
         },
         "Restock": {
           "Hint": "Restocking draws the shelf from the stock table and refills the till.",
           "WorldOff": "Scheduled restocks are off for the whole world (Configure Settings); Restock now still works.",
+          "NoClock": "Restocks happen by hand only, with Restock now: the world clock doesn't run.",
+          "ByHand": "Restock by hand whenever you like.",
           "NoTable": "This shop has no stock table, so it can't restock.",
           "Restocks": "Restocks",
           "WhenOpens": "when the shop opens",
@@ -372,6 +375,7 @@
           "Worth": "Worth {price}",
           "WontBuyNote": "Refused goods stay on the Sell tab, dimmed, with the reason, and never get an offer.",
           "HoursNote": "While closed, players can look over the goods, dimmed, and see when the shop opens. Nothing can be bought or sold.",
+          "NoClock": "Players can trade here at any time: no hours chip, and never the Closed card.",
           "AfterRestock": "After a restock, until closing",
           "AfterRestockDay": "After a restock, until the day ends",
           "RestockNote": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the shop closes.",

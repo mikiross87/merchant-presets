@@ -48,8 +48,8 @@
 {{/inline}}
 {{!-- A checkbox with its label as an option (design "Check <label>", 13 px): `pen` names its box. --}}
 {{#*inline "optionCheck"}}
-  <label class="mp-check is-option" data-pen="Check {{label}}">
-    <input type="checkbox" class="mp-visually-hidden" data-op="{{op}}" {{#if list}}data-list="{{list}}" data-value="{{value}}"{{/if}} {{checked checked}} />
+  <label class="mp-check is-option {{#if dim}}mp-dim{{/if}}" data-pen="Check {{label}}">
+    <input type="checkbox" class="mp-visually-hidden" data-op="{{op}}" {{#if list}}data-list="{{list}}" data-value="{{value}}"{{/if}} {{checked checked}} {{disabled dim}} />
     <span class="mp-box" data-pen="{{pen}} box">{{#if checked}}{{mpIcon "check" pen="Tick"}}{{/if}}</span><span data-pen="{{pen}} label">{{label}}</span>
   </label>
 {{/inline}}
@@ -66,10 +66,10 @@
 {{/inline}}
 {{!-- An opening or closing time (design S2swP): the field, and what the hours come to. --}}
 {{#*inline "hourRow"}}
-  <div class="mp-rate-row" data-pen="Row {{label}}">
+  <div class="mp-rate-row {{#if dim}}mp-dim{{/if}}" data-pen="Row {{label}}">
     <span class="mp-rate-label" data-pen="{{label}} label">{{label}}</span>
     <label class="mp-field is-time" data-pen="Field {{value}}">
-      <input type="time" data-pen="Value" value="{{value}}" data-op="hour" data-end="{{end}}" />
+      <input type="time" data-pen="Value" value="{{value}}" data-op="hour" data-end="{{end}}" {{disabled dim}} />
       {{mpIcon "clock" pen="Clock"}}
     </label>
     {{#if plain}}<em class="mp-plain" data-pen="{{label}} plain">{{plain}}</em>{{/if}}
@@ -195,15 +195,21 @@
 
   <section class="settings-section" data-section="hours" data-pen="Section Hours">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.hours")}}
-    <p class="mp-hint" data-pen="Hours hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Hint"}}</p>
-    {{#if hours.worldOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.WorldOff"}}</p>{{/if}}
-    {{> optionCheck label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Keeps") pen="Keeps" op="keepHours" checked=hours.keeps}}
-    {{#if hours.keeps}}
-      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Opens") end="open" value=hours.open}}
-      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Closes") end="close" value=hours.close plain=hours.length}}
-      <p class="mp-hint" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Note"}}</p>
+    {{!-- Where shops don't follow the world clock (#149, design RRqQ7) the hint says so, and the
+          controls stay in view but dimmed and disabled. --}}
+    {{#if hours.noClock}}
+      <p class="mp-hint" data-pen="Hours hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.NoClock"}}</p>
     {{else}}
-      <p class="mp-hint" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.AlwaysOpen"}}</p>
+      <p class="mp-hint" data-pen="Hours hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Hint"}}</p>
+      {{#if hours.worldOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.WorldOff"}}</p>{{/if}}
+    {{/if}}
+    {{> optionCheck label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Keeps") pen="Keeps" op="keepHours" checked=hours.keeps dim=hours.noClock}}
+    {{#if hours.keeps}}
+      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Opens") end="open" value=hours.open dim=hours.noClock}}
+      {{> hourRow label=(localize "MERCHANT_PRESETS.Shop.Settings.Hours.Closes") end="close" value=hours.close plain=hours.length dim=hours.noClock}}
+      <p class="mp-hint {{#if hours.noClock}}mp-dim{{/if}}" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.Note"}}</p>
+    {{else}}
+      <p class="mp-hint {{#if hours.noClock}}mp-dim{{/if}}" data-pen="Hours note">{{localize "MERCHANT_PRESETS.Shop.Settings.Hours.AlwaysOpen"}}</p>
     {{/if}}
   </section>
 
@@ -211,8 +217,12 @@
   <div class="mp-form-last">
   <section class="settings-section" data-section="restock" data-pen="Section Restock">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.restock")}}
-    <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
-    {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
+    {{#if restock.noClock}}
+      <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoClock"}}</p>
+    {{else}}
+      <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
+      {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
+    {{/if}}
     {{#if restock.table}}
       <button type="button" class="mp-table-card" data-action="openTable" data-pen="Table card">
         {{mpIcon "dices" pen="Table icon"}}
@@ -225,12 +235,12 @@
     {{else}}
       <p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTable"}}</p>
     {{/if}}
-    <div class="mp-schedule" data-pen="Schedule">
+    <div class="mp-schedule {{#if restock.noClock}}mp-dim{{/if}}" data-pen="Schedule">
       <div class="mp-schedule-row" data-pen="Schedule row">
         <span class="mp-rate-label" data-pen="Schedule label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Restocks"}}</span>
         <label class="mp-select" data-pen="Schedule select">
           <span class="mp-select-value" data-pen="Schedule value">{{restock.current}}</span>{{mpIcon "chevron-down" pen="Schedule chevron"}}
-          <select class="mp-select-native" data-op="everyChoice" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Restocks'}}">
+          <select class="mp-select-native" data-op="everyChoice" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Restocks'}}" {{disabled restock.noClock}}>
             {{#each restock.chips}}<option value="{{id}}" {{#if active}}selected{{/if}}>{{label}}</option>{{/each}}
           </select>
         </label>
@@ -238,12 +248,12 @@
       </div>
       <div class="mp-pills" data-pen="Schedule pills">
         {{#each restock.chips}}
-          <button type="button" class="mp-pill {{#if active}}active{{/if}}" data-action="setEvery" data-every="{{id}}" data-pen="Pill {{label}}"><span data-pen="{{label}} text">{{label}}</span></button>
+          <button type="button" class="mp-pill {{#if active}}active{{/if}}" data-action="setEvery" data-every="{{id}}" data-pen="Pill {{label}}" {{disabled ../restock.noClock}}><span data-pen="{{label}} text">{{label}}</span></button>
         {{/each}}
       </div>
       {{#if restock.showFormula}}
         <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
-          <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" /></label>
+          <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" {{disabled restock.noClock}} /></label>
       {{/if}}
       {{#if restock.presetLine}}<p class="mp-hint" data-pen="Schedule default">{{restock.presetLine}}</p>{{/if}}
     </div>
@@ -255,8 +265,12 @@
     {{/if}}
     <div class="mp-last-row" data-pen="Last row">
       <div class="mp-last-text" data-pen="Last text">
-        {{#if restock.last}}<span class="mp-last-line" data-pen="Last line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Last" date=restock.last}}</span>{{/if}}
-        {{#if restock.next}}<span class="mp-hint" data-pen="Next line">{{restock.next}}</span>{{/if}}
+        {{#if restock.noClock}}
+          <span class="mp-last-line" data-pen="Last line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.ByHand"}}</span>
+        {{else}}
+          {{#if restock.last}}<span class="mp-last-line" data-pen="Last line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Last" date=restock.last}}</span>{{/if}}
+          {{#if restock.next}}<span class="mp-hint" data-pen="Next line">{{restock.next}}</span>{{/if}}
+        {{/if}}
       </div>
       <button type="button" class="mp-restock-now" data-action="restockNow" data-pen="Restock now" {{disabled (not restock.table)}}>
         {{mpIcon "refresh-cw" pen="Icon"}}<span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Now"}}</span>
@@ -283,10 +297,10 @@
       <span class="mp-kicker" data-pen="{{pen}} label">{{label}}</span>
       <span class="mp-chip is-{{state}}" data-pen="Chip {{chip}}"><span class="mp-chip-dot" data-pen="{{chip}} dot"></span><span data-pen="{{chip}} text">{{chip}}</span></span>
     {{/each}}
-    <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.HoursNote"}}</p>
+    <p class="mp-preview-foot" data-pen="Preview foot">{{#if preview.hours.noClock}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.NoClock"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.HoursNote"}}{{/if}}</p>
   {{else if preview.restock}}
     <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>
-    <span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
+    {{#unless restock.noClock}}<span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>{{/unless}}
     {{#each preview.restock.rows}}{{> previewRow this showStock=true}}{{/each}}
     <p class="mp-preview-foot" data-pen="Preview foot">{{preview.restock.note}}</p>
   {{else}}

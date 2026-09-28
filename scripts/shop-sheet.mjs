@@ -1747,7 +1747,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         open: shop.hours ? timeText(shop.hours.open) : "",
         close: shop.hours ? timeText(shop.hours.close) : "",
         length: this.#openLength(shop.hours),
-        worldOff: !game.settings.get(MODULE, "tradingHours")
+        worldOff: !game.settings.get(MODULE, "tradingHours"),
+        // Shops don't follow the world clock (#149, design RRqQ7): a note, and the controls dimmed.
+        noClock: !worldFollowsClock()
       },
       restock: {
         table: table ? { name: table.name, uuid: table.uuid, meta: this.#tableMeta(table, shop) } : null,
@@ -1765,7 +1767,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         purseGp: actor.flags?.[MODULE]?.purse ?? null,
         last: lastRestock != null ? this.#dayMonthTime(lastRestock) : null,
         next: this.#nextRestockAt(actor, shop) != null ? this.#nextLine(schedule.dueAt) : null,
-        autoOff: !game.settings.get(MODULE, "autoRestock")
+        autoOff: !game.settings.get(MODULE, "autoRestock"),
+        noClock: !worldFollowsClock()
       },
       deals: { list: shop.deals.map(d => this.#dealCard(d)) },
       canReset: !!preset,
@@ -1807,6 +1810,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /** Players see, jumped to Hours (design S2swP): the open chip at an open hour, the closed chip at a closed one. */
   #hoursPreview(hours) {
+    // No clock (#149, design RRqQ7): no chips to show, only the note.
+    if (!worldFollowsClock()) return { samples: [], noClock: true };
     if (!hours) return null;
     const calendar = game.time.calendar.days;
     const { open, closed } = hoursSamples(hours, this.#minuteOfDay(), calendar);

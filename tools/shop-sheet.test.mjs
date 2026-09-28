@@ -1810,3 +1810,17 @@ test("a sealed bill shows the purse now and what was delivered (design WNYhA, st
     assert.equal(buy.slip.foot, null);
   });
 });
+
+test("where shops don't follow the world clock, Settings says so in Hours and Restock and Players see shows no chips (#149, design RRqQ7)", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.followClock = "never";
+  sheet._settingsSection = "hours";
+  const { settings } = await sheet._prepareContext({});
+  assert.equal(settings.hours.noClock, true);
+  assert.equal(settings.restock.noClock, true);
+  assert.deepEqual(settings.preview.hours, { samples: [], noClock: true });
+  globalThis.game.settings.values.followClock = "always";
+  const clocked = (await sheet._prepareContext({})).settings;
+  assert.equal(clocked.hours.noClock, false);
+  assert.ok(clocked.preview.hours.samples.length > 0);
+});
