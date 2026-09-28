@@ -1003,7 +1003,10 @@
 .shop-sheet .mp-field span { font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 /* The till's coin fields (#147, design U0HcWc): one per coin, sharing the row, each with its coin. */
 .shop-sheet .mp-coin-fields { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 6px; }
-.shop-sheet .mp-coin-fields .mp-field { flex: 1 1 0; width: auto; min-width: 0; }
+/* Equal as drawn, but a field never narrower than its count: a city's 12,500 gp widens the gold
+   field and the empty coins give way. (Firefox lacks field-sizing; there a long count scrolls.) */
+.shop-sheet .mp-coin-fields .mp-field { flex: 1 1 0; width: auto; min-width: auto; }
+.shop-sheet .mp-coin-fields .mp-field input { flex: 1 0 auto; min-width: 1ch; field-sizing: content; }
 .shop-sheet .mp-field.is-coin { padding: 6px 8px; }
 .shop-sheet .mp-field.is-coin img { flex: none; width: 14px; height: 14px; margin: 0; border: none; border-radius: 50%; }
 .shop-sheet .mp-plain { flex: 1 1 0; font: italic 400 14px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
