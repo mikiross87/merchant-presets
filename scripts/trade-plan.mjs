@@ -268,6 +268,16 @@ export const kindOf = item => item.flags?.[MODULE]?.kind
 export const isGear = item => kindOf(item) === "gear";
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
+const SPELL_PREFIX = "Spellcasting: ";
+
+/** A spellcasting service for a named spell (#55): it carries that spell's uuid. */
+export const isNamedSpell = item => item.flags?.[MODULE]?.kind === "spellcasting" && !!item.flags[MODULE].spell;
+
+/** The name a good shows (design IeGac): a named spell by the spell alone, the heading says it's spellcasting. */
+export function goodName(item) {
+  return isNamedSpell(item) && item.name?.startsWith(SPELL_PREFIX) ? item.name.slice(SPELL_PREFIX.length) : item.name;
+}
+
 /** `shopOf`/`stockOf`, but never throwing: a trade only reads config, and must survive data some other bug already left invalid. */
 export const safeShopOf = actor => { try { return shopOf(actor); } catch { return null; } };
 export const safeStockOf = item => { try { return stockOf(item); } catch { return null; } };
@@ -827,7 +837,8 @@ function buildPlan(request, kind, shop, buyer, lines, totalCp, payment, updates)
       shopName: shop.name,
       shopImg: shop.img,
       buyerName: buyer.name,
-      lines: hookLines.map(l => ({ icon: l.item.img, label: l.item.name, quantity: l.quantity, lineTotalCp: l.lineTotalCp })),
+      // Each good by the name the window gave it (#164): a named spell by the spell alone.
+      lines: hookLines.map(l => ({ icon: l.item.img, label: goodName(l.item), quantity: l.quantity, lineTotalCp: l.lineTotalCp })),
       totalCp,
       direction: kind === "buy" ? "Paid" : "Received",
       footnote: { changeCp: payment.changeCp, exact: payment.changeCp === 0 },

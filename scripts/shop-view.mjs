@@ -1,6 +1,9 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, kindOf, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
+
+// The receipt names goods as the window does (#164), so the naming lives with the trade.
+export { goodName, isNamedSpell } from "./trade-plan.mjs";
 
 /**
  * The shop window's view-model (#103): plain data in, plain data out, so the
@@ -317,11 +320,6 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
 /** A bought good that arrives as its own actor: a mount with a stat block to spawn from. */
 export const joinsBuyer = item => item.flags?.["merchant-presets"]?.kind === "mount" && !!item.flags["merchant-presets"].actor;
 
-const SPELL_PREFIX = "Spellcasting: ";
-
-/** A spellcasting service for a named spell (#55): it carries that spell's uuid. */
-export const isNamedSpell = item => item.flags?.["merchant-presets"]?.kind === "spellcasting" && !!item.flags["merchant-presets"].spell;
-
 /**
  * The levels a "Spellcasting: Level N" service covers, by its shipped name: {min: 0, max: 0} for a
  * cantrip, {min: 4, max: 5} for "Level 4-5"; null for any other name.
@@ -350,11 +348,6 @@ function spellWords(item, spell, t) {
   if (levels.min === levels.max) return t("AnySpell", { level: levels.min });
   // Two levels read as either ("4 or 5"); a wider span as its range, so "6-8" keeps Level 7.
   return t(levels.max - levels.min === 1 ? "AnySpells" : "AnySpellRange", levels);
-}
-
-/** The name a good shows (design IeGac): a named spell by the spell alone, the heading says it's spellcasting. */
-export function goodName(item) {
-  return isNamedSpell(item) && item.name?.startsWith(SPELL_PREFIX) ? item.name.slice(SPELL_PREFIX.length) : item.name;
 }
 
 /**
