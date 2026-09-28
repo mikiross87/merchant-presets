@@ -162,6 +162,16 @@ test("Set up shop is carried out by the tab holding the trade claim, so a clock 
   assert.equal(shop.flags["merchant-presets"].shop.source, city, "the claiming tab made it over");
 });
 
+test("a macro's setup with no gear list keeps no gear, as it always has (#136 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  const lines = await globalThis.game.modules.get("merchant-presets").api.setUpShop(shop, city);
+  assert.ok(lines > 0);
+  assert.equal(shop.flags["merchant-presets"].shop.source, city);
+});
+
 test("a player can't set a shop up through the query (#136)", async () => {
   const { world, shop, clock } = await setUp();
   await clock(at(0, 1));
