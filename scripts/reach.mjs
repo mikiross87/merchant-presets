@@ -170,9 +170,13 @@ export function canOpenOn(scene, shop, user, mode, gridlessType = 0) {
   return canVisit({ ...access, reach });
 }
 
-/** The tokens on `scene` whose actor `user` owns, the shop's own aside. */
+/**
+ * The tokens on `scene` that could buy for `user`: linked to a world actor they own, the shop's
+ * own aside. The same tokens "Buying as" lists (a world actor's, `tokensOf`) and the GM's trade
+ * counts, so no one opens a window there's nobody at the counter to buy from (#167 review).
+ */
 export function ownedTokens(scene, user, shop) {
-  return Array.from(scene?.tokens ?? []).filter(t => t.actor && t.actor !== shop && t.actor.testUserPermission(user, "OWNER"));
+  return Array.from(scene?.tokens ?? []).filter(t => t.actorLink && t.actor && t.actor !== shop && t.actor.testUserPermission(user, "OWNER"));
 }
 
 /**

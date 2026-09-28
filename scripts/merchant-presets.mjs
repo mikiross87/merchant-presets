@@ -1759,8 +1759,11 @@ function registerCounter() {
   const atCounter = (token, user) => !user?.isGM && shopAccess() === "reach" && isShopActor(token.actor);
   libWrapper.register(MODULE, `${TOKEN}._canView`, function (wrapped, user, event) {
     if (!atCounter(this, user)) return wrapped(user, event);
-    // Core's own guards, bar the permission: not while dragging, measuring or on another layer.
-    return !!this.layer?.active && !this.layer._draggedToken && !canvas.controls?.ruler?.active;
+    // Core's own guards, bar the permission (token.mjs `_canView`): not on another layer, while
+    // placing a region, dragging, or measuring (#167 review).
+    if (!this.layer?.active || canvas.regions?._placementContext || this.layer._draggedToken) return false;
+    if (canvas.controls?.ruler?.active || (CONFIG.Canvas?.rulerClass?.canMeasure && event?.type === "pointerdown")) return false;
+    return true;
   }, "MIXED");
   libWrapper.register(MODULE, `${TOKEN}._onClickLeft2`, function (wrapped, event) {
     if (!atCounter(this, game.user)) return wrapped(event);
