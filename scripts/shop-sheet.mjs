@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText } from "./shop-settings.mjs";
+import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText, wholeCoins } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { icon } from "./icons.mjs";
@@ -65,7 +65,8 @@ const SETTINGS_SECTIONS = [
   { id: "deals", icon: "lucide:handshake" },
   { id: "wontBuy", icon: "lucide:ban" },
   { id: "hours", icon: "lucide:hourglass" },
-  { id: "restock", icon: "lucide:refresh-cw" }
+  { id: "restock", icon: "lucide:refresh-cw" },
+  { id: "till", icon: "lucide:coins" }
 ];
 
 /**
@@ -169,7 +170,7 @@ const attr = value => String(value).replace(/["\\]/g, "\\$&");
  * A selector that finds `control` again in the next render: its data-op and the data it edits,
  * and a radio's own value (the restock mode's two radios share everything else).
  */
-const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end"]
+const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end", "denomination"]
   .filter(key => control.dataset[key] != null)
   .map(key => `[data-${key}="${attr(control.dataset[key])}"]`).join("")}${
   control.type === "radio" ? `[value="${attr(control.value)}"]` : ""}`;
@@ -214,7 +215,7 @@ function dealChip(termsChip, deal, world, terms) {
  * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
  */
 /** Which Players see view a Settings section has: its own, or the terms and deals one. */
-const previewOf = section => (["restock", "wontBuy", "hours"].includes(section) ? section : "terms");
+const previewOf = section => (["restock", "wontBuy", "hours", "till"].includes(section) ? section : "terms");
 /** `items` in rows of `size`, each numbered from 1 for its layer name. */
 const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) },
   (_, i) => ({ number: i + 1, items: items.slice(i * size, (i + 1) * size) }));
@@ -1689,6 +1690,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }).length;
     const currencies = CONFIG.DND5E.currencies;
     const coins = cp => coinBreakdown(cp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }));
+    const unlimited = game.settings.get(MODULE, "merchantPurse") === "unlimited";
+    // One coin's icon and name, for a field that holds a count of it.
+    const coinsOf = denomination => {
+      const c = currencies[denomination];
+      return c ? { denomination, abbreviation: c.abbreviation ?? denomination, icon: c.icon, label: c.label } : null;
+    };
     // The first good on the Buy list, the design's Longsword: the Terms example prices it, and
     // Players see shows it as everyone sees it and as each deal's character does.
     const sample = this.#previewRow(actor, shop, world, null, currencies);
@@ -1770,6 +1777,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         autoOff: !game.settings.get(MODULE, "autoRestock"),
         noClock: !worldFollowsClock()
       },
+      // The coins the shop holds and what a restock refills them to (#147, design U0HcWc); under
+      // unlimited merchant coin a note, the fields dimmed (design Yusa2).
+      till: {
+        unlimited,
+        coins: Object.entries(currencies).map(([denomination, c]) => {
+          const coin = { denomination, count: actor.system.currency?.[denomination] ?? 0, abbreviation: c.abbreviation ?? denomination, icon: c.icon, label: c.label };
+          return { ...coin, aria: coinAriaLabel(coin) };
+        }),
+        purseGp: Number.isFinite(actor.flags?.[MODULE]?.purse) ? actor.flags[MODULE].purse : null,
+        presetGp: Number.isFinite(presetOf?.merchant?.flags?.[MODULE]?.purse) ? presetOf.merchant.flags[MODULE].purse : null,
+        gold: coinsOf("gp")
+      },
       deals: { list: shop.deals.map(d => this.#dealCard(d)) },
       canReset: !!preset,
       // What players see at these terms: the header chip and its worked example, then each deal in
@@ -1781,6 +1800,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // Not without a world clock (#149): no badge or chip would show, so the terms do instead.
         restock: this._settingsSection === "restock" && worldFollowsClock() ? this.#restockPreview(actor, shop, world, currencies) : null,
         hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
+        // The Sell tab's till card as players get it, with no bill on it: none under unlimited coin.
+        till: this._settingsSection === "till" ? { card: unlimited ? null : { coins: heldCoins(actor.system.currency ?? {}, currencies) } } : null,
         chip: header.termsChipBase,
         // The narrow window's docked Players see, in one line: the chip, then each deal in force.
         line: [header.termsChipBase, ...shop.deals.filter(d => d.buy && activeDeal(shop, d.actor, game.time.worldTime))
@@ -1956,6 +1977,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       await this.#queue(() => this.document.update({ "ownership.default": checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: checked }));
       return;
     }
+    if (op === "till" || op === "purse") return this.#setTill(op, control.dataset.denomination, value, settingSelector(control));
     const change = {
       rate: () => ({ op, side, percent: typedNumber(value) }),
       // Unticked, the rate keeps the figure it showed: the world's, now the shop's own.
@@ -1971,6 +1993,29 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // The schedule's select (design aaJcp) offers what its pills do: the same choice.
     if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
     if (change) await this.#edit(change, settingSelector(control));
+  }
+
+  /**
+   * A Till field left (#147): a count of one coin the shop holds, written to its own currency, or
+   * what a restock refills the gold to (`flags.merchant-presets.purse`, schedule.mjs). A count that
+   * isn't a whole number of coins is refused and the field put back; under unlimited merchant coin
+   * the fields are disabled, and a write that gets through anyway is dropped.
+   */
+  #setTill(op, denomination, value, field) {
+    return this.#queue(async () => {
+      if (game.settings.get(MODULE, "merchantPurse") === "unlimited") return;
+      const count = wholeCoins(value);
+      const key = op === "purse" ? `flags.${MODULE}.purse`
+        : denomination in CONFIG.DND5E.currencies ? `system.currency.${denomination}` : null;
+      if (!key) return;
+      if (count === null) {
+        ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Till.Invalid"));
+        this._resetTyping = field;
+        this.render({ parts: ["body"] });
+        return;
+      }
+      await this.document.update({ [key]: count });
+    }, field);
   }
 
   /**

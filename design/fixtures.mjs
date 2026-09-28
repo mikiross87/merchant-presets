@@ -186,7 +186,7 @@ const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, Breastplate: 1, "Chain Ma
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", name = SHOP } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", coin = "finite", name = SHOP } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
   if (game.user.isGM) {
@@ -196,10 +196,12 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     await game.settings.set("merchant-presets", "autoRestock", ${autoRestock});
     // Whether shops follow the world clock (#149): Auto keeps time here (the clock isn't at 0); band 13 sets Never.
     await game.settings.set("merchant-presets", "followClock", ${JSON.stringify(clock)});
+    // Merchant coin (#147): Finite, but for the Till frame under unlimited coin (band 14, Yusa2).
+    await game.settings.set("merchant-presets", "merchantPurse", ${JSON.stringify(coin)});
     // Every frame starts from the setup's purses and shelf: a Trade States frame trades, or sells
     // a line out, and the frames after it must not see that.
     const smith = game.actors.getName(${JSON.stringify(SHOP)});
-    await smith.update({ "system.currency": { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 } });
+    await smith.update({ "system.currency": { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 }, "flags.merchant-presets.purse": 800 });
     await smith.updateEmbeddedDocuments("Item", Object.entries(${JSON.stringify(ROWS)})
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
@@ -395,6 +397,9 @@ const settingsAt = (section, deals = false, jump = true) => openShop({ tab: "set
  * Band 13 (#149): shops that don't follow the world clock. Settings jumped to Hours, as S2swP; the
  * Buy tab's sealed Bill of Sale, as WNYhA's; a purchase receipt, as z5RBkd's. None of them has a date.
  */
+/** Settings jumped to Till (#147, band 14): the smith's 212 gp, refilled to the Town preset's 800 gp; or under unlimited merchant coin. */
+const tillSettings = coin => openShop({ tab: "settings", autoRestock: true, coin, before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "till";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="till"]').click();` });
 const noClockSettings = openShop({ tab: "settings", autoRestock: true, clock: "never", before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "hours";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="hours"]').click();` });
 const noClockSealed = tradeState({ act: sealThenPutBack("buy"), clock: "never" });
@@ -487,5 +492,9 @@ export const FRAMES = {
   "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" }),
   RRqQ7: frame("13 Settings (GM) · No world clock — Light", "light", 920, 760, "Gamemaster", noClockSettings),
   jajnz: frame("13 Settings (GM) · No world clock — Dark", "dark", 920, 760, "Gamemaster", noClockSettings),
+  U0HcWc: frame("14 Settings (GM) · Till — Light", "light", 920, 760, "Gamemaster", tillSettings("finite")),
+  SrMya: frame("14 Settings (GM) · Till — Dark", "dark", 920, 760, "Gamemaster", tillSettings("finite")),
+  Yusa2: frame("14 Settings (GM) · Till, unlimited coin — Light", "light", 920, 760, "Gamemaster", tillSettings("unlimited")),
+  VUNXW: frame("14 Settings (GM) · Till, unlimited coin — Dark", "dark", 920, 760, "Gamemaster", tillSettings("unlimited")),
   ...noClockFrames
 };

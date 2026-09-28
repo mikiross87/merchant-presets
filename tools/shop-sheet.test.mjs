@@ -1917,7 +1917,8 @@ test("a till or refill that isn't a whole number of coins is refused, the field 
   }
   assert.deepEqual(shop.updates, []);
   assert.equal(warnings.length, 8);
-  assert.ok(sheet._resetTyping, "the field goes back to what the shop holds");
+  await change(sheet, { op: "till", denomination: "gp" }, { value: "x" });
+  assert.match(sheet._resetTyping, /\[data-op="till"\]\[data-denomination="gp"\]/, "that coin's field goes back, not another coin's");
 });
 
 test("a coin the world's currencies don't have is never written (#147)", async t => {

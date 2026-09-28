@@ -1001,6 +1001,11 @@
 .shop-sheet .mp-field input:disabled { cursor: not-allowed; }
 .shop-sheet .mp-field:focus-within { outline-color: var(--mp-accent); }
 .shop-sheet .mp-field span { font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+/* The till's coin fields (#147, design U0HcWc): one per coin, sharing the row, each with its coin. */
+.shop-sheet .mp-coin-fields { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.shop-sheet .mp-coin-fields .mp-field { flex: 1 1 0; width: auto; min-width: 0; }
+.shop-sheet .mp-field.is-coin { padding: 6px 8px; }
+.shop-sheet .mp-field.is-coin img { flex: none; width: 14px; height: 14px; margin: 0; border: none; border-radius: 50%; }
 .shop-sheet .mp-plain { flex: 1 1 0; font: italic 400 14px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .shop-sheet .mp-box {
@@ -1156,6 +1161,8 @@
 .shop-sheet .mp-deal-saving { align-self: flex-start; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
 .shop-sheet .mp-price-line .mp-tag span { font-size: 10px; line-height: 12px; }
 .shop-sheet .mp-divider { flex: none; align-self: stretch; height: 1px; margin: 0; border: none; background: var(--mp-line); }
+/* Players see, jumped to Till: the Sell tab's till card, framed on the pane's own surface. */
+.shop-sheet .settings-preview .mp-till-card { align-self: stretch; outline: 1px solid var(--mp-line); }
 .shop-sheet .mp-preview-foot { align-self: stretch; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* The sections the design has no frame for yet (#145 step 4): kept to the same type and colours. */
