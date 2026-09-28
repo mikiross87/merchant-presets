@@ -496,14 +496,14 @@ test("a shop made visitable once and hidden again by the GM stays hidden through
   const store = legacy(shipped("General_Store_Village_"));
   store.flags["merchant-presets"].madeVisitable = "world-a";
   store.ownership = { default: 0 };
-  assert.equal(planOwnership(store, true, "world-a"), null);
+  assert.equal(planOwnership(store, true, "world-a", undefined, "anywhere"), null);
 });
 
 test("a shop the GM switched off Players can visit stays hidden through a re-run migration (#140 review, round 6)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.flags["merchant-presets"].visibility = false;
   store.ownership = { default: 0 };
-  assert.equal(planOwnership(store, true, "world-a"), null);
+  assert.equal(planOwnership(store, true, "world-a", undefined, "anywhere"), null);
 });
 
 test("a shop marked in another world, its ownership cleared by export, is made visitable here (#138 review, round 6)", () => {
@@ -522,7 +522,7 @@ test("the OWNER entry Foundry writes for the creating GM isn't a choice: the sho
 test("a shop the GM opened to one player only is the GM's choice, left alone (#138 review, round 6)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 0, rogueUser000001: 1 };
-  assert.equal(planOwnership(store, true, "world-a"), null);
+  assert.equal(planOwnership(store, true, "world-a", undefined, "anywhere"), null);
 });
 
 test("a player the GM made Owner of a shop is the GM's choice, left alone (#138 review, round 8)", () => {
@@ -539,7 +539,7 @@ test("a player the GM made Owner of a shop is the GM's choice, left alone (#138 
 test("a level left for a player since deleted isn't a choice: the shop is made visitable (#138 review, round 9)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 0, theGmUser000001: 3, goneUser00000001: 2 };
-  assert.equal(planOwnership(store, true, "world-a", () => false), 1);
+  assert.equal(planOwnership(store, true, "world-a", () => false, "anywhere"), 1);
 });
 
 test("planActorUpdate respects a GM's own ownership choice (not 0) and never overwrites it", () => {
@@ -703,12 +703,20 @@ test("an unambiguous boolean stand-in coerces; an ambiguous one falls back to ST
 
 /* ---------------------------------------------------------------- ownership */
 
-test("planOwnership", () => {
-  assert.equal(planOwnership({ ownership: { default: 0 } }, true), 1);
-  assert.equal(planOwnership({ ownership: { default: 0 } }, false), null);
-  assert.equal(planOwnership({ ownership: { default: 2 } }, false), null);
-  assert.equal(planOwnership({ ownership: { default: 3 } }, true), null);
-  assert.equal(planOwnership({}, true), 1);   // no ownership at all reads as the field's own default, 0
+test("planOwnership, from anywhere (#104)", () => {
+  const anywhere = (actor, placed) => planOwnership(actor, placed, null, undefined, "anywhere");
+  assert.equal(anywhere({ ownership: { default: 0 } }, true), 1);
+  assert.equal(anywhere({ ownership: { default: 0 } }, false), null);
+  assert.equal(anywhere({ ownership: { default: 2 } }, false), null);
+  assert.equal(anywhere({ ownership: { default: 3 } }, true), null);
+  assert.equal(anywhere({}, true), 1);   // no ownership at all reads as the field's own default, 0
+});
+
+test("planOwnership, in reach mode, never writes: a shop stays as it is (#166)", () => {
+  for (const actor of [{ ownership: { default: 0 } }, { ownership: { default: 2 } }, {}]) {
+    assert.equal(planOwnership(actor, true, null, undefined, "reach"), null);
+    assert.equal(planOwnership(actor, false, null), null);
+  }
 });
 
 /* ------------------------------------------------------------- planTokenDisable */

@@ -4,7 +4,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { accessOwnership, canVisit, inReach, tokenRect } from "../scripts/reach.mjs";
+import { accessModeOf, accessOwnership, actorInReach, canOpenOn, canVisit, gridOf, inReach, reachOnScene, tokenRect, tokensOf } from "../scripts/reach.mjs";
 
 const NONE = 0, LIMITED = 1, OWNER = 3;
 /** A 100 px square grid of 5 ft squares, as a V14 scene's `grid` reads. */
@@ -62,6 +62,39 @@ test("a token rect is the token's footprint in scene pixels", () => {
   assert.deepEqual(tokenRect({ x: 300, y: 400, width: 2, height: 1 }, 100), { x: 300, y: 400, width: 200, height: 100 });
 });
 
+/* ------------------------------------------------------------------ scenes */
+
+/** A token document at column `col`, row `row` of a 100 px grid, as V14 stores it. */
+const token = (id, actorId, col, row, over = {}) => ({ id, actorId, actorLink: true, x: col * 100, y: row * 100, width: 1, height: 1, hidden: false, ...over });
+const scene = (id, tokens, grid = { size: 100, distance: 5, type: 1 }) => ({ id, grid, tokens });
+const SHOP = { id: "shop", isToken: false }, ARIA = { id: "aria", isToken: false };
+
+test("an actor's tokens are those linked to it; an unlinked token's actor is that token alone", () => {
+  const market = scene("s1", [token("t1", "shop", 5, 5), token("t2", "shop", 9, 9, { actorLink: false }), token("t3", "aria", 6, 5)]);
+  assert.deepEqual(tokensOf(market, SHOP).map(t => t.id), ["t1"]);
+  assert.deepEqual(tokensOf(market, { id: "shop", isToken: true, token: { id: "t2" } }).map(t => t.id), ["t2"]);
+  assert.deepEqual(tokensOf(market, ARIA).map(t => t.id), ["t3"]);
+});
+
+test("a scene's grid: its square in pixels and in feet, and whether it's gridless", () => {
+  assert.deepEqual(gridOf(scene("s", [], { size: 140, distance: 5, type: 1 })), { size: 140, distance: 5, gridless: false });
+  assert.deepEqual(gridOf(scene("s", [], { size: 100, distance: 5, type: 0 })), { size: 100, distance: 5, gridless: true });
+});
+
+test("the GM finds a buyer in reach on whichever scene they share with the shop", () => {
+  const market = scene("s1", [token("t1", "shop", 5, 5)]);
+  const road = scene("s2", [token("t2", "aria", 5, 6)]);
+  // Beside the shop's square on another scene is not at the counter.
+  assert.equal(actorInReach([market, road], SHOP, ARIA), false);
+  const together = scene("s3", [token("t3", "shop", 5, 5), token("t4", "aria", 6, 6)]);
+  assert.equal(actorInReach([market, road, together], SHOP, ARIA), true);
+});
+
+test("a shop token the GM hid is no counter to stand at", () => {
+  const market = scene("s1", [token("t1", "shop", 5, 5, { hidden: true }), token("t2", "aria", 6, 5)]);
+  assert.equal(reachOnScene(market, SHOP, tokensOf(market, ARIA)), false);
+});
+
 /* ------------------------------------------------------------------ who may open it */
 
 const player = (over = {}) => ({ isGM: false, mode: "reach", switchedOff: false, ownLevel: NONE, defaultLevel: NONE, reach: false, ...over });
@@ -92,6 +125,30 @@ test("a default the GM set by hand opens the shop to every player from anywhere"
 test("in anywhere mode a player opens a visitable shop from anywhere, and a hidden one not at all", () => {
   assert.equal(canVisit(player({ mode: "anywhere", defaultLevel: LIMITED })), true);
   assert.equal(canVisit(player({ mode: "anywhere", defaultLevel: NONE, reach: true })), false);
+});
+
+test("a player opens a shop from the scene they view when a token of theirs stands at it", () => {
+  const P1 = { id: "p1", isGM: false };
+  const owned = (id, owners) => ({ id, testUserPermission: (user, level) => level === "OWNER" && owners.includes(user.id) });
+  const shop = { id: "shop", isToken: false, ownership: { default: NONE }, flags: { "merchant-presets": { shop: { version: 1 } } } };
+  const aria = owned("aria", ["p1"]), tomas = owned("tomas", ["p2"]);
+  const tok = (id, actor, col, row) => ({ ...token(id, actor.id, col, row), actor });
+  const beside = scene("s1", [tok("t1", shop, 5, 5), tok("t2", aria, 6, 5)]);
+  assert.equal(canOpenOn(beside, shop, P1, "reach"), true);
+  // Someone else's token at the counter doesn't let p1 in.
+  const theirs = scene("s1", [tok("t1", shop, 5, 5), tok("t3", tomas, 6, 5), tok("t2", aria, 9, 9)]);
+  assert.equal(canOpenOn(theirs, shop, P1, "reach"), false);
+  // No scene on the canvas: nobody's at any counter.
+  assert.equal(canOpenOn(null, shop, P1, "reach"), false);
+  // From anywhere, a hidden shop stays shut however close p1 stands; a visitable one opens.
+  assert.equal(canOpenOn(beside, shop, P1, "anywhere"), false);
+  assert.equal(canOpenOn(null, { ...shop, ownership: { default: LIMITED } }, P1, "anywhere"), true);
+  assert.equal(canOpenOn(null, shop, { id: "gm", isGM: true }, "reach"), true);
+});
+
+test("a stored Shop access reads as reach unless it says anywhere", () => {
+  assert.equal(accessModeOf("anywhere"), "anywhere");
+  for (const v of ["reach", undefined, null, "", "nonsense"]) assert.equal(accessModeOf(v), "reach");
 });
 
 /* ------------------------------------------------------------------ switching Shop access */

@@ -59,6 +59,28 @@ test("a player's purchase lands: goods on the character, coin in the till, stock
   assert.equal(shop.system.currency.gp, 252);
 });
 
+test("within reach, the GM carries out a player's trade only while their token stands at the counter (#166)", async () => {
+  const { world, shop, tess, api, request } = await setUp();
+  shop.ownership = { default: 0, gm: 3 };   // hidden, as reach mode keeps a shop
+  const grid = { size: 100, distance: 5, type: 1 };
+  const at = (actor, col, row) => ({ id: `${actor.id}-tok`, actorId: actor.id, actorLink: true, hidden: false, x: col * 100, y: row * 100, width: 1, height: 1 });
+  world.scenes.push({ id: "market", grid, tokens: [at(shop, 5, 5), at(tess, 8, 5)] });
+  const far = await asPlayer(() => api.trade(request([{ itemId: BELL, quantity: 1, expectedBundlePriceCp: 100 }])));
+  assert.equal(far.status, "refused");
+  assert.equal(far.reason, "invalid-request");
+  assert.equal(qty(shop, BELL), 11, "nothing moved");
+
+  world.scenes[0].tokens[1] = at(tess, 6, 6);   // diagonal to the stall
+  const near = await asPlayer(() => api.trade(request([{ itemId: BELL, quantity: 1, expectedBundlePriceCp: 100 }])));
+  assert.equal(near.status, "sealed", JSON.stringify(near));
+  assert.equal(qty(shop, BELL), 10);
+
+  // A GM trades for anyone, wherever they stand.
+  world.scenes[0].tokens[1] = at(tess, 9, 9);
+  const gm = await api.trade(request([{ itemId: BELL, quantity: 1, expectedBundlePriceCp: 100 }]));
+  assert.equal(gm.status, "sealed");
+});
+
 test("a trade resent after the claim moved to a fresh tab is still carried out only once (#134 review)", async () => {
   const { world, shop, tess, request } = await setUp();
   const first = request([{ itemId: ROPE, quantity: 1 }], { tradeId: "moved0000000001" });
