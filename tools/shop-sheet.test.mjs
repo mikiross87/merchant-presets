@@ -74,7 +74,7 @@ globalThis.game = {
   // A GM is at the table unless a test says otherwise.
   users: { activeGM: { id: "gm", isGM: true } },
   modules: { get: () => ({ api }) },
-  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite" }, get(_module, key) { return this.values[key]; } },
+  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite", followClock: "always" }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -353,6 +353,27 @@ test("with trading hours off the shop is open around the clock", async () => {
     assert.equal(context.open, true);
   } finally {
     globalThis.game.settings.values.tradingHours = true;
+    clock.hour = 12;
+  }
+});
+
+test("where shops don't follow the world clock the window keeps no time: open at 22:00, no hours chip, fresh chip, New or bill date (#149)", async () => {
+  globalThis.game.settings.values.followClock = "never";
+  clock.hour = 22;
+  const before = globalThis.game.time.worldTime;
+  try {
+    const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 8 * 3600, drawn: true } } })] });
+    shop.flags["merchant-presets"].restockedAt = 8 * 3600;
+    globalThis.game.time.worldTime = 12 * 3600;
+    const { open, header, buy } = await sheet._prepareContext({});
+    assert.equal(open, true);
+    assert.equal(header.hoursChip, false);
+    assert.equal(header.fresh, false);
+    assert.equal(buy.sections[0].rows[0].isNew, false);
+    assert.equal(buy.basket.dateLabel, "");
+  } finally {
+    globalThis.game.settings.values.followClock = "always";
+    globalThis.game.time.worldTime = before;
     clock.hour = 12;
   }
 });

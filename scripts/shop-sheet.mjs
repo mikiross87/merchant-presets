@@ -20,6 +20,7 @@ import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields,
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { icon } from "./icons.mjs";
+import { worldFollowsClock } from "./clock.mjs";
 import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -223,7 +224,13 @@ const listText = (cp, currencies) => coinBreakdown(cp ?? 0, currencies).map(c =>
  * The hours a shop really closes by: none while the world's trading hours are off, since every
  * shop is then open around the clock, so no deal can last "until the shop closes" (#142 review).
  */
-const closingHours = shop => (game.settings.get(MODULE, "tradingHours") ? shop.hours : null);
+const closingHours = shop => (keepsHours() ? shop.hours : null);
+
+/**
+ * Whether shops keep their hours: the world's trading hours are on, and shops follow the world
+ * clock (#149). Where they don't, every shop is open around the clock, as with hours off.
+ */
+const keepsHours = () => worldFollowsClock() && game.settings.get(MODULE, "tradingHours");
 
 /** Text for a form's HTML: the deal form is built as a string (DialogV2.input). */
 const escapeText = text => String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -648,10 +655,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const context = await super._prepareContext(options);
     const actor = this.document;
     const currencies = CONFIG.DND5E.currencies;
-    // Trading hours off means every shop is open around the clock (the setting's own promise), so
-    // the window reads it as a shop with no hours: always open, in the header too.
+    // Trading hours off, or shops not following the world clock (#149), means every shop is open
+    // around the clock (the settings' own promise), so the window reads it as a shop with no hours:
+    // always open, in the header too.
     const shop = shopConfigOf(actor);
-    const config = game.settings.get(MODULE, "tradingHours") ? shop : { ...shop, hours: null };
+    const config = keepsHours() ? shop : { ...shop, hours: null };
     const { title, tierFromName } = titleParts(actor.name);
     const tier = tierFromName ?? config.tier;
 
@@ -725,10 +733,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tier,
       kindIcon: kindIcon(actor, config),
       // "Fresh stock today" until the shop closes after the restock (#152).
-      fresh: isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
+      // Not without a clock, which is what clears it (#149).
+      fresh: worldFollowsClock() && isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
+      // Without a clock, no hours to speak of: no chip at all (#149, design RRqQ7).
+      hoursChip: worldFollowsClock(),
       openLabel: open
         ? (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntil", { time: closesAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.AlwaysOpen"))
         : (config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.ClosedOpensAt", { time: opensAt }) : game.i18n.localize("MERCHANT_PRESETS.Shop.Closed.Label")),
@@ -954,7 +965,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
         // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
-        row.isNew = isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
+        row.isNew = worldFollowsClock() && isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
@@ -1461,14 +1472,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       purseLabel: purse === "now" ? i18n("Bill.PurseNow", { name }) : purse === "short" ? i18n("Bill.ShortLabel", { name }) : i18n("Bill.PurseAfter", { name }),
       notice,
       delivered,
-      stampDate: sealed?.at != null ? this.#dayMonth(sealed.at) : "",
+      // No date without a clock (#149, design band 13).
+      stampDate: sealed?.at != null && worldFollowsClock() ? this.#dayMonth(sealed.at) : "",
       foot
     };
   }
 
-  /** The bill's date now: "14th of Mirtul · mid-morning" (design y6iNf). */
+  /** The bill's date now: "14th of Mirtul · mid-morning" (design y6iNf); none without a clock (#149). */
   #worldDateLabel() {
-    return this.#billDateLabel(game.time.worldTime);
+    return worldFollowsClock() ? this.#billDateLabel(game.time.worldTime) : "";
   }
 
   /** "14th of Mirtul · mid-morning"; a festival day, in no month, as the calendar writes it. */
@@ -1854,7 +1866,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (row.unpriced || row.worthless) continue;
       rows.push({
         name: row.name, img: row.img, meta: stockWords(row.stock), tag: row.tag,
-        isNew: isNewGood(data, shelf, at, hours, game.time.calendar.days),
+        isNew: worldFollowsClock() && isNewGood(data, shelf, at, hours, game.time.calendar.days),
         priceCoins: coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })),
         listText: listText(row.listPriceCp, currencies)
       });

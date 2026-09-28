@@ -472,7 +472,8 @@ function registerRestock() {
   const loadedAt = game.time.worldTime;
 
   Hooks.on("updateWorldTime", async worldTime => {
-    if (!game.settings.get(MODULE, "autoRestock")) return;
+    // Not without a clock (#149): a restock happens by hand, with Restock now.
+    if (!game.settings.get(MODULE, "autoRestock") || !worldFollowsClock()) return;
     if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
     const from = game.settings.get(MODULE, "lastRestockTime") || loadedAt;
     if (worldTime === from) return;
@@ -481,7 +482,10 @@ function registerRestock() {
     if (worldTime > from) await scheduledRestocks(worldTime, from);
   });
   // The switch is read per tick, so it can change mid-session; this only says how the world loaded.
-  if (game.settings.get(MODULE, "autoRestock")) log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
+  if (game.settings.get(MODULE, "autoRestock")) {
+    log(worldFollowsClock() ? `automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`
+      : "automatic restocking waits: shops don't follow the world clock");
+  }
 }
 
 /* ---------------------------------------------------------------- nutrition */
@@ -893,9 +897,9 @@ async function actorAt(uuid) {
   return doc?.documentName === "Actor" ? doc : null;
 }
 
-/** Whether `shop` is open by its own hours on the world clock. Trading hours off: always. */
+/** Whether `shop` is open by its own hours on the world clock. Trading hours off, or shops not following the clock (#149): always. */
 function shopIsOpen(shop) {
-  if (!game.settings.get(MODULE, "tradingHours")) return true;
+  if (!worldFollowsClock() || !game.settings.get(MODULE, "tradingHours")) return true;
   const hours = safeShopOf(shop)?.hours ?? null;
   return isOpen(hours, minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime)), game.time.calendar.days);
 }
@@ -985,8 +989,9 @@ Hooks.on("renderChatMessageHTML", (_message, html) => {
   if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
 });
 
-/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. */
+/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. None without a clock (#149). */
 function receiptWhen(time) {
+  if (!worldFollowsClock()) return "";
   try {
     const calendar = game.time.calendar;
     const c = calendar.timeToComponents(time);

@@ -311,7 +311,8 @@ export function receiptHtml(card, currencies, { t, when, whispered }) {
     + `<div class="mp-receipt-speaker" data-pen="Speaker">`
     + `<img class="mp-receipt-portrait" data-pen="Speaker img" src="${escape(card.shopImg ?? "")}" alt="" />`
     + `<span class="mp-receipt-who" data-pen="Speaker text"><b data-pen="Speaker name">${escape(card.shopName)}</b>`
-    + `<span data-pen="Speaker time">${escape(when)}</span></span>`
+    // No time where shops don't follow the world clock (#149): `when` is empty.
+    + (when ? `<span data-pen="Speaker time">${escape(when)}</span>` : "") + `</span>`
     + `<span class="mp-receipt-vis" data-pen="Visibility">${whispered ? iconSlot("eye-off", "Vis icon") : iconSlot("globe", "Vis icon")}`
     + `<span data-pen="Vis text">${escape(t(whispered ? "Receipt.GmOnly" : "Receipt.Public"))}</span></span></div>`
     + `<div class="mp-receipt-head" data-pen="Card header">${card.kind === "buy" ? iconSlot("shopping-bag", "Kicker icon") : iconSlot("hand-coins", "Kicker icon")}`

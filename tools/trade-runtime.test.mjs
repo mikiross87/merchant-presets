@@ -181,6 +181,18 @@ test("a shop outside its hours refuses, when trading hours are on", async () => 
   assert.deepEqual([result.status, result.reason], ["refused", "closed"]);
 });
 
+test("where shops don't follow the world clock a shop trades at any hour, and its receipt names no time (#149)", async () => {
+  const { world, api, request } = await setUp();
+  world.settings.tradingHours = true;
+  world.settings.followClock = "never";
+  globalThis.game.time.calendar.timeToComponents = () => ({ hour: 22, minute: 0 });
+  globalThis.game.time.calendar.days = { minutesPerHour: 60, hoursPerDay: 24 };
+  const result = await api.trade(request([{ itemId: BELL, quantity: 1 }]));
+  assert.equal(result.status, "sealed");
+  const receipt = world.calls.messages.at(-1)?.content ?? "";
+  assert.ok(receipt.includes("mp-receipt") && !receipt.includes('data-pen="Speaker time"'));
+});
+
 test("no GM connected reads as no-gm; a query that fails reads as unconfirmed", async () => {
   const { api, request } = await setUp();
   const gm = globalThis.game.users.activeGM;

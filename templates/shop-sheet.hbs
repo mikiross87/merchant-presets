@@ -58,9 +58,12 @@
           this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}
     <div class="mp-description mp-wide-only" data-pen="Shop Description">{{{header.description}}}</div>
     <div class="mp-chips mp-wide-only" data-pen="Chips">
+      {{!-- No hours chip where shops don't follow the world clock (#149, design RRqQ7). --}}
+      {{#if header.hoursChip}}
       <span class="mp-hero-chip mp-open-chip {{#if header.open}}is-open{{else}}is-closed{{/if}}" data-pen="Open Chip">
         <span class="mp-dot" data-pen="Dot"></span><span data-pen="Open Label">{{header.openLabel}}</span>
       </span>
+      {{/if}}
       <span class="mp-hero-chip" data-pen="Kind Chip">
         {{mpIcon header.kindIcon pen="Kind icon"}}<span data-pen="Kind Label">{{header.tier}}</span>
       </span>
@@ -70,9 +73,11 @@
     </div>
     {{!-- A narrow window's short chips (design r7HIUl). --}}
     <div class="mp-chips mp-narrow-only" data-pen="Chips">
+      {{#if header.hoursChip}}
       <span class="mp-nchip {{#if header.open}}is-open{{else}}is-closed{{/if}}" data-pen="Chip {{#if header.shortOpen}}{{header.shortOpen}}{{else}}{{header.openLabel}}{{/if}}">
         <span class="mp-dot" data-pen="Dot"></span><span data-pen="Chip text">{{#if header.shortOpen}}{{header.shortOpen}}{{else}}{{header.openLabel}}{{/if}}</span>
       </span>
+      {{/if}}
       <span class="mp-nchip" data-pen="Chip {{header.tier}}">{{mpIcon header.kindIcon pen="Chip icon"}}<span data-pen="Chip text">{{header.tier}}</span></span>
       <button type="button" class="mp-nchip" data-pen="Chip {{header.shortTerms}}" popovertarget="{{appId}}-terms-popover">{{mpIcon "scale" pen="Chip icon"}}<span data-pen="Chip text">{{header.shortTerms}}</span></button>
     </div>
