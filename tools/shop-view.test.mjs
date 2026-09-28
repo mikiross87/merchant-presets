@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
   fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
-  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties
+  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties,
+  currentSection
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -936,4 +937,35 @@ test("the shopkeeper's own gear keeps every pill: its Proficient is the NPC's, a
   const gear = { flags: { "merchant-presets": { kind: "gear" } } };
   assert.deepEqual(shelfCardProperties(props, gear), props);
   assert.deepEqual(shelfCardProperties(props, { flags: { "merchant-presets": { kind: "food-drink" } } }), []);
+});
+
+/* ------------------------------------------------------------ the Settings nav (#172) */
+
+/** The Settings form's six headings, 300 px apart in its scrolled content, in a 400 px tall form. */
+const SECTIONS = ["terms", "deals", "wontBuy", "hours", "restock", "till"].map((id, i) => ({ id, top: i * 300 }));
+const view = (scrollTop, over = {}) => ({ scrollTop, clientHeight: 400, scrollHeight: 1700, pad: 0, ...over });
+
+test("the section being read is the last one whose heading has reached the top of the form (#172)", () => {
+  assert.equal(currentSection(SECTIONS, view(0)), "terms");
+  assert.equal(currentSection(SECTIONS, view(650)), "wontBuy");
+  // Between two headings, the one above is still the one being read.
+  assert.equal(currentSection(SECTIONS, view(599)), "deals");
+  assert.equal(currentSection(SECTIONS, view(1250)), "restock");
+});
+
+test("the form's scroll padding counts as the top: a heading resting on it is current (#172)", () => {
+  // A jump leaves the heading `pad` below the top edge (the form's scroll-padding-top).
+  assert.equal(currentSection(SECTIONS, view(592, { pad: 8 })), "wontBuy");
+  assert.equal(currentSection(SECTIONS, view(591, { pad: 8 })), "deals");
+});
+
+test("scrolled to the bottom, the last heading in view is current, so a short last section can be (#172)", () => {
+  // Till's heading (1500) never reaches the top: the form bottoms out at 1300 + 400 = 1700.
+  assert.equal(currentSection(SECTIONS, view(1300)), "till");
+  // A form too short to scroll at all: the top one.
+  assert.equal(currentSection(SECTIONS, { scrollTop: 0, clientHeight: 400, scrollHeight: 400, pad: 0 }), "terms");
+});
+
+test("no sections, no current one (#172)", () => {
+  assert.equal(currentSection([], view(0)), null);
 });
