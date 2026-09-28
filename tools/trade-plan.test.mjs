@@ -52,7 +52,16 @@ const identifyService = () => ({
   type: "loot",
   img: "icons/magic/perception/eye-ringed-glow-angry-small-red.webp",
   system: { price: { value: 150, denomination: "gp" }, identified: true, container: null, quantity: 1 },
-  flags: { "merchant-presets": { kind: "spellcasting", stock: { infinite: true, keep: true, service: true, noBuyback: true, category: "", bundle: 1, hidden: false, notForSale: false } } }
+  flags: { "merchant-presets": { kind: "spellcasting", spell: "Compendium.dnd5e.spells24.Item.phbsplIdentify00", stock: { infinite: true, keep: true, service: true, noBuyback: true, category: "Spells, Components Included", bundle: 1, hidden: false, notForSale: false } } }
+});
+
+/** A level service (The Temple's "Spellcasting: Cantrip"): the buyer names the spell, so it carries none. */
+const cantripService = () => ({
+  ...identifyService(),
+  _id: "CantripSvc000001",
+  name: "Spellcasting: Cantrip",
+  system: { ...identifyService().system, price: { value: 30, denomination: "gp" } },
+  flags: { "merchant-presets": { kind: "spellcasting", stock: { ...identifyService().flags["merchant-presets"].stock, category: "" } } }
 });
 
 const dagger = () => ({
@@ -850,6 +859,16 @@ test("a plain buy: currency both ways, one item create, the hook and chat card f
   assert.equal(plan.chatCard.lines[0].label, "Dagger");
   assert.equal(plan.chatCard.lines[0].lineTotalCp, 200);   // not lineTotalCp * quantity again
   assert.equal(plan.chatCard.totalCp, 200);
+});
+
+test("the chat card names a named spell as the shop window does, a level service in full (#164, design IeGac)", () => {
+  const ctx = context({ shop: { items: [identifyService(), cantripService()] }, buyer: { currency: { pp: 0, gp: 200, ep: 0, sp: 0, cp: 0 } } });
+  const request = { tradeId: "trade-1", kind: "buy", lines: [{ itemId: "IdentifySvc00001", quantity: 1 }, { itemId: "CantripSvc000001", quantity: 1 }] };
+  const result = planTrade(request, ctx);
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.plan.chatCard.lines.map(l => l.label), ["Identify", "Spellcasting: Cantrip"]);
+  // The hook keeps the good as it is: its listeners read the full name and flags.
+  assert.equal(result.plan.hook.lines[0].item.name, "Spellcasting: Identify");
 });
 
 test("a sale's chat card says the rate it paid at and what the till holds after (design z5RBkd)", () => {
