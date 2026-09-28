@@ -1122,10 +1122,12 @@ test("only the world settings a shop window shows re-render it, not the restock 
   const renders = sheet.renders;
   for (const key of ["lastRestockTime", "autoRestockDecided", "spellcastingToChat"]) fire("updateSetting", { key: `merchant-presets.${key}` });
   assert.equal(sheet.renders, renders);
-  for (const key of ["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock"]) {
+  for (const key of ["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock", "followClock"]) {
     fire("updateSetting", { key: `merchant-presets.${key}` });
   }
-  assert.equal(sheet.renders, renders + 6);
+  // dnd5e's calendar switch too: Auto reads it (#149, #161 review).
+  fire("updateSetting", { key: "dnd5e.calendarConfig" });
+  assert.equal(sheet.renders, renders + 8);
 });
 
 test("a shop whose config can't be read is never overwritten with the defaults", async t => {
@@ -1823,4 +1825,13 @@ test("where shops don't follow the world clock, Settings says so in Hours and Re
   const clocked = (await sheet._prepareContext({})).settings;
   assert.equal(clocked.hours.noClock, false);
   assert.ok(clocked.preview.hours.samples.length > 0);
+});
+
+test("without a world clock, Restock's Players see falls back to the terms, not badges that never show (#149, #161 review)", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.followClock = "never";
+  sheet._settingsSection = "restock";
+  assert.equal((await sheet._prepareContext({})).settings.preview.restock, null);
+  globalThis.game.settings.values.followClock = "always";
+  assert.ok((await sheet._prepareContext({})).settings.preview.restock);
 });

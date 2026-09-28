@@ -300,7 +300,7 @@
     <p class="mp-preview-foot" data-pen="Preview foot">{{#if preview.hours.noClock}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.NoClock"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.HoursNote"}}{{/if}}</p>
   {{else if preview.restock}}
     <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>
-    {{#unless restock.noClock}}<span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>{{/unless}}
+    <span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
     {{#each preview.restock.rows}}{{> previewRow this showStock=true}}{{/each}}
     <p class="mp-preview-foot" data-pen="Preview foot">{{preview.restock.note}}</p>
   {{else}}

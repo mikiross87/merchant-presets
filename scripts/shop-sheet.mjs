@@ -1778,7 +1778,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // Jumped to Restock, Players see shows the shelf after one (design aaJcp); to Hours, the
         // header chip at an open hour and a closed one (design S2swP). Won't buy's is Aria's Sell
         // tab, added once that is built (_prepareContext).
-        restock: this._settingsSection === "restock" ? this.#restockPreview(actor, shop, world, currencies) : null,
+        // Not without a world clock (#149): no badge or chip would show, so the terms do instead.
+        restock: this._settingsSection === "restock" && worldFollowsClock() ? this.#restockPreview(actor, shop, world, currencies) : null,
         hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
         chip: header.termsChipBase,
         // The narrow window's docked Players see, in one line: the chip, then each deal in force.
@@ -2231,9 +2232,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     Hooks.on("updateWorldTime", () => ShopSheet.#liveDataChanged(() => true));
     Hooks.on("updateActor", actor => ShopSheet.#liveDataChanged(app => app.document === actor || app._buyerUuid === actor.uuid));
     Hooks.on("deleteActor", actor => ShopSheet.#liveDataChanged(app => app._buyerUuid === actor.uuid));
-    // The world's rates, stock and purse modes, trading hours and restock switch price and open
-    // every shop (#110). Only those: the restock loop writes its own clock setting every tick.
-    const shown = new Set(["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock"].map(k => `${MODULE}.${k}`));
+    // The world's rates, stock and purse modes, trading hours, restock switch and whether shops
+    // follow the world clock price and open every shop (#110, #149), as does dnd5e's calendar
+    // switch, which Auto reads. Only those: the restock loop writes its own clock setting every tick.
+    const shown = new Set([...["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock", "followClock"]
+      .map(k => `${MODULE}.${k}`), "dnd5e.calendarConfig"]);
     for (const hook of ["createSetting", "updateSetting"]) {
       Hooks.on(hook, setting => { if (shown.has(setting.key)) ShopSheet.#liveDataChanged(() => true); });
     }
