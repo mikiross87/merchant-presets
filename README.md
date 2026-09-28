@@ -133,6 +133,9 @@ game.modules.get("merchant-presets").api.setUpShop(actor, merchantUuid, keepIds)
 
 It resolves to the number of stock lines the shop holds, or `null` when it
 couldn't set the shop up (the GM's console says why) or no GM answered in time.
+A setup that went unanswered may still finish, so check the NPC before running
+it again; `api.requestSetUp(actor, merchantUuid, keepIds)` takes the same
+arguments and tells the two apart (`status` is `done`, `failed` or `no-answer`).
 The setup is carried out by the GM's tab that runs trades and restocks, so the
 three never overlap on the same shop.
 
