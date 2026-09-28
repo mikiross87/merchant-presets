@@ -442,6 +442,19 @@ test("an unidentified item on the shelf is refused to buy, never priced", () => 
   assert.deepEqual(result, { ok: false, reason: "unidentified", line: { itemId: "Ring0000000001", quantity: 1 } });
 });
 
+test("a receipt never names an unidentified good, even one riding in a bought container (#148)", () => {
+  // The receipt and the hook are built from source data, where an unidentified good keeps its
+  // true name. Only the refusals above keep it off them: an unidentified line never plans, and a
+  // container's contents come along unlisted.
+  const pack = backpack("Backpack0000011");
+  const ring = { ...unidentifiedRing(), system: { ...unidentifiedRing().system, container: "Backpack0000011" } };
+  const result = planTrade(buyRequest("Backpack0000011", 1), context({ shop: { items: [pack, ring] } }));
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.plan.chatCard.lines.map(l => l.label), ["Backpack"]);
+  assert.deepEqual(result.plan.hook.lines.map(l => l.itemId), ["Backpack0000011"]);
+  assert.equal(JSON.stringify([result.plan.chatCard, result.plan.hook]).includes("Ring of Mystery"), false);
+});
+
 test("a quantity past the per-line cap is an invalid request, before anything is planned", () => {
   const freeInfinite = { ...backpack("Backpack0000009"), system: { ...backpack("x").system, price: { value: 0, denomination: "gp" } }, flags: { "merchant-presets": { stock: { ...backpack("x").flags["merchant-presets"].stock, infinite: true } } } };
   const ctx = context({ shop: { items: [freeInfinite] } });
