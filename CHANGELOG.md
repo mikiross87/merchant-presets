@@ -48,6 +48,13 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
+- 2.0: the service shops say what their goods do. At a temple, arcane or
+  druidic store a named spell shows by name with its level and school
+  ("Level 3 Necromancy"), a level service reads "any Level 1 spell", and the
+  bill says who it's cast for. At the stable a mount "joins the buyer" (where
+  bought animals arrive as actors) and the bill says so; saddles, carts and
+  boats read as tack and vehicles, not loot. A long shop description stops at
+  two lines, and long category names wrap. (#151)
 - 2.0: a *Till* section in the shop window's Settings tab, where the GM sets
   the coins a shop holds, coin by coin, and the gold each restock refills it
   to, shown beside the preset's own amount. A restock tops the gold up to that
