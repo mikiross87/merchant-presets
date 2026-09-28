@@ -15,7 +15,7 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierO
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
-import { DRINK_IDENTIFIERS, partOfDay } from "./shop-view.mjs";
+import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
   adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
@@ -1735,7 +1735,10 @@ Hooks.once("init", () => {
 
 // After every module's `init`: the system has set its Token class, and no token is drawn yet, so
 // the wraps reach every token's double-click (core binds them when a token is drawn).
-Hooks.once("setup", () => registerCounter());
+Hooks.once("setup", () => {
+  registerCounter();
+  registerShelfCards();
+});
 
 /** The world's *Shop access* (#166): "reach" or "anywhere". */
 function shopAccess() {
@@ -1772,6 +1775,23 @@ function registerCounter() {
     // A shop the GM switched off is no shop to step up to.
     if (!accessOf(shop, game.user, "reach").switchedOff) ui.notifications.info(game.i18n.localize("MERCHANT_PRESETS.Shop.Reach.TooFar"));
   }, "MIXED");
+}
+
+/**
+ * A shop's goods on dnd5e's item card (#170): "Not Equipped" and proficiency are worked out against
+ * the shop NPC, so a good a shop owns keeps only its attunement pill (shop-view.mjs
+ * `shelfCardProperties`). dnd5e mixes `equippableItemCardProperties` into each item type's data
+ * model, so it's wrapped per type, where it's there; a dnd5e without it keeps its own pills.
+ */
+function registerShelfCards() {
+  if (!libWrapper) return;
+  for (const [type, model] of Object.entries(CONFIG.Item?.dataModels ?? {})) {
+    if (!model?.prototype || !("equippableItemCardProperties" in model.prototype)) continue;
+    libWrapper.register(MODULE, `CONFIG.Item.dataModels.${type}.prototype.equippableItemCardProperties`, function (wrapped) {
+      const properties = wrapped();
+      return isShopActor(this.parent?.actor) ? shelfCardProperties(properties) : properties;
+    }, "WRAPPER");
+  }
 }
 
 /**

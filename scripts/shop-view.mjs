@@ -372,6 +372,15 @@ export function inspectTargets(item, { kind, isGM, uuid }) {
 }
 
 /**
+ * The pills dnd5e's card gives an equippable good a shop owns (#170): only its attunement.
+ * "Not Equipped" and proficiency (`equippableItemCardProperties`) are worked out against the shop
+ * NPC, so they say nothing to a buyer; "Requires Attunement" still does.
+ *
+ * @param {object[]} [properties]  what dnd5e's getter returns
+ */
+export const shelfCardProperties = properties => (properties ?? []).filter(p => p?.type === "attunement");
+
+/**
  * dnd5e's rich item card for `uuid`, as dnd5e's own sheets mark it up (dnd5e.mjs `loadingTooltip`):
  * a loading section dnd5e fills with `richTooltip()` when the tooltip opens. Null without a uuid.
  */
