@@ -726,9 +726,13 @@
   background: var(--mp-seal);
   outline: 1px solid var(--mp-gold);
   color: var(--mp-on-dark);
-  transition: transform 120ms ease;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 .shop-sheet .mp-seal-button:active:not(:disabled) { transform: scale(0.97); }
+/* The window's main actions glow under the mouse, as dnd5e's own buttons do (dnd5e.css
+   `.dnd5e2 button:hover`): the seal is reset from nothing above, so it's given here, and Restock
+   now has it on purpose rather than by leaking (#174). Keyboard focus keeps its gold ring. */
+.shop-sheet :is(.mp-seal-button, .mp-restock-now):hover:not(:disabled, :focus-visible) { box-shadow: 0 0 5px var(--color-shadow-primary); }
 .shop-sheet .mp-seal-button:disabled { cursor: not-allowed; background: var(--mp-inset); outline-color: var(--mp-line); color: var(--mp-muted); }
 .shop-sheet .mp-seal-button:disabled .mp-wax { background: var(--mp-line); outline: 1px solid var(--mp-line); color: var(--mp-muted); }
 .shop-sheet .mp-wax {
