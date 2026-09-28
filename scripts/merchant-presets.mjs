@@ -1126,18 +1126,13 @@ function registerTradeDesk() {
 
   const reclaim = () => claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
   reclaim();
-  // Taking the claim over mid-session: a shop the GM dragged in while no live tab held it was
-  // taken in by none (the arrival hooks leave it to the claiming tab), so it's taken in now (#136 review).
-  const takeOver = () => reclaim().then(() => {
-    if (claimsTrades(tradeClaim(), thisTab())) return takeInUnrolled();
-  }).catch(err => console.error(`${MODULE} |`, err));
   globalThis.addEventListener?.("beforeunload", () => {
     if (claimsTrades(tradeClaim(), thisTab())) game.user.unsetFlag(MODULE, "tradeTab");
   });
   Hooks.on("updateUser", user => {
     if (user !== game.user) return;
     lastAliveAt = Date.now();
-    if (tradeClaim() == null) takeOver();
+    if (tradeClaim() == null) reclaim();
   });
   const heartbeat = setInterval(() => {
     const claim = tradeClaim();
@@ -1145,7 +1140,7 @@ function registerTradeDesk() {
       game.socket.emit(SOCKET, { type: "claim-alive", userId: game.user.id, tabId: thisTab() });
     } else if (shouldReclaim({ claim, tabId: thisTab(), lastAliveAt, now: Date.now() })) {
       lastAliveAt = Date.now();
-      takeOver();
+      reclaim();
     }
   }, CLAIM_HEARTBEAT_MS);
   heartbeat.unref?.();   // plain Node (the tests): never keep the process alive for it
@@ -1711,7 +1706,10 @@ Hooks.once("ready", async () => {
   }
 
   // Every tab of the GM who made the change hears it; the one that claims trades takes it in, or
-  // two tabs would each roll a shelf (#136).
+  // two tabs would each roll a shelf (#136). Known limit: one dragged in while the claim names a
+  // tab that's gone (up to CLAIM_STALE_MS) is taken in by the load-time sweep below, at the next
+  // world load. Sweeping at the takeover instead can roll twice: two tabs taking the claim at once
+  // each briefly read it as theirs, and a claimer that lost it mid-setup is still building (#157 review).
   Hooks.on("createActor", (actor, _options, userId) => {
     if (userId !== game.user.id || !claimsTrades(tradeClaim(), thisTab())) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
@@ -1751,21 +1749,15 @@ Hooks.once("ready", async () => {
   migrateAll()
     .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
     // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
-    .then(takeInUnrolled)
+    // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+    .then(() => {
+      if (game.users.activeGM !== game.user) return;
+      return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+    })
     .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
 });
-/**
- * Take in every shop that's still fresh pack data, never rolled: one replaced from the pack while
- * the world was closed (#66), or dragged in while no tab held the trade claim (#136 review). One GM
- * does it, as for the migration: two would each adopt and draw a shelf (#138 review).
- */
-function takeInUnrolled() {
-  if (game.users.activeGM !== game.user) return;
-  return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
-}
-
 /** Ids of the shops `arrive` is working on right now: a create and an update can come together. */
 const arriving = new Set();
 

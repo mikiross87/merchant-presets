@@ -211,21 +211,6 @@ test("of one GM's tabs only the one that claims trades takes in a shop that GM r
   assert.equal(shop.flags["merchant-presets"].shelf ?? null, null, "left to the claiming tab");
 });
 
-test("a shop dragged in while no tab held the claim is taken in by the tab that claims next (#136 review)", async () => {
-  const { world, shop } = await setUp();
-  world.actors.push(shop);
-  const gm = globalThis.game.user;
-  gm.flags["merchant-presets"].tradeTab = "aTabThatCrashed";   // its claim not yet given up
-  await world.fire("createActor", shop, {}, "gm");
-  await tick(40);
-  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null, "no tab took it in");
-  delete gm.flags["merchant-presets"].tradeTab;                // given up: this tab takes the claim
-  await world.fire("updateUser", gm, {});
-  await tick(40);
-  assert.ok(shop.flags["merchant-presets"].shelf, "rolled by the tab that took over");
-  assert.equal(shop.flags.core?.sheetClass, "merchant-presets.ShopSheet");
-});
-
 test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);
