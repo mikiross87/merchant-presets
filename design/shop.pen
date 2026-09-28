@@ -32663,7 +32663,7 @@
                 {
                   "type": "frame",
                   "id": "f02FR",
-                  "name": "Cat Gear",
+                  "name": "Cat Adventuring gear",
                   "width": "fill_container",
                   "fill": "#00000000",
                   "cornerRadius": 4,
@@ -32678,7 +32678,7 @@
                     {
                       "type": "icon",
                       "id": "r94ov",
-                      "name": "Gear icon",
+                      "name": "Adventuring gear icon",
                       "width": 14,
                       "height": 14,
                       "icon": "backpack",
@@ -32688,7 +32688,7 @@
                     {
                       "type": "text",
                       "id": "qYj6U",
-                      "name": "Gear label",
+                      "name": "Adventuring gear label",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -32700,7 +32700,7 @@
                     {
                       "type": "text",
                       "id": "Giqub",
-                      "name": "Gear count",
+                      "name": "Adventuring gear count",
                       "fill": "$text-secondary",
                       "content": "27",
                       "fontFamily": "$font-compact",
@@ -33327,7 +33327,7 @@
                       }
                     },
                     "BZVOe": {
-                      "content": "Protection from Evil and Good"
+                      "content": "Protection from Evil and G…"
                     },
                     "vYzUL": {
                       "content": "Service · Level 1 Abjuration"
@@ -33445,6 +33445,51 @@
                       }
                     }
                   }
+                },
+                {
+                  "id": "R5Iqf2",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Glyph of Warding",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/triangle-glowing-green.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Glyph of Warding"
+                    },
+                    "vYzUL": {
+                      "content": "Service · Level 3 Abjuration"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "500"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
                 }
               ]
             },
@@ -33520,7 +33565,6 @@
                       "name": "Ledger",
                       "clip": true,
                       "width": "fill_container",
-                      "height": 170,
                       "layout": "vertical",
                       "gap": 8,
                       "children": [
@@ -33562,8 +33606,6 @@
                                       "id": "xePt3",
                                       "name": "Protection from Evil and Good name",
                                       "fill": "$ink",
-                                      "textGrowth": "fixed-width",
-                                      "width": "fill_container",
                                       "content": "Protection from Evil and Good",
                                       "fontFamily": "$font-slip",
                                       "fontSize": 15,
@@ -33683,7 +33725,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "UDIKN",
+                          "id": "O0qqX",
                           "name": "Line Spellcasting: Cantrip",
                           "width": "fill_container",
                           "layout": "vertical",
@@ -33691,90 +33733,69 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "S6j8ea",
+                              "id": "kansj",
                               "name": "Spellcasting: Cantrip entry",
                               "width": "fill_container",
-                              "layout": "vertical",
+                              "gap": 6,
+                              "alignItems": "end",
                               "children": [
                                 {
-                                  "type": "frame",
-                                  "id": "ObOlP",
-                                  "name": "Spellcasting: Cantrip name row",
-                                  "width": "fill_container",
-                                  "gap": 6,
-                                  "alignItems": "end",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "X69eQ",
-                                      "name": "Spellcasting: Cantrip qty",
-                                      "fill": "$accent-gold",
-                                      "content": "1 ×",
-                                      "fontFamily": "$font-compact",
-                                      "fontSize": 13,
-                                      "fontWeight": "700"
-                                    },
-                                    {
-                                      "type": "text",
-                                      "id": "X0BBG",
-                                      "name": "Spellcasting: Cantrip name",
-                                      "fill": "$ink",
-                                      "textGrowth": "fixed-width",
-                                      "width": "fill_container",
-                                      "content": "Spellcasting: Cantrip",
-                                      "fontFamily": "$font-slip",
-                                      "fontSize": 15,
-                                      "fontWeight": "600"
-                                    }
-                                  ]
+                                  "type": "text",
+                                  "id": "jqJUb",
+                                  "name": "Spellcasting: Cantrip qty",
+                                  "fill": "$accent-gold",
+                                  "content": "1 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "mtcGX",
+                                  "name": "Spellcasting: Cantrip name",
+                                  "fill": "$ink",
+                                  "content": "Spellcasting: Cantrip",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
                                 },
                                 {
                                   "type": "frame",
-                                  "id": "YOJCD",
-                                  "name": "Spellcasting: Cantrip cost row",
+                                  "id": "ZLA70",
+                                  "name": "Spellcasting: Cantrip leader",
                                   "width": "fill_container",
-                                  "gap": 6,
-                                  "alignItems": "end",
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "LV3ZI",
+                                  "name": "Spellcasting: Cantrip coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
                                   "children": [
                                     {
-                                      "type": "frame",
-                                      "id": "es8Sw",
-                                      "name": "Spellcasting: Cantrip leader",
-                                      "width": "fill_container",
-                                      "height": 10,
-                                      "stroke": "$slip-edge",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      }
-                                    },
-                                    {
-                                      "type": "frame",
-                                      "id": "R03zz5",
-                                      "name": "Spellcasting: Cantrip coins",
-                                      "gap": 5,
-                                      "alignItems": "center",
-                                      "children": [
-                                        {
-                                          "id": "Xwzr2",
-                                          "type": "ref",
-                                          "ref": "uJ3dp",
-                                          "name": "gold 30",
-                                          "descendants": {
-                                            "e1b2b": {
-                                              "content": "30",
-                                              "fill": "$ink"
-                                            },
-                                            "B6r81": {
-                                              "fill": {
-                                                "type": "image",
-                                                "enabled": true,
-                                                "url": "assets/gold.webp",
-                                                "mode": "fill"
-                                              }
-                                            }
+                                      "id": "TzCgr",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 30",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "30",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "fill"
                                           }
                                         }
-                                      ]
+                                      }
                                     }
                                   ]
                                 }
@@ -33782,7 +33803,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "Qyje6",
+                              "id": "B2Kwq",
                               "name": "Spellcasting: Cantrip detail",
                               "width": "fill_container",
                               "padding": [
@@ -33796,14 +33817,14 @@
                               "children": [
                                 {
                                   "type": "frame",
-                                  "id": "nBqBN",
+                                  "id": "T4jpDm",
                                   "name": "Spellcasting: Cantrip detail left",
                                   "gap": 5,
                                   "alignItems": "center",
                                   "children": [
                                     {
                                       "type": "icon",
-                                      "id": "UTE0d",
+                                      "id": "lb6Lx",
                                       "name": "Spellcasting: Cantrip svc icon",
                                       "width": 12,
                                       "height": 12,
@@ -33813,7 +33834,7 @@
                                     },
                                     {
                                       "type": "text",
-                                      "id": "khUvr",
+                                      "id": "gpSBW",
                                       "name": "Spellcasting: Cantrip each",
                                       "fill": "$text-secondary",
                                       "content": "Cast for Aria",
@@ -33824,7 +33845,7 @@
                                   ]
                                 },
                                 {
-                                  "id": "ktNBo",
+                                  "id": "j9GnA",
                                   "type": "ref",
                                   "ref": "obOO9",
                                   "name": "Spellcasting: Cantrip stepper",
@@ -33889,33 +33910,24 @@
                               "fontWeight": "700"
                             },
                             {
-                              "type": "frame",
-                              "id": "j9e60r",
-                              "name": "Total coins",
-                              "gap": 8,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "id": "j8BAJB",
-                                  "type": "ref",
-                                  "ref": "uJ3dp",
-                                  "name": "gold 105",
-                                  "descendants": {
-                                    "e1b2b": {
-                                      "content": "105",
-                                      "fill": "$ink"
-                                    },
-                                    "B6r81": {
-                                      "fill": {
-                                        "type": "image",
-                                        "enabled": true,
-                                        "url": "assets/gold.webp",
-                                        "mode": "fill"
-                                      }
-                                    }
+                              "id": "j8BAJB",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "gold 105",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "105",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/gold.webp",
+                                    "mode": "fill"
                                   }
                                 }
-                              ]
+                              }
                             }
                           ]
                         }
@@ -34834,6 +34846,43 @@
                       }
                     }
                   }
+                },
+                {
+                  "id": "z1K3e",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Mastiff",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/dog-husky-white-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Mastiff"
+                    },
+                    "vYzUL": {
+                      "content": "Mount · joins the buyer"
+                    },
+                    "UB234": {
+                      "content": "6 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "25"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
                 }
               ]
             },
@@ -34909,7 +34958,6 @@
                       "name": "Ledger",
                       "clip": true,
                       "width": "fill_container",
-                      "height": 170,
                       "layout": "vertical",
                       "gap": 8,
                       "children": [
@@ -35226,33 +35274,24 @@
                               "fontWeight": "700"
                             },
                             {
-                              "type": "frame",
-                              "id": "X2lXuH",
-                              "name": "Total coins",
-                              "gap": 8,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "id": "siTJm",
-                                  "type": "ref",
-                                  "ref": "uJ3dp",
-                                  "name": "gold 76",
-                                  "descendants": {
-                                    "e1b2b": {
-                                      "content": "76",
-                                      "fill": "$ink"
-                                    },
-                                    "B6r81": {
-                                      "fill": {
-                                        "type": "image",
-                                        "enabled": true,
-                                        "url": "assets/gold.webp",
-                                        "mode": "fill"
-                                      }
-                                    }
+                              "id": "siTJm",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "gold 76",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "76",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/gold.webp",
+                                    "mode": "fill"
                                   }
                                 }
-                              ]
+                              }
                             }
                           ]
                         }

@@ -50,5 +50,7 @@ icons/environment/settlement/stable.webp
 icons/commodities/treasure/figurine-camel.webp
 icons/creatures/mammals/ox-bull-horned-glowing-orange.webp
 icons/creatures/mammals/deer-antlers-blue.webp
+icons/creatures/mammals/dog-husky-white-blue.webp
+icons/magic/symbols/triangle-glowing-green.webp
 LIST
 echo "copied $(find "$DEST" -type f | wc -l | tr -d ' ') icons to $DEST"
