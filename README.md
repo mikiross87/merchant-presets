@@ -131,6 +131,11 @@ unticked items, so an empty array strips all of a fresh NPC's gear:
 game.modules.get("merchant-presets").api.setUpShop(actor, merchantUuid, keepIds)
 ```
 
+It resolves to the number of stock lines the shop holds, or `null` when it
+couldn't set the shop up (the GM's console says why) or no GM answered in time.
+The setup is carried out by the GM's tab that runs trades and restocks, so the
+three never overlap on the same shop.
+
 ### The shops
 
 Adventurers' Store · Alchemists & Apothecaries · Arcane Store · Armourer &
