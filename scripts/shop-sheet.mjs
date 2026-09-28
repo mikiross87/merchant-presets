@@ -2212,8 +2212,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     clearTimeout(this._settleTimer);
     this._settleTimer = setTimeout(() => {
       this._settlePending = false;
-      // Never under a GM's typing: the next render catches the preview up.
-      if (!this.rendered || this.element.querySelector(".settings-tab")?.contains(document.activeElement)) return;
+      // Never under a GM's typing: the next render catches the preview up. Only a field counts: a nav
+      // link still focused from its click isn't typing (#173 live check).
+      const focused = document.activeElement;
+      const typing = focused?.matches?.("input, select, textarea") && this.element.querySelector(".settings-tab")?.contains(focused);
+      if (!this.rendered || typing) return;
       this.render({ parts: ["body"] });
     }, 200);
   }
