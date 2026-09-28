@@ -569,7 +569,7 @@ const LABELS = {
   goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" }
 };
 const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
-  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -843,6 +843,8 @@ test("a level service says the buyer picks any spell of its level (#151, design 
   assert.equal(svc("Spellcasting: Cantrip"), "Service · any cantrip");
   assert.equal(svc("Spellcasting: Level 1"), "Service · any Level 1 spell");
   assert.equal(svc("Spellcasting: Level 4-5"), "Service · any Level 4 or 5 spell");
+  // A span wider than two levels names its range: Level 7 is in "6-8" too (#163 review).
+  assert.equal(svc("Spellcasting: Level 6-8"), "Service · any Level 6–8 spell");
   assert.equal(svc("Hired Spellcaster"), "Service", "a GM's own spellcasting good says only that");
   assert.deepEqual([levelService("Spellcasting: Cantrip"), levelService("Spellcasting: Level 3"), levelService("Spellcasting: Level 4-5"), levelService("Spellcasting: Revivify")],
     [{ min: 0, max: 0 }, { min: 3, max: 3 }, { min: 4, max: 5 }, null]);
