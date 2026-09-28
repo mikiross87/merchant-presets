@@ -184,6 +184,21 @@ test("within reach, placing a shop's token leaves it hidden: players open it at 
   assert.equal(shop.flags["merchant-presets"].madeVisitable, undefined);
 });
 
+test("within reach, a shop an earlier build made visitable is hidden again when the world loads (#167 live check)", async () => {
+  const world = createWorld();
+  world.settings.shopAccess = "reach";
+  const shop = world.merchant("General_Store_Town_");
+  // Placing its token opened it before #166, in this world.
+  shop.ownership = { default: LIMITED, gm: 3 };
+  shop.flags["merchant-presets"].madeVisitable = "stub-world";
+  world.actors.push(shop);
+  serveStock(world, shop);
+  await loadRuntime(world);
+  await tick(40);
+  assert.equal(shop.ownership.default, 0);
+  assert.equal(shop.flags["merchant-presets"].madeVisitable ?? null, null);
+});
+
 test("placing a token of an actor that isn't a shop changes nothing (#104)", async () => {
   const { world } = await setUp();
   const npc = world.character("goblin");

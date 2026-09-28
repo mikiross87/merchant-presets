@@ -62,6 +62,12 @@ test("a token rect is the token's footprint in scene pixels", () => {
   assert.deepEqual(tokenRect({ x: 300, y: 400, width: 2, height: 1 }, 100), { x: 300, y: 400, width: 200, height: 100 });
 });
 
+test("a token rect reads where the token was moved to, as core does, not where its move is drawn from (#167 live check)", () => {
+  // V14, at updateToken: the getters still say where the move started; `_source` says where it ends.
+  const moving = { x: 100, y: 100, width: 1, height: 1, _source: { x: 700, y: 900, width: 1, height: 1 } };
+  assert.deepEqual(tokenRect(moving, 100), { x: 700, y: 900, width: 100, height: 100 });
+});
+
 /* ------------------------------------------------------------------ scenes */
 
 /** A token document at column `col`, row `row` of a 100 px grid, as V14 stores it. */
