@@ -135,6 +135,12 @@ trades out itself. For GMs upgrading a world:
   player you give a permission of their own on a shop opens it from anywhere.
   For games without a map, the new *Shop access* setting's *From anywhere*
   opens a shop to every player once its token is placed. (#166)
+- 2.0: see what a good is from the shop window, as on a character sheet.
+  Hovering a good's picture or name shows dnd5e's item card, with its
+  description and properties, and clicking opens its page from the
+  compendium. The GM opens the shop's own copy to edit it, and on the Sell
+  tab each good opens as the seller's own. An unidentified good gives nothing
+  away. (#168)
 - 2.0: rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
   and the shop window lists them under Food & drink. The general, adventurers'

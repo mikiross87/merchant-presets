@@ -2029,3 +2029,34 @@ test("a GM's window opens, and trades for anyone, wherever the tokens stand (#16
   const { buyerPicker } = await sheet._prepareContext({});
   assert.deepEqual([...buyerPicker.characters, ...buyerPicker.others].map(a => a.name).sort(), ["hero", "mule"]);
 });
+
+/* ------------------------------------------------------------ a good's details (#168) */
+
+test("each Buy row carries its good's card and the page a click opens; each Sell row the seller's own (#168)", async t => {
+  const SRC = "Compendium.dnd5e.equipment24.Item.phbagRope0000000";
+  const rope = item("rope");
+  rope._stats = { compendiumSource: SRC };
+  const { sheet } = openShop({ shopItems: [rope], buyerItems: [item("gem", { price: { value: 14, denomination: "gp" } })] });
+  const card = uuid => '<section class="loading" data-uuid="' + uuid + '"><i class="fas fa-spinner fa-spin-pulse" inert></i></section>';
+  const { buy, sell } = await sheet._prepareContext({});
+  assert.deepEqual(buy.sections[0].rows[0].inspect, { tooltip: card("Actor.shop.Item.rope"), open: SRC });
+  assert.deepEqual(packRows(sell)[0].inspect, { tooltip: card("Actor.hero.Item.gem"), open: "Actor.hero.Item.gem" });
+  // A GM opens the shop's own copy.
+  globalThis.game.user.isGM = true;
+  t.after(() => { globalThis.game.user.isGM = false; });
+  const { buy: gmBuy } = await sheet._prepareContext({});
+  assert.equal(gmBuy.sections[0].rows[0].inspect.open, "Actor.shop.Item.rope");
+});
+
+test("clicking a good's picture or name opens the page its row names (#168)", async t => {
+  const opened = [];
+  const saved = globalThis.fromUuid;
+  t.after(() => { globalThis.fromUuid = saved; });
+  globalThis.fromUuid = async uuid => ({ sheet: { render: options => opened.push([uuid, options]) } });
+  const { sheet } = openShop();
+  await actions.inspect.call(sheet, {}, { dataset: { uuid: "Compendium.dnd5e.equipment24.Item.phbagRope0000000" } });
+  assert.deepEqual(opened, [["Compendium.dnd5e.equipment24.Item.phbagRope0000000", { force: true }]]);
+  // Nothing to open: nothing happens.
+  await actions.inspect.call(sheet, {}, { dataset: {} });
+  assert.equal(opened.length, 1);
+});

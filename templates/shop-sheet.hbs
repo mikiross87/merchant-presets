@@ -147,10 +147,10 @@
       </div>
       {{#each rows}}
         <div class="mp-row {{#if (eq stock.state 'soldOut')}}is-sold-out{{/if}} {{#if inBasket}}in-basket{{/if}}" data-pen="Row {{name}}">
-          <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+          <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" {{mpInspect inspect}} />
           <div class="mp-row-text" data-pen="Text">
             <span class="mp-name-line" data-pen="Name line">
-              <span data-pen="Name" data-tooltip="{{name}}">{{name}}</span>
+              <span data-pen="Name" {{mpInspect inspect}}>{{name}}</span>
               {{#if isNew}}<span class="mp-new-badge" data-pen="New badge"><span data-pen="New badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.New"}}</span></span>{{/if}}
             </span>
             <span class="mp-meta mp-wide-only" data-pen="Meta">{{meta}}</span>
@@ -227,19 +227,19 @@
           {{!-- A good the shop won't take stays in its group, with the reason; an unidentified one
                 isn't turned away for good, so it keeps full strength, in amber. --}}
           <div class="mp-row {{#unless (eq refusal 'Unidentified')}}is-refused{{/unless}}" data-pen="Refused {{name}}">
-            <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+            <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" {{mpInspect inspect}} />
             <div class="mp-row-text" data-pen="Text">
-              <span class="mp-name-line" data-pen="Name line"><span data-pen="Name" data-tooltip="{{name}}">{{name}}</span></span>
+              <span class="mp-name-line" data-pen="Name line"><span data-pen="Name" {{mpInspect inspect}}>{{name}}</span></span>
               <span class="mp-meta" data-pen="Meta">{{meta}}</span>
             </div>
             <span class="mp-stock-state is-{{#if (eq refusal 'Unidentified')}}unidentified{{else}}soldOut{{/if}}" data-pen="Stock">{{reason}}</span>
           </div>
         {{else}}
           <div class="mp-row {{#if inBasket}}in-basket{{/if}}" data-pen="Sell {{name}}">
-            <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" />
+            <img class="mp-item-icon" src="{{img}}" alt="" data-pen="Item Icon" {{mpInspect inspect}} />
             <div class="mp-row-text" data-pen="Text">
               <span class="mp-name-line" data-pen="Name line">
-                <span data-pen="Name" data-tooltip="{{name}}">{{name}}</span>
+                <span data-pen="Name" {{mpInspect inspect}}>{{name}}</span>
                 {{#if equipped}}{{mpIcon "shield-half" pen="Equipped icon"}}{{/if}}
               </span>
               <span class="mp-meta mp-wide-only" data-pen="Meta">{{meta}}</span>

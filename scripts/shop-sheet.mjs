@@ -25,7 +25,8 @@ import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
+  inspectTargets, itemTooltipHtml
 } from "./shop-view.mjs";
 
 import { accessModeOf, accessOf, canOpenOn, canVisit, reachOnScene, tokensOf } from "./reach.mjs";
@@ -462,6 +463,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     window: { resizable: true, icon: "fa-solid fa-store" },
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
+      inspect: ShopSheet.#onInspect,
       selectCategory: ShopSheet.#onSelectCategory,
       toggleBill: ShopSheet.#onToggleBill,
       addLine: ShopSheet.#onAddLine,
@@ -1010,6 +1012,25 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       .filter(({ data, stock }) => stock && isVisibleStock(data, stock, shopItems));
   }
 
+  /**
+   * A row's details (#168): dnd5e's rich card on hover, as markup, and the uuid a click opens
+   * (shop-view.mjs `inspectTargets`). `owner` holds the good: the shop on the Buy tab, the seller
+   * on the Sell tab.
+   */
+  #inspect(data, kind, owner) {
+    const uuid = owner?.items?.get?.(data._id)?.uuid ?? `${owner?.uuid}.Item.${data._id}`;
+    const { tip, open } = inspectTargets(data, { kind, isGM: game.user.isGM, uuid });
+    return { tooltip: itemTooltipHtml(tip), open };
+  }
+
+  /** A good's picture or name, clicked (#168): the page its row names, read-only unless it's yours to edit. */
+  static async #onInspect(_event, target) {
+    const uuid = target.dataset.uuid;
+    if (!uuid) return;
+    const doc = await fromUuid(uuid).catch(() => null);
+    return doc?.sheet?.render({ force: true });
+  }
+
   #buyContext(actor, config, rates, currencies, buyer, open) {
     const shelf = actor.flags?.[MODULE]?.shelf;
     const rows = this.#shelf(actor)
@@ -1025,6 +1046,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           ...groupFields(data, stock),
           // A named spell by the spell alone (design IeGac).
           name: goodName(data),
+          inspect: this.#inspect(data, "buy", actor),
           meta: itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: !!stock.service, spell: spellFacts(data) }),
           stockText: stockWords(row.stock),
           // A narrow window folds the stock into the meta line (design r7HIUl).
@@ -1274,6 +1296,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         ...row,
         // The shown name; the source data (true name) only prices and matches, as the engine does.
         name: buyer.items.get(item._id)?.name ?? row.name,
+        inspect: this.#inspect(item, "sell", buyer),
         // Grouped as a shelf groups its goods (design TGXBN): by kind of good.
         ...groupFields(item, null),
         meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
@@ -2318,6 +2341,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     Handlebars.registerHelper("mpIcon", (name, options) => {
       const pen = options?.hash?.pen;
       return new Handlebars.SafeString(icon(String(name).replace(/^lucide:/, ""), pen ? { "data-pen": pen } : {}));
+    });
+    // A good's picture or name (#168): dnd5e's rich card on hover, as dnd5e's own sheets mark it
+    // up, and a click that opens its page when there's one to open.
+    Handlebars.registerHelper("mpInspect", inspect => {
+      const esc = Handlebars.escapeExpression;
+      const attrs = [];
+      if (inspect?.open) attrs.push(`data-action="inspect" data-uuid="${esc(inspect.open)}"`);
+      if (inspect?.tooltip) attrs.push(`data-tooltip-html="${esc(inspect.tooltip)}"`,
+        `data-tooltip-class="dnd5e2 dnd5e-tooltip item-tooltip document-tooltip"`, `data-tooltip-direction="LEFT"`);
+      return new Handlebars.SafeString(attrs.join(" "));
     });
     // A coin's design layer name, which depends on where it shows: in a purse by its metal
     // ("gold"), in a worked example by its metal and count ("gold 15"), in a price by its place.
