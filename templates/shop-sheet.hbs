@@ -240,7 +240,7 @@
             <div class="mp-row-text" data-pen="Text">
               <span class="mp-name-line" data-pen="Name line">
                 <span data-pen="Name" {{mpInspect inspect}}>{{name}}</span>
-                {{#if equipped}}{{mpIcon "shield-half" pen="Equipped icon"}}{{/if}}
+                {{#if equipped}}<span class="mp-new-badge mp-equipped-badge" data-pen="Equipped badge"><span data-pen="Equipped badge text">{{localize "MERCHANT_PRESETS.Shop.Tag.Equipped"}}</span></span>{{/if}}
               </span>
               <span class="mp-meta mp-wide-only" data-pen="Meta">{{meta}}</span>
               <span class="mp-meta mp-narrow-only" data-pen="Meta">{{meta}} · ×{{owned}}</span>

@@ -535,6 +535,9 @@
   white-space: nowrap;
   color: var(--mp-accent);
 }
+/* An equipped item on the Sell tab (#170, design TGXBN): the New badge's shape, in neutral grey. */
+.shop-sheet .mp-equipped-badge { background: #8080802e; }
+.shop-sheet .mp-equipped-badge span { color: var(--mp-muted); }
 .shop-sheet .mp-stock-state { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 /* The same in both themes. */
 .shop-sheet .mp-stock-state.is-last { font-weight: 700; color: #b86a12; }

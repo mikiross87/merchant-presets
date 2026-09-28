@@ -141,6 +141,10 @@ trades out itself. For GMs upgrading a world:
   compendium. The GM opens the shop's own copy to edit it, and on the Sell
   tab each good opens as the seller's own. An unidentified good gives nothing
   away. (#168)
+- 2.0: a shop's goods no longer say "Not Equipped" or "Proficient" in their
+  item card, which dnd5e worked out for the shopkeeper; "Requires
+  Attunement" stays. On the Sell tab, the character's equipped items are
+  tagged *Equipped*. (#170)
 - 2.0: rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
   and the shop window lists them under Food & drink. The general, adventurers'
