@@ -48,6 +48,12 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
+- 2.0: a *Till* section in the shop window's Settings tab, where the GM sets
+  the coins a shop holds, coin by coin, and the gold each restock refills it
+  to, shown beside the preset's own amount. A restock tops the gold up to that
+  amount and never takes coin away; set it to 0 and restocks leave the till
+  alone. Under *Merchant coin: Unlimited* the till is bottomless and the
+  section says so. (#147)
 - 2.0: a world setting, *Shops follow the world clock*: *Auto* (the default),
   *Always* or *Never*. In a world that doesn't keep time, shops no longer sit
   closed for good at the hour the clock stopped: they're always open, restock
