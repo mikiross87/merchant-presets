@@ -257,7 +257,7 @@ export const SHELF_GROUP_ICONS = Object.freeze({
  */
 export function shelfGroup(item, stock, armorTypes = {}) {
   if (stock?.category) return { id: `named:${stock.category}`, named: stock.category, icon: "lucide:tag" };
-  const kind = item.flags?.["merchant-presets"]?.kind;
+  const kind = kindOf(item);
   if (kind && kind !== "gear" && kind in SHELF_GROUP_ICONS) return { id: kind, named: null, icon: SHELF_GROUP_ICONS[kind] };
   const id = item.type === "weapon" ? "weapons"
     : item.type === "equipment" && Object.hasOwn(armorTypes, item.system?.type?.value ?? "") ? "armor"

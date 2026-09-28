@@ -6820,7 +6820,6 @@
             "vehicle",
             "mount",
             "tack",
-            "food-drink",
             "meal",
             "lodging",
             "service",
@@ -6852,7 +6851,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,component,travel,gear"
+            "filters": "vehicle,mount,tack,meal,lodging,service,component,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
