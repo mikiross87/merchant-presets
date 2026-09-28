@@ -26,7 +26,7 @@ import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, sa
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
   COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
-  inspectTargets, itemTooltipHtml
+  inspectTargets, itemTooltipHtml, currentSection
 } from "./shop-view.mjs";
 
 import { accessModeOf, accessOf, canOpenOn, canVisit, reachOnScene, tokensOf } from "./reach.mjs";
@@ -543,6 +543,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._buyerUuid = game.user.character?.uuid ?? null;
     /** The GM Settings tab's open section (#110). */
     this._settingsSection = "terms";
+    /** When the nav last jumped the form (`performance.now()`): the scroll it made marks nothing else (#172). */
+    this._jumpedAt = 0;
     /** Whether a narrow window shows Players see in place of the Settings form (its dock's chevron). */
     this._previewOpen = false;
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
@@ -621,6 +623,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         else this._activeCategory = select.value;
         this.render();
       });
+    }
+    // The Settings form scrolls as one page: its nav follows the section being read (#172).
+    const settingsForm = this.element?.querySelector(".settings-body");
+    if (settingsForm) {
+      let frame = null;
+      settingsForm.addEventListener("scroll", () => {
+        if (frame) return;
+        frame = requestAnimationFrame(() => { frame = null; this.#followScroll(settingsForm); });
+      }, { passive: true });
     }
     // The GM's Settings tab (#110). A field saves when it's left (Enter leaves it): a time input
     // fires `change` on each part typed, and saving 01:00 would re-render before the 9 of 19:00.
@@ -2156,11 +2167,48 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this.render({ parts: ["body"] });
   }
 
+  /**
+   * The GM scrolled the Settings form (#172): mark the section now being read (shop-view.mjs
+   * `currentSection`) in the nav and the narrow dropdown straight away, and once the scroll
+   * settles, re-render so Players see shows that section's own view and the dropdown its icon. The
+   * scroll a click's jump makes is the jump's own: it marks nothing else.
+   */
+  #followScroll(form) {
+    if (performance.now() - this._jumpedAt < 250) return;
+    const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
+    const formTop = form.getBoundingClientRect().top;
+    const sections = [...form.querySelectorAll(".settings-section[data-section]")]
+      .map(el => ({ id: el.dataset.section, top: el.getBoundingClientRect().top - formTop + form.scrollTop }));
+    const id = currentSection(sections, { scrollTop: form.scrollTop, clientHeight: form.clientHeight, scrollHeight: form.scrollHeight, pad });
+    if (!id || id === this._settingsSection) return;
+    this._settingsSection = id;
+    this.#markSection(id);
+    clearTimeout(this._settleTimer);
+    this._settleTimer = setTimeout(() => {
+      // Never under a GM's typing: the next render catches the preview up.
+      if (!this.rendered || this.element.querySelector(".settings-tab")?.contains(document.activeElement)) return;
+      this.render({ parts: ["body"] });
+    }, 200);
+  }
+
+  /** Marks `sectionId` in the side nav, and names it in the narrow window's dropdown. */
+  #markSection(sectionId) {
+    for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link.dataset.section === sectionId);
+    const select = this.element.querySelector(".mp-section-native");
+    if (!select) return;
+    select.value = sectionId;
+    const label = select.selectedOptions[0]?.textContent ?? "";
+    select.setAttribute("aria-label", label);
+    const shown = select.closest(".mp-category-select")?.querySelector(".mp-cat-value");
+    if (shown) shown.textContent = label;
+  }
+
   /** Scrolls the form to `section` and marks it in the nav and the narrow dropdown. */
   #jumpToSection(sectionId, { fromDropdown = false } = {}) {
     const previous = this._settingsSection;
     const changed = previous !== sectionId;
     this._settingsSection = sectionId;
+    this._jumpedAt = performance.now();
     for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link.dataset.section === sectionId);
     // Only the form scrolls: scrollIntoView would scroll the window's own content too, and take
     // its bar and hero off the top.
