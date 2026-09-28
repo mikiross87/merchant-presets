@@ -229,3 +229,10 @@ test("a deal's percent takes a true minus as typed or pasted (design Q6UvA)", ()
   assert.equal(fields.buy, -10);
   assert.equal(fields.sell, null);
 });
+
+test("a deal can't end after some days where shops don't follow the world clock (#149, #161 review)", () => {
+  const form = { actor: "Actor.a", buy: "−10", sell: "", ends: "days", days: 3, note: "" };
+  const context = { name: "A", worldTime: 0, hours: null, calendar: { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 }, previous: null };
+  assert.ok(dealFields(form, { ...context, clock: false }).error);
+  assert.equal(dealFields(form, context).ends.when, "date");
+});

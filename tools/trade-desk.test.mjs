@@ -321,3 +321,9 @@ test("a GM tab takes the claim from a claimer that's gone quiet (#102 live run: 
 test("the claiming tab never re-claims from itself", () => {
   assert.equal(shouldReclaim({ claim: "b", tabId: "b", lastAliveAt: 0, now: 10 * CLAIM_STALE_MS }), false);
 });
+
+test("a receipt with no time, where shops don't follow the world clock, draws no time at all (#149, design cPxfb)", () => {
+  const html = receiptHtml(BOUGHT, CURRENCIES, { t, when: "", whispered: false });
+  assert.ok(!html.includes('data-pen="Speaker time"'));
+  assert.ok(receiptHtml(BOUGHT, CURRENCIES, { t, when: "14 Mirtul · mid-morning", whispered: false }).includes('data-pen="Speaker time">14 Mirtul'));
+});

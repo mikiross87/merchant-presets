@@ -68,7 +68,9 @@ export function createWorld() {
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
-    spellcastingToChat: true, tradeChat: "public"
+    spellcastingToChat: true, tradeChat: "public",
+    // The stub world keeps time: its tests are about the clock. Auto's own rule is tools/clock.test.mjs's.
+    followClock: "always"
   };
   // No world ever has a stored value in the stub: every setting is at its default.
   const storage = { get: () => ({ find: () => undefined }) };

@@ -48,6 +48,12 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
+- 2.0: a world setting, *Shops follow the world clock*: *Auto* (the default),
+  *Always* or *Never*. In a world that doesn't keep time, shops no longer sit
+  closed for good at the hour the clock stopped: they're always open, restock
+  only by hand, and put no date on a bill or a receipt. *Auto* follows the
+  clock wherever anything keeps time: dnd5e's calendar is on, a calendar module
+  runs it, or a whole day has passed on the clock. (#149)
 - 2.0: after a restock, the goods that came back in stock wear a *New* badge
   and the shop shows *Fresh stock today*, until the shop next closes. A shop
   that doesn't close (no hours, open round the clock, or *Shops keep their

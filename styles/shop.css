@@ -782,7 +782,8 @@
   animation: mp-stamp 180ms ease-out;
 }
 .shop-sheet .mp-stamp span:first-child { font: 700 22px/30px "Alegreya SC", system-ui, sans-serif; letter-spacing: 3px; white-space: nowrap; color: #b32626b3; }
-.shop-sheet .mp-stamp span:last-child { font: 400 10px/12px "Roboto Condensed", system-ui, sans-serif; letter-spacing: 1px; white-space: nowrap; color: #b32626b3; }
+/* The date, after the word; a stamp with no date (#149) is the word alone. */
+.shop-sheet .mp-stamp span + span { font: 400 10px/12px "Roboto Condensed", system-ui, sans-serif; letter-spacing: 1px; white-space: nowrap; color: #b32626b3; }
 .shop-sheet .mp-keep-shopping {
   flex: none;
   text-transform: none;
@@ -973,6 +974,8 @@
 }
 .shop-sheet .mp-rule { flex: 1 1 0; height: 1px; background: var(--mp-rule); }
 .shop-sheet .mp-hint { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+/* Settings where shops don't follow the world clock (#149, design RRqQ7): in view, but off. */
+.shop-sheet .settings-tab .mp-dim { opacity: 0.45; }
 
 .shop-sheet .mp-rate-row { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }

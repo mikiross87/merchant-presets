@@ -4,6 +4,7 @@
  * and the listeners that act on a trade (meals, animals, spellcasting).
  */
 
+import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
@@ -473,6 +474,12 @@ function registerRestock() {
   Hooks.on("updateWorldTime", async worldTime => {
     if (!game.settings.get(MODULE, "autoRestock")) return;
     if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
+    // Not without a clock (#149): a restock happens by hand, with Restock now. The time passed is
+    // still marked gone through, so following the clock again doesn't replay it (#161 review).
+    if (!worldFollowsClock()) {
+      if (worldTime !== game.settings.get(MODULE, "lastRestockTime")) await game.settings.set(MODULE, "lastRestockTime", worldTime);
+      return;
+    }
     const from = game.settings.get(MODULE, "lastRestockTime") || loadedAt;
     if (worldTime === from) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
@@ -480,7 +487,10 @@ function registerRestock() {
     if (worldTime > from) await scheduledRestocks(worldTime, from);
   });
   // The switch is read per tick, so it can change mid-session; this only says how the world loaded.
-  if (game.settings.get(MODULE, "autoRestock")) log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
+  if (game.settings.get(MODULE, "autoRestock")) {
+    log(worldFollowsClock() ? `automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`
+      : "automatic restocking waits: shops don't follow the world clock");
+  }
 }
 
 /* ---------------------------------------------------------------- nutrition */
@@ -892,9 +902,9 @@ async function actorAt(uuid) {
   return doc?.documentName === "Actor" ? doc : null;
 }
 
-/** Whether `shop` is open by its own hours on the world clock. Trading hours off: always. */
+/** Whether `shop` is open by its own hours on the world clock. Trading hours off, or shops not following the clock (#149): always. */
 function shopIsOpen(shop) {
-  if (!game.settings.get(MODULE, "tradingHours")) return true;
+  if (!worldFollowsClock() || !game.settings.get(MODULE, "tradingHours")) return true;
   const hours = safeShopOf(shop)?.hours ?? null;
   return isOpen(hours, minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime)), game.time.calendar.days);
 }
@@ -984,8 +994,9 @@ Hooks.on("renderChatMessageHTML", (_message, html) => {
   if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
 });
 
-/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. */
+/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. None without a clock (#149). */
 function receiptWhen(time) {
+  if (!worldFollowsClock()) return "";
   try {
     const calendar = game.time.calendar;
     const c = calendar.timeToComponents(time);
@@ -1581,6 +1592,19 @@ Hooks.once("init", () => {
   // flip a genuinely fresh 2.0 world's default off (#100 review).
   game.settings.register(MODULE, "autoRestockDecided", {
     scope: "world", config: false, type: Boolean, default: false
+  });
+
+  game.settings.register(MODULE, "followClock", {
+    name: "Shops follow the world clock",
+    hint: "Trading hours, scheduled restocks, fresh stock and the dates on a bill all run on the "
+      + "world clock. Auto follows it where anything keeps time: dnd5e's calendar is on, a calendar "
+      + "module runs it, or a whole day has passed on the clock (combat alone doesn't count). Where "
+      + "shops don't follow it, they're always open, restock only by hand, and put no date on a bill.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { auto: "Auto", always: "Always", never: "Never" },
+    default: FOLLOW_CLOCK_MODES[0]
   });
 
   game.settings.register(MODULE, "tradingHours", {

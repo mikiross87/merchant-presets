@@ -186,7 +186,7 @@ const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, Breastplate: 1, "Chain Ma
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, name = SHOP } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", name = SHOP } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
   if (game.user.isGM) {
@@ -194,6 +194,8 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     const at = Math.floor(game.time.worldTime / perDay) * perDay + ${hour} * 3600;
     if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
     await game.settings.set("merchant-presets", "autoRestock", ${autoRestock});
+    // Whether shops follow the world clock (#149): Auto keeps time here (the clock isn't at 0); band 13 sets Never.
+    await game.settings.set("merchant-presets", "followClock", ${JSON.stringify(clock)});
     // Every frame starts from the setup's purses and shelf: a Trade States frame trades, or sells
     // a line out, and the frames after it must not see that.
     const smith = game.actors.getName(${JSON.stringify(SHOP)});
@@ -283,7 +285,7 @@ const sell = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBa
  * `lines` are [name, quantity] pairs of the shop's goods (a purchase) or Aria's (a sale). The
  * frame is the posted message, in the sidebar's chat log.
  */
-const receipt = ({ kind, lines, chat }) => `async ({ theme }) => {
+const receipt = ({ kind, lines, chat, clock = "auto" }) => `async ({ theme }) => {
   const cfg = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   cfg.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", cfg);
@@ -291,6 +293,7 @@ const receipt = ({ kind, lines, chat }) => `async ({ theme }) => {
   const at = Math.floor(game.time.worldTime / perDay) * perDay + 10 * 3600;
   if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
   await game.settings.set("merchant-presets", "tradeChat", ${JSON.stringify(chat)});
+  await game.settings.set("merchant-presets", "followClock", ${JSON.stringify(clock)});
   const shop = game.actors.getName(${JSON.stringify(SHOP)});
   const aria = game.actors.getName("Aria");
   ${withoutDeals}
@@ -308,6 +311,7 @@ const receipt = ({ kind, lines, chat }) => `async ({ theme }) => {
     await actor.update({ "system.currency": currency });
   }
   await game.settings.set("merchant-presets", "tradeChat", "public");
+  await game.settings.set("merchant-presets", "followClock", "auto");
   ui.sidebar.expand();
   ui.sidebar.changeTab("chat", "primary");
   await new Promise(r => setTimeout(r, 800));
@@ -326,8 +330,8 @@ const receiptSell = receipt({ kind: "sell", lines: [["Longsword", 1], ["Potion o
  * slip, and the window's height is fitted so the slip is as tall as its contents, as the board draws
  * each one (the slip fills the column in a taller window).
  */
-const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = "", act = "", gm = true }) => openShop({
-  tab, basket, sellBasket, size: { width: 920, height: 680 },
+const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = "", act = "", gm = true, clock = "auto" }) => openShop({
+  tab, basket, sellBasket, clock, size: { width: 920, height: 680 },
   before: gm ? withoutDeals + restocked(0) + newBadges(true) + before : "",
   then: `${act}
   await new Promise(r => setTimeout(r, 500));
@@ -387,6 +391,21 @@ const stateFrames = Object.fromEntries(["light", "dark"].flatMap(theme => PARTS.
 /** Settings jumped to `section` at 10:00 on the 14th, restocked the day before, with or without the Settings frames' deals (bands 09 and 11). */
 const settingsAt = (section, deals = false, jump = true) => openShop({ tab: "settings", autoRestock: true, before: (deals ? withDeals : withoutDeals) + restocked(1) + `shop.sheet._settingsSection = "${section}";`,
   then: jump ? `app.element.querySelector('.mp-nav-link[data-section="${section}"]').click();` : "" });
+/**
+ * Band 13 (#149): shops that don't follow the world clock. Settings jumped to Hours, as S2swP; the
+ * Buy tab's sealed Bill of Sale, as WNYhA's; a purchase receipt, as z5RBkd's. None of them has a date.
+ */
+const noClockSettings = openShop({ tab: "settings", autoRestock: true, clock: "never", before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "hours";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="hours"]').click();` });
+const noClockSealed = tradeState({ act: sealThenPutBack("buy"), clock: "never" });
+const noClockReceipt = receipt({ kind: "buy", lines: BASKET, chat: "public", clock: "never" });
+const noClockFrames = Object.fromEntries(["light", "dark"].flatMap(theme => {
+  const [board, suffix] = theme === "light" ? ["cPxfb", "Light"] : ["LoQo1", "Dark"];
+  return [
+    [`${board}:sealed`, frame(`13 No world clock · Bill and receipt — ${suffix} · sealed`, theme, 664, 503, "Gamemaster", noClockSealed, { export: board, part: "qoHBi" })],
+    [`${board}:receipt`, frame(`13 No world clock · Bill and receipt — ${suffix} · receipt`, theme, 664, 503, "Gamemaster", noClockReceipt, { export: board, part: "Ea7Oy" })]
+  ];
+}));
 /** Aria's −10% deal on buying, running (until the shop closes) or ended at yesterday's closing. */
 const ariaDeal = ended => `
   const perDay = game.time.calendar.days.hoursPerDay * 3600;
@@ -465,5 +484,8 @@ export const FRAMES = {
   bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 780, "Gamemaster", settingsAt("terms", true, false)),
   G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 780, "Gamemaster", settingsAt("terms", true, false)),
   "euA99:sealed": frame("12 Sell Trade States — Light · sealed", "light", 694, 596, "Gamemaster", sellSealed, { export: "euA99", part: "o05Tqq" }),
-  "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" })
+  "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" }),
+  RRqQ7: frame("13 Settings (GM) · No world clock — Light", "light", 920, 760, "Gamemaster", noClockSettings),
+  jajnz: frame("13 Settings (GM) · No world clock — Dark", "dark", 920, 760, "Gamemaster", noClockSettings),
+  ...noClockFrames
 };

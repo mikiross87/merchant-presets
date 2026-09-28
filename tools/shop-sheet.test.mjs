@@ -74,7 +74,7 @@ globalThis.game = {
   // A GM is at the table unless a test says otherwise.
   users: { activeGM: { id: "gm", isGM: true } },
   modules: { get: () => ({ api }) },
-  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite" }, get(_module, key) { return this.values[key]; } },
+  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite", followClock: "always" }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -353,6 +353,27 @@ test("with trading hours off the shop is open around the clock", async () => {
     assert.equal(context.open, true);
   } finally {
     globalThis.game.settings.values.tradingHours = true;
+    clock.hour = 12;
+  }
+});
+
+test("where shops don't follow the world clock the window keeps no time: open at 22:00, no hours chip, fresh chip, New or bill date (#149)", async () => {
+  globalThis.game.settings.values.followClock = "never";
+  clock.hour = 22;
+  const before = globalThis.game.time.worldTime;
+  try {
+    const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 8 * 3600, drawn: true } } })] });
+    shop.flags["merchant-presets"].restockedAt = 8 * 3600;
+    globalThis.game.time.worldTime = 12 * 3600;
+    const { open, header, buy } = await sheet._prepareContext({});
+    assert.equal(open, true);
+    assert.equal(header.hoursChip, false);
+    assert.equal(header.fresh, false);
+    assert.equal(buy.sections[0].rows[0].isNew, false);
+    assert.equal(buy.basket.dateLabel, "");
+  } finally {
+    globalThis.game.settings.values.followClock = "always";
+    globalThis.game.time.worldTime = before;
     clock.hour = 12;
   }
 });
@@ -1101,10 +1122,12 @@ test("only the world settings a shop window shows re-render it, not the restock 
   const renders = sheet.renders;
   for (const key of ["lastRestockTime", "autoRestockDecided", "spellcastingToChat"]) fire("updateSetting", { key: `merchant-presets.${key}` });
   assert.equal(sheet.renders, renders);
-  for (const key of ["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock"]) {
+  for (const key of ["sellsAt", "buysAt", "stockMode", "merchantPurse", "tradingHours", "autoRestock", "followClock"]) {
     fire("updateSetting", { key: `merchant-presets.${key}` });
   }
-  assert.equal(sheet.renders, renders + 6);
+  // dnd5e's calendar switch too: Auto reads it (#149, #161 review).
+  fire("updateSetting", { key: "dnd5e.calendarConfig" });
+  assert.equal(sheet.renders, renders + 8);
 });
 
 test("a shop whose config can't be read is never overwritten with the defaults", async t => {
@@ -1435,6 +1458,19 @@ test("a player's window can't make, edit or remove a deal", async t => {
   await act(sheet, "removeDeal", { actor: buyer.uuid });
   assert.equal(shop.updates.length, 0);
   assert.equal(opened.asked.length, 0);
+});
+
+test("without a world clock no deal can end after some days: nothing would ever move it on (#149, #161 review)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer, warnings } = opened;
+  globalThis.game.settings.values.followClock = "never";
+  opened.answer = { actor: buyer.uuid, buy: -10, sell: null, ends: "days", days: 3, note: "" };
+  await act(sheet, "addDeal");
+  const ends = opened.asked[0].ends;
+  assert.equal(ends.find(e => e.value === "days").disabled, true);
+  assert.equal(ends.find(e => e.value === "close").disabled, true);
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 1);
 });
 
 test("with trading hours off a shop never closes, so no deal can last until it does (#142 review)", async t => {
@@ -1788,4 +1824,27 @@ test("a sealed bill shows the purse now and what was delivered (design WNYhA, st
     assert.equal(buy.slip.totalLabel, "MERCHANT_PRESETS.Shop.Bill.Paid");
     assert.equal(buy.slip.foot, null);
   });
+});
+
+test("where shops don't follow the world clock, Settings says so in Hours and Restock and Players see shows no chips (#149, design RRqQ7)", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.followClock = "never";
+  sheet._settingsSection = "hours";
+  const { settings } = await sheet._prepareContext({});
+  assert.equal(settings.hours.noClock, true);
+  assert.equal(settings.restock.noClock, true);
+  assert.deepEqual(settings.preview.hours, { samples: [], noClock: true });
+  globalThis.game.settings.values.followClock = "always";
+  const clocked = (await sheet._prepareContext({})).settings;
+  assert.equal(clocked.hours.noClock, false);
+  assert.ok(clocked.preview.hours.samples.length > 0);
+});
+
+test("without a world clock, Restock's Players see falls back to the terms, not badges that never show (#149, #161 review)", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.followClock = "never";
+  sheet._settingsSection = "restock";
+  assert.equal((await sheet._prepareContext({})).settings.preview.restock, null);
+  globalThis.game.settings.values.followClock = "always";
+  assert.ok((await sheet._prepareContext({})).settings.preview.restock);
 });

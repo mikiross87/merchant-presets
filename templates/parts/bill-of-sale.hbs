@@ -52,7 +52,7 @@
       </div>
 
       {{#if (eq seal.state "sealed")}}
-        <div class="mp-stamp" data-pen="Sealed Stamp"><span data-pen="Stamp word">{{localize "MERCHANT_PRESETS.Shop.Seal.Sealed"}}</span><span data-pen="Stamp date">{{slip.stampDate}}</span></div>
+        <div class="mp-stamp" data-pen="Sealed Stamp"><span data-pen="Stamp word">{{localize "MERCHANT_PRESETS.Shop.Seal.Sealed"}}</span>{{#if slip.stampDate}}<span data-pen="Stamp date">{{slip.stampDate}}</span>{{/if}}</div>
       {{/if}}
 
       <div class="mp-total-block" data-pen="Total Block">
@@ -84,7 +84,7 @@
     <header class="mp-slip-head" data-pen="Slip Head">
       <span class="mp-slip-kicker" data-pen="Slip Kicker">{{slip.kicker}}</span>
       <h2 class="mp-slip-title" data-pen="Slip Title">{{shopTitle}}</h2>
-      <span class="mp-slip-date" data-pen="Slip Date">{{basket.dateLabel}}</span>
+      {{#if basket.dateLabel}}<span class="mp-slip-date" data-pen="Slip Date">{{basket.dateLabel}}</span>{{/if}}
     </header>
     {{#if slip.notice.first}}{{> notice slip.notice}}{{/if}}
     <span class="mp-head-rule" data-pen="Head Rule"></span>

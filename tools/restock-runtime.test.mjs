@@ -231,6 +231,29 @@ test("a player can't restock a shop through the query (#140 review, round 8)", a
   assert.equal(byName(shop, "Bell")[0]._id, bell._id);
 });
 
+test("where shops don't follow the world clock, the clock never restocks a shop: only Restock now does (#149)", async () => {
+  const { world, shop, clock } = await setUp();
+  world.settings.followClock = "never";
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(0, 1));
+  await clock(at(3, 8));
+  assert.equal(shop.flags["merchant-presets"].schedule ?? null, null, "never scheduled");
+  assert.equal(byName(shop, "Bell")[0]._id, bell);
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.notEqual(byName(shop, "Bell")[0]._id, bell, "Restock now still works");
+});
+
+test("switching back to following the world clock doesn't replay the restocks due while shops didn't (#161 review)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));                                  // adopted and scheduled: due day 3
+  world.settings.followClock = "never";
+  await clock(at(5, 12));                                 // the clock moves on while shops don't follow it
+  world.settings.followClock = "always";
+  const bell = byName(shop, "Bell")[0]._id;
+  await clock(at(5, 13));
+  assert.equal(byName(shop, "Bell")[0]._id, bell, "day 3's restock isn't run late");
+});
+
 test("turning restocking off mid-session stops it at the next tick (#135 review)", async () => {
   const { world, shop, clock } = await setUp();
   world.settings.autoRestock = false;   // what migrateShop does when a 1.x merchant arrives
