@@ -24,9 +24,10 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 11 | Sell — Narrow (Light) / (Dark); Settings (GM) — Narrow (Light) / (Dark) |
 | 12 | Sell Trade States boards, light and dark |
 | 13 | No world clock (#149): Settings (GM) · No world clock — Light / Dark; below it, the Bill and receipt boards with no dates, light and dark |
+| 14 | Settings (GM) · Till (#147) — Light / Dark; Settings (GM) · Till, unlimited coin — Light / Dark |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (14, at y 11214) and gets a row here.
+A new agreed screen goes in the next band (15, at y 12094) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
