@@ -930,3 +930,10 @@ test("a shop's good keeps only its attunement pill: Not Equipped and proficiency
   assert.deepEqual(shelfCardProperties([{ type: "label", label: "DND5E.Unequipped" }, { type: "proficiency", proficiency: 0 }]), []);
   assert.deepEqual(shelfCardProperties(undefined), []);
 });
+
+test("the shopkeeper's own gear keeps every pill: its Proficient is the NPC's, and true (#171 review)", () => {
+  const props = [{ type: "label", label: "DND5E.Unequipped" }, { type: "proficiency", proficiency: 1 }];
+  const gear = { flags: { "merchant-presets": { kind: "gear" } } };
+  assert.deepEqual(shelfCardProperties(props, gear), props);
+  assert.deepEqual(shelfCardProperties(props, { flags: { "merchant-presets": { kind: "food-drink" } } }), []);
+});
