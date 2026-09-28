@@ -253,7 +253,12 @@ let runtimeLoads = 0;
 
 export async function loadRuntime(world) {
   const log = console.log;
-  console.log = (...args) => { if (!String(args[0]).startsWith("merchant-presets |")) log(...args); };
+  // This module's own log lines are kept off the test output, on `world.logs`.
+  world.logs = [];
+  console.log = (...args) => {
+    if (String(args[0]).startsWith("merchant-presets |")) world.logs.push(args.join(" "));
+    else log(...args);
+  };
   // A fresh module instance per world: its own state (migrationGateOpen, say)
   // must not leak from one test's world into the next.
   await import(`../scripts/merchant-presets.mjs?world=${++runtimeLoads}`);

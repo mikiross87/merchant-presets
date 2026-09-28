@@ -146,6 +146,52 @@ test("Restock now is carried out by the tab holding the trade claim, as a trade 
   assert.notEqual(byName(shop, "Bell")[0]._id, bell._id, "the claiming tab restocked it");
 });
 
+test("Set up shop is carried out by the tab holding the trade claim, so a clock tick there can't adopt a half-built shelf (#136)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  const gm = globalThis.game.users.activeGM;
+  const asked = [];
+  const query = gm.query;
+  gm.query = (name, data, options) => { asked.push(name); return query.call(gm, name, data, options); };
+  const lines = await globalThis.game.modules.get("merchant-presets").api.setUpShop(shop, city, []);
+  gm.query = query;
+  assert.deepEqual(asked, ["merchant-presets.setup"]);
+  assert.ok(lines > 0);
+  assert.equal(shop.flags["merchant-presets"].shop.source, city, "the claiming tab made it over");
+});
+
+test("a player can't set a shop up through the query (#136)", async () => {
+  const { world, shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  const shelf = shop.flags["merchant-presets"].shelf;
+  const answer = await globalThis.CONFIG.queries["merchant-presets.setup"]({ shopUuid: shop.uuid, sourceUuid: city, keepIds: [] },
+    { user: { id: "player", isGM: false } });
+  assert.deepEqual(answer, { lines: null });
+  assert.equal(shop.flags["merchant-presets"].shelf, shelf, "untouched");
+});
+
+test("a setup that throws on the claiming tab reads as failed, not as maybe still running (#136)", async () => {
+  const { shop, clock } = await setUp();
+  await clock(at(0, 1));
+  const warned = console.error;
+  console.error = () => {};
+  try {
+    const answer = await globalThis.game.modules.get("merchant-presets").api.requestSetUp(shop, "Compendium.merchant-presets.merchants.Actor.missing", []);
+    assert.deepEqual(answer, { status: "failed", lines: null });
+  } finally { console.error = warned; }
+});
+
+test("loading a world with scheduled restocking off doesn't log it as active (#136, from #107's live run)", async () => {
+  const world = createWorld();
+  world.settings.autoRestock = false;
+  await loadRuntime(world);
+  assert.ok(!world.logs.some(line => line.includes("restocking active")), world.logs.join("\n"));
+});
+
 test("a restock that throws on the claiming tab reads as failed, not as maybe still running (#140 review, round 10)", async () => {
   const { shop, clock } = await setUp();
   await clock(at(0, 1));
