@@ -74,3 +74,16 @@ test("text compares trimmed and with runs of space collapsed, and a true minus i
   assert.equal(scoreFrame(pairNodes([d], [node("Badge", { text: "  Buying   −10% " })])).failures.length, 0);
   assert.equal(scoreFrame(pairNodes([d], [node("Badge", { text: "Buying -10%" })])).failures[0].check, "text");
 });
+
+test("text a window cuts off matches a design that draws the cut: its start, then an ellipsis (#151)", () => {
+  const score = (design, app, truncated) => scoreFrame(pairNodes([node("(frame)"), node("Name", { text: design })],
+    [node("(frame)"), node("Name", { text: app, truncated })])).failures;
+  const full = "Protection from Evil and Good";
+  assert.deepEqual(score("Protection from Evil and G…", full, true), []);
+  // Paragraphs that run on have no space between them in the window's text.
+  assert.deepEqual(score("to carry. Spellcasting here…", "to carry.Spellcasting here draws on the divine lists.", true), []);
+  // Only where the window really cuts it, and only a true start of it.
+  assert.equal(score("Protection from Evil and G…", full, false).length, 1);
+  assert.equal(score("Protection from Good…", full, true).length, 1);
+  assert.equal(score("Protection", full, true).length, 1, "no ellipsis, no cut");
+});

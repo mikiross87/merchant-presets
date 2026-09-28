@@ -204,6 +204,11 @@
 }
 .shop-sheet .mp-description { align-self: stretch; font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
 .shop-sheet .mp-description p { margin: 0; }
+/* Two lines at most, its paragraphs run on (design IeGac): a shop's long notes (the temple's spell
+   slots) would otherwise push the window's body down. */
+.shop-sheet .mp-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.shop-sheet .mp-description p { display: inline; }
+.shop-sheet .mp-description p + p::before { content: " "; }
 .shop-sheet .mp-chips { display: flex; align-items: center; gap: 8px; }
 .shop-sheet .mp-hero-chip {
   gap: 6px;
@@ -473,7 +478,8 @@
   overflow-y: auto;
   scrollbar-width: none;
 }
-.shop-sheet .mp-nav-label { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* A long category name wraps rather than losing its end (design IeGac: "Spells, Components Included"). */
+.shop-sheet .mp-nav-label { flex: 1 1 0; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
 .shop-sheet .mp-nav-count { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* The shelf scrolls; like the Settings page, without a scrollbar taking the design's width. */
@@ -485,6 +491,9 @@
   padding: 12px 16px;
   overflow-y: auto;
   scrollbar-width: none;
+  /* Scrolled rows pass under the top padding, not through it: a list scrolled to a group starts
+     at that group, as the frames draw it (design IeGac, pI7Yd). */
+  clip-path: inset(12px 0 0 0);
 }
 .shop-sheet .mp-group { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 0 6px; }
 .shop-sheet .mp-group-heading {
@@ -1468,7 +1477,7 @@
   .shop-sheet .mp-cat-value { flex: 1 1 0; min-width: 0; font: 700 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
   .shop-sheet .mp-category-native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-  .shop-sheet .mp-stock { padding: 0 16px; }
+  .shop-sheet .mp-stock { padding: 0 16px; clip-path: none; }
   .shop-sheet .mp-stock > .mp-group:first-child { padding-top: 4px; }
   /* Settings, narrow (design bXBEW): the dropdown over one column, Players see docked below. */
   .shop-sheet .settings-tab.active { flex-direction: column; }

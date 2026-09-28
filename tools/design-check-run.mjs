@@ -56,8 +56,12 @@ function collect({ rootSelector, attr, iconAttr }) {
     const r = el.getBoundingClientRect();
     for (let a = el.parentElement; a && a !== root.parentElement; a = a.parentElement) {
       const cs = getComputedStyle(a);
-      if (cs.overflowX === "visible" && cs.overflowY === "visible") continue;
-      const c = a.getBoundingClientRect();
+      // A clip-path inset clips too: the shelf's padding band, which scrolled rows pass under.
+      const inset = /^inset\(([^)]*)\)$/.exec(cs.clipPath)?.[1].split(/\s+/).map(parseFloat);
+      if (cs.overflowX === "visible" && cs.overflowY === "visible" && !inset) continue;
+      const b = a.getBoundingClientRect();
+      const [top = 0, right = top, bottom = top, left = right] = inset ?? [];
+      const c = { top: b.top + top, right: b.right - right, bottom: b.bottom - bottom, left: b.left + left };
       if (r.bottom <= c.top || r.top >= c.bottom || r.right <= c.left || r.left >= c.right) return true;
     }
     return false;
@@ -92,6 +96,8 @@ function collect({ rootSelector, attr, iconAttr }) {
         "font-family": cs.fontFamily, "font-size": cs.fontSize, "font-weight": cs.fontWeight
       },
       text: textOf(el, cs),
+      // Text the element hides past its edge (an ellipsis, a clamped paragraph).
+      truncated: cs.overflowX !== "visible" && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1),
       icon
     };
   });

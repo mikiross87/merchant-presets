@@ -25,9 +25,10 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 12 | Sell Trade States boards, light and dark |
 | 13 | No world clock (#149): Settings (GM) · No world clock — Light / Dark; below it, the Bill and receipt boards with no dates, light and dark |
 | 14 | Settings (GM) · Till (#147) — Light / Dark; Settings (GM) · Till, unlimited coin — Light / Dark |
+| 15 | Service shops (#151): Temple & Faith Store — Light / Dark (spellcasting: named spells by name with their level and school, level services "any Level N spell", "Cast for Aria" on the bill); Stable — Light / Dark (tack and mounts as goods, "Joins Aria" on the bill). The Dock follows the Stable's rows |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (15, at y 12094) and gets a row here.
+A new agreed screen goes in the next band (16, at y 12974) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 

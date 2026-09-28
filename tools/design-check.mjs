@@ -11,8 +11,9 @@
  *
  * @typedef {{x: number, y: number, w: number, h: number}} Box  From the window's own top-left.
  * @typedef {{name: string, box: Box, sets: string[], style: Record<string, string>, text: string,
- *   icon: string|null}} Node  `sets`: the CSS properties the design sets on the node (its inline
- *   style's keys); `style`: computed values; `text`: the node's own text; `icon`: a Lucide name.
+ *   icon: string|null, truncated?: boolean}} Node  `sets`: the CSS properties the design sets on the node (its inline
+ *   style's keys); `style`: computed values; `text`: the node's own text; `icon`: a Lucide name;
+ *   `truncated`: the window cuts its text off (app nodes only).
  */
 
 /** Pixels a box edge may be off. */
@@ -144,6 +145,19 @@ const squash = text => String(text ?? "").replace(/\s+/g, " ").trim();
 const firstFamily = value => String(value ?? "").split(",")[0].replace(/["']/g, "").trim().toLowerCase();
 const px = value => parseFloat(value);
 
+/**
+ * The design's text is the window's, or, where the window cuts its text off (an ellipsis, a
+ * clamped paragraph), the design draws the cut: a start of it, then "…". Spaces aside, since
+ * paragraphs that run on have none between them in the window's text.
+ */
+function textMatches(designText, app) {
+  const drawn = squash(designText);
+  if (drawn === squash(app.text)) return true;
+  if (!app.truncated || !drawn.endsWith("…")) return false;
+  const bare = text => text.replace(/\s+/g, "");
+  return bare(app.text).startsWith(bare(drawn.slice(0, -1)));
+}
+
 /** Whether `app` passes `check` against `design`; returns [pass, expected, actual]. */
 function run(check, design, app) {
   if (check === "exists") return [!!app, true, !!app];
@@ -151,7 +165,7 @@ function run(check, design, app) {
     const e = design.box[check], a = app.box[check];
     return [Math.abs(e - a) <= BOX_TOLERANCE, e, a];
   }
-  if (check === "text") return [squash(design.text) === squash(app.text), squash(design.text), squash(app.text)];
+  if (check === "text") return [textMatches(design.text, app), squash(design.text), squash(app.text)];
   if (check === "icon") return [design.icon === app.icon, design.icon, app.icon];
   const e = design.style[check], a = app.style[check];
   if (check.endsWith("color")) return [colorsMatch(e, a), e, a];

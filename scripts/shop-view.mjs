@@ -281,11 +281,11 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
  *   service, meals feed the buyer (Simple Nutrition takes them), and ale and wine hydrate
  * @returns {string}
  */
-export function itemMeta(item, labels, t, { service = false, feeds = false, hydrates = false } = {}) {
+export function itemMeta(item, labels, t, { service = false, feeds = false, hydrates = false, spawns = false, spell = null } = {}) {
   const sys = item.system ?? {};
   // What it does for the buyer, where that holds (design mRg3y): a meal feeds them only where
   // Simple Nutrition takes meals, and ale or wine counts as water only where drinks hydrate.
-  if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : null].filter(Boolean).join(" · ");
+  if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : spellWords(item, spell, t)].filter(Boolean).join(" · ");
   if (DRINKS.includes(sys.identifier)) return [t("Drink"), hydrates && DRINK_IDENTIFIERS.includes(sys.identifier) ? t("CountsAsWater") : null].filter(Boolean).join(" · ");
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
@@ -308,9 +308,60 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
     parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
   } else {
     parts.push(whatItIs(item, labels), weight);
+    // A mount joins the buyer only where bought animals spawn, from its stat block (design pI7Yd).
+    if (spawns && joinsBuyer(item)) parts.push(t("JoinsBuyer"));
   }
   return parts.filter(Boolean).join(" · ");
 }
+
+/** A bought good that arrives as its own actor: a mount with a stat block to spawn from. */
+export const joinsBuyer = item => item.flags?.["merchant-presets"]?.kind === "mount" && !!item.flags["merchant-presets"].actor;
+
+const SPELL_PREFIX = "Spellcasting: ";
+
+/** A spellcasting service for a named spell (#55): it carries that spell's uuid. */
+export const isNamedSpell = item => item.flags?.["merchant-presets"]?.kind === "spellcasting" && !!item.flags["merchant-presets"].spell;
+
+/**
+ * The levels a "Spellcasting: Level N" service covers, by its shipped name: {min: 0, max: 0} for a
+ * cantrip, {min: 4, max: 5} for "Level 4-5"; null for any other name.
+ */
+export function levelService(name) {
+  const match = /^Spellcasting: (?:(Cantrip)|Level (\d)(?:-(\d))?)$/.exec(name ?? "");
+  if (!match) return null;
+  if (match[1]) return { min: 0, max: 0 };
+  return { min: Number(match[2]), max: Number(match[3] ?? match[2]) };
+}
+
+/**
+ * What a spellcasting service casts (design IeGac): a named spell's level and school ("Level 1
+ * Abjuration", "Evocation cantrip"), or the level a buyer picks any spell of ("any Level 1 spell").
+ * Null for anything else, or a named spell that couldn't be found.
+ *
+ * @param {object} item
+ * @param {{level: number, school: string}|null} spell  the named spell's, resolved by the caller
+ */
+function spellWords(item, spell, t) {
+  if (item.flags?.["merchant-presets"]?.kind !== "spellcasting") return null;
+  if (isNamedSpell(item)) return !spell ? null : spell.level === 0 ? t("CantripOf", { school: spell.school }) : t("SpellOf", spell);
+  const levels = levelService(item.name);
+  if (!levels) return null;
+  if (levels.max === 0) return t("AnyCantrip");
+  if (levels.min === levels.max) return t("AnySpell", { level: levels.min });
+  // Two levels read as either ("4 or 5"); a wider span as its range, so "6-8" keeps Level 7.
+  return t(levels.max - levels.min === 1 ? "AnySpells" : "AnySpellRange", levels);
+}
+
+/** The name a good shows (design IeGac): a named spell by the spell alone, the heading says it's spellcasting. */
+export function goodName(item) {
+  return isNamedSpell(item) && item.name?.startsWith(SPELL_PREFIX) ? item.name.slice(SPELL_PREFIX.length) : item.name;
+}
+
+/**
+ * Whether the seal takes its short label, "Seal it · …": three coins or more, or a price longer than
+ * "76 gp", which the long label no longer fits on one line beside (design IeGac, "Seal it · 105 gp").
+ */
+export const sealsShort = (priceText, coins) => coins >= 3 || priceText.length > 5;
 
 /** The ale and wines the module registers with Simple Nutrition as hydration (merchant-presets.mjs `registerDrinks`). */
 export const DRINK_IDENTIFIERS = Object.freeze(["ale", "wine-common", "wine-fine"]);
@@ -350,6 +401,9 @@ const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? ""
 /** What a good is, as the first part of its meta line says it: "Martial melee", "Medium armor", "Potion". */
 function whatItIs(item, labels) {
   const type = item.system?.type?.value;
+  // Tack, vehicles and mounts are loot to dnd5e; the shop names them by kind (design pI7Yd).
+  const kind = item.flags?.["merchant-presets"]?.kind;
+  if (labels.goodKinds?.[kind]) return labels.goodKinds[kind];
   if (item.type === "weapon") return sentenceCase(labelOf(labels.weaponTypes?.[type]));
   if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
   if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);

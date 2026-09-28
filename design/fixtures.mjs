@@ -14,6 +14,9 @@
 export const SHOP = "Armourer & Blacksmith";
 /** The Inn frames' shop. */
 export const INN = "Inn & Tavern";
+/** The service shops' frames (#151, band 15), by the names the frames give them. */
+export const TEMPLE = "Temple & Faith Store";
+export const STABLE = "Stable";
 
 /**
  * Runs in the page as the GM (`design-check-run.mjs --setup`): puts the world into the frames'
@@ -174,6 +177,15 @@ export async function setup() {
     [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
     [`flags.${MP}.shop.deals`]: []
   });
+
+  // The service shops (band 15; TEMPLE, STABLE); each frame's `before` lays out their shelves.
+  for (const [title, entryName] of [["Temple & Faith Store", "Temple & Faith Store (Town)"], ["Stable", "Stable (Town)"]]) {
+    for (const a of game.actors.filter(a => a.name === title)) await a.delete();
+    const made = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName(entryName)._id);
+    await rolled(made, title);
+    await made.update({ name: title, "ownership.default": 1, [`flags.${MP}.visibility`]: true,
+      [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] }, [`flags.${MP}.shop.deals`]: [] });
+  }
   return shop.id;
 }
 
@@ -271,6 +283,32 @@ const closed = openShop({ before: withoutDeals + restocked(1) + nextRestock + ne
 /** The Inn frames: evening, a meal, two nights and three ales on the bill, fresh stock today. */
 const inn = openShop({ name: INN, before: restocked(0), hour: 19,
   basket: [["Meal, Comfortable", 1], ["Inn Stay, Comfortable (per day)", 2], ["Ale (mug)", 3]] });
+/**
+ * A service shop's shelf as its frame draws it (in the page, `shop` in scope): every good on show,
+ * so the nav counts are the pack's; in the pack's order, which the arrival roll doesn't keep (it
+ * can still be replacing lines after setup, so this runs as the frame opens); the Stable's stock.
+ */
+const shelfAsPacked = name => `{
+  const pack = game.packs.get("merchant-presets.merchants");
+  const entry = (await pack.getIndex()).find(e => e.name.startsWith(${JSON.stringify(name)} + " (Town)"));
+  const order = new Map();
+  (await pack.getDocument(entry._id)).toObject().items.forEach((it, n) => { if (!order.has(it.name)) order.set(it.name, n); });
+  const counts = ${JSON.stringify(name === STABLE ? { "Saddle, Military": 8, "Saddle, Riding": 3, Camel: 4, "Horse, Draft": 4, "Horse, Riding": 4, Mastiff: 6 } : {})};
+  await shop.updateEmbeddedDocuments("Item", shop.items.filter(i => i.flags["merchant-presets"]?.kind !== "gear").map(i => ({ _id: i.id,
+    sort: ((order.get(i.name) ?? 999) + 1) * 100, "flags.merchant-presets.stock.hidden": false,
+    "system.quantity": counts[i.name] ?? Math.max(1, i.system.quantity ?? 1) })));
+}`;
+/**
+ * The service shops (#151), yesterday's restock so nothing is fresh, the list scrolled to `group`
+ * as its frame draws it. At the temple Aria has saved 100 gp more, for a named spell and a cantrip.
+ */
+const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: restocked(1) + shelfAsPacked(name) + before,
+  then: `const stock = app.element.querySelector(".buy-tab .mp-stock");
+  const first = stock.querySelector('[data-pen^="Group "]'), to = stock.querySelector('[data-pen="Group ${group}"]');
+  stock.scrollTop = to.getBoundingClientRect().top - first.getBoundingClientRect().top;` });
+const temple = serviceShop(TEMPLE, "Spellcasting", [["Spellcasting: Protection from Evil and Good", 1], ["Spellcasting: Cantrip", 1]],
+  `await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 147, ep: 0, sp: 12, cp: 30 } });`);
+const stable = serviceShop(STABLE, "Tack", [["Horse, Riding", 1], ["Stabling (per day)", 2]]);
 /** The Buyer Picker, open over the storefront; each menu on the board is measured on its own. */
 const picker = openShop({ size: { width: 920, height: 680 },
   then: "app.element.querySelector('.buyer-picker').showPopover();", root: "`${app.id}-buyer-picker`" });
@@ -496,5 +534,9 @@ export const FRAMES = {
   SrMya: frame("14 Settings (GM) · Till — Dark", "dark", 920, 760, "Gamemaster", tillSettings("finite")),
   Yusa2: frame("14 Settings (GM) · Till, unlimited coin — Light", "light", 920, 760, "Gamemaster", tillSettings("unlimited")),
   VUNXW: frame("14 Settings (GM) · Till, unlimited coin — Dark", "dark", 920, 760, "Gamemaster", tillSettings("unlimited")),
-  ...noClockFrames
+  ...noClockFrames,
+  IeGac: frame("15 Temple & Faith Store — Light", "light", 920, 760, "Gamemaster", temple),
+  iczDO: frame("15 Temple & Faith Store — Dark", "dark", 920, 760, "Gamemaster", temple),
+  pI7Yd: frame("15 Stable — Light", "light", 920, 760, "Gamemaster", stable),
+  ldd9L: frame("15 Stable — Dark", "dark", 920, 760, "Gamemaster", stable)
 };
