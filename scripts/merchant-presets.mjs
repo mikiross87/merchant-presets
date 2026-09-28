@@ -1066,7 +1066,7 @@ async function handleSetupQuery(request, { user }) {
  * @param {string[]} keepIds  Physical items to keep as the NPC's gear.
  * @returns {Promise<{status: "done"|"failed"|"no-answer", lines: number|null}>}
  */
-async function requestSetUp(actor, sourceUuid, keepIds) {
+async function requestSetUp(actor, sourceUuid, keepIds = []) {
   const gm = game.users.activeGM;
   if (!gm) return { status: "no-answer", lines: null };
   try {
@@ -1126,13 +1126,18 @@ function registerTradeDesk() {
 
   const reclaim = () => claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
   reclaim();
+  // Taking the claim over mid-session: a shop the GM dragged in while no live tab held it was
+  // taken in by none (the arrival hooks leave it to the claiming tab), so it's taken in now (#136 review).
+  const takeOver = () => reclaim().then(() => {
+    if (claimsTrades(tradeClaim(), thisTab())) return takeInUnrolled();
+  }).catch(err => console.error(`${MODULE} |`, err));
   globalThis.addEventListener?.("beforeunload", () => {
     if (claimsTrades(tradeClaim(), thisTab())) game.user.unsetFlag(MODULE, "tradeTab");
   });
   Hooks.on("updateUser", user => {
     if (user !== game.user) return;
     lastAliveAt = Date.now();
-    if (tradeClaim() == null) reclaim();
+    if (tradeClaim() == null) takeOver();
   });
   const heartbeat = setInterval(() => {
     const claim = tradeClaim();
@@ -1140,7 +1145,7 @@ function registerTradeDesk() {
       game.socket.emit(SOCKET, { type: "claim-alive", userId: game.user.id, tabId: thisTab() });
     } else if (shouldReclaim({ claim, tabId: thisTab(), lastAliveAt, now: Date.now() })) {
       lastAliveAt = Date.now();
-      reclaim();
+      takeOver();
     }
   }, CLAIM_HEARTBEAT_MS);
   heartbeat.unref?.();   // plain Node (the tests): never keep the process alive for it
@@ -1746,15 +1751,21 @@ Hooks.once("ready", async () => {
   migrateAll()
     .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
     // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
-    // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
-    .then(() => {
-      if (game.users.activeGM !== game.user) return;
-      return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
-    })
+    .then(takeInUnrolled)
     .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
 });
+/**
+ * Take in every shop that's still fresh pack data, never rolled: one replaced from the pack while
+ * the world was closed (#66), or dragged in while no tab held the trade claim (#136 review). One GM
+ * does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+ */
+function takeInUnrolled() {
+  if (game.users.activeGM !== game.user) return;
+  return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+}
+
 /** Ids of the shops `arrive` is working on right now: a create and an update can come together. */
 const arriving = new Set();
 
