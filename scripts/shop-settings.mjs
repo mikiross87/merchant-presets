@@ -30,6 +30,12 @@ export const percentOf = rate => Math.round(rate * 10_000) / 100;
 /** A percentage as a rate, the same rounding: 57 is 0.57, not 0.5700000000000001. */
 const rateOf = percent => (typeof percent === "number" ? Math.round(percent * 100) / 10_000 : percent);
 
+/** A till field's text as a count of coins (#147): a whole number, 0 or more, or null for anything else. */
+export function wholeCoins(text) {
+  const match = /^\d+$/.exec(typeof text === "string" ? text.trim() : "");
+  return match ? Number(match[0]) : null;
+}
+
 /** `{hour, minute}` as a time input's value, "07:05". */
 export const timeText = time => `${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`;
 

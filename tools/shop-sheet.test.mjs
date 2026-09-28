@@ -944,7 +944,7 @@ function openSettings(t, { gm = true, shopConfig = {}, ownership = 0 } = {}) {
   globalThis.game.user.isGM = gm;
   globalThis.ui.notifications.warn = message => warnings.push(message);
   globalThis._replace = value => ({ replaced: value });
-  globalThis.fromUuid = async uuid => (uuid === PRESET_UUID ? { flags: { "merchant-presets": { shop: preset } } } : null);
+  globalThis.fromUuid = async uuid => (uuid === PRESET_UUID ? { flags: { "merchant-presets": { shop: preset, purse: 800 } } } : null);
   t.after(() => {
     globalThis.game.user.isGM = saved.isGM;
     globalThis.game.settings.values = saved.values;
@@ -1847,4 +1847,90 @@ test("without a world clock, Restock's Players see falls back to the terms, not 
   assert.equal((await sheet._prepareContext({})).settings.preview.restock, null);
   globalThis.game.settings.values.followClock = "always";
   assert.ok((await sheet._prepareContext({})).settings.preview.restock);
+});
+
+/* -------------------------------------------------------------- Till (#147, design U0HcWc / Yusa2) */
+
+test("Settings has a Till section after Restock (#147, design U0HcWc)", async t => {
+  const { sheet } = openSettings(t);
+  const { settings } = await sheet._prepareContext({});
+  assert.deepEqual(settings.sections.map(s => s.id), ["terms", "deals", "wontBuy", "hours", "restock", "till"]);
+  assert.equal(settings.sections.at(-1).icon, "lucide:coins");
+});
+
+test("the Till section shows every coin the shop holds, what a restock refills it to and the preset's (#147)", async t => {
+  const { sheet, shop } = openSettings(t);
+  shop.system.currency = { pp: 0, gp: 212, ep: 0, sp: 3, cp: 0 };
+  shop.flags["merchant-presets"].purse = 500;
+  const { till } = (await sheet._prepareContext({})).settings;
+  assert.deepEqual(till.coins.map(c => [c.denomination, c.count]), [["pp", 0], ["gp", 212], ["ep", 0], ["sp", 3], ["cp", 0]]);
+  assert.equal(till.purseGp, 500);
+  assert.equal(till.presetGp, 800);
+  assert.equal(till.unlimited, false);
+});
+
+test("a shop with no refill amount shows the field blank, and no preset line without a preset (#147)", async t => {
+  const { sheet, shop } = openSettings(t);
+  delete shop.flags["merchant-presets"].purse;
+  globalThis.fromUuid = async () => null;
+  const { till } = (await sheet._prepareContext({})).settings;
+  assert.equal(till.purseGp, null);
+  assert.equal(till.presetGp, null);
+});
+
+test("under unlimited merchant coin the Till section is a note, and Players see has no till card (#147, design Yusa2)", async t => {
+  const { sheet } = openSettings(t);
+  globalThis.game.settings.values.merchantPurse = "unlimited";
+  sheet._settingsSection = "till";
+  const { settings } = await sheet._prepareContext({});
+  assert.equal(settings.till.unlimited, true);
+  assert.deepEqual(settings.preview.till, { card: null });
+});
+
+test("jumped to Till, Players see shows the Sell tab's till card: the coins held, no meter (#147, design U0HcWc)", async t => {
+  const { sheet, shop } = openSettings(t);
+  shop.system.currency = { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 };
+  sheet._settingsSection = "till";
+  const { preview } = (await sheet._prepareContext({})).settings;
+  assert.deepEqual(preview.till.card.coins.map(c => [c.denomination, c.count]), [["gp", 212]]);
+  sheet._settingsSection = "restock";
+  assert.equal((await sheet._prepareContext({})).settings.preview.till, null);
+});
+
+test("a coin count the GM types is written to the shop's own currency, that coin alone (#147)", async t => {
+  const { sheet, shop } = openSettings(t);
+  await change(sheet, { op: "till", denomination: "sp" }, { value: "40" });
+  assert.deepEqual(shop.updates, [{ "system.currency.sp": 40 }]);
+});
+
+test("a refill amount the GM types is written to the shop's purse flag (#147)", async t => {
+  const { sheet, shop } = openSettings(t);
+  await change(sheet, { op: "purse" }, { value: "1200" });
+  assert.deepEqual(shop.updates, [{ "flags.merchant-presets.purse": 1200 }]);
+});
+
+test("a till or refill that isn't a whole number of coins is refused, the field put back and nothing written (#147)", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  for (const value of ["-5", "2.5", "", "lots"]) {
+    await change(sheet, { op: "till", denomination: "gp" }, { value });
+    await change(sheet, { op: "purse" }, { value });
+  }
+  assert.deepEqual(shop.updates, []);
+  assert.equal(warnings.length, 8);
+  await change(sheet, { op: "till", denomination: "gp" }, { value: "x" });
+  assert.match(sheet._resetTyping, /\[data-op="till"\]\[data-denomination="gp"\]/, "that coin's field goes back, not another coin's");
+});
+
+test("a coin the world's currencies don't have is never written (#147)", async t => {
+  const { sheet, shop } = openSettings(t);
+  await change(sheet, { op: "till", denomination: "zz" }, { value: "4" });
+  assert.deepEqual(shop.updates, []);
+});
+
+test("under unlimited merchant coin the till fields write nothing (#147, design Yusa2)", async t => {
+  const { sheet, shop } = openSettings(t);
+  globalThis.game.settings.values.merchantPurse = "unlimited";
+  await change(sheet, { op: "till", denomination: "gp" }, { value: "4" });
+  await change(sheet, { op: "purse" }, { value: "4" });
+  assert.deepEqual(shop.updates, []);
 });

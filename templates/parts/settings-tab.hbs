@@ -213,8 +213,6 @@
     {{/if}}
   </section>
 
-  {{!-- The last section, on a page-tall wrapper: jumped to, it scrolls to the top (design aaJcp). --}}
-  <div class="mp-form-last">
   <section class="settings-section" data-section="restock" data-pen="Section Restock">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.restock")}}
     {{#if restock.noClock}}
@@ -277,6 +275,36 @@
       </button>
     </div>
   </section>
+
+  {{!-- The last section, on a page-tall wrapper: jumped to, it scrolls to the top (design U0HcWc). --}}
+  <div class="mp-form-last">
+  <section class="settings-section" data-section="till" data-pen="Section Till">
+    {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.till")}}
+    {{!-- Under unlimited merchant coin (design Yusa2) the till is bottomless: a note, the fields dimmed and disabled. --}}
+    <p class="mp-hint" data-pen="Till hint">{{#if till.unlimited}}{{localize "MERCHANT_PRESETS.Shop.Settings.Till.Unlimited"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Till.Hint"}}{{/if}}</p>
+    <div class="mp-rate-row {{#if till.unlimited}}mp-dim{{/if}}" data-pen="Row Holds">
+      <span class="mp-rate-label" data-pen="Holds label">{{localize "MERCHANT_PRESETS.Shop.Settings.Till.Holds"}}</span>
+      <div class="mp-coin-fields" data-pen="Coin fields">
+        {{#each till.coins}}
+          <label class="mp-field is-coin" data-pen="Field {{mpCoinPen 'metal' this}}">
+            <input type="text" inputmode="numeric" data-pen="Value" value="{{count}}" data-op="till" data-denomination="{{denomination}}" aria-label="{{aria}}" {{disabled ../till.unlimited}} />
+            <img data-pen="Coin" src="{{icon}}" alt="" />
+          </label>
+        {{/each}}
+      </div>
+    </div>
+    {{#if till.gold}}
+      <div class="mp-rate-row {{#if till.unlimited}}mp-dim{{/if}}" data-pen="Row Refills to">
+        <span class="mp-rate-label" data-pen="Refills to label">{{localize "MERCHANT_PRESETS.Shop.Settings.Till.RefillsTo"}}</span>
+        <label class="mp-field is-coin" data-pen="Field Refill gold">
+          <input type="text" inputmode="numeric" data-pen="Value" value="{{till.purseGp}}" data-op="purse" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Till.RefillsTo'}}" {{disabled till.unlimited}} />
+          <img data-pen="Coin" src="{{till.gold.icon}}" alt="" />
+        </label>
+        <em class="mp-plain" data-pen="Refills plain">{{#if till.presetGp includeZero=true}}{{localize "MERCHANT_PRESETS.Shop.Settings.Till.EachRestockPreset" gp=till.presetGp}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Till.EachRestock"}}{{/if}}</em>
+      </div>
+    {{/if}}
+    <p class="mp-hint {{#if till.unlimited}}mp-dim{{/if}}" data-pen="Till note">{{localize "MERCHANT_PRESETS.Shop.Settings.Till.Note"}}</p>
+  </section>
   {{!-- The nav's reset, for a narrow window, which hides the nav. --}}
   <button type="button" class="mp-reset mp-narrow-only" data-action="resetToPreset" {{disabled (not canReset)}}>
     {{mpIcon "rotate-ccw"}}<span>{{localize "MERCHANT_PRESETS.Shop.Settings.Reset.Label"}}</span>
@@ -298,6 +326,20 @@
       <span class="mp-chip is-{{state}}" data-pen="Chip {{chip}}"><span class="mp-chip-dot" data-pen="{{chip}} dot"></span><span data-pen="{{chip}} text">{{chip}}</span></span>
     {{/each}}
     <p class="mp-preview-foot" data-pen="Preview foot">{{#if preview.hours.noClock}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.NoClock"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.HoursNote"}}{{/if}}</p>
+  {{else if preview.till}}
+    {{!-- The Sell tab's till card, with no bill on it (design U0HcWc); none under unlimited coin (Yusa2). --}}
+    {{#if preview.till.card}}
+      <span class="mp-kicker" data-pen="Sell label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.OnSellTab"}}</span>
+      <div class="mp-till-card" data-pen="Till Card">
+        <span class="mp-till-kicker" data-pen="Till kicker">{{localize "MERCHANT_PRESETS.Shop.Sell.Till"}}</span>
+        <div class="mp-till-coins" data-pen="Till coins">{{> mpCoins coins=preview.till.card.coins mode="count"}}</div>
+        <span class="mp-meter" data-pen="Till meter"></span>
+        <p class="mp-till-note" data-pen="Till note">{{localize "MERCHANT_PRESETS.Shop.Sell.TillNote"}}</p>
+      </div>
+      <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.TillNote"}}</p>
+    {{else}}
+      <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.TillUnlimited"}}</p>
+    {{/if}}
   {{else if preview.restock}}
     <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>
     <span class="mp-chip" data-pen="Fresh chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh text">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>

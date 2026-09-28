@@ -227,7 +227,8 @@
           "deals": "Deals",
           "wontBuy": "Won't buy",
           "hours": "Hours",
-          "restock": "Restock"
+          "restock": "Restock",
+          "till": "Till"
         },
         "Visit": {
           "Label": "Players can visit",
@@ -379,7 +380,20 @@
           "AfterRestock": "After a restock, until closing",
           "AfterRestockDay": "After a restock, until the day ends",
           "RestockNote": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the shop closes.",
-          "RestockNoteDay": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the day ends."
+          "RestockNoteDay": "“New” marks goods that were out of stock before the restock. Badges and the chip clear when the day ends.",
+          "OnSellTab": "On the Sell tab",
+          "TillNote": "Players see the coins the till holds, never what a restock refills it to.",
+          "TillUnlimited": "Players see no till on the Sell tab: under unlimited merchant coin a sale is never capped."
+        },
+        "Till": {
+          "Hint": "The coins the shop holds. What players sell is paid out of it, and what they buy is paid into it.",
+          "Unlimited": "Merchant coin is Unlimited in this world, so the till is bottomless and there's nothing to set. To change that: Configure Settings › Merchant coin.",
+          "Holds": "Holds",
+          "RefillsTo": "Refills to",
+          "EachRestock": "each restock",
+          "EachRestockPreset": "each restock · preset {gp} gp",
+          "Note": "A restock tops the gold up to this and never takes coin away, so a till above it keeps the surplus. Set it to 0 and restocks leave the till alone.",
+          "Invalid": "A till takes a whole number of coins, 0 or more."
         }
       },
       "Deal": {

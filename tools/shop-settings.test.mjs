@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SHOP_DEFAULTS, shopFrom, validateShop } from "../scripts/schema.mjs";
-import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText, wholeCoins } from "../scripts/shop-settings.mjs";
 
 const WORLD = { sellsAt: 1, buysAt: 0.5 };
 const shop = (over = {}) => shopFrom({ version: 1, ...over });
@@ -235,4 +235,9 @@ test("a deal can't end after some days where shops don't follow the world clock 
   const context = { name: "A", worldTime: 0, hours: null, calendar: { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 }, previous: null };
   assert.ok(dealFields(form, { ...context, clock: false }).error);
   assert.equal(dealFields(form, context).ends.when, "date");
+});
+
+test("a till field takes a whole number of coins, and nothing else (#147)", () => {
+  for (const [text, count] of [["212", 212], [" 0 ", 0], ["07", 7]]) assert.equal(wholeCoins(text), count, text);
+  for (const text of ["", "  ", "-3", "1.5", "12gp", "abc", "1e3", "+5"]) assert.equal(wholeCoins(text), null, text);
 });
