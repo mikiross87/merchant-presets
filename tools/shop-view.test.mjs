@@ -886,8 +886,10 @@ const SHOP_ITEM = "Actor.shop0000000000001.Item.bell000000000001";
 const BELL_SRC = "Compendium.dnd5e.equipment24.Item.phbagBell0000000";
 const bell = (over = {}) => ({ _id: "bell000000000001", name: "Bell", system: { identified: true }, _stats: { compendiumSource: BELL_SRC }, ...over });
 
-test("a player hovering a good sees its compendium card, and a click opens that page (#168)", () => {
-  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: BELL_SRC, open: BELL_SRC });
+test("a player hovering a good sees the shop's own copy, as it stands, and a click opens its compendium page (#168 live check)", () => {
+  // The shop's copy is what they'd buy, edits included; dnd5e gives the compendium item's card the
+  // same "Not Equipped · Not Proficient" pills, so the source's card is no cleaner.
+  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: BELL_SRC });
 });
 
 test("a GM sees and opens the shop's own copy, as it stands, edits included (#168, #169 review)", () => {

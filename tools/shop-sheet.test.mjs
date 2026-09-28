@@ -2039,7 +2039,7 @@ test("each Buy row carries its good's card and the page a click opens; each Sell
   const { sheet } = openShop({ shopItems: [rope], buyerItems: [item("gem", { price: { value: 14, denomination: "gp" } })] });
   const card = uuid => '<section class="loading" data-uuid="' + uuid + '"><i class="fas fa-spinner fa-spin-pulse" inert></i></section>';
   const { buy, sell } = await sheet._prepareContext({});
-  assert.deepEqual(buy.sections[0].rows[0].inspect, { tooltip: card(SRC), open: SRC });
+  assert.deepEqual(buy.sections[0].rows[0].inspect, { tooltip: card("Actor.shop.Item.rope"), open: SRC });
   assert.deepEqual(packRows(sell)[0].inspect, { tooltip: card("Actor.hero.Item.gem"), open: "Actor.hero.Item.gem" });
   // A GM opens the shop's own copy.
   globalThis.game.user.isGM = true;
