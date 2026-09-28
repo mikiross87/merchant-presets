@@ -432,8 +432,9 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * restock until the shop next closes after it (schedule.mjs `nextCloseAt`, through the closing
  * minute). A shop that doesn't close (it keeps no hours, keeps them round the clock, or the world's
  * trading hours are off, so `hours` is null) keeps a restock fresh for a whole day from it, so one
- * just before its opening or midnight isn't gone in minutes. Worked out when the window draws, so
- * nothing is written at closing (#152).
+ * just before its opening or midnight isn't gone in minutes. A clock wound back up to a day before
+ * the restock keeps it fresh (#153). Worked out when the window draws, so nothing is written at
+ * closing (#152).
  *
  * @param {number|null|undefined} lastRestock  when the shelf was last restocked (the shop's `restockedAt`), in world seconds
  * @param {number} now          the world time
@@ -441,7 +442,9 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
  */
 export function isFresh(lastRestock, now, hours, days) {
-  if (lastRestock == null || now < lastRestock) return false;
+  // A clock wound back before the restock keeps it fresh, what it brought still on the shelf (#153),
+  // but only by up to a day: a month back isn't today's stock (#158 review).
+  if (lastRestock == null || now < lastRestock - secondsPerDay(days)) return false;
   return now < (nextCloseAt(hours, lastRestock, days) ?? lastRestock + secondsPerDay(days));
 }
 

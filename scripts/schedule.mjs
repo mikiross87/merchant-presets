@@ -286,7 +286,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
  * @typedef {object} RestockPlan
  * @property {string[]} deletes   Item ids to delete.
  * @property {object[]} creates   New embedded item data to create.
- * @property {object[]} updates   `{_id, ...}` partial updates (topup's refills).
+ * @property {object[]} updates   `{_id, ...}` partial updates: topup's refills, and goods moved out of
+ *   a container that's deleted. Applied before the deletes.
  * @property {number|null} currency  The till's new `system.currency.gp`, or
  *   null if it's already right.
  * @property {string[]} restocked  Names of the lines this restock drew or
@@ -306,8 +307,10 @@ export function dueRestock(shop, state, previous, now, calendar) {
  */
 function newAtFor(items, context) {
   if (context.markNew === false) return () => undefined;
-  // In stock as players see it: a copy they can't see or buy (hidden, delisted, packed away) isn't.
-  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0 && forSale(i, items)).map(i => i.name));
+  // In stock as players see it: a copy they can't see or buy (hidden, delisted, packed away) isn't,
+  // unless this shop drew it. That one never sold out, so unhiding it later mustn't show it New (#153).
+  const inStock = new Set(items.filter(i => !isGear(i) && i.system?.quantity !== 0
+    && (isDrawn(i, context.drawnBy) || forSale(i, items))).map(i => i.name));
   // Only from this shop's own goods still in stock: a copy another shop drew keeps its time to
   // itself, and one that sold out again isn't New any more.
   const earlier = new Map();
@@ -337,6 +340,23 @@ const forSale = (item, items) => {
 export function dropsNewMark(item, quantity, setsNewAt) {
   if (quantity === undefined || setsNewAt || item.flags?.["merchant-presets"]?.newAt == null) return false;
   return quantity === 0 || item.system?.quantity === 0;
+}
+
+/**
+ * `updates`, plus updates moving whatever is stored in a container the restock deletes, and isn't
+ * deleted with it, out onto the shelf: dnd5e would take it with the container, or leave it pointing at nothing
+ * (#153). The runtime applies them before the deletes, as `setUpShopNow` moves goods out first.
+ */
+function movedOut(items, deletes, updates = []) {
+  const going = new Set(deletes);
+  const merged = updates.map(u => ({ ...u }));
+  for (const item of items.filter(i => going.has(i.system?.container) && !going.has(i._id))) {
+    // A good the same restock refills gets one update, not two for the same id (#158 review).
+    const refill = merged.find(u => u._id === item._id);
+    if (refill) refill["system.container"] = null;
+    else merged.push({ _id: item._id, "system.container": null });
+  }
+  return merged;
 }
 
 /** The shopkeeper's own kit, never stock. */
@@ -496,7 +516,8 @@ export function planRestock(shop, items, draws, context) {
       const item = items.find(i => i._id === u._id);
       return { ...item, flags: { ...item.flags, "merchant-presets": { ...item.flags?.["merchant-presets"], stock: u["flags.merchant-presets.stock"] } } };
     });
-    return { deletes, creates, updates, currency, restocked: [...new Set(restocked)], fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
+    return { deletes, creates, updates: movedOut(items, deletes, updates), currency, restocked: [...new Set(restocked)],
+      fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
   // reroll: the whole drawn shelf comes back fresh.
@@ -512,7 +533,8 @@ export function planRestock(shop, items, draws, context) {
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
-  return { deletes: drawnNow.map(i => i._id), creates, updates: [], currency, restocked, fresh: creates.some(i => forSale(i, items)) };
+  const deletes = drawnNow.map(i => i._id);
+  return { deletes, creates, updates: movedOut(items, deletes), currency, restocked, fresh: creates.some(i => forSale(i, items)) };
 }
 
 /* ------------------------------------------------------------------ the runtime's first restock (#105) */

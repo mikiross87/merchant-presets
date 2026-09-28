@@ -202,6 +202,14 @@ test("loading a world with scheduled restocking off doesn't log it as active (#1
   assert.ok(!world.logs.some(line => line.includes("restocking active")), world.logs.join("\n"));
 });
 
+test("a settled 1.x shop's first Restock now, before any tick adopts it, still marks what comes back New (#158 review)", async () => {
+  const { shop } = await setUp();
+  byName(shop, "Bell")[0].system.quantity = 0;                    // sold out while it was an Item Piles shop
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.ok(Number.isFinite(byName(shop, "Bell")[0].flags["merchant-presets"].newAt), "back in stock: New");
+  assert.ok(Number.isFinite(shop.flags["merchant-presets"].restockedAt), "and fresh stock today");
+});
+
 test("a restock that throws on the claiming tab reads as failed, not as maybe still running (#140 review, round 10)", async () => {
   const { shop, clock } = await setUp();
   await clock(at(0, 1));
