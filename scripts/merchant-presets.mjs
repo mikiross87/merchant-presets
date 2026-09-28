@@ -4,6 +4,7 @@
  * and the listeners that act on a trade (meals, animals, spellcasting).
  */
 
+import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
@@ -1581,6 +1582,19 @@ Hooks.once("init", () => {
   // flip a genuinely fresh 2.0 world's default off (#100 review).
   game.settings.register(MODULE, "autoRestockDecided", {
     scope: "world", config: false, type: Boolean, default: false
+  });
+
+  game.settings.register(MODULE, "followClock", {
+    name: "Shops follow the world clock",
+    hint: "Trading hours, scheduled restocks, fresh stock and the dates on a bill all run on the "
+      + "world clock. Auto follows it where anything keeps time: dnd5e's calendar is on, a calendar "
+      + "module runs it, or the clock has ever moved. Where shops don't follow it, they're always "
+      + "open, restock only by hand, and put no date on a bill.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { auto: "Auto", always: "Always", never: "Never" },
+    default: FOLLOW_CLOCK_MODES[0]
   });
 
   game.settings.register(MODULE, "tradingHours", {
