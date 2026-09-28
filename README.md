@@ -57,10 +57,22 @@ shop differ. Players double-click the token to shop. Dragging in a shop the
 world already holds asks whether to replace it or create a new actor; either
 works.
 
-A shop arrives hidden from players, so one you haven't placed stays out of
-their Actors sidebar. Placing its token opens it to them (Limited permission,
-which is what a double-click needs). A permission you set yourself always
-wins, and so does the *Players can visit* switch in the shop's Settings tab.
+Players shop at the counter. A shop stays out of their Actors sidebar, and a
+player opens it by double-clicking its token while a token of theirs stands
+within 5 ft of it: beside it or diagonal to it, measured from a large stall's
+edge. Too far away, they're told to step up to the counter. Walking away
+closes the window, and *Buying as* lists only the characters standing there.
+The GM checks the distance again for every trade, so a window left open can't
+buy from across the map. The shop's *Players can visit* switch turns a shop
+off entirely, and a player you give a permission of their own on a shop can
+open it from anywhere: a player-merchant, or a fence who deals with one rogue.
+
+For games without a map, set *Shop access* to *From anywhere* in Configure
+Settings. Placing a shop's token then opens it to every player, from the
+sidebar too (Limited permission). Switching the setting brings every shop in
+the world into line with it. The double-click at the counter uses
+[libWrapper](https://foundryvtt.com/packages/lib-wrapper) when it's installed,
+and works without it.
 
 ### The shop window
 

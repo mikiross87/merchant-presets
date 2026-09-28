@@ -29,6 +29,13 @@
           "verified": "6.0.5"
         }
       }
+    ],
+    "recommends": [
+      {
+        "id": "lib-wrapper",
+        "type": "module",
+        "reason": "Opening a shop at its counter wraps two of core's token methods; libWrapper keeps that clear of other modules' own wraps. Without it the module patches them itself."
+      }
     ]
   },
   "packs": [

@@ -4,7 +4,8 @@ import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 
 // #104, the cut-over, driven through the real merchant-presets.mjs: a shop is visited through
 // its own window, made visitable by placing its token, and gets its per-import stock without
-// Item Piles.
+// Item Piles. Placing a token opens a shop only with *Shop access* set to From anywhere; within
+// reach, the world's default, it stays hidden and players open it at its counter (#166).
 
 const LIMITED = 1;
 const tick = async (n = 10) => { for (let i = 0; i < n; i++) await new Promise(resolve => setImmediate(resolve)); };
@@ -20,9 +21,13 @@ function serveStock(world, shop) {
   }
 }
 
-/** A world whose Item Piles is gone (the cut-over's premise), with General Store (Town) in the pack. */
-async function setUp() {
+/**
+ * A world whose Item Piles is gone (the cut-over's premise), with General Store (Town) in the pack.
+ * `access` is the world's *Shop access*: From anywhere unless said, #104's own rule, these tests'.
+ */
+async function setUp({ access = "anywhere" } = {}) {
   const world = createWorld();
+  world.settings.shopAccess = access;
   await loadRuntime(world);
   const shop = world.merchant("General_Store_Town_");
   // As Foundry leaves an imported shop: hidden, and owned by the GM who imported it.
@@ -167,6 +172,31 @@ test("a 1.x merchant dropped straight onto the canvas is made visitable too (#13
   await world.fire("createToken", { actor: legacy, actorId: legacy.id, actorLink: true }, {}, "gm");
   await tick();
   assert.equal(legacy.ownership.default, LIMITED);
+});
+
+test("within reach, placing a shop's token leaves it hidden: players open it at its counter (#166)", async () => {
+  const { world, shop } = await setUp({ access: "reach" });
+  world.actors.push(shop);
+  await world.fire("createToken", { actor: shop, actorId: shop.id, actorLink: true }, {}, "gm");
+  await world.fire("createScene", { tokens: [{ actor: shop, actorId: shop.id, actorLink: true }] }, {}, "gm");
+  await tick();
+  assert.deepEqual(shop.ownership, { default: 0, gm: 3 });
+  assert.equal(shop.flags["merchant-presets"].madeVisitable, undefined);
+});
+
+test("within reach, a shop an earlier build made visitable is hidden again when the world loads (#167 live check)", async () => {
+  const world = createWorld();
+  world.settings.shopAccess = "reach";
+  const shop = world.merchant("General_Store_Town_");
+  // Placing its token opened it before #166, in this world.
+  shop.ownership = { default: LIMITED, gm: 3 };
+  shop.flags["merchant-presets"].madeVisitable = "stub-world";
+  world.actors.push(shop);
+  serveStock(world, shop);
+  await loadRuntime(world);
+  await tick(40);
+  assert.equal(shop.ownership.default, 0);
+  assert.equal(shop.flags["merchant-presets"].madeVisitable ?? null, null);
 });
 
 test("placing a token of an actor that isn't a shop changes nothing (#104)", async () => {

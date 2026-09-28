@@ -1,10 +1,14 @@
 /**
  * Merchant Presets — the runtime: the shops arriving in a world (migrated, made visitable, their
  * first shelf rolled), restocking on the world clock, the GM-side trade desk the shop window asks,
- * and the listeners that act on a trade (meals, animals, spellcasting).
+ * the double-click that opens a shop at its counter, and the listeners that act on a trade
+ * (meals, animals, spellcasting).
  */
 
+// First, so its own `init` runs before ours: libWrapper, or its fallback (#166).
+import { libWrapper } from "./libwrapper-shim.mjs";
 import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
+import { accessModeOf, accessOf, accessOwnership, actorInReach, canOpenOn, canVisit } from "./reach.mjs";
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
@@ -928,7 +932,13 @@ async function applyUpdate(actor, update, also = {}) {
  */
 async function carryOutTrade(request, user) {
   const [shop, buyer] = await Promise.all([actorAt(request?.shopUuid), actorAt(request?.buyerUuid)]);
-  const refused = checkParties({ user, shop, buyer });
+  // May this user trade here: reach from the buyer's tokens on every scene, as the GM sees them
+  // now, not whatever the player's window thought (#166).
+  const mode = shopAccess();
+  const access = shop && buyer ? accessOf(shop, user, mode) : null;
+  const visit = !!access && canVisit({ ...access, reach: mode === "reach" && !canVisit({ ...access, reach: false })
+    && actorInReach(game.scenes, shop, buyer, CONST.GRID_TYPES?.GRIDLESS ?? 0) });
+  const refused = checkParties({ user, shop, buyer, visit });
   if (refused) return { status: "refused", reason: refused };
   // Carried out already, maybe by a tab that has since lost the claim: its first outcome.
   const done = recordedOutcome(shop.flags?.[MODULE]?.trades, user.id, request.tradeId);
@@ -1222,7 +1232,7 @@ async function migrateShop(actor) {
 
   const packShop = await resolvePackShop(data);
   const { update, shopError, warnings } = planActorUpdate(data,
-    { packShop, hasTokenOnScene: tokens.length > 0, worldId: game.world?.id ?? null, isPlayer });
+    { packShop, hasTokenOnScene: tokens.length > 0, worldId: game.world?.id ?? null, isPlayer, access: shopAccess() });
   if (shopError) console.error(`${MODULE} | ${shopError}`);
   for (const w of warnings) console.warn(`${MODULE} | ${w}`);
 
@@ -1706,8 +1716,78 @@ Hooks.once("init", () => {
     default: true
   });
 
+  game.settings.register(MODULE, "shopAccess", {
+    name: "Shop access",
+    hint: "Within reach: a player opens a shop by double-clicking its token while a token of theirs "
+      + "stands within 5 ft of it, and shops stay out of players' Actors sidebar. From anywhere: "
+      + "placing a shop's token opens it to every player, from the sidebar too, for games played "
+      + "without a map. A player you give a level of their own on a shop opens it from anywhere either way.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { reach: "Within reach of a token (default)", anywhere: "From anywhere" },
+    default: "reach",
+    onChange: () => sweepAccess().catch(err => console.error(`${MODULE} |`, err))
+  });
+
   registerShopSetup();
 });
+
+// After every module's `init`: the system has set its Token class, and no token is drawn yet, so
+// the wraps reach every token's double-click (core binds them when a token is drawn).
+Hooks.once("setup", () => registerCounter());
+
+/** The world's *Shop access* (#166): "reach" or "anywhere". */
+function shopAccess() {
+  try { return accessModeOf(game.settings.get(MODULE, "shopAccess")); } catch { return "reach"; }
+}
+
+/** Whether `actor` is one of this module's shops. */
+const isShopActor = actor => !!actor?.flags?.[MODULE]?.shop;
+
+/**
+ * Open a shop at its counter (#166): double-clicking a shop's token, a player opens it when a
+ * token of theirs stands within reach, and is told to step up otherwise. Core gates a double-click
+ * on `Token#_canView` (Limited on the actor) before `_onClickLeft2` ever runs, and in reach mode a
+ * shop is None to players, so both are wrapped, for shop tokens and players only: `_canView` gates
+ * nothing but the double-click (placeable-object.mjs `_createInteractionManager`), so hover, the
+ * HUD, control and configuring keep core's rules.
+ */
+function registerCounter() {
+  if (!libWrapper || !CONFIG.Token?.objectClass) return;
+  const TOKEN = "CONFIG.Token.objectClass.prototype";
+  const atCounter = (token, user) => !user?.isGM && shopAccess() === "reach" && isShopActor(token.actor);
+  libWrapper.register(MODULE, `${TOKEN}._canView`, function (wrapped, user, event) {
+    if (!atCounter(this, user)) return wrapped(user, event);
+    // Core's own guards, bar the permission (token.mjs `_canView`): not on another layer, while
+    // placing a region, dragging, or measuring (#167 review).
+    if (!this.layer?.active || canvas.regions?._placementContext || this.layer._draggedToken) return false;
+    if (canvas.controls?.ruler?.active || (CONFIG.Canvas?.rulerClass?.canMeasure && event?.type === "pointerdown")) return false;
+    return true;
+  }, "MIXED");
+  libWrapper.register(MODULE, `${TOKEN}._onClickLeft2`, function (wrapped, event) {
+    if (!atCounter(this, game.user)) return wrapped(event);
+    const shop = this.actor;
+    if (canOpenOn(canvas.scene, shop, game.user, "reach", CONST.GRID_TYPES?.GRIDLESS ?? 0)) return shop.sheet?.render({ force: true });
+    // A shop the GM switched off is no shop to step up to.
+    if (!accessOf(shop, game.user, "reach").switchedOff) ui.notifications.info(game.i18n.localize("MERCHANT_PRESETS.Shop.Reach.TooFar"));
+  }, "MIXED");
+}
+
+/**
+ * Bring every shop's default ownership into line with *Shop access* (#166, reach.mjs
+ * `accessOwnership`): when the GM switches it, and once a world loads. The active GM alone writes.
+ */
+async function sweepAccess() {
+  if (game.users.activeGM !== game.user) return;
+  const mode = shopAccess();
+  const worldId = game.world?.id ?? null;
+  for (const actor of game.actors.filter(isShopActor)) {
+    const hasTokenOnScene = game.scenes.some(scene => scene.tokens.some(t => t.actorId === actor.id));
+    const update = accessOwnership(actor.toObject(), { mode, hasTokenOnScene, worldId, isPlayer });
+    if (update) await actor.update(update).catch(err => console.error(`${MODULE} |`, err));
+  }
+}
 
 Hooks.once("ready", async () => {
   game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
@@ -1785,6 +1865,10 @@ Hooks.once("ready", async () => {
       if (game.users.activeGM !== game.user) return;
       return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
     })
+    // Every shop as *Shop access* has it now, not only when the GM switches it: the default is never
+    // stored, so a shop an earlier build opened on placing its token would otherwise stay open to
+    // every player in reach mode (#167 live check). It writes only what disagrees.
+    .then(() => sweepAccess())
     .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
@@ -1818,16 +1902,18 @@ async function arrive(actor) {
 }
 
 /**
- * Make a hidden shop visitable when the GM places its token (#104, decided on the issue): shops
- * arrive hidden (ownership None) so an unplaced one stays out of players' Actors sidebar, and a
- * placed one opens for players on a double-click, which core gates on Limited. A GM's own choice
- * holds either way: any default ownership but None, or the "Players can visit" switch (#110,
- * `flags.merchant-presets.visibility`) once it's been set.
+ * From anywhere only (#166's *Shop access*): make a hidden shop visitable when the GM places its
+ * token (#104, decided on the issue): shops arrive hidden (ownership None) so an unplaced one stays
+ * out of players' Actors sidebar, and a placed one opens for players on a double-click, which core
+ * gates on Limited. A GM's own choice holds either way: any default ownership but None, or the
+ * "Players can visit" switch (#110, `flags.merchant-presets.visibility`) once it's been set. In
+ * reach mode a shop stays hidden: players open it at its counter (`registerCounter`).
  *
  * @param {TokenDocument} token
  */
 async function makeVisitable(token) {
   const LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  if (shopAccess() !== "anywhere") return;
   // A token in a compendium scene (an Adventure being built) is on no world scene, though its
   // baseActor still resolves to the world actor by id (#138 review).
   if (token.parent?.pack) return;

@@ -617,19 +617,22 @@ function planSheetClass(actor) {
 }
 
 /**
- * The default ownership a migrated shop should get (#104): Limited if it
- * already has a token on a scene, otherwise None — but 1.x never touched
- * ownership, so any value but the field's own default (None) reads as a GM's
- * own choice and is left alone.
+ * The default ownership a migrated shop should get. In reach mode (#166), none
+ * to write: a shop stays hidden and players open it at the counter. From
+ * anywhere (#104): Limited if it already has a token on a scene, otherwise
+ * None — but 1.x never touched ownership, so any value but the field's own
+ * default (None) reads as a GM's own choice and is left alone.
  *
  * @param {object} actor
  * @param {boolean} hasTokenOnScene
  * @param {string|null} worldId
  * @param {(userId: string) => boolean} [isPlayer] See `isOwnershipChosen`.
+ * @param {"reach"|"anywhere"} [access] The world's *Shop access* (reach.mjs).
  * @returns {number|null} A `CONST.DOCUMENT_OWNERSHIP_LEVELS` value to write, or `null`.
  */
-export function planOwnership(actor, hasTokenOnScene, worldId, isPlayer) {
+export function planOwnership(actor, hasTokenOnScene, worldId, isPlayer, access = "reach") {
   const NONE = 0, LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS (constants.mjs:470-496)
+  if (access !== "anywhere") return null;
   // Made visitable once already, in this world: None now is the GM hiding it again, and the
   // migration re-runs whenever a shelf item lacks its stock config (a sale lands one). A mark from
   // another world came along with an export, which cleared the ownership it was set against
@@ -690,6 +693,7 @@ export function isOwnershipChosen(actor, isPlayer) {
  * @param {boolean} [options.hasTokenOnScene] See `planOwnership`.
  * @param {string|null} [options.worldId]     See `planOwnership`.
  * @param {(userId: string) => boolean} [options.isPlayer] See `isOwnershipChosen`.
+ * @param {"reach"|"anywhere"} [options.access] See `planOwnership`.
  * @returns {{update: object|null, shopError: string|null, warnings: string[]}} `update`: `null`
  *   if there's nothing to write. `shopError`: set, and the shop key left out
  *   of `update`, when the derived shop config is still invalid after
@@ -700,7 +704,7 @@ export function isOwnershipChosen(actor, isPlayer) {
  *   other than the fixed `natural` — for the caller to warn about, since
  *   once the shop is current its Item Piles data is never read again.
  */
-export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, worldId = null, isPlayer } = {}) {
+export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, worldId = null, isPlayer, access = "reach" } = {}) {
   if (!needsMigration(actor)) return { update: null, shopError: null, warnings: [] };
   const update = {};
   let shopError = null;
@@ -731,7 +735,7 @@ export function planActorUpdate(actor, { packShop, hasTokenOnScene = false, worl
   const sheetClass = planSheetClass(actor);
   if (sheetClass) update["flags.core.sheetClass"] = sheetClass;
 
-  const ownership = planOwnership(actor, hasTokenOnScene, worldId, isPlayer);
+  const ownership = planOwnership(actor, hasTokenOnScene, worldId, isPlayer, access);
   if (ownership !== null) {
     update["ownership.default"] = ownership;
     // What `makeVisitable` (merchant-presets.mjs) marks too: made visitable once in this world,

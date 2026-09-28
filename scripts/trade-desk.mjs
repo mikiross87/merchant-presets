@@ -215,13 +215,15 @@ export function clientOutcome(hasGm) {
 /**
  * Who may trade: the request is untrusted client input, so the uuids it names are checked before
  * any planning. The shop has to be one of this module's shops, the buyer someone else, and the
- * querying user either a GM or the buyer's owner who can see the shop.
+ * querying user either a GM or the buyer's owner who may visit the shop: `visit`, reach.mjs
+ * `canVisit` as the GM finds it now, the buyer's tokens against the shop's (#166). Ownership of
+ * the shop alone no longer says: in reach mode a player trades at a shop they have no level on.
  *
- * @param {{user: {id: string, isGM: boolean}, shop: object|null, buyer: object|null}} parties
+ * @param {{user: {id: string, isGM: boolean}, shop: object|null, buyer: object|null, visit?: boolean}} parties
  *   `shop` and `buyer` are actors (anything with `flags`, `id` and `testUserPermission`).
  * @returns {null|"not-found"|"invalid-request"}  null when the trade may go ahead.
  */
-export function checkParties({ user, shop, buyer }) {
+export function checkParties({ user, shop, buyer, visit }) {
   if (!shop || !buyer) return "not-found";
   // A compendium's actors are read-only to a trade: a locked pack would refuse the shop's half
   // after the buyer's had already been written.
@@ -230,7 +232,7 @@ export function checkParties({ user, shop, buyer }) {
   if (shop === buyer || (shop.uuid && shop.uuid === buyer.uuid)) return "invalid-request";
   if (user.isGM) return null;
   if (!buyer.testUserPermission(user, "OWNER")) return "invalid-request";
-  if (!shop.testUserPermission(user, "LIMITED")) return "invalid-request";
+  if (visit !== true) return "invalid-request";
   return null;
 }
 
