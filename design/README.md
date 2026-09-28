@@ -23,9 +23,10 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 10 | Deals boards, light and dark: the deal form, an ended deal, a bill at a deal's price |
 | 11 | Sell — Narrow (Light) / (Dark); Settings (GM) — Narrow (Light) / (Dark) |
 | 12 | Sell Trade States boards, light and dark |
+| 13 | No world clock (#149): Settings (GM) · No world clock — Light / Dark; below it, the Bill and receipt boards with no dates, light and dark |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (13, at y 9711) and gets a row here.
+A new agreed screen goes in the next band (14, at y 11214) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
@@ -136,7 +137,7 @@ The basket is a **Bill of Sale**: a parchment slip with ledger lines, dotted lea
 
 - Each line: quantity × name, the line total in coins, then the unit price and a stepper.
 - Under the sum: the buyer's purse after the bargain, so nobody has to do coin arithmetic.
-- The heading shows the world date and time of day, from the world clock.
+- The heading shows the world date and time of day, from the world clock. Where shops don't follow the world clock (#149), it shows no date, and neither do the SEALED stamp and the chat receipt (band 13).
 - Idea, not yet decided: the slip's name could follow the shop kind, such as "Your tab" at an inn or tavern and "Offering" at a temple.
 
 ## Terms of trade
@@ -168,6 +169,7 @@ A third tab, **Settings**, marked with a `GM` badge. Only GMs see it. Players' c
 - **Right, "Players see":** a live preview. "Everyone" shows the terms chip and a sample row. "Only Aria" shows a deal as that character sees it: the chip reads "Your price −10%", and the row shows the list price struck through with a `−10%` tag (15 gp → 13 gp 5 sp).
 - **Won't buy:** checkboxes in three columns, "Item types" then "Kinds of goods". Players see the Sell tab: a refused good stays listed, dimmed, with the reason on its second line.
 - **Hours:** "Keeps trading hours", then the open and close times with a plain reading ("12 hours a day"). Players see the chip at an open hour and at a closed one.
+- **No world clock** (#149, band 13): where shops don't follow the world clock, Hours and Restock each open with a note saying so and where to change it, and their controls stay visible but disabled; *Restock now* still works. The shop is always open: no hours chip, no Closed card, no "Fresh stock today".
 - The page scrolls as one, so a frame jumped to a section also shows the start of the next one.
 - **Deals board (band 10):** the add/edit form is the shop's own dialog (Character, Buying and Selling with a plain reading, Ends, and a GM-only note with the console warning). An ended deal stays, dimmed, "Ended at closing, 13 Mirtul", until the GM edits or removes it. On the character's bill, each line carries the green deal tag beside its name, and "Your deal saves you 3 gp." sits under the sum.
 - World-wide defaults (rates, trade chat mode) stay in Foundry's Configure Settings.

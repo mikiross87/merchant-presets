@@ -34,8 +34,7 @@ export const INN = "Inn & Tavern";
  * - Aria's pack as the Sell frames draw it: a Longsword, a Chain Shirt and 2 Potions of Healing
  *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
  * - *Inn & Tavern*: a fresh import of the Town inn, with the goods the Inn frames don't draw hidden
- *   (as a GM hides them): three meals, two rooms, and ale, bread and cheese, in the frame's order
- *   (water until #150 kinds it as food and drink);
+ *   (as a GM hides them): three meals, two rooms, and ale, bread and water, in the frame's order;
  * - no deals: the storefront frames draw Aria at list price. Only the Settings frames list deals,
  *   and their `open` sets them (`withDeals`).
  */
@@ -161,7 +160,7 @@ export async function setup() {
   const inn = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName("Inn & Tavern (Town)")._id);
   await rolled(inn, "the inn");
   const shown = { "Meal, Modest": [], "Meal, Comfortable": [], "Meal, Wealthy": [], "Inn Stay, Modest (per day)": [],
-    "Inn Stay, Comfortable (per day)": [], "Ale (mug)": [17], "Bread (loaf)": [20], "Cheese (wedge)": [19] };
+    "Inn Stay, Comfortable (per day)": [], "Ale (mug)": [17], "Bread (loaf)": [20], "Water (Pint)": [20] };
   const innOrder = Object.keys(shown);
   await inn.updateEmbeddedDocuments("Item", inn.items.filter(i => i.flags[MP]?.drawn).map(i => (i.name in shown
     ? { _id: i.id, sort: (innOrder.indexOf(i.name) + 1) * 100, [`flags.${MP}.stock.hidden`]: false,
