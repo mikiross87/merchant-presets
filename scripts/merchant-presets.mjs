@@ -1705,13 +1705,16 @@ Hooks.once("ready", async () => {
     console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
 
-  // Every tab of the GM who made the change hears it; the one that claims trades takes it in, or
-  // two tabs would each roll a shelf (#136). Known limit: one dragged in while the claim names a
-  // tab that's gone (up to CLAIM_STALE_MS) is taken in by the load-time sweep below, at the next
-  // world load. Sweeping at the takeover instead can roll twice: two tabs taking the claim at once
-  // each briefly read it as theirs, and a claimer that lost it mid-setup is still building (#157 review).
+  // A GM's arriving shop is taken in on one tab: the active GM's claiming tab, whichever GM brought
+  // it, where setups, trades and the scheduled restocks run on one queue. Anywhere else, two tabs,
+  // or an arrival and a restock, could each roll a shelf (#136, #157 review). Known limit: one that
+  // arrives while the claim names a tab that's gone (up to CLAIM_STALE_MS) is taken in by the
+  // load-time sweep below, at the next world load. Sweeping at the takeover instead can roll twice:
+  // two tabs taking the claim at once each briefly read it as theirs, and a claimer that lost it
+  // mid-setup is still building.
+  const takesIn = userId => game.users.get(userId)?.isGM && game.users.activeGM === game.user && claimsTrades(tradeClaim(), thisTab());
   Hooks.on("createActor", (actor, _options, userId) => {
-    if (userId !== game.user.id || !claimsTrades(tradeClaim(), thisTab())) return;
+    if (!takesIn(userId)) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
@@ -1742,7 +1745,7 @@ Hooks.once("ready", async () => {
   // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
   // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
   Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (userId !== game.user.id || !claimsTrades(tradeClaim(), thisTab()) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    if (!takesIn(userId) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
