@@ -472,9 +472,14 @@ function registerRestock() {
   const loadedAt = game.time.worldTime;
 
   Hooks.on("updateWorldTime", async worldTime => {
-    // Not without a clock (#149): a restock happens by hand, with Restock now.
-    if (!game.settings.get(MODULE, "autoRestock") || !worldFollowsClock()) return;
+    if (!game.settings.get(MODULE, "autoRestock")) return;
     if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
+    // Not without a clock (#149): a restock happens by hand, with Restock now. The time passed is
+    // still marked gone through, so following the clock again doesn't replay it (#161 review).
+    if (!worldFollowsClock()) {
+      if (worldTime !== game.settings.get(MODULE, "lastRestockTime")) await game.settings.set(MODULE, "lastRestockTime", worldTime);
+      return;
+    }
     const from = game.settings.get(MODULE, "lastRestockTime") || loadedAt;
     if (worldTime === from) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
@@ -1593,8 +1598,8 @@ Hooks.once("init", () => {
     name: "Shops follow the world clock",
     hint: "Trading hours, scheduled restocks, fresh stock and the dates on a bill all run on the "
       + "world clock. Auto follows it where anything keeps time: dnd5e's calendar is on, a calendar "
-      + "module runs it, or the clock has ever moved. Where shops don't follow it, they're always "
-      + "open, restock only by hand, and put no date on a bill.",
+      + "module runs it, or a whole day has passed on the clock (combat alone doesn't count). Where "
+      + "shops don't follow it, they're always open, restock only by hand, and put no date on a bill.",
     scope: "world",
     config: true,
     type: String,

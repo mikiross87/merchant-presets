@@ -301,8 +301,9 @@ shop stays open around the clock. Change one shop's hours on its Settings tab.
 
 All of this needs a clock that moves. *Shops follow the world clock* decides
 whether shops keep time at all. On *Auto* (the default) they do wherever
-anything keeps time: dnd5e's calendar is on, a calendar module runs it, or the
-world clock has ever moved. *Always* and *Never* override it. Where shops don't
+anything keeps time: dnd5e's calendar is on, a calendar module runs it, or a
+whole day has passed on the world clock (combat's six seconds a round don't
+count). *Always* and *Never* override it. Where shops don't
 follow the clock, they're always open, restock only by hand with *Restock now*,
 show no *Fresh stock today* or *New*, and put no date on a bill or a receipt;
 their Settings tab says so.

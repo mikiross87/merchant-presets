@@ -11,19 +11,26 @@ export const FOLLOW_CLOCK_MODES = Object.freeze(["auto", "always", "never"]);
 
 /**
  * Whether shops follow the world clock. Auto follows it where anything keeps time: dnd5e's
- * calendar is on, a calendar module (Calendaria) has replaced dnd5e's calendar, or the clock has
- * moved at all (a world nobody keeps time in sits at 0; a GM moving it with another tool doesn't).
- * An unknown mode reads as Auto.
+ * calendar is on, a calendar module (Calendaria) has replaced dnd5e's calendar, or a whole day has
+ * passed on the clock (a GM keeping time with another tool). Not merely a moved clock: Foundry moves
+ * it 6 s every combat round whatever the calendar says, and combat alone would take 14,400 rounds
+ * to make a day (#161 review). Wrong this way, a shop is only ever open around the clock. An
+ * unknown mode reads as Auto.
  *
  * @param {string} mode  the setting: "auto", "always" or "never"
- * @param {{calendarEnabled: boolean, calendarReplaced: boolean, worldTime: number}} world
+ * @param {{calendarEnabled: boolean, calendarReplaced: boolean, worldTime: number, daySeconds: number}} world
+ *   `daySeconds`: the world calendar's day
  * @returns {boolean}
  */
-export function followsClock(mode, { calendarEnabled, calendarReplaced, worldTime }) {
+export function followsClock(mode, { calendarEnabled, calendarReplaced, worldTime, daySeconds }) {
   if (mode === "always") return true;
   if (mode === "never") return false;
-  return !!calendarEnabled || !!calendarReplaced || (Number.isFinite(worldTime) && worldTime !== 0);
+  const day = daySeconds > 0 ? daySeconds : 86_400;
+  return !!calendarEnabled || !!calendarReplaced || (Number.isFinite(worldTime) && Math.abs(worldTime) >= day);
 }
+
+/** Seconds in one day of the calendar's `days` (`{secondsPerMinute, minutesPerHour, hoursPerDay}`); undefined if it can't say. */
+const daySecondsOf = days => (days ? days.secondsPerMinute * days.minutesPerHour * days.hoursPerDay : undefined);
 
 /**
  * `followsClock` for this world, read live (the clock moves, and Auto reads it): the module's
@@ -38,6 +45,7 @@ export function worldFollowsClock(g = globalThis.game, config = globalThis.CONFI
   return followsClock(read("merchant-presets", "followClock"), {
     calendarEnabled: !!read("dnd5e", "calendarConfig")?.enabled,
     calendarReplaced: !!current && own.length > 0 && !own.includes(current),
-    worldTime: g?.time?.worldTime
+    worldTime: g?.time?.worldTime,
+    daySeconds: daySecondsOf(g?.time?.calendar?.days)
   });
 }
