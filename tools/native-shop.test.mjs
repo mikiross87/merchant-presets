@@ -240,6 +240,27 @@ test("a shop a player's client creates isn't taken in: only a GM's arrival is (#
   assert.equal(shop.flags["merchant-presets"].shelf ?? null, null);
 });
 
+test("a shop whose arrival roll failed gets nothing New from its first roll, whichever restock draws it (#153)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  const table = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
+  const missing = table.results[0].documentUuid;
+  const served = world.compendium.get(missing);
+  world.compendium.delete(missing);                  // a line that won't resolve: the arrival rolls nothing
+  const warn = console.warn;
+  console.warn = () => {};
+  try {
+    await world.fire("createActor", shop, {}, "gm");
+    await tick(40);
+  } finally { console.warn = warn; }
+  assert.equal(shop.flags["merchant-presets"].shelf ?? null, null, "not rolled");
+  world.compendium.set(missing, served);
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);   // the GM's Restock now
+  assert.ok(shop.flags["merchant-presets"].shelf, "rolled now");
+  assert.ok(shop.items.every(i => i.flags["merchant-presets"]?.newAt === undefined), "players never saw this shop: nothing is back in stock");
+  assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "nor fresh stock today");
+});
+
 test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);

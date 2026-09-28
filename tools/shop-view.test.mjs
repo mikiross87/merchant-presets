@@ -685,10 +685,14 @@ test("a shop open round the clock from 7:00 keeps its restock fresh until its ow
   assert.equal(isFresh(at, 11 * DAY + H(7), hours, DAYS), false);
 });
 
-test("no restock yet, or a clock wound back before it, isn't fresh", () => {
+test("no restock yet isn't fresh", () => {
   assert.equal(isFresh(null, 10 * DAY, SMITH_HOURS, DAYS), false);
   assert.equal(isFresh(undefined, 10 * DAY, null, DAYS), false);
-  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(7), SMITH_HOURS, DAYS), false);
+});
+
+test("a clock wound back before the restock keeps it fresh: the goods it brought are still on the shelf (#153)", () => {
+  assert.equal(isFresh(10 * DAY + H(7), 10 * DAY + H(6, 30), SMITH_HOURS, DAYS), true);
+  assert.equal(isFresh(10 * DAY + H(8), 10 * DAY + H(8), null, DAYS), true);
 });
 
 /* -------------------------------------------------------------- Restock section (design aaJcp) */

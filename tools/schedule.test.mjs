@@ -448,6 +448,30 @@ test("a copy players can't see or buy doesn't count as in stock for New (#152 re
   assert.equal(newAtOf(plan.creates[0]), T, "as the Buy list sees it (shop-view.mjs isVisibleStock)");
 });
 
+test("a good this shop drew that's hidden but still in stock isn't New after a reroll: it never sold out (#153)", () => {
+  const hidden = { ...drawn("i1", "Arrows", "consumable", 3), flags: { "merchant-presets": { drawn: true, stock: { hidden: true } } } };
+  const plan = planRestock(shop, [hidden], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.equal(newAtOf(plan.creates[0]), undefined, "the GM unhiding it later mustn't show it New");
+});
+
+test("a top-up moves what's stored in a container out before the sold-out container goes (#153)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const bought = drawn("i3", "Backpack", "container", 0, { container: null });
+  const inside = { _id: "gm7", name: "Grandma's Locket", type: "loot", system: { quantity: 1, container: "i3" }, flags: {} };
+  const plan = planRestock(topup, [bought, inside], [draws[2]], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.deletes, ["i3"]);
+  assert.deepEqual(plan.updates, [{ _id: "gm7", "system.container": null }]);
+});
+
+test("a reroll moves a hand-added good out of a drawn container before the container goes (#153)", () => {
+  const pack = drawn("i3", "Backpack", "container", 1, { container: null });
+  const inside = { _id: "gm7", name: "Grandma's Locket", type: "loot", system: { quantity: 1, container: "i3" }, flags: {} };
+  const drawnInside = { ...drawn("i4", "Arrows", "consumable", 5), system: { quantity: 5, container: "i3" } };
+  const plan = planRestock(shop, [pack, inside, drawnInside], [draws[2]], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.deletes.sort(), ["i3", "i4"]);
+  assert.deepEqual(plan.updates, [{ _id: "gm7", "system.container": null }], "a drawn good inside goes with the shelf; the GM's stays");
+});
+
 test("a restock is fresh stock only when it brings back something players can see (#152 review)", () => {
   const topup = rawShop({ restock: { mode: "topup" } });
   const hiddenLine = { ...drawn("i1", "Arrows", "consumable", 0), flags: { "merchant-presets": { drawn: true, stock: { hidden: true } } } };
