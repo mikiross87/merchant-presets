@@ -343,13 +343,20 @@ export function dropsNewMark(item, quantity, setsNewAt) {
 }
 
 /**
- * Updates moving whatever is stored in a container the restock deletes, and isn't deleted with it,
- * out onto the shelf: dnd5e would take it with the container, or leave it pointing at nothing
+ * `updates`, plus updates moving whatever is stored in a container the restock deletes, and isn't
+ * deleted with it, out onto the shelf: dnd5e would take it with the container, or leave it pointing at nothing
  * (#153). The runtime applies them before the deletes, as `setUpShopNow` moves goods out first.
  */
-function movedOut(items, deletes) {
+function movedOut(items, deletes, updates = []) {
   const going = new Set(deletes);
-  return items.filter(i => going.has(i.system?.container) && !going.has(i._id)).map(i => ({ _id: i._id, "system.container": null }));
+  const merged = updates.map(u => ({ ...u }));
+  for (const item of items.filter(i => going.has(i.system?.container) && !going.has(i._id))) {
+    // A good the same restock refills gets one update, not two for the same id (#158 review).
+    const refill = merged.find(u => u._id === item._id);
+    if (refill) refill["system.container"] = null;
+    else merged.push({ _id: item._id, "system.container": null });
+  }
+  return merged;
 }
 
 /** The shopkeeper's own kit, never stock. */
@@ -509,7 +516,7 @@ export function planRestock(shop, items, draws, context) {
       const item = items.find(i => i._id === u._id);
       return { ...item, flags: { ...item.flags, "merchant-presets": { ...item.flags?.["merchant-presets"], stock: u["flags.merchant-presets.stock"] } } };
     });
-    return { deletes, creates, updates: [...updates, ...movedOut(items, deletes)], currency, restocked: [...new Set(restocked)],
+    return { deletes, creates, updates: movedOut(items, deletes, updates), currency, restocked: [...new Set(restocked)],
       fresh: [...creates, ...refilled].some(i => forSale(i, items)) };
   }
 
