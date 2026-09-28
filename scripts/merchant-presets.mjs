@@ -15,7 +15,7 @@ import {
   adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
-  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY,
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY, SETUP_QUERY,
   receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
@@ -475,7 +475,8 @@ function registerRestock() {
     // Rewinding the clock should not trigger a day's worth of restocks.
     if (worldTime > from) await scheduledRestocks(worldTime, from);
   });
-  log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
+  // The switch is read per tick, so it can change mid-session; this only says how the world loaded.
+  if (game.settings.get(MODULE, "autoRestock")) log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
 }
 
 /* ---------------------------------------------------------------- nutrition */
@@ -1038,6 +1039,47 @@ async function requestRestock(actor) {
 }
 
 /**
+ * The setup query's handler: a GM's *Set up shop…*, carried out on the claiming tab's trade queue.
+ * Run from another tab, a scheduled restock on the claiming tab could land between the setup
+ * clearing the shelf key and the new stock arriving, adopt the half-built shelf, and double it at
+ * the next reroll (#136). Like a trade, a tab without the claim never answers.
+ */
+async function handleSetupQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
+  if (!shop || typeof request?.sourceUuid !== "string") return { lines: null };
+  const keepIds = Array.isArray(request.keepIds) ? request.keepIds.filter(id => typeof id === "string") : [];
+  // Answered as failed, logged here, as a restock that throws is (`handleRestockQuery`).
+  const lines = await setUpShop(shop, request.sourceUuid, keepIds)
+    .catch(err => { console.error(`${MODULE} | setting up "${shop.name}" as a shop failed`, err); return null; });
+  return { lines };
+}
+
+/**
+ * Set `actor` up as the merchant at `sourceUuid`, as *Set up shop…* does: sent to the active GM's
+ * claiming tab (see `handleSetupQuery`). `done` with the stock lines it holds, `failed` when it
+ * couldn't (the claiming tab's console says why), `no-answer` when no GM answered in time: it may
+ * be queued behind a scheduled sweep, and still run.
+ *
+ * @param {Actor} actor
+ * @param {string} sourceUuid  The chosen merchant in this module's compendium.
+ * @param {string[]} keepIds  Physical items to keep as the NPC's gear.
+ * @returns {Promise<{status: "done"|"failed"|"no-answer", lines: number|null}>}
+ */
+async function requestSetUp(actor, sourceUuid, keepIds = []) {
+  const gm = game.users.activeGM;
+  if (!gm) return { status: "no-answer", lines: null };
+  try {
+    const lines = (await gm.query(SETUP_QUERY, { shopUuid: actor.uuid, sourceUuid, keepIds: [...keepIds] },
+      { timeout: QUERY_TIMEOUT_MS }))?.lines ?? null;
+    return { status: lines === null ? "failed" : "done", lines };
+  } catch (err) {
+    console.warn(`${MODULE} | setting up "${actor.name}" as a shop unconfirmed:`, err.message);
+    return { status: "no-answer", lines: null };
+  }
+}
+
+/**
  * Ask the GM to carry out a trade: `{tradeId, kind, shopUuid, buyerUuid,
  * lines: [{itemId, quantity, expectedBundlePriceCp?}]}` (the contract on
  * #102). Resolves `{status: "sealed"|"refused"|"no-gm"|"unconfirmed", ...}`,
@@ -1406,8 +1448,10 @@ async function shopDialog(actor) {
     return;
   }
   const keepIds = Object.entries(result.keep ?? {}).filter(([, on]) => on).map(([id]) => id);
-  const lines = await setUpShop(actor, uuid, keepIds);
-  ui.notifications.info(`${actor.name} is now a ${shop.name} (${result.tier}): ${lines} stock lines.`);
+  const { status, lines } = await requestSetUp(actor, uuid, keepIds);
+  if (status === "done") ui.notifications.info(`${actor.name} is now a ${shop.name} (${result.tier}): ${lines} stock lines.`);
+  else if (status === "failed") ui.notifications.error(`${actor.name} couldn't be set up as a shop. The GM's console says why.`);
+  else ui.notifications.warn(`No GM answered setting up ${actor.name} as a shop yet. It may still finish; check before trying again.`);
 }
 
 /** The Actors sidebar entry. Registered at init, before the sidebar first renders. */
@@ -1449,6 +1493,7 @@ Hooks.on("preUpdateItem", (item, changes) => {
 Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
   CONFIG.queries[RESTOCK_QUERY] = handleRestockQuery;
+  CONFIG.queries[SETUP_QUERY] = handleSetupQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1638,7 +1683,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", async () => {
   game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
-    setUpShop, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
+    setUpShop: async (actor, sourceUuid, keepIds) => (await requestSetUp(actor, sourceUuid, keepIds)).lines, requestSetUp, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too.
@@ -1660,8 +1705,16 @@ Hooks.once("ready", async () => {
     console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
 
+  // A GM's arriving shop is taken in on one tab: the active GM's claiming tab, whichever GM brought
+  // it, where setups, trades and the scheduled restocks run on one queue. Anywhere else, two tabs,
+  // or an arrival and a restock, could each roll a shelf (#136, #157 review). Known limit: one that
+  // arrives while the claim names a tab that's gone (up to CLAIM_STALE_MS) is taken in by the
+  // load-time sweep below, at the next world load. Sweeping at the takeover instead can roll twice:
+  // two tabs taking the claim at once each briefly read it as theirs, and a claimer that lost it
+  // mid-setup is still building.
+  const takesIn = userId => game.users.get(userId)?.isGM && game.users.activeGM === game.user && claimsTrades(tradeClaim(), thisTab());
   Hooks.on("createActor", (actor, _options, userId) => {
-    if (userId !== game.user.id) return;
+    if (!takesIn(userId)) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
@@ -1692,7 +1745,7 @@ Hooks.once("ready", async () => {
   // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
   // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
   Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (userId !== game.user.id || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    if (!takesIn(userId) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });

@@ -52,6 +52,9 @@ export const QUERY = "merchant-presets.trade";
 /** The `CONFIG.queries` key a GM's "Restock now" (#110) is sent under, to the tab that holds the trade claim. */
 export const RESTOCK_QUERY = "merchant-presets.restock";
 
+/** The `CONFIG.queries` key a GM's *Set up shop…* (#136) is sent under, to the tab that holds the trade claim. */
+export const SETUP_QUERY = "merchant-presets.setup";
+
 /** How long a player waits for the GM before the trade reads as unconfirmed. */
 export const QUERY_TIMEOUT_MS = 15_000;
 
