@@ -109,7 +109,9 @@ trades out itself. For GMs upgrading a world:
   their own the first time you load, tokens included. (#104)
 - 2.0: rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
-  and the shop window lists them under Food & drink. (#150)
+  and the shop window lists them under Food & drink. The general, adventurers'
+  and druidic stores, which sell rations, now buy food and drink too, ale and
+  bread included. (#150)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler
