@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
   fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
-  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort
+  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -878,4 +878,41 @@ test("the seal takes its short label once the price is longer than a few charact
   assert.equal(sealsShort("105 gp", 1), true);
   assert.equal(sealsShort("1 gp 9 sp 2 cp", 3), true);
   assert.equal(sealsShort("30 gp", 1), false);
+});
+
+/* ------------------------------------------------------------ a good's details (#168) */
+
+const SHOP_ITEM = "Actor.shop0000000000001.Item.bell000000000001";
+const BELL_SRC = "Compendium.dnd5e.equipment24.Item.phbagBell0000000";
+const bell = (over = {}) => ({ _id: "bell000000000001", name: "Bell", system: { identified: true }, _stats: { compendiumSource: BELL_SRC }, ...over });
+
+test("a player hovering a good sees its compendium card, and a click opens that page (#168)", () => {
+  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: BELL_SRC, open: BELL_SRC });
+});
+
+test("a GM's click opens the shop's own copy, to edit; the card is still the compendium's (#168)", () => {
+  assert.deepEqual(inspectTargets(bell(), { kind: "buy", isGM: true, uuid: SHOP_ITEM }), { tip: BELL_SRC, open: SHOP_ITEM });
+});
+
+test("a good with no compendium source shows the shop's copy, and opens only for the GM (#168)", () => {
+  const handmade = bell({ _stats: {} });
+  assert.deepEqual(inspectTargets(handmade, { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: null });
+  assert.deepEqual(inspectTargets(handmade, { kind: "buy", isGM: true, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: SHOP_ITEM });
+});
+
+test("an unidentified good never gives its true item away: its card is the shop's copy, and a player opens nothing (#168)", () => {
+  const mystery = bell({ system: { identified: false } });
+  assert.deepEqual(inspectTargets(mystery, { kind: "buy", isGM: false, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: null });
+  assert.deepEqual(inspectTargets(mystery, { kind: "buy", isGM: true, uuid: SHOP_ITEM }), { tip: SHOP_ITEM, open: SHOP_ITEM });
+});
+
+test("on the Sell tab a good is the seller's own: its own card and its own sheet (#168)", () => {
+  const own = "Actor.aria000000000001.Item.bell000000000001";
+  assert.deepEqual(inspectTargets(bell(), { kind: "sell", isGM: false, uuid: own }), { tip: own, open: own });
+});
+
+test("the card's markup is dnd5e's own loading section, which dnd5e fills from the uuid (#168)", () => {
+  assert.equal(itemTooltipHtml(BELL_SRC),
+    '<section class="loading" data-uuid="' + BELL_SRC + '"><i class="fas fa-spinner fa-spin-pulse" inert></i></section>');
+  assert.equal(itemTooltipHtml(null), null);
 });
