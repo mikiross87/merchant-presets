@@ -1705,8 +1705,10 @@ Hooks.once("ready", async () => {
     console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
 
+  // Every tab of the GM who made the change hears it; the one that claims trades takes it in, or
+  // two tabs would each roll a shelf (#136).
   Hooks.on("createActor", (actor, _options, userId) => {
-    if (userId !== game.user.id) return;
+    if (userId !== game.user.id || !claimsTrades(tradeClaim(), thisTab())) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
@@ -1737,7 +1739,7 @@ Hooks.once("ready", async () => {
   // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
   // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
   Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (userId !== game.user.id || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    if (userId !== game.user.id || !claimsTrades(tradeClaim(), thisTab()) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
