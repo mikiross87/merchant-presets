@@ -146,6 +146,14 @@ test("a player opens a shop from the scene they view when a token of theirs stan
   assert.equal(canOpenOn(null, shop, { id: "gm", isGM: true }, "reach"), true);
 });
 
+test("only a token that could buy lets a player in: an unlinked one of theirs doesn't, as Buying as and the GM don't count it (#167 review)", () => {
+  const P1 = { id: "p1", isGM: false };
+  const shop = { id: "shop", isToken: false, ownership: { default: NONE }, flags: { "merchant-presets": { shop: { version: 1 } } } };
+  const hireling = { id: "hireling", testUserPermission: (user, level) => level === "OWNER" && user.id === "p1" };
+  const market = scene("s1", [{ ...token("t1", "shop", 5, 5), actor: shop }, { ...token("t2", "hireling", 6, 5, { actorLink: false }), actor: hireling }]);
+  assert.equal(canOpenOn(market, shop, P1, "reach"), false);
+});
+
 test("a stored Shop access reads as reach unless it says anywhere", () => {
   assert.equal(accessModeOf("anywhere"), "anywhere");
   for (const v of ["reach", undefined, null, "", "nonsense"]) assert.equal(accessModeOf(v), "reach");
