@@ -1789,7 +1789,7 @@ function registerShelfCards() {
     if (!model?.prototype || !("equippableItemCardProperties" in model.prototype)) continue;
     libWrapper.register(MODULE, `CONFIG.Item.dataModels.${type}.prototype.equippableItemCardProperties`, function (wrapped) {
       const properties = wrapped();
-      return isShopActor(this.parent?.actor) ? shelfCardProperties(properties) : properties;
+      return isShopActor(this.parent?.actor) ? shelfCardProperties(properties, this.parent) : properties;
     }, "WRAPPER");
   }
 }
