@@ -351,6 +351,35 @@ function spellWords(item, spell, t) {
 }
 
 /**
+ * What a row's picture and name show on hover and open on a click (#168), as uuids: `tip` for
+ * dnd5e's rich item card, `open` for the sheet a click renders (null: nothing to open).
+ *
+ * - Buy tab: the good's compendium source, which a player can open where the shop's own copy is
+ *   None to them in reach mode (#166); its card also leaves out the "Not Equipped · Proficient" the
+ *   shop NPC's copy would add. A GM opens the shop's copy, to edit it. A good with no source shows
+ *   the shop's copy and opens only for the GM.
+ * - An unidentified good shows the shop's copy, whose card dnd5e keeps vague, and opens nothing for
+ *   a player: its source is the true item, which the shelf's unidentified name doesn't give away.
+ * - Sell tab: the seller's own item, card and sheet.
+ *
+ * @param {object} item  the good's data
+ * @param {{kind: "buy"|"sell", isGM: boolean, uuid: string}} context  `uuid`: the item's own
+ */
+export function inspectTargets(item, { kind, isGM, uuid }) {
+  if (kind === "sell") return { tip: uuid, open: uuid };
+  const source = item.system?.identified === false ? null : (item._stats?.compendiumSource ?? null);
+  return { tip: source ?? uuid, open: isGM ? uuid : source };
+}
+
+/**
+ * dnd5e's rich item card for `uuid`, as dnd5e's own sheets mark it up (dnd5e.mjs `loadingTooltip`):
+ * a loading section dnd5e fills with `richTooltip()` when the tooltip opens. Null without a uuid.
+ */
+export function itemTooltipHtml(uuid) {
+  return uuid ? `<section class="loading" data-uuid="${uuid}"><i class="fas fa-spinner fa-spin-pulse" inert></i></section>` : null;
+}
+
+/**
  * Whether the seal takes its short label, "Seal it · …": three coins or more, or a price longer than
  * "76 gp", which the long label no longer fits on one line beside (design IeGac, "Seal it · 105 gp").
  */
