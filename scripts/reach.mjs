@@ -24,13 +24,16 @@ export const accessModeOf = value => (value === "anywhere" ? "anywhere" : "reach
 
 /**
  * A token's footprint in scene pixels: its top-left corner and its size, which a token document
- * gives in grid squares.
+ * gives in grid squares. Read from the document's source, as core reads a token's position: while
+ * a move is under way V14's getters still give where it started (seen at `updateToken`, #167 live
+ * check), and reach is where the token was moved to.
  *
- * @param {{x: number, y: number, width: number, height: number}} token
+ * @param {{x: number, y: number, width: number, height: number, _source?: object}} token
  * @param {number} gridSize  pixels per grid square (`scene.grid.size`)
  */
 export function tokenRect(token, gridSize) {
-  return { x: token.x, y: token.y, width: token.width * gridSize, height: token.height * gridSize };
+  const t = token._source ?? token;
+  return { x: t.x, y: t.y, width: t.width * gridSize, height: t.height * gridSize };
 }
 
 /**

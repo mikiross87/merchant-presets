@@ -1775,8 +1775,8 @@ function registerCounter() {
 }
 
 /**
- * The GM switched *Shop access* (#166): bring every shop's default ownership into line with the
- * new mode (reach.mjs `accessOwnership`). The active GM alone writes.
+ * Bring every shop's default ownership into line with *Shop access* (#166, reach.mjs
+ * `accessOwnership`): when the GM switches it, and once a world loads. The active GM alone writes.
  */
 async function sweepAccess() {
   if (game.users.activeGM !== game.user) return;
@@ -1865,6 +1865,10 @@ Hooks.once("ready", async () => {
       if (game.users.activeGM !== game.user) return;
       return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
     })
+    // Every shop as *Shop access* has it now, not only when the GM switches it: the default is never
+    // stored, so a shop an earlier build opened on placing its token would otherwise stay open to
+    // every player in reach mode (#167 live check). It writes only what disagrees.
+    .then(() => sweepAccess())
     .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
