@@ -332,10 +332,11 @@ function restock(actor, options) {
 
 /**
  * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
- * even when the clock caught up with it later, or now. `markNew: false` is a shop's first roll,
- * which brings nothing back in stock (#152).
+ * even when the clock caught up with it later, or now. A shop's first roll, from whichever caller,
+ * brings nothing back in stock (#152): one with no shelf key yet has never been drawn (#153). A
+ * shop that sold out entirely keeps its key.
  */
-async function restockNow(actor, { at = game.time.worldTime, markNew = true } = {}) {
+async function restockNow(actor, { at = game.time.worldTime } = {}) {
   const raw = actor.flags?.[MODULE]?.shop;
   const shop = safeShopOf(actor);
   if (!shop?.restock.table) return null;
@@ -344,6 +345,7 @@ async function restockNow(actor, { at = game.time.worldTime, markNew = true } = 
     console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
     return null;
   }
+  const markNew = shelfKeyOf(actor) != null;
   const shelf = await adoptOnce(actor, table);
   if (!shelf) return null;
 
@@ -366,8 +368,9 @@ async function restockNow(actor, { at = game.time.worldTime, markNew = true } = 
   });
   // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
   await actor.update({ [`flags.${MODULE}.lines`]: memory });
-  if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
+  // Updates first: they move goods out of a container before it's deleted (#153).
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
+  if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
   // The till; when the shelf was last restocked, whatever did it, for Settings' Last restock; and
   // when it last brought fresh stock, for the shop window's "Fresh stock today" (#145, #152): not a
@@ -1393,7 +1396,7 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);
-    await restockNow(actor, { markNew: false });
+    await restockNow(actor);
   } finally {
     rewiring.delete(actor.id);
   }
@@ -1783,7 +1786,7 @@ async function arrive(actor) {
     await migrateShop(actor);
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
-    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor, { markNew: false });
+    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
   } finally {
     arriving.delete(actor.id);
   }

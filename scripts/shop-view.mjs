@@ -441,7 +441,8 @@ export function partOfDay(hour, hoursPerDay = 24) {
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
  */
 export function isFresh(lastRestock, now, hours, days) {
-  if (lastRestock == null || now < lastRestock) return false;
+  // A clock wound back before the restock keeps it fresh: what it brought is still on the shelf (#153).
+  if (lastRestock == null) return false;
   return now < (nextCloseAt(hours, lastRestock, days) ?? lastRestock + secondsPerDay(days));
 }
 
