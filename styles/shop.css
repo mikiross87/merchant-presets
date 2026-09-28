@@ -124,7 +124,7 @@
   align-items: center;
   cursor: pointer;
 }
-.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-seal-button, .mp-nchip, .mp-info, .mp-dock-expand, .mp-stepper button):focus-visible {
+.shop-sheet :is(.mp-npc-sheet, .mp-close, .mp-hero-chip, .mp-buyer-row, .mp-tab, .mp-nav-link, .mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-seal-button, .mp-nchip, .mp-info, .mp-dock-expand, .mp-stepper button, .mp-restock-now):focus-visible {
   box-shadow: 0 0 0 2px var(--mp-gold-light);
 }
 .shop-sheet :is(.mp-reset, .mp-button, .mp-icon-button, .mp-add, .mp-stepper button):disabled { opacity: 0.5; cursor: not-allowed; }
