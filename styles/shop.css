@@ -1349,6 +1349,8 @@
   white-space: nowrap;
   color: #ffffff;
   cursor: pointer;
+  /* Its hover glow eases in as the seal's does (#174). */
+  transition: box-shadow 120ms ease;
 }
 .shop-sheet .mp-restock-now .mp-icon { width: 16px; height: 16px; }
 .shop-sheet .mp-restock-now:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -1416,7 +1418,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-sheet .mp-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button, .shop-sheet .mp-seal-button { animation: none !important; transition: none !important; }
+  .shop-sheet .mp-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button, .shop-sheet .mp-seal-button, .shop-sheet .mp-restock-now { animation: none !important; transition: none !important; }
   .shop-sheet .mp-line.is-struck .mp-line-name { animation: none; }
 }
 
