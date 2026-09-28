@@ -77,7 +77,8 @@
           "vehicle": "Vehicle",
           "tack": "Tack",
           "mount": "Mount"
-        }
+        },
+        "AnySpellRange": "any Level {min}–{max} spell"
       },
       "Day": {
         "night": "night",

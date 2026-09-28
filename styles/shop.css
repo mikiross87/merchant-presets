@@ -479,7 +479,7 @@
   scrollbar-width: none;
 }
 /* A long category name wraps rather than losing its end (design IeGac: "Spells, Components Included"). */
-.shop-sheet .mp-nav-label { flex: 1 1 0; min-width: 0; white-space: normal; }
+.shop-sheet .mp-nav-label { flex: 1 1 0; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
 .shop-sheet .mp-nav-count { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* The shelf scrolls; like the Settings page, without a scrollbar taking the design's width. */

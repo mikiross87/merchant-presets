@@ -347,7 +347,9 @@ function spellWords(item, spell, t) {
   const levels = levelService(item.name);
   if (!levels) return null;
   if (levels.max === 0) return t("AnyCantrip");
-  return levels.min === levels.max ? t("AnySpell", { level: levels.min }) : t("AnySpells", levels);
+  if (levels.min === levels.max) return t("AnySpell", { level: levels.min });
+  // Two levels read as either ("4 or 5"); a wider span as its range, so "6-8" keeps Level 7.
+  return t(levels.max - levels.min === 1 ? "AnySpells" : "AnySpellRange", levels);
 }
 
 /** The name a good shows (design IeGac): a named spell by the spell alone, the heading says it's spellcasting. */
