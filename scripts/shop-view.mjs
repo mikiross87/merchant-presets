@@ -354,14 +354,12 @@ function spellWords(item, spell, t) {
  * What a row's picture and name show on hover and open on a click (#168), as uuids: `tip` for
  * dnd5e's rich item card, `open` for the sheet a click renders (null: nothing to open).
  *
- * - Buy tab, a player: the good's compendium source, which they can open where the shop's own copy
- *   is None to them in reach mode (#166); its card also leaves out the "Not Equipped · Proficient"
- *   the shop NPC's copy would add. So a good the GM rewrote on the shelf shows its source's words
- *   to players. A good with no source shows the shop's copy and opens nothing.
- * - Buy tab, the GM: the shop's own copy, card and sheet, as it stands on the shelf, their edits
- *   included (#169 review).
- * - An unidentified good shows the shop's copy, whose card dnd5e keeps vague, and opens nothing for
- *   a player: its source is the true item, which the shelf's unidentified name doesn't give away.
+ * - The card is always the item itself, as it stands: on the Buy tab the shop's own copy, the GM's
+ *   edits included (#169 review), which a player's client holds and dnd5e renders without any
+ *   permission on the shop; an unidentified one stays vague, as dnd5e draws it.
+ * - A click on the Buy tab opens, for the GM, the shop's copy, to edit it; for a player, who can't
+ *   open that in reach mode (#166), its compendium source, read-only. A good with no source, or an
+ *   unidentified one, opens nothing for a player: an unidentified good's source is the true item.
  * - Sell tab: the seller's own item, card and sheet.
  *
  * @param {object} item  the good's data
@@ -370,7 +368,7 @@ function spellWords(item, spell, t) {
 export function inspectTargets(item, { kind, isGM, uuid }) {
   if (kind === "sell" || isGM) return { tip: uuid, open: uuid };
   const source = item.system?.identified === false ? null : (item._stats?.compendiumSource ?? null);
-  return { tip: source ?? uuid, open: isGM ? uuid : source };
+  return { tip: uuid, open: source };
 }
 
 /**
