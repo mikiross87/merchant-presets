@@ -261,6 +261,31 @@ test("a shop whose arrival roll failed gets nothing New from its first roll, whi
   assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "nor fresh stock today");
 });
 
+test("a shop whose arrival roll failed and the clock then adopted marks none of its pack goods New at its first restock (#158 review)", async () => {
+  const { world, shop } = await setUp();
+  world.actors.push(shop);
+  world.settings.autoRestock = true;
+  globalThis.game.time.calendar.days = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
+  globalThis.game.time.calendar.timeToComponents = t => ({ hour: Math.floor((t % 86_400) / 3600), minute: 0 });
+  const table = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
+  const missing = table.results[0].documentUuid;
+  const served = world.compendium.get(missing);
+  world.compendium.delete(missing);
+  const warn = console.warn;
+  console.warn = () => {};
+  try {
+    await world.fire("createActor", shop, {}, "gm");
+    await tick(40);
+  } finally { console.warn = warn; }
+  world.compendium.set(missing, served);
+  globalThis.game.time.worldTime = 3600;
+  await world.fire("updateWorldTime", 3600, 0);                   // the schedule sees it first: adopts the pack's goods
+  await tick(40);
+  assert.ok(shop.flags["merchant-presets"].shelf, "adopted by the clock");
+  await globalThis.game.modules.get("merchant-presets").api.restock(shop);
+  assert.ok(shop.items.every(i => i.flags["merchant-presets"]?.newAt === undefined), "the pack's goods were in stock all along");
+});
+
 test("a shop replaced from the pack mid-session starts a fresh shelf: one of each line (#66, #135 review)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);
