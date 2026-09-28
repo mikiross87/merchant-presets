@@ -463,6 +463,14 @@ test("a top-up moves what's stored in a container out before the sold-out contai
   assert.deepEqual(plan.updates, [{ _id: "gm7", "system.container": null }]);
 });
 
+test("a top-up refill that's also moved out of a container going is one update, not two for the same good (#158 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const bought = drawn("i3", "Backpack", "container", 0, { container: null });
+  const inside = { ...drawn("i1", "Arrows", "consumable", 0), system: { quantity: 0, container: "i3" } };
+  const plan = planRestock(topup, [bought, inside], [{ ...draws[0], quantity: 10 }, draws[2]], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.updates.map(u => [u._id, u["system.quantity"], u["system.container"]]), [["i1", 10, null]]);
+});
+
 test("a reroll moves a hand-added good out of a drawn container before the container goes (#153)", () => {
   const pack = drawn("i3", "Backpack", "container", 1, { container: null });
   const inside = { _id: "gm7", name: "Grandma's Locket", type: "loot", system: { quantity: 1, container: "i3" }, flags: {} };
