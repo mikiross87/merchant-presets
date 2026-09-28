@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
   fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
-  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml
+  stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -917,4 +917,16 @@ test("the card's markup is dnd5e's own loading section, which dnd5e fills from t
   assert.equal(itemTooltipHtml(BELL_SRC),
     '<section class="loading" data-uuid="' + BELL_SRC + '"><i class="fas fa-spinner fa-spin-pulse" inert></i></section>');
   assert.equal(itemTooltipHtml(null), null);
+});
+
+test("a shop's good keeps only its attunement pill: Not Equipped and proficiency are the shop NPC's, not the buyer's (#170)", () => {
+  // dnd5e 6.0.5 `equippableItemCardProperties`, as it returns them for an unequipped weapon needing attunement.
+  const props = [
+    { type: "attunement", attuned: false, attunement: "required" },
+    { type: "label", label: "DND5E.Unequipped" },
+    { type: "proficiency", proficiency: 1 }
+  ];
+  assert.deepEqual(shelfCardProperties(props), [{ type: "attunement", attuned: false, attunement: "required" }]);
+  assert.deepEqual(shelfCardProperties([{ type: "label", label: "DND5E.Unequipped" }, { type: "proficiency", proficiency: 0 }]), []);
+  assert.deepEqual(shelfCardProperties(undefined), []);
 });
