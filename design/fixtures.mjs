@@ -34,7 +34,7 @@ export const STABLE = "Stable";
  *   from earlier checks included): Aria, P1's character, a Fighter 5 with 3 pp 47 gp 12 sp 30 cp;
  *   Tomas (a humanoid, 3 gp 4 sp) and Whisker (a beast, no purse), NPCs P1 owns; Brom (P2's
  *   character, Cleric 5, 212 gp) and Kess (a Rogue 5 no one plays, 41 gp 7 sp);
- * - Aria's pack as the Sell frames draw it: a Longsword, a Chain Shirt and 2 Potions of Healing
+ * - Aria's pack as the Sell frames draw it: a Longsword, a worn Chain Shirt and 2 Potions of Healing
  *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
  * - *Inn & Tavern*: a fresh import of the Town inn, with the goods the Inn frames don't draw hidden
  *   (as a GM hides them): three meals, two rooms, and ale, bread and water, in the frame's order;
@@ -80,7 +80,8 @@ export async function setup() {
   };
   await aria.createEmbeddedDocuments("Item", [
     await packed("dnd5e.equipment24", "Longsword", { sort: 100 }),
-    await packed("dnd5e.equipment24", "Chain Shirt", { sort: 200 }),
+    // Worn: the Sell frames tag it Equipped (#170).
+    await packed("dnd5e.equipment24", "Chain Shirt", { sort: 200, "system.equipped": true }),
     await packed("dnd5e.equipment24", "Potion of Healing", { sort: 300, "system.quantity": 2 }),
     await packed(`${MP}.goods`, "Bread (loaf)", { sort: 400 }),
     { name: "Ring of Protection", type: "equipment", img: "icons/equipment/finger/ring-band-copper.webp", sort: 500,

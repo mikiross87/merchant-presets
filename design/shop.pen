@@ -421,6 +421,33 @@
                           "letterSpacing": 0.5
                         }
                       ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kLNky",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Equipped badge",
+                      "enabled": false,
+                      "fill": "#8080802e",
+                      "cornerRadius": 3,
+                      "padding": [
+                        1,
+                        5
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rGWRR",
+                          "name": "Equipped badge text",
+                          "fill": "$text-secondary",
+                          "content": "Equipped",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.5
+                        }
+                      ]
                     }
                   ]
                 },
@@ -4005,6 +4032,9 @@
                     },
                     "BZVOe": {
                       "content": "Chain Shirt"
+                    },
+                    "kLNky": {
+                      "enabled": true
                     },
                     "vYzUL": {
                       "content": "Medium armor · worth 50 gp"
@@ -23314,6 +23344,9 @@
                 },
                 "BZVOe": {
                   "content": "Chain Shirt"
+                },
+                "kLNky": {
+                  "enabled": true
                 },
                 "vYzUL": {
                   "content": "Medium armor · worth 50 gp · ×1"

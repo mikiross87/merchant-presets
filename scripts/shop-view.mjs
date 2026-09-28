@@ -1,6 +1,6 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
 
 // The receipt names goods as the window does (#164), so the naming lives with the trade.
 export { goodName, isNamedSpell } from "./trade-plan.mjs";
@@ -370,6 +370,19 @@ export function inspectTargets(item, { kind, isGM, uuid }) {
   const source = item.system?.identified === false ? null : (item._stats?.compendiumSource ?? null);
   return { tip: uuid, open: source };
 }
+
+/**
+ * The pills dnd5e's card gives an equippable good a shop owns (#170): only its attunement.
+ * "Not Equipped" and proficiency (`equippableItemCardProperties`) are worked out against the shop
+ * NPC, so they say nothing to a buyer; "Requires Attunement" still does. The shopkeeper's own gear
+ * isn't a good: its pills are the NPC's, and true, on its card, its sheet and its chat card, so
+ * they all stay (#171 review).
+ *
+ * @param {object[]} [properties]  what dnd5e's getter returns
+ * @param {object} [item]  the item they're for
+ */
+export const shelfCardProperties = (properties, item) => (isGear(item ?? {}) ? properties
+  : (properties ?? []).filter(p => p?.type === "attunement"));
 
 /**
  * dnd5e's rich item card for `uuid`, as dnd5e's own sheets mark it up (dnd5e.mjs `loadingTooltip`):
