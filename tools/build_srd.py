@@ -161,6 +161,17 @@ DND5E_ITEM_FILTERS = [
     {"path": "system.type.value", "filters": "natural"},
 ]
 
+def kind_of(item):
+    """A good's kind, as the runtime reads it (trade-plan.mjs `kindOf`): our own flag, else food
+    and drink for dnd5e's own food, which SRD rations and water are (#150). A shop that stocks
+    rations then never lists food and drink among what it won't buy."""
+    kind = (item.get("flags", {}).get("merchant-presets") or {}).get("kind")
+    if kind:
+        return kind
+    if item.get("type") == "consumable" and ((item.get("system") or {}).get("type") or {}).get("value") == "food":
+        return "food-drink"
+    return None
+
 def refuses(item_filters, item):
     """Whether a merchant with these filters refuses `item`, as Item Piles'
     isItemInvalid reads them."""
@@ -538,8 +549,7 @@ def main():
             # Derived from what this shop actually stocks, so nothing it sells
             # can ever be filtered out of its own inventory.
             stocked_types = {i.get("type") for i in items}
-            stocked_kinds = {(i.get("flags", {}).get("merchant-presets") or {}).get("kind")
-                             for i in items}
+            stocked_kinds = {kind_of(i) for i in items}
             refuse_types = [t for t in PHYSICAL_TYPES if t not in stocked_types]
             refuse_kinds = [k for k in GOODS_KINDS if k not in stocked_kinds]
             item_filters = [dict(f) for f in DND5E_ITEM_FILTERS]

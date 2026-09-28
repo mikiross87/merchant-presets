@@ -9032,7 +9032,6 @@
             "vehicle",
             "mount",
             "tack",
-            "food-drink",
             "meal",
             "lodging",
             "service",
@@ -9069,7 +9068,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,spellcasting,component,travel,gear"
+            "filters": "vehicle,mount,tack,meal,lodging,service,spellcasting,component,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,

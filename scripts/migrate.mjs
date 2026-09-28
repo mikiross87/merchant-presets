@@ -230,14 +230,21 @@ function valuesOn(filters, path) {
   return new Set(values);
 }
 
-/** `wontBuy` from `overrideItemFilters`: everything on `type` and our own `kind`, minus the fixed ones. */
-function wontBuyFrom(filters) {
+/**
+ * `wontBuy` from `overrideItemFilters`: everything on `type` and our own `kind`, minus the fixed
+ * ones. 1.x's food-and-drink filter matched only this module's own flagged goods; 2.0 reads SRD
+ * rations and water as food and drink too (#150), so it carries over only where the shipped
+ * merchant (`packShop`) refuses food and drink as well: a General Store keeps buying the rations
+ * it sells. With no shipped merchant to go by, it carries over as it was.
+ */
+function wontBuyFrom(filters, packShop) {
   if (!Array.isArray(filters)) return { types: [], kinds: [] };
   const fixedTypes = valuesOn(DND5E_ITEM_FILTERS, "type");
   const typeValues = valuesOn(filters, "type");
   for (const t of fixedTypes) typeValues.delete(t);
   const kindValues = valuesOn(filters, "flags.merchant-presets.kind");
   kindValues.delete(FIXED_KIND);
+  if (packShop?.wontBuy && !packShop.wontBuy.kinds?.includes("food-drink")) kindValues.delete("food-drink");
   return { types: canonicalOrder(typeValues, PHYSICAL_TYPES_ORDER), kinds: canonicalOrder(kindValues, GOODS_KINDS_ORDER) };
 }
 
@@ -280,7 +287,7 @@ export function deriveShop(actor, packShop) {
       onOpen: ip.refreshItemsOnOpen,
       mode: "reroll"
     },
-    wontBuy: wontBuyFrom(ip.overrideItemFilters)
+    wontBuy: wontBuyFrom(ip.overrideItemFilters, packShop)
   };
 }
 

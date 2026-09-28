@@ -76,7 +76,8 @@
  *   `system.quantity: 0` when `keep` is true (the default) and is deleted
  *   when `keep` is false. No separate field; #98's schema already has the
  *   one that matters.
- * - **`wontBuy.kinds`** matches `flags.merchant-presets.kind` — the generator's
+ * - **`wontBuy.kinds`** matches `kindOf`: `flags.merchant-presets.kind` (SRD food reads as
+ *   "food-drink", #150) — the generator's
  *   own classification (`tools/build_srd.py`'s `GOODS_KINDS`: "component",
  *   "spellcasting", "food-drink", "meal", "lodging", "mount", "vehicle",
  *   "tack", "travel", "gear"), which is coarser than any single dnd5e type or
@@ -257,7 +258,13 @@ const findById = (docs, id) => docs.find(d => idOf(d) === id);
 
 const stockOf = item => stockFrom(item.flags?.[MODULE]?.stock ?? {});
 const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
-export const kindOf = item => item.flags?.[MODULE]?.kind ?? null;
+/**
+ * A good's kind (`wontBuy.kinds`, the Buy list's groups): our own flag, else food and drink for
+ * dnd5e's own food, which SRD rations and water are and carry no flag of ours, in a shop or in a
+ * player's pack (#150).
+ */
+export const kindOf = item => item.flags?.[MODULE]?.kind
+  ?? (item.type === "consumable" && item.system?.type?.value === "food" ? "food-drink" : null);
 export const isGear = item => kindOf(item) === "gear";
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 

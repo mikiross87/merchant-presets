@@ -15,6 +15,21 @@ const CURRENCIES = {
   cp: { conversion: 100, label: "Copper Pieces", abbreviation: "cp", icon: "copper.webp" }
 };
 
+/* -------------------------------------------------------------- SRD food and drink (#150) */
+
+const SRD_RATIONS = { type: "consumable", name: "Rations", system: { type: { value: "food" } }, flags: {} };
+const SMITH_WONT_BUY = { wontBuy: { types: [], kinds: ["food-drink", "meal"] } };
+
+test("a smith that won't buy food and drink refuses SRD rations, which carry no kind of ours (#150)", () => {
+  assert.equal(dealtIn(SRD_RATIONS, SMITH_WONT_BUY), false);
+  assert.deepEqual(wontBuyReason(SRD_RATIONS, SMITH_WONT_BUY), { kind: "food-drink" });
+});
+
+test("our own kind wins over dnd5e's food type: a meal is a meal (#150)", () => {
+  const meal = { ...SRD_RATIONS, name: "Meal, Modest", flags: { "merchant-presets": { kind: "meal" } } };
+  assert.deepEqual(wontBuyReason(meal, { wontBuy: { types: [], kinds: ["food-drink"] } }), null);
+});
+
 /* -------------------------------------------------------------- titleParts */
 
 test("a trailing settlement tier moves out of the title", () => {
@@ -577,6 +592,8 @@ test("a good sits under the category its line names, else its kind of good", () 
   assert.deepEqual(shelfGroup(weapon, { category: "" }, armorTypes), { id: "weapons", named: null, icon: "lucide:sword" });
   assert.deepEqual(shelfGroup(weapon, { category: "Heirlooms" }, armorTypes), { id: "named:Heirlooms", named: "Heirlooms", icon: "lucide:tag" });
   assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "shield" } } }, {}, armorTypes).id, "armor");
+  // SRD food and drink carry no kind of ours; dnd5e's own "food" type makes them food and drink (#150).
+  assert.equal(shelfGroup({ type: "consumable", name: "Water (Pint)", system: { type: { value: "food" } }, flags: {} }, {}, armorTypes).id, "food-drink");
   assert.equal(shelfGroup({ type: "equipment", system: { type: { value: "trinket" } } }, {}, armorTypes).id, "gear");
   assert.equal(shelfGroup({ type: "tool", system: {} }, {}, armorTypes).id, "tools");
   // The module's own goods, by their kind (design mRg3y): an inn's meals and rooms.
