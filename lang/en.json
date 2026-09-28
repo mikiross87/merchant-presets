@@ -66,7 +66,18 @@
         "Drink": "Drink",
         "CountsAsWater": "counts as water",
         "Worth": "worth {amount}",
-        "WorthEach": "worth {amount} each"
+        "WorthEach": "worth {amount} each",
+        "JoinsBuyer": "joins the buyer",
+        "SpellOf": "Level {level} {school}",
+        "CantripOf": "{school} cantrip",
+        "AnyCantrip": "any cantrip",
+        "AnySpell": "any Level {level} spell",
+        "AnySpells": "any Level {min} or {max} spell",
+        "Kind": {
+          "vehicle": "Vehicle",
+          "tack": "Tack",
+          "mount": "Mount"
+        }
       },
       "Day": {
         "night": "night",
@@ -155,7 +166,9 @@
         "DeliveredBuyOne": "{goods} is in {name}'s pack.",
         "DeliveredBuyMany": "{goods} are in {name}'s pack.",
         "DeliveredSellOne": "{goods} is with {shop} now.",
-        "DeliveredSellMany": "{goods} are with {shop} now."
+        "DeliveredSellMany": "{goods} are with {shop} now.",
+        "CastFor": "Cast for {name}",
+        "Joins": "Joins {name}"
       },
       "Seal": {
         "Bargain": "Seal the bargain · {price}",

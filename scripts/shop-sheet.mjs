@@ -25,7 +25,7 @@ import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort
 } from "./shop-view.mjs";
 
 const MODULE = "merchant-presets";
@@ -80,8 +80,31 @@ function serviceNote(kind, item, stock, buyer) {
     return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.Feeds", { name: buyer.name }), noteIcon: "lucide:utensils" };
   }
   if (goodKind === "lodging") return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.FromTonight"), noteIcon: "lucide:bed-double" };
+  // A spell is cast for whoever it's bought as (design IeGac), whatever the chat is told.
+  if (goodKind === "spellcasting" && buyer) return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.CastFor", { name: buyer.name }), noteIcon: "lucide:sparkles" };
   return { note: null, noteIcon: null };
 }
+
+/** A bought mount's bill line (design pI7Yd): it joins the buyer, where bought animals spawn. */
+function mountNote(kind, item, buyer) {
+  if (kind !== "buy" || !buyer || !goodsWorld().spawns || !joinsBuyer(item)) return null;
+  return { note: game.i18n.localize("MERCHANT_PRESETS.Shop.Bill.Joins", { name: buyer.name }), noteIcon: "lucide:paw-print" };
+}
+
+/**
+ * A named spell's level and school ("Level 1 Abjuration", design IeGac), by its uuid: looked up
+ * once and kept, since the row is drawn on every render. Null for a spell that can't be found.
+ */
+const SPELL_FACTS = new Map();
+async function learnSpells(items) {
+  const uuids = [...new Set(items.filter(isNamedSpell).map(i => i.flags[MODULE].spell))].filter(u => !SPELL_FACTS.has(u));
+  await Promise.all(uuids.map(async uuid => {
+    const spell = await Promise.resolve(fromUuid(uuid)).catch(() => null);
+    const level = spell?.system?.level;
+    SPELL_FACTS.set(uuid, Number.isInteger(level) ? { level, school: CONFIG.DND5E.spellSchools?.[spell.system.school]?.label ?? spell.system.school ?? "" } : null);
+  }));
+}
+const spellFacts = item => (isNamedSpell(item) ? SPELL_FACTS.get(item.flags[MODULE].spell) ?? null : null);
 
 /** A row's stock in words: "7 left", "Last one", "Sold out", "Always". */
 function stockWords(stock) {
@@ -101,7 +124,8 @@ const metaWords = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.
  */
 function goodsWorld() {
   const sn = game.modules.get(NUTRITION_MODULE);
-  return { feeds: mealsFeed(sn, foundry.utils.isNewerVersion), hydrates: !!sn?.active && game.settings.get(MODULE, "drinksHydrate") };
+  return { feeds: mealsFeed(sn, foundry.utils.isNewerVersion), hydrates: !!sn?.active && game.settings.get(MODULE, "drinksHydrate"),
+    spawns: !!game.settings.get(MODULE, "animalsSpawn") };
 }
 
 /** CONFIG.DND5E's labels a row's meta line reads (shop-view.mjs `itemMeta`). */
@@ -110,6 +134,7 @@ function metaLabels() {
   return {
     weaponTypes: D.weaponTypes, armorTypes: D.armorTypes, toolTypes: D.toolTypes, consumableTypes: D.consumableTypes,
     typeLabels: Object.fromEntries(Object.entries(CONFIG.Item.typeLabels ?? {}).map(([k, v]) => [k, game.i18n.localize(v)])),
+    goodKinds: Object.fromEntries(["vehicle", "tack", "mount"].map(k => [k, game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.Kind.${k}`)])),
     properties: D.itemProperties, weaponProperties: [...(D.validProperties?.weapon ?? [])], weightUnits: D.weightUnits
   };
 }
@@ -655,6 +680,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     const actor = this.document;
+    await learnSpells(actor.items.map(i => i));
     const currencies = CONFIG.DND5E.currencies;
     // Trading hours off, or shops not following the world clock (#149), means every shop is open
     // around the clock (the settings' own promise), so the window reads it as a shop with no hours:
@@ -973,10 +999,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           // Its place on the list (design y6iNf): a category the GM named, as they wrote it, else
           // its kind of good. The pricing category (`row.category`) stays what rules key on.
           ...groupFields(data, stock),
-          meta: itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: !!stock.service }),
+          // A named spell by the spell alone (design IeGac).
+          name: goodName(data),
+          meta: itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: !!stock.service, spell: spellFacts(data) }),
           stockText: stockWords(row.stock),
           // A narrow window folds the stock into the meta line (design r7HIUl).
-          metaShort: stock.service ? itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: true })
+          metaShort: stock.service ? itemMeta(data, metaLabels(), metaWords, { ...goodsWorld(), service: true, spell: spellFacts(data) })
             : compactMeta(data, metaLabels(), metaWords, stockWords(row.stock)),
           // The Narrow layout shows a filled check instead of "+" for a line already on the bill
           // (design/README.md, "Narrow"). Wide layouts ignore the flag entirely.
@@ -1015,9 +1043,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       seal: {
         ...seal,
         state,
-        // A price of three coins or more takes the short label, so it fits the button (design mRg3y).
+        // A long price takes the short label, so it fits the button (designs mRg3y, IeGac).
         label: seal.labelKey === "MERCHANT_PRESETS.Shop.Seal.Bargain"
-          ? game.i18n.localize(coinBreakdown(totals.sumCp, currencies).length >= 3 ? "MERCHANT_PRESETS.Shop.Seal.BargainShort" : seal.labelKey, { price: sumText })
+          ? game.i18n.localize(sealsShort(sumText, coinBreakdown(totals.sumCp, currencies).length) ? "MERCHANT_PRESETS.Shop.Seal.BargainShort" : seal.labelKey, { price: sumText })
           : game.i18n.localize(seal.labelKey)
       },
       open
@@ -1346,7 +1374,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       } catch { /* unpriced: the add button is disabled for these, but never trust that alone */ }
       lines.push({
         // The shown name (an unidentified good's unidentified one); the source data prices the line.
-        itemId, name: this.#docOf(kind, itemId)?.name ?? item.name, img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
+        itemId, name: goodName({ ...item, name: this.#docOf(kind, itemId)?.name ?? item.name }), img: item.img, quantity, lineTotalCp: lineTotal, bundlePriceCp: bundleCp,
         struck: this._struck[kind].has(itemId),
         // The buyer's deal moved this line's total: the bill marks it as theirs. Compared in coin,
         // since a small deal on cheap goods can floor to the same total (#142 review).
@@ -1363,7 +1391,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // A bundle that floors to nothing has no sticker worth showing beside a real line total.
         showUnit: (bundleCp ?? 0) > 0 || lineTotal === 0,
         // What a service line does, in place of its unit price (design mRg3y).
-        ...serviceNote(kind, item, stock, this.#resolveBuyer()),
+        ...(mountNote(kind, item, this.#resolveBuyer()) ?? serviceNote(kind, item, stock, this.#resolveBuyer())),
         // A sale's detail says what share of the good's worth that is: "(½ of 15 gp)".
         ofList: kind === "sell" ? this.#ofListText(item, rate, currencies) : null,
         lineTotalCoins: coinBreakdown(lineTotal, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) }))
