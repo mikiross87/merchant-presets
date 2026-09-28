@@ -385,6 +385,31 @@ export const shelfCardProperties = (properties, item) => (isGear(item ?? {}) ? p
   : (properties ?? []).filter(p => p?.type === "attunement"));
 
 /**
+ * The GM Settings section being read (#172), for the side nav and the narrow dropdown to mark: the
+ * last one whose heading has reached the top of the form, its scroll padding included (where a jump
+ * leaves a heading). Scrolled to the bottom, the last heading in view, so a short last section
+ * that can never reach the top is still reached. The form scrolls as one page (design/README.md,
+ * GM Settings tab).
+ *
+ * @param {{id: string, top: number}[]} sections  in page order; `top`, each heading's offset in the form's scrolled content
+ * @param {{scrollTop: number, clientHeight: number, scrollHeight: number, pad?: number}} view  the form's
+ * @returns {string|null}
+ */
+export function currentSection(sections, { scrollTop, clientHeight, scrollHeight, pad = 0 }) {
+  if (!sections.length) return null;
+  // Half a pixel's grace: a jump's scrollTop lands on fractions.
+  const line = scrollTop + pad + 0.5;
+  let current = sections[0].id;
+  for (const s of sections) if (s.top <= line) current = s.id;
+  const scrolls = scrollHeight > clientHeight + 1;
+  if (scrolls && scrollTop + clientHeight >= scrollHeight - 1) {
+    const inView = sections.filter(s => s.top < scrollTop + clientHeight);
+    if (inView.length) current = inView.at(-1).id;
+  }
+  return current;
+}
+
+/**
  * dnd5e's rich item card for `uuid`, as dnd5e's own sheets mark it up (dnd5e.mjs `loadingTooltip`):
  * a loading section dnd5e fills with `richTooltip()` when the tooltip opens. Null without a uuid.
  */

@@ -86,8 +86,9 @@ trades out itself. For GMs upgrading a world:
 - 2.0: the shop window's GM-only Settings tab, where each shop's terms are
   changed: what it sells and buys at (or the world default), category rules,
   what it won't buy, its hours, and how often and how it restocks, with
-  *Restock now*, *Players can visit* and *Reset to preset*. Changes save as
-  you make them, and every open shop window reprices at once. Two new world
+  *Restock now*, *Players can visit* and *Reset to preset*. The tab scrolls as
+  one page, and its side list marks the section you're reading (#172).
+  Changes save as you make them, and every open shop window reprices at once. Two new world
   settings, *Shops sell at (%)* and *Shops buy at (%)*, set the rates for any
   shop whose terms are on *World default*. Most shipped merchants import on
   *World default* (the few with their own rates keep them); shops already in
