@@ -1306,7 +1306,7 @@
   background: var(--mp-inset);
 }
 .shop-sheet .mp-last-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.shop-sheet .mp-till-note { align-self: flex-start; }
+.shop-sheet .settings-section .mp-till-note { align-self: flex-start; }
 .shop-sheet .mp-last-line { font: 400 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-last-text .mp-hint { white-space: nowrap; }
 .shop-sheet .mp-restock-now {
