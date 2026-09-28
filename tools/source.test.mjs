@@ -28,6 +28,14 @@ const stockItems = m => m.items.filter(i => kind(i) !== "gear");
 
 /* -------------------------------------------------------------- validity */
 
+test("no merchant refuses the food and drink it stocks, SRD rations and water included (#150)", () => {
+  for (const m of merchants) {
+    const food = m.items.some(i => i.flags?.["merchant-presets"]?.kind === "food-drink"
+      || (!i.flags?.["merchant-presets"]?.kind && i.type === "consumable" && i.system?.type?.value === "food"));
+    if (food) assert.ok(!m.flags["merchant-presets"].shop.wontBuy.kinds.includes("food-drink"), m.name);
+  }
+});
+
 test("every merchant's shop config validates", () => {
   assert.equal(merchants.length, 51);
   for (const m of merchants) {

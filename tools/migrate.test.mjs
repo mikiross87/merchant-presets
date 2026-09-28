@@ -124,6 +124,18 @@ test("an invalid category at index 11 doesn't also drop index 1 (#100 review)", 
   }
 });
 
+test("a 1.x food-and-drink filter carries over only where the shipped merchant refuses food and drink too (#150)", () => {
+  // In 1.x the filter matched only this module's flagged goods; 2.0 reads SRD rations and water as
+  // food and drink too, so a General Store's old filter would turn away the rations it sells.
+  const store = legacy(shipped("General_Store_Village_"));
+  store.flags["item-piles"].data.overrideItemFilters = [{ path: "flags.merchant-presets.kind", filters: "food-drink,meal" }];
+  const sells = { restock: { every: 3, quantities: {} }, wontBuy: { types: [], kinds: ["meal"] } };
+  const refuses = { restock: { every: 3, quantities: {} }, wontBuy: { types: [], kinds: ["food-drink", "meal"] } };
+  assert.deepEqual(deriveShop(store, sells).wontBuy.kinds, ["meal"]);
+  assert.deepEqual(deriveShop(store, refuses).wontBuy.kinds, ["food-drink", "meal"]);
+  assert.deepEqual(deriveShop(store).wontBuy.kinds, ["food-drink", "meal"], "no shipped merchant to go by: as it was");
+});
+
 test("hand-retuned Item Piles values win over the pack (#100)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   const ip = store.flags["item-piles"].data;
