@@ -37,5 +37,18 @@ icons/consumables/food/bowl-stew-brown.webp
 icons/consumables/food/bowl-ribs-meat-rice-mash-brown-white.webp
 icons/magic/water/water-drop-swirl-blue.webp
 icons/equipment/finger/ring-band-copper.webp
+icons/environment/settlement/church.webp
+icons/environment/settlement/stables-horses.webp
+icons/magic/symbols/runes-star-blue.webp
+icons/magic/symbols/fleur-de-lis-yellow.webp
+icons/magic/light/torch-fire-orange.webp
+icons/magic/perception/third-eye-blue-red.webp
+icons/consumables/potions/bottle-round-empty-glass.webp
+icons/sundries/survival/bedroll-brown.webp
+icons/environment/settlement/farm-silo-windmill.webp
+icons/environment/settlement/stable.webp
+icons/commodities/treasure/figurine-camel.webp
+icons/creatures/mammals/ox-bull-horned-glowing-orange.webp
+icons/creatures/mammals/deer-antlers-blue.webp
 LIST
 echo "copied $(find "$DEST" -type f | wc -l | tr -d ' ') icons to $DEST"

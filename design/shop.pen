@@ -32502,6 +32502,2907 @@
       "theme": {
         "mode": "dark"
       }
+    },
+    {
+      "type": "frame",
+      "id": "IeGac",
+      "x": 800,
+      "y": 12094,
+      "name": "15 Temple & Faith Store — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 920,
+      "height": 760,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "j3z2y",
+          "type": "ref",
+          "ref": "m382Vk",
+          "name": "Window Bar",
+          "descendants": {
+            "GYd90": {
+              "content": "Temple & Faith Store"
+            }
+          }
+        },
+        {
+          "id": "EvTX3",
+          "type": "ref",
+          "ref": "UiMqw",
+          "name": "Hero",
+          "descendants": {
+            "gRWBt": {
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "assets/items/church.webp",
+                "mode": "fill"
+              }
+            },
+            "v4bjn": {
+              "content": "Temple & Faith Store"
+            },
+            "uYCYY": {
+              "enabled": false
+            },
+            "Cx08R": {
+              "content": "Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry. Spellcasting here…"
+            },
+            "xlRXV": {
+              "content": "Open · closes at 20:00"
+            },
+            "W5e1pg": {
+              "icon": "church"
+            },
+            "M14jey/e1b2b": {
+              "content": "147",
+              "fill": "#ffffff"
+            }
+          }
+        },
+        {
+          "id": "TlGRE",
+          "type": "ref",
+          "ref": "ZwEAx",
+          "name": "Tabs"
+        },
+        {
+          "type": "frame",
+          "id": "vLEAK",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "D95w8F",
+              "name": "Categories",
+              "width": 180,
+              "height": "fill_container",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "right": 1
+              },
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nFanI",
+                  "name": "Cat All goods",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ygwcs",
+                      "name": "All goods icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "layout-grid",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Z3khJb",
+                      "name": "All goods label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "All goods",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zPcPn",
+                      "name": "All goods count",
+                      "fill": "$text-secondary",
+                      "content": "55",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "f02FR",
+                  "name": "Cat Gear",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "r94ov",
+                      "name": "Gear icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "backpack",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qYj6U",
+                      "name": "Gear label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Gear",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Giqub",
+                      "name": "Gear count",
+                      "fill": "$text-secondary",
+                      "content": "27",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e6ITzJ",
+                  "name": "Cat Tools",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "DMENM",
+                      "name": "Tools icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "wrench",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "F3Lf47",
+                      "name": "Tools label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Tools",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YdolG",
+                      "name": "Tools count",
+                      "fill": "$text-secondary",
+                      "content": "2",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "n6iHK1",
+                  "name": "Cat Weapons",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "dR9Q0",
+                      "name": "Weapons icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "sword",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "J7q3oW",
+                      "name": "Weapons label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Weapons",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "LVdRr",
+                      "name": "Weapons count",
+                      "fill": "$text-secondary",
+                      "content": "1",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iXcnF",
+                  "name": "Cat Spellcasting",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "MQRm1",
+                      "name": "Spellcasting icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "PJa3k",
+                      "name": "Spellcasting label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Spellcasting",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "mw9j6",
+                      "name": "Spellcasting count",
+                      "fill": "$text-secondary",
+                      "content": "5",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "relaL",
+                  "name": "Cat Spells, Components Included",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "x3tazg",
+                      "name": "Spells, Components Included icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "tag",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "v8szc",
+                      "name": "Spells, Components Included label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Spells, Components Included",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "R1MyGd",
+                      "name": "Spells, Components Included count",
+                      "fill": "$text-secondary",
+                      "content": "12",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wBENE",
+                  "name": "Cat Valuables",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "RA24I",
+                      "name": "Valuables icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "tag",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AmQgV",
+                      "name": "Valuables label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Valuables",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "y4gs4",
+                      "name": "Valuables count",
+                      "fill": "$text-secondary",
+                      "content": "3",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "reMqM",
+                  "name": "Cat Spell components",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "BmJfl",
+                      "name": "Spell components icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "gem",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "CPHOC",
+                      "name": "Spell components label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Spell components",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uSmV8",
+                      "name": "Spell components count",
+                      "fill": "$text-secondary",
+                      "content": "5",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OaHTW",
+              "name": "Stock",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                12,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TSZIZ",
+                  "name": "Group Spellcasting",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "leGgE",
+                      "name": "Spellcasting heading",
+                      "fill": "$text-title",
+                      "content": "Spellcasting",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "EnvxU",
+                      "name": "Spellcasting rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "owGzs",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Spellcasting: Cantrip",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/runes-star-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Spellcasting: Cantrip"
+                    },
+                    "vYzUL": {
+                      "content": "Service · any cantrip"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "30"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "LEafV",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Spellcasting: Level 1",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/runes-star-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Spellcasting: Level 1"
+                    },
+                    "vYzUL": {
+                      "content": "Service · any Level 1 spell"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "50"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "ZtYpB",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Spellcasting: Level 2",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/runes-star-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Spellcasting: Level 2"
+                    },
+                    "vYzUL": {
+                      "content": "Service · any Level 2 spell"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "200"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "GhxAz",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Spellcasting: Level 3",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/runes-star-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Spellcasting: Level 3"
+                    },
+                    "vYzUL": {
+                      "content": "Service · any Level 3 spell"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "300"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "gBu8T",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Spellcasting: Level 4-5",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/runes-star-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Spellcasting: Level 4-5"
+                    },
+                    "vYzUL": {
+                      "content": "Service · any Level 4 or 5 spell"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "2000"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "TvJN9",
+                  "name": "Group Spells, Components Included",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gtyFM",
+                      "name": "Spells, Components Included heading",
+                      "fill": "$text-title",
+                      "content": "Spells, Components Included",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "A9HVbe",
+                      "name": "Spells, Components Included rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "LjDmK",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Protection from Evil and Good",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/fleur-de-lis-yellow.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Protection from Evil and Good"
+                    },
+                    "vYzUL": {
+                      "content": "Service · Level 1 Abjuration"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "75"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "QifFT",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Continual Flame",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/torch-fire-orange.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Continual Flame"
+                    },
+                    "vYzUL": {
+                      "content": "Service · Level 2 Evocation"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "250"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "rYEQU",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Clairvoyance",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/third-eye-blue-red.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Clairvoyance"
+                    },
+                    "vYzUL": {
+                      "content": "Service · Level 3 Divination"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "400"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pES1q",
+              "name": "Basket",
+              "width": 280,
+              "height": "fill_container",
+              "fill": "$surface-app",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "left": 1
+              },
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ne0uH",
+                  "name": "Bill of Sale",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$slip",
+                  "cornerRadius": 2,
+                  "stroke": "$slip-edge",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0000002e",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 6
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    16,
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "id": "IbR4s",
+                      "type": "ref",
+                      "ref": "L2azKq",
+                      "name": "Slip Head",
+                      "width": "fill_container",
+                      "descendants": {
+                        "khLWB": {
+                          "content": "Temple & Faith Store"
+                        },
+                        "PO46Q": {
+                          "content": "14th of Mirtul · mid-morning"
+                        }
+                      }
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "I939Pu",
+                      "name": "Head Rule",
+                      "fill": "$slip-edge",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lBV98",
+                      "name": "Ledger",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 170,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "j1OpRT",
+                          "name": "Line Protection from Evil and Good",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Z9iDJ",
+                              "name": "Protection from Evil and Good entry",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "N3CaAz",
+                                  "name": "Protection from Evil and Good name row",
+                                  "width": "fill_container",
+                                  "gap": 6,
+                                  "alignItems": "end",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "K13d7",
+                                      "name": "Protection from Evil and Good qty",
+                                      "fill": "$accent-gold",
+                                      "content": "1 ×",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 13,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "xePt3",
+                                      "name": "Protection from Evil and Good name",
+                                      "fill": "$ink",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Protection from Evil and Good",
+                                      "fontFamily": "$font-slip",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Mmo6V",
+                                  "name": "Protection from Evil and Good cost row",
+                                  "width": "fill_container",
+                                  "gap": 6,
+                                  "alignItems": "end",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "gQqxY",
+                                      "name": "Protection from Evil and Good leader",
+                                      "width": "fill_container",
+                                      "height": 10,
+                                      "stroke": "$slip-edge",
+                                      "strokeWidth": {
+                                        "bottom": 1
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "UXHdP",
+                                      "name": "Protection from Evil and Good coins",
+                                      "gap": 5,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "id": "QI1ef",
+                                          "type": "ref",
+                                          "ref": "uJ3dp",
+                                          "name": "gold 75",
+                                          "descendants": {
+                                            "e1b2b": {
+                                              "content": "75",
+                                              "fill": "$ink"
+                                            },
+                                            "B6r81": {
+                                              "fill": {
+                                                "type": "image",
+                                                "enabled": true,
+                                                "url": "assets/gold.webp",
+                                                "mode": "fill"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "vHYrx",
+                              "name": "Protection from Evil and Good detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "i3CDC2",
+                                  "name": "Protection from Evil and Good detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "v5htdQ",
+                                      "name": "Protection from Evil and Good svc icon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "icon": "sparkles",
+                                      "library": "lucide",
+                                      "fill": "$accent-gold"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "dTKJO",
+                                      "name": "Protection from Evil and Good each",
+                                      "fill": "$text-secondary",
+                                      "content": "Cast for Aria",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "s3fgs",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Protection from Evil and Good stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UDIKN",
+                          "name": "Line Spellcasting: Cantrip",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "S6j8ea",
+                              "name": "Spellcasting: Cantrip entry",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ObOlP",
+                                  "name": "Spellcasting: Cantrip name row",
+                                  "width": "fill_container",
+                                  "gap": 6,
+                                  "alignItems": "end",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "X69eQ",
+                                      "name": "Spellcasting: Cantrip qty",
+                                      "fill": "$accent-gold",
+                                      "content": "1 ×",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 13,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "X0BBG",
+                                      "name": "Spellcasting: Cantrip name",
+                                      "fill": "$ink",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Spellcasting: Cantrip",
+                                      "fontFamily": "$font-slip",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "YOJCD",
+                                  "name": "Spellcasting: Cantrip cost row",
+                                  "width": "fill_container",
+                                  "gap": 6,
+                                  "alignItems": "end",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "es8Sw",
+                                      "name": "Spellcasting: Cantrip leader",
+                                      "width": "fill_container",
+                                      "height": 10,
+                                      "stroke": "$slip-edge",
+                                      "strokeWidth": {
+                                        "bottom": 1
+                                      }
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "R03zz5",
+                                      "name": "Spellcasting: Cantrip coins",
+                                      "gap": 5,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "id": "Xwzr2",
+                                          "type": "ref",
+                                          "ref": "uJ3dp",
+                                          "name": "gold 30",
+                                          "descendants": {
+                                            "e1b2b": {
+                                              "content": "30",
+                                              "fill": "$ink"
+                                            },
+                                            "B6r81": {
+                                              "fill": {
+                                                "type": "image",
+                                                "enabled": true,
+                                                "url": "assets/gold.webp",
+                                                "mode": "fill"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Qyje6",
+                              "name": "Spellcasting: Cantrip detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "nBqBN",
+                                  "name": "Spellcasting: Cantrip detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "UTE0d",
+                                      "name": "Spellcasting: Cantrip svc icon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "icon": "sparkles",
+                                      "library": "lucide",
+                                      "fill": "$accent-gold"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "khUvr",
+                                      "name": "Spellcasting: Cantrip each",
+                                      "fill": "$text-secondary",
+                                      "content": "Cast for Aria",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "ktNBo",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Spellcasting: Cantrip stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "m6rZqs",
+                      "name": "Total Block",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "j0Qecr",
+                          "name": "Rule 1",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "jVxQd",
+                          "name": "Rule 2",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "sZMoM",
+                          "name": "Total Row",
+                          "width": "fill_container",
+                          "padding": [
+                            6,
+                            0,
+                            0,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qx6Pr",
+                              "name": "Total label",
+                              "fill": "$ink",
+                              "content": "Sum owed",
+                              "fontFamily": "$font-title",
+                              "fontSize": 17,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "j9e60r",
+                              "name": "Total coins",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "id": "j8BAJB",
+                                  "type": "ref",
+                                  "ref": "uJ3dp",
+                                  "name": "gold 105",
+                                  "descendants": {
+                                    "e1b2b": {
+                                      "content": "105",
+                                      "fill": "$ink"
+                                    },
+                                    "B6r81": {
+                                      "fill": {
+                                        "type": "image",
+                                        "enabled": true,
+                                        "url": "assets/gold.webp",
+                                        "mode": "fill"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "j101K1",
+                      "name": "Purse After",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q2z4CY",
+                          "name": "After label",
+                          "fill": "$text-secondary",
+                          "content": "Aria's purse after the bargain",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 13,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zlAgm",
+                          "name": "After coins",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "lQPDx",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "gold 72",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "72",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/gold.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "CwcSP",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "silver 12",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "12",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/silver.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "WzFTq",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "copper 30",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "30",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/copper.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "uK6U1",
+                      "type": "ref",
+                      "ref": "UFsFb",
+                      "name": "Seal Button",
+                      "width": "fill_container",
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal it · 105 gp"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "XgLeZ",
+                      "name": "Slip foot",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Exact change is counted from your coins.",
+                      "textAlign": "center",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pI7Yd",
+      "x": 2800,
+      "y": 12094,
+      "name": "15 Stable — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 920,
+      "height": 760,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "b9fXwZ",
+          "type": "ref",
+          "ref": "m382Vk",
+          "name": "Window Bar",
+          "descendants": {
+            "GYd90": {
+              "content": "Stable"
+            }
+          }
+        },
+        {
+          "id": "jdDdk",
+          "type": "ref",
+          "ref": "UiMqw",
+          "name": "Hero",
+          "descendants": {
+            "gRWBt": {
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "assets/items/stables-horses.webp",
+                "mode": "fill"
+              }
+            },
+            "v4bjn": {
+              "content": "Stable"
+            },
+            "uYCYY": {
+              "enabled": false
+            },
+            "Cx08R": {
+              "content": "Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day."
+            },
+            "xlRXV": {
+              "content": "Open · closes at 20:00"
+            },
+            "W5e1pg": {
+              "icon": "fence"
+            }
+          }
+        },
+        {
+          "id": "PuC7d",
+          "type": "ref",
+          "ref": "ZwEAx",
+          "name": "Tabs"
+        },
+        {
+          "type": "frame",
+          "id": "DL9CW",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ePjgF",
+              "name": "Categories",
+              "width": 180,
+              "height": "fill_container",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "right": 1
+              },
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S14On",
+                  "name": "Cat All goods",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "jX2Wp",
+                      "name": "All goods icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "layout-grid",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DPnXK",
+                      "name": "All goods label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "All goods",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "i6cuFt",
+                      "name": "All goods count",
+                      "fill": "$text-secondary",
+                      "content": "16",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Vq1xn",
+                  "name": "Cat Vehicles",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "zRp9G",
+                      "name": "Vehicles icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "caravan",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FTxmP",
+                      "name": "Vehicles label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Vehicles",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TbK0k",
+                      "name": "Vehicles count",
+                      "fill": "$text-secondary",
+                      "content": "4",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M1fPUL",
+                  "name": "Cat Tack",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "lSoUi",
+                      "name": "Tack icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "link",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qnzIZ",
+                      "name": "Tack label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Tack",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qk81G",
+                      "name": "Tack count",
+                      "fill": "$text-secondary",
+                      "content": "2",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "z2Far6",
+                  "name": "Cat Services",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "j7e09",
+                      "name": "Services icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "concierge-bell",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AFp5i",
+                      "name": "Services label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Services",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qwEVB",
+                      "name": "Services count",
+                      "fill": "$text-secondary",
+                      "content": "2",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L7jFX",
+                  "name": "Cat Mounts",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "F3xoRd",
+                      "name": "Mounts icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "fence",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uNRd2",
+                      "name": "Mounts label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Mounts",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZZsTu",
+                      "name": "Mounts count",
+                      "fill": "$text-secondary",
+                      "content": "6",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hwA0g",
+                  "name": "Cat Travel",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "NL5Z2",
+                      "name": "Travel icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "map",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ycy6q",
+                      "name": "Travel label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Travel",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "JxeqI",
+                      "name": "Travel count",
+                      "fill": "$text-secondary",
+                      "content": "2",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l4el1",
+              "name": "Stock",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                12,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "KdRsI",
+                  "name": "Group Tack",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "pSsVs",
+                      "name": "Tack heading",
+                      "fill": "$text-title",
+                      "content": "Tack",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "eU0zy",
+                      "name": "Tack rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "a2b1F7",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Saddle, Military",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/bedroll-brown.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Saddle, Military"
+                    },
+                    "vYzUL": {
+                      "content": "Tack · 30 lb"
+                    },
+                    "UB234": {
+                      "content": "8 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "20"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "Wusge",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Saddle, Riding",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/bedroll-brown.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Saddle, Riding"
+                    },
+                    "vYzUL": {
+                      "content": "Tack · 25 lb"
+                    },
+                    "UB234": {
+                      "content": "3 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "10"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "PeqhJ",
+                  "name": "Group Services",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ConqT",
+                      "name": "Services heading",
+                      "fill": "$text-title",
+                      "content": "Services",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "p2UIx",
+                      "name": "Services rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "ZSSbN",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Animal Feed (per day)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/farm-silo-windmill.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Animal Feed (per day)"
+                    },
+                    "vYzUL": {
+                      "content": "Service"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "5"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/copper.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "pCM3y",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Stabling (per day)",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/stable.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Stabling (per day)"
+                    },
+                    "vYzUL": {
+                      "content": "Service"
+                    },
+                    "UB234": {
+                      "content": "Always"
+                    },
+                    "I2hf2v": {
+                      "enabled": true,
+                      "fill": "#9f927526"
+                    },
+                    "g3HWm": {
+                      "content": "Service",
+                      "fill": "$text-secondary"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "5"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/silver.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "n4eni",
+                  "name": "Group Mounts",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nC6wM",
+                      "name": "Mounts heading",
+                      "fill": "$text-title",
+                      "content": "Mounts",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "T2TeK",
+                      "name": "Mounts rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "sR90Q",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Camel",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/figurine-camel.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Camel"
+                    },
+                    "vYzUL": {
+                      "content": "Mount · joins the buyer"
+                    },
+                    "UB234": {
+                      "content": "4 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "50"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "p9tmBs",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Horse, Draft",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/ox-bull-horned-glowing-orange.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Horse, Draft"
+                    },
+                    "vYzUL": {
+                      "content": "Mount · joins the buyer"
+                    },
+                    "UB234": {
+                      "content": "4 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "50"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "BneI5",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Horse, Riding",
+                  "width": "fill_container",
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/deer-antlers-blue.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Horse, Riding"
+                    },
+                    "vYzUL": {
+                      "content": "Mount · joins the buyer"
+                    },
+                    "UB234": {
+                      "content": "4 left"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "75"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FY5CH",
+              "name": "Basket",
+              "width": 280,
+              "height": "fill_container",
+              "fill": "$surface-app",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "left": 1
+              },
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hAX3e",
+                  "name": "Bill of Sale",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$slip",
+                  "cornerRadius": 2,
+                  "stroke": "$slip-edge",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0000002e",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 6
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    16,
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "id": "xCvxn",
+                      "type": "ref",
+                      "ref": "L2azKq",
+                      "name": "Slip Head",
+                      "width": "fill_container",
+                      "descendants": {
+                        "khLWB": {
+                          "content": "Stable"
+                        },
+                        "PO46Q": {
+                          "content": "14th of Mirtul · mid-morning"
+                        }
+                      }
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "uXzAt",
+                      "name": "Head Rule",
+                      "fill": "$slip-edge",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jS8bi",
+                      "name": "Ledger",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 170,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "oHq9k",
+                          "name": "Line Horse, Riding",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "x15UFA",
+                              "name": "Horse, Riding entry",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "eUDMk",
+                                  "name": "Horse, Riding qty",
+                                  "fill": "$accent-gold",
+                                  "content": "1 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "RbYKn",
+                                  "name": "Horse, Riding name",
+                                  "fill": "$ink",
+                                  "content": "Horse, Riding",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "LBPm4",
+                                  "name": "Horse, Riding leader",
+                                  "width": "fill_container",
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "RvOOV",
+                                  "name": "Horse, Riding coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "id": "N3N5ME",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 75",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "75",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "fill"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "D4hbc",
+                              "name": "Horse, Riding detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ch9op",
+                                  "name": "Horse, Riding detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "BLXOo",
+                                      "name": "Horse, Riding svc icon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "icon": "paw-print",
+                                      "library": "lucide",
+                                      "fill": "$accent-gold"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "T8nJ5e",
+                                      "name": "Horse, Riding each",
+                                      "fill": "$text-secondary",
+                                      "content": "Joins Aria",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "PsgUX",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Horse, Riding stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "e5no6",
+                          "name": "Line Stabling (per day)",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "gbKYi",
+                              "name": "Stabling (per day) entry",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "w18Mel",
+                                  "name": "Stabling (per day) qty",
+                                  "fill": "$accent-gold",
+                                  "content": "2 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "pwZJz",
+                                  "name": "Stabling (per day) name",
+                                  "fill": "$ink",
+                                  "content": "Stabling (per day)",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "MHLwY",
+                                  "name": "Stabling (per day) leader",
+                                  "width": "fill_container",
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "B4HLH",
+                                  "name": "Stabling (per day) coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "id": "zSdYm",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 1",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "1",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "fill"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "P4pAe",
+                              "name": "Stabling (per day) detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "LuiDE",
+                                  "name": "Stabling (per day) detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "KEHW7",
+                                      "name": "Stabling (per day) each",
+                                      "fill": "$text-secondary",
+                                      "content": "5 sp each",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "V0Kvek",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Stabling (per day) stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xVodw",
+                      "name": "Total Block",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "g4n1RU",
+                          "name": "Rule 1",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "EEDmk",
+                          "name": "Rule 2",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lmcsr",
+                          "name": "Total Row",
+                          "width": "fill_container",
+                          "padding": [
+                            6,
+                            0,
+                            0,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "IgVvF",
+                              "name": "Total label",
+                              "fill": "$ink",
+                              "content": "Sum owed",
+                              "fontFamily": "$font-title",
+                              "fontSize": 17,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "X2lXuH",
+                              "name": "Total coins",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "id": "siTJm",
+                                  "type": "ref",
+                                  "ref": "uJ3dp",
+                                  "name": "gold 76",
+                                  "descendants": {
+                                    "e1b2b": {
+                                      "content": "76",
+                                      "fill": "$ink"
+                                    },
+                                    "B6r81": {
+                                      "fill": {
+                                        "type": "image",
+                                        "enabled": true,
+                                        "url": "assets/gold.webp",
+                                        "mode": "fill"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "aYtod",
+                      "name": "Purse After",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DTI4x",
+                          "name": "After label",
+                          "fill": "$text-secondary",
+                          "content": "Aria's purse after the bargain",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 13,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YtgLm",
+                          "name": "After coins",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "TPSfk",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "gold 1",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "1",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/gold.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "TqJeh",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "silver 12",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "12",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/silver.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "CTw9P",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "copper 30",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "30",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/copper.webp",
+                                    "mode": "fill"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "vVylb",
+                      "type": "ref",
+                      "ref": "UFsFb",
+                      "name": "Seal Button",
+                      "width": "fill_container",
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal the bargain · 76 gp"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "supdY",
+                      "name": "Slip foot",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Exact change is counted from your coins.",
+                      "textAlign": "center",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iczDO",
+      "type": "ref",
+      "ref": "IeGac",
+      "name": "15 Temple & Faith Store — Dark",
+      "x": 1800,
+      "y": 12094,
+      "theme": {
+        "mode": "dark"
+      }
+    },
+    {
+      "id": "ldd9L",
+      "type": "ref",
+      "ref": "pI7Yd",
+      "name": "15 Stable — Dark",
+      "x": 3800,
+      "y": 12094,
+      "theme": {
+        "mode": "dark"
+      }
     }
   ],
   "themes": {
