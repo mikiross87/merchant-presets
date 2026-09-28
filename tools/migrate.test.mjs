@@ -473,9 +473,19 @@ test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet 
   assert.ok(!("ownership.default" in update));
 });
 
-test("planActorUpdate makes a shop with a placed token visitable (Limited)", () => {
+test("in reach mode planActorUpdate leaves a shop with a placed token hidden: players open it at the counter (#166)", () => {
   const store = legacy(shipped("General_Store_Village_"));
-  const { update } = planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a" });
+  const { update } = planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a", access: "reach" });
+  assert.ok(!("ownership.default" in update));
+  assert.ok(!("flags.merchant-presets.madeVisitable" in update));
+  // Reach is the world's default.
+  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a" }).update));
+  assert.equal(planOwnership(store, true, "world-a"), null);
+});
+
+test("in anywhere mode planActorUpdate makes a shop with a placed token visitable (Limited)", () => {
+  const store = legacy(shipped("General_Store_Village_"));
+  const { update } = planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a", access: "anywhere" });
   assert.equal(update["ownership.default"], 1);
   // Marked with this world, so placing another token here never re-opens it after a GM hides it
   // again (#138 review), while a copy exported to another world starts afresh.
@@ -500,13 +510,13 @@ test("a shop marked in another world, its ownership cleared by export, is made v
   const store = legacy(shipped("General_Store_Village_"));
   store.flags["merchant-presets"].madeVisitable = "world-a";
   store.ownership = { default: 0 };
-  assert.equal(planOwnership(store, true, "world-b"), 1);
+  assert.equal(planOwnership(store, true, "world-b", undefined, "anywhere"), 1);
 });
 
 test("the OWNER entry Foundry writes for the creating GM isn't a choice: the shop is made visitable (#138 review, round 7)", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 0, theGmUser000001: 3 };   // fromCompendium and _preCreate both add this
-  assert.equal(planOwnership(store, true, "world-a"), 1);
+  assert.equal(planOwnership(store, true, "world-a", undefined, "anywhere"), 1);
 });
 
 test("a shop the GM opened to one player only is the GM's choice, left alone (#138 review, round 6)", () => {
@@ -519,11 +529,11 @@ test("a player the GM made Owner of a shop is the GM's choice, left alone (#138 
   const store = legacy(shipped("General_Store_Village_"));
   store.ownership = { default: 0, theGmUser000001: 3, rogueUser000001: 3 };
   const isPlayer = id => id === "rogueUser000001";
-  assert.equal(planOwnership(store, true, "world-a", isPlayer), null);
-  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a", isPlayer }).update));
+  assert.equal(planOwnership(store, true, "world-a", isPlayer, "anywhere"), null);
+  assert.ok(!("ownership.default" in planActorUpdate(store, { hasTokenOnScene: true, worldId: "world-a", isPlayer, access: "anywhere" }).update));
   // The GM's own Owner entry alone still isn't.
   store.ownership = { default: 0, theGmUser000001: 3 };
-  assert.equal(planOwnership(store, true, "world-a", isPlayer), 1);
+  assert.equal(planOwnership(store, true, "world-a", isPlayer, "anywhere"), 1);
 });
 
 test("a level left for a player since deleted isn't a choice: the shop is made visitable (#138 review, round 9)", () => {

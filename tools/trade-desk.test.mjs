@@ -173,27 +173,33 @@ const party = (id, { flags = {}, owners = [], viewers = [] } = {}) => ({
   testUserPermission: (user, level) => (level === "OWNER" ? owners : [...owners, ...viewers]).includes(user.id)
 });
 
-test("a player may trade for a character they own at a shop they can see", () => {
+test("a player may trade for a character they own at a shop they may visit", () => {
   const user = { id: "p1", isGM: false };
-  const shop = party("shop", { flags: SHOP_FLAGS, viewers: ["p1"] });
+  const shop = party("shop", { flags: SHOP_FLAGS });
   const buyer = party("pc", { owners: ["p1"] });
-  assert.equal(checkParties({ user, shop, buyer }), null);
+  assert.equal(checkParties({ user, shop, buyer, visit: true }), null);
 });
 
 test("a player can't trade for a character they don't own", () => {
   const user = { id: "p1", isGM: false };
   const shop = party("shop", { flags: SHOP_FLAGS, viewers: ["p1"] });
-  assert.equal(checkParties({ user, shop, buyer: party("pc", { viewers: ["p1"] }) }), "invalid-request");
+  assert.equal(checkParties({ user, shop, buyer: party("pc", { viewers: ["p1"] }), visit: true }), "invalid-request");
 });
 
-test("a player can't trade at a shop they can't see", () => {
+test("a player can't trade at a shop they may not visit, Limited on it or not (#166)", () => {
   const user = { id: "p1", isGM: false };
-  assert.equal(checkParties({ user, shop: party("shop", { flags: SHOP_FLAGS }), buyer: party("pc", { owners: ["p1"] }) }), "invalid-request");
+  const buyer = party("pc", { owners: ["p1"] });
+  assert.equal(checkParties({ user, shop: party("shop", { flags: SHOP_FLAGS }), buyer, visit: false }), "invalid-request");
+  // Out of reach of a shop still Limited from before the switch: reach decides, not ownership.
+  const limited = party("shop", { flags: SHOP_FLAGS, viewers: ["p1"] });
+  assert.equal(checkParties({ user, shop: limited, buyer, visit: false }), "invalid-request");
+  // Nothing said is nothing allowed.
+  assert.equal(checkParties({ user, shop: limited, buyer }), "invalid-request");
 });
 
-test("a GM may trade for anyone at any shop", () => {
+test("a GM may trade for anyone at any shop, in reach or not", () => {
   const user = { id: "gm", isGM: true };
-  assert.equal(checkParties({ user, shop: party("shop", { flags: SHOP_FLAGS }), buyer: party("pc") }), null);
+  assert.equal(checkParties({ user, shop: party("shop", { flags: SHOP_FLAGS }), buyer: party("pc"), visit: false }), null);
 });
 
 test("an actor that isn't a shop, a missing party, or trading with yourself is refused", () => {
