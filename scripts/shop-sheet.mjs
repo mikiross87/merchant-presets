@@ -608,6 +608,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         const name = entry.querySelector(".buyer-entry-name")?.textContent.toLocaleLowerCase() ?? "";
         entry.hidden = !!query && !name.includes(query);
       }
+      // A heading goes with its group: hidden once the search leaves nobody under it.
+      for (const group of this.element.querySelectorAll(".buyer-picker .mp-picker-group")) {
+        let shown = false;
+        for (let next = group.nextElementSibling; next && !next.classList.contains("mp-picker-group"); next = next.nextElementSibling) {
+          if (next.classList.contains("buyer-entry") && !next.hidden) shown = true;
+        }
+        group.hidden = !shown;
+      }
     };
     search.value = this._buyerSearch ?? "";
     // Typing survives a clock tick's re-render: focus and caret go back where they were.

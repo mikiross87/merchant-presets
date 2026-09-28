@@ -730,6 +730,36 @@ test("the search box's focus is read from its own window's document, popped out 
   assert.equal(sheet._searchFocus, 2);
 });
 
+test("the buyer search hides a group's heading once it filters out everyone under it", async () => {
+  const { sheet } = openShop();
+  const node = (cls, name) => ({
+    classList: { contains: c => c === cls }, hidden: false,
+    querySelector: selector => (selector === ".buyer-entry-name" ? { textContent: name } : null)
+  });
+  // The GM's picker as the template lays it out: each heading, then its entries, as siblings.
+  const picker = [
+    node("mp-picker-group"), node("buyer-entry", "Aria"), node("buyer-entry", "Borin"),
+    node("mp-picker-group"), node("buyer-entry", "Goblin"), node("buyer-entry", "Wolf")
+  ];
+  picker.forEach((n, i) => { n.nextElementSibling = picker[i + 1] ?? null; });
+  const listeners = {};
+  const search = { value: "", addEventListener: (type, fn) => { listeners[type] = fn; }, focus() {}, setSelectionRange() {} };
+  sheet.element = {
+    querySelector: selector => (selector === ".buyer-search" ? search : null),
+    querySelectorAll: selector => ({
+      ".buyer-picker .buyer-entry": picker.filter(n => n.classList.contains("buyer-entry")),
+      ".buyer-picker .mp-picker-group": picker.filter(n => n.classList.contains("mp-picker-group"))
+    })[selector] ?? []
+  };
+  await sheet._onRender({}, {});
+  search.value = "ar";
+  listeners.input();
+  assert.deepEqual(picker.map(n => n.hidden), [false, false, true, true, true, true]);
+  search.value = "";
+  listeners.input();
+  assert.deepEqual(picker.map(n => n.hidden), [false, false, false, false, false, false]);
+});
+
 test("the shop description is cleaned before it's put in the page", async () => {
   const { sheet } = openShop();
   sheet.document.flags["merchant-presets"].shop.description = "<img src=x onerror=alert(1)>";
