@@ -183,9 +183,14 @@ export async function setup() {
   for (const [title, entryName, counts] of [["Temple & Faith Store", "Temple & Faith Store (Town)", {}],
     ["Stable", "Stable (Town)", { "Saddle, Military": 8, "Saddle, Riding": 3, Camel: 4, "Horse, Draft": 4, "Horse, Riding": 4 }]]) {
     for (const a of game.actors.filter(a => a.name === title)) await a.delete();
-    const made = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName(entryName)._id);
+    const id = (await pack.getIndex()).getName(entryName)._id;
+    const made = await game.actors.importFromCompendium(pack, id);
     await rolled(made, title);
+    // The pack's own order, which the frames' groups and rows follow; the arrival roll reorders.
+    const order = new Map();
+    (await pack.getDocument(id)).toObject().items.forEach((it, n) => { if (!order.has(it.name)) order.set(it.name, n); });
     await made.updateEmbeddedDocuments("Item", made.items.filter(i => i.flags[MP]?.kind !== "gear").map(i => ({ _id: i.id,
+      sort: ((order.get(i.name) ?? 999) + 1) * 100,
       [`flags.${MP}.stock.hidden`]: false, "system.quantity": counts[i.name] ?? Math.max(1, i.system.quantity ?? 1) })));
     await made.update({ name: title, "ownership.default": 1, [`flags.${MP}.visibility`]: true,
       [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] }, [`flags.${MP}.shop.deals`]: [] });
