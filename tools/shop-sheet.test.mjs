@@ -74,7 +74,9 @@ globalThis.game = {
   // A GM is at the table unless a test says otherwise.
   users: { activeGM: { id: "gm", isGM: true } },
   modules: { get: () => ({ api }) },
-  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite", followClock: "always" }, get(_module, key) { return this.values[key]; } },
+  // Shop access from anywhere: these tests are about the bill, not who stands at the counter,
+  // which has its own tests (#166) below.
+  settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite", followClock: "always", shopAccess: "anywhere" }, get(_module, key) { return this.values[key]; } },
   actors: [],
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
@@ -1980,4 +1982,50 @@ test("a three-digit price takes the seal's short label (#151, design IeGac: Seal
   act(sheet, "addLine", { itemId: "idol" });
   const { buy } = await sheet._prepareContext({});
   assert.equal(buy.seal.label, "MERCHANT_PRESETS.Shop.Seal.BargainShort");
+});
+
+/* ------------------------------------------------------------ reach (#166) */
+
+/**
+ * Within reach: the window opens, and "Buying as" lists, only what stands at the counter on the
+ * scene the player's canvas shows. `tokens` is [actor, column, row] on a 100 px grid of 5 ft squares.
+ */
+function atCounter(t, { tokens, ready = true }) {
+  const saved = { values: { ...globalThis.game.settings.values }, canvas: globalThis.canvas };
+  t.after(() => { globalThis.game.settings.values = saved.values; globalThis.canvas = saved.canvas; });
+  globalThis.game.settings.values.shopAccess = "reach";
+  const token = ([actor, col, row], i) => ({ id: `t${i}`, actorId: actor.id, actorLink: true, hidden: false,
+    x: col * 100, y: row * 100, width: 1, height: 1, actor });
+  globalThis.canvas = { ready, scene: { id: "market", grid: { size: 100, distance: 5, type: 1 }, tokens: tokens.map(token) } };
+}
+
+test("within reach, a player's window opens only while a token of theirs stands at the counter (#166)", t => {
+  const { sheet, shop, buyer } = openShop({ permission: OWNERSHIP.NONE });
+  atCounter(t, { tokens: [[shop, 5, 5], [buyer, 6, 6]] });
+  assert.equal(sheet.isVisible, true, "diagonal to the stall");
+  globalThis.canvas.scene.tokens[1].x = 800;
+  assert.equal(sheet.isVisible, false, "two squares off");
+  globalThis.canvas = undefined;
+  assert.equal(sheet.isVisible, false, "no canvas, no counter");
+});
+
+test("within reach, Buying as lists only the player's characters standing at the counter (#166)", async t => {
+  const { sheet, shop, buyer } = openShop({ permission: OWNERSHIP.NONE });
+  const mule = actor("mule", []);
+  globalThis.game.actors.push(mule);
+  atCounter(t, { tokens: [[shop, 5, 5], [buyer, 4, 5], [mule, 9, 9]] });
+  const { buyerPicker } = await sheet._prepareContext({});
+  assert.deepEqual(buyerPicker.actors.map(a => a.name), ["hero"]);
+});
+
+test("a GM's window opens, and trades for anyone, wherever the tokens stand (#166)", async t => {
+  const { sheet, shop } = openShop({ permission: OWNERSHIP.OWNER });
+  const mule = actor("mule", []);
+  globalThis.game.actors.push(mule);
+  atCounter(t, { tokens: [[shop, 5, 5]] });
+  globalThis.game.user.isGM = true;
+  t.after(() => { globalThis.game.user.isGM = false; });
+  assert.equal(sheet.isVisible, true);
+  const { buyerPicker } = await sheet._prepareContext({});
+  assert.deepEqual([...buyerPicker.characters, ...buyerPicker.others].map(a => a.name).sort(), ["hero", "mule"]);
 });

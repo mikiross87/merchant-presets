@@ -33,8 +33,10 @@ trades out itself. For GMs upgrading a world:
   Anything else Item Piles held, such as a custom per-item price list, is not
   read.
 - **What changes for players.** Double-clicking a shop's token opens its shop
-  window. A GM has to be logged in for a trade to go through; with none, the
-  window says so and keeps the bill.
+  window, from a token of theirs within 5 ft of it; shops no longer show in
+  their Actors sidebar unless *Shop access* is *From anywhere*. A GM has to be
+  logged in for a trade to go through; with none, the window says so and keeps
+  the bill.
 - **Restocking and the till.** Upgraded worlds keep restocking off until you
   turn *Shops restock on their schedule* on. A restock now tops the till up to
   the shop's starting purse and never takes coin away, where 1.x reset it to
@@ -121,12 +123,18 @@ trades out itself. For GMs upgrading a world:
   hid or edited keeps your settings. Worlds upgrading from 1.x keep restocking
   off until you turn it on. (#105)
 - 2.0: the shops run without Item Piles. Double-clicking a shop's token opens
-  its shop window, for players and GMs alike. A shop dragged in from the
-  compendium stays hidden from players until you place its token on a scene,
-  then players can visit it; set a shop's ownership yourself and your choice
-  holds. Every shop you drag in rolls its own shelf, and *Set up as shop…*
-  works without Item Piles too. Shops already in your world move over on
-  their own the first time you load, tokens included. (#104)
+  its shop window, for players and GMs alike. Every shop you drag in rolls its
+  own shelf, and *Set up as shop…* works without Item Piles too. Shops already
+  in your world move over on their own the first time you load, tokens
+  included. (#104)
+- 2.0: players shop at the counter. A shop stays out of players' Actors
+  sidebar, and a player opens it by double-clicking its token while a token of
+  theirs stands within 5 ft of it; too far, and they're told to step up.
+  Walking away closes the window, *Buying as* lists only the characters
+  standing there, and the GM checks the distance again for every trade. A
+  player you give a permission of their own on a shop opens it from anywhere.
+  For games without a map, the new *Shop access* setting's *From anywhere*
+  opens a shop to every player once its token is placed. (#166)
 - 2.0: rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
   and the shop window lists them under Food & drink. The general, adventurers'

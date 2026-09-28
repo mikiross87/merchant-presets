@@ -28,8 +28,12 @@ import {
   COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort
 } from "./shop-view.mjs";
 
+import { accessModeOf, accessOf, canOpenOn, canVisit, reachOnScene, tokensOf } from "./reach.mjs";
+
 const MODULE = "merchant-presets";
 const TEMPLATES = `modules/${MODULE}/templates`;
+/** `CONST.GRID_TYPES.GRIDLESS`, read late: reach measures gridless scenes as the crow flies (#166). */
+const gridless = () => globalThis.CONST?.GRID_TYPES?.GRIDLESS ?? 0;
 
 /**
  * The runtime's bundle resolver (#102), the same one the GM's trade prices by: a good with no
@@ -497,6 +501,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** One tab group; the tab list itself is dynamic (GM-only Settings tab) — see `_getTabsConfig`. */
   static TABS = { primary: {} };
 
+  /**
+   * Whether this user may see the shop (#166), which core asks before every render: in reach mode
+   * a player at the counter, with a token within 5 ft of the shop's on the scene they're viewing,
+   * though the shop is None to them; from anywhere, core's own Limited. So a link, a macro or the
+   * sidebar opens a shop only where the double-click would.
+   * @override
+   */
+  get isVisible() {
+    const scene = globalThis.canvas?.ready ? globalThis.canvas.scene : null;
+    return canOpenOn(scene, this.document, game.user, accessModeOf(game.settings.get(MODULE, "shopAccess")), gridless());
+  }
+
   constructor(options = {}) {
     super(options);
     /** One basket per trade kind: itemId -> quantity. Never persisted; client-only state, cleared on seal. */
@@ -875,11 +891,19 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   /* -------------------------------------------------------------- buyer */
 
-  /** Every actor this window could trade as: the user's own owned actors, or, for a GM, every actor. */
+  /**
+   * Every actor this window could trade as: the user's own owned actors, or, for a GM, every actor.
+   * A player at the counter (#166) trades as the characters standing there: only those with a
+   * token in reach of this shop on the scene they're viewing.
+   */
   #candidateBuyers() {
     const shopId = this.document.id;
     // Merchants aren't buyers: a shop's own coin is its till.
-    return game.actors.filter(a => a.id !== shopId && !a.flags?.[MODULE]?.shop && a.testUserPermission(game.user, "OWNER"));
+    const owned = game.actors.filter(a => a.id !== shopId && !a.flags?.[MODULE]?.shop && a.testUserPermission(game.user, "OWNER"));
+    const mode = accessModeOf(game.settings.get(MODULE, "shopAccess"));
+    if (mode !== "reach" || canVisit({ ...accessOf(this.document, game.user, mode), reach: false })) return owned;
+    const scene = globalThis.canvas?.ready ? globalThis.canvas.scene : null;
+    return scene ? owned.filter(a => reachOnScene(scene, this.document, tokensOf(scene, a), gridless())) : [];
   }
 
   #resolveBuyer() {
@@ -1751,7 +1775,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // The narrow window's section dropdown shows the one jumped to (design bXBEW).
       get activeSection() { return this.sections.find(s => s.active) ?? this.sections[0]; },
       previewOpen: this._previewOpen,
-      visit: (actor.ownership?.default ?? NONE) >= LIMITED,
+      // Within reach (#166) the shop stays None and the switch is the GM's own flag, on until set
+      // off; from anywhere it's the default ownership, as #110 wrote it.
+      visit: accessModeOf(game.settings.get(MODULE, "shopAccess")) === "reach"
+        ? actor.flags?.[MODULE]?.visibility !== false
+        : (actor.ownership?.default ?? NONE) >= LIMITED,
       // "Entirely" holds only while no player has access of their own; then the hint says so.
       visitHint: i18n(visitOthers ? "Visit.Hint" : "Visit.HintAll"),
       visitOthers,
@@ -2001,8 +2029,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // Read now, while the control still holds what the GM set; applied when its turn comes.
     const value = control.value, checked = control.checked;
     if (op === "visit") {
-      // The GM's own choice, which placing a token never overrides again (`makeVisitable`).
-      await this.#queue(() => this.document.update({ "ownership.default": checked ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: checked }));
+      // The GM's own choice, which placing a token never overrides again (`makeVisitable`). Within
+      // reach (#166) on is "at the counter", so the default stays None either way.
+      const reach = accessModeOf(game.settings.get(MODULE, "shopAccess")) === "reach";
+      await this.#queue(() => this.document.update({ "ownership.default": checked && !reach ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: checked }));
       return;
     }
     if (op === "till" || op === "purse") return this.#setTill(op, control.dataset.denomination, value, settingSelector(control));
@@ -2321,6 +2351,22 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // Core re-renders this window for the shop's own items, but the Sell tab lists the buyer's.
     for (const hook of ["createItem", "updateItem", "deleteItem"]) {
       Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));
+    }
+    // Reach (#166): a player's window stays open only while they may visit, so walking away from
+    // the counter closes it, and "Buying as" follows whose tokens stand at it.
+    for (const hook of ["createToken", "updateToken", "deleteToken", "canvasReady", "updateActor"]) {
+      Hooks.on(hook, () => ShopSheet.#reachChanged());
+    }
+    Hooks.on("updateSetting", setting => { if (setting.key === `${MODULE}.shopAccess`) ShopSheet.#reachChanged(); });
+  }
+
+  /** A player's open shop windows, after a token, the scene or access changed: out of reach closes, in reach re-reads its buyers. */
+  static #reachChanged() {
+    if (game.user.isGM) return;
+    for (const app of foundry.applications.instances.values()) {
+      if (!(app instanceof ShopSheet) || !app.rendered) continue;
+      if (!app.isVisible) app.close();
+      else app.render({ parts: ["body"] });
     }
   }
 

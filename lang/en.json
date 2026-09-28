@@ -2,6 +2,9 @@
   "MERCHANT_PRESETS": {
     "Shop": {
       "SheetLabel": "Shop window",
+      "Reach": {
+        "TooFar": "Step up to the counter: a token of yours needs to stand within 5 ft of the shop."
+      },
       "NpcSheet": "NPC sheet",
       "NoNpcSheet": "This module's own dnd5e sheet couldn't be found for the NPC sheet button.",
       "About": "About",
