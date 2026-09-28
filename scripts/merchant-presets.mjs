@@ -333,8 +333,9 @@ function restock(actor, options) {
 /**
  * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
  * even when the clock caught up with it later, or now. A shop's first roll, from whichever caller,
- * brings nothing back in stock (#152): one with no shelf key yet has never been drawn (#153). A
- * shop that sold out entirely keeps its key.
+ * brings nothing back in stock (#152): one that's still fresh pack data (`needsWiring`) with no
+ * shelf key yet has never been drawn (#153). A shop that sold out entirely keeps its key, and one
+ * a 1.x world wired to its own table was drawn there (#158 review).
  */
 async function restockNow(actor, { at = game.time.worldTime } = {}) {
   const raw = actor.flags?.[MODULE]?.shop;
@@ -345,7 +346,7 @@ async function restockNow(actor, { at = game.time.worldTime } = {}) {
     console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
     return null;
   }
-  const markNew = shelfKeyOf(actor) != null;
+  const markNew = shelfKeyOf(actor) != null || !needsWiring(actor);
   const shelf = await adoptOnce(actor, table);
   if (!shelf) return null;
 
