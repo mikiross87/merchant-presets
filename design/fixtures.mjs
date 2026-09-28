@@ -178,20 +178,11 @@ export async function setup() {
     [`flags.${MP}.shop.deals`]: []
   });
 
-  // The service shops (band 15; TEMPLE, STABLE): every good on show, so the nav counts are the
-  // pack's, and the Stable's drawn stock as its frame counts it.
-  for (const [title, entryName, counts] of [["Temple & Faith Store", "Temple & Faith Store (Town)", {}],
-    ["Stable", "Stable (Town)", { "Saddle, Military": 8, "Saddle, Riding": 3, Camel: 4, "Horse, Draft": 4, "Horse, Riding": 4 }]]) {
+  // The service shops (band 15; TEMPLE, STABLE); each frame's `before` lays out their shelves.
+  for (const [title, entryName] of [["Temple & Faith Store", "Temple & Faith Store (Town)"], ["Stable", "Stable (Town)"]]) {
     for (const a of game.actors.filter(a => a.name === title)) await a.delete();
-    const id = (await pack.getIndex()).getName(entryName)._id;
-    const made = await game.actors.importFromCompendium(pack, id);
+    const made = await game.actors.importFromCompendium(pack, (await pack.getIndex()).getName(entryName)._id);
     await rolled(made, title);
-    // The pack's own order, which the frames' groups and rows follow; the arrival roll reorders.
-    const order = new Map();
-    (await pack.getDocument(id)).toObject().items.forEach((it, n) => { if (!order.has(it.name)) order.set(it.name, n); });
-    await made.updateEmbeddedDocuments("Item", made.items.filter(i => i.flags[MP]?.kind !== "gear").map(i => ({ _id: i.id,
-      sort: ((order.get(i.name) ?? 999) + 1) * 100,
-      [`flags.${MP}.stock.hidden`]: false, "system.quantity": counts[i.name] ?? Math.max(1, i.system.quantity ?? 1) })));
     await made.update({ name: title, "ownership.default": 1, [`flags.${MP}.visibility`]: true,
       [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] }, [`flags.${MP}.shop.deals`]: [] });
   }
@@ -293,10 +284,25 @@ const closed = openShop({ before: withoutDeals + restocked(1) + nextRestock + ne
 const inn = openShop({ name: INN, before: restocked(0), hour: 19,
   basket: [["Meal, Comfortable", 1], ["Inn Stay, Comfortable (per day)", 2], ["Ale (mug)", 3]] });
 /**
+ * A service shop's shelf as its frame draws it (in the page, `shop` in scope): every good on show,
+ * so the nav counts are the pack's; in the pack's order, which the arrival roll doesn't keep (it
+ * can still be replacing lines after setup, so this runs as the frame opens); the Stable's stock.
+ */
+const shelfAsPacked = name => `{
+  const pack = game.packs.get("merchant-presets.merchants");
+  const entry = (await pack.getIndex()).find(e => e.name.startsWith(${JSON.stringify(name)} + " (Town)"));
+  const order = new Map();
+  (await pack.getDocument(entry._id)).toObject().items.forEach((it, n) => { if (!order.has(it.name)) order.set(it.name, n); });
+  const counts = ${JSON.stringify(name === STABLE ? { "Saddle, Military": 8, "Saddle, Riding": 3, Camel: 4, "Horse, Draft": 4, "Horse, Riding": 4, Mastiff: 6 } : {})};
+  await shop.updateEmbeddedDocuments("Item", shop.items.filter(i => i.flags["merchant-presets"]?.kind !== "gear").map(i => ({ _id: i.id,
+    sort: ((order.get(i.name) ?? 999) + 1) * 100, "flags.merchant-presets.stock.hidden": false,
+    "system.quantity": counts[i.name] ?? Math.max(1, i.system.quantity ?? 1) })));
+}`;
+/**
  * The service shops (#151), yesterday's restock so nothing is fresh, the list scrolled to `group`
  * as its frame draws it. At the temple Aria has saved 100 gp more, for a named spell and a cantrip.
  */
-const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: restocked(1) + before,
+const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: restocked(1) + shelfAsPacked(name) + before,
   then: `const stock = app.element.querySelector(".buy-tab .mp-stock");
   const first = stock.querySelector('[data-pen^="Group "]'), to = stock.querySelector('[data-pen="Group ${group}"]');
   stock.scrollTop = to.getBoundingClientRect().top - first.getBoundingClientRect().top;` });

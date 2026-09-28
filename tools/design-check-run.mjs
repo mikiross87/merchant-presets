@@ -96,6 +96,8 @@ function collect({ rootSelector, attr, iconAttr }) {
         "font-family": cs.fontFamily, "font-size": cs.fontSize, "font-weight": cs.fontWeight
       },
       text: textOf(el, cs),
+      // Text the element hides past its edge (an ellipsis, a clamped paragraph).
+      truncated: cs.overflowX !== "visible" && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1),
       icon
     };
   });
