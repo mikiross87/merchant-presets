@@ -22,7 +22,8 @@ function ledgerOf(lines, { scale = 1, direction = "ltr" } = {}) {
     const name = {
       style: { maxWidth: "stale", ...line.style },
       line,
-      offsetWidth: line.box[2] - line.box[0],
+      // What getComputedStyle reports: the used width, in unscaled CSS pixels.
+      cssWidth: `${line.box[2] - line.box[0]}px`,
       nextElementSibling: tag ?? cost,
       parentElement: { querySelector: selector => (selector === ":scope > .mp-cost" ? cost : null) },
       getBoundingClientRect: () => rect(line.box)
@@ -35,7 +36,7 @@ function ledgerOf(lines, { scale = 1, direction = "ltr" } = {}) {
       selectNodeContents: name => { selected = name; },
       getClientRects: () => selected.line.rects.map(([top, right]) => rect([selected.line.box[0], top, right, top + 17]))
     }),
-    defaultView: { getComputedStyle: () => ({ direction }) }
+    defaultView: { getComputedStyle: el => ({ direction, width: el.cssWidth }) }
   };
   return { names, ledger: { ownerDocument: doc, querySelectorAll: () => names } };
 }

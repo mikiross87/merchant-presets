@@ -623,10 +623,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
     // The bill's leaders follow its names' last lines (#198): again when a ledger's width changes
-    // (not its height: a taller window wraps no name), and once the names' font has loaded, since
-    // either can move where a name wraps. The window's own document: it can be popped out.
-    this._leaderObserver?.disconnect();
-    this._leaderObserver = null;
+    // (not its height: a taller window wraps no name), and whenever a font finishes loading (a
+    // name's subset, the coins' face), which moves where a name wraps without resizing the ledger.
+    // The window's own document: it can be popped out.
+    this._stopHangingLeaders();
     const ledgers = [...this.element?.querySelectorAll(".mp-ledger") ?? []];
     if (ledgers.length) {
       const doc = this.element.ownerDocument;
@@ -637,13 +637,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         hangLeaders(target);
       }));
       for (const ledger of ledgers) this._leaderObserver.observe(ledger);
-      const name = ledgers[0].querySelector(".mp-line-name");
-      const font = name && getComputedStyle(name).font;
-      // A font not loaded yet swaps in later without resizing anything the observer sees. A font
-      // the browser can't parse just keeps the first measure.
-      if (font && doc.fonts && !doc.fonts.check(font)) {
-        doc.fonts.load(font).then(() => ledgers.forEach(ledger => ledger.isConnected && hangLeaders(ledger)), () => {});
-      }
+      const rehang = () => ledgers.forEach(ledger => ledger.isConnected && hangLeaders(ledger));
+      doc.fonts?.addEventListener("loadingdone", rehang);
+      this._leaderFonts = { fonts: doc.fonts, rehang };
     }
     // A narrow window's category dropdown: a native select, which reports a change, not a click.
     for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
@@ -735,8 +731,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** @override */
   _onClose(options) {
     super._onClose(options);
+    this._stopHangingLeaders();
+  }
+
+  /** Lets go of the bill's width observer and font listener (`_onRender`). */
+  _stopHangingLeaders() {
     this._leaderObserver?.disconnect();
     this._leaderObserver = null;
+    this._leaderFonts?.fonts?.removeEventListener("loadingdone", this._leaderFonts.rehang);
+    this._leaderFonts = null;
   }
 
   /* -------------------------------------------------------------- tabs */
