@@ -1852,13 +1852,14 @@ Hooks.once("ready", async () => {
   // visitable, or after the GM switched Players can visit on (#110), comes back with its ownership
   // cleared but its mark kept (#138 review, round 9; #140 review, round 6). Switched off, the
   // choice stays: hidden is right whatever ownership came along, a duplicate's included (round 8).
-  Hooks.on("preCreateActor", (actor, _data, options) => {
+  Hooks.on("preCreateActor", actor => {
     const flags = actor.flags?.[MODULE];
     if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
     if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
     // A pack merchant arrives already 2.0 but without its sheet, which stays off a compendium copy,
-    // a world compendium's included (#203, #204 review).
-    const sheetClass = options?.pack ? null : shopSheetOnArrival(actor);
+    // a world compendium's included (#203, #204 review). V14 names that pack on the document; the
+    // create options arrive without it.
+    const sheetClass = actor.pack ? null : shopSheetOnArrival(actor);
     if (sheetClass) actor.updateSource({ "flags.core.sheetClass": sheetClass });
   });
   Hooks.on("createToken", token => {
