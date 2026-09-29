@@ -274,7 +274,8 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
 /**
  * A good's line under its name (design y6iNf): what it is, then what matters about it.
  * "Martial melee · Versatile · 3 lb", "Medium armor · AC 14 + Dex (max 2)", "+2 AC · 6 lb",
- * "Artisan's tools · 8 lb"; anything else by its type, then its weight.
+ * "Artisan's tools · 8 lb"; anything else by its type, then its weight. A magic good adds its rarity
+ * and attunement before its weight: "Martial melee · Versatile · Uncommon · 3 lb" (#185).
  *
  * @param {object} item  an item's `toObject()`
  * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
@@ -290,6 +291,11 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
   // Simple Nutrition takes meals, and ale or wine counts as water only where drinks hydrate.
   if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : spellWords(item, spell, t)].filter(Boolean).join(" · ");
   if (DRINKS.includes(sys.identifier)) return [t("Drink"), hydrates && DRINK_IDENTIFIERS.includes(sys.identifier) ? t("CountsAsWater") : null].filter(Boolean).join(" · ");
+  // A magic good's rarity and attunement come before its weight (#185); an unidentified one keeps
+  // them secret, as dnd5e's own card does.
+  const known = sys.identified !== false;
+  const magic = known ? [sentenceCase(labelOf(labels.rarities?.[sys.rarity])),
+    sys.attunement === "required" ? t("Attunement") : sys.attunement === "optional" ? t("AttunementOptional") : null] : [];
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
@@ -300,17 +306,17 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
     const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p))
       .map(p => labelOf(labels.properties?.[p])).filter(Boolean);
     if (props.length) parts.push(sentenceCase(props.join(", ")));
-    parts.push(weight);
+    parts.push(...magic, weight);
   } else if (item.type === "equipment" && sys.type?.value === "shield") {
-    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), weight);
+    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), ...magic, weight);
   } else if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, sys.type?.value ?? "")) {
     // Armour's weight goes unsaid: its AC and what wearing it asks are what a buyer weighs.
     const dex = sys.armor?.dex;
     const ac = t("Ac", { ac: sys.armor?.value ?? 0 })
       + (sys.type.value === "heavy" ? "" : dex ? t("DexMax", { max: dex }) : t("Dex"));
-    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null);
+    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null, ...magic);
   } else {
-    parts.push(whatItIs(item, labels), weight);
+    parts.push(whatItIs(item, labels), ...magic, weight);
     // A mount joins the buyer only where bought animals spawn, from its stat block (design pI7Yd).
     if (spawns && joinsBuyer(item)) parts.push(t("JoinsBuyer"));
   }
@@ -467,6 +473,8 @@ function whatItIs(item, labels) {
   if (item.type === "weapon") return sentenceCase(labelOf(labels.weaponTypes?.[type]));
   if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
   if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);
+  // A magic wand, ring or wondrous item by its kind; mundane equipment stays "Equipment" (#185).
+  if (item.type === "equipment" && item.system?.rarity && labels.equipmentTypes?.[type]) return sentenceCase(labelOf(labels.equipmentTypes[type]));
   return labelOf(labels.consumableTypes?.[type]) || labelOf(labels.typeLabels?.[item.type]);
 }
 
