@@ -820,6 +820,10 @@ test("a shop that won't buy magic items turns away anything magic, whatever its 
   const magicRations = { type: "consumable", system: { rarity: "common" }, flags: { "merchant-presets": { kind: "food-drink" } } };
   assert.deepEqual(wontBuyReason(magicRations, shop), { kind: "food-drink" });
   assert.deepEqual(wontBuyReason({ type: "loot", system: { rarity: "uncommon" }, flags: {} }, shop), { kind: "magic" });
+  // dnd5e 6 stores rarities, not rarity: the SRD's Pipe of Smoke Monsters is magic by its rarity alone (#185).
+  const pipe = { type: "equipment", system: { type: { value: "wondrous" }, rarities: ["common"], properties: [] }, flags: {} };
+  assert.equal(dealtIn(pipe, shop), false);
+  assert.deepEqual(wontBuyReason(pipe, shop), { kind: "magic" });
   // Without the entry, magic is bought like anything else.
   assert.equal(dealtIn(ring, { wontBuy: { types: [], kinds: ["food-drink"] } }), true);
 });
