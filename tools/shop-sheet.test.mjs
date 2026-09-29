@@ -2126,6 +2126,18 @@ test("the deal form offers an NPC standing on the scene, for roleplay, where the
   assert.deepEqual(opened.warnings, []);
 });
 
+test("a deal for an unlinked token is named after the token's actor, which the sidebar doesn't hold (#200 live check)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop } = opened;
+  const bandit = cast("bandit");
+  globalThis.game.actors = [shop];
+  gmOnScene(t, [[shop], [bandit, { linked: false }]]);
+  const uuid = "Scene.market.Token.t1.Actor.bandit";
+  opened.answer = { actor: uuid, buy: -10, sell: null, ends: "never", days: null, note: "" };
+  await act(sheet, "addDeal");
+  assert.deepEqual(writtenShop(shop).deals.map(d => [d.actor, d.name]), [[uuid, "bandit"]]);
+});
+
 test("with no one to offer, the deal form says there's no one, not that everyone has a deal (#200)", async t => {
   const opened = openDeals(t);
   const { sheet, shop, buyer } = opened;
