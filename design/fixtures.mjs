@@ -34,6 +34,8 @@ export const STABLE = "Stable";
  *   from earlier checks included): Aria, P1's character, a Fighter 5 with 3 pp 47 gp 12 sp 30 cp;
  *   Tomas (a humanoid, 3 gp 4 sp) and Whisker (a beast, no purse), NPCs P1 owns; Brom (P2's
  *   character, Cleric 5, 212 gp) and Kess (a Rogue 5 no one plays, 41 gp 7 sp);
+ * - on the active scene, the smith's token with Aria's, Tomas's and Whisker's beside it, so P1's
+ *   frames open the shop and list all three as buyers in reach mode (#166);
  * - Aria's pack as the Sell frames draw it: a Longsword, a worn Chain Shirt and 2 Potions of Healing
  *   the smith buys, and Bread (loaf) and an unidentified ring it turns away; nothing else;
  * - *Inn & Tavern*: a fresh import of the Town inn, with the goods the Inn frames don't draw hidden
@@ -187,6 +189,19 @@ export async function setup() {
     await made.update({ name: title, "ownership.default": 1, [`flags.${MP}.visibility`]: true,
       [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] }, [`flags.${MP}.shop.deals`]: [] });
   }
+
+  // P1 at the counter (#166): in reach mode a player opens a shop, and trades as a character, only
+  // with a token beside the shop's on the scene they view. So the smith stands on the active scene
+  // with P1's three around it; the tokens earlier runs left (and the deleted shops') go first.
+  const scene = game.scenes.active;
+  if (!scene) throw new Error("the fixture world has no active scene for the player's tokens");
+  const standing = [shop, aria, game.actors.getName("Tomas"), game.actors.getName("Whisker")];
+  await scene.deleteEmbeddedDocuments("Token", scene.tokens.filter(t => !game.actors.has(t.actorId)
+    || standing.some(a => a.id === t.actorId)).map(t => t.id));
+  const { size, sceneX, sceneY } = scene.dimensions;
+  const cells = [[0, 0], [1, 0], [0, 1], [1, 1]];
+  await scene.createEmbeddedDocuments("Token", await Promise.all(standing.map(async (actor, i) => (await actor.getTokenDocument({
+    x: sceneX + cells[i][0] * size, y: sceneY + cells[i][1] * size, actorLink: true, hidden: false })).toObject())));
   return shop.id;
 }
 
@@ -220,8 +235,12 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
   }
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
+  // Writing the scheme redraws the canvas (even unchanged), and until it's back a player stands at
+  // no counter (#166).
+  const redrawn = canvas.scene ? new Promise(r => { Hooks.once("canvasReady", r); setTimeout(r, 5000); }) : null;
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
+  await redrawn;
   const shop = game.actors.getName(${JSON.stringify(name)});
   ${before}
   const app = shop.sheet;
@@ -230,6 +249,8 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   const aria = game.actors.getName("Aria");
   for (const [name, quantity] of ${JSON.stringify(sellBasket)}) app._baskets.sell.set(aria.items.getName(name).id, quantity);
   await app.render({ force: true, position: { left: 20, top: 20, width, height } });
+  // Core refuses the render, quietly, to a user who can't see the shop (ShopSheet#isVisible).
+  if (!app.rendered) throw new Error(\`\${game.user.name} can't open \${shop.name}: no token of theirs stands in its reach on \${canvas.scene?.name ?? "any scene"} (run --setup)\`);
   app.changeTab(${JSON.stringify(tab)}, "primary");
   ${then}
   await new Promise(r => setTimeout(r, 800));
