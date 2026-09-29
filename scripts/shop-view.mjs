@@ -471,6 +471,17 @@ function whatItIs(item, labels) {
 }
 
 /**
+ * A pack row's meta line (#177): a Buy row's (`itemMeta`), minus what only happens to a buyer.
+ * The seller is parting with a mount, so it never "joins the buyer" here.
+ *
+ * @param {object} item  the seller's item's `toObject()`
+ * @param {object} labels  as `itemMeta` takes them
+ * @param {(key: string, data?: object) => string} t
+ * @param {object} [world]  as `itemMeta`'s options take them
+ */
+export const sellRowMeta = (item, labels, t, world = {}) => itemMeta(item, labels, t, { ...world, spawns: false });
+
+/**
  * A pack row's ratio chip's tooltip (#177): what one is worth at list value ("Worth 15 gp"),
  * "each" when the seller holds several. The meta line under the name leaves it out, as the chip
  * beside the price already shows the ratio; a deal's tag, which takes the chip's place, says so.

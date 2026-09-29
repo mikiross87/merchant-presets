@@ -25,7 +25,7 @@ import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRowMeta, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
   inspectTargets, itemTooltipHtml, currentSection
 } from "./shop-view.mjs";
 
@@ -1327,7 +1327,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         ...groupFields(item, null),
         // A Buy row's line (#177): the worth is the ratio chip's tooltip, not repeated here.
         meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
-          : itemMeta(item, metaLabels(), metaWords, goodsWorld()),
+          : sellRowMeta(item, metaLabels(), metaWords, goodsWorld()),
         reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
         worthText,
         worthTip: sellWorth(item, metaWords, worthText, { deal: !!row.tag?.text }),
