@@ -5,10 +5,10 @@
  * hold the name at the width it wrapped to, or the room it gives up would re-wrap it. Not in a
  * right-to-left window, whose last line ends on the left.
  *
- * A line crowded enough to squeeze its name under 5em (ten of a good at a deal's price, three
- * coins) would cut the name into pieces of words: its entry is marked `is-crowded` instead, which
- * sends the leader and coins to a row of their own, as before #198, and gives the name the line.
- * The name can't take 5em as a CSS floor: a short name's box would outgrow its text.
+ * A name breaks between words only. A word sticking out of its name (a line crowded with a deal tag
+ * and three coins, a long compound word) marks the entry `is-crowded` instead, which sends the
+ * leader and coins to a row of their own, as before #198, and gives the name the line; a word that
+ * still sticks out of a row of its own marks the name `is-broken`, the one case it may break in.
  *
  * Measured in the ledger's own window (a popped-out sheet has its own), and in CSS pixels: a
  * window at a `position.scale` reports its boxes scaled.
@@ -16,40 +16,44 @@
  * Plain DOM, no Foundry: tools/leaders.test.mjs drives it with stand-in boxes.
  */
 export function hangLeaders(ledger) {
-  const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")]
-    .map(name => ({ name, next: name.nextElementSibling, cost: name.parentElement.querySelector(":scope > .mp-cost") }));
-  for (const { name, next } of lines) {
+  const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")].map(name => ({ name, entry: name.parentElement,
+    next: name.nextElementSibling, cost: name.parentElement.querySelector(":scope > .mp-cost") }));
+  for (const { name, entry, next } of lines) {
     name.style.maxWidth = "";
-    name.parentElement.classList.remove("is-crowded");
+    name.classList.remove("is-broken");
+    entry.classList.remove("is-crowded");
     if (next) next.style.marginLeft = "";
   }
+  // Layout sizes, whole CSS pixels either way: a pixel of rounding isn't a word sticking out.
+  const sticksOut = name => name.scrollWidth > name.clientWidth + 1;
+  const crowded = lines.filter(({ name, cost }) => cost && sticksOut(name));
+  for (const { entry } of crowded) entry.classList.add("is-crowded");
+  for (const { name } of crowded) if (sticksOut(name)) name.classList.add("is-broken");
+
   const doc = ledger.ownerDocument;
   const view = doc.defaultView;
   if (view.getComputedStyle(ledger).direction === "rtl") return;
   // Every line measured before any is changed: one layout, not one per line.
   const range = doc.createRange();
-  const measured = lines.map(({ name, next, cost }) => {
-    if (!next || !cost) return null;
+  const measured = lines.map(({ name, entry, next, cost }) => {
+    if (!next || !cost || entry.classList.contains("is-crowded")) return null;
     const box = name.getBoundingClientRect();
     if (!box.width || cost.getBoundingClientRect().top >= box.bottom) return null;
-    // A flex item's computed width is its used width in CSS pixels, unrounded (offsetWidth rounds).
-    const style = view.getComputedStyle(name);
-    const width = parseFloat(style.width);
     range.selectNodeContents(name);
     const rects = [...range.getClientRects()];
     if (!rects.length) return null;
-    const last = rects.at(-1);
-    // Squeezed: wrapped into less than 5em. A short name on one line is narrow by its own width.
-    if (last.top - rects[0].top >= 1 && width < 5 * parseFloat(style.fontSize)) return { crowded: true };
     // The last line's right end: a name mixing scripts can make it of several boxes.
+    const last = rects.at(-1);
     const end = Math.max(...rects.filter(r => Math.abs(r.top - last.top) < 1).map(r => r.right));
+    // A flex item's computed width is its used width in CSS pixels, unrounded (offsetWidth rounds).
+    const width = parseFloat(view.getComputedStyle(name).width);
     return { width, slack: (box.right - end) * (width / box.width) };
   });
-  const px = n => `${Math.round(n * 100) / 100}px`;
+  // The held width rounds up: any less, and the name's widest line could wrap again.
+  const hundredths = (n, round) => `${round(n * 100) / 100}px`;
   lines.forEach(({ name, next }, i) => {
-    if (measured[i]?.crowded) return name.parentElement.classList.add("is-crowded");
     if (!measured[i] || measured[i].slack < 0.5) return;
-    name.style.maxWidth = px(measured[i].width);
-    next.style.marginLeft = px(-measured[i].slack);
+    name.style.maxWidth = hundredths(measured[i].width, Math.ceil);
+    next.style.marginLeft = hundredths(-measured[i].slack, Math.round);
   });
 }
