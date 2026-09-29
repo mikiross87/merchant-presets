@@ -1,6 +1,6 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isMagic, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isMagic, isNamedSpell, kindOf, lineTotalCp, rarityOf } from "./trade-plan.mjs";
 
 // The receipt names goods as the window does (#164), so the naming lives with the trade.
 export { goodName, isNamedSpell } from "./trade-plan.mjs";
@@ -294,7 +294,8 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
   // A magic good's rarity and attunement come before its weight (#185); an unidentified one keeps
   // them secret, as dnd5e's own card does.
   const known = sys.identified !== false;
-  const magic = known ? [sentenceCase(labelOf(labels.rarities?.[sys.rarity])),
+  const rarity = known ? sentenceCase(labelOf(labels.rarities?.[rarityOf(item)])) : "";
+  const magic = known ? [rarity,
     sys.attunement === "required" ? t("Attunement") : sys.attunement === "optional" ? t("AttunementOptional") : null] : [];
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
@@ -303,7 +304,8 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
   if (item.type === "weapon") {
     parts.push(whatItIs(item, labels));
     // Only a weapon's own rules: dnd5e also tags a compendium copy with properties such as "gear".
-    const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p))
+    // "Magical" goes unsaid where the rarity says it (design y6iNf).
+    const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p) && !(p === "mgc" && rarity))
       .map(p => labelOf(labels.properties?.[p])).filter(Boolean);
     if (props.length) parts.push(sentenceCase(props.join(", ")));
     parts.push(...magic, weight);
@@ -474,7 +476,7 @@ function whatItIs(item, labels) {
   if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
   if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);
   // A magic wand, ring or wondrous item by its kind; mundane equipment stays "Equipment" (#185).
-  if (item.type === "equipment" && item.system?.rarity && labels.equipmentTypes?.[type]) return sentenceCase(labelOf(labels.equipmentTypes[type]));
+  if (item.type === "equipment" && rarityOf(item) && labels.equipmentTypes?.[type]) return sentenceCase(labelOf(labels.equipmentTypes[type]));
   return labelOf(labels.consumableTypes?.[type]) || labelOf(labels.typeLabels?.[item.type]);
 }
 

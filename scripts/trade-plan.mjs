@@ -267,13 +267,19 @@ export const kindOf = item => item.flags?.[MODULE]?.kind
   ?? (item.type === "consumable" && item.system?.type?.value === "food" ? "food-drink" : null);
 export const isGear = item => kindOf(item) === "gear";
 /**
+ * A good's rarity key ("uncommon"), or "" for a mundane one. dnd5e 6 stores a set of them (an array
+ * in `toObject()`) and derives `rarity` as the first; dnd5e 5 stores `rarity` itself.
+ */
+export const rarityOf = item => item.system?.rarity || [...(item.system?.rarities ?? [])][0] || "";
+
+/**
  * A magic item, as the SRD marks one: a rarity, or the Magical property (a live document's
  * properties are a Set, its stored data an array). A shop turns these away when its `wontBuy.kinds`
  * holds "magic" (#184), whatever the item's own kind.
  */
 export const isMagic = item => {
   const props = item.system?.properties;
-  return Boolean(item.system?.rarity) || (props instanceof Set ? props.has("mgc") : (props ?? []).includes("mgc"));
+  return Boolean(rarityOf(item)) || (props instanceof Set ? props.has("mgc") : (props ?? []).includes("mgc"));
 };
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
