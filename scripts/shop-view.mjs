@@ -471,17 +471,19 @@ function whatItIs(item, labels) {
 }
 
 /**
- * A pack row's line under its name (design TGXBN): what the good is, then what one is worth at
- * list value ("Martial melee · worth 15 gp"), "each" when the seller holds several.
+ * A pack row's ratio chip's tooltip (#177): what one is worth at list value ("Worth 15 gp"),
+ * "each" when the seller holds several. The meta line under the name leaves it out, as the chip
+ * beside the price already shows the ratio; a deal's tag, which takes the chip's place, says so.
  *
  * @param {object} item  the seller's item's `toObject()`
- * @param {object} labels  as `itemMeta` takes them
  * @param {(key: string, data?: object) => string} t
  * @param {string|null} worthText  one's list value in words ("15 gp"); null for a good with no price
+ * @param {{deal?: boolean}} [options]  `deal`: the row shows the seller's deal tag, not the ratio
  */
-export function sellMeta(item, labels, t, worthText) {
-  const worth = worthText ? t((item.system?.quantity ?? 1) > 1 ? "WorthEach" : "Worth", { amount: worthText }) : null;
-  return [whatItIs(item, labels), worth].filter(Boolean).join(" · ");
+export function sellWorth(item, t, worthText, { deal = false } = {}) {
+  if (!worthText) return null;
+  const each = (item.system?.quantity ?? 1) > 1 ? "Each" : "";
+  return t(`${deal ? "DealWorth" : "Worth"}${each}`, { amount: worthText });
 }
 
 /** The order the Terms popover names refused kinds in: what a traveller most often tries to sell first. */

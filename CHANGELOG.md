@@ -146,6 +146,10 @@ trades out itself. For GMs upgrading a world:
   item card, which dnd5e worked out for the shopkeeper; "Requires
   Attunement" stays. On the Sell tab, the character's equipped items are
   tagged *Equipped*. (#170)
+- 2.0: on the Sell tab, a good's line under its name reads as it does on the
+  Buy tab (its kind, properties and weight, or its armour class), and what
+  one is worth at list moves to the tooltip on the offer's ratio (or on
+  *Your deal*), next to the price it explains. (#177)
 - 2.0: rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
   and the shop window lists them under Food & drink. The general, adventurers'

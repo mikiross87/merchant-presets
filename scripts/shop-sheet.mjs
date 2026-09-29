@@ -25,7 +25,7 @@ import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellMeta, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
   inspectTargets, itemTooltipHtml, currentSection
 } from "./shop-view.mjs";
 
@@ -120,7 +120,7 @@ function stockWords(stock) {
 /** "list" as a chip starts it: "List". */
 const sentence = text => (text ? text.charAt(0).toUpperCase() + text.slice(1) : text);
 
-/** The meta line's words (shop-view.mjs `itemMeta`/`sellMeta`). */
+/** The meta line's words (shop-view.mjs `itemMeta`/`sellWorth`). */
 const metaWords = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.${key}`, data);
 
 /**
@@ -1317,6 +1317,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       if (row.minQuantity) this._minQuantity.sell.set(item._id, row.minQuantity);
       let worthCp = null;
       try { worthCp = bundlePriceCp(item, 1, currencies); } catch { /* unpriced: no worth to state */ }
+      const worthText = worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null;
       return {
         ...row,
         // The shown name; the source data (true name) only prices and matches, as the engine does.
@@ -1324,11 +1325,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         inspect: this.#inspect(item, "sell", buyer),
         // Grouped as a shelf groups its goods (design TGXBN): by kind of good.
         ...groupFields(item, null),
+        // A Buy row's line (#177): the worth is the ratio chip's tooltip, not repeated here.
         meta: row.refusal === "Unidentified" ? game.i18n.localize("MERCHANT_PRESETS.Shop.Sell.Reason.UnidentifiedNote")
-          : row.refusal ? itemMeta(item, metaLabels(), metaWords, goodsWorld())
-          : sellMeta(item, metaLabels(), metaWords, worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null),
+          : itemMeta(item, metaLabels(), metaWords, goodsWorld()),
         reason: row.refusal ? this.#refusalText(row.refusal, item, config) : null,
-        worthText: worthCp > 0 ? coinsText(coinBreakdown(worthCp, currencies)) : null,
+        worthText,
+        worthTip: sellWorth(item, metaWords, worthText, { deal: !!row.tag?.text }),
         inBasket: this._baskets.sell.has(item._id),
         priceCoins: row.bundlePriceCp != null ? coinBreakdown(row.priceForCp ?? row.bundlePriceCp, currencies).map(c => ({ ...c, aria: coinAriaLabel(c) })) : [],
         listText: listText(row.listPriceCp, currencies)

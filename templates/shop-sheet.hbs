@@ -249,8 +249,8 @@
             <div class="mp-price-block" data-pen="Price Block">
               {{#if listText}}<s class="mp-list-price" data-pen="List Price" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.ListPrice'}}">{{listText}}</s>{{/if}}
               <span class="mp-price-line" data-pen="Price Line">
-                {{#if tag.text}}<span class="mp-tag is-good" data-pen="Terms Tag" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"><span data-pen="Terms Tag Text">{{tag.text}}</span></span>
-                {{else}}<span class="mp-tag is-ratio" data-pen="Terms Tag"><span data-pen="Terms Tag Text">{{ratio}}</span></span>{{/if}}
+                {{#if tag.text}}<span class="mp-tag is-good" data-pen="Terms Tag" data-tooltip="{{#if worthTip}}{{worthTip}}{{else}}{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}{{/if}}"><span data-pen="Terms Tag Text">{{tag.text}}</span></span>
+                {{else}}<span class="mp-tag is-ratio" data-pen="Terms Tag" {{#if worthTip}}data-tooltip="{{worthTip}}"{{/if}}><span data-pen="Terms Tag Text">{{ratio}}</span></span>{{/if}}
                 {{#if (gt bundle 1)}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.Bundle" bundle=bundle}}</span>{{/if}}
                 {{#if priceFor}}<span class="price-tag tag-neutral">{{localize "MERCHANT_PRESETS.Shop.Tag.PriceFor" count=priceFor}}</span>{{/if}}
                 {{> mpCoins coins=priceCoins mode="price"}}
