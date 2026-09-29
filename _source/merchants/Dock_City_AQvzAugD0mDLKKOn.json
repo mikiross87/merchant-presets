@@ -4255,9 +4255,6 @@
     "default": 0
   },
   "flags": {
-    "core": {
-      "sheetClass": "merchant-presets.ShopSheet"
-    },
     "merchant-presets": {
       "purse": 12500,
       "profile": "Pirate Captain",

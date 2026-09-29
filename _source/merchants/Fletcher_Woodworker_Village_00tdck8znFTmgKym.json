@@ -3787,9 +3787,6 @@
     "default": 0
   },
   "flags": {
-    "core": {
-      "sheetClass": "merchant-presets.ShopSheet"
-    },
     "merchant-presets": {
       "purse": 120,
       "profile": "Commoner",

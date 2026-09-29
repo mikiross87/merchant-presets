@@ -231,6 +231,12 @@ test("a shop arriving with a GM's own sheet choice keeps it (#204 review)", asyn
   assert.equal(shop.flags.core.sheetClass, "dnd5e.NPCActorSheet");
 });
 
+test("a shop exported into a world compendium gets no sheet there (#204 review)", async () => {
+  const { world, shop } = await setUp();
+  await world.fire("preCreateActor", shop, {}, { pack: "world.my-shops" }, "gm");
+  assert.equal(shop.flags.core?.sheetClass, undefined);
+});
+
 test("of one GM's tabs only the one that claims trades takes in a shop that GM dragged in: two would each roll a shelf (#136)", async () => {
   const { world, shop } = await setUp();
   world.actors.push(shop);

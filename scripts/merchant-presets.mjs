@@ -25,7 +25,7 @@ import {
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
+  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shopSheetOnArrival, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
   from "./migrate.mjs";
@@ -1852,10 +1852,14 @@ Hooks.once("ready", async () => {
   // visitable, or after the GM switched Players can visit on (#110), comes back with its ownership
   // cleared but its mark kept (#138 review, round 9; #140 review, round 6). Switched off, the
   // choice stays: hidden is right whatever ownership came along, a duplicate's included (round 8).
-  Hooks.on("preCreateActor", actor => {
+  Hooks.on("preCreateActor", (actor, _data, options) => {
     const flags = actor.flags?.[MODULE];
     if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
     if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
+    // A pack merchant arrives already 2.0 but without its sheet, which stays off a compendium copy,
+    // a world compendium's included (#203, #204 review).
+    const sheetClass = options?.pack ? null : shopSheetOnArrival(actor);
+    if (sheetClass) actor.updateSource({ "flags.core.sheetClass": sheetClass });
   });
   Hooks.on("createToken", token => {
     if (game.users.activeGM !== game.user) return;   // one GM does the writing
@@ -1913,6 +1917,10 @@ async function arrive(actor) {
   arriving.add(actor.id);
   try {
     await migrateShop(actor);
+    // preCreateActor gives a new shop its sheet, but Replace Actor is an update that writes the
+    // pack's flags, which carry none, over the actor's own (#66, #204 review).
+    const sheetClass = shopSheetOnArrival(actor);
+    if (sheetClass) await actor.update({ "flags.core.sheetClass": sheetClass });
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
     if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
