@@ -1888,7 +1888,7 @@
                       "id": "AWacs",
                       "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "19",
+                      "content": "20",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -1937,7 +1937,7 @@
                       "id": "BiEBd",
                       "name": "Weapons count",
                       "fill": "$text-secondary",
-                      "content": "3",
+                      "content": "4",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -2264,6 +2264,49 @@
                         "type": "image",
                         "enabled": true,
                         "url": "assets/silver.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "CfART",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Longsword +1",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/greatsword-guard.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Longsword +1"
+                    },
+                    "vYzUL": {
+                      "content": "Martial melee · Versatile · Uncommon · 3 lb"
+                    },
+                    "UB234": {
+                      "content": "Last one",
+                      "fill": "#b86a12",
+                      "fontWeight": "700"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "415"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
                         "mode": "fill"
                       }
                     },
@@ -4103,7 +4146,7 @@
                       "content": "Potion of Healing"
                     },
                     "vYzUL": {
-                      "content": "Potion · 0.5 lb"
+                      "content": "Potion · Common · 0.5 lb"
                     },
                     "UB234": {
                       "content": "×2"
@@ -23410,7 +23453,7 @@
                   "content": "Potion of Healing"
                 },
                 "vYzUL": {
-                  "content": "Potion · 0.5 lb · ×2"
+                  "content": "Potion · Common · 0.5 lb"
                 },
                 "UB234": {
                   "content": "×2",
