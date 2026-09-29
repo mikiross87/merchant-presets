@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/winemaker-still-vintner.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d14",
+  "formula": "1d15",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -233,6 +233,22 @@
       "range": [
         14,
         14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NQfUyFv7tenRwcQR",
+      "_key": "!tables.results!920mqgq5WWXj8iYz.NQfUyFv7tenRwcQR",
+      "type": "document",
+      "name": "Potion of Climbing",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb",
+      "weight": 1,
+      "range": [
+        15,
+        15
       ],
       "drawn": false,
       "description": "",

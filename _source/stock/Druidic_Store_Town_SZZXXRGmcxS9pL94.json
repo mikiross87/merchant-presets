@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d51",
+  "formula": "1d58",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -825,6 +825,118 @@
       "range": [
         51,
         51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VBOQlU6cuvL4NGRy",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.VBOQlU6cuvL4NGRy",
+      "type": "document",
+      "name": "Potion of Animal Friendship",
+      "img": "icons/consumables/potions/potion-jar-corked-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfAnima",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Mcznl3M9ZdxaieHM",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.Mcznl3M9ZdxaieHM",
+      "type": "document",
+      "name": "Potion of Water Breathing",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sXaWCsaYoqcpmCzG",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.sXaWCsaYoqcpmCzG",
+      "type": "document",
+      "name": "Bead of Nourishment",
+      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MXl4TsPJzO9qgD5K",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.MXl4TsPJzO9qgD5K",
+      "type": "document",
+      "name": "Staff of the Python",
+      "img": "icons/weapons/staves/staff-metal-mask.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStaffOfThePyt",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7ki8bB1tdflwOWtj",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.7ki8bB1tdflwOWtj",
+      "type": "document",
+      "name": "Gray Bag of Tricks",
+      "img": "icons/containers/bags/coinpouch-leather-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBagOfTricks00",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WZ13BaIP3r6Y2ioi",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.WZ13BaIP3r6Y2ioi",
+      "type": "document",
+      "name": "Rust Bag of Tricks",
+      "img": "icons/containers/bags/sack-simple-leather-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRustBagofTric",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "V3nRFVtg5pOb0g3t",
+      "_key": "!tables.results!SZZXXRGmcxS9pL94.V3nRFVtg5pOb0g3t",
+      "type": "document",
+      "name": "Tan Bag of Tricks",
+      "img": "icons/containers/bags/sack-twisted-leather-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgTanBagofTrick",
+      "weight": 1,
+      "range": [
+        58,
+        58
       ],
       "drawn": false,
       "description": "",

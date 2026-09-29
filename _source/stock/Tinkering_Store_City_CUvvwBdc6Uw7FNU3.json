@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/pottery-shop-shed-red.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d31",
+  "formula": "1d38",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -505,6 +505,118 @@
       "range": [
         31,
         31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "D4kniPwLDbaaxQLF",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.D4kniPwLDbaaxQLF",
+      "type": "document",
+      "name": "Immovable Rod",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pPX8raMtjrzPPjmj",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.pPX8raMtjrzPPjmj",
+      "type": "document",
+      "name": "Lantern of Revealing",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "52A81hiJErRZtQOb",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.52A81hiJErRZtQOb",
+      "type": "document",
+      "name": "Chime of Opening",
+      "img": "icons/commodities/tech/pipe-cylinder.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgChimeOfOpenin",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ifT6VyDEFeoWlKAM",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.ifT6VyDEFeoWlKAM",
+      "type": "document",
+      "name": "Eversmoking Bottle",
+      "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEversmokingBo",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QFjBndhoeIKL18RK",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.QFjBndhoeIKL18RK",
+      "type": "document",
+      "name": "Iron Bands",
+      "img": "icons/commodities/metal/clasp-steel-braid.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgIronBandsOfBi",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GwSaT6ze9yjDt1en",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.GwSaT6ze9yjDt1en",
+      "type": "document",
+      "name": "Instant Fortress",
+      "img": "icons/commodities/treasure/token-engraved-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDaernsInstant",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GO9hM4WLZmAOStSA",
+      "_key": "!tables.results!CUvvwBdc6Uw7FNU3.GO9hM4WLZmAOStSA",
+      "type": "document",
+      "name": "Cube of Force",
+      "img": "icons/sundries/gaming/dice-runed-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCubeOfForce00",
+      "weight": 1,
+      "range": [
+        38,
+        38
       ],
       "drawn": false,
       "description": "",

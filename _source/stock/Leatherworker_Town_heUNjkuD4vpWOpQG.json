@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-two-stories-small.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Hides curing out back and the smell to prove it. Boots, belts, jerkins and the straps that hold everything else together.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d11",
+  "formula": "1d17",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -185,6 +185,102 @@
       "range": [
         11,
         11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mWQiz85UpJC3A6ng",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.mWQiz85UpJC3A6ng",
+      "type": "document",
+      "name": "Boots of Elvenkind",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9VZ9RP8Xt6e2COBe",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.9VZ9RP8Xt6e2COBe",
+      "type": "document",
+      "name": "Boots of Striding and Springing",
+      "img": "icons/equipment/feet/boots-collared-leather-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfStridi",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xAr7T4G0QblQrUGv",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.xAr7T4G0QblQrUGv",
+      "type": "document",
+      "name": "Gloves of Swimming and Climbing",
+      "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfSwimm",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oaRVxJY6hBT2mXYt",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.oaRVxJY6hBT2mXYt",
+      "type": "document",
+      "name": "Boots of the Winterlands",
+      "img": "icons/equipment/feet/boots-leather-banded-furred.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfTheWin",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Qp0t6EpN7wMpVjyZ",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.Qp0t6EpN7wMpVjyZ",
+      "type": "document",
+      "name": "Winged Boots",
+      "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWingedBoots00",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dHQ4qUsTy2kAquOn",
+      "_key": "!tables.results!heUNjkuD4vpWOpQG.dHQ4qUsTy2kAquOn",
+      "type": "document",
+      "name": "Gloves of Missile Snaring",
+      "img": "icons/equipment/hand/glove-tooled-leather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfMissi",
+      "weight": 1,
+      "range": [
+        17,
+        17
       ],
       "drawn": false,
       "description": "",

@@ -536,7 +536,9 @@ def main():
                 # two items, exactly as on a character sheet. So stock them as
                 # separate documents rather than one with a count.
                 if is_container:
-                    n = roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
+                    # A Bag of Holding or a Folding Boat is one of its kind on
+                    # any shelf (#33).
+                    n = 1 if is_magic(src) else roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
                     containers[src["name"]] = n
                     for c in range(1, n):
                         dup, _ = make_item(src, line, aid, uuid, own, ti, copy=c)

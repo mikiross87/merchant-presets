@@ -5409,6 +5409,276 @@
       "_key": "!actors.items!v5K6ycEOTlSO5K4N.sv1OCciesNIZrB0e"
     },
     {
+      "name": "Periapt of Health",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "system": {
+        "activities": {
+          "otEbvmR9v3TKQfpN": {
+            "type": "heal",
+            "_id": "otEbvmR9v3TKQfpN",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "healing": {
+              "number": 2,
+              "denomination": "4",
+              "types": [
+                "healing"
+              ],
+              "custom": {
+                "enabled": false
+              },
+              "scaling": {
+                "number": 1
+              },
+              "bonus": "2"
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ],
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this pendant, you can take a Magic action to regain 2d4 + 2 Hit Points. Once used, this property can't be used again until the next dawn.</p><p>In addition, you have Advantage on saving throws to avoid or end the &amp;Reference[Poisoned apply=false] condition while you wear this pendant.</p>",
+          "chat": ""
+        },
+        "identifier": "periapt-of-health",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfHeal"
+      },
+      "_id": "v1HtLwiGpXmwIXqM",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.v1HtLwiGpXmwIXqM"
+    },
+    {
+      "name": "Periapt of Wound Closure",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-faceted-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this pendant, you gain the following benefits.</p><p><em><strong>Life Preservation.</strong></em> Whenever you make a Death Saving Throw, you can change a roll of 9 or lower to a 10, turning a failed save into a successful one.</p><p><em><strong>Natural Healing Boost.</strong></em> Whenever you roll a Hit Point Die to regain Hit Points, double the number of Hit Points it restores.</p>",
+          "chat": ""
+        },
+        "identifier": "periapt-of-wound-closure",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfWoun"
+      },
+      "_id": "n1z3CcmD90YRVTdU",
+      "_key": "!actors.items!v5K6ycEOTlSO5K4N.n1z3CcmD90YRVTdU"
+    },
+    {
       "name": "Mace",
       "system": {
         "description": {
@@ -7992,6 +8262,18 @@
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Periapt of Health": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Periapt of Wound Closure": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -8078,7 +8360,9 @@
             "adwYeITRmZDOdYTT": "1d6+2",
             "NLNiQk1YggORbv5l": "1d2",
             "oWPe6K2UF3TQdOjH": "1d6+2",
-            "3keRpat4Iqw8S5Sz": "1d3+1"
+            "3keRpat4Iqw8S5Sz": "1d3+1",
+            "p7tVl2gCfIjODAMK": "1d2",
+            "OwskVUJvOPdZv09U": "1d2"
           },
           "onOpen": true,
           "every": 7,
@@ -8190,7 +8474,9 @@
               "adwYeITRmZDOdYTT": "1d6+2",
               "NLNiQk1YggORbv5l": "1d2",
               "oWPe6K2UF3TQdOjH": "1d6+2",
-              "3keRpat4Iqw8S5Sz": "1d3+1"
+              "3keRpat4Iqw8S5Sz": "1d3+1",
+              "p7tVl2gCfIjODAMK": "1d2",
+              "OwskVUJvOPdZv09U": "1d2"
             }
           }
         ],

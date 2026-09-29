@@ -1789,6 +1789,173 @@
       "_key": "!actors.items!q3fWf3cBWITAW2hl.a2CcCyI5r2BKvBZI"
     },
     {
+      "name": "Bead of Nourishment",
+      "type": "consumable",
+      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
+      "system": {
+        "activities": {
+          "BNdV5GgauLzPukTs": {
+            "type": "utility",
+            "name": "Consume",
+            "_id": "BNdV5GgauLzPukTs",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Common</em></p><p>This flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}.</p></div>",
+          "chat": ""
+        },
+        "identifier": "bead-of-nourishment",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "common",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish"
+      },
+      "_id": "b7HtcLYT3EBQUzBc",
+      "_key": "!actors.items!q3fWf3cBWITAW2hl.b7HtcLYT3EBQUzBc"
+    },
+    {
       "name": "Club",
       "system": {
         "description": {
@@ -2136,6 +2303,12 @@
           "keepOnMerchant": true,
           "isService": true,
           "cantBeSoldToMerchants": true
+        },
+        "Bead of Nourishment": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {},
@@ -2174,7 +2347,8 @@
             "AvbBeDnssPebXpbn": "1",
             "7ji1seUwKVxTm0T0": "1",
             "nE5BQiC0nBJMAsSu": "1",
-            "4xzqQe14bOOyRMaF": "1"
+            "4xzqQe14bOOyRMaF": "1",
+            "0FbRSjigNXG1ej0u": "1d2"
           },
           "onOpen": true,
           "every": 2,
@@ -2249,7 +2423,8 @@
               "AvbBeDnssPebXpbn": "1",
               "7ji1seUwKVxTm0T0": "1",
               "nE5BQiC0nBJMAsSu": "1",
-              "4xzqQe14bOOyRMaF": "1"
+              "4xzqQe14bOOyRMaF": "1",
+              "0FbRSjigNXG1ej0u": "1d2"
             }
           }
         ],

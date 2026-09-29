@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/wizard-castle.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d36",
+  "formula": "1d37",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -585,6 +585,22 @@
       "range": [
         36,
         36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "RTnPrwUYhWFgpusv",
+      "_key": "!tables.results!QfNemaVvxU8Eh0lJ.RTnPrwUYhWFgpusv",
+      "type": "document",
+      "name": "Pipe of Smoke Monsters",
+      "img": "icons/sundries/misc/pipe-elegant.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipeOfSmokeMo",
+      "weight": 1,
+      "range": [
+        37,
+        37
       ],
       "drawn": false,
       "description": "",

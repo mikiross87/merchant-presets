@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/winemaker-still-vintner.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d16",
+  "formula": "1d25",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -265,6 +265,150 @@
       "range": [
         16,
         16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dLL995yZgOog2tXQ",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.dLL995yZgOog2tXQ",
+      "type": "document",
+      "name": "Potion of Climbing",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mlbtPY7VGbQIVJhG",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.mlbtPY7VGbQIVJhG",
+      "type": "document",
+      "name": "Oil of Slipperiness",
+      "img": "icons/consumables/potions/bottle-circular-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgOilOfSlipperi",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "trhJBpEm3MjrFWlp",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.trhJBpEm3MjrFWlp",
+      "type": "document",
+      "name": "Philter of Love",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPhilterOfLove",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ao1JAUsSUm8VfMU7",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.Ao1JAUsSUm8VfMU7",
+      "type": "document",
+      "name": "Potion of Animal Friendship",
+      "img": "icons/consumables/potions/potion-jar-corked-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfAnima",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "i0w4wDd65gQFYdkj",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.i0w4wDd65gQFYdkj",
+      "type": "document",
+      "name": "Potion of Giant Strength (Hill)",
+      "img": "icons/consumables/potions/bottle-bulb-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHillPotionOfG",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "03SzEH1K15J8IZYm",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.03SzEH1K15J8IZYm",
+      "type": "document",
+      "name": "Potion of Growth",
+      "img": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfGrowt",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sN5hvkw5WySGrylA",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.sN5hvkw5WySGrylA",
+      "type": "document",
+      "name": "Potion of Resistance",
+      "img": "icons/consumables/potions/potion-bottle-labeled-medicine-capped-red-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfResis",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "l1K28DyAo798AQEC",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.l1K28DyAo798AQEC",
+      "type": "document",
+      "name": "Potion of Water Breathing",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GUn7X1d5D4qxgBz5",
+      "_key": "!tables.results!dwvFE5Ni1XXbfaoM.GUn7X1d5D4qxgBz5",
+      "type": "document",
+      "name": "Dust of Dryness",
+      "img": "icons/commodities/materials/bowl-powder-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDustOfDryness",
+      "weight": 1,
+      "range": [
+        25,
+        25
       ],
       "drawn": false,
       "description": "",

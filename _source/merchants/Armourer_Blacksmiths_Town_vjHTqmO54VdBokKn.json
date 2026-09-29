@@ -9664,6 +9664,5831 @@
       "_key": "!actors.items!vjHTqmO54VdBokKn.RpZxGxCh1RsD0KS5"
     },
     {
+      "name": "Sentinel Shield",
+      "type": "equipment",
+      "img": "icons/equipment/shield/targe-copper-eye.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Armor (Shield), Uncommon</em></p><p>While holding this Shield, you have Advantage on Initiative rolls and Wisdom (Perception) checks. The Shield is emblazoned with a symbol of an eye.</p>",
+          "chat": ""
+        },
+        "identifier": "sentinel-shield",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 6,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": 2,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "shield",
+          "baseItem": "shield"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Initiative Advantage",
+          "img": "icons/equipment/shield/targe-copper-eye.webp",
+          "_id": "ZAvAoLlBaQ4M2QIK",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.init.roll.mode",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "0OVNUxE29KjbpSmX"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730667051674,
+            "modifiedTime": 1783544098242,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.Xv4P4OFmFgkvWo4F.ZAvAoLlBaQ4M2QIK"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel"
+      },
+      "_id": "Xv4P4OFmFgkvWo4F",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.Xv4P4OFmFgkvWo4F"
+    },
+    {
+      "name": "Javelin of Lightning",
+      "type": "weapon",
+      "img": "icons/weapons/polearms/spear-barbed-silver.webp",
+      "system": {
+        "activities": {
+          "i20Sq0KrXu1Cu54H": {
+            "_id": "i20Sq0KrXu1Cu54H",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "mfPMOlnJzaaNBdd2": {
+            "type": "save",
+            "name": "Lightning Bolt",
+            "_id": "mfPMOlnJzaaNBdd2",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": true,
+              "units": "ft",
+              "special": "",
+              "value": "120"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "line",
+                "size": "120",
+                "width": "5",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "damage": {
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": 4,
+                  "denomination": 6,
+                  "bonus": "",
+                  "types": [
+                    "lightning"
+                  ]
+                }
+              ],
+              "onSave": "half"
+            },
+            "save": {
+              "ability": "dex",
+              "dc": {
+                "calculation": "",
+                "formula": "13"
+              }
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p>Each time you make an attack roll with this magic weapon and hit, you can have it deal Lightning damage instead of Piercing damage.</p><p><em><strong>Lightning Bolt.</strong></em> When you throw this weapon at a target no farther than 120 feet from you, you can forgo making a ranged attack roll and instead turn the weapon into a bolt of lightning. This bolt forms a 5-foot-wide Line between you and the target. The target and each other creature in the Line (excluding you) makes a DC 13 Dexterity saving throw, taking 4d6 Lightning damage on a failed save or half as much damage on a successful one. Immediately after dealing this damage, the weapon reappears in your hand. This property can't be used again until the next dawn.</p><section id=\"secret-606LeZVVMHWwmeln\" class=\"secret\"><p><strong>Foundry Note</strong></p><p>The <strong>Attack</strong> activity allows you to choose between Lightning and Piercing when rolling damage and will remember your last choice.</p></section>",
+          "chat": ""
+        },
+        "identifier": "javelin-of-lightning",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400.5,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "javelin"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "lightning",
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          }
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc",
+          "ret",
+          "thr"
+        ],
+        "range": {
+          "value": 30,
+          "long": 120,
+          "reach": null,
+          "units": "ft"
+        },
+        "mastery": "slow"
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgJavelinOfLigh"
+      },
+      "_id": "yPT8JBSZVOOpO5FR",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.yPT8JBSZVOOpO5FR"
+    },
+    {
+      "name": "Gauntlets of Ogre Power",
+      "type": "equipment",
+      "img": "icons/equipment/hand/gauntlet-armored-steel-grey.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>Your Strength is 19 while you wear these gauntlets. They have no effect on you if your Strength is 19 or higher without them.</p>",
+          "chat": ""
+        },
+        "identifier": "gauntlets-of-ogre-power",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Ogre Strength",
+          "img": "icons/equipment/hand/gauntlet-armored-steel-grey.webp",
+          "_id": "Qu1TxafvUQ8zwt7h",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.abilities.str.value",
+                "value": 19,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "asLdY2yFXjZXr24g"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730729800431,
+            "modifiedTime": 1783544095802,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.laV8zCRgs8bvgJsY.Qu1TxafvUQ8zwt7h"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGauntletsOfOg"
+      },
+      "_id": "laV8zCRgs8bvgJsY",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.laV8zCRgs8bvgJsY"
+    },
+    {
+      "name": "Longsword +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 415,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 3,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": 1,
+            "denomination": 10,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "longsword"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "BFZXotvvF4YaAKeT": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "BFZXotvvF4YaAKeT",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "sap",
+        "identifier": "longsword"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepLongsword0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.6cVv2lHnUuZVMT2M"
+      },
+      "_id": "sa5zAIw9YS56mPZY",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.sa5zAIw9YS56mPZY"
+    },
+    {
+      "name": "Shortsword +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 410,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "shortsword"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "fin",
+          "lgt",
+          "mgc"
+        ],
+        "activities": {
+          "42jdrHDfDRCcYeL4": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "42jdrHDfDRCcYeL4",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "vex",
+        "identifier": "shortsword"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepShortsword"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.W8WoYvY5Wn5v3gwB"
+      },
+      "_id": "08Ouf4wG3wzXpv2X",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.08Ouf4wG3wzXpv2X"
+    },
+    {
+      "name": "Greatsword +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 450,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 6,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 2,
+            "denomination": 6,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "greatsword"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "hvy",
+          "two",
+          "mgc"
+        ],
+        "activities": {
+          "zi3BW6RGO2ugOyXu": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "zi3BW6RGO2ugOyXu",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "graze",
+        "identifier": "greatsword"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepGreatsword"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.b61rFsXgBPiX7ubz"
+      },
+      "_id": "2HJc2eHwgbjy5aGD",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.2HJc2eHwgbjy5aGD"
+    },
+    {
+      "name": "Rapier +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 425,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "rapier"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "fin",
+          "mgc"
+        ],
+        "activities": {
+          "0PGNisis4CVkSml5": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "0PGNisis4CVkSml5",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "vex",
+        "identifier": "rapier"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/swords/sword-guard-bronze.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepRapier0000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.peiTmPHlXAOmZL1r"
+      },
+      "_id": "j1LDduCueXzNO9oo",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.j1LDduCueXzNO9oo"
+    },
+    {
+      "name": "Scimitar +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 425,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 3,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "scimitar"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "fin",
+          "lgt",
+          "mgc"
+        ],
+        "activities": {
+          "YOx3cikY6oPu6Ojh": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "YOx3cikY6oPu6Ojh",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "nick",
+        "identifier": "scimitar"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/swords/scimitar-worn-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepScimitar00"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.dONUTanUySotA7fj"
+      },
+      "_id": "lLwgTCEROXcOUYbZ",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.lLwgTCEROXcOUYbZ"
+    },
+    {
+      "name": "Battleaxe +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 410,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": 1,
+            "denomination": 10,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "battleaxe"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "WkTYphqhrW8RuuUm": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "WkTYphqhrW8RuuUm",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "topple",
+        "identifier": "battleaxe"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/axes/axe-battle-black.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepBattleaxe0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.lSNORERk1LPtHlt2"
+      },
+      "_id": "fF6UiL1syQdcbQeE",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.fF6UiL1syQdcbQeE"
+    },
+    {
+      "name": "Greataxe +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 430,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 7,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 12,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "greataxe"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "hvy",
+          "two",
+          "mgc"
+        ],
+        "activities": {
+          "ylhYxAHaTmE2223j": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "ylhYxAHaTmE2223j",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "cleave",
+        "identifier": "greataxe"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepGreataxe00"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.DVQPZW8ClPkWlsNy"
+      },
+      "_id": "OlQRP2wVUEmWcF5A",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.OlQRP2wVUEmWcF5A"
+    },
+    {
+      "name": "Warhammer +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 415,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "warhammer"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "jf99rIxqlwX1YLPc": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "jf99rIxqlwX1YLPc",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "push",
+        "identifier": "warhammer"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/hammers/hammer-drilling-spiked.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepWarhammer0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.RFdrvWUfb1nl5dKU"
+      },
+      "_id": "bMHmdM3jIuGRddMq",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.bMHmdM3jIuGRddMq"
+    },
+    {
+      "name": "Mace +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 405,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "mace"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "mgc"
+        ],
+        "activities": {
+          "KiHlb6kIDAvWmnhv": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "KiHlb6kIDAvWmnhv",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "sap",
+        "identifier": "mace"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/maces/mace-flanged-steel.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepMace000000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.B7UzqZnNYk3caxsk"
+      },
+      "_id": "lHR2RGifleyMnVRe",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.lHR2RGifleyMnVRe"
+    },
+    {
+      "name": "Dagger +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 402,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": 20,
+          "long": 60,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 4,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "dagger"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "fin",
+          "lgt",
+          "thr",
+          "mgc"
+        ],
+        "activities": {
+          "3SJSAL3pv9gKkAM9": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "20",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "3SJSAL3pv9gKkAM9",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "nick",
+        "identifier": "dagger"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/daggers/dagger-straight-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepDagger0000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.cjpMECh3fKnghbFn"
+      },
+      "_id": "4eBEBeCTB6Q1eoQd",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.4eBEBeCTB6Q1eoQd"
+    },
+    {
+      "name": "Spear +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 401,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 3,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": 20,
+          "long": 60,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "spear"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "thr",
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "HiR3FA2Uc0oOAHU9": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "20",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "HiR3FA2Uc0oOAHU9",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "sap",
+        "identifier": "spear"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/polearms/spear-flared-green.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepSpear00000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.d6BhdvUBzVURRr7T"
+      },
+      "_id": "HgomvwC6paDZfpLA",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.HgomvwC6paDZfpLA"
+    },
+    {
+      "name": "Quarterstaff +1",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeapon12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 402,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "quarterstaff"
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "XYVC9JOYrtFlLA1k": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "XYVC9JOYrtFlLA1k",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "topple",
+        "identifier": "quarterstaff"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeapon12or300",
+            "enchantment": "8Fd1n2gyqFB5lLKd",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepQuartersta"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.WTtt8ywLg30WB0HD"
+      },
+      "_id": "rlYfb02yuXVC8QvL",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.rlYfb02yuXVC8QvL"
+    },
+    {
+      "name": "Shield +1",
+      "system": {
+        "description": {
+          "value": "<p>You gain the Armor Class benefit of a Shield only if you have training with it.</p><p>@Embed[Compendium.dnd5e.equipment24.Item.dmgShield12or300 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 410,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 6,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 2,
+          "magicalBonus": 1,
+          "dex": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "shield",
+          "baseItem": "shield"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "shield"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgShield12or300",
+            "enchantment": "9X6TAHEQJAzN96cl",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmShield0000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.PtNINaeqIhkx0ldL"
+      },
+      "_id": "HzzKnoGplVZr2f25",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.HzzKnoGplVZr2f25"
+    },
+    {
+      "name": "Adamantine Chain Shirt",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 450,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 20,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 13,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "chainshirt"
+        },
+        "properties": [
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "chain-shirt"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmChainShirt"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.R925G202IWbGnRfF"
+      },
+      "_id": "wr6yVFtUJtlYWD7L",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.wr6yVFtUJtlYWD7L"
+    },
+    {
+      "name": "Adamantine Scale Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 450,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 45,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "scalemail"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "scale-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.RboTJBGN8Jlmo1lk"
+      },
+      "_id": "Q4IqbFOLQin0GnlY",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.Q4IqbFOLQin0GnlY"
+    },
+    {
+      "name": "Adamantine Breastplate",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 800,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 20,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "breastplate"
+        },
+        "properties": [
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "breastplate"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmBreastplat"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.XYZrjTyO1V5TtVq6"
+      },
+      "_id": "v5Rt8OSJr7OoT8Eg",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.v5Rt8OSJr7OoT8Eg"
+    },
+    {
+      "name": "Adamantine Half Plate Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1150,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 40,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 15,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "halfplate"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "half-plate-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmHalfPlateA"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.oNLgUga3i81qkA73"
+      },
+      "_id": "JWXlIXbMILb8c2mR",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.JWXlIXbMILb8c2mR"
+    },
+    {
+      "name": "Adamantine Ring Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 430,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 40,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "ringmail"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": null,
+        "activities": {},
+        "identifier": "ring-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmRingMail00"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.zf8nXDXf6YWXIwwF"
+      },
+      "_id": "9FH4bVY7lmUm3iTw",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.9FH4bVY7lmUm3iTw"
+    },
+    {
+      "name": "Adamantine Chain Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 475,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 55,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 16,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "chainmail"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 13,
+        "activities": {},
+        "identifier": "chain-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmChainMail0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.WYfRYzF2KQE6WJHL"
+      },
+      "_id": "mvtmIvO6RnEbV2pP",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.mvtmIvO6RnEbV2pP"
+    },
+    {
+      "name": "Adamantine Splint Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 600,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 60,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 17,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "splint"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 15,
+        "activities": {},
+        "identifier": "splint-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmSplintArmo"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.y6BtXVILdYJdcMAi"
+      },
+      "_id": "VA0jqvEOFsn3sJdN",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.VA0jqvEOFsn3sJdN"
+    },
+    {
+      "name": "Adamantine Plate Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1900,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 65,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 18,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "plate"
+        },
+        "properties": [
+          "stealthDisadvantage",
+          "mgc",
+          "ada"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 15,
+        "activities": {},
+        "identifier": "plate-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
+            "enchantment": "nqdPjlPUrizNLhug",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmPlateArmor"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.bN2aGZ4dLvrrbhP0"
+      },
+      "_id": "tnGhQkL21pA5lt3f",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.tnGhQkL21pA5lt3f"
+    },
+    {
+      "name": "Mithral Chain Shirt",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 450,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 20,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 13,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "chainshirt"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "chain-shirt"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmChainShirt"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.HtNevYf68na1T6bk"
+      },
+      "_id": "GX3EHCoQTOtQg5Nt",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.GX3EHCoQTOtQg5Nt"
+    },
+    {
+      "name": "Mithral Scale Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 450,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 45,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "scalemail"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "scale-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-banded-steel.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.V7w2zU25HnEmZCHy"
+      },
+      "_id": "jMpj7vp54GUKqNfW",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.jMpj7vp54GUKqNfW"
+    },
+    {
+      "name": "Mithral Breastplate",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 800,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 20,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "breastplate"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "breastplate"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-collared-steel-grey.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmBreastplat"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.VXZcgr5aRqSpd1aG"
+      },
+      "_id": "13rN5LhQgVqvsv6m",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.13rN5LhQgVqvsv6m"
+    },
+    {
+      "name": "Mithral Half Plate Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1150,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 40,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 15,
+          "magicalBonus": null,
+          "dex": 2
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "medium",
+          "baseItem": "halfplate"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "half-plate-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmHalfPlateA"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.UVWh1LRoWSomsy7t"
+      },
+      "_id": "TFVviB3GqNYaPpE0",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.TFVviB3GqNYaPpE0"
+    },
+    {
+      "name": "Mithral Ring Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 430,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 40,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 14,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "ringmail"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "ring-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmRingMail00"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.AmngrLaNvTKI5jQh"
+      },
+      "_id": "t99qUHHQiJxp7Sas",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.t99qUHHQiJxp7Sas"
+    },
+    {
+      "name": "Mithral Chain Mail",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 475,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 55,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 16,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "chainmail"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "chain-mail"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-metal-scaled-grey.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmChainMail0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.nfVd8WoIB76u6LOp"
+      },
+      "_id": "aeqOaJxBRPrbxNNi",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.aeqOaJxBRPrbxNNi"
+    },
+    {
+      "name": "Mithral Splint Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 600,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 60,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 17,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "splint"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "splint-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-layered-steel.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmSplintArmo"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.b66Sk2702xnRQgme"
+      },
+      "_id": "P0bDdKA1CxPPLYN6",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.P0bDdKA1CxPPLYN6"
+    },
+    {
+      "name": "Mithral Plate Armor",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 1900,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 65,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "armor": {
+          "value": 18,
+          "magicalBonus": null,
+          "dex": 0
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "heavy",
+          "baseItem": "plate"
+        },
+        "properties": [
+          "mgc"
+        ],
+        "speed": {
+          "value": null,
+          "conditions": ""
+        },
+        "strength": 0,
+        "activities": {},
+        "identifier": "plate-armor"
+      },
+      "type": "equipment",
+      "img": "icons/equipment/chest/breastplate-collared-steel.webp",
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+            "enchantment": "iopwvJrcnzObDYSR",
+            "base": "Compendium.dnd5e.equipment24.Item.phbarmPlateArmor"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.50YYfhNo7T5hGyjj"
+      },
+      "_id": "qPhsEhkjNgjUPCSA",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.qPhsEhkjNgjUPCSA"
+    },
+    {
+      "name": "Longsword of Warning",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 415,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 3,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": 1,
+            "denomination": 10,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": false,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "slashing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "longsword"
+        },
+        "magicalBonus": null,
+        "properties": [
+          "ver",
+          "mgc"
+        ],
+        "activities": {
+          "BFZXotvvF4YaAKeT": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "BFZXotvvF4YaAKeT",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "sap",
+        "identifier": "longsword"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "effects": [
+        {
+          "name": "Supernatural Readiness: Initiative Advantage",
+          "img": "icons/magic/symbols/runes-etched-steel-blade.webp",
+          "_id": "FF4WVEaiiCBg8xKa",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.init.roll.mode",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "NgBC9TqHAaYVZU6q"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Each ally (including you) has Advantage on its Initiative rolls when within 30 feet.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730224444582,
+            "modifiedTime": 1783544099501,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.gGRU9WmMYFLY5eTH.FF4WVEaiiCBg8xKa"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni",
+            "enchantment": "5rHVxAXfNzLO5zxx",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepLongsword0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.uk3OV57ljuNGjmXF"
+      },
+      "_id": "gGRU9WmMYFLY5eTH",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.gGRU9WmMYFLY5eTH"
+    },
+    {
+      "name": "Rapier of Warning",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 425,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": null,
+          "long": null,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 8,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "martialM",
+          "baseItem": "rapier"
+        },
+        "magicalBonus": null,
+        "properties": [
+          "fin",
+          "mgc"
+        ],
+        "activities": {
+          "0PGNisis4CVkSml5": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "5",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "0PGNisis4CVkSml5",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "vex",
+        "identifier": "rapier"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "effects": [
+        {
+          "name": "Supernatural Readiness: Initiative Advantage",
+          "img": "icons/magic/symbols/runes-etched-steel-blade.webp",
+          "_id": "Qz3mjr6dmZQkwpD2",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.init.roll.mode",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "NgBC9TqHAaYVZU6q"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Each ally (including you) has Advantage on its Initiative rolls when within 30 feet.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730224444582,
+            "modifiedTime": 1783544099501,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.7t5Mtj85A84gHLJC.Qz3mjr6dmZQkwpD2"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni",
+            "enchantment": "5rHVxAXfNzLO5zxx",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepRapier0000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.hwCBLZ7PoyT1554w"
+      },
+      "_id": "7t5Mtj85A84gHLJC",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.7t5Mtj85A84gHLJC"
+    },
+    {
+      "name": "Dagger of Warning",
+      "system": {
+        "description": {
+          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni caption=false]</p>",
+          "chat": ""
+        },
+        "price": {
+          "value": 402,
+          "denomination": "gp"
+        },
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 2,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "cover": null,
+        "crewed": false,
+        "range": {
+          "value": 20,
+          "long": 60,
+          "units": "ft",
+          "reach": null
+        },
+        "uses": {
+          "max": "",
+          "spent": 0,
+          "recovery": []
+        },
+        "damage": {
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "bonus": "",
+            "types": [],
+            "custom": {
+              "enabled": true,
+              "formula": ""
+            },
+            "scaling": {
+              "mode": "",
+              "number": null,
+              "formula": ""
+            }
+          },
+          "base": {
+            "number": 1,
+            "denomination": 4,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "armor": {
+          "value": null
+        },
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "dagger"
+        },
+        "magicalBonus": null,
+        "properties": [
+          "fin",
+          "lgt",
+          "thr",
+          "mgc"
+        ],
+        "activities": {
+          "3SJSAL3pv9gKkAM9": {
+            "type": "attack",
+            "activation": {
+              "type": "action",
+              "value": 1,
+              "condition": "",
+              "override": false
+            },
+            "consumption": {
+              "targets": [],
+              "scaling": {
+                "allowed": false,
+                "max": ""
+              },
+              "spellSlot": true
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "concentration": false,
+              "value": "",
+              "units": "inst",
+              "special": "",
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "value": "20",
+              "units": "ft",
+              "special": "",
+              "override": false
+            },
+            "target": {
+              "template": {
+                "count": "",
+                "contiguous": false,
+                "type": "",
+                "size": "",
+                "width": "",
+                "height": "",
+                "units": ""
+              },
+              "affects": {
+                "count": "",
+                "type": "",
+                "choice": false,
+                "special": ""
+              },
+              "prompt": false,
+              "override": false
+            },
+            "attack": {
+              "ability": "",
+              "bonus": "",
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "melee",
+                "classification": "weapon"
+              }
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "sort": 0,
+            "_id": "3SJSAL3pv9gKkAM9",
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "ammunition": {},
+        "mastery": "nick",
+        "identifier": "dagger"
+      },
+      "type": "weapon",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "effects": [
+        {
+          "name": "Supernatural Readiness: Initiative Advantage",
+          "img": "icons/magic/symbols/runes-etched-steel-blade.webp",
+          "_id": "LoeWUHwqCZ0bphVR",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.init.roll.mode",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "NgBC9TqHAaYVZU6q"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Each ally (including you) has Advantage on its Initiative rolls when within 30 feet.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730224444582,
+            "modifiedTime": 1783544099501,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.phJbuCgYlrM4Tu4B.LoeWUHwqCZ0bphVR"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgWeaponOfWarni",
+            "enchantment": "5rHVxAXfNzLO5zxx",
+            "base": "Compendium.dnd5e.equipment24.Item.phbwepDagger0000"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.SnjQVEh2vh3pN0XO"
+      },
+      "_id": "phJbuCgYlrM4Tu4B",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.phJbuCgYlrM4Tu4B"
+    },
+    {
       "name": "Spear",
       "system": {
         "description": {
@@ -10316,6 +16141,216 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Sentinel Shield": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Javelin of Lightning": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gauntlets of Ogre Power": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Longsword +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Shortsword +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Greatsword +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rapier +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Scimitar +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Battleaxe +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Greataxe +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Warhammer +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mace +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dagger +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Spear +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Quarterstaff +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Shield +1": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Chain Shirt": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Scale Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Breastplate": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Half Plate Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Ring Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Chain Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Splint Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Adamantine Plate Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Chain Shirt": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Scale Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Breastplate": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Half Plate Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Ring Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Chain Mail": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Splint Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mithral Plate Armor": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Longsword of Warning": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rapier of Warning": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dagger of Warning": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -10392,7 +16427,42 @@
             "GlRLr31ReaVkzIWg": "1d6+2",
             "yu5KkFlADbDmAMu0": "2d6+4",
             "k2GsZOuyIBgAnTNZ": "1d6+2",
-            "3nsZO594u0Yfgir6": "2d6+4"
+            "3nsZO594u0Yfgir6": "2d6+4",
+            "UBRSHpx0D84z8Pw0": "1d2",
+            "lWEtHTAk7hWx695U": "1d2",
+            "30fSmyxYh9TIYARf": "1d2",
+            "VpZblNiabUJCBsYP": "1d2",
+            "7IOVZZLH7rbQn3rh": "1d2",
+            "n65eDCpnoZ50oGYD": "1d2",
+            "mhSb3PcYsFlVGmMD": "1d2",
+            "rLJYPmtgYbS8ntsC": "1d2",
+            "fLQIeFo0JLcWCwpH": "1d2",
+            "YqwtuwRc3i9ZhIFD": "1d2",
+            "5F4fna5jSOIleXQt": "1d2",
+            "gliRtGw2VhA0Xk2l": "1d2",
+            "mRHuAxaEE77fQi8J": "1d2",
+            "vDpKCjMIuw9zayNq": "1d2",
+            "ywX9vXdpRbmocL5L": "1d2",
+            "oYzq1GtdDprasa85": "1d2",
+            "DAsABAc6vohllRiU": "1d2",
+            "0BoYY5LwzSxfh7uI": "1d2",
+            "f4IizkMQ2ImXnLKv": "1d2",
+            "bxKowuSwRbmxArTl": "1d2-1",
+            "HQAdYYHZuyIenZT3": "1d2",
+            "sr0KycPjieUTkZQy": "1d2",
+            "0kosNOY4kiFJlFS8": "1d2",
+            "oCrjSbjJf4U1RCj8": "1d2-1",
+            "7NoEvuG1qzvgsE3a": "1d2",
+            "8dEXQ0PH7ppragF8": "1d2",
+            "3CTYkDxXpcWePm4b": "1d2",
+            "YSHifaI33HXdNKS9": "1d2-1",
+            "5plmKWdAXeyr6dGj": "1d2",
+            "y9SDuRFFCxkc5m9X": "1d2",
+            "380iDlwdWoYlWNlT": "1d2",
+            "KTSrX5NGiBwF0SS7": "1d2-1",
+            "gT5VyDnkkudgoai3": "1d2",
+            "yd35IVQ5nOYcav56": "1d2",
+            "hGJFt7TFsLiOLpxP": "1d2"
           },
           "onOpen": true,
           "every": 7,
@@ -10497,7 +16567,42 @@
               "GlRLr31ReaVkzIWg": "1d6+2",
               "yu5KkFlADbDmAMu0": "2d6+4",
               "k2GsZOuyIBgAnTNZ": "1d6+2",
-              "3nsZO594u0Yfgir6": "2d6+4"
+              "3nsZO594u0Yfgir6": "2d6+4",
+              "UBRSHpx0D84z8Pw0": "1d2",
+              "lWEtHTAk7hWx695U": "1d2",
+              "30fSmyxYh9TIYARf": "1d2",
+              "VpZblNiabUJCBsYP": "1d2",
+              "7IOVZZLH7rbQn3rh": "1d2",
+              "n65eDCpnoZ50oGYD": "1d2",
+              "mhSb3PcYsFlVGmMD": "1d2",
+              "rLJYPmtgYbS8ntsC": "1d2",
+              "fLQIeFo0JLcWCwpH": "1d2",
+              "YqwtuwRc3i9ZhIFD": "1d2",
+              "5F4fna5jSOIleXQt": "1d2",
+              "gliRtGw2VhA0Xk2l": "1d2",
+              "mRHuAxaEE77fQi8J": "1d2",
+              "vDpKCjMIuw9zayNq": "1d2",
+              "ywX9vXdpRbmocL5L": "1d2",
+              "oYzq1GtdDprasa85": "1d2",
+              "DAsABAc6vohllRiU": "1d2",
+              "0BoYY5LwzSxfh7uI": "1d2",
+              "f4IizkMQ2ImXnLKv": "1d2",
+              "bxKowuSwRbmxArTl": "1d2-1",
+              "HQAdYYHZuyIenZT3": "1d2",
+              "sr0KycPjieUTkZQy": "1d2",
+              "0kosNOY4kiFJlFS8": "1d2",
+              "oCrjSbjJf4U1RCj8": "1d2-1",
+              "7NoEvuG1qzvgsE3a": "1d2",
+              "8dEXQ0PH7ppragF8": "1d2",
+              "3CTYkDxXpcWePm4b": "1d2",
+              "YSHifaI33HXdNKS9": "1d2-1",
+              "5plmKWdAXeyr6dGj": "1d2",
+              "y9SDuRFFCxkc5m9X": "1d2",
+              "380iDlwdWoYlWNlT": "1d2",
+              "KTSrX5NGiBwF0SS7": "1d2-1",
+              "gT5VyDnkkudgoai3": "1d2",
+              "yd35IVQ5nOYcav56": "1d2",
+              "hGJFt7TFsLiOLpxP": "1d2"
             }
           }
         ],

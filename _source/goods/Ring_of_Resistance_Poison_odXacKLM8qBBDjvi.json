@@ -1,0 +1,128 @@
+{
+  "_id": "odXacKLM8qBBDjvi",
+  "name": "Ring of Resistance (Poison)",
+  "type": "equipment",
+  "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+  "system": {
+    "activities": {},
+    "uses": {
+      "spent": 0,
+      "recovery": [],
+      "max": ""
+    },
+    "description": {
+      "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.dmgsupRingofResi]{Ring}, Rare</em></p><p>You have Resistance to one damage type while wearing this ring. The gemstone in the ring indicates the type, which the GM chooses or determines randomly by rolling on the following table.</p><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgRingOfResista rollable caption=false]</p><p>@Embed[Compendium.dnd5e.content24.JournalEntry.dmgFoundryRefere.JournalEntryPage.Ok4iCgD25ENgoRxE cite=false caption=false classes=\"hide-in-embed\"]</p><p><em>See: @UUID[Compendium.dnd5e.equipment24.Item.dmgRingOfResista]</em></p> <p>You have Resistance to one damage type while wearing this ring. The gemstone in the ring indicates the type.</p>",
+      "chat": ""
+    },
+    "identifier": "ring-of-resistance",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 4000,
+      "denomination": "gp"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "armor": {
+      "value": null,
+      "magicalBonus": null,
+      "dex": null
+    },
+    "cover": null,
+    "crewed": false,
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "ring",
+      "baseItem": ""
+    },
+    "properties": [
+      "mgc"
+    ],
+    "strength": null
+  },
+  "effects": [
+    {
+      "name": "Poison Resistance",
+      "img": "systems/dnd5e/icons/svg/damage/necrotic.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.traits.dr.value",
+            "value": "poison",
+            "priority": null,
+            "type": "add",
+            "phase": "initial",
+            "_id": "bg0gh0lRqs89Pibj"
+          }
+        ],
+        "magical": true
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgArmorOfResist.ActiveEffect.R2WuyXjV8Z8E0wKu",
+        "duplicateSource": null,
+        "coreVersion": "14.364",
+        "systemId": "dnd5e",
+        "systemVersion": "6.0.0",
+        "createdTime": 1730844702877,
+        "modifiedTime": 1783544097797,
+        "lastModifiedBy": "dnd5ebuilder0000",
+        "exportSource": null
+      },
+      "_id": "8fplOx39Ff4VwqPJ",
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!odXacKLM8qBBDjvi.8fplOx39Ff4VwqPJ"
+    }
+  ],
+  "flags": {
+    "dnd5e": {},
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgRingOfResista",
+        "enchantment": "msSwrsX2i4sCvhLa",
+        "base": "Compendium.dnd5e.equipment24.Item.dmgRingOfResista"
+      }
+    }
+  },
+  "_key": "!items!odXacKLM8qBBDjvi",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

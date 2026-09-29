@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/market-stall.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d28",
+  "formula": "1d29",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -457,6 +457,22 @@
       "range": [
         28,
         28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Ey8chkNExzwoiBLt",
+      "_key": "!tables.results!FoTPHRm8DVpL3r1O.Ey8chkNExzwoiBLt",
+      "type": "document",
+      "name": "Potion of Climbing",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb",
+      "weight": 1,
+      "range": [
+        29,
+        29
       ],
       "drawn": false,
       "description": "",
