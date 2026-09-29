@@ -2364,7 +2364,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!answer) return;
     // An edit stays with its own character, whatever the form sent back.
     const actor = previous?.actor ?? answer.actor;
-    const name = game.actors.find(a => a.uuid === actor)?.name ?? previous?.name ?? "";
+    // An unlinked token's own actor is among those offered, but never in the sidebar's game.actors.
+    const name = (offered.find(a => a.uuid === actor) ?? game.actors.find(a => a.uuid === actor))?.name ?? previous?.name ?? "";
     await this.#edit(config => {
       const fields = dealFields({ ...answer, actor }, {
         name, worldTime: game.time.worldTime, hours: closingHours(config), calendar: game.time.calendar.days,
