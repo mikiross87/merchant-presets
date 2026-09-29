@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellRowMeta, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties,
   currentSection
 } from "../scripts/shop-view.mjs";
@@ -863,6 +863,11 @@ test("a mount joins the buyer only where bought animals spawn and it has a stat 
   assert.equal(itemMeta(horse, LABELS, t, { spawns: true }), "Mount · joins the buyer");
   assert.equal(itemMeta(horse, LABELS, t, { spawns: false }), "Mount");
   assert.equal(itemMeta(good("mount", "Statue Horse"), LABELS, t, { spawns: true }), "Mount");
+});
+
+test("a mount on the Sell tab never says it joins the buyer: the seller is the one parting with it (#177)", () => {
+  const horse = good("mount", "Horse, Riding", { actor: "Compendium.dnd5e.actors24.Actor.h" });
+  assert.equal(sellRowMeta(horse, LABELS, t, { spawns: true, hydrates: true }), "Mount");
 });
 
 test("tack and vehicles read by what they are, not as loot (#151, design pI7Yd)", () => {
