@@ -290,7 +290,8 @@
           "Until": "Until {date}",
           "EndedClose": "Ended at closing, {date}",
           "EndedOn": "Ended {date}",
-          "NoCharacters": "Every player character already has a deal here.",
+          "NoCharacters": "Every player character, and everyone on this scene, already has a deal here.",
+          "NoOne": "No one to make a deal with: there are no player characters, and no one else on this scene.",
           "Form": {
             "AddTitle": "Add a deal",
             "EditTitle": "Edit deal",

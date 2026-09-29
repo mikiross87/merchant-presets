@@ -1701,13 +1701,17 @@ test("the Sell tab groups the pack by kind of good, and its category narrows onl
   assert.equal(buy.categories.find(c => c.active).id, "all", "the Buy tab keeps its own category");
 });
 
-test("the Buyer Picker lists no merchants, and each group alphabetically (design n9I5aQ)", async () => {
+test("the Buyer Picker lists no merchants, and each group alphabetically (design n9I5aQ)", async t => {
   const { sheet, buyer } = openShop();
   const pc = name => Object.assign(actor(name, []), { type: "character" });
   const inn = actor("inn", [], { shop: true });
   const [kess, brom] = [pc("kess"), pc("brom")];
   const tomas = actor("tomas", []);
   globalThis.game.actors.push(inn, kess, brom, tomas);
+  // A GM's other actors are whoever stands on the scene (#201): the inn stands there too.
+  const saved = globalThis.canvas;
+  t.after(() => { globalThis.canvas = saved; });
+  globalThis.canvas = { ready: true, scene: { tokens: [tomas, inn, buyer].map(a => ({ actor: a, actorLink: true, actorId: a.id })) } };
   globalThis.game.user.isGM = true;
   try {
     const { buyerPicker } = await sheet._prepareContext({});
@@ -2018,11 +2022,12 @@ test("within reach, Buying as lists only the player's characters standing at the
   assert.deepEqual(buyerPicker.actors.map(a => a.name), ["hero"]);
 });
 
-test("a GM's window opens, and trades for anyone, wherever the tokens stand (#166)", async t => {
-  const { sheet, shop } = openShop({ permission: OWNERSHIP.OWNER });
+test("a GM's window opens, and trades for anyone on the scene, wherever the tokens stand (#166, #201)", async t => {
+  const { sheet, shop, buyer } = openShop({ permission: OWNERSHIP.OWNER });
   const mule = actor("mule", []);
   globalThis.game.actors.push(mule);
-  atCounter(t, { tokens: [[shop, 5, 5]] });
+  // Both far out of reach of the counter.
+  atCounter(t, { tokens: [[shop, 5, 5], [buyer, 20, 20], [mule, 30, 30]] });
   globalThis.game.user.isGM = true;
   t.after(() => { globalThis.game.user.isGM = false; });
   assert.equal(sheet.isVisible, true);

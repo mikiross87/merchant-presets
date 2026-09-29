@@ -182,6 +182,35 @@ export function ownedTokens(scene, user, shop) {
   return Array.from(scene?.tokens ?? []).filter(t => t.actorLink && t.actor && t.actor !== shop && t.actor.testUserPermission(user, "OWNER"));
 }
 
+/** dnd5e's group actors: a party or an encounter, which hold no purse of their own to trade from. */
+const GROUP_TYPES = new Set(["group", "encounter"]);
+
+/**
+ * Who a GM trades and makes deals as at `shop` (#200, #201): every character in the world, then
+ * whoever stands on `scene`, the one the GM's canvas shows. A GM owns every actor, and a premade
+ * adventure brings hundreds. A token stands for its own actor: a linked token for the world
+ * actor, an unlinked one for its synthetic actor, with the token's own purse. Never a shop, nor a
+ * group; each actor once, characters first.
+ *
+ * @param {Iterable<object>} actors  `game.actors`
+ * @param {object|null} scene  `canvas.scene`, or null with no canvas
+ * @param {object} shop  the shop actor
+ * @returns {object[]}
+ */
+export function gmCandidates(actors, scene, shop) {
+  const candidate = a => a && a !== shop && a.uuid !== shop?.uuid && !a.flags?.["merchant-presets"]?.shop && !GROUP_TYPES.has(a.type);
+  const characters = Array.from(actors ?? []).filter(a => a.type === "character" && candidate(a));
+  const seen = new Set(characters.map(a => a.uuid));
+  const present = [];
+  for (const token of scene?.tokens ?? []) {
+    const a = token.actor;
+    if (!candidate(a) || seen.has(a.uuid)) continue;
+    seen.add(a.uuid);
+    present.push(a);
+  }
+  return [...characters, ...present];
+}
+
 /**
  * The update one shop needs when the GM switches *Shop access* to `mode`, or null: its default
  * ownership, as the other mode leaves it.
