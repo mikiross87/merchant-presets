@@ -664,15 +664,15 @@
 }
 .shop-sheet .mp-line { display: flex; flex-direction: column; gap: 3px; animation: mp-line-in 150ms ease-out; }
 .shop-sheet .mp-line.is-struck .mp-line-name { text-decoration: line-through; color: var(--mp-danger-ink); animation: mp-flash 400ms ease-out; }
-/* A name too long for its line keeps the line, and the leader and coins wrap below it (design mRg3y). */
-.shop-sheet .mp-entry { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 6px; }
-.shop-sheet .mp-qty { font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-gold); }
+/* A name too long for its line wraps in its own width, and the leader and coins stay on its last
+   line (#198, design mRg3y): the sheet's hangLeaders starts the leader where that line ends. */
+.shop-sheet .mp-entry { display: flex; align-items: flex-end; gap: 6px; }
+.shop-sheet .mp-qty { align-self: baseline; font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-gold); }
 .shop-sheet .mp-line-name {
+  align-self: baseline;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
   font: 600 15px/17px "Crimson Pro", system-ui, sans-serif;
-  white-space: nowrap;
   color: var(--mp-paper-ink);
 }
 .shop-sheet .mp-leader {

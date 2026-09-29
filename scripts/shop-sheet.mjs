@@ -368,6 +368,34 @@ function windowBar(frame, { npcSheet }) {
   return frame;
 }
 
+/**
+ * A bill line's name wraps in its own width, and its leader starts where the name's last line ends
+ * (#198, design mRg3y). A wrapped name is as wide as the line lets it be, so the part after the
+ * last line is empty: pull what follows the name (the leader, or a deal tag) back over it, and
+ * hold the name at the width it wrapped to, or the room it gives up would re-wrap it.
+ */
+function hangLeaders(ledger) {
+  const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")].map(name => ({ name, next: name.nextElementSibling }));
+  for (const { name, next } of lines) {
+    name.style.maxWidth = "";
+    if (next) next.style.marginLeft = "";
+  }
+  // Every line measured before any is changed: one layout, not one per line.
+  const range = document.createRange();
+  const measured = lines.map(({ name }) => {
+    range.selectNodeContents(name);
+    const rects = range.getClientRects();
+    const box = name.getBoundingClientRect();
+    return { width: box.width, slack: rects.length ? box.right - rects[rects.length - 1].right : 0 };
+  });
+  lines.forEach(({ name, next }, i) => {
+    const { width, slack } = measured[i];
+    if (!next || slack < 0.5) return;
+    name.style.maxWidth = `${width}px`;
+    next.style.marginLeft = `${-slack}px`;
+  });
+}
+
 /** A deal side's plain reading beside its field (design Q6UvA): "10% off the shop's price". */
 const dealReadingText = (side, value) => {
   const { key, percent } = dealReading(side, value);
@@ -621,6 +649,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
+    // The bill's leaders follow its names' last lines (#198): again when the window's width
+    // changes, and once the ledger's font has loaded, since either can move where a name wraps.
+    this._leaderObserver?.disconnect();
+    this._leaderObserver = null;
+    const ledgers = [...this.element?.querySelectorAll(".mp-ledger") ?? []];
+    if (ledgers.length) {
+      this._leaderObserver = new ResizeObserver(entries => entries.forEach(entry => hangLeaders(entry.target)));
+      for (const ledger of ledgers) this._leaderObserver.observe(ledger);
+      document.fonts?.ready.then(() => ledgers.forEach(ledger => ledger.isConnected && hangLeaders(ledger)));
+    }
     // A narrow window's category dropdown: a native select, which reports a change, not a click.
     for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
       select.addEventListener("change", () => {
@@ -706,6 +744,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     filter();
     search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
     search.addEventListener("input", filter);
+  }
+
+  /** @override */
+  _onClose(options) {
+    super._onClose(options);
+    this._leaderObserver?.disconnect();
+    this._leaderObserver = null;
   }
 
   /* -------------------------------------------------------------- tabs */
