@@ -15,6 +15,8 @@ shop. No other modules required. Each comes in Village / Town / City sizes —
 **51 merchants, 1,551 stock lines** — with its own shop window, stock that runs
 out and comes back, a purse that runs dry, and hours it keeps.
 
+![A shop window open at the counter, with the bill of sale filled in](docs/media/cover.webp)
+
 Built entirely from **SRD 5.2** (CC-BY-4.0) plus this module's own goods, so it
 works in any `dnd5e` world and redistributes no paid content.
 
@@ -76,6 +78,8 @@ and works without it.
 
 ### The shop window
 
+![The Buy tab: stock by category and a running bill of sale](docs/media/buy.webp)
+
 - **Buy** — the stock by category, with what's left of each, and a running
   **Bill of Sale** that totals the basket and shows what's left in the buyer's
   purse. *Seal the bargain* makes the trade.
@@ -86,6 +90,8 @@ and works without it.
 - **Who's buying** — a player picks which of their own characters they're
   trading as; a GM can trade as anyone.
 
+![The Sell tab: what the shop pays for each item, and what it won't buy](docs/media/sell.webp)
+
 A trade is carried out by a GM's client, so **a GM has to be logged in**. With
 none, the window says so and keeps the bill for when one arrives. Goods, coin
 and stock all move at once, two players can't both buy the last one, and a
@@ -93,10 +99,14 @@ trade sent twice over a flaky connection only happens once. Each trade posts a
 receipt in chat — public, whispered to the GMs, or none, by the *Trades in chat*
 setting.
 
+<img src="docs/media/receipt.webp" alt="A trade's receipt in chat" width="292">
+
 ### Settings (GM)
 
 The window's GM-only **Settings** tab changes the shop. Each change saves as
 you make it, and every open window reprices at once:
+
+![The Settings tab: terms, deals, what it won't buy, hours, restock and the till](docs/media/settings.webp)
 
 - **Terms** — what it sells and buys at, or *World default* to follow the
   world's *Shops sell at (%)* and *Shops buy at (%)* settings; and category
