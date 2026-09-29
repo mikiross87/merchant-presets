@@ -1053,7 +1053,7 @@
 .shop-sheet .mp-check.is-option > span:last-child { font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
 .shop-sheet .mp-check-grid { align-self: stretch; display: flex; flex-direction: column; gap: 8px; }
 .shop-sheet .mp-check-row { display: flex; gap: 10px; }
-.shop-sheet .mp-check-row .mp-check.is-option { flex: 1 1 0; min-width: 0; }
+.shop-sheet .mp-check-row :is(.mp-check.is-option, .mp-check-filler) { flex: 1 1 0; min-width: 0; }
 .shop-sheet .mp-field.is-time input { height: 16px; font: 700 14px/16px "Roboto Condensed", system-ui, sans-serif; }
 .shop-sheet .mp-field.is-time input::-webkit-calendar-picker-indicator { display: none; }
 .shop-sheet .mp-field.is-time input::-webkit-datetime-edit { padding: 0; }

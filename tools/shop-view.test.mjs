@@ -771,10 +771,31 @@ test("a good the shop won't deal in names what it won't buy: its kind, else its 
   assert.equal(wontBuyReason({ type: "weapon", flags: {} }, shop), null);
 });
 
+test("a shop that won't buy magic items turns away anything magic, whatever its kind or type (#184)", () => {
+  const shop = { wontBuy: { types: ["loot"], kinds: ["food-drink", "magic"] } };
+  // As dnd5e stores them: a rarity and the Magical property on a potion, the property alone on a scroll.
+  const potion = { type: "consumable", system: { rarity: "common", properties: ["mgc"] }, flags: {} };
+  const scroll = { type: "consumable", system: { rarity: "", properties: ["mgc"] }, flags: {} };
+  // A live document's properties are a Set.
+  const ring = { type: "equipment", system: { rarity: "rare", properties: new Set(["mgc"]) }, flags: {} };
+  const sword = { type: "weapon", system: { rarity: "", properties: ["ver"] }, flags: {} };
+  for (const item of [potion, scroll, ring]) {
+    assert.equal(dealtIn(item, shop), false);
+    assert.deepEqual(wontBuyReason(item, shop), { kind: "magic" });
+  }
+  assert.equal(dealtIn(sword, shop), true);
+  // Its own kind comes first, its type last: a magic loot item is refused as magic.
+  const magicRations = { type: "consumable", system: { rarity: "common" }, flags: { "merchant-presets": { kind: "food-drink" } } };
+  assert.deepEqual(wontBuyReason(magicRations, shop), { kind: "food-drink" });
+  assert.deepEqual(wontBuyReason({ type: "loot", system: { rarity: "uncommon" }, flags: {} }, shop), { kind: "magic" });
+  // Without the entry, magic is bought like anything else.
+  assert.equal(dealtIn(ring, { wontBuy: { types: [], kinds: ["food-drink"] } }), true);
+});
+
 /* -------------------------------------------------------------- wontBuyTerms */
 
 const NOUNS = { "food-drink": "food", meal: "food", mount: "mounts", service: "services", vehicle: "vehicles", tack: "tack",
-  lodging: "lodging", travel: "passage", spellcasting: "spellcasting", component: "spell components" };
+  lodging: "lodging", travel: "passage", spellcasting: "spellcasting", component: "spell components", magic: "magic items" };
 
 test("the Terms popover leads with three things a shop won't buy and lists the rest after (design ChoNd)", () => {
   // The smith's own list, in its config order.
@@ -783,6 +804,13 @@ test("the Terms popover leads with three things a shop won't buy and lists the r
     lead: ["food", "mounts", "services"],
     rest: ["vehicles", "tack", "lodging", "passage", "spellcasting", "spell components"]
   });
+});
+
+test("magic items come last among the kinds a shop won't buy (#184)", () => {
+  assert.deepEqual(wontBuyTerms(["magic", "vehicle", "mount", "service"], [], k => NOUNS[k]), {
+    lead: ["mounts", "services", "vehicles"], rest: ["magic items"]
+  });
+  assert.deepEqual(wontBuyTerms(["magic"], ["loot"], k => NOUNS[k]), { lead: ["magic items", "loot"], rest: [] });
 });
 
 test("a short list is all lead, item types come after the kinds, and nothing refused is nothing", () => {

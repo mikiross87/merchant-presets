@@ -247,8 +247,11 @@ function dealChip(termsChip, deal, world, terms) {
 /** Which Players see view a Settings section has: its own, or the terms and deals one. */
 const previewOf = section => (["restock", "wontBuy", "hours", "till"].includes(section) ? section : "terms");
 /** `items` in rows of `size`, each numbered from 1 for its layer name. */
-const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) },
-  (_, i) => ({ number: i + 1, items: items.slice(i * size, (i + 1) * size) }));
+// A short last row keeps its checks under the columns above with empty cells (design dYANz, #184).
+const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) }, (_, i) => {
+  const row = items.slice(i * size, (i + 1) * size);
+  return { number: i + 1, items: row, fillers: row.length < size && i > 0 ? Array(size - row.length).fill(0) : [] };
+});
 const listText = (cp, currencies) => coinBreakdown(cp ?? 0, currencies).map(c => `${c.count} ${c.abbreviation ?? c.denomination}`).join(" ");
 
 /**

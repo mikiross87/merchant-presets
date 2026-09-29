@@ -1,6 +1,6 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
-import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
+import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isMagic, isNamedSpell, kindOf, lineTotalCp } from "./trade-plan.mjs";
 
 // The receipt names goods as the window does (#164), so the naming lives with the trade.
 export { goodName, isNamedSpell } from "./trade-plan.mjs";
@@ -498,7 +498,8 @@ export function sellWorth(item, t, worthText, { deal = false } = {}) {
 }
 
 /** The order the Terms popover names refused kinds in: what a traveller most often tries to sell first. */
-const TERMS_KIND_ORDER = ["food-drink", "meal", "mount", "service", "vehicle", "tack", "lodging", "travel", "spellcasting", "component"];
+const TERMS_KIND_ORDER = ["food-drink", "meal", "mount", "service", "vehicle", "tack", "lodging", "travel", "spellcasting", "component",
+  "magic"];
 
 /**
  * The Terms popover's "Won't buy" (design ChoNd): the first three things named on the line ("food,
@@ -520,13 +521,14 @@ const rank = kind => (TERMS_KIND_ORDER.includes(kind) ? TERMS_KIND_ORDER.indexOf
 
 /**
  * What a shop that won't deal in `item` won't buy, for the refusal ("Won't buy food and drink"):
- * the kind it turns away, else the item type, else null (trade-plan `dealtIn`'s own order).
+ * the kind it turns away, else magic items (#184), else the item type, else null.
  *
  * @returns {{kind: string}|{type: string}|null}
  */
 export function wontBuyReason(item, shop) {
   const kind = kindOf(item);
   if (kind && shop.wontBuy.kinds.includes(kind)) return { kind };
+  if (shop.wontBuy.kinds.includes("magic") && isMagic(item)) return { kind: "magic" };
   if (shop.wontBuy.types.includes(item.type)) return { type: item.type };
   return null;
 }

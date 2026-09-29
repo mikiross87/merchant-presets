@@ -60,6 +60,7 @@
     {{#each items}}
       <div class="mp-check-row" data-pen="{{../title}} row {{number}}">
         {{#each items}}{{> optionCheck label=label pen=label op="wontBuy" list=../../list value=value checked=checked}}{{/each}}
+        {{#each fillers}}<span class="mp-check-filler" aria-hidden="true" data-pen="{{../../title}} filler"></span>{{/each}}
       </div>
     {{/each}}
   </div>

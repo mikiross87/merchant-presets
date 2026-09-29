@@ -646,7 +646,11 @@ def main():
                 # carries that kind), but the runtime already refuses it as
                 # fixed behaviour (isGear); leave it off the config so wontBuy
                 # only ever states what varies between shops.
-                "wontBuy": {"types": refuse_types, "kinds": [k for k in refuse_kinds if k != "gear"]}
+                # A shop that stocks no magic item won't buy one either (#184). "magic" is any magic
+                # item, whatever its kind, so it stays out of the Item Piles filters above, which
+                # can only match a flag's value.
+                "wontBuy": {"types": refuse_types, "kinds": [k for k in refuse_kinds if k != "gear"]
+                            + ([] if any(is_magic(i) for i in items) else ["magic"])}
             }
 
             docs_a.append({

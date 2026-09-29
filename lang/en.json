@@ -228,7 +228,8 @@
           "lodging": "lodging",
           "travel": "passage",
           "spellcasting": "spellcasting",
-          "component": "spell components"
+          "component": "spell components",
+          "magic": "magic items"
         },
         "Note": "Set by the GM on the shop. Prices below already include these terms."
       },
@@ -330,7 +331,8 @@
           "service": "Services",
           "spellcasting": "Spellcasting",
           "component": "Spell components",
-          "travel": "Travel"
+          "travel": "Travel",
+          "magic": "Magic items"
         },
         "Hours": {
           "Keeps": "Keeps trading hours",
