@@ -16,8 +16,9 @@ const missing = names.filter(n => !available.has(n));
 if (missing.length) throw new Error(`not Lucide icons: ${missing.join(", ")}`);
 
 // Only the shapes: the <svg> wrapper and its attributes are the helper's (scripts/icons.mjs `icon`).
+// Cutting up to <svg> takes Lucide's license comment with it, its only comment (#196).
 const inner = name => readFileSync(new URL(`icons/${name}.svg`, lucide), "utf8")
-  .replace(/<!--.*?-->/gs, "").replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "")
+  .replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "")
   .replace(/\s*\n\s*/g, "").trim();
 
 const body = names.map(n => `  ${JSON.stringify(n)}: ${JSON.stringify(inner(n))}`).join(",\n");
