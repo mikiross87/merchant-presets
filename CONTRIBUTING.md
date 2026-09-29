@@ -129,6 +129,15 @@ Constraints worth knowing before changing the generator:
   `Scrolls`, `Tools`, `Holy Symbol`. Indexed by name they shadow the lookup, and
   a stock line naming one would resolve to the folder and be embedded as an item
   rather than being reported missing.
+- **Magic items need a price, and go by rarity.** About fifty SRD magic items
+  are unpriced: the `+1, +2, or +3` parents, the Deck of Many Things cards, and
+  real ones such as the Immovable Rod. The cheapest stock band would put dozens
+  on a city shelf, so `build_srd.py` reports and skips a magic stock line (one
+  with a rarity or the `mgc` property) whose item has no price, unless the line
+  gives `price` (#33). Rarity sets where a magic item is stocked: common `vtc`,
+  uncommon `tc`, rare `c` with `limited`, and very rare and above nowhere. The
+  spell scrolls and *Potion of Healing (Supreme)* that shipped before are the
+  only exceptions.
 - **Shopkeeper gear is not stock.** `PROFILES` maps each shop and size to an SRD
   stat block, whose items ride along on the merchant tagged
   `flags.merchant-presets.kind: "gear"`. That kind is in every shop's refuse

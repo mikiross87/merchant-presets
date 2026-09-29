@@ -195,6 +195,15 @@ def refuses(item_filters, item):
 VALUABLE_TYPES = ("gem", "art", "trade")
 VALUABLES = "Valuables"
 
+def is_magic(item):
+    """A magic item, as the SRD marks one: a rarity, or the Magical property."""
+    sysd = item.get("system") or {}
+    return bool(sysd.get("rarity")) or "mgc" in (sysd.get("properties") or [])
+
+def gp_price(item):
+    price = (item.get("system") or {}).get("price") or {}
+    return (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
+
 def is_valuable(item):
     return (item.get("type") == "loot"
             and ((item.get("system") or {}).get("type") or {}).get("value") in VALUABLE_TYPES)
@@ -482,6 +491,11 @@ def main():
     fold_a = {}; fold_t = fid("stockfolder")
     docs_a = []; docs_t = []
     unresolved = collections.defaultdict(set)
+    # About fifty SRD magic items carry no price: the "+1, +2, or +3" parents, the Deck of Many
+    # Things cards, and real ones such as the Immovable Rod. Stocked as they are they would land in
+    # the cheapest stock band and a city would roll dozens of them (#33), so a line has to give
+    # the price itself.
+    unpriced = collections.defaultdict(set)
     counts = collections.Counter(); gear_counts = collections.Counter()
 
     for key, label, purse_mul, ti in TIERS:
@@ -511,6 +525,8 @@ def main():
                     src = srd.get(norm(line["n"])); own = False
                     if not src: unresolved[line["n"]].add(shop["name"]); continue
                     uuid = f"Compendium.{SRD_PACK}.Item.{src['_id']}"
+                if is_magic(src) and not gp_price(src) and line.get("price") is None:
+                    unpriced[line["n"]].add(shop["name"]); continue
 
                 it, is_container = make_item(src, line, aid, uuid, own, ti)
                 items.append(it); counts[label] += 1
@@ -696,6 +712,10 @@ def main():
     if unresolved:
         print(f"  not in SRD, left out ({len(unresolved)}):")
         for n, shops in sorted(unresolved.items()):
+            print(f"     {n}  —  {', '.join(sorted(shops))}")
+    if unpriced:
+        print(f"  magic with no price, left out ({len(unpriced)}):")
+        for n, shops in sorted(unpriced.items()):
             print(f"     {n}  —  {', '.join(sorted(shops))}")
 
 # tools/build_spell_goods.py imports fid and norm from here.
