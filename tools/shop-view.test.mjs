@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellMeta, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties,
   currentSection
 } from "../scripts/shop-view.mjs";
@@ -570,7 +570,7 @@ const LABELS = {
   goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" }
 };
 const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
-  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "worth {amount}", WorthEach: "worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
+  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "Worth {amount}", WorthEach: "Worth {amount} each", DealWorth: "Your deal · worth {amount}", DealWorthEach: "Your deal · worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -745,20 +745,20 @@ test("a weapon's meta line lists only weapon properties, not dnd5e's other tags 
   assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · 3 lb");
 });
 
-/* -------------------------------------------------------------- sellMeta */
+/* -------------------------------------------------------------- sellWorth */
 
-test("a pack row's meta line says what the good is and what it's worth (design TGXBN)", () => {
+test("a pack row's ratio chip says what one is worth at list, \"each\" when several are held (#177)", () => {
   const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver"], quantity: 1 });
-  assert.equal(sellMeta(sword, LABELS, t, "15 gp"), "Martial melee · worth 15 gp");
-  const shirt = gear("equipment", { type: { value: "medium" }, armor: { value: 13, dex: 2 }, quantity: 1 });
-  assert.equal(sellMeta(shirt, LABELS, t, "50 gp"), "Medium armor · worth 50 gp");
+  assert.equal(sellWorth(sword, t, "15 gp"), "Worth 15 gp");
   const potions = gear("consumable", { type: { value: "potion" }, quantity: 2 });
-  assert.equal(sellMeta(potions, LABELS, t, "50 gp"), "Potion · worth 50 gp each");
+  assert.equal(sellWorth(potions, t, "50 gp"), "Worth 50 gp each");
 });
 
-test("a shield in the pack reads as a shield, and a good with no price says nothing of worth", () => {
-  assert.equal(sellMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 } }), LABELS, t, "10 gp"), "Shield · worth 10 gp");
-  assert.equal(sellMeta(gear("loot", {}), LABELS, t, null), "Loot");
+test("the Your deal tag that replaces the chip carries the worth too, and a good with no price says nothing of worth (#177)", () => {
+  const sword = gear("weapon", { type: { value: "martialM" }, quantity: 1 });
+  assert.equal(sellWorth(sword, t, "15 gp", { deal: true }), "Your deal · worth 15 gp");
+  assert.equal(sellWorth(gear("consumable", { type: { value: "potion" }, quantity: 2 }), t, "50 gp", { deal: true }), "Your deal · worth 50 gp each");
+  assert.equal(sellWorth(gear("loot", {}), t, null), null);
 });
 
 /* -------------------------------------------------------------- wontBuyReason */
@@ -871,7 +871,6 @@ test("tack and vehicles read by what they are, not as loot (#151, design pI7Yd)"
   assert.equal(itemMeta(saddle, LABELS, t), "Tack · 25 lb");
   assert.equal(itemMeta(cart, LABELS, t), "Vehicle · 200 lb");
   assert.equal(compactMeta(saddle, LABELS, t, "3 left"), "Tack · 25 lb · 3 left");
-  assert.equal(sellMeta(cart, LABELS, t, "15 gp"), "Vehicle · worth 15 gp each");
 });
 
 test("the seal takes its short label once the price is longer than a few characters (#151, design IeGac)", () => {
