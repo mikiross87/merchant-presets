@@ -153,7 +153,7 @@ Prices on screen **always include the shop's terms**. Terms show in three places
    - green `−10%` for a discount
    - green `Full value` for a category override
    - neutral `per 10` for a bundle (`quantityForPrice`)
-   - neutral `½` on the Sell tab, where every row shows the offer ratio
+   - neutral `½` on the Sell tab, where every row shows the offer ratio. Its tooltip gives what one is worth at list ("Worth 15 gp", "Worth 50 gp each" when several are held), and so does the "Your deal" tag that replaces it ("Your deal · worth 15 gp"). The row's meta line doesn't repeat the worth: it is the same line a Buy row shows (#177)
 
    A shop-wide markup is not struck on every row. The chip carries it, so the list doesn't turn into a wall of strikethroughs. Rows are struck only when their price differs from what the chip says.
 
