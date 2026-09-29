@@ -547,7 +547,14 @@
     "texture": {
       "src": "icons/environment/settlement/house-two-stories-small.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -2508,7 +2515,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Hides curing out back and the smell to prove it. Boots, belts, jerkins and the straps that hold everything else together.</p>",
         "merchantImage": "icons/environment/settlement/house-two-stories-small.webp",

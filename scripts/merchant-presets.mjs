@@ -25,7 +25,7 @@ import {
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
-  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
+  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shopSheetOnArrival, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
   from "./migrate.mjs";
@@ -1413,8 +1413,8 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
-    // Migrated to the shop window here (the plan copies the source's Item Piles data, still
-    // switched on), then the chosen merchant's table draws this shop's first shelf. Still held:
+    // Migrated to the shop window here (the plan copies the source's Item Piles data, switched
+    // on for this), then the chosen merchant's table draws this shop's first shelf. Still held:
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);
@@ -1856,6 +1856,11 @@ Hooks.once("ready", async () => {
     const flags = actor.flags?.[MODULE];
     if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
     if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
+    // A pack merchant arrives already 2.0 but without its sheet, which stays off a compendium copy,
+    // a world compendium's included (#203, #204 review). V14 names that pack on the document; the
+    // create options arrive without it.
+    const sheetClass = actor.pack ? null : shopSheetOnArrival(actor);
+    if (sheetClass) actor.updateSource({ "flags.core.sheetClass": sheetClass });
   });
   Hooks.on("createToken", token => {
     if (game.users.activeGM !== game.user) return;   // one GM does the writing
@@ -1913,6 +1918,10 @@ async function arrive(actor) {
   arriving.add(actor.id);
   try {
     await migrateShop(actor);
+    // preCreateActor gives a new shop its sheet, but Replace Actor is an update that writes the
+    // pack's flags, which carry none, over the actor's own (#66, #204 review).
+    const sheetClass = shopSheetOnArrival(actor);
+    if (sheetClass) await actor.update({ "flags.core.sheetClass": sheetClass });
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
     if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);

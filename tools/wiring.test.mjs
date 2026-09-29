@@ -43,6 +43,7 @@ await tick();
 
 test("a merchant dragged in as a new actor opens as the shop window and rolls its shelf", async () => {
   const temple = merchant(TEMPLE);
+  await world.fire("preCreateActor", temple, {}, {}, "gm");
   world.actors.push(temple);
   await world.fire("createActor", temple, {}, "gm");
   await tick();
@@ -61,6 +62,7 @@ test("a merchant replaced in place from the compendium is migrated and rolls its
 
 test("a merchant replaced before the world loaded rolls its shelf when it loads (#66)", () => {
   assert.ok(rolled(replacedEarlier));
+  assert.equal(replacedEarlier.flags.core?.sheetClass, "merchant-presets.ShopSheet");
 });
 
 test("an ordinary update leaves a rolled shop as it is", async () => {

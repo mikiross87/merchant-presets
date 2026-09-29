@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/winemaker-still-vintner.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -8176,7 +8183,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>",
         "merchantImage": "icons/environment/settlement/winemaker-still-vintner.webp",

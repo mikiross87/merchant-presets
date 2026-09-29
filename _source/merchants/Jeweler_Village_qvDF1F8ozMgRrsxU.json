@@ -547,7 +547,14 @@
     "texture": {
       "src": "icons/environment/settlement/house-city.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -2159,7 +2166,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>",
         "merchantImage": "icons/environment/settlement/house-city.webp",

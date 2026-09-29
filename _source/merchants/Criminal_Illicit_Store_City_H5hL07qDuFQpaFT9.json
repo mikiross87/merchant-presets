@@ -548,7 +548,14 @@
     "texture": {
       "src": "icons/environment/settlement/sewer-entrance.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -14263,7 +14270,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>",
         "merchantImage": "icons/environment/settlement/sewer-entrance.webp",

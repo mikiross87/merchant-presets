@@ -157,7 +157,9 @@ export function planShop(source, actor, keepIds, sourceShop) {
   }
 
   const from = source.flags?.["merchant-presets"] ?? {};
-  const pileData = { ...structuredClone(source.flags?.["item-piles"]?.data ?? {}), merchantImage: "" };
+  // Switched on whatever the source ships (#203): the NPC isn't a 2.0 shop yet, and the migration's
+  // cut-over, which gives it the shop sheet and its ownership, only runs on a shop Item Piles runs.
+  const pileData = { ...structuredClone(source.flags?.["item-piles"]?.data ?? {}), merchantImage: "", enabled: true };
   const moduleFlags = {
     purse: from.purse ?? null,
     itemFlags: structuredClone(from.itemFlags ?? null),

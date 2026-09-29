@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/house-two-stories.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -3819,7 +3826,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Bolts of cloth stacked to the ceiling and a tailor who can tell your station from your hem. Everyday wear off the shelf, finery to measure.</p>",
         "merchantImage": "icons/environment/settlement/house-two-stories.webp",

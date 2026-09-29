@@ -6,7 +6,7 @@ import { planShop } from "../scripts/shop.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planRestockStock, planTokenDisable, planTokenUpdates,
-  shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
+  shopSheetOnArrival, shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
   worldHasLegacyShops, derivedShop
 } from "../scripts/migrate.mjs";
 
@@ -30,12 +30,16 @@ function allShipped() {
 
 /** `merchant`, as it would have sat in a world before 2.0 shipped: with the
  *  new schema flags #99 now ships alongside the Item Piles ones stripped
- *  back off, since a pre-2.0 actor never had them. What #100 actually
- *  migrates from. */
+ *  back off, since a pre-2.0 actor never had them, and the 2.0 cut-over the
+ *  packs ship already done (#203) undone — Item Piles running the shop, no
+ *  shop sheet. What #100 actually migrates from. */
 function legacy(merchant) {
   const m = structuredClone(merchant);
   delete m.flags["merchant-presets"].shop;
   for (const item of m.items) delete item.flags?.["merchant-presets"]?.stock;
+  m.flags["item-piles"].data.enabled = true;
+  delete m.flags.core;
+  delete m.prototypeToken?.flags?.["item-piles"];
   return m;
 }
 
@@ -460,6 +464,33 @@ test("needsMigration reopens the cut-over for a leftover unlinked token still It
 
 /* ------------------------------------------------------------ planActorUpdate */
 
+test("a freshly imported pack merchant is already in its 2.0 shape: nothing to migrate (#203)", () => {
+  const merchants = allShipped();
+  assert.equal(merchants.length, 51);
+  for (const m of merchants) {
+    assert.equal(needsMigration(m), false, m.name);
+    for (const access of ["reach", "anywhere"]) {
+      assert.equal(planActorUpdate(m, { access }).update, null, `${m.name}, ${access}`);
+    }
+    assert.equal(m.prototypeToken.flags?.["item-piles"]?.data?.enabled, false, m.name);
+    // Core reads a sheet class on a compendium copy too, and the shop window has no read-only mode
+    // for one: the sheet goes on as the merchant arrives in the world instead (#204 review).
+    assert.equal(m.flags.core?.sheetClass, undefined, m.name);
+    assert.equal(shopSheetOnArrival(m), SHOP_SHEET_ID, m.name);
+  }
+});
+
+test("shopSheetOnArrival: any shop arriving without a sheet of its own gets the shop window (#204 review)", () => {
+  const store = shipped("General_Store_Village_");
+  assert.equal(shopSheetOnArrival(store), SHOP_SHEET_ID);
+  assert.equal(shopSheetOnArrival(legacy(store)), SHOP_SHEET_ID);        // a 1.x merchant, from an Adventure say
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: SHOP_SHEET_ID } } }), null);
+  // A GM's own sheet choice, carried on an export or a duplicate, stands — Foundry's default included.
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: "dnd5e.NPCActorSheet" } } }), null);
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: "" } } }), null);
+  assert.equal(shopSheetOnArrival({ name: "Goblin", flags: {} }), null);  // not a shop
+});
+
 test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet and (hidden) ownership", () => {
   const store = legacy(shipped("General_Store_Village_"));
   store._id = "abcdefghijklmnop";
@@ -801,6 +832,9 @@ test("a 2.0 'Set up as shop' NPC is never treated as a 1.x shop needing migratio
   };
 
   assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
+  // The NPC is someone else's: the migration's cut-over gives it the shop sheet and its ownership,
+  // and it only runs on a shop Item Piles still has switched on (#203).
+  assert.equal(plan.pileData.enabled, true);
   // Only the cut-over half is planned: never the shop data, so never the autoRestock switch-off
   // below either.
   const { update: cutOver } = planActorUpdate(npc);
@@ -820,6 +854,9 @@ test("planShop still produces a valid, current config when the source's own had 
   const plan = planShop({ ...bareSource, uuid: "Actor.baresource000000000000" },
     { name: "Grumm", items: [], flags: {} }, [], derived);
   assert.ok(validateShop(plan.moduleFlags.shop).ok, validateShop(plan.moduleFlags.shop).errors.join(" | "));
+  // The NPC is someone else's: the migration's cut-over gives it the shop sheet and its ownership,
+  // and it only runs on a shop Item Piles still has switched on (#203).
+  assert.equal(plan.pileData.enabled, true);
   assert.equal(plan.moduleFlags.shop.version, 1);
   assert.equal(plan.moduleFlags.shop.source, "Actor.baresource000000000000");
 });

@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/lumbermill.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -7780,7 +7787,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>",
         "merchantImage": "icons/environment/settlement/lumbermill.webp",

@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/gazebo.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -4961,7 +4968,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>",
         "merchantImage": "icons/environment/settlement/gazebo.webp",

@@ -663,9 +663,16 @@ def main():
                                    # Neutral is what a tradesperson is — not on the party's
                                    # side, not against it. A recipe may override per shop
                                    # (1 friendly, 0 neutral, -1 hostile, -2 secret).
-                                   "disposition": shop.get("disposition", 0)},
+                                   "disposition": shop.get("disposition", 0),
+                                   "flags": {"item-piles": {"data": {"enabled": False}}}},
                 "items": items + gear, "effects": [], "ownership": {"default": 0},
                 "flags": {
+                    # Shipped already cut over to 2.0 (#203): Item Piles switched off
+                    # below and on the prototype token, or every fresh import runs
+                    # migrate.mjs's 1.x cut-over and can't be told apart from a real
+                    # 1.x upgrade. No flags.core.sheetClass: core reads it on the
+                    # compendium copy too, and the shop window has no read-only mode
+                    # for one (#199); the runtime sets it as the merchant arrives.
                     # The shop's own record of itself: what its purse should be
                     # refilled to, and the item flags a restock must restore.
                     "merchant-presets": {"purse": round(shop["purse"] * purse_mul),
@@ -674,7 +681,7 @@ def main():
                                          "containers": containers,
                                          "shop": shop_config},
                     "item-piles": {"data": {
-                    "enabled": True, "type": "merchant",
+                    "enabled": False, "type": "merchant",
                     "description": description,
                     "merchantImage": shop["img"], "displayItemTypes": True, "canInspectItems": True,
                     # A finite purse: a village innkeeper cannot buy a suit of

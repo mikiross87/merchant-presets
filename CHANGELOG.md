@@ -21,6 +21,9 @@ than for the code. Reference the issue or PR it closes.
   viewing, so a shop can give a friend or rival its own terms for roleplay.
   With no one to offer, it now says so instead of claiming every player
   character already has a deal. (#200)
+- A merchant imported from the compendium no longer goes through the 1.x
+  upgrade, or logs that it was migrated: the merchants now ship already set up
+  for 2.0. (#203)
 
 ## [2.0.0] - 2026-09-29
 

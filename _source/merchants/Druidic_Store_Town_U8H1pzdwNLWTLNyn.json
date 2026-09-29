@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/house-woods.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -11712,7 +11719,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/house-woods.webp",
