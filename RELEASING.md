@@ -112,7 +112,7 @@ after the beta (#76).
 - **minor** (`1.3.0`) — new shops, goods, settings, or behaviour that is
   backwards compatible with existing worlds
 - **major** (`2.0.0`) — existing merchants in a world need migrating, or the
-  minimum Foundry / dnd5e / Item Piles version rises
+  minimum Foundry / dnd5e version rises
 
 Prereleases (`1.3.0-beta.1`) are tagged straight on `main` — see
 [Prereleases](#prereleases).

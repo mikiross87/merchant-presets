@@ -1,21 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { boughtWith, goodFlag, uuidOf } from "../scripts/trade.mjs";
+import { boughtWith, goodFlag } from "../scripts/trade.mjs";
 
-// item-piles-tradeItems as Item Piles 3.3.4 fires it (#48): its callHook swaps
-// UUID strings for documents, and socketlib hands the GM that ran the trade the
-// Item documents but sends every other client their JSON.
-const flags = { "item-piles": { item: { isService: true } }, "merchant-presets": { kind: "meal", nutrition: { food: 0.5, water: 0.125 } } };
+// A trade's lines as the listeners get them (#48): the client that made the writes holds the
+// shop's Item documents, and every other client their JSON.
+const flags = { "merchant-presets": { kind: "meal", nutrition: { food: 0.5, water: 0.125 } } };
 const mealData = { _id: "meal1", name: "Meal, Poor", type: "loot", flags };
 const mealDocument = { ...mealData, id: "meal1", uuid: "Actor.inn.Item.meal1", getFlag: (scope, key) => flags[scope]?.[key] };
-const buyer = { uuid: "Actor.tess", name: "Tess", type: "character" };
-
-test("the buyer is found whether the hook passed its UUID or the actor itself", () => {
-  assert.equal(uuidOf("Actor.tess"), "Actor.tess");
-  assert.equal(uuidOf(buyer), "Actor.tess");
-  assert.equal(uuidOf(null), null);
-  assert.equal(uuidOf({ name: "no uuid" }), null);
-});
+const trade = lines => ({ kind: "buy", shopUuid: "Actor.inn", buyerUuid: "Actor.tess", userId: "p1", lines });
 
 test("a good's flags read the same from an Item document and from its JSON", () => {
   assert.deepEqual(goodFlag(mealDocument, "nutrition"), { food: 0.5, water: 0.125 });
@@ -24,19 +16,20 @@ test("a good's flags read the same from an Item document and from its JSON", () 
   assert.equal(goodFlag(undefined, "nutrition"), undefined);
 });
 
-test("bought meals are found on the GM's client and on the buying player's", () => {
-  const onGM = { buyerReceive: [{ quantity: 1, name: "Meal, Poor", item: mealDocument }] };
-  const onPlayer = JSON.parse(JSON.stringify(onGM));
-  assert.equal(boughtWith(onGM, "nutrition").length, 1);
-  assert.equal(boughtWith(onPlayer, "nutrition").length, 1);
+test("bought meals are found on the client that made the writes and on every other", () => {
+  const here = trade([{ quantity: 1, item: mealDocument }]);
+  const elsewhere = JSON.parse(JSON.stringify(here));
+  assert.equal(boughtWith(here, "nutrition").length, 1);
+  assert.equal(boughtWith(elsewhere, "nutrition").length, 1);
 });
 
-test("only entries actually bought and carrying the flag count", () => {
-  const prices = { buyerReceive: [
+test("only lines actually bought and carrying the flag count", () => {
+  const lines = [
     { quantity: 0, item: mealData },
     { quantity: 2, item: { name: "Rope", flags: {} } },
     { quantity: 3, item: mealData }
-  ] };
-  assert.deepEqual(boughtWith(prices, "nutrition").map(e => e.quantity), [3]);
-  assert.deepEqual(boughtWith(undefined, "nutrition"), []);
+  ];
+  assert.deepEqual(boughtWith(trade(lines), "nutrition").map(e => e.quantity), [3]);
+  assert.deepEqual(boughtWith(trade(undefined), "nutrition"), []);
+  assert.deepEqual(boughtWith(null, "nutrition"), []);
 });

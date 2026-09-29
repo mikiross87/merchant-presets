@@ -49,7 +49,17 @@
     },
     "merchant-presets": {
       "kind": "spellcasting",
-      "spell": "Compendium.dnd5e.spells24.Item.phbsplHallow0000"
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplHallow0000",
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": true,
+        "noBuyback": true,
+        "category": "Spells, Components Included",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
+      }
     }
   }
 }

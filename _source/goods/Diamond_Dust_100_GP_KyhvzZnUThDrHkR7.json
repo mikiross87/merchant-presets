@@ -42,7 +42,17 @@
   },
   "flags": {
     "merchant-presets": {
-      "kind": "component"
+      "kind": "component",
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": false,
+        "noBuyback": false,
+        "category": "Valuables",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
+      }
     },
     "item-piles": {
       "item": {

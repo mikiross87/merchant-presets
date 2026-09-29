@@ -51,6 +51,16 @@
       "nutrition": {
         "food": 1,
         "water": 0.125
+      },
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": true,
+        "noBuyback": true,
+        "category": "",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
       }
     }
   }

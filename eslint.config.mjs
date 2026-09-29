@@ -21,21 +21,25 @@ const foundryGlobals = {
   CONST: "readonly",
   ChatMessage: "readonly",
   Folder: "readonly",
+  Handlebars: "readonly",
   Hooks: "readonly",
   Item: "readonly",
   Roll: "readonly",
   RollTable: "readonly",
   _replace: "readonly",
+  canvas: "readonly",
   foundry: "readonly",
   fromUuid: "readonly",
+  fromUuidSync: "readonly",
   game: "readonly",
   ui: "readonly"
 };
 
 export default [
   {
-    // Generated packs and the JSON content trees hold no linted source.
-    ignores: ["packs/**", "_source/**", "data/**"]
+    // Generated packs and the JSON content trees hold no linted source; libWrapper's shim is
+    // vendored as upstream wrote it (#166).
+    ignores: ["packs/**", "_source/**", "data/**", "scripts/libwrapper-shim.mjs"]
   },
 
   js.configs.recommended,

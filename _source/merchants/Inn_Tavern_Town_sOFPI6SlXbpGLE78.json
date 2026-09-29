@@ -692,6 +692,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -818,7 +830,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -945,7 +967,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1072,7 +1104,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1199,7 +1241,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1326,7 +1378,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "food-drink"
+          "kind": "food-drink",
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1380,7 +1442,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1434,7 +1506,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1488,7 +1570,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1542,7 +1634,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1596,7 +1698,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "lodging"
+          "kind": "lodging",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1654,6 +1766,16 @@
           "nutrition": {
             "food": 0.25,
             "water": 0
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1712,6 +1834,16 @@
           "nutrition": {
             "food": 0.5,
             "water": 0.125
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1770,6 +1902,16 @@
           "nutrition": {
             "food": 1,
             "water": 0.125
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1828,6 +1970,16 @@
           "nutrition": {
             "food": 1,
             "water": 0.25
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1886,6 +2038,16 @@
           "nutrition": {
             "food": 2,
             "water": 0.5
+          },
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1894,6 +2056,173 @@
       },
       "_id": "unFaxjtbhS0BHfgI",
       "_key": "!actors.items!sOFPI6SlXbpGLE78.unFaxjtbhS0BHfgI"
+    },
+    {
+      "name": "Bead of Nourishment",
+      "type": "consumable",
+      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
+      "system": {
+        "activities": {
+          "BNdV5GgauLzPukTs": {
+            "type": "utility",
+            "name": "Consume",
+            "_id": "BNdV5GgauLzPukTs",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Common</em></p><p>This flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}.</p></div>",
+          "chat": ""
+        },
+        "identifier": "bead-of-nourishment",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "common",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish"
+      },
+      "_id": "lQrOBG8N6d6DV528",
+      "_key": "!actors.items!sOFPI6SlXbpGLE78.lQrOBG8N6d6DV528"
     },
     {
       "name": "Mace",
@@ -2555,9 +2884,78 @@
           "keepOnMerchant": true,
           "isService": true,
           "cantBeSoldToMerchants": true
+        },
+        "Bead of Nourishment": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
-      "containers": {}
+      "containers": {},
+      "shop": {
+        "version": 1,
+        "tier": "Town",
+        "source": null,
+        "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
+        "terms": {
+          "sellsAt": null,
+          "buysAt": null,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 6,
+            "minute": 0
+          },
+          "close": {
+            "hour": 2,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.fdwOF4sVRKlKbIpY",
+          "quantities": {
+            "kjzICq7N6uQBjvzX": "3d6+8",
+            "4TOJ4cGgaCPGqitV": "3d6+8",
+            "w1suzLARLe5wN09y": "3d6+8",
+            "I34lOv8Ftdy8NsVK": "3d6+8",
+            "xSnwfqPMmbX9074M": "3d6+8",
+            "LtGMmlvMfaHdODSW": "1d6+2",
+            "x1jvhDRpObNTgVBO": "1",
+            "l1yBAOVGfbOWXLJA": "1",
+            "ICW4inhVORcKcojg": "1",
+            "gFOrhXE6b4OHecJd": "1",
+            "1vatc6helNLt28S7": "1",
+            "TixGB0t4HXVZoUBm": "1",
+            "KeImhMkkNtngLLkR": "1",
+            "6wIJwZoxil6faNQN": "1",
+            "rS9yAXqB1cd6yOQv": "1",
+            "RdgwanOSsBV8iEMk": "1",
+            "Cq9uVw5JB4KKuNgc": "1d3+1"
+          },
+          "onOpen": true,
+          "every": 1,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [
+            "weapon",
+            "equipment",
+            "tool",
+            "container"
+          ],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "service",
+            "spellcasting",
+            "component",
+            "travel"
+          ]
+        }
+      }
     },
     "item-piles": {
       "data": {
@@ -2612,7 +3010,8 @@
               "KeImhMkkNtngLLkR": "1",
               "6wIJwZoxil6faNQN": "1",
               "rS9yAXqB1cd6yOQv": "1",
-              "RdgwanOSsBV8iEMk": "1"
+              "RdgwanOSsBV8iEMk": "1",
+              "Cq9uVw5JB4KKuNgc": "1d3+1"
             }
           }
         ],

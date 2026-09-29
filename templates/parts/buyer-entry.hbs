@@ -1,0 +1,12 @@
+{{!-- One row of the Buyer Picker (design n9I5aQ). `this` is one buyerPicker entry
+      {id, uuid, name, initial, subtitle, hasPurse, current}; picking one closes the picker (the
+      sheet's pickBuyer action). One with no coin is dimmed: it has nothing to trade with. --}}
+<button type="button" class="buyer-entry {{#if current}}is-current{{/if}} {{#unless hasPurse}}is-dimmed{{/unless}}"
+  data-action="pickBuyer" data-actor-uuid="{{uuid}}" data-pen="Entry {{name}}">
+  <span class="mp-picker-avatar" data-pen="{{name}} avatar"><span data-pen="{{name}} initial">{{initial}}</span></span>
+  <span class="buyer-entry-info" data-pen="{{name}} text">
+    <span class="buyer-entry-name" data-pen="{{name}} name">{{name}}</span>
+    <span class="buyer-entry-subtitle" data-pen="{{name}} sub">{{subtitle}}</span>
+  </span>
+  {{#if current}}{{mpIcon "check" pen=(concat name " check")}}{{/if}}
+</button>

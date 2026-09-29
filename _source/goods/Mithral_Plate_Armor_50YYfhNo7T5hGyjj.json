@@ -1,0 +1,88 @@
+{
+  "name": "Mithral Plate Armor",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 1900,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 65,
+      "units": "lb"
+    },
+    "rarity": "uncommon",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 18,
+      "magicalBonus": null,
+      "dex": 0
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "heavy",
+      "baseItem": "plate"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": 0,
+    "activities": {},
+    "identifier": "plate-armor"
+  },
+  "_id": "50YYfhNo7T5hGyjj",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-collared-steel.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+        "enchantment": "iopwvJrcnzObDYSR",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmPlateArmor"
+      }
+    }
+  },
+  "_key": "!items!50YYfhNo7T5hGyjj",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

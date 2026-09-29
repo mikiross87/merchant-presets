@@ -1,61 +1,47 @@
 /**
- * Merchant Presets — world wiring.
- *
- * The module ships 51 merchants prebuilt from SRD 5.2 (CC-BY-4.0) plus its own
- * goods, so nothing here has to resolve anything at runtime. Two things still
- * have to happen when a merchant is dragged into the world, and both can only
- * be done on the world copy:
- *
- * 1. STOCK TABLES. The shipped merchants point their Item Piles "Populate
- *    Items" tab at stock RollTables in this module's compendium. That tab
- *    rebuilds its list from `Array.from(game.tables)` — world tables only — and
- *    discards anything it cannot find there, silently wiping the merchant's
- *    populate configuration. So import the stock table into the world and
- *    repoint the merchant at it.
- *
- * 2. STOCK COUNTS. The packs ship canonical quantities; how many are actually
- *    on the shelf is rolled per import, from the item's price and the
- *    settlement size, so two copies of the same shop differ.
+ * Merchant Presets — the runtime: the shops arriving in a world (migrated, made visitable, their
+ * first shelf rolled), restocking on the world clock, the GM-side trade desk the shop window asks,
+ * the double-click that opens a shop at its counter, and the listeners that act on a trade
+ * (meals, animals, spellcasting).
  */
 
-import { applyMeal, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
+// First, so its own `init` runs before ours: libWrapper, or its fallback (#166).
+import { libWrapper } from "./libwrapper-shim.mjs";
+import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
+import { accessModeOf, accessOf, accessOwnership, actorInReach, canOpenOn, canVisit } from "./reach.mjs";
+import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, planWorldTable, STOCK_PREFIX, TIERS, tierOf }
-  from "./shop.mjs";
-import { boughtWith, goodFlag, uuidOf } from "./trade.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
+import { boughtWith, goodFlag } from "./trade.mjs";
+import { planTrade, safeShopOf } from "./trade-plan.mjs";
+import { activeDeal } from "./deals.mjs";
+import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
+import {
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
+} from "./schedule.mjs";
+import {
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY, SETUP_QUERY,
+  receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
+} from "./trade-desk.mjs";
+import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
+import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
+  planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shouldForceAutoRestockOff, stockFromRecord,
+  tokenNeedsMigration,
+  worldHasLegacyShops }
+  from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
-const TABLE_FOLDER = "Merchant Stock";
-const FLAG_PATH = "flags.item-piles.data.tablesForPopulate";
 
-/**
- * Stock is rolled, not flat: how many a shop has on the shelf depends on what
- * the thing costs and how big the settlement is. A village chandler has piles
- * of candles; a city armourer may or may not have a suit of plate today.
- * Bands are the item's price in gp; each entry is [Village, Town, City].
- */
-const STOCK_BANDS = [
-  { under: 1, formulas: ["2d6+4", "3d6+8", "4d10+20"] },     // candles, chalk, rations
-  { under: 10, formulas: ["1d6+2", "2d6+4", "3d8+8"] },      // rope, torches, daggers
-  { under: 50, formulas: ["1d4+1", "1d6+2", "2d6+4"] },      // shortswords, tools
-  { under: 250, formulas: ["1d2", "1d3+1", "1d4+2"] },       // breastplates, potions
-  { under: 1000, formulas: ["1d2-1", "1d2", "1d3"] },        // half plate, fine goods
-  { under: Infinity, formulas: ["1d3-2", "1d2-1", "1d2-1"] } // plate, ships, warhorses
-];
-const TIER_INDEX = { Village: 0, Town: 1, City: 2 };
-const COIN_IN_GP = { pp: 10, gp: 1, ep: 0.5, sp: 0.1, cp: 0.01 };
 
-const NUTRITION_MODULE = "simple-nutrition-5e";
-/** Simple Nutrition 1.0 keeps the day's tally in fractions of a day, which is what we write. */
-const NUTRITION_MINIMUM = "1.0.0";
-/** Identifiers on our drinks that should slake thirst rather than hunger. */
-const DRINK_IDENTIFIERS = ["ale", "wine-common", "wine-fine"];
-
-/** Serialises table imports so dragging several merchants at once cannot duplicate them. */
-const inFlight = new Map();
-
-/** Ids of the merchants `rewire` is working on right now. */
+/** Ids of the shops `setUpShopNow` is building right now: `arrive` leaves them alone. */
 const rewiring = new Set();
+
+/** Closed for the rest of the session if the autoRestock-default write
+ *  (`applyAutoRestockDefault`, #105) fails: a migration completing while
+ *  that write is unconfirmed would erase the "world holds 1.x merchants"
+ *  signal before a retry on the next load could read it (#100 review). */
+let migrationGateOpen = true;
+let autoRestockNoticeShown = false;
 
 const log = (...args) => console.log(`${MODULE} |`, ...args);
 
@@ -76,23 +62,11 @@ const rollStock = async formula =>
  * Whether an item is the shopkeeper's own kit rather than stock.
  *
  * Merchants carry an SRD stat block, and its gear rides along as ordinary
- * embedded items. `overrideItemFilters` keeps it out of the shop window, but
- * the restock helpers below walk `actor.items` directly and match on name — so
- * without this the mage's own Wand would be treated as merchandise.
+ * embedded items. The helpers below walk `actor.items` directly and match on
+ * name, so without this the mage's own Wand would be treated as merchandise.
  */
 const isGear = item =>
   foundry.utils.getProperty(item, "flags.merchant-presets.kind") === "gear";
-
-/** An item's price expressed in gold pieces. */
-function priceInGp(item) {
-  const p = item.system?.price ?? {};
-  return (Number(p.value) || 0) * (COIN_IN_GP[p.denomination] ?? 1);
-}
-
-function stockFormula(item, tierIndex) {
-  const gp = priceInGp(item);
-  return (STOCK_BANDS.find(b => gp < b.under) ?? STOCK_BANDS.at(-1)).formulas[tierIndex];
-}
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -101,198 +75,7 @@ async function ensureFolder(name, type) {
   return existing ?? Folder.implementation.create({ name, type, sorting: "a" });
 }
 
-async function ensureWorldTable(src) {
-  if (inFlight.has(src.uuid)) return inFlight.get(src.uuid);
-  const promise = (async () => {
-    const folder = await ensureFolder(TABLE_FOLDER, "RollTable");
-    const inFolder = game.tables.filter(t => t.folder?.id === folder.id);
-    const plan = planWorldTable(inFolder, src, game.modules.get(MODULE).version);
-    if (plan.existing) {
-      // A copy made before copies were stamped matched on its own results.
-      // Stamp it now, so edits the GM makes to it later don't stop it matching.
-      if (!plan.existing.getFlag(MODULE, "stock")) await plan.existing.setFlag(MODULE, "stock", plan.stamp);
-      return plan.existing;
-    }
-    const data = game.tables.fromCompendium(src, { clearFolder: true, clearOwnership: true });
-    data.folder = folder.id;
-    data.name = plan.name;
-    foundry.utils.setProperty(data, `flags.${MODULE}.stock`, plan.stamp);
-    return RollTable.implementation.create(data);
-  })();
-  inFlight.set(src.uuid, promise);
-  try { return await promise; } finally { inFlight.delete(src.uuid); }
-}
-
-/* -------------------------------------------------------------------------- */
-
-/** Repoint the merchant's populate tables at world copies. */
-async function wireTables(actor) {
-  if (!needsWiring(actor)) return false;
-  const tables = foundry.utils.getProperty(actor, FLAG_PATH);
-
-  const next = [];
-  for (const entry of tables) {
-    if (!entry?.uuid?.startsWith(STOCK_PREFIX)) { next.push(entry); continue; }
-    const src = await foundry.utils.fromUuid(entry.uuid);
-    if (!src) { console.warn(`${MODULE} | missing stock table ${entry.uuid}`); continue; }
-    const world = await ensureWorldTable(src);
-
-    // Re-key the per-result quantity formulas by what each result points at,
-    // so this holds even if the import reassigns TableResult ids.
-    const byTarget = new Map();
-    for (const r of src.results) byTarget.set(r.documentUuid, entry.items?.[r.id] ?? "1");
-    const items = {};
-    for (const r of world.results) items[r.id] = byTarget.get(r.documentUuid) ?? "1";
-
-    next.push({ ...entry, uuid: world.uuid, items });
-  }
-  if (!next.length) return false;
-  await actor.update({ [FLAG_PATH]: next });
-  return true;
-}
-
-/**
- * Roll this shop's stock.
- *
- * Services never run out. Containers are left alone: dnd5e pins a container's
- * quantity to exactly 1 (`ContainerData` declares
- * `quantity: new NumberField({min: 1, max: 1})`) because each one is a distinct
- * object holding its own contents, so a count of them cannot be represented —
- * the shop has one, and it sells out. Stock flagged as limited — poisons, spell
- * scrolls, and anything else a shop would not hold in depth — is always rolled;
- * everything else is rolled only when the world is set to finite stock. Anything that rolls zero
- * is simply not in stock today — "Roll All Tables" on the Populate Items tab
- * brings it back.
- */
-async function applyStockMode(actor) {
-  const finite = game.settings.get(MODULE, "stockMode") === "finite";
-  const tierIndex = TIER_INDEX[tierOf(actor)];
-  const quantityPath = game.itempiles.API.ITEM_QUANTITY_ATTRIBUTE;
-  const flagPath = "flags.item-piles.item.infiniteQuantity";
-
-  const updates = [];
-  const soldOut = [];
-  for (const item of actor.items) {
-    // The shopkeeper's own kit is not stock: rolling it would put the smith's
-    // armour on a stock band and, on a zero, delete it off the stat block.
-    if (isGear(item)) continue;
-    if (foundry.utils.getProperty(item, "flags.item-piles.item.isService")) continue;
-    if (item.type === "container") continue;
-
-    const alwaysLimited = foundry.utils.getProperty(item, flagPath) === "no";
-    if (!finite && !alwaysLimited) continue;
-
-    // The bundle size, so 3 "Arrows" means 3 bundles of 20 rather than 3 arrows.
-    const bundle = Number(foundry.utils.getProperty(item, "flags.item-piles.system.quantityForPrice")) || 1;
-    const count = await rollStock(stockFormula(item, tierIndex));
-    if (count === 0) { soldOut.push(item.id); continue; }
-    updates.push({ _id: item.id, [quantityPath]: count * bundle, [flagPath]: "no" });
-  }
-
-  // Keep the pile's own switches in step with the world's settings. The purse
-  // only bites when infiniteCurrencies is off: Item Piles short-circuits the
-  // whole affordability check when it is on, which makes the coin decorative.
-  const pileUpdate = {};
-  const infiniteCoin = game.settings.get(MODULE, "merchantPurse") === "unlimited";
-  if (!!foundry.utils.getProperty(actor, "flags.item-piles.data.infiniteQuantity") === finite) {
-    pileUpdate["flags.item-piles.data.infiniteQuantity"] = !finite;
-  }
-  if (!!foundry.utils.getProperty(actor, "flags.item-piles.data.infiniteCurrencies") !== infiniteCoin) {
-    pileUpdate["flags.item-piles.data.infiniteCurrencies"] = infiniteCoin;
-  }
-  if (!foundry.utils.isEmpty(pileUpdate)) await actor.update(pileUpdate);
-  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  if (soldOut.length) {
-    await actor.deleteEmbeddedDocuments("Item", soldOut);
-    log(`"${actor.name}" is out of ${soldOut.length} line(s) today`);
-  }
-  return !!(updates.length || soldOut.length);
-}
-
-/**
- * Bring one imported preset merchant fully into the world.
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether anything changed
- */
-async function rewire(actor) {
-  if (!isPreset(actor)) return false;
-  // One pass per merchant at a time. A merchant can arrive through createActor
-  // and updateActor together, and both would see the compendium table and
-  // roll its stock.
-  if (rewiring.has(actor.id)) return false;
-  rewiring.add(actor.id);
-  try {
-    // Stock is rolled once, in the call that wires the compendium table. A shop
-    // already wired keeps the shelf it has: rewireAll and a duplicated merchant
-    // reach here too, and must not re-roll it.
-    const wired = await wireTables(actor);
-    let changed = wired;
-    if (wired) changed = await applyStockMode(actor) || changed;
-    changed = await releaseStrays(actor) > 0 || changed;
-    changed = await syncStockWeight(actor) || changed;
-    changed = await syncOpenState(actor) || changed;
-    if (changed) log(`prepared "${actor.name}"`);
-    return changed;
-  } finally {
-    rewiring.delete(actor.id);
-  }
-}
-
-/**
- * Wire every merchant of ours still on its compendium stock table.
- *
- * Catches merchants replaced from the compendium while nothing was listening
- * for it (#66), before anyone opens their Populate Items tab and Item Piles
- * drops the table. Unlike rewireAll it leaves wired merchants alone.
- *
- * @returns {Promise<number>} how many merchants were wired
- */
-async function wireReplacedAll() {
-  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
-  let n = 0;
-  for (const actor of game.actors) {
-    if (!needsWiring(actor)) continue;
-    try { if (await rewire(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | failed on "${actor.name}"`, err); }
-  }
-  return n;
-}
-
-/**
- * Fix every preset merchant already sitting in the world.
- * @returns {Promise<number>} how many actors were changed
- */
-async function rewireAll() {
-  let n = 0;
-  for (const actor of game.actors) {
-    try { if (await rewire(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | failed on "${actor.name}"`, err); }
-  }
-  ui.notifications.info(`Merchant Presets: prepared ${n} merchant(s).`);
-  return n;
-}
-
 /* ------------------------------------------------------------------ restock */
-
-/**
- * Calendar-driven restocking, on Foundry's own clock.
- *
- * Item Piles has all of this built in — `openTimes`, `refreshItemsOnOpen`,
- * `refreshItemsDays` — but every trigger runs through its Simple Calendar
- * plugin, and `BasePlugin.initialize()` gates on that module being active by id:
- *
- *   if (!game.modules.get("foundryvtt-simple-calendar")?.active) return;
- *
- * So no API shim can switch it on, and neither Foundry's built-in calendar nor
- * Calendaria can drive it. Everything needed is native in V14 though —
- * `game.time.components` and `game.time.calendar` — and
- * `game.itempiles.API.refreshMerchantInventory()` is public, so this reads the
- * same flags Item Piles would and calls the same refresh. Works with the core
- * calendar and with any module that advances `game.time.worldTime`.
- *
- * Holiday closures and holiday restocks are not supported: they are built on
- * Simple Calendar notes, which core has no equivalent for.
- */
 
 /** Minutes since midnight, using this calendar's own hour length. */
 function minuteOfDay(components) {
@@ -300,95 +83,16 @@ function minuteOfDay(components) {
   return (components.hour * minutesPerHour) + components.minute;
 }
 
-/** Whether `minute` falls inside a merchant's trading hours, wrapping midnight. */
-function isOpenAt(pileData, minute) {
-  const { minutesPerHour } = game.time.calendar.days;
-  const open = (pileData.openTimes?.open?.hour ?? 0) * minutesPerHour + (pileData.openTimes?.open?.minute ?? 0);
-  const close = (pileData.openTimes?.close?.hour ?? 0) * minutesPerHour + (pileData.openTimes?.close?.minute ?? 0);
-  return open > close ? (minute >= open || minute <= close) : (minute >= open && minute <= close);
-}
-
-/**
- * Put back what a restock cannot know.
- *
- * Item Piles rebuilds a restocked shelf from the source compendium, and SRD
- * items carry no Item Piles flags — so a poison or a spell scroll would come
- * back as ordinary unlimited stock, quietly undoing the limited-items rule.
- * Each merchant carries the intended flags keyed by item name; re-apply them.
- *
- * @param {Actor} actor
- * @returns {Promise<number>} how many items were corrected
- */
-async function reapplyItemFlags(actor) {
-  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.itemFlags");
-  if (!wanted) return 0;
-  const updates = [];
-  for (const item of actor.items) {
-    if (isGear(item)) continue;
-    const want = wanted[item.name];
-    if (!want) continue;
-    const { quantityForPrice, ...itemFlags } = want;
-    const have = foundry.utils.getProperty(item, "flags.item-piles.item") ?? {};
-    const update = { _id: item.id };
-    let changed = false;
-    for (const [k, v] of Object.entries(itemFlags)) {
-      if (have[k] !== v) { update[`flags.item-piles.item.${k}`] = v; changed = true; }
-    }
-    if (quantityForPrice
-      && foundry.utils.getProperty(item, "flags.item-piles.system.quantityForPrice") !== quantityForPrice) {
-      update["flags.item-piles.system.quantityForPrice"] = quantityForPrice;
-      changed = true;
-    }
-    if (changed) updates.push(update);
-  }
-  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  return updates.length;
-}
-
-/**
- * Put the shop's containers back to their proper number.
- *
- * A container cannot carry a quantity — dnd5e's ContainerData declares
- * `quantity: new NumberField({min: 1, max: 1})`, because each one is a distinct
- * object with its own contents, exactly as two pouches on a character sheet are
- * two items. So the shop stocks them as separate documents. A restock cannot
- * reproduce that on its own: Item Piles' Transaction appends one document per
- * table result and calls setItemQuantity on it, which dnd5e clamps straight
- * back to 1. Each merchant records how many of each it should carry.
- *
- * @param {Actor} actor
- * @returns {Promise<number>} how many container documents were created
- */
-async function reconcileContainers(actor) {
-  const wanted = foundry.utils.getProperty(actor, "flags.merchant-presets.containers");
-  if (!wanted) return 0;
-  const have = actor.items.filter(i => i.type === "container" && !isGear(i));
-  const creates = [];
-  for (const [name, target] of Object.entries(wanted)) {
-    const existing = have.filter(i => i.name === name);
-    if (!existing.length || existing.length >= target) continue;
-    const template = existing[0].toObject();
-    for (let n = existing.length; n < target; n++) {
-      const copy = foundry.utils.deepClone(template);
-      delete copy._id;
-      creates.push(copy);
-    }
-  }
-  if (creates.length) await actor.createEmbeddedDocuments("Item", creates);
-  return creates.length;
-}
-
 /**
  * Keep the shop's own goods off the shopkeeper's back.
  *
- * A merchant's wares live in its inventory because that is what Item Piles
- * reads, so a shopkeeper is carrying every barrel and anvil on the shelves —
+ * A merchant's wares live in its inventory, so a shopkeeper is carrying every
+ * barrel and anvil on the shelves —
  * 14,775 lb for a city stable, against a capacity of 240. dnd5e ignores this
  * until a world turns encumbrance on, and then the shopkeeper is Exceeding
  * Carrying Capacity for good, which in the 2024 rules means Speed 0.
  *
- * The stock cannot be moved off the actor without hiding it from Item Piles, so
- * cancel its weight instead: an effect raising the thresholds by exactly what
+ * The stock is the shop, so it stays on the actor; cancel its weight instead: an effect raising the thresholds by exactly what
  * the shop holds, leaving the shopkeeper's own kit to count normally. Off by
  * default, because dnd5e ships encumbrance off and then none of this bites.
  *
@@ -438,9 +142,8 @@ async function syncStockWeight(actor) {
   await actor.createEmbeddedDocuments("ActiveEffect", [{
     name: "Shop stock (not carried)",
     img: "icons/commodities/currency/coins-assorted-mix-copper-silver-gold.webp",
-    description: "<p>The shop's goods and till sit in this actor's inventory because that is how "
-      + "Item Piles stocks a merchant. This cancels their weight, so only the shopkeeper's own "
-      + "equipment counts against their carrying capacity.</p>",
+    description: "<p>The shop's goods and till sit in this actor's inventory. This cancels their "
+      + "weight, so only the shopkeeper's own equipment counts against their carrying capacity.</p>",
     changes,
     flags: { [MODULE]: { stockWeight: true } }
   }]);
@@ -463,31 +166,13 @@ async function syncStockWeightAll() {
 }
 
 /**
- * Refill the till. Coin is finite, and buying from the party drains it, so
- * without this a shop that once bought a hoard is poor for the rest of the
- * campaign. A new day's trading starts from the shop's own purse.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether the purse changed
- */
-async function replenishPurse(actor) {
-  const purse = foundry.utils.getProperty(actor, "flags.merchant-presets.purse");
-  if (!Number.isFinite(purse)) return false;
-  if (actor.system?.currency?.gp === purse) return false;
-  await actor.update({ "system.currency.gp": purse });
-  return true;
-}
-
-/**
  * Let go of goods that name a container the merchant does not hold.
  *
  * The SRD kits ship their contents as items of their own, each carrying the
  * kit's id in `system.container`, and earlier builds stocked Rope, Tinderbox
  * and nine more goods from those copies. dnd5e lists such an item as loose,
- * but Item Piles counts it as contained and hides it from the shop window
- * (#89). Merchants dragged in from those builds still hold the copies. A
- * restock or Roll All Tables needs no repair: Item Piles drops
- * `system.container` whenever it adds items from a table.
+ * but the shop window counts it as contained and hides it (#89). Merchants
+ * dragged in from those builds still hold the copies.
  *
  * @param {Actor} actor
  * @returns {Promise<number>} how many items were let go
@@ -516,56 +201,259 @@ async function releaseStraysAll() {
   return n;
 }
 
-/**
- * Restock one merchant: rebuild the shelf, then put back what the rebuild lost.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>}
- */
-async function restock(actor) {
-  await game.itempiles.API.refreshMerchantInventory(actor);
-  await reapplyItemFlags(actor);
-  await reconcileContainers(actor);
-  await replenishPurse(actor);
-  await syncStockWeight(actor);        // last: the shelf and the till have both just moved
-  return true;
+/** A restock interval as a whole number of days, rolling a dice formula; null for "never". */
+async function daysOf(every) {
+  const interval = intervalOf(every);
+  if (!interval) return null;
+  return interval.days ?? rollStock(interval.formula);
 }
 
 /**
- * Restock every merchant whose doors just opened.
+ * Whether a stock table result can put an item on the shelf: one pointing at an Item. A text
+ * line ("Nothing today") or one pointing at another document (a nested table, a journal) never
+ * becomes stock, so it's neither drawn nor waited for (#135 review).
+ */
+const isItemLine = result => /(^|\.)Item\.[^.]+$/.test(result.documentUuid ?? "");
+
+/** Shops already warned this session that their table doesn't resolve: once each, not every tick. */
+const unresolvedWarned = new Set();
+
+/**
+ * The names of the items a stock table's lines point to: what adoption stamps
+ * as drawn. The documents' own names, as the shelf carries them, not the
+ * results' labels, which a GM's own table may word differently. Null while
+ * any line's document can't be found: adopting by a guessed name could leave
+ * that line's copy unstamped for good (#135 review).
+ */
+async function lineNames(table) {
+  const names = [];
+  for (const result of table.results ?? []) {
+    if (!isItemLine(result)) continue;
+    // The pack's index has the name, without loading the document: a world's first tick adopts
+    // every shop at once, and loading each line made that take seconds per shop (#105 live run).
+    let entry = null;
+    try { entry = fromUuidSync(result.documentUuid, { strict: false }); } catch { /* not indexed */ }
+    const doc = entry?.name ? entry : await fromUuid(result.documentUuid).catch(() => null);
+    if (!doc) return null;
+    names.push(doc.name);
+  }
+  return names;
+}
+
+/**
+ * This restock's draw from a shop's stock table: each line's document, with
+ * its compendium source recorded as an import would (stacking, the shelf match
+ * and the bundle fallback all read it), and its quantity freshly rolled from
+ * the shop's own `restock.quantities`. Null if any line's document can't be
+ * found (the SRD pack not loaded, a world item deleted): a reroll would delete
+ * that line's drawn copy and have nothing to replace it with, so the whole
+ * restock waits for the table to resolve (#135 review).
+ */
+async function drawsFor(table, quantities) {
+  const draws = [];
+  for (const result of table.results ?? []) {
+    if (!isItemLine(result)) continue;
+    const doc = await fromUuid(result.documentUuid).catch(() => null);
+    if (!doc) {
+      console.warn(`${MODULE} | stock table "${table.name}": no document for "${result.name}"; restock skipped`);
+      return null;
+    }
+    const data = doc.toObject();
+    // A world item that already records where it came from keeps that source (#135 review).
+    data._stats = { ...data._stats, compendiumSource: data._stats?.compendiumSource ?? doc.uuid ?? result.documentUuid };
+    const formula = quantities?.[result.id ?? result._id] ?? "1";
+    draws.push({ name: doc.name, data, quantity: await rollStock(formula) });
+  }
+  return draws;
+}
+
+/**
+ * A shop's shelf key: what its restocks stamp as `drawn`, so a reroll knows its
+ * own goods from ones another shop drew (schedule.mjs `isDrawn`). A random id
+ * kept on the shop, not its actor id: a duplicated or re-imported shop carries
+ * its items' stamps and this key together, and still knows its own shelf
+ * (#135 review). Made once, when the shop is adopted.
+ */
+const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
+/**
+ * Whether user `id` is a player, for `isOwnershipChosen`: a level given to one, Owner included, is
+ * the GM's choice; a GM's own entry, or one left for a user deleted since, lets nobody in.
+ */
+const isPlayer = id => { const user = game.users.get(id); return !!user && !user.isGM; };
+
+/**
+ * Adopt a shop's shelf, once, before its first native restock: give it a shelf
+ * key, and stamp its current table goods with it (schedule.mjs `adoptDrawn`).
+ * A shop with a key is adopted
+ * already, so a good the GM adds by hand later, under a table line's name,
+ * stays theirs.
+ *
+ * @returns {Promise<string|null>} the shop's shelf key; null if it can't be
+ *   adopted yet (see `lineNames`)
+ */
+async function adoptOnce(actor, table) {
+  const known = shelfKeyOf(actor);
+  if (known) return known;
+  const names = await lineNames(table);
+  if (!names) {
+    if (!unresolvedWarned.has(actor.uuid)) {
+      unresolvedWarned.add(actor.uuid);
+      console.warn(`${MODULE} | "${actor.name}": not every line of its stock table resolves; not restocking it yet`);
+    }
+    return null;
+  }
+  const key = foundry.utils.randomID();
+  const updates = adoptDrawn(actor.items.map(i => i.toObject()), names, key);
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  await actor.update({ [`flags.${MODULE}.shelf`]: key });
+  return key;
+}
+
+/**
+ * Restock one shop from its own stock table (#105), off the trade queue's
+ * back: a restock and a trade on the same shelf never interleave (#134
+ * review). What's replaced is only what a restock drew (`planRestock`); goods
+ * the GM added by hand and the shopkeeper's gear stay, and each redrawn line
+ * keeps the stock config its shelf item had.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<string[]|null>} the lines it drew or topped up; null if
+ *   it couldn't restock at all (no shop config, or its table is gone)
+ */
+function restock(actor, options) {
+  return runTrade(async () => {
+    const restocked = await restockNow(actor, options);
+    // A scheduled shop restocked by hand counts its next due day from today, as a scheduled
+    // restock would, or the next opening would reroll the shelf just rolled (#135 review).
+    const state = actor.flags?.[MODULE]?.schedule;
+    const every = safeShopOf(actor)?.restock.every;
+    const days = restocked !== null && state ? await daysOf(every) : null;
+    if (days != null) {
+      await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(game.time.worldTime, days, game.time.calendar.days), every } });
+    }
+    return restocked;
+  });
+}
+
+/**
+ * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
+ * even when the clock caught up with it later, or now. A shop's first roll, from whichever caller,
+ * brings nothing back in stock (#152): one that's still fresh pack data (`needsWiring`) with no
+ * shelf key yet has never been drawn (#153). A shop that sold out entirely keeps its key, and one
+ * a 1.x world wired to its own table was drawn there (#158 review).
+ */
+async function restockNow(actor, { at = game.time.worldTime } = {}) {
+  const raw = actor.flags?.[MODULE]?.shop;
+  const shop = safeShopOf(actor);
+  if (!shop?.restock.table) return null;
+  const table = await fromUuid(shop.restock.table).catch(() => null);
+  if (!table) {
+    console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
+    return null;
+  }
+  const markNew = shelfKeyOf(actor) != null || !needsWiring(actor);
+  const shelf = await adoptOnce(actor, table);
+  if (!shelf) return null;
+
+  const items = actor.items.map(i => i.toObject());
+  const draws = await drawsFor(table, shop.restock.quantities);
+  if (!draws) return null;
+  const record = actor.flags?.[MODULE]?.itemFlags ?? {};
+  // What the shelf says of each line now, over what it said at earlier restocks: a line that
+  // left the shelf comes back with the GM's settings (schedule.mjs `lineMemory`).
+  const memory = lineMemory(actor.flags?.[MODULE]?.lines, items, shelf);
+  const remembered = new Map(memory.map(line => [line.name, line]));
+  const plan = planRestock(raw, items, draws, {
+    purse: actor.flags?.[MODULE]?.purse,
+    currentGp: actor.system?.currency?.gp,
+    stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), shelf),
+    containers: actor.flags?.[MODULE]?.containers ?? {},
+    drawnBy: shelf,
+    at,
+    markNew
+  });
+  // Noted before anything is deleted: a restock that fails part-way still has each line's settings.
+  await actor.update({ [`flags.${MODULE}.lines`]: memory });
+  // Updates first: they move goods out of a container before it's deleted (#153).
+  if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
+  if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
+  if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates);
+  // The till; when the shelf was last restocked, whatever did it, for Settings' Last restock; and
+  // when it last brought fresh stock, for the shop window's "Fresh stock today" (#145, #152): not a
+  // shop's first roll, nor one that brought back nothing players can see. One update, so open
+  // windows render the new shelf with its chip at once.
+  await actor.update({
+    ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {}),
+    [`flags.${MODULE}.lastRestockAt`]: at,
+    ...(markNew && plan.fresh ? { [`flags.${MODULE}.restockedAt`]: at } : {})
+  });
+  await syncStockWeight(actor);        // the shelf and the till have both just moved
+  return plan.restocked;
+}
+
+/**
+ * One shop's turn on the clock: seen for the first time, it's adopted and
+ * scheduled (no restock); due (`dueRestock`), it restocks and is scheduled
+ * again from that opening.
+ *
+ * @returns {Promise<string[]|null>} the lines restocked, or null if it wasn't due
+ */
+async function scheduleShop(actor, now, previous, calendar) {
+  const raw = actor.flags[MODULE].shop;
+  let state = actor.flags[MODULE].schedule;
+  if (!state) {
+    const shop = safeShopOf(actor);
+    const days = shop ? await daysOf(shop.restock.every) : null;
+    if (days == null || !shop.restock.table) return null;
+    // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
+    // would skip the adoption, and its first restock would add a second shelf.
+    const table = await fromUuid(shop.restock.table).catch(() => null);
+    if (!table) return null;
+    if (!await adoptOnce(actor, table)) return null;
+    await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
+    return null;
+  }
+  // The GM changed the interval since it was scheduled: count the new one from the last restock,
+  // rather than waiting out the old due date (#135 review).
+  const every = safeShopOf(actor)?.restock.every;
+  if (every !== undefined && state.every !== undefined && state.every !== every) {
+    const days = await daysOf(every);
+    if (days != null) {
+      state = { ...scheduleNext(state.lastRestock, days, calendar), every };
+      await actor.update({ [`flags.${MODULE}.schedule`]: state });
+    }
+  }
+  const due = dueRestock(raw, state, previous, now, calendar);
+  if (!due.due) return null;
+  const restocked = await restockNow(actor, { at: due.at });
+  // Couldn't run (its table or a line's document is missing): still due, so the next opening
+  // tries again, rather than the shop skipping a whole cycle.
+  if (restocked === null) return null;
+  const days = await daysOf(due.nextEvery);
+  await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(due.at, days ?? 1, calendar), every: due.nextEvery } });
+  return restocked;
+}
+
+/**
+ * Restock every shop whose due day's opening fell between `previous` and
+ * `worldTime` (#105), one at a time on the trade queue.
  *
  * @param {number} worldTime  The new world time.
  * @param {number} previous   The world time last processed.
- * @returns {Promise<number>} how many merchants were restocked
+ * @returns {Promise<number>} how many shops were restocked
  */
-async function restockOnTimeChange(worldTime, previous) {
-  const calendar = game.time.calendar;
-  const { secondsPerMinute, minutesPerHour, hoursPerDay } = calendar.days;
-  const secondsPerDay = secondsPerMinute * minutesPerHour * hoursPerDay;
-
-  const wasMinute = minuteOfDay(calendar.timeToComponents(previous));
-  const nowMinute = minuteOfDay(calendar.timeToComponents(worldTime));
-  if (wasMinute === nowMinute && worldTime - previous < secondsPerDay) return 0;
-
-  // A jump of a full day or more passes every opening time on the way.
-  const dayPassed = (worldTime - previous) >= secondsPerDay;
-
+async function scheduledRestocks(worldTime, previous) {
+  const calendar = game.time.calendar.days;
   const restocked = [];
   for (const actor of game.actors) {
-    const pileData = foundry.utils.getProperty(actor, "flags.item-piles.data");
-    if (pileData?.type !== "merchant" || !pileData.refreshItemsOnOpen) continue;
-    if (!pileData.openTimes?.enabled) continue;
-    if (!(foundry.utils.getProperty(actor, FLAG_PATH) ?? []).length) continue;
-    if (!dayPassed && (isOpenAt(pileData, wasMinute) || !isOpenAt(pileData, nowMinute))) continue;
-
+    if (!actor.flags?.[MODULE]?.shop || actor.pack) continue;
     try {
-      await restock(actor);
-      restocked.push(actor.name);
+      const lines = await runTrade(() => scheduleShop(actor, worldTime, previous, calendar));
+      if (lines?.length) restocked.push(actor.name);
     } catch (err) {
       console.error(`${MODULE} | could not restock "${actor.name}"`, err);
     }
   }
-
   if (restocked.length) {
     log(`restocked ${restocked.length}: ${restocked.join(", ")}`);
     ui.notifications.info(`Merchant Presets: ${restocked.length} shop(s) restocked for the new day.`);
@@ -574,81 +462,39 @@ async function restockOnTimeChange(worldTime, previous) {
 }
 
 /**
- * Open and close the shops on the world clock.
- *
- * Every merchant ships with trading hours, and Item Piles can act on them —
- * but only through Simple Calendar, which it requires by name. Worse, its
- * `updateOpenCloseStatus` rewrites `status: "auto"` back to `"open"` and saves
- * it when that module is absent, so the hours cannot even be left armed for
- * later. Simple Calendar is unmaintained and does not support v14, which this
- * module requires, so that path is closed for good rather than merely absent.
- *
- * Item Piles documents `open` and `closed` as first-class manual statuses,
- * though, so drive those from Foundry's own clock — the same trick this module
- * already plays for restocking, and using the same `isOpenAt` it reads the
- * hours with. No patching, and any calendar that advances world time works.
- *
- * @param {Actor} actor
- * @returns {Promise<boolean>} whether the status changed
+ * Wire restocking to the world clock. Only the active GM acts, and of their
+ * tabs only the one that claims trades (`registerTradeDesk`), so two GMs or
+ * two tabs restock once. It picks up from the last world time it processed
+ * (`lastRestockTime`, which only it writes), so a stretch of clock that passed
+ * while no tab held the claim (a handoff) is still gone through, not skipped
+ * (#135 review). The switch is read on every tick: the migration can turn it
+ * off mid-session when a 1.x merchant arrives.
  */
-async function syncOpenState(actor) {
-  const pileData = foundry.utils.getProperty(actor, "flags.item-piles.data");
-  if (!pileData?.openTimes?.enabled) return false;
-
-  let wanted = "open";
-  if (game.settings.get(MODULE, "tradingHours")) {
-    const now = minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime));
-    wanted = isOpenAt(pileData, now) ? "open" : "closed";
-  }
-  // Turning the setting off hands the shops back always-open, rather than
-  // leaving whichever ones happened to be shut stuck that way.
-  if (pileData.openTimes.status === wanted) return false;
-  await actor.update({ "flags.item-piles.data.openTimes.status": wanted });
-  return true;
-}
-
-/**
- * Put every merchant in the world on the right side of its own door.
- * @returns {Promise<number>} how many changed
- */
-async function syncOpenStateAll() {
-  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
-  let n = 0;
-  for (const actor of game.actors) {
-    if (!isPreset(actor)) continue;
-    try { if (await syncOpenState(actor)) n++; }
-    catch (err) { console.error(`${MODULE} | could not set open state on "${actor.name}"`, err); }
-  }
-  return n;
-}
-
-/** Wire trading hours to the world clock. Separate from restocking, which is off by default. */
-function registerTradingHours() {
-  if (!game.settings.get(MODULE, "tradingHours")) return;
-  Hooks.on("updateWorldTime", async () => {
-    if (game.users.activeGM !== game.user) return;
-    await syncOpenStateAll();
-  });
-  log(`trading hours active on the ${game.time.calendar.name ?? "world"} calendar`);
-}
-
-/** Wire restocking to the world clock. Only the designated GM acts. */
 function registerRestock() {
-  if (!game.settings.get(MODULE, "autoRestock")) return;
-  // 0 means "never run": start from now, or the first tick would see a jump of
-  // the whole world time and restock every shop at once.
-  let previous = game.settings.get(MODULE, "lastRestockTime") || game.time.worldTime;
+  // "Never run" (0) starts from now, or the first tick would see a jump of the
+  // whole world time and restock every shop at once.
+  const loadedAt = game.time.worldTime;
 
   Hooks.on("updateWorldTime", async worldTime => {
-    if (game.users.activeGM !== game.user) return;      // one GM does the work
-    if (worldTime === previous) return;
-    const from = previous;
-    previous = worldTime;
+    if (!game.settings.get(MODULE, "autoRestock")) return;
+    if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
+    // Not without a clock (#149): a restock happens by hand, with Restock now. The time passed is
+    // still marked gone through, so following the clock again doesn't replay it (#161 review).
+    if (!worldFollowsClock()) {
+      if (worldTime !== game.settings.get(MODULE, "lastRestockTime")) await game.settings.set(MODULE, "lastRestockTime", worldTime);
+      return;
+    }
+    const from = game.settings.get(MODULE, "lastRestockTime") || loadedAt;
+    if (worldTime === from) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
     // Rewinding the clock should not trigger a day's worth of restocks.
-    if (worldTime > from) await restockOnTimeChange(worldTime, from);
+    if (worldTime > from) await scheduledRestocks(worldTime, from);
   });
-  log(`automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`);
+  // The switch is read per tick, so it can change mid-session; this only says how the world loaded.
+  if (game.settings.get(MODULE, "autoRestock")) {
+    log(worldFollowsClock() ? `automatic restocking active on the ${game.time.calendar.name ?? "world"} calendar`
+      : "automatic restocking waits: shops don't follow the world clock");
+  }
 }
 
 /* ---------------------------------------------------------------- nutrition */
@@ -680,20 +526,8 @@ async function registerDrinks() {
   }
 }
 
-/**
- * Can we feed characters through the active Simple Nutrition?
- *
- * Meals and sheet consumption write straight into its daily tally, and the
- * unit of that tally changed in 1.0: before it, the same flag held pounds and
- * gallons. Writing fractions of a day into 0.5 would credit every creature
- * that is not Medium wrongly, and still pass the export checks below, so an
- * older version gets no meals rather than wrong ones. Drinks are unaffected —
- * WATER_IDENTIFIERS means the same in both.
- */
-function nutritionFeeds() {
-  const sn = game.modules.get(NUTRITION_MODULE);
-  return !!sn?.active && !foundry.utils.isNewerVersion(NUTRITION_MINIMUM, sn.version);
-}
+/** Can we feed characters through the active Simple Nutrition? (nutrition.mjs `mealsFeed`) */
+const nutritionFeeds = () => mealsFeed(game.modules.get(NUTRITION_MODULE), foundry.utils.isNewerVersion);
 
 /** Tell the GM once, at load, when a Simple Nutrition too old to feed is why meals do nothing. */
 function warnOutdatedNutrition() {
@@ -710,7 +544,7 @@ function warnOutdatedNutrition() {
 /**
  * Offer to eat a meal the moment it is bought.
  *
- * Meals are Item Piles services: paying for one hands nothing over, because
+ * Meals are services: paying for one hands nothing over, because
  * the eating happens at the inn's table. Simple Nutrition 5e can only feed a
  * character from an item in their inventory, so without this the meal would
  * be money for nothing. Instead, when a preset merchant sells a good carrying
@@ -720,20 +554,22 @@ function warnOutdatedNutrition() {
  * for its state helpers and condition ids). The flag is the whole contract, so
  * a meal copied onto a tavern of your own works the same way.
  *
- * Item Piles fires `item-piles-tradeItems` on every client; only the buying
- * user's client acts, so one purchase gets one prompt. Players own their own
- * characters, so the flag write and the condition toggle need no GM. That
- * client gets the buyer as an actor and the meal as plain data, not the UUID
- * and Item document the hook is documented with (scripts/trade.mjs, #48).
+ * Every client hears a trade (see `registerTradeListeners`); only the client
+ * that asked for it acts, so one purchase gets one prompt. Players own their
+ * own characters, so the flag write and the condition toggle need no GM. The
+ * meal arrives as plain data (scripts/trade.mjs, #48).
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{askedHere: boolean}} where
  */
-async function offerMeals(_seller, buyerRef, itemPrices, userId) {
-  if (userId !== game.user.id) return;
+async function offerMeals(trade, { askedHere }) {
+  if (!askedHere || trade.kind !== "buy") return;
   if (!nutritionFeeds()) return;
   if (!game.settings.get(MODULE, "mealsFeed")) return;
-  const buyer = await fromUuid(uuidOf(buyerRef));
+  const buyer = await fromUuid(trade.buyerUuid);
   if (buyer?.type !== "character") return;
 
-  for (const entry of boughtWith(itemPrices, "nutrition")) {
+  for (const entry of boughtWith(trade, "nutrition")) {
     await eatMeal(buyer, entry.item, entry.quantity)
       .catch(err => console.error(`${MODULE} | could not apply ${entry.item?.name}`, err));
   }
@@ -793,12 +629,6 @@ function creditMeal(actor, cfg, sn, nutrition, quantity) {
     if (result.clearMalnutrition) await actor.toggleStatusEffect(cfg.CONDITION_MALNUTRITION, { active: false });
     if (result.clearDehydration) await actor.toggleStatusEffect(cfg.CONDITION_DEHYDRATION, { active: false });
     return result;
-  });
-}
-
-function registerMeals() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    offerMeals(...args).catch(err => console.error(`${MODULE} |`, err));
   });
 }
 
@@ -870,28 +700,30 @@ const ANIMAL_FOLDER = "Purchased Animals";
  * folder, owned by whoever owns the buying character — and the loot item
  * becomes the bill of sale, linking to the creatures it stands for.
  *
- * Item Piles runs every trade through a GM, so one is always online; the
- * active GM's client does the creating, which players are not allowed to.
+ * Every trade runs through a GM, so one is always online; the client that
+ * carried the trade out does the creating, which players are not allowed to.
  * Nothing is placed on a scene: the GM drags the animal in from the sidebar.
  * Selling the deed back is money only — the animal stays for the GM to deal
  * with, since deleting actors unasked is not this module's business.
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{carriedOut: boolean}} where
  */
-async function deliverAnimals(sellerRef, buyerRef, itemPrices, _userId) {
-  if (game.users.activeGM !== game.user) return;
+async function deliverAnimals(trade, { carriedOut }) {
+  if (!carriedOut) return;
   if (!game.settings.get(MODULE, "animalsSpawn")) return;
-  const bought = boughtWith(itemPrices, "actor");
+  const bought = boughtWith(trade, "actor");
   if (!bought.length) return;
 
-  // Actors rather than UUIDs, despite the hook's documentation (#48).
-  const buyer = await fromUuid(uuidOf(buyerRef));
-  const seller = await fromUuid(uuidOf(sellerRef));
+  const buyer = await fromUuid(trade.buyerUuid);
+  const seller = await fromUuid(trade.shopUuid);
   if (!buyer) return;
 
   // Selling a deed to a merchant: the deed is the merchant's entry now.
-  if (game.itempiles?.API?.isItemPileMerchant?.(buyer)) {
+  if (trade.kind === "sell") {
     const names = bought.map(e => e.item.name).join(", ");
     await ChatMessage.create({
-      content: `<p><strong>${seller?.name ?? "Someone"}</strong> sold ${names} to ${buyer.name}. `
+      content: `<p><strong>${buyer.name}</strong> sold ${names} to ${seller?.name ?? "a merchant"}. `
         + `The animal is still in the <em>${ANIMAL_FOLDER}</em> folder for the GM to remove or keep.</p>`,
       whisper: game.users.filter(u => u.isGM).map(u => u.id)
     });
@@ -950,32 +782,31 @@ async function recordDeed(buyer, good, uuids) {
   });
 }
 
-function registerAnimals() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    deliverAnimals(...args).catch(err => console.error(`${MODULE} |`, err));
-  });
-}
-
 /* ------------------------------------------------------------- spellcasting */
 
 /**
  * Say in chat which spell a bought spellcasting service casts, and for whom
  * (#70). The message text, and why it carries no price, is scripts/casting.mjs.
  *
- * Posted by the client of the user who traded, like the meal prompt, so one
+ * Posted by the client that asked for the trade, like the meal prompt, so one
  * trade makes one message and no GM has to be at the table. A named service
  * links its spell, fetched here for the effects the GM may drag onto the
  * target; a spell that cannot be fetched is still announced, linked, without
  * them.
+ *
+ * @param {import("./trade.mjs").ShopTrade} trade
+ * @param {{askedHere: boolean, chatMode: number}} where  `chatMode` is the
+ *   0-3 scale casting.mjs `chatRecipients` takes, from *Trades in chat*
+ *   (`nativeChatMode`).
  */
-async function announceSpellcasting(sellerRef, buyerRef, itemPrices, userId) {
-  if (userId !== game.user.id) return;
+async function announceSpellcasting(trade, { askedHere, chatMode }) {
+  if (!askedHere) return;
   if (!game.settings.get(MODULE, "spellcastingToChat")) return;
-  const bought = castsIn(itemPrices);
+  const bought = castsIn(trade);
   if (!bought.length) return;
-  const seller = await fromUuid(uuidOf(sellerRef));
-  const buyer = await fromUuid(uuidOf(buyerRef));
-  if (!seller || !buyer || !game.itempiles?.API?.isItemPileMerchant?.(seller)) return;
+  const seller = await fromUuid(trade.shopUuid);
+  const buyer = await fromUuid(trade.buyerUuid);
+  if (!seller || !buyer) return;
 
   const casts = [];
   for (const { item, quantity } of bought) {
@@ -984,19 +815,537 @@ async function announceSpellcasting(sellerRef, buyerRef, itemPrices, userId) {
     casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
   }
 
-  let mode = 1;
-  try { mode = Number(game.settings.get("item-piles", "outputToChat")) || 0; } catch { /* Item Piles' setting is not registered */ }
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: seller }),
     content: castingMessage({ shop: seller.name, buyer: buyer.name, casts }),
-    whisper: chatRecipients(mode, game.users.filter(u => u.isGM).map(u => u.id), userId)
+    whisper: chatRecipients(chatMode, game.users.filter(u => u.isGM).map(u => u.id), trade.userId)
   });
 }
 
-function registerSpellcasting() {
-  Hooks.on("item-piles-tradeItems", (...args) => {
-    announceSpellcasting(...args).catch(err => console.error(`${MODULE} |`, err));
+/* ------------------------------------------------------------ trade listeners */
+
+/** The `tradeChat` setting as a chat mode (casting.mjs `chatRecipients`), for the messages beside the receipt: GM whisper is 3. */
+const nativeChatMode = () => (game.settings.get(MODULE, "tradeChat") === "gm" ? 3 : 1);
+
+/**
+ * Run the meal, animal and spellcasting listeners for one trade. `askedHere`:
+ * this is the client that asked for the trade (prompts and the casting message
+ * go there, once). `carriedOut`: this is the client that made the writes
+ * (documents are created there, once).
+ */
+function onTrade(trade, where) {
+  for (const listener of [offerMeals, deliverAnimals, announceSpellcasting]) {
+    listener(trade, where).catch(err => console.error(`${MODULE} |`, err));
+  }
+}
+
+/** Hear every shop trade on every client: `merchant-presets.trade`, fired by `carryOutTrade`. */
+function registerTradeListeners() {
+  Hooks.on(TRADE_HOOK, (trade, { carriedOut } = {}) => {
+    onTrade(trade, { askedHere: askedHere.delete(trade.tradeId), carriedOut: !!carriedOut, chatMode: nativeChatMode() });
   });
+}
+
+/* ---------------------------------------------------------------- trade desk */
+
+/**
+ * The GM-side trade (#102): the shop window asks, one GM tab carries it out.
+ *
+ * A player's `api.trade(request)` queries the active GM through
+ * `CONFIG.queries`. Foundry sends a query to every tab that GM has open and
+ * takes the first answer, so exactly one tab claims trades (the last one
+ * opened, through a flag on the GM's user) and the rest never answer. That tab
+ * runs trades one at a time, answers a repeated `tradeId` with its first
+ * outcome, plans each with `planTrade` against fresh snapshots of the shop and
+ * the character, and carries the plan out. Then it posts the receipt and fires
+ * `merchant-presets.trade` on every client (trade-desk.mjs `hookPayload`).
+ *
+ * Known limit: when the claiming tab closes or crashes and its unload write
+ * doesn't land, trades read as unconfirmed for up to about half a minute,
+ * until another GM tab notices the silence and takes the claim
+ * (`registerTradeDesk`). The window resends the same trade id, and a sealed
+ * trade is recorded on the shop in the trade's last write, so whichever tab
+ * answers the resend finds it there and nothing lands twice. The module
+ * socket can't say who sent a message, so a player's client could forge a
+ * trade hook or a claim heartbeat; neither moves goods or coin.
+ */
+
+const SOCKET = `module.${MODULE}`;
+const runTrade = serial();
+const tradeOutcomes = outcomes();
+/** Trade ids this client asked for: the meal prompt and casting message belong to it. */
+const askedHere = new Set();
+/** This tab's id, for the trade claim. Made on first use: `foundry.utils` isn't there at import. */
+let tabId = null;
+const thisTab = () => (tabId ??= foundry.utils.randomID());
+/** `planTrade`'s and the window's bundle resolver; empty until the dnd5e indexes load. */
+let bundleOf = bundleResolver(new Map());
+
+const tradeClaim = () => game.user.getFlag(MODULE, "tradeTab");
+const claimTrades = () => game.user.setFlag(MODULE, "tradeTab", thisTab());
+
+/**
+ * Index every dnd5e Item pack by `system.quantity`, so `bundleOf` can read a
+ * good's bundle off its compendium source without an async fetch: the SRD's
+ * Arrows are 20 for 1 gp with no bundle flag of ours anywhere.
+ */
+async function loadBundles() {
+  const quantities = new Map();
+  for (const pack of game.packs ?? []) {
+    if (pack.metadata?.packageName !== "dnd5e" || pack.documentName !== "Item") continue;
+    const index = await pack.getIndex({ fields: ["system.quantity"] });
+    for (const entry of index) if (entry.system?.quantity > 1) quantities.set(entry.uuid, entry.system.quantity);
+  }
+  bundleOf = bundleResolver(quantities);
+}
+
+/** An actor named by a request's uuid, or null: the request is untrusted, so anything else is nobody. */
+async function actorAt(uuid) {
+  if (typeof uuid !== "string") return null;
+  const doc = await fromUuid(uuid).catch(() => null);
+  return doc?.documentName === "Actor" ? doc : null;
+}
+
+/** Whether `shop` is open by its own hours on the world clock. Trading hours off, or shops not following the clock (#149): always. */
+function shopIsOpen(shop) {
+  if (!worldFollowsClock() || !game.settings.get(MODULE, "tradingHours")) return true;
+  const hours = safeShopOf(shop)?.hours ?? null;
+  return isOpen(hours, minuteOfDay(game.time.calendar.timeToComponents(game.time.worldTime)), game.time.calendar.days);
+}
+
+/**
+ * One actor's share of a plan: its items first, then its coin, with `also`
+ * (the shop's trade record) in that same last update.
+ */
+async function applyUpdate(actor, update, also = {}) {
+  if (update.itemUpdates.length) await actor.updateEmbeddedDocuments("Item", update.itemUpdates);
+  if (update.itemCreates.length) await actor.createEmbeddedDocuments("Item", update.itemCreates, { keepId: true });
+  if (update.itemDeletes.length) await actor.deleteEmbeddedDocuments("Item", update.itemDeletes);
+  const changes = { ...(update.currency ? { "system.currency": update.currency } : {}), ...also };
+  if (Object.keys(changes).length) await actor.update(changes);
+}
+
+/**
+ * Validate, plan and carry out one trade, on the claiming GM tab. Never
+ * throws: a write that fails reads as refused `error`, since the window must
+ * not be told a half-made trade sealed.
+ */
+async function carryOutTrade(request, user) {
+  const [shop, buyer] = await Promise.all([actorAt(request?.shopUuid), actorAt(request?.buyerUuid)]);
+  // May this user trade here: reach from the buyer's tokens on every scene, as the GM sees them
+  // now, not whatever the player's window thought (#166).
+  const mode = shopAccess();
+  const access = shop && buyer ? accessOf(shop, user, mode) : null;
+  const visit = !!access && canVisit({ ...access, reach: mode === "reach" && !canVisit({ ...access, reach: false })
+    && actorInReach(game.scenes, shop, buyer, CONST.GRID_TYPES?.GRIDLESS ?? 0) });
+  const refused = checkParties({ user, shop, buyer, visit });
+  if (refused) return { status: "refused", reason: refused };
+  // Carried out already, maybe by a tab that has since lost the claim: its first outcome.
+  const done = recordedOutcome(shop.flags?.[MODULE]?.trades, user.id, request.tradeId);
+  if (done) return done;
+
+  const planned = planTrade(request, {
+    shop: shop.toObject(),
+    buyer: buyer.toObject(),
+    // The same terms the window billed from (trade-desk.mjs `worldTerms`).
+    worldSettings: worldTerms(key => game.settings.get(MODULE, key)),
+    currencies: CONFIG.DND5E.currencies,
+    // The buyer's deal at this moment, read as the window read it (#111): a shop config that
+    // can't be read has none, and planTrade refuses it anyway.
+    deal: activeDeal(safeShopOf(shop) ?? { deals: [] }, buyer.uuid, game.time.worldTime),
+    now: { isOpen: shopIsOpen(shop) },
+    newId: () => foundry.utils.randomID(),
+    bundleOf
+  });
+  if (!planned.ok) return resultOf(planned);
+
+  const { plan } = planned;
+  const result = resultOf(planned);
+  // The record goes on the shop, in the very last write, so it's there only once the whole
+  // trade is: a tab that dies part-way leaves no record, and the resend plans again.
+  const record = { [`flags.${MODULE}.trades`]: withRecord(shop.flags?.[MODULE]?.trades,
+    { userId: user.id, tradeId: plan.tradeId, result }) };
+  const toShop = plan.updates.find(u => u.actorId === shop.id);
+  const toBuyer = plan.updates.find(u => u.actorId !== shop.id);
+  try {
+    await applyUpdate(buyer, toBuyer);
+    await applyUpdate(shop, toShop, record);
+  } catch (err) {
+    console.error(`${MODULE} | trade ${plan.tradeId} failed part-way; check ${shop.name} and ${buyer.name}`, err);
+    ui.notifications.error(`A trade between ${buyer.name} and ${shop.name} failed part-way. Check both inventories.`);
+    return { status: "refused", reason: "error" };
+  }
+
+  const trade = hookPayload(plan, { shopUuid: shop.uuid, buyerUuid: buyer.uuid, userId: user.id });
+  try {
+    game.socket.emit(SOCKET, { type: "trade", trade });
+    Hooks.callAll(TRADE_HOOK, trade, { carriedOut: true });
+    const whisper = recipients(game.settings.get(MODULE, "tradeChat"), game.users.filter(u => u.isGM).map(u => u.id));
+    if (whisper) {
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: shop }),
+        content: receiptHtml(plan.chatCard, CONFIG.DND5E.currencies, {
+          t: (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.${key}`, data),
+          when: receiptWhen(game.time.worldTime),
+          whispered: whisper.length > 0
+        }),
+        whisper
+      });
+    }
+  } catch (err) {
+    console.error(`${MODULE} | trade ${plan.tradeId} landed, but telling the table failed`, err);
+  }
+  return result;
+}
+
+/** A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs `receiptIcons`). */
+Hooks.on("renderChatMessageHTML", (_message, html) => {
+  const receipt = html?.querySelector?.(".message-content .mp-receipt");
+  if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
+});
+
+/** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. None without a clock (#149). */
+function receiptWhen(time) {
+  if (!worldFollowsClock()) return "";
+  try {
+    const calendar = game.time.calendar;
+    const c = calendar.timeToComponents(time);
+    const month = calendar.months?.values?.[c.month];
+    const date = month ? `${c.dayOfMonth + 1} ${game.i18n.localize(month.name)}` : calendar.format(time, "timestamp");
+    const part = game.i18n.localize(`MERCHANT_PRESETS.Shop.Day.${partOfDay(c.hour, calendar.days.hoursPerDay)}`);
+    return game.i18n.localize("MERCHANT_PRESETS.Shop.Receipt.When", { date, part });
+  } catch { return ""; }
+}
+
+/**
+ * The `CONFIG.queries` handler. A tab without the claim never answers, so the
+ * server takes the claiming tab's answer; answering "no" from here would beat
+ * it and refuse a trade that's about to go through.
+ */
+function handleTradeQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  if (typeof request?.tradeId !== "string" || !request.tradeId) return { status: "refused", reason: "invalid-request" };
+  return tradeOutcomes.once(user.id, request.tradeId, () => runTrade(() => carryOutTrade(request, user)));
+}
+
+/**
+ * The restock query's handler: a GM's "Restock now" (#110), carried out on the claiming tab's
+ * trade queue, where trades and the scheduled restocks run, so it can't interleave with either
+ * on the same shelf (#140 review). Like a trade, a tab without the claim never answers.
+ */
+async function handleRestockQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
+  // A restock that throws has stopped: answered as failed, logged here, never left to read as a
+  // query that timed out and may still run (#140 review).
+  const restocked = shop ? await restock(shop).catch(err => { console.error(`${MODULE} | restock of "${shop.name}" failed`, err); return null; }) : null;
+  return { restocked };
+}
+
+/**
+ * Restock `actor` now, as "Restock now" does: sent to the active GM's claiming tab (see
+ * `handleRestockQuery`). `restocked` when it ran, `failed` when it couldn't (the claiming tab's
+ * console says why), `no-answer` when no GM answered in time: it may be queued behind a
+ * scheduled sweep, and still run.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<{status: "restocked"|"failed"|"no-answer", restocked: string[]|null}>}
+ */
+async function requestRestock(actor) {
+  const gm = game.users.activeGM;
+  if (!gm) return { status: "no-answer", restocked: null };
+  try {
+    const restocked = (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+    return { status: restocked ? "restocked" : "failed", restocked };
+  } catch (err) {
+    console.warn(`${MODULE} | restock of "${actor.name}" unconfirmed:`, err.message);
+    return { status: "no-answer", restocked: null };
+  }
+}
+
+/**
+ * The setup query's handler: a GM's *Set up shop…*, carried out on the claiming tab's trade queue.
+ * Run from another tab, a scheduled restock on the claiming tab could land between the setup
+ * clearing the shelf key and the new stock arriving, adopt the half-built shelf, and double it at
+ * the next reroll (#136). Like a trade, a tab without the claim never answers.
+ */
+async function handleSetupQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
+  if (!shop || typeof request?.sourceUuid !== "string") return { lines: null };
+  const keepIds = Array.isArray(request.keepIds) ? request.keepIds.filter(id => typeof id === "string") : [];
+  // Answered as failed, logged here, as a restock that throws is (`handleRestockQuery`).
+  const lines = await setUpShop(shop, request.sourceUuid, keepIds)
+    .catch(err => { console.error(`${MODULE} | setting up "${shop.name}" as a shop failed`, err); return null; });
+  return { lines };
+}
+
+/**
+ * Set `actor` up as the merchant at `sourceUuid`, as *Set up shop…* does: sent to the active GM's
+ * claiming tab (see `handleSetupQuery`). `done` with the stock lines it holds, `failed` when it
+ * couldn't (the claiming tab's console says why), `no-answer` when no GM answered in time: it may
+ * be queued behind a scheduled sweep, and still run.
+ *
+ * @param {Actor} actor
+ * @param {string} sourceUuid  The chosen merchant in this module's compendium.
+ * @param {string[]} keepIds  Physical items to keep as the NPC's gear.
+ * @returns {Promise<{status: "done"|"failed"|"no-answer", lines: number|null}>}
+ */
+async function requestSetUp(actor, sourceUuid, keepIds = []) {
+  const gm = game.users.activeGM;
+  if (!gm) return { status: "no-answer", lines: null };
+  try {
+    const lines = (await gm.query(SETUP_QUERY, { shopUuid: actor.uuid, sourceUuid, keepIds: [...keepIds] },
+      { timeout: QUERY_TIMEOUT_MS }))?.lines ?? null;
+    return { status: lines === null ? "failed" : "done", lines };
+  } catch (err) {
+    console.warn(`${MODULE} | setting up "${actor.name}" as a shop unconfirmed:`, err.message);
+    return { status: "no-answer", lines: null };
+  }
+}
+
+/**
+ * Ask the GM to carry out a trade: `{tradeId, kind, shopUuid, buyerUuid,
+ * lines: [{itemId, quantity, expectedBundlePriceCp?}]}` (the contract on
+ * #102). Resolves `{status: "sealed"|"refused"|"no-gm"|"unconfirmed", ...}`,
+ * never rejects.
+ */
+async function trade(request) {
+  const gm = game.users.activeGM;
+  if (!gm) return clientOutcome(false);
+  // Core refuses to send a query without this permission (Player by default, but a GM can raise
+  // it). Caught as a failed query it would read as unconfirmed for ever, with no one told why.
+  if (!game.user.hasPermission("QUERY_USER")) {
+    ui.notifications.warn("Your role doesn't have permission to query users, which trading in a shop needs. "
+      + "Ask the GM to grant it in Configure Permissions.");
+    return { status: "refused", reason: "no-permission" };
+  }
+  if (typeof request?.tradeId === "string") askedHere.add(request.tradeId);
+  try {
+    return await gm.query(QUERY, request, { timeout: QUERY_TIMEOUT_MS });
+  } catch (err) {
+    console.warn(`${MODULE} | trade ${request?.tradeId} unconfirmed:`, err.message);
+    return clientOutcome(true);
+  }
+}
+
+/**
+ * Wire the trade desk on this client: the socket every client hears trades
+ * on, the bundle index, and on a GM's tab the trade claim. It's taken on load,
+ * given up on close, and kept alive by a heartbeat on the socket; another tab
+ * takes it once it's given up or its claimer goes quiet (`shouldReclaim`).
+ */
+function registerTradeDesk() {
+  // When this tab last heard the claiming tab, or noticed a new claim: the
+  // grace period a claimer gets before its silence counts.
+  let lastAliveAt = Date.now();
+  game.socket.on(SOCKET, message => {
+    if (message?.type === "trade") Hooks.callAll(TRADE_HOOK, message.trade, { carriedOut: false });
+    // Only the tab named in the claim counts: a stray or stale heartbeat mustn't hold it for a dead tab.
+    if (message?.type === "claim-alive" && message.userId === game.user.id && message.tabId === tradeClaim()) {
+      lastAliveAt = Date.now();
+    }
+  });
+  loadBundles().catch(err => console.error(`${MODULE} | could not index the dnd5e packs' bundles`, err));
+  if (!game.user.isGM) return;
+
+  const reclaim = () => claimTrades().catch(err => console.error(`${MODULE} | could not claim trades for this tab`, err));
+  reclaim();
+  globalThis.addEventListener?.("beforeunload", () => {
+    if (claimsTrades(tradeClaim(), thisTab())) game.user.unsetFlag(MODULE, "tradeTab");
+  });
+  Hooks.on("updateUser", user => {
+    if (user !== game.user) return;
+    lastAliveAt = Date.now();
+    if (tradeClaim() == null) reclaim();
+  });
+  const heartbeat = setInterval(() => {
+    const claim = tradeClaim();
+    if (claimsTrades(claim, thisTab())) {
+      game.socket.emit(SOCKET, { type: "claim-alive", userId: game.user.id, tabId: thisTab() });
+    } else if (shouldReclaim({ claim, tabId: thisTab(), lastAliveAt, now: Date.now() })) {
+      lastAliveAt = Date.now();
+      reclaim();
+    }
+  }, CLAIM_HEARTBEAT_MS);
+  heartbeat.unref?.();   // plain Node (the tests): never keep the process alive for it
+}
+
+/* ----------------------------------------------------------- 1.x migration */
+
+/**
+ * The shipped merchant's own `flags.merchant-presets.shop` (#99), for
+ * `restock.every` — the one field Item Piles never had. Resolved from
+ * `packShopCandidates`, in preference order, returning the first that
+ * actually names a shop (a #57 NPC's own compendium provenance points at
+ * the SRD stat block it was instantiated from, not a shop, so that
+ * candidate must be skipped rather than trusted outright — #100 review).
+ * `undefined` when nothing resolves (a #57 source since deleted, say), so
+ * the migration falls back to the schema default.
+ *
+ * @param {object} actorData  `actor.toObject()`.
+ * @returns {Promise<object|undefined>}
+ */
+async function resolvePackShop(actorData) {
+  for (const uuid of packShopCandidates(actorData)) {
+    const doc = await foundry.utils.fromUuid(uuid).catch(() => null);
+    const shop = doc?.flags?.["merchant-presets"]?.shop;
+    if (shop) return shop;
+  }
+  return undefined;
+}
+
+/**
+ * Bring one 1.x merchant into its 2.0 shop config (#100): the data half —
+ * `flags.merchant-presets.shop` and each item's `.stock` — and the cut-over
+ * half: Item Piles switched off everywhere it can still see the shop (#97) —
+ * the actor, its prototype token, and every unlinked token, and its delta, on
+ * every scene — plus the 2.0 sheet and the ownership default. Reads stored
+ * flags directly, so it works with Item Piles inactive or uninstalled. Once
+ * `flags.merchant-presets.shop` is current, a GM's own Item Piles retuning is
+ * never read again: our schema is the source of truth from there on.
+ *
+ * Does nothing while `migrationGateOpen` is closed (#100 review). The shop
+ * and item halves are independent writes: a shop config still invalid after
+ * repair (`planActorUpdate`'s `shopError`) is logged but doesn't stop the
+ * item half, which has nothing to do with it (#100 review).
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether anything was actually written
+ */
+async function migrateShop(actor) {
+  // Never a compendium copy (same rule as isPreset): it proves nothing about
+  // this world until it's imported, and createActor fires inside packs too.
+  if (!migrationGateOpen || actor.pack || !isMigratable(actor)) return false;
+  const data = actor.toObject();
+
+  // This shop's tokens, every scene's: an unlinked one keeps a delta of its
+  // own (items it traded, Item Piles settings re-tuned on it) that the base
+  // actor's migration never reaches (#124), so even a shop whose own config
+  // is current may still have a token to migrate.
+  const scenes = game.scenes.map(scene => ({ scene, docs: scene.tokens.filter(t => t.actorId === actor.id) }));
+  for (const s of scenes) s.tokens = s.docs.map(t => t.toObject());
+  const tokens = scenes.flatMap(s => s.tokens);
+  const unlinked = scenes.flatMap(s => s.docs).filter(t => !t.actorLink && t.actor);
+  if (!needsMigration(data, tokens)
+    && !unlinked.some(t => tokenNeedsMigration(t.toObject(), t.actor.toObject(), data))) return false;
+
+  const packShop = await resolvePackShop(data);
+  const { update, shopError, warnings } = planActorUpdate(data,
+    { packShop, hasTokenOnScene: tokens.length > 0, worldId: game.world?.id ?? null, isPlayer, access: shopAccess() });
+  if (shopError) console.error(`${MODULE} | ${shopError}`);
+  for (const w of warnings) console.warn(`${MODULE} | ${w}`);
+
+  // A 1.x merchant sitting in a world compendium or an Adventure only
+  // proves "this world is upgrading from 1.x" once it's actually migrated,
+  // which can be well after applyAutoRestockDefault's own first-load check
+  // already found nothing (#100 review). Written before the actor's own
+  // update below: if it fails, nothing is written for this actor at all —
+  // the world's only evidence of it stays exactly as unmigrated as it was,
+  // for a retry on the next load, rather than the actor's own write erasing
+  // it a moment before the setting that depended on it could land.
+  //
+  // A fresh 2.0 world importing old 1.x content lands here too, and there's
+  // no telling it from an upgrade (#120 review). Off is the safe guess: on
+  // would reroll a GM's curated stock, off only leaves shops unrestocked.
+  // So the GM is told, since they may want it back on.
+  if (shouldForceAutoRestockOff(update, hasStoredAutoRestock())) {
+    try { await game.settings.set(MODULE, "autoRestock", false); }
+    catch (err) {
+      migrationGateOpen = false;
+      console.error(`${MODULE} | could not force the autoRestock default off; migration deferred to next load`, err);
+      return false;
+    }
+    // Several merchants imported together each see no stored value before the
+    // first write returns; the setting lands the same, but tell the GM once.
+    if (!autoRestockNoticeShown) {
+      autoRestockNoticeShown = true;
+      ui.notifications.warn(`Merchant Presets: "${actor.name}" is a 1.x merchant, so automatic restocking `
+        + "has been turned off to keep 1.x behaviour. Turn it back on in the module settings if you want it.");
+    }
+  }
+
+  let changed = false;
+  if (update) { await actor.update(update); changed = true; }
+
+  const { updates: itemUpdates, errors: itemErrors } = planItemUpdates(data);
+  if (itemUpdates.length) { await actor.updateEmbeddedDocuments("Item", itemUpdates); changed = true; }
+  for (const { item, errors } of itemErrors) {
+    console.error(`${MODULE} | invalid migrated stock config for "${item}" on "${actor.name}": ${errors.join("; ")}`);
+  }
+
+  // Each unlinked token's own half, through its synthetic actor so it lands in the delta, and
+  // before Item Piles is switched off on it below: its own settings are read from there.
+  for (const token of unlinked) {
+    const plan = planTokenMigration(token.toObject(), token.actor.toObject(), actor.toObject());
+    for (const w of plan.warnings) console.warn(`${MODULE} | ${w}`);
+    for (const { item, errors } of plan.errors) {
+      console.error(`${MODULE} | invalid migrated stock config for "${item}" on a token of "${actor.name}": ${errors.join("; ")}`);
+    }
+    // Known limit (#137 review): Foundry builds the token's actor by deep-merging the delta over
+    // the base, so a key the token's config leaves out reads the base's. The one map where that
+    // shows is `restock.quantities`: a token whose Item Piles table config omitted lines the
+    // base lists keeps the base's formulas for them.
+    if (plan.shop) { await token.actor.update({ [`flags.${MODULE}.shop`]: plan.shop }); changed = true; }
+    if (plan.itemUpdates.length) { await token.actor.updateEmbeddedDocuments("Item", plan.itemUpdates); changed = true; }
+  }
+
+  for (const { scene, tokens: sceneTokens } of scenes) {
+    const tokenUpdates = planTokenUpdates(sceneTokens);
+    if (tokenUpdates.length) { await scene.updateEmbeddedDocuments("Token", tokenUpdates); changed = true; }
+  }
+
+  if (changed) log(`migrated "${actor.name}" to its 2.0 shop config`);
+  return changed;
+}
+
+/**
+ * Migrate every one of our shops still on a pre-2.0 config, or still Item
+ * Piles' own merchant. Runs on `ready` and on `createActor`, not only once
+ * per version, so a shop arriving later from a world compendium or an
+ * Adventure — or a re-upgrade after a rollback — is caught too (#97).
+ *
+ * @returns {Promise<number>} how many shops changed
+ */
+async function migrateAll() {
+  if (game.users.activeGM !== game.user) return 0;   // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    try { if (await migrateShop(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not migrate "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/** Whether the world's settings storage already holds a value for
+ *  `autoRestock` — a GM's own choice, on 1.x or 2.0, never overwritten by
+ *  either the first-load default decision or `migrateShop`'s own (#100
+ *  review). */
+function hasStoredAutoRestock() {
+  const key = `${MODULE}.autoRestock`;
+  return !!game.settings.storage.get("world").find(s => s.key === key);
+}
+
+/**
+ * Force `autoRestock` off on this world's first 2.0 load, if it's upgrading
+ * from 1.x and the GM never touched the setting (#105): the setting's
+ * default flips from off to on in 2.0, and leaving that unhandled would
+ * silently turn restocking on under every world that left it unset.
+ *
+ * Decided once, on the first load where `autoRestockDecided` is unset, then
+ * never re-evaluated: `worldHasLegacyShops` reads `game.actors` fresh every
+ * call, and a #57 setup done on 2.0 (its own marker carries no version
+ * until #119) would otherwise look like one more 1.x merchant on a later
+ * reload and wrongly flip a fresh 2.0 world's default off. Awaited by the
+ * caller, which closes `migrationGateOpen` if this throws: a migration that
+ * ran anyway would erase the very signal this reads, before a retry on the
+ * next load could capture it.
+ */
+async function applyAutoRestockDefault() {
+  if (game.settings.get(MODULE, "autoRestockDecided")) return;
+  const value = planAutoRestockDefault(hasStoredAutoRestock(), worldHasLegacyShops(game.actors));
+  if (value !== null) await game.settings.set(MODULE, "autoRestock", value);
+  await game.settings.set(MODULE, "autoRestockDecided", true);
 }
 
 /* -------------------------------------------------------- setting up a shop */
@@ -1007,24 +1356,42 @@ function registerSpellcasting() {
  * A GM's own shopkeeper — Sister Garaele in Phandelver, say — keeps its name,
  * portrait, stat block and token and becomes the chosen merchant: stock,
  * buying rules, prices, purse and trading hours. The decisions are
- * scripts/shop.mjs's `planShop`; this carries them out, then runs the same
- * import path a merchant dragged out of the compendium does. The source's
- * stock table is still the compendium's at that point, so it is wired and
- * stock is rolled once, for the settlement size on the marker.
+ * scripts/shop.mjs's `planShop`; this carries them out, migrates the result
+ * to the shop window, and rolls its first shelf from the chosen merchant's
+ * stock table.
  *
  * @param {Actor} actor
  * @param {string} sourceUuid  The chosen merchant in this module's compendium.
  * @param {Iterable<string>} keepIds  Physical items to keep as the NPC's gear.
  * @returns {Promise<number>} how many stock lines the shop holds
  */
-async function setUpShop(actor, sourceUuid, keepIds) {
+function setUpShop(actor, sourceUuid, keepIds) {
+  // On the trade queue: a clock tick between clearing the shelf key and the new stock arriving
+  // would adopt an empty shelf, and a trade would read a half-made shop (#135 review).
+  return runTrade(() => setUpShopNow(actor, sourceUuid, keepIds));
+}
+
+async function setUpShopNow(actor, sourceUuid, keepIds) {
   const source = await foundry.utils.fromUuid(sourceUuid);
   if (!source) throw new Error(`merchant ${sourceUuid} not found`);
-  const plan = planShop({ ...source.toObject(), uuid: source.uuid }, actor.toObject(), keepIds);
+  const sourceData = source.toObject();
+  // Every 2.0 pack merchant carries its own current flags.merchant-presets.shop
+  // (#99); copy it wholesale rather than writing a bare {source, tier}
+  // marker, which used to wipe the chosen merchant's terms, hours, restock
+  // and won't-buy outright (#119 fix 3). Deriving it from the source's own
+  // Item Piles data is a defensive fallback for a source that somehow still
+  // lacks one.
+  let sourceShop = sourceData.flags["merchant-presets"]?.shop;
+  if (!hasCurrentShop(sourceData)) {
+    const derived = derivedShop(sourceData);
+    if (!derived.ok) throw new Error(`merchant ${sourceUuid} has no valid shop config: ${derived.errors.join("; ")}`);
+    sourceShop = derived.shop;
+  }
+  const plan = planShop({ ...sourceData, uuid: source.uuid }, actor.toObject(), keepIds, sourceShop);
 
   // Hold the merchant while it is half built: the flag update below puts it on
-  // a compendium table, and the updateActor hook would otherwise wire it and
-  // roll a shelf the stock has not reached yet.
+  // a compendium table, and the updateActor hook would otherwise take it for
+  // a fresh arrival and roll a shelf the stock has not reached yet.
   rewiring.add(actor.id);
   try {
     // Out of their containers before the containers go, since dnd5e may take
@@ -1037,13 +1404,24 @@ async function setUpShop(actor, sourceUuid, keepIds) {
       [`flags.${MODULE}.itemFlags`]: plan.moduleFlags.itemFlags ? _replace(plan.moduleFlags.itemFlags) : null,
       [`flags.${MODULE}.containers`]: plan.moduleFlags.containers ? _replace(plan.moduleFlags.containers) : null,
       [`flags.${MODULE}.shop`]: _replace(plan.moduleFlags.shop),
+      // A new shelf from a new table: the next restock adopts it afresh (#135 review).
+      [`flags.${MODULE}.shelf`]: null,
+      [`flags.${MODULE}.schedule`]: null,
+      [`flags.${MODULE}.lines`]: null,
+      [`flags.${MODULE}.restockedAt`]: null,
+      [`flags.${MODULE}.lastRestockAt`]: null,
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
+    // Migrated to the shop window here (the plan copies the source's Item Piles data, still
+    // switched on), then the chosen merchant's table draws this shop's first shelf. Still held:
+    // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
+    // a second time (#138 review). Already on the trade queue, so the restock is called directly.
+    await migrateShop(actor);
+    await restockNow(actor);
   } finally {
     rewiring.delete(actor.id);
   }
-  await rewire(actor);
   return actor.items.filter(i => !isGear(i)).length;
 }
 
@@ -1095,8 +1473,10 @@ async function shopDialog(actor) {
     return;
   }
   const keepIds = Object.entries(result.keep ?? {}).filter(([, on]) => on).map(([id]) => id);
-  const lines = await setUpShop(actor, uuid, keepIds);
-  ui.notifications.info(`${actor.name} is now a ${shop.name} (${result.tier}): ${lines} stock lines.`);
+  const { status, lines } = await requestSetUp(actor, uuid, keepIds);
+  if (status === "done") ui.notifications.info(`${actor.name} is now a ${shop.name} (${result.tier}): ${lines} stock lines.`);
+  else if (status === "failed") ui.notifications.error(`${actor.name} couldn't be set up as a shop. The GM's console says why.`);
+  else ui.notifications.warn(`No GM answered setting up ${actor.name} as a shop yet. It may still finish; check before trying again.`);
 }
 
 /** The Actors sidebar entry. Registered at init, before the sidebar first renders. */
@@ -1111,7 +1491,7 @@ function registerShopSetup() {
     options.push({
       label: "Set up as shop…",
       icon: "fa-solid fa-store",
-      visible: li => game.user.isGM && !!game.modules.get("item-piles")?.active && actorOf(li)?.type === "npc",
+      visible: li => game.user.isGM && actorOf(li)?.type === "npc",
       onClick: (_event, li) => {
         const actor = actorOf(li);
         if (actor) shopDialog(actor).catch(err => {
@@ -1125,7 +1505,20 @@ function registerShopSetup() {
 
 /* ----------------------------------------------------------------- settings */
 
+/**
+ * A shop good's New mark goes as it sells out, or as anything but a restock refills it from 0: a
+ * trade, the GM on the NPC sheet, a drop (#152). One place for every way a quantity moves.
+ */
+Hooks.on("preUpdateItem", (item, changes) => {
+  const quantity = foundry.utils.getProperty(changes, "system.quantity");
+  const setsNewAt = foundry.utils.hasProperty(changes, `flags.${MODULE}.newAt`);
+  if (dropsNewMark(item, quantity, setsNewAt)) foundry.utils.setProperty(changes, `flags.${MODULE}.newAt`, null);
+});
+
 Hooks.once("init", () => {
+  (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
+  CONFIG.queries[RESTOCK_QUERY] = handleRestockQuery;
+  CONFIG.queries[SETUP_QUERY] = handleSetupQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1158,17 +1551,43 @@ Hooks.once("init", () => {
     default: "finite"
   });
 
+  // The world's default rates (#110), as percentages; a shop's own terms (its Settings tab) and
+  // category rules override them. Read through trade-desk.mjs `worldTerms`, by the window and the
+  // trade alike.
+  game.settings.register(MODULE, "sellsAt", {
+    name: "Shops sell at (%)",
+    hint: "What a shop charges, as a percentage of an item's price, when its own terms are set to "
+      + "World default (the shop window's Settings tab): 100 is list price, 120 a markup. Most "
+      + "shipped merchants import on World default; a few set their own rates, and so do shops "
+      + "imported or set up before 2.0. Open shop windows reprice at once.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 1, step: 1, initial: 100 }),
+    default: 100
+  });
+
+  game.settings.register(MODULE, "buysAt", {
+    name: "Shops buy at (%)",
+    hint: "What a shop pays for what players sell it, as a percentage of the item's value, when "
+      + "its own terms are set to World default: 50 is half. Most shipped merchants import on "
+      + "World default. A shop never pays more than it would charge.",
+    scope: "world",
+    config: true,
+    type: new foundry.data.fields.NumberField({ required: true, nullable: false, min: 0, step: 1, initial: 50 }),
+    default: 50
+  });
+
   game.settings.register(MODULE, "autoRestock", {
-    name: "Restock shops when they open",
-    hint: "Each merchant carries trading hours and can restock when its doors open for the day, "
-      + "using Foundry's own calendar rather than Simple Calendar. OFF BY DEFAULT: a restock "
-      + "rebuilds the shelf from the shop's stock table, which discards anything you added to that "
-      + "merchant by hand. Turn it on once your shops hold nothing you would miss. Takes effect on "
-      + "reload.",
+    name: "Shops restock on their schedule",
+    hint: "Each shop restocks when its doors open on its due day, every few days by its kind "
+      + "(an inn daily, a jeweler fortnightly), on Foundry's own calendar. A restock redraws only "
+      + "what the shop's stock table put there; anything you added by hand stays, and a line you "
+      + "hid or edited keeps your settings. Worlds upgrading from 1.x keep this off until you turn "
+      + "it on.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: false
+    default: true
   });
 
   // Last world time a restock pass ran for, so a reload cannot re-fire one.
@@ -1176,25 +1595,44 @@ Hooks.once("init", () => {
     scope: "world", config: false, type: Number, default: 0
   });
 
+  // Whether the autoRestock default (#105) has already been decided.
+  // Decided once, at this world's first 2.0 load, and never again: a 2.0
+  // #57 setup (#57's own marker carries no version until #119 rebuilds it)
+  // would otherwise read as one more 1.x merchant on a later reload, and
+  // flip a genuinely fresh 2.0 world's default off (#100 review).
+  game.settings.register(MODULE, "autoRestockDecided", {
+    scope: "world", config: false, type: Boolean, default: false
+  });
+
+  game.settings.register(MODULE, "followClock", {
+    name: "Shops follow the world clock",
+    hint: "Trading hours, scheduled restocks, fresh stock and the dates on a bill all run on the "
+      + "world clock. Auto follows it where anything keeps time: dnd5e's calendar is on, a calendar "
+      + "module runs it, or a whole day has passed on the clock (combat alone doesn't count). Where "
+      + "shops don't follow it, they're always open, restock only by hand, and put no date on a bill.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { auto: "Auto", always: "Always", never: "Never" },
+    default: FOLLOW_CLOCK_MODES[0]
+  });
+
   game.settings.register(MODULE, "tradingHours", {
     name: "Shops keep their trading hours",
     hint: "Every merchant ships with hours — a jeweler keeps 09:00-17:00, a dock opens at 05:00, "
-      + "a fence trades 20:00 to 04:00 — and closes to players outside them. Item Piles can do "
-      + "this itself, but only through Simple Calendar, which it requires by name and which is "
-      + "unmaintained and does not support v14; this module drives the same hours off Foundry's "
-      + "own world clock instead, so any calendar that advances time works. Turn it off and every "
-      + "shop stays open around the clock. Takes effect on reload.",
+      + "a fence trades 20:00 to 04:00 — and closes to players outside them, on Foundry's own "
+      + "world clock, so any calendar that advances time works. Turn it off and every shop stays "
+      + "open around the clock.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: true,
-    onChange: () => syncOpenStateAll()
+    default: true
   });
 
   game.settings.register(MODULE, "ignoreStockWeight", {
     name: "Shop stock is not carried",
-    hint: "A merchant's wares and till sit in its own inventory, because that is what Item Piles "
-      + "reads as the shop. dnd5e therefore has the shopkeeper carrying the whole shelf — a city "
+    hint: "A merchant's wares and till sit in its own inventory, so dnd5e has the shopkeeper "
+      + "carrying the whole shelf — a city "
       + "stable holds 14,775 lb against a capacity of 240 — which does nothing until you turn on "
       + "dnd5e's Encumbrance variant, and then leaves every shopkeeper permanently Exceeding "
       + "Carrying Capacity. Turn this on to cancel the weight of the stock and the purse, leaving "
@@ -1254,64 +1692,260 @@ Hooks.once("init", () => {
     default: true
   });
 
+  game.settings.register(MODULE, "tradeChat", {
+    name: "Trades in chat",
+    hint: "Each trade made in the shop window posts one receipt in chat: what changed hands and for how "
+      + "much. Public, whispered to the GMs, or off. Whispered also whispers the spellcasting "
+      + "announcement; to turn that off, use its own setting below.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { public: "Public (default)", gm: "Whispered to the GMs", off: "Off" },
+    default: "public"
+  });
+
   game.settings.register(MODULE, "spellcastingToChat", {
     name: "Bought spellcasting is announced in chat",
     hint: "Buying a spellcasting service moves gold and nothing else. With this on, the shop says in "
       + "chat which spell it casts and for whom, linking the spell and any effects to drag onto the "
       + "creature it was cast on; for a service sold by level it asks the buyer to name the spell. "
-      + "Nothing is applied automatically. The message follows Item Piles' own chat visibility.",
+      + "Nothing is applied automatically. Whispered to the GMs when trades are.",
     scope: "world",
     config: true,
     type: Boolean,
     default: true
   });
 
+  game.settings.register(MODULE, "shopAccess", {
+    name: "Shop access",
+    hint: "Within reach: a player opens a shop by double-clicking its token while a token of theirs "
+      + "stands within 5 ft of it, and shops stay out of players' Actors sidebar. From anywhere: "
+      + "placing a shop's token opens it to every player, from the sidebar too, for games played "
+      + "without a map. A player you give a level of their own on a shop opens it from anywhere either way.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { reach: "Within reach of a token (default)", anywhere: "From anywhere" },
+    default: "reach",
+    onChange: () => sweepAccess().catch(err => console.error(`${MODULE} |`, err))
+  });
+
   registerShopSetup();
 });
 
-Hooks.once("ready", () => {
-  game.modules.get(MODULE).api = { rewire, rewireAll, registerDrinks, restock, restockOnTimeChange, reapplyItemFlags,
-    reconcileContainers, replenishPurse, syncStockWeight, syncStockWeightAll,
-    syncOpenState, syncOpenStateAll, setUpShop };
+// After every module's `init`: the system has set its Token class, and no token is drawn yet, so
+// the wraps reach every token's double-click (core binds them when a token is drawn).
+Hooks.once("setup", () => {
+  registerCounter();
+  registerShelfCards();
+});
+
+/** The world's *Shop access* (#166): "reach" or "anywhere". */
+function shopAccess() {
+  try { return accessModeOf(game.settings.get(MODULE, "shopAccess")); } catch { return "reach"; }
+}
+
+/** Whether `actor` is one of this module's shops. */
+const isShopActor = actor => !!actor?.flags?.[MODULE]?.shop;
+
+/**
+ * Open a shop at its counter (#166): double-clicking a shop's token, a player opens it when a
+ * token of theirs stands within reach, and is told to step up otherwise. Core gates a double-click
+ * on `Token#_canView` (Limited on the actor) before `_onClickLeft2` ever runs, and in reach mode a
+ * shop is None to players, so both are wrapped, for shop tokens and players only: `_canView` gates
+ * nothing but the double-click (placeable-object.mjs `_createInteractionManager`), so hover, the
+ * HUD, control and configuring keep core's rules.
+ */
+function registerCounter() {
+  if (!libWrapper || !CONFIG.Token?.objectClass) return;
+  const TOKEN = "CONFIG.Token.objectClass.prototype";
+  const atCounter = (token, user) => !user?.isGM && shopAccess() === "reach" && isShopActor(token.actor);
+  libWrapper.register(MODULE, `${TOKEN}._canView`, function (wrapped, user, event) {
+    if (!atCounter(this, user)) return wrapped(user, event);
+    // Core's own guards, bar the permission (token.mjs `_canView`): not on another layer, while
+    // placing a region, dragging, or measuring (#167 review).
+    if (!this.layer?.active || canvas.regions?._placementContext || this.layer._draggedToken) return false;
+    if (canvas.controls?.ruler?.active || (CONFIG.Canvas?.rulerClass?.canMeasure && event?.type === "pointerdown")) return false;
+    return true;
+  }, "MIXED");
+  libWrapper.register(MODULE, `${TOKEN}._onClickLeft2`, function (wrapped, event) {
+    if (!atCounter(this, game.user)) return wrapped(event);
+    const shop = this.actor;
+    if (canOpenOn(canvas.scene, shop, game.user, "reach", CONST.GRID_TYPES?.GRIDLESS ?? 0)) return shop.sheet?.render({ force: true });
+    // A shop the GM switched off is no shop to step up to.
+    if (!accessOf(shop, game.user, "reach").switchedOff) ui.notifications.info(game.i18n.localize("MERCHANT_PRESETS.Shop.Reach.TooFar"));
+  }, "MIXED");
+}
+
+/**
+ * A shop's goods on dnd5e's item card (#170): "Not Equipped" and proficiency are worked out against
+ * the shop NPC, so a good a shop owns keeps only its attunement pill (shop-view.mjs
+ * `shelfCardProperties`). dnd5e mixes `equippableItemCardProperties` into each item type's data
+ * model, so it's wrapped per type, where it's there; a dnd5e without it keeps its own pills.
+ */
+function registerShelfCards() {
+  if (!libWrapper) return;
+  for (const [type, model] of Object.entries(CONFIG.Item?.dataModels ?? {})) {
+    if (!model?.prototype || !("equippableItemCardProperties" in model.prototype)) continue;
+    libWrapper.register(MODULE, `CONFIG.Item.dataModels.${type}.prototype.equippableItemCardProperties`, function (wrapped) {
+      const properties = wrapped();
+      return isShopActor(this.parent?.actor) ? shelfCardProperties(properties, this.parent) : properties;
+    }, "WRAPPER");
+  }
+}
+
+/**
+ * Bring every shop's default ownership into line with *Shop access* (#166, reach.mjs
+ * `accessOwnership`): when the GM switches it, and once a world loads. The active GM alone writes.
+ */
+async function sweepAccess() {
+  if (game.users.activeGM !== game.user) return;
+  const mode = shopAccess();
+  const worldId = game.world?.id ?? null;
+  for (const actor of game.actors.filter(isShopActor)) {
+    const hasTokenOnScene = game.scenes.some(scene => scene.tokens.some(t => t.actorId === actor.id));
+    const update = accessOwnership(actor.toObject(), { mode, hasTokenOnScene, worldId, isPlayer });
+    if (update) await actor.update(update).catch(err => console.error(`${MODULE} |`, err));
+  }
+}
+
+Hooks.once("ready", async () => {
+  game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
+    setUpShop: async (actor, sourceUuid, keepIds) => (await requestSetUp(actor, sourceUuid, keepIds)).lines, requestSetUp, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
-  // players too — and it does not depend on Item Piles.
+  // players too.
   registerDrinks();
-  // The buyer's own client answers the meal prompt, so this is for players too.
-  registerMeals();
+  // The buyer's own client answers the meal prompt and posts the spellcasting
+  // announcement, so trades are heard by players too.
+  registerTradeListeners();
   registerActivityMeals();
-  // So is the spellcasting announcement: whoever traded posts it.
-  registerSpellcasting();
+  registerTradeDesk();
 
   if (!game.user.isGM) return;
   warnOutdatedNutrition();
-  if (!game.modules.get("item-piles")?.active) {
-    ui.notifications.warn("Merchant Presets requires the Item Piles module, which is not active.");
-    return;
+
+  // The world's one-time autoRestock decision (#105), before any shop migrates. Awaited: a failed
+  // write here must close migrationGateOpen before anything below can migrate a shop (#100 review).
+  try { await applyAutoRestockDefault(); }
+  catch (err) {
+    migrationGateOpen = false;
+    console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
 
+  // A GM's arriving shop is taken in on one tab: the active GM's claiming tab, whichever GM brought
+  // it, where setups, trades and the scheduled restocks run on one queue. Anywhere else, two tabs,
+  // or an arrival and a restock, could each roll a shelf (#136, #157 review). Known limit: one that
+  // arrives while the claim names a tab that's gone (up to CLAIM_STALE_MS) is taken in by the
+  // load-time sweep below, at the next world load. Sweeping at the takeover instead can roll twice:
+  // two tabs taking the claim at once each briefly read it as theirs, and a claimer that lost it
+  // mid-setup is still building.
+  const takesIn = userId => game.users.get(userId)?.isGM && game.users.activeGM === game.user && claimsTrades(tradeClaim(), thisTab());
   Hooks.on("createActor", (actor, _options, userId) => {
-    if (userId !== game.user.id) return;
-    rewire(actor).catch(err => console.error(`${MODULE} |`, err));
-  });
-  // Dragging in a shop the world already holds offers Replace Actor, and that
-  // is the default: Foundry keeps the compendium id on import, then writes the
-  // compendium data over the existing actor as an update (#66). Only a
-  // merchant left on its compendium table is touched, so an ordinary edit
-  // never re-rolls a shop or overrides its open/closed status.
-  Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (userId !== game.user.id || !needsWiring(actor)) return;
-    rewire(actor).catch(err => console.error(`${MODULE} |`, err));
+    if (!takesIn(userId)) return;
+    arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
+  // The shops restock on their own schedule (#105).
   registerRestock();
-  registerTradingHours();
-  registerAnimals();
-  // Time moves while a world is closed, so put the shops on the right side of
-  // their doors now rather than at the next tick of the clock.
-  syncOpenStateAll().then(n => { if (n) log(`${n} shop(s) opened or closed for the hour`); });
-  wireReplacedAll().then(n => { if (n) log(`wired ${n} merchant(s) replaced from the compendium`); });
+  // A shop arriving is new to this world, whatever its flags say: one exported after it was made
+  // visitable, or after the GM switched Players can visit on (#110), comes back with its ownership
+  // cleared but its mark kept (#138 review, round 9; #140 review, round 6). Switched off, the
+  // choice stays: hidden is right whatever ownership came along, a duplicate's included (round 8).
+  Hooks.on("preCreateActor", actor => {
+    const flags = actor.flags?.[MODULE];
+    if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
+    if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
+  });
+  Hooks.on("createToken", token => {
+    if (game.users.activeGM !== game.user) return;   // one GM does the writing
+    makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+  });
+  // A scene arriving with tokens already on it (an Adventure or scene import) fires createScene
+  // alone, never createToken for them (#138 review).
+  Hooks.on("createScene", scene => {
+    if (game.users.activeGM !== game.user || scene.pack) return;
+    for (const token of scene.tokens ?? []) makeVisitable(token).catch(err => console.error(`${MODULE} |`, err));
+  });
+
+  // Dragging in a shop the world already holds offers Replace Actor, and that is the default:
+  // Foundry keeps the compendium id on import, then writes the compendium data over the existing
+  // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
+  // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
+  Hooks.on("updateActor", (actor, _changes, _options, userId) => {
+    if (!takesIn(userId) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    arrive(actor).catch(err => console.error(`${MODULE} |`, err));
+  });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
+  migrateAll()
+    .then(n => { if (n) log(`migrated ${n} shop(s) to their 2.0 config`); })
+    // Replaced from the pack while the world was closed (#66): fresh pack data, never rolled.
+    // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
+    .then(() => {
+      if (game.users.activeGM !== game.user) return;
+      return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+    })
+    // Every shop as *Shop access* has it now, not only when the GM switches it: the default is never
+    // stored, so a shop an earlier build opened on placing its token would otherwise stay open to
+    // every player in reach mode (#167 live check). It writes only what disagrees.
+    .then(() => sweepAccess())
+    .catch(err => console.error(`${MODULE} |`, err));
 
   log("ready");
 });
+/** Ids of the shops `arrive` is working on right now: a create and an update can come together. */
+const arriving = new Set();
+
+/**
+ * A shop arriving: created in this world (dragged in from the pack, a world compendium or an
+ * Adventure), or fresh pack data written over an existing actor by Replace Actor (#66). Migrated to
+ * its shop window, let go of stray kit ids (#89, which would hide goods from the window), and, when
+ * it's fresh pack data, given its own shelf by a first restock. Fresh pack data is still on its
+ * compendium stock table with no shelf key; a shop that has either been rolled here or wired to a
+ * world table by 1.x keeps the shelf it has.
+ *
+ * @param {Actor} actor
+ */
+async function arrive(actor) {
+  // A shop being set up (`setUpShopNow`) is half built until it finishes, and migrates and rolls
+  // its own shelf there (#138 review).
+  if (actor.pack || arriving.has(actor.id) || rewiring.has(actor.id)) return;
+  arriving.add(actor.id);
+  try {
+    await migrateShop(actor);
+    if (!isPreset(actor)) return;
+    await releaseStrays(actor);
+    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
+  } finally {
+    arriving.delete(actor.id);
+  }
+}
+
+/**
+ * From anywhere only (#166's *Shop access*): make a hidden shop visitable when the GM places its
+ * token (#104, decided on the issue): shops arrive hidden (ownership None) so an unplaced one stays
+ * out of players' Actors sidebar, and a placed one opens for players on a double-click, which core
+ * gates on Limited. A GM's own choice holds either way: any default ownership but None, or the
+ * "Players can visit" switch (#110, `flags.merchant-presets.visibility`) once it's been set. In
+ * reach mode a shop stays hidden: players open it at its counter (`registerCounter`).
+ *
+ * @param {TokenDocument} token
+ */
+async function makeVisitable(token) {
+  const LIMITED = 1;   // CONST.DOCUMENT_OWNERSHIP_LEVELS
+  if (shopAccess() !== "anywhere") return;
+  // A token in a compendium scene (an Adventure being built) is on no world scene, though its
+  // baseActor still resolves to the world actor by id (#138 review).
+  if (token.parent?.pack) return;
+  const actor = token.baseActor ?? token.actor;
+  // Any shop the migration takes, not only one it already has: a 1.x merchant dropped straight onto
+  // the canvas lands before its migration writes the 2.0 config (#138 review).
+  if (!actor || actor.pack || !isMigratable(actor)) return;
+  if (actor.flags?.[MODULE]?.visibility != null) return;
+  // Once per shop, in this world: a GM who sets it back to None afterwards has decided, and None
+  // set by hand looks exactly like the untouched default. A GM's own ownership, a player's own
+  // level included, holds (#138 review).
+  const worldId = game.world?.id ?? null;
+  if (isMadeVisitable(actor, worldId) || isOwnershipChosen(actor, isPlayer)) return;
+  await actor.update({ "ownership.default": LIMITED, [`flags.${MODULE}.madeVisitable`]: worldId });
+}

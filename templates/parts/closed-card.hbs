@@ -1,0 +1,21 @@
+{{!-- The Bill of Sale's stand-in when the shop is closed (design x9IX9): the shelf stays in view,
+      dimmed and with no add buttons, and the slip becomes this card. `this` is the sheet's
+      `closed` context. --}}
+<aside class="mp-basket" data-pen="Basket">
+  <div class="mp-closed-card" data-pen="Closed Card">
+    <span class="mp-moon" data-pen="Moon">{{mpIcon "moon-star" pen="Moon icon"}}</span>
+    <h2 class="mp-closed-title" data-pen="Closed title">{{localize "MERCHANT_PRESETS.Shop.Closed.Title"}}</h2>
+    <p class="mp-closed-when" data-pen="Closed when">{{localize "MERCHANT_PRESETS.Shop.Closed.OpensIn" time=opensAtLabel duration=duration}}</p>
+    <span class="mp-closed-rule" data-pen="Closed rule"></span>
+    <p class="mp-closed-body" data-pen="Closed body">{{localize "MERCHANT_PRESETS.Shop.Closed.Body"}}</p>
+    {{#if openLabel}}
+      <div class="mp-hours" data-pen="Hours table">
+        <div class="mp-hours-row" data-pen="Hours Open"><span data-pen="Open key">{{localize "MERCHANT_PRESETS.Shop.Closed.Open"}}</span><b data-pen="Open val">{{openLabel}}</b></div>
+        <div class="mp-hours-row" data-pen="Hours Close"><span data-pen="Close key">{{localize "MERCHANT_PRESETS.Shop.Closed.Close"}}</span><b data-pen="Close val">{{closeLabel}}</b></div>
+        {{#if nextRestock}}
+          <div class="mp-hours-row" data-pen="Hours Restocks"><span data-pen="Restocks key">{{localize "MERCHANT_PRESETS.Shop.Closed.NextRestock"}}</span><b data-pen="Restocks val">{{nextRestock}}</b></div>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</aside>

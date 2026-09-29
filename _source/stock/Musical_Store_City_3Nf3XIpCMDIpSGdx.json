@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/gazebo.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d11",
+  "formula": "1d16",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -185,6 +185,86 @@
       "range": [
         11,
         11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ugchouw4VRC5sCT3",
+      "_key": "!tables.results!3Nf3XIpCMDIpSGdx.ugchouw4VRC5sCT3",
+      "type": "document",
+      "name": "Pipes of Haunting",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfHaunti",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5MlUlEufgTbYbSUT",
+      "_key": "!tables.results!3Nf3XIpCMDIpSGdx.5MlUlEufgTbYbSUT",
+      "type": "document",
+      "name": "Pipes of the Sewers",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfTheSew",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r7tJg94WXdlyOuhQ",
+      "_key": "!tables.results!3Nf3XIpCMDIpSGdx.r7tJg94WXdlyOuhQ",
+      "type": "document",
+      "name": "Horn of Blasting",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHornOfBlastin",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r7Gv1gvqq0yxk3xM",
+      "_key": "!tables.results!3Nf3XIpCMDIpSGdx.r7Gv1gvqq0yxk3xM",
+      "type": "document",
+      "name": "Brass Horn of Valhalla",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBrassHornOfVa",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HL5J4djdFbWUgAzm",
+      "_key": "!tables.results!3Nf3XIpCMDIpSGdx.HL5J4djdFbWUgAzm",
+      "type": "document",
+      "name": "Silver Horn of Valhalla",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSilverHornOfV",
+      "weight": 1,
+      "range": [
+        16,
+        16
       ],
       "drawn": false,
       "description": "",

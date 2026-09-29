@@ -161,6 +161,17 @@ DND5E_ITEM_FILTERS = [
     {"path": "system.type.value", "filters": "natural"},
 ]
 
+def kind_of(item):
+    """A good's kind, as the runtime reads it (trade-plan.mjs `kindOf`): our own flag, else food
+    and drink for dnd5e's own food, which SRD rations and water are (#150). A shop that stocks
+    rations then never lists food and drink among what it won't buy."""
+    kind = (item.get("flags", {}).get("merchant-presets") or {}).get("kind")
+    if kind:
+        return kind
+    if item.get("type") == "consumable" and ((item.get("system") or {}).get("type") or {}).get("value") == "food":
+        return "food-drink"
+    return None
+
 def refuses(item_filters, item):
     """Whether a merchant with these filters refuses `item`, as Item Piles'
     isItemInvalid reads them."""
@@ -184,9 +195,80 @@ def refuses(item_filters, item):
 VALUABLE_TYPES = ("gem", "art", "trade")
 VALUABLES = "Valuables"
 
+def is_magic(item):
+    """A magic item, as the SRD marks one: a rarity, or the Magical property."""
+    sysd = item.get("system") or {}
+    return bool(sysd.get("rarity")) or "mgc" in (sysd.get("properties") or [])
+
+def gp_price(item):
+    price = (item.get("system") or {}).get("price") or {}
+    return (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
+
 def is_valuable(item):
     return (item.get("type") == "loot"
             and ((item.get("system") or {}).get("type") or {}).get("value") in VALUABLE_TYPES)
+
+# The module's own stock config (#98/#99), kept beside the Item Piles flags it
+# replaces. scripts/schema.mjs is the schema this must satisfy.
+SHOP_VERSION = 1
+# The world's default rates (#110, the "Shops sell at / buy at" settings): list price, half of
+# value. A preset at exactly these ships on World default (null), so those settings move it (#141);
+# one with its own rates keeps them.
+WORLD_SELLS_AT, WORLD_BUYS_AT = 1, 0.5
+
+def stock_flags(ip_item, bundle=1):
+    """flags.merchant-presets.stock for one item, derived from the same
+    `flags.item-piles.item` values Item Piles' own flags are built from, so the
+    two can never disagree. `ip_item` is that dict; `bundle` is the good's own
+    quantityForPrice, where one exists."""
+    service = bool(ip_item.get("isService"))
+    infinite = {"yes": True, "no": False, "default": None}[ip_item.get("infiniteQuantity", "default")]
+    return {
+        "infinite": infinite,
+        "keep": ip_item.get("keepOnMerchant", True),
+        "service": service,
+        # A night's lodging can't be sold back to the innkeeper; tie this to
+        # `service` rather than Item Piles' own cantBeSoldToMerchants, which
+        # _source/goods never sets — only the shop-embedded copy does.
+        "noBuyback": service,
+        "category": ip_item.get("customCategory") or "",
+        "bundle": bundle,
+        "hidden": False,
+        "notForSale": False
+    }
+
+def sync_goods_stock():
+    """Stamp `flags.merchant-presets.stock` onto every good in _source/goods
+    that carries `flags.item-piles.item`, so a hand-authored good (a meal, a
+    mount, a level service) gets the new config exactly like a generated one,
+    without being touched by build_spell_goods.py. Idempotent: only rewrites a
+    file whose derived stock actually changed."""
+    changed = 0
+    for f in sorted(glob.glob(os.path.join(MOD, "_source/goods/*.json"))):
+        doc = json.load(open(f))
+        ip_item = ((doc.get("flags") or {}).get("item-piles") or {}).get("item")
+        mp_flags = (doc.get("flags") or {}).get("merchant-presets") or {}
+        # No Item Piles flags to derive from: leave a good that never had a stock config alone,
+        # but re-derive one that has, from the defaults, so a customCategory (or any other
+        # setting) removed from the Item Piles flags doesn't live on in a stale stock (#119).
+        if not ip_item and "stock" not in mp_flags:
+            continue
+        stock = stock_flags(ip_item or {})
+        mp = doc.setdefault("flags", {}).setdefault("merchant-presets", {})
+        if mp.get("stock") == stock:
+            continue
+        mp["stock"] = stock
+        json.dump(doc, open(f, "w"), indent=2, ensure_ascii=False)
+        open(f, "a").write("\n")
+        changed += 1
+    return changed
+
+def restock_every(every, label):
+    """A shop's data/recipes.json `restock` interval, doubled for a Village
+    (#105): a number doubles, a dice formula gets a `*2` on the outside."""
+    if label != "Village":
+        return every
+    return every * 2 if isinstance(every, int) else f"({every})*2"
 
 # Containers are stocked as separate documents, one each, so their count is the
 # number of rows in the merchant list. Keep it small deliberately: the price
@@ -268,13 +350,19 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
                                     # the innkeeper; this greys out the button.
                                     "cantBeSoldToMerchants": service}}
     # Its heading in the shop window. The flags above replace the good's own, so
-    # a category the good carries (the named spellcasting heading) comes across.
+    # a category the good carries (the named spellcasting heading) comes across
+    # from its own stock flag (#99), which sync_goods_stock has already stamped
+    # onto every good in _source/goods.
     category = VALUABLES if is_valuable(it) else \
-        (((src.get("flags") or {}).get("item-piles") or {}).get("item") or {}).get("customCategory")
+        (((src.get("flags") or {}).get("merchant-presets") or {}).get("stock") or {}).get("category")
     if category:
         flags["item-piles"]["item"]["customCategory"] = category
     if bundle > 1 and not is_container:
         flags["item-piles"]["system"] = {"quantityForPrice": bundle}
+    # The #98 mirror of the flags just above, derived from them so the two can
+    # never disagree.
+    qty_for_price = flags["item-piles"].get("system", {}).get("quantityForPrice", 1)
+    flags.setdefault("merchant-presets", {})["stock"] = stock_flags(flags["item-piles"]["item"], qty_for_price)
     it["_id"] = iid
     it["_key"] = f"!actors.items!{actor_id}.{iid}"
 
@@ -386,6 +474,9 @@ def main():
     if not FEATS or not os.path.isdir(FEATS):
         sys.exit("point MP_FEATS_DIR (or argv[3]) at an unpacked dnd5e.monsterfeatures24 directory")
     assert_world_closed()
+    # Every good's own stock flag, before it is either embedded in a merchant
+    # (below) or read for its category (make_item, above).
+    stamped = sync_goods_stock()
     srd = load_srd(); goods = load_goods()
     actors = load_actors(); feats = load_feats()
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
@@ -400,6 +491,12 @@ def main():
     fold_a = {}; fold_t = fid("stockfolder")
     docs_a = []; docs_t = []
     unresolved = collections.defaultdict(set)
+    # About fifty SRD magic items carry no price: the "+1, +2, or +3" parents, the Deck of Many
+    # Things cards, and real ones such as the Immovable Rod. Stocked as they are they would land in
+    # the cheapest stock band and a city would roll dozens of them (#33). A price on the line is no
+    # cure: it reaches only this snapshot, and a shop rolls its shelf from the stock table, which
+    # draws the SRD item unpriced. tools/build_magic_goods.py writes a priced good instead.
+    unpriced = collections.defaultdict(set)
     counts = collections.Counter(); gear_counts = collections.Counter()
 
     for key, label, purse_mul, ti in TIERS:
@@ -429,6 +526,8 @@ def main():
                     src = srd.get(norm(line["n"])); own = False
                     if not src: unresolved[line["n"]].add(shop["name"]); continue
                     uuid = f"Compendium.{SRD_PACK}.Item.{src['_id']}"
+                if is_magic(src) and not gp_price(src):
+                    unpriced[line["n"]].add(shop["name"]); continue
 
                 it, is_container = make_item(src, line, aid, uuid, own, ti)
                 items.append(it); counts[label] += 1
@@ -438,7 +537,9 @@ def main():
                 # two items, exactly as on a character sheet. So stock them as
                 # separate documents rather than one with a count.
                 if is_container:
-                    n = roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
+                    # A Bag of Holding or a Folding Boat is one of its kind on
+                    # any shelf (#33).
+                    n = 1 if is_magic(src) else roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
                     containers[src["name"]] = n
                     for c in range(1, n):
                         dup, _ = make_item(src, line, aid, uuid, own, ti, copy=c)
@@ -467,8 +568,7 @@ def main():
             # Derived from what this shop actually stocks, so nothing it sells
             # can ever be filtered out of its own inventory.
             stocked_types = {i.get("type") for i in items}
-            stocked_kinds = {(i.get("flags", {}).get("merchant-presets") or {}).get("kind")
-                             for i in items}
+            stocked_kinds = {kind_of(i) for i in items}
             refuse_types = [t for t in PHYSICAL_TYPES if t not in stocked_types]
             refuse_kinds = [k for k in GOODS_KINDS if k not in stocked_kinds]
             item_filters = [dict(f) for f in DND5E_ITEM_FILTERS]
@@ -502,6 +602,9 @@ def main():
                     f["quantityForPrice"] = q
                 item_flags[i["name"]] = f
 
+            table_uuid = f"Compendium.merchant-presets.stock.RollTable.{tid}"
+            description = f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else "")
+
             docs_t.append({"_id": tid, "_key": f"!tables!{tid}", "name": name,
                            "img": shop["img"], "folder": fold_t,
                            "description": f"<p>{shop['desc']}</p><p><em>Stock list for a {label.lower()}.</em></p>",
@@ -523,6 +626,33 @@ def main():
                                 "ep": 0, "sp": 0, "cp": 0}
             sysd["details"]["biography"] = {"value": f"<p>{shop['desc']}</p>"}
 
+            # The #98/#99 config, beside the Item Piles flags below: not read
+            # by next's runtime yet (#102-#105), but derived from the same
+            # values so the two can never disagree.
+            at_world = shop["buy"] == WORLD_SELLS_AT and shop["sell"] == WORLD_BUYS_AT
+            shop_config = {
+                "version": SHOP_VERSION, "tier": label, "source": None, "description": description,
+                "terms": {"sellsAt": None if at_world else shop["buy"],
+                         "buysAt": None if at_world else shop["sell"],
+                         # Valuables state only their full value when bought; selling follows
+                         # the shop's own rate (null), World default included (#143 review).
+                         "categories": ([{"category": VALUABLES, "sellsAt": None, "buysAt": 1}]
+                                        if price_modifiers else [])},
+                "hours": {"open": {"hour": shop["hours"][0], "minute": 0},
+                         "close": {"hour": shop["hours"][1], "minute": 0}},
+                "restock": {"table": table_uuid, "quantities": per_result, "onOpen": True,
+                           "every": restock_every(shop["restock"], label), "mode": "reroll"},
+                # Shopkeeper gear is always in refuse_kinds (no stock line ever
+                # carries that kind), but the runtime already refuses it as
+                # fixed behaviour (isGear); leave it off the config so wontBuy
+                # only ever states what varies between shops.
+                # A shop that stocks no magic item won't buy one either (#184). "magic" is any magic
+                # item, whatever its kind, so it stays out of the Item Piles filters above, which
+                # can only match a flag's value.
+                "wontBuy": {"types": refuse_types, "kinds": [k for k in refuse_kinds if k != "gear"]
+                            + ([] if any(is_magic(i) for i in items) else ["magic"])}
+            }
+
             docs_a.append({
                 "_id": aid, "_key": f"!actors!{aid}", "name": name, "type": "npc",
                 "img": shop["img"], "folder": fold_a[key], "sort": 0,
@@ -541,10 +671,11 @@ def main():
                     "merchant-presets": {"purse": round(shop["purse"] * purse_mul),
                                          "profile": profile,
                                          "itemFlags": item_flags,
-                                         "containers": containers},
+                                         "containers": containers,
+                                         "shop": shop_config},
                     "item-piles": {"data": {
                     "enabled": True, "type": "merchant",
-                    "description": f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else ""),
+                    "description": description,
                     "merchantImage": shop["img"], "displayItemTypes": True, "canInspectItems": True,
                     # A finite purse: a village innkeeper cannot buy a suit of
                     # plate. Item Piles short-circuits the affordability check
@@ -553,7 +684,7 @@ def main():
                     "overrideItemFilters": item_filters,
                     "buyPriceModifier": shop["buy"], "sellPriceModifier": shop["sell"],
                     **({"itemTypePriceModifiers": price_modifiers} if price_modifiers else {}),
-                    "tablesForPopulate": [{"uuid": f"Compendium.merchant-presets.stock.RollTable.{tid}",
+                    "tablesForPopulate": [{"uuid": table_uuid,
                                            "addAll": True, "timesToRoll": "1", "customCategory": "",
                                            "items": per_result}],
                     # Trading hours, and a restock each morning when the doors
@@ -580,6 +711,7 @@ def main():
             json.dump(doc, open(p, "w"), indent=2, ensure_ascii=False); open(p, "a").write("\n")
     write(docs_a, actors_dir); write(docs_t, tables_dir)
 
+    print(f"goods stock flags: {stamped} stamped or updated")
     print(f"merchants: {len([d for d in docs_a if d['_key'].startswith('!actors!')])}"
           f"  stock lines: {sum(counts.values())}  tables: {len([d for d in docs_t if d['_key'].startswith('!tables!')])}")
     print("  by tier:", dict(counts))
@@ -587,6 +719,10 @@ def main():
     if unresolved:
         print(f"  not in SRD, left out ({len(unresolved)}):")
         for n, shops in sorted(unresolved.items()):
+            print(f"     {n}  —  {', '.join(sorted(shops))}")
+    if unpriced:
+        print(f"  magic with no price, left out ({len(unpriced)}):")
+        for n, shops in sorted(unpriced.items()):
             print(f"     {n}  —  {', '.join(sorted(shops))}")
 
 # tools/build_spell_goods.py imports fid and norm from here.

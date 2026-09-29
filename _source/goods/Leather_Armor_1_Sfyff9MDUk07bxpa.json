@@ -1,0 +1,88 @@
+{
+  "name": "Leather Armor +1",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgArmor12or3000 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4010,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 10,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 11,
+      "magicalBonus": 1,
+      "dex": null
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "light",
+      "baseItem": "leather"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": null,
+    "activities": {},
+    "identifier": "leather-armor"
+  },
+  "_id": "Sfyff9MDUk07bxpa",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-scale-leather.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgArmor12or3000",
+        "enchantment": "6JbAzK6YBkyx73iy",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmLeatherArm"
+      }
+    }
+  },
+  "_key": "!items!Sfyff9MDUk07bxpa",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

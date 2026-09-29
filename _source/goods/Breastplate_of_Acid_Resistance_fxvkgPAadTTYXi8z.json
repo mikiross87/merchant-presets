@@ -1,0 +1,137 @@
+{
+  "name": "Breastplate of Acid Resistance",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgArmorOfResist caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4400,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 20,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "required",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 14,
+      "magicalBonus": null,
+      "dex": 2
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "medium",
+      "baseItem": "breastplate"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": null,
+    "activities": {},
+    "identifier": "breastplate"
+  },
+  "_id": "fxvkgPAadTTYXi8z",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+  "effects": [
+    {
+      "name": "Acid Resistance",
+      "img": "systems/dnd5e/icons/svg/damage/acid.svg",
+      "_id": "h1xgFNPFipF7zdWv",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.traits.dr.value",
+            "value": "acid",
+            "priority": null,
+            "type": "add",
+            "phase": "initial",
+            "_id": "4PGRppwN8L1q8pwP"
+          }
+        ],
+        "magical": true
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.364",
+        "systemId": "dnd5e",
+        "systemVersion": "6.0.0",
+        "createdTime": 1729893460230,
+        "modifiedTime": 1783544093593,
+        "lastModifiedBy": "dnd5ebuilder0000",
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!fxvkgPAadTTYXi8z.h1xgFNPFipF7zdWv"
+    }
+  ],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgArmorOfResist",
+        "enchantment": "YreDFSu9z9mGCWt1",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmBreastplat"
+      }
+    }
+  },
+  "_key": "!items!fxvkgPAadTTYXi8z",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

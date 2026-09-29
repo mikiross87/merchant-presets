@@ -1,0 +1,89 @@
+{
+  "name": "Elven Chain Shirt",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgElvenChain000 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4050,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 20,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 13,
+      "magicalBonus": 1,
+      "dex": 2
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "medium",
+      "baseItem": "chainshirt"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": null,
+    "proficient": 1,
+    "activities": {},
+    "identifier": "chain-shirt"
+  },
+  "_id": "5iec2goJzVsCP2fg",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgElvenChain000",
+        "enchantment": "nrk34InFS4POIYtq",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmChainShirt"
+      }
+    }
+  },
+  "_key": "!items!5iec2goJzVsCP2fg",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

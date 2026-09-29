@@ -1,0 +1,89 @@
+{
+  "name": "Chain Mail +1",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgArmor12or3000 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4075,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 55,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 16,
+      "magicalBonus": 1,
+      "dex": 0
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "heavy",
+      "baseItem": "chainmail"
+    },
+    "properties": [
+      "stealthDisadvantage",
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": 13,
+    "activities": {},
+    "identifier": "chain-mail"
+  },
+  "_id": "6auX1WDAbs4Qd9mF",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-metal-scaled-grey.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgArmor12or3000",
+        "enchantment": "6JbAzK6YBkyx73iy",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmChainMail0"
+      }
+    }
+  },
+  "_key": "!items!6auX1WDAbs4Qd9mF",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

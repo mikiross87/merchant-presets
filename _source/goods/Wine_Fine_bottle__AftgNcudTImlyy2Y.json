@@ -120,7 +120,17 @@
       }
     },
     "merchant-presets": {
-      "kind": "food-drink"
+      "kind": "food-drink",
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": false,
+        "noBuyback": false,
+        "category": "",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
+      }
     }
   }
 }

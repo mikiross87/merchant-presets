@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-city.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d19",
+  "formula": "1d23",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -313,6 +313,70 @@
       "range": [
         19,
         19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xaXGSLeoWIXlNDI0",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.xaXGSLeoWIXlNDI0",
+      "type": "document",
+      "name": "Stone of Good Luck (Luckstone)",
+      "img": "icons/commodities/gems/gem-rough-rectangle-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStoneOfGoodLu",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iXs8iFLRM0WEAu38",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.iXs8iFLRM0WEAu38",
+      "type": "document",
+      "name": "Gem of Brightness",
+      "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGemOfBrightne",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vRzRILHh47vVW0K7",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.vRzRILHh47vVW0K7",
+      "type": "document",
+      "name": "Brooch of Shielding",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBroochOfShiel",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rAIy7HApOQIwb3eC",
+      "_key": "!tables.results!85n7AWcO2ZbDou0s.rAIy7HApOQIwb3eC",
+      "type": "document",
+      "name": "Silver Raven",
+      "img": "icons/commodities/materials/feather-blue-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg",
+      "weight": 1,
+      "range": [
+        23,
+        23
       ],
       "drawn": false,
       "description": "",

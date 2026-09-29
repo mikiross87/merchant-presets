@@ -1,15 +1,9 @@
 # Force every issue through one of the forms, so nothing arrives unlabelled
-# and bug reports always carry the Foundry, dnd5e and Item Piles versions
-# needed to reproduce them.
+# and bug reports always carry the Foundry and dnd5e versions needed to
+# reproduce them.
 blank_issues_enabled: false
 
 contact_links:
-  - name: Item Piles support
-    url: https://github.com/fantasycalendar/FoundryVTT-ItemPiles/issues
-    about: >-
-      Merchant windows, currency handling, buying and selling are Item Piles
-      features. If the problem is with how a merchant sheet behaves rather
-      than with this module's shops or stock, report it there.
   - name: Foundry VTT help and general questions
     url: https://foundryvtt.com/community/
     about: >-

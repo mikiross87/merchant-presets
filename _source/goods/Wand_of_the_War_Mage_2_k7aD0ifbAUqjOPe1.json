@@ -1,0 +1,172 @@
+{
+  "_id": "k7aD0ifbAUqjOPe1",
+  "name": "Wand of the War Mage, +2",
+  "type": "equipment",
+  "img": "icons/weapons/wands/wand-gem-blue.webp",
+  "system": {
+    "activities": {},
+    "uses": {
+      "spent": 0,
+      "recovery": [],
+      "max": ""
+    },
+    "description": {
+      "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.phbafcWand000000]{Wand}, Uncommon (+1), Rare (+2), or Very Rare (+3) (Requires Attunement by a Spellcaster)</em></p><p>While holding this wand, you gain a bonus to spell attack rolls determined by the wand's rarity. In addition, you ignore &amp;Reference[HalfCover] when making a spell attack roll.</p><p>@Embed[Compendium.dnd5e.content24.JournalEntry.dmgFoundryRefere.JournalEntryPage.Ok4iCgD25ENgoRxE cite=false caption=false classes=\"hide-in-embed\"]</p><p>@Embed[Compendium.dnd5e.equipment24.Item.dmg1WandOfTheWar caption=false]</p>",
+      "chat": ""
+    },
+    "identifier": "1-wand-of-the-war-mage",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "price": {
+      "value": 4000,
+      "denomination": "gp"
+    },
+    "rarity": "rare",
+    "attunement": "required",
+    "attuned": false,
+    "armor": {
+      "value": null,
+      "magicalBonus": 1
+    },
+    "cover": null,
+    "crewed": false,
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "wand",
+      "baseItem": ""
+    },
+    "ammunition": {},
+    "damage": {
+      "base": {
+        "number": null,
+        "denomination": null,
+        "types": [],
+        "custom": {
+          "enabled": false
+        },
+        "scaling": {
+          "number": 1
+        }
+      },
+      "versatile": {
+        "number": null,
+        "denomination": null,
+        "types": [],
+        "custom": {
+          "enabled": false
+        },
+        "scaling": {
+          "number": 1
+        }
+      }
+    },
+    "magicalBonus": 2,
+    "properties": [
+      "foc",
+      "mgc"
+    ],
+    "range": {
+      "value": null,
+      "long": null,
+      "reach": null
+    }
+  },
+  "effects": [
+    {
+      "name": "War Mage +2",
+      "img": "icons/weapons/wands/wand-gem-blue.webp",
+      "_id": "D7tcmhwR65ui33rg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.bonuses.msak.attack",
+            "value": 2,
+            "priority": null,
+            "type": "add",
+            "phase": "initial",
+            "_id": "N5NvKOTP7Cw4ejJc"
+          },
+          {
+            "key": "system.bonuses.rsak.attack",
+            "value": 2,
+            "priority": null,
+            "type": "add",
+            "phase": "initial",
+            "_id": "5BEYpln30DtMt1D9"
+          }
+        ],
+        "magical": true
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "statuses": []
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmg1WandOfTheWar.ActiveEffect.7Pcy0FgaAr30JUBV",
+        "duplicateSource": null,
+        "coreVersion": "14.364",
+        "systemId": "dnd5e",
+        "systemVersion": "6.0.0",
+        "createdTime": 1731109827169,
+        "modifiedTime": 1783544093104,
+        "lastModifiedBy": "dnd5ebuilder0000",
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!k7aD0ifbAUqjOPe1.D7tcmhwR65ui33rg"
+    }
+  ],
+  "flags": {
+    "dnd5e": {},
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmg1WandOfTheWar",
+        "enchantment": "jqNFw2MJ4B1HG257",
+        "base": "Compendium.dnd5e.equipment24.Item.dmg1WandOfTheWar"
+      }
+    }
+  },
+  "_key": "!items!k7aD0ifbAUqjOPe1",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

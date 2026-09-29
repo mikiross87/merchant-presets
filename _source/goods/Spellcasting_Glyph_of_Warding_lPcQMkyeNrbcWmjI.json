@@ -49,7 +49,17 @@
     },
     "merchant-presets": {
       "kind": "spellcasting",
-      "spell": "Compendium.dnd5e.spells24.Item.phbsplGlyphofWar"
+      "spell": "Compendium.dnd5e.spells24.Item.phbsplGlyphofWar",
+      "stock": {
+        "infinite": null,
+        "keep": true,
+        "service": true,
+        "noBuyback": true,
+        "category": "Spells, Components Included",
+        "bundle": 1,
+        "hidden": false,
+        "notForSale": false
+      }
     }
   }
 }

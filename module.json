@@ -1,8 +1,8 @@
 {
   "id": "merchant-presets",
   "title": "Merchant Presets — Shops for 5e",
-  "description": "<p>Ready-made shops as Item Piles merchants — each store in village, town and city sizes, pre-stocked and priced. Drag one out of the compendium, drop a token, and your players can shop.</p><p>Shops behave like shops: stock is rolled rather than flat, coin purses are finite and scaled to the trade, merchants only buy what they deal in, and every shop opens, closes and restocks on Foundry's own world clock. Services the rules print as table rows rather than items — meals, lodging, stabling, passage, spellcasting — ship as sellable goods.</p><p>Built entirely from <strong>SRD 5.2</strong> (CC-BY-4.0), so it works in any dnd5e world and redistributes no paid content. Inspired by The Inspired Arcana's free homebrew shop guide.</p>",
-  "version": "1.2.4",
+  "description": "<p><strong>Ready-made shops for dnd5e.</strong> Drag a shop out of the compendium, drop its token, and your players can shop. No other modules required.</p><ul><li><strong>A window of its own</strong>: stock by category, a running bill of sale with the buyer's purse, and a Sell tab that shows what the shop pays for each item and what it won't touch.</li><li><strong>Shops that behave like shops</strong>: rolled stock that sells out and restocks on its own schedule, a till that can run dry, trading hours on the world clock, and merchants who only buy what they deal in.</li><li><strong>Village, town and city</strong>: every shop in three sizes, stocked and priced to match, with magic items up to rare in the cities.</li><li><strong>Services as goods</strong>: meals, lodging, stabling, passage and spellcasting, sold like any item; a bought spell is announced in chat and a bought mount arrives as an actor.</li><li><strong>The GM in charge</strong>: a Settings tab for rates, category rules, per-character deals, hours, restocks and the till, and <em>Set up as shop…</em> to turn any NPC into one.</li><li><strong>Trades that hold</strong>: carried out on the GM's side, so two players can't both buy the last one, with a receipt in chat.</li></ul><p>Built entirely from <strong>SRD 5.2</strong> (CC-BY-4.0), so it works in any dnd5e world and redistributes no paid content. Inspired by The Inspired Arcana's free homebrew shop guide.</p>",
+  "version": "2.0.0",
   "compatibility": {
     "minimum": "14",
     "verified": "14"
@@ -30,24 +30,11 @@
         }
       }
     ],
-    "requires": [
+    "recommends": [
       {
-        "id": "item-piles",
+        "id": "lib-wrapper",
         "type": "module",
-        "compatibility": {
-          "minimum": "3.2.7",
-          "verified": "3.3.4"
-        },
-        "reason": "The merchants are Item Piles merchants; without it they are inert NPCs."
-      },
-      {
-        "id": "itempilesdnd5e",
-        "type": "module",
-        "compatibility": {
-          "minimum": "1.1.0",
-          "verified": "1.1.0"
-        },
-        "reason": "Teaches Item Piles how dnd5e stores currency, prices and quantities."
+        "reason": "Opening a shop at its counter wraps two of core's token methods; libWrapper keeps that clear of other modules' own wraps. Without it the module patches them itself."
       }
     ]
   },
@@ -93,7 +80,51 @@
   "esmodules": [
     "scripts/merchant-presets.mjs"
   ],
+  "socket": true,
+  "styles": [
+    "styles/fonts.css",
+    "styles/shop.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
   "flags": {
     "hotReload": false
-  }
+  },
+  "media": [
+    {
+      "type": "cover",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/cover.webp",
+      "caption": "A shop window open at the counter, on Foundry's own scene"
+    },
+    {
+      "type": "screenshot",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/buy.webp",
+      "caption": "Buying: stock by category and a running bill of sale"
+    },
+    {
+      "type": "screenshot",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/sell.webp",
+      "caption": "Selling: what the shop pays for each item, and what it won't buy"
+    },
+    {
+      "type": "screenshot",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/settings.webp",
+      "caption": "The GM's Settings tab: terms, deals, what it won't buy, hours, restock and the till"
+    },
+    {
+      "type": "screenshot",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/receipt.webp",
+      "caption": "Each trade posts a receipt in chat"
+    },
+    {
+      "type": "screenshot",
+      "url": "https://raw.githubusercontent.com/mikiross87/merchant-presets/main/docs/media/buy-light.webp",
+      "caption": "The shop window in the light theme"
+    }
+  ]
 }

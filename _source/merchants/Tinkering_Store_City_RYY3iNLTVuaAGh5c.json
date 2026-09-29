@@ -724,6 +724,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1006,6 +1018,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1093,6 +1117,18 @@
           },
           "system": {
             "quantityForPrice": 10
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 10,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1353,6 +1389,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1415,6 +1463,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1499,6 +1559,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1662,6 +1734,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1823,6 +1907,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1986,6 +2082,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2039,6 +2147,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2094,6 +2214,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2147,6 +2279,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2394,6 +2538,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2448,6 +2604,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2501,6 +2669,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2786,6 +2966,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2934,6 +3126,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2988,6 +3192,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3041,6 +3257,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3189,6 +3417,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3252,6 +3492,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3314,6 +3566,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3457,6 +3721,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3598,6 +3874,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3741,6 +4029,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3882,6 +4182,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -4025,6 +4337,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4167,6 +4491,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4308,6 +4644,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -4513,6 +4861,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -4722,6 +5082,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4929,6 +5301,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4936,6 +5320,1768 @@
       },
       "_id": "SVSuiXCmysZocJUC",
       "_key": "!actors.items!RYY3iNLTVuaAGh5c.SVSuiXCmysZocJUC"
+    },
+    {
+      "name": "Immovable Rod",
+      "type": "equipment",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "system": {
+        "activities": {
+          "a9ZLyGvSKD1k33nC": {
+            "type": "utility",
+            "name": "Make Immovable",
+            "_id": "a9ZLyGvSKD1k33nC",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            },
+            "appliedEffects": []
+          },
+          "PweONVtDaHGqDRnZ": {
+            "type": "check",
+            "name": "Attempt to Move",
+            "_id": "PweONVtDaHGqDRnZ",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "check": {
+              "associated": [
+                "ath"
+              ],
+              "dc": {
+                "calculation": "",
+                "formula": "30"
+              },
+              "ability": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Rod, Uncommon</em></p><p>This iron rod has a button on one end. You can take a Utilize action to press the button, which causes the rod to become magically fixed in place. Until you or another creature takes a Utilize action to push the button again, the rod doesn't move, even if it defies gravity. The rod can hold up to 8,000 pounds of weight. More weight causes the rod to deactivate and fall. A creature can take a Utilize action to make a DC 30 Strength (Athletics) check, moving the fixed rod up to 10 feet on a successful check.</p>",
+          "chat": ""
+        },
+        "identifier": "immovable-rod",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "rod",
+          "baseItem": ""
+        },
+        "properties": [
+          "foc",
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR"
+      },
+      "_id": "nBfciVQq4uzkq5rj",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.nBfciVQq4uzkq5rj"
+    },
+    {
+      "name": "Lantern of Revealing",
+      "type": "equipment",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "system": {
+        "activities": {
+          "L8hUSl7lSC1PEqP4": {
+            "type": "utility",
+            "name": "Consume Oil",
+            "_id": "L8hUSl7lSC1PEqP4",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "30",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>While lit, this hooded lantern burns for 6 hours on 1 pint of oil, shedding Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. &amp;Reference[Invisible apply=false] creatures and objects are visible as long as they are in the lantern's Bright Light. You can take a Utilize action to lower the hood, reducing the lantern's light to Dim Light in a 5-foot radius.</p>",
+          "chat": ""
+        },
+        "identifier": "lantern-of-revealing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve"
+      },
+      "_id": "PSEIZieIEilN88PT",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.PSEIZieIEilN88PT"
+    },
+    {
+      "name": "Chime of Opening",
+      "type": "equipment",
+      "img": "icons/commodities/tech/pipe-cylinder.webp",
+      "system": {
+        "activities": {
+          "FW2x7qXh6xbtpxRQ": {
+            "type": "cast",
+            "_id": "FW2x7qXh6xbtpxRQ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplKnock00000",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "10"
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare</em></p></div><p>This hollow metal tube measures about 1 foot long and weighs 1 pound. As a Magic action, you can strike the chime to cast <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplKnock00000]{Knock}</em>. The spell's customary knocking sound is replaced by the clear, ringing tone of the chime, which is audible out to 300 feet.</p><p>The chime can be used 10 times. After the tenth time, it cracks and becomes useless.</p>",
+          "chat": ""
+        },
+        "identifier": "chime-of-opening",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgChimeOfOpenin"
+      },
+      "_id": "98aYtEfqhGYkQRhr",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.98aYtEfqhGYkQRhr"
+    },
+    {
+      "name": "Eversmoking Bottle",
+      "type": "equipment",
+      "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+      "system": {
+        "activities": {
+          "wdjQ3jmtTZwzS7mu": {
+            "type": "utility",
+            "name": "Open Bottle",
+            "_id": "wdjQ3jmtTZwzS7mu",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "7"
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "50 + @scaling * 10",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "systems/dnd5e/icons/svg/ink-pot.svg",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p></div><p>As a Magic action, you can open or close this bottle.</p><p>Opening the bottle causes thick smoke to billow out, forming a cloud that fills a 60-foot Emanation originating from the bottle. The area within the smoke is &amp;Reference[HeavilyObscured].</p><p>Each minute the bottle remains open, the size of the Emanation increases by 10 feet until it reaches its maximum size of 120 feet.</p><p>Closing the bottle causes the cloud to become fixed in place until it disperses after 10 minutes. A strong wind (such as that created by the <em>Gust of Wind</em> spell) disperses the cloud after 1 minute.</p><section class=\"secret\" id=\"secret-O7B8LCiiU4CnDjQw\"><p><strong>Foundry Note</strong></p><p>The scaling slider of the <strong>Open Bottle</strong> activity controls the size of the created Emanation from 60 feet at scaling value 1 to 120 feet at scaling value 7 (increments of 10 feet).</p></section>",
+          "chat": ""
+        },
+        "identifier": "eversmoking-bottle",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgEversmokingBo"
+      },
+      "_id": "47GTmFp2PmVtpElT",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.47GTmFp2PmVtpElT"
+    },
+    {
+      "name": "Iron Bands",
+      "type": "equipment",
+      "img": "icons/commodities/metal/clasp-steel-braid.webp",
+      "system": {
+        "activities": {
+          "YvxUL75GlG2OoFMg": {
+            "type": "attack",
+            "name": "Throw Bands",
+            "_id": "YvxUL75GlG2OoFMg",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "IgRS1gR2uBlWZnIK",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "60"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": "Huge or smaller you can see"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "ranged",
+                "classification": "weapon"
+              },
+              "ability": "",
+              "bonus": ""
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": []
+            },
+            "img": "",
+            "appliedEffects": [
+              "IgRS1gR2uBlWZnIK"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "2FSMsnJsj8zfMx85": {
+            "type": "check",
+            "name": "Break Check",
+            "_id": "2FSMsnJsj8zfMx85",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "check": {
+              "associated": [
+                "ath"
+              ],
+              "dc": {
+                "calculation": "",
+                "formula": "20"
+              },
+              "ability": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare</em></p><p>This rusty iron sphere measures 3 inches in diameter and weighs 1 pound. You can take a Magic action to throw the sphere at a Huge or smaller creature you can see within 60 feet of yourself. As the sphere moves through the air, it opens into a tangle of metal bands.</p><p>Make a ranged attack roll with an attack bonus equal to your Dexterity modifier plus your Proficiency Bonus. On a hit, the target has the &amp;Reference[Restrained apply=false] condition until you take a Bonus Action to issue a command that releases it. Doing so or missing with the attack causes the bands to contract and become a sphere once more.</p><p>A creature that can touch the bands, including the one Restrained, can take an action to make a DC 20 Strength (Athletics) check to break the iron bands. On a successful check, the item is destroyed, and the Restrained creature is freed. On a failed check, any further attempts made by that creature automatically fail until 24 hours have elapsed.</p><p>Once the bands are used, they can't be used again until the next dawn.</p>",
+          "chat": ""
+        },
+        "identifier": "iron-bands",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Restrained by Iron",
+          "img": "icons/commodities/metal/clasp-steel-braid.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "7NRHPM5Mxgvw3eN5",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [
+            "restrained"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730694344239,
+            "modifiedTime": 1783544096497,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!RYY3iNLTVuaAGh5c.quqJVFN8UVzlIYmS.7NRHPM5Mxgvw3eN5"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgIronBandsOfBi"
+      },
+      "_id": "quqJVFN8UVzlIYmS",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.quqJVFN8UVzlIYmS"
+    },
+    {
+      "name": "Instant Fortress",
+      "type": "equipment",
+      "img": "icons/commodities/treasure/token-engraved-blue.webp",
+      "system": {
+        "activities": {
+          "DByArwt2cHu1XB0F": {
+            "type": "utility",
+            "name": "Grow Tower",
+            "_id": "DByArwt2cHu1XB0F",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "perm",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "any",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "cube",
+                "size": "20",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "The adamantine"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "9iUaAGUtacDYwh0Q": {
+            "type": "utility",
+            "_id": "9iUaAGUtacDYwh0Q",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "any",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "The tower's door"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Open Fortress Door",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare (Requires Attunement)</em></p></div><p>As a Magic action, you can place this 1-inch adamantine statuette on the ground and, using a command word, cause it to grow rapidly into a square adamantine tower. Repeating the command word causes the tower to revert to statuette form, which works only if the tower is empty. Each creature in the area where the tower appears is pushed to an unoccupied space outside but next to the tower. Objects in the area that aren't being worn or carried are also pushed clear of the tower.</p><p>The tower is 20 feet on a side and 30 feet high, with arrow slits on all sides and a battlement atop it. Its interior is divided into two floors, with a ladder, staircase, or ramp (your choice) connecting them. This ladder, staircase, or ramp ends at a trapdoor leading to the roof. When created, the tower has a single door at ground level on the side facing you. The door opens only at your command, which you can issue as a Bonus Action. It is immune to the <em>Knock</em> spell and similar magic.</p><p>Magic prevents the tower from being tipped over. The roof, the door, and the walls each have AC 20; HP 100; Immunity to Bludgeoning, Piercing, and Slashing damage except that which is dealt by siege equipment; and Resistance to all other damage. Shrinking the tower back down to statuette form doesn't repair damage to the tower. Only a <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplWish000000]{Wish}</em> spell can repair the tower (this use of the spell counts as replicating a spell of level 8 or lower). Each casting of <em>Wish</em> causes the tower to regain all its Hit Points.</p>",
+          "chat": ""
+        },
+        "identifier": "instant-fortress",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0.1,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDaernsInstant"
+      },
+      "_id": "t6KZhQmtmAvXlcrz",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.t6KZhQmtmAvXlcrz"
+    },
+    {
+      "name": "Cube of Force",
+      "type": "equipment",
+      "img": "icons/sundries/gaming/dice-runed-brown.webp",
+      "system": {
+        "activities": {
+          "P5hQL8Tv1BZgMM5p": {
+            "type": "cast",
+            "_id": "P5hQL8Tv1BZgMM5p",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplMageArmor0",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "ZtRR3jrinUNMIEvU": {
+            "type": "cast",
+            "_id": "ZtRR3jrinUNMIEvU",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplShield0000",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "tCJJNlbzPWFK6X2m": {
+            "type": "cast",
+            "_id": "tCJJNlbzPWFK6X2m",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "3",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "3",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplLeomundsTi",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "KRhYoWhmZNWAmv1i": {
+            "type": "cast",
+            "_id": "KRhYoWhmZNWAmv1i",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "4",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "4",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbPrivateSanctu",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "N5Y0YZKK2llU4HXf": {
+            "type": "cast",
+            "_id": "N5Y0YZKK2llU4HXf",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "4",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": 17,
+                "override": true
+              },
+              "level": "4",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplOtilukesRe",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "ZIMYDxhyS56bcRQE": {
+            "type": "cast",
+            "_id": "ZIMYDxhyS56bcRQE",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "5",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "5",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplWallofForc",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d6"
+            }
+          ],
+          "max": "10"
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare (Requires Attunement)</em></p></div><p>This cube is about an inch across. Each face has a distinct marking on it. You can press one of those faces, expend the number of charges required for it, and thereby cast the spell associated with it (save DC 17), as shown in the Cube of Force Faces table.</p><p>The cube starts with 10 charges, and it regains 1d6 <span class=\"no-break\">expended</span> charges daily at dawn.</p><table><caption>Cube of Force Faces</caption><thead><tr><td>Spell</td><td>Charge Cost</td></tr></thead><tbody><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbsplMageArmor0]{Mage Armor}</em></td><td>1</td></tr><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbsplShield0000]{Shield}</em></td><td>1</td></tr><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbsplLeomundsTi]{Tiny Hut}</em></td><td>3</td></tr><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbPrivateSanctu]{Private Sanctum}</em></td><td>4</td></tr><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbsplOtilukesRe]{Resilient Sphere}</em></td><td>4</td></tr><tr><td><em>@UUID[Compendium.dnd5e.spells24.Item.phbsplWallofForc]{Wall of Force}</em></td><td>5</td></tr></tbody></table>",
+          "chat": ""
+        },
+        "identifier": "cube-of-force",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgCubeOfForce00"
+      },
+      "_id": "qIxdGwOy7pR5fK7s",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.qIxdGwOy7pR5fK7s"
     },
     {
       "name": "Wand",
@@ -9281,11 +11427,135 @@
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Immovable Rod": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Lantern of Revealing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Chime of Opening": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Eversmoking Bottle": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Iron Bands": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Instant Fortress": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Cube of Force": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
         "Flask": 1,
         "Vial": 2
+      },
+      "shop": {
+        "version": 1,
+        "tier": "City",
+        "source": null,
+        "description": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p>",
+        "terms": {
+          "sellsAt": null,
+          "buysAt": null,
+          "categories": []
+        },
+        "hours": {
+          "open": {
+            "hour": 8,
+            "minute": 0
+          },
+          "close": {
+            "hour": 18,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.CUvvwBdc6Uw7FNU3",
+          "quantities": {
+            "FnBIMjppmeaQiNvL": "2d6+4",
+            "z7QxpgNybGQ9xiZR": "3d8+8",
+            "mWZkq2zt1olQfCvD": "(3d8+8)*10",
+            "wgIPF5QCR2LMniB9": "3d8+8",
+            "A0a5bXRhpINCjJpb": "1",
+            "5S6CjhRRJO7RKK0e": "2d6+4",
+            "oFyAgHWOaVFwZ6Bc": "4d10+20",
+            "Sn9hVDfYd2lVl4D9": "2d6+4",
+            "yKmXbBTzrex4Tzo5": "3d8+8",
+            "kmazTq9C9ggd2cW0": "2d6+4",
+            "1nwonJU2nbUGeRDs": "1d4+2",
+            "3B3E9xoQyI91QEAi": "3d8+8",
+            "8i9B4Q4aRQyFWbK7": "4d10+20",
+            "ot0oCTDRRgFrk69L": "4d10+20",
+            "PMG3Bhrf9mKcOI4m": "4d10+20",
+            "DDiqaJXEA3ZlYrQv": "3d8+8",
+            "B50lJ7cHkaXTi5pZ": "4d10+20",
+            "5f1QI95nnVqXuyuI": "1d2-1",
+            "ZDru15uJs3kTNz6L": "4d10+20",
+            "QVQILcgdCUAIe5cx": "4d10+20",
+            "gvlfG1rTdqHee3Qx": "1",
+            "VfXEDY9YNUc5K1XE": "1d4+2",
+            "KRmUh1ZwxENY56wl": "2d6+4",
+            "bt0CQkeURkp7Oy0J": "2d6+4",
+            "ZfPlOFgtEHBam4PN": "2d6+4",
+            "k2csPzLOXIiCCSIn": "2d6+4",
+            "mmv0yZdQJpbxtIma": "1d4+2",
+            "32SvfTelWgG8GMpr": "3d8+8",
+            "ttZGekYJPPjjrMxN": "3d8+8",
+            "KinzSaXEnonPTLFp": "1d3",
+            "N3HHY3o2etmzrpr1": "1d3",
+            "nQAIovACp2xtSyrw": "1d3",
+            "pPX8raMtjrzPPjmj": "1d3",
+            "52A81hiJErRZtQOb": "1d2-1",
+            "ifT6VyDEFeoWlKAM": "1d3",
+            "QFjBndhoeIKL18RK": "1d2-1",
+            "GwSaT6ze9yjDt1en": "1d2-1",
+            "GO9hM4WLZmAOStSA": "1d2-1"
+          },
+          "onOpen": true,
+          "every": 7,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "food-drink",
+            "meal",
+            "lodging",
+            "service",
+            "spellcasting",
+            "component",
+            "travel"
+          ]
+        }
       }
     },
     "item-piles": {
@@ -9352,7 +11622,14 @@
               "32SvfTelWgG8GMpr": "3d8+8",
               "ttZGekYJPPjjrMxN": "3d8+8",
               "KinzSaXEnonPTLFp": "1d3",
-              "N3HHY3o2etmzrpr1": "1d3"
+              "N3HHY3o2etmzrpr1": "1d3",
+              "nQAIovACp2xtSyrw": "1d3",
+              "pPX8raMtjrzPPjmj": "1d3",
+              "52A81hiJErRZtQOb": "1d2-1",
+              "ifT6VyDEFeoWlKAM": "1d3",
+              "QFjBndhoeIKL18RK": "1d2-1",
+              "GwSaT6ze9yjDt1en": "1d2-1",
+              "GO9hM4WLZmAOStSA": "1d2-1"
             }
           }
         ],

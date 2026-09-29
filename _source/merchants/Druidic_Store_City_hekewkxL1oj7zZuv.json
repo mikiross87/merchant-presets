@@ -750,6 +750,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -812,6 +824,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -876,6 +900,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -939,6 +975,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -992,6 +1040,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1047,6 +1107,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1101,6 +1173,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1154,6 +1238,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1307,6 +1403,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1393,6 +1501,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1411,6 +1531,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1475,6 +1607,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "img": "icons/containers/bags/pouch-leather-pink.webp",
@@ -1538,6 +1682,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "img": "icons/containers/bags/pouch-leather-pink.webp",
@@ -1600,6 +1756,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1708,6 +1876,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1770,6 +1950,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1834,6 +2026,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -1896,6 +2100,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -1960,6 +2176,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2022,6 +2250,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2192,6 +2432,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2254,6 +2506,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2318,6 +2582,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2380,6 +2656,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2545,6 +2833,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2607,6 +2907,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2671,6 +2983,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2734,6 +3058,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -2796,6 +3132,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -2945,6 +3293,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3030,6 +3390,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3315,6 +3687,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3368,6 +3752,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3515,6 +3911,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3705,6 +4113,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -3790,6 +4210,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -3968,6 +4400,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4053,6 +4497,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -4266,6 +4722,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4462,6 +4930,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4604,6 +5084,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -4745,6 +5237,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -4958,6 +5462,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5099,6 +5615,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -5304,6 +5832,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -5513,6 +6053,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -5716,6 +6268,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -5924,6 +6488,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6127,6 +6703,18 @@
             "keepOnMerchant": true,
             "isService": false,
             "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
           }
         }
       },
@@ -6334,6 +6922,18 @@
             "isService": false,
             "cantBeSoldToMerchants": false
           }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": null,
+            "keep": true,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6387,7 +6987,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6441,7 +7051,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6495,7 +7115,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6549,7 +7179,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6603,7 +7243,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6657,7 +7307,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6711,7 +7371,17 @@
           }
         },
         "merchant-presets": {
-          "kind": "spellcasting"
+          "kind": "spellcasting",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6767,7 +7437,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr"
+          "spell": "Compendium.dnd5e.spells24.Item.phbEvilAndGoodPr",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6823,7 +7503,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplContinualF",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6879,7 +7569,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplNondetecti"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplNondetecti",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6935,7 +7635,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplRevivify00"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplRevivify00",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -6991,7 +7701,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplDivination"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplDivination",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7047,7 +7767,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplStoneskin0"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplStoneskin0",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7103,7 +7833,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7159,7 +7899,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplReincarnat"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplReincarnat",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7215,7 +7965,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplScrying000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplScrying000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7271,7 +8031,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplHeroesFeas"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplHeroesFeas",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7327,7 +8097,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplSymbol0000"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplSymbol0000",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7383,7 +8163,17 @@
         },
         "merchant-presets": {
           "kind": "spellcasting",
-          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueResurr"
+          "spell": "Compendium.dnd5e.spells24.Item.phbsplTrueResurr",
+          "stock": {
+            "infinite": true,
+            "keep": true,
+            "service": true,
+            "noBuyback": true,
+            "category": "Spells, Components Included",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         }
       },
       "_stats": {
@@ -7429,7 +8219,17 @@
       "effects": [],
       "flags": {
         "merchant-presets": {
-          "kind": "component"
+          "kind": "component",
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
         },
         "item-piles": {
           "item": {
@@ -7445,6 +8245,3646 @@
       },
       "_id": "w8mwnW0jBgEfPC1D",
       "_key": "!actors.items!hekewkxL1oj7zZuv.w8mwnW0jBgEfPC1D"
+    },
+    {
+      "name": "Potion of Animal Friendship",
+      "type": "consumable",
+      "img": "icons/consumables/potions/potion-jar-corked-orange.webp",
+      "system": {
+        "activities": {
+          "0Ecazu341cv88FXR": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplAnimalFrie",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "3",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true
+            },
+            "_id": "0Ecazu341cv88FXR",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": ""
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Uncommon</em></p><p>When you drink this potion, you can cast the level 3 version of the @UUID[Compendium.dnd5e.spells24.Item.phbsplAnimalFrie]{Animal Friendship} spell (save DC 13).</p><p>Agitating this potion's muddy liquid brings little bits into view: a fish scale, a hummingbird feather, a cat claw, or a squirrel hair.</p>",
+          "chat": ""
+        },
+        "identifier": "potion-of-animal-friendship",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 5,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfAnima"
+      },
+      "_id": "tgN6lk2CLROXOKPG",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.tgN6lk2CLROXOKPG"
+    },
+    {
+      "name": "Potion of Water Breathing",
+      "type": "consumable",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "system": {
+        "activities": {
+          "21kmAfoqMj4fSwrH": {
+            "type": "utility",
+            "name": "Drink",
+            "_id": "21kmAfoqMj4fSwrH",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "FuzyfcWOcC3IXsDB",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [
+              "FuzyfcWOcC3IXsDB"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Uncommon</em></p><p>You can breathe underwater for 24 hours after drinking this potion.</p><p>This potion's cloudy green fluid smells of the sea and has a jellyfish-like bubble floating in it.</p><section class=\"secret\" id=\"secret-Hak8pdfo1Rbwhrgv\"><p><strong>Foundry Note</strong></p><p>The <strong>Water Breather</strong> Active Effect can be used for tracking.</p></section>",
+          "chat": ""
+        },
+        "identifier": "potion-of-water-breathing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Water Breather",
+          "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "n7VZCDUYTgZlvS3d",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 86400,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfVital.ActiveEffect.GxutU47JS0FNfeoM",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730864676000,
+            "modifiedTime": 1783544097650,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!hekewkxL1oj7zZuv.ZlyTqbEwogrfB5ja.n7VZCDUYTgZlvS3d"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater"
+      },
+      "_id": "ZlyTqbEwogrfB5ja",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.ZlyTqbEwogrfB5ja"
+    },
+    {
+      "name": "Bead of Nourishment",
+      "type": "consumable",
+      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
+      "system": {
+        "activities": {
+          "BNdV5GgauLzPukTs": {
+            "type": "utility",
+            "name": "Consume",
+            "_id": "BNdV5GgauLzPukTs",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Common</em></p><p>This flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of @UUID[Compendium.dnd5e.equipment24.Item.phbagRations0000]{Rations}.</p></div>",
+          "chat": ""
+        },
+        "identifier": "bead-of-nourishment",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 6,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "common",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish"
+      },
+      "_id": "lbAOVg6uPOKBXee3",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.lbAOVg6uPOKBXee3"
+    },
+    {
+      "name": "Staff of the Python",
+      "type": "weapon",
+      "img": "icons/weapons/staves/staff-metal-mask.webp",
+      "system": {
+        "activities": {
+          "Wn7DTIPOw8KojLSF": {
+            "_id": "Wn7DTIPOw8KojLSF",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "pu1EtLCcCkZMABET": {
+            "type": "summon",
+            "_id": "pu1EtLCcCkZMABET",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": true,
+              "units": "ft",
+              "special": "",
+              "value": "10"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": "Unoccupied"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "bonuses": {
+              "ac": "",
+              "hd": "",
+              "hp": "",
+              "attackDamage": "",
+              "saveDamage": "",
+              "healing": ""
+            },
+            "creatureSizes": [],
+            "creatureTypes": [],
+            "match": {
+              "attacks": false,
+              "proficiency": false,
+              "saves": false,
+              "ability": ""
+            },
+            "profiles": [
+              {
+                "count": "",
+                "name": "",
+                "_id": "rsxy82m9MDij6yUt",
+                "uuid": "Compendium.dnd5e.actors24.Actor.mmGiantConstrict",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "summon": {
+              "prompt": true,
+              "mode": "",
+              "identifier": ""
+            },
+            "name": "Transform into Snake",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.phbafcStaffalsoa]{Staff}, Uncommon (Requires Attunement)</em></p><p>As a Magic action, you can throw this staff so that it lands in an unoccupied space within 10 feet of you, causing the staff to become a <strong>Giant Constrictor Snake</strong> in that space. The snake is under your control and shares your Initiative count, taking its turn immediately after yours.</p><p>On your turn, you can mentally command the snake (no action required) if it is within 60 feet of you and you don't have the Incapacitated condition. You decide what action the snake takes and where it moves during its turn, or you can issue it a general command, such as to attack your enemies or guard a location. Absent commands from you, the snake defends itself.</p><p>As a Bonus Action, you can command the snake to revert to staff form in its current space, and you can't use the staff's property again for 1 hour. If the snake is reduced to 0 Hit Points, it dies and reverts to its staff form; the staff then shatters and is destroyed. If the snake reverts to staff form before losing all its Hit Points, it regains all of them.</p>",
+          "chat": ""
+        },
+        "identifier": "staff-of-the-python",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "quarterstaff"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": 0,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          }
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ],
+        "range": {
+          "value": null,
+          "long": null,
+          "reach": null,
+          "units": ""
+        },
+        "mastery": "topple"
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgStaffOfThePyt"
+      },
+      "_id": "5dn5gplAiC7K3Mls",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.5dn5gplAiC7K3Mls"
+    },
+    {
+      "name": "Staff of Swarming Insects",
+      "type": "weapon",
+      "img": "icons/weapons/staves/staff-spiked.webp",
+      "system": {
+        "activities": {
+          "6KuytsUTiFOGUCTA": {
+            "_id": "6KuytsUTiFOGUCTA",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "Z7aNKLTWuCs6cpRx": {
+            "type": "utility",
+            "name": "Insect Cloud",
+            "_id": "Z7aNKLTWuCs6cpRx",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "minute",
+              "concentration": false,
+              "override": false,
+              "value": "10"
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "30",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "mAiLkjRTxXGR2iRG": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplGiantInsec",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "4",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "mAiLkjRTxXGR2iRG",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "4",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "bqhXvRAyiX8QEAv6": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplInsectPlag",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "5",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "bqhXvRAyiX8QEAv6",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "5",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d6"
+            }
+          ],
+          "max": "10"
+        },
+        "description": {
+          "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.phbafcStaffalsoa]{Staff}, Rare (Requires Attunement by a Bard, Cleric, Druid, Sorcerer, Warlock, or Wizard)</em></p><p>This staff has 10 charges.</p><p><em><strong>Insect Cloud.</strong></em> While holding the staff, you can take a Magic action and expend 1 charge to cause a swarm of harmless flying insects to fill a 30-foot Emanation originating from you. The insects remain for 10 minutes, making the area &amp;Reference[Heavily Obscured] for creatures other than you. A strong wind (like that created by @UUID[Compendium.dnd5e.spells24.Item.phbsplGustofWind]{Gust of Wind}) disperses the swarm and ends the effect.</p><p><em><strong>Spells.</strong></em> While holding the staff, you can cast one of the spells on the following table from it, using your spell save DC and spell attack modifier. The table indicates how many charges you must expend to cast the spell.</p><table><thead><tr><th><p>Spell</p></th><th><p>Charge Cost</p></th><th></th></tr></thead><tbody><tr><td><p>@UUID[Compendium.dnd5e.spells24.Item.phbsplGiantInsec]{Giant Insect}</p></td><td><p>4</p></td><td></td></tr><tr><td><p>@UUID[Compendium.dnd5e.spells24.Item.phbsplInsectPlag]{Insect Plague}</p></td><td><p>5</p></td><td></td></tr></tbody></table><p><em><strong>Regaining Charges.</strong></em> The staff regains 1d6 + 4 expended charges daily at dawn. If you expend the last charge, roll [[/r 1d20]]. On a 1, a swarm of insects consumes and destroys the staff, then disperses.</p>",
+          "chat": ""
+        },
+        "identifier": "staff-of-swarming-insects",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "quarterstaff"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc",
+          "ver"
+        ],
+        "range": {
+          "value": null,
+          "long": null,
+          "reach": null,
+          "units": ""
+        },
+        "mastery": "topple"
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgStaffOfSwarmi"
+      },
+      "_id": "mTzXlid2H5DXB8Ak",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.mTzXlid2H5DXB8Ak"
+    },
+    {
+      "name": "Staff of the Woodlands",
+      "type": "weapon",
+      "img": "icons/weapons/staves/staff-nature-spiral.webp",
+      "system": {
+        "activities": {
+          "ab5Z0l7OcuWCtauU": {
+            "_id": "ab5Z0l7OcuWCtauU",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "geAlp70iuxuH1dvD": {
+            "type": "cast",
+            "name": "Animal Friendship",
+            "_id": "geAlp70iuxuH1dvD",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplAnimalFrie",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "ZsTnyKpNKhX2UNw8": {
+            "type": "cast",
+            "name": "Awaken",
+            "_id": "ZsTnyKpNKhX2UNw8",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "5",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "5",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplAwaken0000",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "HRmbe3tUq47ZLbeM": {
+            "type": "cast",
+            "name": "Barkskin",
+            "_id": "HRmbe3tUq47ZLbeM",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "2",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": 2,
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplBarkskin00",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "swaYlNmRQNmfu6MB": {
+            "type": "cast",
+            "name": "Locate Animals or Plants",
+            "_id": "swaYlNmRQNmfu6MB",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "2",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplLocateAnim",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "cDbVrjDu0tnXlzaR": {
+            "type": "cast",
+            "name": "Pass without Trace",
+            "_id": "cDbVrjDu0tnXlzaR",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "2",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplPasswithou",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "j5AgCtSJZN12vsJW": {
+            "type": "cast",
+            "name": "Speak with Animals",
+            "_id": "j5AgCtSJZN12vsJW",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplSpeakwithA",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "eoNl5saIm2pOFmsu": {
+            "type": "cast",
+            "name": "Speak with Plants",
+            "_id": "eoNl5saIm2pOFmsu",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "3",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "3",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplSpeakwithP",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "WmZyIUTekKP2iDtH": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplWallofThor",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "6",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "WmZyIUTekKP2iDtH",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "6",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "9xO1w9Vzhq6EU5Qr": {
+            "type": "utility",
+            "name": "Tree Form",
+            "_id": "9xO1w9Vzhq6EU5Qr",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d6"
+            }
+          ],
+          "max": "6"
+        },
+        "description": {
+          "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.phbafcStaffalsoa]{Staff}, Rare (Requires Attunement by a Druid)</em></p><p>This staff has 6 charges and can be wielded as a magic Quarterstaff that grants a +2 bonus to attack rolls and damage rolls made with it. While holding it, you have a +2 bonus to spell attack rolls.</p><p><em><strong>Spells.</strong></em> While holding the staff, you can cast one of the spells on the following table from it, using your spell save DC. The table indicates how many charges you must expend to cast the spell.</p><table><thead><tr><th><p>Spell</p></th><th><p>Charge Cost</p></th><th></th></tr></thead><tbody><tr><td><p><em>Animal Friendship</em></p></td><td><p>1</p></td><td></td></tr><tr><td><p><em>Awaken</em></p></td><td><p>5</p></td><td></td></tr><tr><td><p><em>Barkskin</em></p></td><td><p>2</p></td><td></td></tr><tr><td><p><em>Locate Animals or Plants</em></p></td><td><p>2</p></td><td></td></tr><tr><td><p><em>Pass without Trace</em></p></td><td><p>2</p></td><td></td></tr><tr><td><p><em>Speak with Animals</em></p></td><td><p>1</p></td><td></td></tr><tr><td><p><em>Speak with Plants</em></p></td><td><p>3</p></td><td></td></tr><tr><td><p><em>Wall of Thorns</em></p></td><td><p>6</p></td><td></td></tr></tbody></table><p><em><strong>Tree Form.</strong></em> You can take a Magic action to plant one end of the staff in earth in an unoccupied space and expend 1 charge to transform the staff into a healthy tree. The tree is 60 feet tall and has a 5-foot-diameter trunk, and its branches at the top spread out in a 20-foot radius. The tree appears ordinary but radiates a faint aura of Transmutation magic that can be discerned with the <em>Detect Magic</em> spell. While touching the tree and using a Magic action, you return the staff to its normal form. Any creature in the tree falls when the tree reverts to a staff.</p><p><em><strong>Regaining Charges.</strong></em> The staff regains 1d6 expended charges daily at dawn. If you expend the last charge, roll [[/r 1d20]]. On a 1, the staff loses its properties and becomes a nonmagical Quarterstaff.</p>",
+          "chat": ""
+        },
+        "identifier": "staff-of-the-woodlands",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "quarterstaff"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "magicalBonus": 2,
+        "properties": [
+          "mgc",
+          "ver"
+        ],
+        "range": {
+          "value": null,
+          "long": null,
+          "reach": null,
+          "units": ""
+        },
+        "mastery": "topple"
+      },
+      "effects": [
+        {
+          "name": "Spell Attack Bonus",
+          "img": "icons/magic/life/cross-worn-green.webp",
+          "_id": "qTf6EqWlYBkgWRzF",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.bonuses.msak.attack",
+                "value": 2,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "408L3BJVZ1Y0cNIX"
+              },
+              {
+                "key": "system.bonuses.rsak.attack",
+                "value": 2,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "NDKxLfgWs9tGAZRk"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729886547004,
+            "modifiedTime": 1783544098646,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!hekewkxL1oj7zZuv.MWMrpbI1tXxJN5cy.qTf6EqWlYBkgWRzF"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgStaffOfTheWoo"
+      },
+      "_id": "MWMrpbI1tXxJN5cy",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.MWMrpbI1tXxJN5cy"
+    },
+    {
+      "name": "Ring of Animal Influence",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-cabochon-gold-orange.webp",
+      "system": {
+        "activities": {
+          "Y0cSjJs5olZWdSgZ": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplAnimalFrie",
+              "challenge": {
+                "attack": null,
+                "save": 13,
+                "override": true
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "Y0cSjJs5olZWdSgZ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "kn4eCuLZrcps7ujc": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplFear000000",
+              "challenge": {
+                "attack": null,
+                "save": 13,
+                "override": true
+              },
+              "level": "3",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "kn4eCuLZrcps7ujc",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "Fear (Affects Beasts Only)",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "76ZGwAp8abm0ZB5Z": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplSpeakwithA",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "76ZGwAp8abm0ZB5Z",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d3"
+            }
+          ],
+          "max": "3"
+        },
+        "description": {
+          "value": "<p><em>Ring, Rare</em></p><p>This ring has 3 charges, and it regains 1d3 expended charges daily at dawn. While wearing the ring, you can expend 1 charge to cast one of the following spells (save DC 13) from it:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAnimalFrie]{Animal Friendship}</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFear000000]{Fear} (affects Beasts only)</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplSpeakwithA]{Speak with Animals}</li></ul>",
+          "chat": ""
+        },
+        "identifier": "ring-of-animal-influence",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfAnimalI"
+      },
+      "_id": "JubdK4yvwJ9m0FWA",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.JubdK4yvwJ9m0FWA"
+    },
+    {
+      "name": "Bag of Beans",
+      "type": "equipment",
+      "img": "icons/containers/bags/coinpouch-simple-leather-tan.webp",
+      "system": {
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare</em></p><p>This heavy cloth bag contains 3d4 dry beans when found. The bag weighs half a pound regardless of how many beans it contains and becomes a @UUID[Compendium.dnd5e.equipment24.Item.phbagPouch000000]{nonmagical item} when it no longer contains any beans.</p><p>If you dump one or more beans out of the bag, they explode in a 10-foot-radius Sphere centered on them. All the dumped beans are destroyed in the explosion, and each creature in the Sphere, including you, makes a DC 15 Dexterity saving throw, taking 5d4 Force damage on a failed save or half as much damage on a successful one.</p><p>If you remove a bean from the bag, plant it in dirt or sand, and then water it, the bean disappears as it produces an effect 1 minute later from the ground where it was planted. The GM can choose an effect from the following table or determine it randomly.</p><details><summary>Bag of Beans Effect (click to expand)</summary><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgBagOfBeansEff rollable caption=false]</p></details><p></p><section class=\"secret\" id=\"secret-Ksf2KyYXOK1HhLmm\"><p><strong>Foundry Note</strong></p><p>Upon obtaining this item, the <strong>Count Beans</strong> activity can be used to determine the number of dry beans contained within and set this item's number of uses accordingly.</p></section>",
+          "chat": ""
+        },
+        "identifier": "bag-of-beans",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [
+          "mgc",
+          "weightlessContents"
+        ],
+        "capacity": {
+          "type": "items",
+          "value": 12
+        },
+        "type": {
+          "value": "wondrous"
+        },
+        "uses": {
+          "max": "12",
+          "spent": 12
+        },
+        "activities": {
+          "pCPfWEoVCDCMzl58": {
+            "type": "utility",
+            "name": "Count Beans",
+            "_id": "pCPfWEoVCDCMzl58",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": "Upon discovering the bag."
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "-3d4",
+                  "target": "",
+                  "scaling": {}
+                },
+                {
+                  "type": "activityUses",
+                  "value": "1",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": "3d4 dry beans found in bag."
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "Held Bag of Beans"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": "1"
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          },
+          "2OuJC3aroy0tJ8SW": {
+            "type": "save",
+            "name": "Dump Beans",
+            "_id": "2OuJC3aroy0tJ8SW",
+            "sort": 0,
+            "activation": {
+              "type": "special",
+              "value": null,
+              "override": false,
+              "condition": "Object interaction"
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "@item.uses.value"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": ""
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "sphere",
+                "size": "10",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": 5,
+                  "denomination": 4,
+                  "bonus": "",
+                  "types": [
+                    "force"
+                  ],
+                  "scaling": {
+                    "mode": ""
+                  }
+                }
+              ],
+              "onSave": "half"
+            },
+            "save": {
+              "ability": "dex",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "fo7GQpsx1ryDXtPU": {
+            "type": "utility",
+            "_id": "fo7GQpsx1ryDXtPU",
+            "sort": 0,
+            "activation": {
+              "type": "special",
+              "value": null,
+              "override": false,
+              "condition": "Object interaction"
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": "Dirt or sand"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Plant Bean",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBagOfBeans000"
+      },
+      "_id": "GMBCG3en9cfdHTgY",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.GMBCG3en9cfdHTgY"
+    },
+    {
+      "name": "Gray Bag of Tricks",
+      "type": "equipment",
+      "img": "icons/containers/bags/coinpouch-leather-grey.webp",
+      "system": {
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p><p>This bag made from gray, rust, or tan cloth appears empty. Reaching inside the bag, however, reveals the presence of a small, fuzzy object.</p><p>You can take a Magic action to pull the fuzzy object from the bag and throw it up to 20 feet. When the object lands, it transforms into a creature you determine by rolling on the table that corresponds to the bag's color. See @UUID[Compendium.dnd5e.content24.JournalEntry.mmMonstersAtoZ00]{Monsters} for the creature's stat block. The creature vanishes at the next dawn or when it is reduced to 0 Hit Points.</p><p>The creature is Friendly to you and your allies, and it acts immediately after you on your Initiative count. You can take a Bonus Action to command how the creature moves and what action it takes on its next turn, such as attacking an enemy. In the absence of such orders, the creature acts in a fashion appropriate to its nature.</p><p>Once three fuzzy objects have been pulled from the bag, the bag can't be used again until the next dawn.</p><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgGrayBagOfTric rollable]</p></div>",
+          "chat": ""
+        },
+        "identifier": "bag-of-tricks",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [
+          "mgc"
+        ],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        },
+        "uses": {
+          "max": "3",
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ]
+        },
+        "type": {
+          "value": "wondrous"
+        },
+        "activities": {
+          "v5llnlVkusldILPp": {
+            "type": "summon",
+            "_id": "v5llnlVkusldILPp",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": "Transformed creature determined by GM or table roll"
+            },
+            "duration": {
+              "units": "spec",
+              "concentration": false,
+              "override": false,
+              "special": "Until the next dawn or when creature is reduced to 0 Hit Points."
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "20"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "bonuses": {
+              "ac": "",
+              "hd": "",
+              "hp": "",
+              "attackDamage": "",
+              "saveDamage": "",
+              "healing": ""
+            },
+            "creatureSizes": [],
+            "creatureTypes": [],
+            "match": {
+              "attacks": false,
+              "proficiency": false,
+              "saves": false,
+              "ability": ""
+            },
+            "profiles": [
+              {
+                "count": "",
+                "name": "",
+                "_id": "0Ucu6AtxqkzgKsd9",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobWeasel0000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "sz8G8hKLXnov0Ogq",
+                "uuid": "Compendium.dnd5e.actors24.Actor.q1YJIeIt6rK8fCKn",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "DuOt4Z41ZMs4foqq",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobBadger0000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "J1kF0U6RizYz9jaa",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobBoar000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "vrkqGgFiq2kOG1kt",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobPanther000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "iV4Q4Qjp73ZCcLqx",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobGiantBadge",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "iYlBabuB5uOig7hm",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobDireWolf00",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "9txdXobEjQtYqTT7",
+                "uuid": "Compendium.dnd5e.actors24.Actor.hQt3qIahnB1Odb40",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "summon": {
+              "prompt": false,
+              "mode": "",
+              "identifier": ""
+            },
+            "name": "Pull and Throw",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBagOfTricks00"
+      },
+      "_id": "M4dzWW3eG0eUet3c",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.M4dzWW3eG0eUet3c"
+    },
+    {
+      "name": "Rust Bag of Tricks",
+      "type": "equipment",
+      "img": "icons/containers/bags/sack-simple-leather-tan.webp",
+      "system": {
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p><p>This bag made from gray, rust, or tan cloth appears empty. Reaching inside the bag, however, reveals the presence of a small, fuzzy object.</p><p>You can take a Magic action to pull the fuzzy object from the bag and throw it up to 20 feet. When the object lands, it transforms into a creature you determine by rolling on the table that corresponds to the bag's color. See @UUID[Compendium.dnd5e.content24.JournalEntry.mmMonstersAtoZ00]{Monsters} for the creature's stat block. The creature vanishes at the next dawn or when it is reduced to 0 Hit Points.</p><p>The creature is Friendly to you and your allies, and it acts immediately after you on your Initiative count. You can take a Bonus Action to command how the creature moves and what action it takes on its next turn, such as attacking an enemy. In the absence of such orders, the creature acts in a fashion appropriate to its nature.</p><p>Once three fuzzy objects have been pulled from the bag, the bag can't be used again until the next dawn.</p><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgRustBagOfTric rollable]</p></div>",
+          "chat": ""
+        },
+        "identifier": "bag-of-tricks",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "properties": [
+          "mgc"
+        ],
+        "activities": {
+          "v5llnlVkusldILPp": {
+            "type": "summon",
+            "_id": "v5llnlVkusldILPp",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": "Transformed creature determined by GM or table roll"
+            },
+            "duration": {
+              "units": "spec",
+              "concentration": false,
+              "override": false,
+              "special": "Until the next dawn or when creature is reduced to 0 Hit Points."
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "value": "20",
+              "units": "ft",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "bonuses": {
+              "ac": "",
+              "hd": "",
+              "hp": "",
+              "attackDamage": "",
+              "saveDamage": "",
+              "healing": ""
+            },
+            "creatureSizes": [],
+            "creatureTypes": [],
+            "match": {
+              "attacks": false,
+              "proficiency": false,
+              "saves": false,
+              "ability": ""
+            },
+            "profiles": [
+              {
+                "count": "",
+                "name": "",
+                "_id": "0Ucu6AtxqkzgKsd9",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobBrownBear0",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "sz8G8hKLXnov0Ogq",
+                "uuid": "Compendium.dnd5e.actors24.Actor.SsuCaF2fIEoDdFA3",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "DuOt4Z41ZMs4foqq",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobRat0000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "J1kF0U6RizYz9jaa",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobOwl0000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "vrkqGgFiq2kOG1kt",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobLion000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "iV4Q4Qjp73ZCcLqx",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobGoat000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "iYlBabuB5uOig7hm",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobMastiff000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "9txdXobEjQtYqTT7",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobGiantGoat0",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "summon": {
+              "prompt": false,
+              "identifier": "",
+              "mode": ""
+            },
+            "name": "Pull and Throw",
+            "img": "",
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            },
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "max": "3",
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ]
+        },
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRustBagofTric"
+      },
+      "_id": "b8rhKqlrSo3ZT7jk",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.b8rhKqlrSo3ZT7jk"
+    },
+    {
+      "name": "Tan Bag of Tricks",
+      "type": "equipment",
+      "img": "icons/containers/bags/sack-twisted-leather-red.webp",
+      "system": {
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p><p>This bag made from gray, rust, or tan cloth appears empty. Reaching inside the bag, however, reveals the presence of a small, fuzzy object.</p><p>You can take a Magic action to pull the fuzzy object from the bag and throw it up to 20 feet. When the object lands, it transforms into a creature you determine by rolling on the table that corresponds to the bag's color. See @UUID[Compendium.dnd5e.content24.JournalEntry.mmMonstersAtoZ00]{Monsters} for the creature's stat block. The creature vanishes at the next dawn or when it is reduced to 0 Hit Points.</p><p>The creature is Friendly to you and your allies, and it acts immediately after you on your Initiative count. You can take a Bonus Action to command how the creature moves and what action it takes on its next turn, such as attacking an enemy. In the absence of such orders, the creature acts in a fashion appropriate to its nature.</p><p>Once three fuzzy objects have been pulled from the bag, the bag can't be used again until the next dawn.</p><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgTanBagOfTrick rollable]</p></div>",
+          "chat": ""
+        },
+        "identifier": "bag-of-tricks",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "properties": [
+          "mgc"
+        ],
+        "activities": {
+          "v5llnlVkusldILPp": {
+            "type": "summon",
+            "_id": "v5llnlVkusldILPp",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": "Transformed creature determined by GM or table roll"
+            },
+            "duration": {
+              "units": "spec",
+              "concentration": false,
+              "override": false,
+              "special": "Until the next dawn or when creature is reduced to 0 Hit Points."
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "value": "20",
+              "units": "ft",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "space",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "bonuses": {
+              "ac": "",
+              "hd": "",
+              "hp": "",
+              "attackDamage": "",
+              "saveDamage": "",
+              "healing": ""
+            },
+            "creatureSizes": [],
+            "creatureTypes": [],
+            "match": {
+              "attacks": false,
+              "proficiency": false,
+              "saves": false,
+              "ability": ""
+            },
+            "profiles": [
+              {
+                "count": "",
+                "name": "",
+                "_id": "GHPZeky1w72GL4lN",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobApe0000000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "oJtdCfur0YjQcN5S",
+                "uuid": "Compendium.dnd5e.actors24.Actor.MZYCPIVoBs918qGZ",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "mK0C90AP9NoSoDHc",
+                "uuid": "Compendium.dnd5e.actors24.Actor.JW8bXggOMBx1S6tF",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "Q84QytFBOgZlPYyK",
+                "uuid": "Compendium.dnd5e.actors24.Actor.SXXvwaLBNuzBymp3",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "paUPq24gdSjQUCNq",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobBlackBear0",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "yFG9Dsrd6Dd4qI2J",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobGiantWease",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "W3Q0TgeomalBWPDE",
+                "uuid": "Compendium.dnd5e.actors24.Actor.aAqfEHPiVbhMwZ6j",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              },
+              {
+                "count": "",
+                "name": "",
+                "_id": "Eonmk8mpWd3O0Xn1",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobTiger00000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "summon": {
+              "prompt": false,
+              "identifier": "",
+              "mode": ""
+            },
+            "name": "Pull and Throw",
+            "img": "",
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            },
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "max": "3",
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ]
+        },
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgTanBagofTrick"
+      },
+      "_id": "NbucokdHkJqr4T6Q",
+      "_key": "!actors.items!hekewkxL1oj7zZuv.NbucokdHkJqr4T6Q"
     },
     {
       "name": "Studded Leather Armor",
@@ -10601,6 +15041,72 @@
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Potion of Animal Friendship": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Potion of Water Breathing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Bead of Nourishment": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Staff of the Python": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Staff of Swarming Insects": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Staff of the Woodlands": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Animal Influence": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Bag of Beans": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gray Bag of Tricks": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rust Bag of Tricks": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Tan Bag of Tricks": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -10611,6 +15117,121 @@
         "Flask": 2,
         "Pot, Iron": 3,
         "Pouch": 4
+      },
+      "shop": {
+        "version": 1,
+        "tier": "City",
+        "source": null,
+        "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Spellcasting here draws on the primal lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "terms": {
+          "sellsAt": null,
+          "buysAt": null,
+          "categories": [
+            {
+              "category": "Valuables",
+              "sellsAt": null,
+              "buysAt": 1
+            }
+          ]
+        },
+        "hours": {
+          "open": {
+            "hour": 6,
+            "minute": 0
+          },
+          "close": {
+            "hour": 18,
+            "minute": 0
+          }
+        },
+        "restock": {
+          "table": "Compendium.merchant-presets.stock.RollTable.Pjl0dXAgJZzcQhxL",
+          "quantities": {
+            "BTqallLLsVrJT3fU": "1d4+2",
+            "q1BiHSYIopPwspIM": "1",
+            "dIjAFVUL24II8AZo": "1",
+            "XnmuDZrvY5ReoMvc": "3d8+8",
+            "i2VzhUs3i11xMZKs": "4d10+20",
+            "sxHSKj9bj6sMJ74R": "3d8+8",
+            "saKVBh4DjCuJkahO": "2d6+4",
+            "UERTwLbq6ShIIt0P": "4d10+20",
+            "9B9F1ez0EhobRSSy": "2d6+4",
+            "RpLNYcnvavVBi05T": "1",
+            "VtfG1HXJ7J9E8jvD": "1",
+            "GgkEULlosvrCtQGl": "1",
+            "27EeD0pTwrccmx0F": "1d4+2",
+            "plotKjgFEuQ74q6C": "1",
+            "WjbbRZNmkgQypMym": "1d4+2",
+            "im33Mqai3NzMU8fy": "1",
+            "OTKVDN8IKxTDu3k8": "4d10+20",
+            "zajWiQUEw1kHPceR": "3d8+8",
+            "OzxUvYBxUf7p3xlP": "3d8+8",
+            "caU0ERQR5NbnrrOm": "3d8+8",
+            "ImTmzbywunhOp5lU": "4d10+20",
+            "sMRAkj9ApKtQfS4F": "4d10+20",
+            "Q0uQHu5KOkhmcCBC": "3d8+8",
+            "u0U9lYSHQRF8zoes": "3d8+8",
+            "ACkAJzOzLzDH3Z4Z": "2d6+4",
+            "Wkr66FT2QdB3ZDLM": "2d6+4",
+            "oqZuLcpDeGzR7zXR": "2d6+4",
+            "j7C1CP8oaYZcZkr0": "3d8+8",
+            "jyTbSzI3JRHRzZ4h": "2d6+4",
+            "xxmoeRATAjj7TJIW": "3d8+8",
+            "O4kQmLYT2rcfC9JM": "3d8+8",
+            "2qPQA37ZqgwaBts4": "3d8+8",
+            "4QclVv9M0sgngihu": "1d4+2",
+            "9KAVJ1UELGWn9a5T": "4d10+20",
+            "NGBre7RHNhDZ7TYf": "2d6+4",
+            "T6Mx7SiqyiCA2pR3": "3d8+8",
+            "0LBcTJcfucEfUJU1": "4d10+20",
+            "bVBEdcZSu60UL8ew": "1",
+            "zCImHCIEhpQIOYZD": "1",
+            "HYtt3jD7vGpaQzss": "1",
+            "0isAZPcexzr0kTOT": "1",
+            "JJukhza8UQdb0Km7": "1",
+            "h6iPgaShpt0ESGNP": "1",
+            "OLRPAFEIGHTJUTW1": "1",
+            "kW8UXWfp0hQT4pfY": "1",
+            "1zQSIq0qAuQmjqhF": "1",
+            "elccVHcpDXeVWXPw": "1",
+            "mtOJkkE8RJMdQWdu": "1",
+            "qvucsMNJLlVN0G1N": "1",
+            "fRnyuHg4qVDZ9EOD": "1",
+            "6m2TUBXwEntFseAc": "1",
+            "zEVCI4FyQj0txOKA": "1",
+            "h4D26JkY20NjQ0Qy": "1",
+            "peryWzrPmSpq6COY": "1",
+            "ptekCddUvmnldATP": "1",
+            "0zXkVui9oO0h3Sn1": "1",
+            "segqU17MkbJdZzvC": "1d2-1",
+            "EWoLh1gHFeF7oxfG": "1d4+2",
+            "YcwxMiJN0kXCUH23": "1d4+2",
+            "aQDgum2PMANv5Sro": "1d4+2",
+            "1GkxKXlrBfqjbm7q": "1d3",
+            "WgMPoPwJohCaIkyA": "1d2-1",
+            "kBpK8FcCZDVpAHAZ": "1d2-1",
+            "R7MgZDFbm4PT9HU8": "1d2-1",
+            "tfnAsHFyMyDjxUuh": "1d2-1",
+            "kw3ce2dI7ZwQeCQR": "1d3",
+            "yEa0CWASUtZYA858": "1d3",
+            "ADeYgp2vaf4fCSM9": "1d3"
+          },
+          "onOpen": true,
+          "every": 7,
+          "mode": "reroll"
+        },
+        "wontBuy": {
+          "types": [],
+          "kinds": [
+            "vehicle",
+            "mount",
+            "tack",
+            "meal",
+            "lodging",
+            "service",
+            "travel"
+          ]
+        }
       }
     },
     "item-piles": {
@@ -10635,7 +15256,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "vehicle,mount,tack,food-drink,meal,lodging,service,travel,gear"
+            "filters": "vehicle,mount,tack,meal,lodging,service,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -10712,7 +15333,18 @@
               "peryWzrPmSpq6COY": "1",
               "ptekCddUvmnldATP": "1",
               "0zXkVui9oO0h3Sn1": "1",
-              "segqU17MkbJdZzvC": "1d2-1"
+              "segqU17MkbJdZzvC": "1d2-1",
+              "EWoLh1gHFeF7oxfG": "1d4+2",
+              "YcwxMiJN0kXCUH23": "1d4+2",
+              "aQDgum2PMANv5Sro": "1d4+2",
+              "1GkxKXlrBfqjbm7q": "1d3",
+              "WgMPoPwJohCaIkyA": "1d2-1",
+              "kBpK8FcCZDVpAHAZ": "1d2-1",
+              "R7MgZDFbm4PT9HU8": "1d2-1",
+              "tfnAsHFyMyDjxUuh": "1d2-1",
+              "kw3ce2dI7ZwQeCQR": "1d3",
+              "yEa0CWASUtZYA858": "1d3",
+              "ADeYgp2vaf4fCSM9": "1d3"
             }
           }
         ],

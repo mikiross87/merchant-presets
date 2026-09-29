@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/stables-horses.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d21",
+  "formula": "1d22",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -345,6 +345,22 @@
       "range": [
         21,
         21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LmuhbOk6OMrMh2aI",
+      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.LmuhbOk6OMrMh2aI",
+      "type": "document",
+      "name": "Horseshoes of Speed",
+      "img": "icons/tools/smithing/horseshoe-steel-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHorseshoesOfS",
+      "weight": 1,
+      "range": [
+        22,
+        22
       ],
       "drawn": false,
       "description": "",

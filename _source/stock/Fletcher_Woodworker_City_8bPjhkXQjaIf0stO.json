@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/lumbermill.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d20",
+  "formula": "1d32",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -329,6 +329,198 @@
       "range": [
         20,
         20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OMyF1vW1bUNSnfsc",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.OMyF1vW1bUNSnfsc",
+      "type": "document",
+      "name": "Bracers of Archery",
+      "img": "icons/equipment/wrist/bracer-banded-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBracersOfArch",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "n4CTC9c5wV60Of5g",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.n4CTC9c5wV60Of5g",
+      "type": "document",
+      "name": "Efficient Quiver",
+      "img": "icons/containers/ammunition/arrows-quiver-brown-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgQuiverOfEhlon",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wyy9Hl3iYYJpJCN1",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.wyy9Hl3iYYJpJCN1",
+      "type": "document",
+      "name": "Longbow +1",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3BOB7HgPWrlHB4kD",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ay1ou4XMIqwGzkJ2",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.ay1ou4XMIqwGzkJ2",
+      "type": "document",
+      "name": "Shortbow +1",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.eJvDTFsYLMaUPJcX",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "we71Ol5hZfHWOt4h",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.we71Ol5hZfHWOt4h",
+      "type": "document",
+      "name": "Light Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cFTwsiqeJ2qYlul6",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NfaN1mbBviF3parz",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.NfaN1mbBviF3parz",
+      "type": "document",
+      "name": "Heavy Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-loaded-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CriagYKuEAzBwRSn",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jLykIRM4cGn1551P",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.jLykIRM4cGn1551P",
+      "type": "document",
+      "name": "Hand Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-slotted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QGV06ulqiSpksSuS",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FieFIGqyNOgmSR5r",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.FieFIGqyNOgmSR5r",
+      "type": "document",
+      "name": "Longbow +2",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.iFTsmOdk6NopFJUa",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4KdQMTd0Hqri8nqp",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.4KdQMTd0Hqri8nqp",
+      "type": "document",
+      "name": "Shortbow +2",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.d0WcDhnn6p4O8J7F",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "COUslav4dMoPhbGK",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.COUslav4dMoPhbGK",
+      "type": "document",
+      "name": "Light Crossbow +2",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.x2H50SqAghR4M5sq",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ztZHbzbMsefEF6CZ",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.ztZHbzbMsefEF6CZ",
+      "type": "document",
+      "name": "Heavy Crossbow +2",
+      "img": "icons/weapons/crossbows/crossbow-loaded-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.breWbJPLH6xMSeA3",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xFuaRPLJOyTwEa3g",
+      "_key": "!tables.results!8bPjhkXQjaIf0stO.xFuaRPLJOyTwEa3g",
+      "type": "document",
+      "name": "Hand Crossbow +2",
+      "img": "icons/weapons/crossbows/crossbow-slotted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MPAh2YHPSb4y99j4",
+      "weight": 1,
+      "range": [
+        32,
+        32
       ],
       "drawn": false,
       "description": "",
