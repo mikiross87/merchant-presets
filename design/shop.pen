@@ -3083,19 +3083,6 @@
                           "content": "Seal the bargain · 30 gp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "VD7H4",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -9870,7 +9857,7 @@
                       "name": "Ledger",
                       "clip": true,
                       "width": "fill_container",
-                      "height": 170,
+                      "height": 180,
                       "layout": "vertical",
                       "gap": 8,
                       "children": [
@@ -10575,19 +10562,6 @@
                           "content": "Seal it · 1 gp 9 sp 2 cp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "iNzdo",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -13224,19 +13198,6 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "r5MJ0z",
-                      "name": "Foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change, counted from Aria's coins.",
-                      "fontFamily": "$font-slip",
-                      "fontSize": 12,
-                      "fontWeight": "normal",
-                      "fontStyle": "italic"
                     }
                   ]
                 }
@@ -13657,19 +13618,6 @@
                           ]
                         }
                       ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "AJTxD",
-                      "name": "Foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "At ½ of value. The till holds 154 gp 5 sp.",
-                      "fontFamily": "$font-slip",
-                      "fontSize": 12,
-                      "fontWeight": "normal",
-                      "fontStyle": "italic"
                     }
                   ]
                 }
@@ -17470,19 +17418,6 @@
                           "content": "Seal the bargain · 15 gp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "u7Cmon",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -22387,19 +22322,6 @@
                           "content": "Seal the bargain · 27 gp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "cMqFs",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -30536,19 +30458,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "text",
-                  "id": "c0Mxz3",
-                  "name": "Foot",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Exact change, counted from Aria's coins.",
-                  "fontFamily": "$font-slip",
-                  "fontSize": 12,
-                  "fontWeight": "normal",
-                  "fontStyle": "italic"
                 }
               ]
             }
@@ -34068,19 +33977,6 @@
                           "content": "Seal it · 105 gp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "XgLeZ",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -35432,19 +35328,6 @@
                           "content": "Seal the bargain · 76 gp"
                         }
                       }
-                    },
-                    {
-                      "type": "text",
-                      "id": "supdY",
-                      "name": "Slip foot",
-                      "fill": "$text-secondary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Exact change is counted from your coins.",
-                      "textAlign": "center",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 11,
-                      "fontWeight": "normal"
                     }
                   ]
                 }
