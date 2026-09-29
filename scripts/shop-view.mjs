@@ -477,8 +477,8 @@ function whatItIs(item, labels) {
   if (item.type === "weapon") return sentenceCase(labelOf(labels.weaponTypes?.[type]));
   if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "")) return sentenceCase(labelOf(labels.armorTypes[type]));
   if (item.type === "tool") return sentenceCase(labelOf(labels.toolTypes?.[type])) || labelOf(labels.typeLabels?.tool);
-  // A magic wand, ring or wondrous item by its kind; mundane equipment stays "Equipment" (#185).
-  if (item.type === "equipment" && rarityOf(item) && labels.equipmentTypes?.[type]) return sentenceCase(labelOf(labels.equipmentTypes[type]));
+  // A magic wand, ring or wondrous item by its kind; mundane or unidentified equipment stays "Equipment" (#185).
+  if (item.type === "equipment" && item.system?.identified !== false && rarityOf(item) && labels.equipmentTypes?.[type]) return sentenceCase(labelOf(labels.equipmentTypes[type]));
   return labelOf(labels.consumableTypes?.[type]) || labelOf(labels.typeLabels?.[item.type]);
 }
 
