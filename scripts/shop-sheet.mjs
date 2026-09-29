@@ -373,21 +373,23 @@ function windowBar(frame, { npcSheet }) {
  * (#198, design mRg3y). A wrapped name is as wide as the line lets it be, so the part after the
  * last line is empty: pull what follows the name (the leader, or a deal tag) back over it, and
  * hold the name at the width it wrapped to, or the room it gives up would re-wrap it. Not when
- * what follows went below the name (a crowded line), nor in a right-to-left window, whose last
- * line ends on the left.
+ * the leader and coins went below the name (a crowded line: the room pulled back would bring them
+ * up beside a narrower name, and the pull would overshoot it), nor in a right-to-left window,
+ * whose last line ends on the left.
  */
 function hangLeaders(ledger) {
-  const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")].map(name => ({ name, next: name.nextElementSibling }));
+  const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")]
+    .map(name => ({ name, next: name.nextElementSibling, cost: name.parentElement.querySelector(":scope > .mp-cost") }));
   for (const { name, next } of lines) {
     name.style.maxWidth = "";
     if (next) next.style.marginLeft = "";
   }
   // Every line measured before any is changed: one layout, not one per line.
   const range = ledger.ownerDocument.createRange();
-  const measured = lines.map(({ name, next }) => {
-    if (!next || getComputedStyle(name).direction === "rtl") return null;
+  const measured = lines.map(({ name, next, cost }) => {
+    if (!next || !cost || getComputedStyle(name).direction === "rtl") return null;
     const box = name.getBoundingClientRect();
-    if (next.getBoundingClientRect().top >= box.bottom) return null;
+    if (cost.getBoundingClientRect().top >= box.bottom) return null;
     range.selectNodeContents(name);
     const rects = [...range.getClientRects()];
     if (!rects.length) return null;

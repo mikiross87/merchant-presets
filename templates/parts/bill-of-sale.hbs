@@ -17,8 +17,7 @@
             <div class="mp-entry" data-pen="{{this.name}} entry">
               <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
               <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
-              <span class="mp-leader" data-pen="{{this.name}} leader"></span>
-              <span class="mp-line-coins" data-pen="{{this.name}} coins"><span class="mp-coin" data-pen="{{this.pen}}"><b data-pen="Amount">—</b></span></span>
+              <span class="mp-cost"><span class="mp-leader" data-pen="{{this.name}} leader"></span><span class="mp-line-coins" data-pen="{{this.name}} coins"><span class="mp-coin" data-pen="{{this.pen}}"><b data-pen="Amount">—</b></span></span></span>
             </div>
             <div class="mp-detail" data-pen="{{this.name}} detail">
               <span class="mp-each is-sold-out" data-pen="{{this.name}} each">{{localize "MERCHANT_PRESETS.Shop.Bill.SoldOut"}}</span>
@@ -31,8 +30,7 @@
               <span class="mp-qty" data-pen="{{this.name}} qty">{{this.quantity}} ×</span>
               <span class="mp-line-name" data-pen="{{this.name}} name">{{this.name}}</span>
               {{#if this.dealTag}}<span class="mp-tag is-good" data-pen="{{this.name}} deal tag" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Deal.Yours'}}"><span data-pen="{{this.name}} deal tag text">{{this.dealTag}}</span></span>{{/if}}
-              <span class="mp-leader" data-pen="{{this.name}} leader"></span>
-              <span class="mp-line-coins" data-pen="{{this.name}} coins">{{> mpCoins coins=this.lineTotalCoins mode="count"}}</span>
+              <span class="mp-cost"><span class="mp-leader" data-pen="{{this.name}} leader"></span><span class="mp-line-coins" data-pen="{{this.name}} coins">{{> mpCoins coins=this.lineTotalCoins mode="count"}}</span></span>
             </div>
             <div class="mp-detail" data-pen="{{this.name}} detail">
               <span class="mp-detail-left" data-pen="{{this.name}} detail left">
