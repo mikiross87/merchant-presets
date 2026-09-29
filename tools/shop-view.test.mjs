@@ -619,6 +619,9 @@ test("a magic good's meta line says its rarity before its weight, and leaves att
   assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "uncommon", identified: false, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
   assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["rare"], identified: false, ...lb(3) }), LABELS, t),
     "Martial melee · Versatile, magical · 3 lb");
+  // Nor does it take a magic kind's name: an unidentified ring is Equipment, like a mundane one (#189 review).
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarities: ["uncommon"], identified: false, ...lb(1) }), { ...LABELS, typeLabels: { equipment: "Equipment" } }, t),
+    "Equipment · 1 lb");
 });
 
 test("a good sits under the category its line names, else its kind of good", () => {
