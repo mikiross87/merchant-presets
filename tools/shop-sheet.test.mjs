@@ -24,6 +24,7 @@ class ActorSheetV2 {
   get isEditable() { return this.document.testUserPermission(globalThis.game.user, this.options.editPermission); }
   _toggleDisabled(disabled) { this.disabled = disabled; }
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
+  _onClose() {}
   render() { this.renders++; }
   async _prepareContext() { return {}; }
 }
@@ -781,6 +782,42 @@ test("the buyer search hides a group's heading once it filters out everyone unde
   search.value = "";
   listeners.input();
   assert.deepEqual(picker.map(n => n.hidden), [false, false, false, false, false, false]);
+});
+
+/**
+ * A window whose document holds one bill ledger: the font set and the observers it gets, so a test
+ * can see what the sheet listens to. `fonts.check` throws, as it does for a font it can't parse.
+ */
+function billWindow(sheet) {
+  const listeners = new Map();
+  const observed = [];
+  const doc = {
+    fonts: {
+      addEventListener: (type, fn) => listeners.set(fn, type),
+      removeEventListener: (type, fn) => { if (listeners.get(fn) === type) listeners.delete(fn); },
+      check: () => { throw new SyntaxError("Could not resolve the font"); },
+      load: () => Promise.resolve([])
+    },
+    defaultView: { ResizeObserver: class { observe(el) { observed.push(el); } disconnect() { observed.length = 0; } } }
+  };
+  const ledger = { isConnected: true, ownerDocument: doc, querySelector: () => null, querySelectorAll: () => [] };
+  sheet.element = { ownerDocument: doc, querySelector: () => null, querySelectorAll: selector => (selector === ".mp-ledger" ? [ledger] : []) };
+  const fontListeners = () => [...listeners.values()];
+  return { fontListeners, observed };
+}
+
+test("a bill's leaders are hung again whenever a font finishes loading, until the window closes (#205 review)", async () => {
+  const { sheet } = openShop();
+  const { fontListeners, observed } = billWindow(sheet);
+  await sheet._onRender({}, {});
+  assert.deepEqual(fontListeners(), ["loadingdone"]);
+  assert.equal(observed.length, 1);
+  // A re-render replaces the listener rather than adding a second.
+  await sheet._onRender({}, {});
+  assert.deepEqual(fontListeners(), ["loadingdone"]);
+  sheet._onClose({});
+  assert.deepEqual(fontListeners(), []);
+  assert.equal(observed.length, 0);
 });
 
 test("the shop description is cleaned before it's put in the page", async () => {
