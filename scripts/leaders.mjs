@@ -35,12 +35,13 @@ export function hangLeaders(ledger) {
     // A flex item's computed width is its used width in CSS pixels, unrounded (offsetWidth rounds).
     const style = view.getComputedStyle(name);
     const width = parseFloat(style.width);
-    if (width < 5 * parseFloat(style.fontSize)) return { crowded: true };
     range.selectNodeContents(name);
     const rects = [...range.getClientRects()];
     if (!rects.length) return null;
-    // The last line's right end: a name mixing scripts can make it of several boxes.
     const last = rects.at(-1);
+    // Squeezed: wrapped into less than 5em. A short name on one line is narrow by its own width.
+    if (last.top - rects[0].top >= 1 && width < 5 * parseFloat(style.fontSize)) return { crowded: true };
+    // The last line's right end: a name mixing scripts can make it of several boxes.
     const end = Math.max(...rects.filter(r => Math.abs(r.top - last.top) < 1).map(r => r.right));
     return { width, slack: (box.right - end) * (width / box.width) };
   });
