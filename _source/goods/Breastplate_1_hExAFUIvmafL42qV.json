@@ -1,0 +1,88 @@
+{
+  "name": "Breastplate +1",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgArmor12or3000 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4400,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 20,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 14,
+      "magicalBonus": 1,
+      "dex": 2
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "medium",
+      "baseItem": "breastplate"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": null,
+    "activities": {},
+    "identifier": "breastplate"
+  },
+  "_id": "hExAFUIvmafL42qV",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-collared-steel-grey.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgArmor12or3000",
+        "enchantment": "6JbAzK6YBkyx73iy",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmBreastplat"
+      }
+    }
+  },
+  "_key": "!items!hExAFUIvmafL42qV",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

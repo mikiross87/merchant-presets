@@ -2364,6 +2364,1056 @@
       "_key": "!actors.items!rrXsKno8WincEfQz.gMmb4mQSuEacDE9E"
     },
     {
+      "name": "Boots of Elvenkind",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p></div><p>While you wear these boots, your steps make no sound, regardless of the surface you are moving across. You also have Advantage on Dexterity (Stealth) checks.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-elvenkind",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Boots of Elvenkind",
+          "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+          "origin": null,
+          "_id": "Jv4t9bwwLzkiGV4K",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "",
+                "value": "",
+                "type": "add",
+                "phase": "initial",
+                "_id": "RHoNEHxHTNzZMBHD"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1768925670296,
+            "modifiedTime": 1783544093872,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.Kc1zkOFc8hSNubyy.Jv4t9bwwLzkiGV4K"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk"
+      },
+      "_id": "Kc1zkOFc8hSNubyy",
+      "_key": "!actors.items!rrXsKno8WincEfQz.Kc1zkOFc8hSNubyy"
+    },
+    {
+      "name": "Boots of Striding and Springing",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-collared-leather-brown.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>While you wear these boots, your Speed becomes 30 feet unless your Speed is higher, and your Speed isn't reduced by you carrying weight in excess of your carrying capacity or wearing Heavy Armor.</p><p>Once on each of your turns, you can jump up to 30 feet by spending only 10 feet of movement.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-striding-and-springing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Unburdened Movement",
+          "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+          "_id": "W6qdEgKh9MQHr48m",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.walk",
+                "value": 30,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "w9tt06ONQPwBaJ2N"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Your Speed becomes 30 feet unless your Speed is higher, and your Speed isn’t reduced by you carrying weight in excess of your carrying capacity or wearing Heavy Armor.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728681153281,
+            "modifiedTime": 1783544093953,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.d6wPngaVzvQflbav.W6qdEgKh9MQHr48m"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfStridi"
+      },
+      "_id": "d6wPngaVzvQflbav",
+      "_key": "!actors.items!rrXsKno8WincEfQz.d6wPngaVzvQflbav"
+    },
+    {
+      "name": "Gloves of Swimming and Climbing",
+      "type": "equipment",
+      "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing these gloves, you have a Climb Speed and a Swim Speed equal to your Speed, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim.</p><section class=\"secret\" id=\"secret-9sClXeq4AMq44GSR\"><p><strong>Foundry Note</strong></p><p>The +5 bonus to checks made to climb or swim should be added as a situational bonus when applicable.</p></section>",
+          "chat": ""
+        },
+        "identifier": "gloves-of-swimming-and-climbing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Gloves On",
+          "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+          "_id": "ErZgCuKzqc1TUlh9",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.skills.ath.bonuses.check",
+                "value": 5,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "PTlDr6AmbDDZjWQY"
+              },
+              {
+                "key": "system.attributes.movement.climb",
+                "value": "@attributes.movement.walk",
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "YQfm6WvZKOLdBipn"
+              },
+              {
+                "key": "system.attributes.movement.swim",
+                "value": "@attributes.movement.walk",
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "LmERZSCb4kriGH4F"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You have a Climb Speed and a Swim Speed equal to your Speed, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfThiev.ActiveEffect.6f8ARzOvPmhNZ0NV",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730728909619,
+            "modifiedTime": 1783544095947,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.S6MM4HZaaBjUt4BP.ErZgCuKzqc1TUlh9"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfSwimm"
+      },
+      "_id": "S6MM4HZaaBjUt4BP",
+      "_key": "!actors.items!rrXsKno8WincEfQz.S6MM4HZaaBjUt4BP"
+    },
+    {
+      "name": "Boots of the Winterlands",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-leather-banded-furred.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>These furred boots are snug and feel warm. While wearing them, you gain the following benefits.</p><p><strong>Cold Resistance.</strong> You have Resistance to Cold damage and can tolerate temperatures of 0 degrees Fahrenheit or lower without any additional protection.</p><p><strong>Winter Strider.</strong> You ignore Difficult Terrain created by ice or snow.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-the-winterlands",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Cold Resistance",
+          "img": "icons/magic/water/snowflake-ice-gray.webp",
+          "_id": "OKyLOqGM9D5Tx57M",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.traits.dr.value",
+                "value": "cold",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "70xCV6nzrLqi1tvb"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You have Resistance to Cold damage and can tolerate temperatures of 0 degrees Fahrenheit or lower without any additional protection.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728681470080,
+            "modifiedTime": 1783544093987,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.OIlPyxAlCNJQqHs6.OKyLOqGM9D5Tx57M"
+        },
+        {
+          "name": "Winter Strider",
+          "img": "icons/magic/water/barrier-ice-crystal-wall-faceted-blue.webp",
+          "origin": null,
+          "_id": "tdEZrpjyVIPzsuHg",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.ignoredDifficultTerrain",
+                "value": "ice",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "Q3rfl32SNSPWmWlA"
+              },
+              {
+                "key": "system.attributes.movement.ignoredDifficultTerrain",
+                "value": "snow",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "rc4I5R3cDwSGZA8d"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You ignore Difficult Terrain created by ice or snow.</p>",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1753118928666,
+            "modifiedTime": 1783544093987,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.OIlPyxAlCNJQqHs6.tdEZrpjyVIPzsuHg"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfTheWin"
+      },
+      "_id": "OIlPyxAlCNJQqHs6",
+      "_key": "!actors.items!rrXsKno8WincEfQz.OIlPyxAlCNJQqHs6"
+    },
+    {
+      "name": "Winged Boots",
+      "type": "equipment",
+      "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+      "system": {
+        "activities": {
+          "Ef5R7kWEyJZ765vY": {
+            "type": "utility",
+            "name": "Fly",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "jKz5xLbftW2r0f3P",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "Ef5R7kWEyJZ765vY",
+            "img": "",
+            "appliedEffects": [
+              "jKz5xLbftW2r0f3P"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d4"
+            }
+          ],
+          "max": "4"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>These boots have 4 charges and regain 1d4 expended charges daily at dawn. While wearing the boots, you can take a Magic action to expend 1 charge, gaining a Fly Speed of 30 feet for 1 hour. If you are flying when the duration expires, you descend at a rate of 30 feet per round until you land.</p>",
+          "chat": ""
+        },
+        "identifier": "winged-boots",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Winged",
+          "img": "icons/magic/holy/angel-wings-gray.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "lj3I9Ln0lzb6h40R",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.fly",
+                "value": 30,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "hDgVk6JQplgJfSNO"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>The wings lasts for 1 hour or until you end the effect early as a Magic action. The wings give you a Fly Speed of 60 feet.</p>",
+          "tint": "#ffffff",
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgWingsOfFlying.ActiveEffect.JLR5JpSUgL3yYcvt",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730660820044,
+            "modifiedTime": 1783544099537,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!rrXsKno8WincEfQz.PeLp4AE03Lxx76YA.lj3I9Ln0lzb6h40R"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgWingedBoots00"
+      },
+      "_id": "PeLp4AE03Lxx76YA",
+      "_key": "!actors.items!rrXsKno8WincEfQz.PeLp4AE03Lxx76YA"
+    },
+    {
+      "name": "Gloves of Missile Snaring",
+      "type": "equipment",
+      "img": "icons/equipment/hand/glove-tooled-leather-blue.webp",
+      "system": {
+        "activities": {
+          "x4IPCLTGbrUwWZxn": {
+            "type": "utility",
+            "name": "Snare Missile",
+            "_id": "x4IPCLTGbrUwWZxn",
+            "sort": 0,
+            "activation": {
+              "type": "reaction",
+              "value": null,
+              "override": false,
+              "condition": "Hit by an attack roll with a Ranged or Thrown weapon"
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "object",
+                "special": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "Snare Missile",
+              "formula": "1d10 + @abilities.dex.mod"
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>If you're hit by an attack roll made with a Ranged or Thrown weapon while wearing these gloves, you can take a Reaction to reduce the damage by 1d10 plus your Dexterity modifier if you have a free hand. If you reduce the damage to 0, you can catch the ammunition or weapon if it is small enough for you to hold in that hand.</p>",
+          "chat": ""
+        },
+        "identifier": "gloves-of-missile-snaring",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfMissi"
+      },
+      "_id": "RRqDBqhNVgrO0S4C",
+      "_key": "!actors.items!rrXsKno8WincEfQz.RRqDBqhNVgrO0S4C"
+    },
+    {
       "name": "Shortsword",
       "system": {
         "description": {
@@ -3064,6 +4114,42 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Boots of Elvenkind": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of Striding and Springing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gloves of Swimming and Climbing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of the Winterlands": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Winged Boots": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gloves of Missile Snaring": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -3102,7 +4188,13 @@
             "qUY3rIkTDEK9HQy9": "1d6+2",
             "NCwfBW5jJArlETXZ": "2d6+4",
             "yxq7CVjopssfqCbo": "3d6+8",
-            "bdofuYMj5CBPE8CB": "2d6+4"
+            "bdofuYMj5CBPE8CB": "2d6+4",
+            "mWQiz85UpJC3A6ng": "1d2",
+            "9VZ9RP8Xt6e2COBe": "1d2",
+            "xAr7T4G0QblQrUGv": "1d2",
+            "oaRVxJY6hBT2mXYt": "1d2",
+            "Qp0t6EpN7wMpVjyZ": "1d2",
+            "dHQ4qUsTy2kAquOn": "1d2"
           },
           "onOpen": true,
           "every": 7,
@@ -3176,7 +4268,13 @@
               "qUY3rIkTDEK9HQy9": "1d6+2",
               "NCwfBW5jJArlETXZ": "2d6+4",
               "yxq7CVjopssfqCbo": "3d6+8",
-              "bdofuYMj5CBPE8CB": "2d6+4"
+              "bdofuYMj5CBPE8CB": "2d6+4",
+              "mWQiz85UpJC3A6ng": "1d2",
+              "9VZ9RP8Xt6e2COBe": "1d2",
+              "xAr7T4G0QblQrUGv": "1d2",
+              "oaRVxJY6hBT2mXYt": "1d2",
+              "Qp0t6EpN7wMpVjyZ": "1d2",
+              "dHQ4qUsTy2kAquOn": "1d2"
             }
           }
         ],

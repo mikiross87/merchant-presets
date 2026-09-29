@@ -195,6 +195,15 @@ def refuses(item_filters, item):
 VALUABLE_TYPES = ("gem", "art", "trade")
 VALUABLES = "Valuables"
 
+def is_magic(item):
+    """A magic item, as the SRD marks one: a rarity, or the Magical property."""
+    sysd = item.get("system") or {}
+    return bool(sysd.get("rarity")) or "mgc" in (sysd.get("properties") or [])
+
+def gp_price(item):
+    price = (item.get("system") or {}).get("price") or {}
+    return (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
+
 def is_valuable(item):
     return (item.get("type") == "loot"
             and ((item.get("system") or {}).get("type") or {}).get("value") in VALUABLE_TYPES)
@@ -482,6 +491,12 @@ def main():
     fold_a = {}; fold_t = fid("stockfolder")
     docs_a = []; docs_t = []
     unresolved = collections.defaultdict(set)
+    # About fifty SRD magic items carry no price: the "+1, +2, or +3" parents, the Deck of Many
+    # Things cards, and real ones such as the Immovable Rod. Stocked as they are they would land in
+    # the cheapest stock band and a city would roll dozens of them (#33). A price on the line is no
+    # cure: it reaches only this snapshot, and a shop rolls its shelf from the stock table, which
+    # draws the SRD item unpriced. tools/build_magic_goods.py writes a priced good instead.
+    unpriced = collections.defaultdict(set)
     counts = collections.Counter(); gear_counts = collections.Counter()
 
     for key, label, purse_mul, ti in TIERS:
@@ -511,6 +526,8 @@ def main():
                     src = srd.get(norm(line["n"])); own = False
                     if not src: unresolved[line["n"]].add(shop["name"]); continue
                     uuid = f"Compendium.{SRD_PACK}.Item.{src['_id']}"
+                if is_magic(src) and not gp_price(src):
+                    unpriced[line["n"]].add(shop["name"]); continue
 
                 it, is_container = make_item(src, line, aid, uuid, own, ti)
                 items.append(it); counts[label] += 1
@@ -520,7 +537,9 @@ def main():
                 # two items, exactly as on a character sheet. So stock them as
                 # separate documents rather than one with a count.
                 if is_container:
-                    n = roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
+                    # A Bag of Holding or a Folding Boat is one of its kind on
+                    # any shelf (#33).
+                    n = 1 if is_magic(src) else roll(CONTAINER_COUNTS[ti], f"{aid}|{uuid}|containers")
                     containers[src["name"]] = n
                     for c in range(1, n):
                         dup, _ = make_item(src, line, aid, uuid, own, ti, copy=c)
@@ -696,6 +715,10 @@ def main():
     if unresolved:
         print(f"  not in SRD, left out ({len(unresolved)}):")
         for n, shops in sorted(unresolved.items()):
+            print(f"     {n}  —  {', '.join(sorted(shops))}")
+    if unpriced:
+        print(f"  magic with no price, left out ({len(unpriced)}):")
+        for n, shops in sorted(unpriced.items()):
             print(f"     {n}  —  {', '.join(sorted(shops))}")
 
 # tools/build_spell_goods.py imports fid and norm from here.

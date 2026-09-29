@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/lumbermill.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d19",
+  "formula": "1d26",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -313,6 +313,118 @@
       "range": [
         19,
         19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QgffCj6huJz9Pk9j",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.QgffCj6huJz9Pk9j",
+      "type": "document",
+      "name": "Bracers of Archery",
+      "img": "icons/equipment/wrist/bracer-banded-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBracersOfArch",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wUEnw6FvBSYqyLqV",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.wUEnw6FvBSYqyLqV",
+      "type": "document",
+      "name": "Efficient Quiver",
+      "img": "icons/containers/ammunition/arrows-quiver-brown-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgQuiverOfEhlon",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8e7UdqEcw60o1Ca8",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.8e7UdqEcw60o1Ca8",
+      "type": "document",
+      "name": "Longbow +1",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3BOB7HgPWrlHB4kD",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XiQfq6svNOiRmvsx",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.XiQfq6svNOiRmvsx",
+      "type": "document",
+      "name": "Shortbow +1",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.eJvDTFsYLMaUPJcX",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BI9IjqRSXj22eHk7",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.BI9IjqRSXj22eHk7",
+      "type": "document",
+      "name": "Light Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cFTwsiqeJ2qYlul6",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6smqc6filxIbEi6h",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.6smqc6filxIbEi6h",
+      "type": "document",
+      "name": "Heavy Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-loaded-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CriagYKuEAzBwRSn",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VZZRnosNXOtTy7wd",
+      "_key": "!tables.results!qY696EaXTQU0OwqG.VZZRnosNXOtTy7wd",
+      "type": "document",
+      "name": "Hand Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-slotted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QGV06ulqiSpksSuS",
+      "weight": 1,
+      "range": [
+        26,
+        26
       ],
       "drawn": false,
       "description": "",

@@ -1977,6 +1977,965 @@
       "_key": "!actors.items!jwnx9SR2cla6JDNr.KksaGHLnDlLArhkV"
     },
     {
+      "name": "Stone of Good Luck (Luckstone)",
+      "type": "equipment",
+      "img": "icons/commodities/gems/gem-rough-rectangle-red.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While this polished agate is on your person, you gain a +1 bonus to ability checks and saving throws.</p><section id=\"secret-nh2ZHIcUKEYwoYE9\" class=\"secret\"><p><strong>Foundry Note</strong></p><p>This item includes an Active Effect that automates the bonus.</p></section>",
+          "chat": ""
+        },
+        "identifier": "stone-of-good-luck-luckstone",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Lucky",
+          "img": "icons/magic/control/buff-luck-fortune-green.webp",
+          "_id": "Uv7ssfY8bPYU1df8",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.bonuses.abilities.check",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "AMeAQoMxGicoal5w"
+              },
+              {
+                "key": "system.bonuses.abilities.save",
+                "value": 1,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "VFCpjdh2smR3YH2l"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730665110091,
+            "modifiedTime": 1783544098769,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!jwnx9SR2cla6JDNr.H0y1NgZO3TzwLOLv.Uv7ssfY8bPYU1df8"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgStoneOfGoodLu"
+      },
+      "_id": "H0y1NgZO3TzwLOLv",
+      "_key": "!actors.items!jwnx9SR2cla6JDNr.H0y1NgZO3TzwLOLv"
+    },
+    {
+      "name": "Gem of Brightness",
+      "type": "equipment",
+      "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+      "system": {
+        "activities": {
+          "JqueOuWlVu4CcNRP": {
+            "type": "utility",
+            "name": "First Command Word",
+            "_id": "JqueOuWlVu4CcNRP",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "60"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "zSCMjUyMs03rTkuH": {
+            "type": "save",
+            "name": "Second Command Word",
+            "_id": "zSCMjUyMs03rTkuH",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "05Lok63szRXdAafx",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "60"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [],
+              "onSave": "half"
+            },
+            "save": {
+              "ability": "con",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "img": "",
+            "appliedEffects": [
+              "05Lok63szRXdAafx"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "Hp7wMeMuSpJoTVd1": {
+            "type": "save",
+            "name": "Third Command Word",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "5",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "05Lok63szRXdAafx",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "value": "",
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "cone",
+                "size": "30",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [],
+              "onSave": "half"
+            },
+            "save": {
+              "ability": "con",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "_id": "Hp7wMeMuSpJoTVd1",
+            "img": "",
+            "appliedEffects": [
+              "05Lok63szRXdAafx"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "50"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>This prism has 50 charges. While you are holding it, you can take a Magic action and use one of three command words to cause one of the following effects:</p><p><strong>First Command Word.</strong> The gem sheds Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. This effect doesn't expend a charge. It lasts until you take a Bonus Action to repeat the command word or until you use another function of the gem.</p><p><strong>Second Command Word.</strong> You expend 1 charge and cause the gem to fire a brilliant beam of light at one creature you can see within 60 feet of yourself. The creature must succeed on a DC 15 Constitution saving throw or have the &amp;Reference[Blinded apply=false] condition for 1 minute. The creature repeats the save at the end of each of its turns, ending the effect on itself on a success.</p><p><strong>Third Command Word.</strong> You expend 5 charges and cause the gem to flare with intense light in a 30-foot Cone. Each creature in the Cone makes a saving throw as if struck by the beam created with the second command word.</p><p>When all of the gem's charges are expended, the gem becomes a nonmagical jewel worth 50 GP.</p>",
+          "chat": ""
+        },
+        "identifier": "gem-of-brightness",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Blinded by Brilliance",
+          "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "pPaIBXupsARMFyyT",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [
+            "blinded"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730729662573,
+            "modifiedTime": 1783544095836,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!jwnx9SR2cla6JDNr.ti0yDEDCzf0A0kvk.pPaIBXupsARMFyyT"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGemOfBrightne"
+      },
+      "_id": "ti0yDEDCzf0A0kvk",
+      "_key": "!actors.items!jwnx9SR2cla6JDNr.ti0yDEDCzf0A0kvk"
+    },
+    {
+      "name": "Brooch of Shielding",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>While wearing this brooch, you have Resistance to Force damage, and you have Immunity to damage from the <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMissi]{Magic Missile}</em> spell.</p>",
+          "chat": ""
+        },
+        "identifier": "brooch-of-shielding",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0.2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Resistance: Force",
+          "img": "systems/dnd5e/icons/svg/activity/save.svg",
+          "_id": "sSr4OhNbTJ9ISRnH",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.traits.dr.value",
+                "value": "force",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "O00SDgE90XuoUMzC"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Additionally, you have Immunity to damage from the <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMissi]{Magic Missile}</em> spell.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728924884072,
+            "modifiedTime": 1783544094207,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!jwnx9SR2cla6JDNr.pjxUOfE33rXQraw6.sSr4OhNbTJ9ISRnH"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBroochOfShiel"
+      },
+      "_id": "pjxUOfE33rXQraw6",
+      "_key": "!actors.items!jwnx9SR2cla6JDNr.pjxUOfE33rXQraw6"
+    },
+    {
+      "name": "Silver Raven",
+      "system": {
+        "description": {
+          "value": "<p><em>See @UUID[Compendium.dnd5e.equipment24.Item.dmgFigurineOfWon]{Figurine of Wondrous Power}</em></p><p>This silver statuette of a raven can become a <strong>@UUID[Compendium.dnd5e.actors24.Actor.mmRaven000000000]{Raven}</strong> for up to 12 hours. Once it has been used, it can't be used again until 2 days have passed. While in raven form, the figurine grants you the ability to cast <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplAnimalMess]{Animal Messenger}</em> on it.</p><section class=\"secret\" id=\"secret-1zjsYfZzKHfXhi9j\"><p><strong>Foundry Note</strong></p><p>This item's limited uses represent the 2 days required before the figurine can be used again.</p></section>",
+          "chat": ""
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "activities": {
+          "H9avlnuBT1KSCMEp": {
+            "type": "summon",
+            "_id": "H9avlnuBT1KSCMEp",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "@item.uses.max",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "bonuses": {
+              "ac": "",
+              "hd": "",
+              "hp": "",
+              "attackDamage": "",
+              "saveDamage": "",
+              "healing": ""
+            },
+            "creatureSizes": [],
+            "creatureTypes": [],
+            "match": {
+              "attacks": false,
+              "proficiency": false,
+              "saves": false,
+              "ability": ""
+            },
+            "profiles": [
+              {
+                "count": "",
+                "name": "",
+                "_id": "AUX3WzRv6PMEm7dn",
+                "uuid": "Compendium.dnd5e.actors24.Actor.phbmobRaven00000",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "summon": {
+              "prompt": true,
+              "mode": "",
+              "identifier": ""
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "bO4agG7byTwFTiFg": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplAnimalMess",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [],
+              "spellbook": true
+            },
+            "_id": "bO4agG7byTwFTiFg",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "Can target only the Silver Raven"
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": "The Silver Raven in raven form"
+              },
+              "override": true,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": ""
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "day",
+              "type": "formula",
+              "formula": "1"
+            }
+          ],
+          "max": "2"
+        },
+        "identifier": "silver-raven-uncommon",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "type": "equipment",
+      "img": "icons/commodities/materials/feather-blue-grey.webp",
+      "effects": [],
+      "flags": {
+        "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+          },
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg"
+      },
+      "_id": "AVLj0hGsntTDpdBF",
+      "_key": "!actors.items!jwnx9SR2cla6JDNr.AVLj0hGsntTDpdBF"
+    },
+    {
       "name": "Rapier",
       "system": {
         "description": {
@@ -2527,6 +3486,30 @@
           "isService": false,
           "cantBeSoldToMerchants": false,
           "customCategory": "Valuables"
+        },
+        "Stone of Good Luck (Luckstone)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gem of Brightness": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Brooch of Shielding": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Silver Raven": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {},
@@ -2577,7 +3560,11 @@
             "7F5eEnMqNceNZFHB": "1d6+2",
             "lOevHzTZX1P4vG5k": "1d2",
             "jgWFxTmLmrLNwHoR": "1d3+1",
-            "57jEnBjLeBsQL8tO": "1d3+1"
+            "57jEnBjLeBsQL8tO": "1d3+1",
+            "xaXGSLeoWIXlNDI0": "1d2",
+            "iXs8iFLRM0WEAu38": "1d3+1",
+            "vRzRILHh47vVW0K7": "1d2",
+            "rAIy7HApOQIwb3eC": "1d2"
           },
           "onOpen": true,
           "every": 14,
@@ -2668,7 +3655,11 @@
               "7F5eEnMqNceNZFHB": "1d6+2",
               "lOevHzTZX1P4vG5k": "1d2",
               "jgWFxTmLmrLNwHoR": "1d3+1",
-              "57jEnBjLeBsQL8tO": "1d3+1"
+              "57jEnBjLeBsQL8tO": "1d3+1",
+              "xaXGSLeoWIXlNDI0": "1d2",
+              "iXs8iFLRM0WEAu38": "1d3+1",
+              "vRzRILHh47vVW0K7": "1d2",
+              "rAIy7HApOQIwb3eC": "1d2"
             }
           }
         ],

@@ -154,6 +154,18 @@ trades out itself. For GMs upgrading a world:
   and the shop window lists them under Food & drink. The general, adventurers'
   and druidic stores, which sell rations, now buy food and drink too, ale and
   bread included. (#150)
+- Shops sell the SRD 5.2 magic items, up to rare: potions and oils at the
+  alchemist, wands, rings and staffs at the arcane store, periapts and a Mace of
+  Disruption at the temple, elven boots and cloaks at the adventurers' store and
+  the thieves, figurines and ioun stones at the jeweler, and more across 16
+  shops. Common items are sold everywhere, uncommon ones in towns and cities,
+  rare ones only in cities, and each is limited stock that sells out and
+  restocks. The smith and the fletcher sell magic weapons and armour ready to
+  use: *Longsword +1*, *Mithral Half Plate Armor*, *Flame Tongue Longsword*,
+  *Giant Slayer Greataxe* and 108 more, made from the SRD's own enchantments
+  on its own weapons and armour. Very rare and legendary items are never
+  stocked. Merchants already in your world keep their old stock list; drag in
+  a fresh merchant to get these. (#33)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler

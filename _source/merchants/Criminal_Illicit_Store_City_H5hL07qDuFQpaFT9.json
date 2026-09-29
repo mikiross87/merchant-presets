@@ -10140,6 +10140,2886 @@
       "_key": "!actors.items!H5hL07qDuFQpaFT9.rU4sGxEsEt3oLB0f"
     },
     {
+      "name": "Potion of Invisibility",
+      "type": "consumable",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "system": {
+        "activities": {
+          "qYmaJ6qeUuRzigNI": {
+            "type": "utility",
+            "name": "Drink",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "hour",
+              "concentration": false,
+              "override": false,
+              "value": "1"
+            },
+            "effects": [
+              {
+                "_id": "tsRnLFf1HtqAPphv",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "qYmaJ6qeUuRzigNI",
+            "img": "",
+            "appliedEffects": [
+              "tsRnLFf1HtqAPphv"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Rare</em></p><p>This potion's container looks empty but feels as though it holds liquid. When you drink the potion, you have the &amp;Reference[Invisible apply=false] condition for 1 hour. The effect ends early if you make an attack roll, deal damage, or cast a spell.</p>",
+          "chat": ""
+        },
+        "identifier": "potion-of-invisibility",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Invisible",
+          "img": "icons/consumables/potions/bottle-round-empty-glass.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "nQmzD65mdhL0lDGe",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [
+            "invisible"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfGrowt.ActiveEffect.2SfkO4POfhLZ8oYt",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730863706581,
+            "modifiedTime": 1783544097457,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.iIjAgeObMI8U5hmZ.nQmzD65mdhL0lDGe"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfInvis"
+      },
+      "_id": "iIjAgeObMI8U5hmZ",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.iIjAgeObMI8U5hmZ"
+    },
+    {
+      "name": "Hat of Disguise",
+      "type": "equipment",
+      "img": "icons/equipment/head/hat-belted-simple.webp",
+      "system": {
+        "activities": {
+          "VVpK2CV6r5DFeB2o": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplDisguiseSe",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": 1,
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "VVpK2CV6r5DFeB2o",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this hat, you can cast the @UUID[Compendium.dnd5e.spells24.Item.phbsplDisguiseSe]{Disguise Self} spell. The spell ends if the hat is removed.</p>",
+          "chat": ""
+        },
+        "identifier": "hat-of-disguise",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgHatOfDisguise"
+      },
+      "_id": "qCrlHwM3ctREvJrt",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.qCrlHwM3ctREvJrt"
+    },
+    {
+      "name": "Medallion of Thoughts",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "system": {
+        "activities": {
+          "wGYNB4IKjRIscenB": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplDetectThou",
+              "challenge": {
+                "attack": null,
+                "save": 13,
+                "override": true
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "wGYNB4IKjRIscenB",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d4"
+            }
+          ],
+          "max": "5"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>The medallion has 5 charges. While wearing it, you can expend 1 charge to cast @UUID[Compendium.dnd5e.spells24.Item.phbsplDetectThou]{Detect Thoughts} (save DC 13) from it. The medallion regains 1d4 expended charges daily at dawn.</p>",
+          "chat": ""
+        },
+        "identifier": "medallion-of-thoughts",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgMedallionOfTh"
+      },
+      "_id": "TdfJRokOvZb8m2q2",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.TdfJRokOvZb8m2q2"
+    },
+    {
+      "name": "Eyes of Charming",
+      "type": "equipment",
+      "img": "icons/tools/scribal/spectacles-glasses.webp",
+      "system": {
+        "activities": {
+          "73f7nND3BlavEH4a": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplCharmPerso",
+              "challenge": {
+                "attack": null,
+                "save": 13,
+                "override": true
+              },
+              "level": "1",
+              "properties": [],
+              "ability": ""
+            },
+            "_id": "73f7nND3BlavEH4a",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": ""
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": ""
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ],
+          "max": "3"
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>These crystal lenses fit over the eyes. They have 3 charges. While wearing them, you can expend 1 or more charges to cast <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplCharmPerso]{Charm Person}</em> (save DC 13). For 1 charge, you cast the level 1 version of the spell. You increase the spell's level by one for each additional charge you expend. The lenses regain all expended charges daily at dawn.</p>",
+          "chat": ""
+        },
+        "identifier": "eyes-of-charming",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgEyesOfCharmin"
+      },
+      "_id": "V6LGTxfc5P4UEV8V",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.V6LGTxfc5P4UEV8V"
+    },
+    {
+      "name": "Ring of Mind Shielding",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-cabochon-gold-purple.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Ring, Uncommon (Requires Attunement)</em></p><p>While wearing this ring, you are immune to magic that allows other creatures to read your thoughts, determine whether you are lying, know your alignment, or know your creature type. Creatures can telepathically communicate with you only if you allow it.</p><p>You can take a Magic action to cause the ring to become imperceptible until you take another Magic action to make it perceptible, until you remove the ring, or until you die.</p><p>If you die while wearing the ring, your soul enters it, unless it already houses a soul. You can remain in the ring or depart for the afterlife. As long as your soul is in the ring, you can telepathically communicate with any creature wearing it. A wearer can't prevent this telepathic communication.</p>",
+          "chat": ""
+        },
+        "identifier": "ring-of-mind-shielding",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfMindShi"
+      },
+      "_id": "ALJNLeYKtGGTnUqQ",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.ALJNLeYKtGGTnUqQ"
+    },
+    {
+      "name": "Dagger of Venom",
+      "type": "weapon",
+      "img": "icons/weapons/daggers/dagger-double-skull-pink.webp",
+      "system": {
+        "activities": {
+          "E5j2Kwh11vsVIUTq": {
+            "_id": "E5j2Kwh11vsVIUTq",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "mvBETzTSBwNrYq2T": {
+            "type": "enchant",
+            "_id": "mvBETzTSBwNrYq2T",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "minute",
+              "concentration": false,
+              "override": false,
+              "value": "1"
+            },
+            "effects": [
+              {
+                "_id": "f0WvHHwmTfdkF3OP",
+                "level": {
+                  "min": null,
+                  "max": null
+                },
+                "riders": {
+                  "activity": [
+                    "VHStJ3hZGwHAHcUQ"
+                  ],
+                  "effect": [],
+                  "item": []
+                }
+              }
+            ],
+            "range": {
+              "override": true,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "The Dagger of Venom"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "enchant": {
+              "identifier": "",
+              "self": true
+            },
+            "restrictions": {
+              "allowMagical": true,
+              "categories": [
+                "simpleM"
+              ],
+              "properties": [
+                "fin",
+                "lgt",
+                "mgc",
+                "thr"
+              ],
+              "type": "weapon"
+            },
+            "name": "Coat Blade with Poison",
+            "img": "",
+            "appliedEffects": [
+              "f0WvHHwmTfdkF3OP"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "VHStJ3hZGwHAHcUQ": {
+            "type": "save",
+            "name": "Poison Save",
+            "_id": "VHStJ3hZGwHAHcUQ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "zM8Qfv5u9OCNUrhE",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "value": "20",
+              "units": "ft",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": 2,
+                  "denomination": 10,
+                  "bonus": "",
+                  "types": [
+                    "poison"
+                  ]
+                }
+              ],
+              "onSave": "none"
+            },
+            "save": {
+              "ability": "con",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "img": "",
+            "appliedEffects": [
+              "zM8Qfv5u9OCNUrhE"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": false
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ],
+          "max": "1"
+        },
+        "description": {
+          "value": "<div><p><em>Weapon (Dagger), Rare</em></p></div><p>You gain a +1 bonus to attack rolls and damage rolls made with this magic weapon.</p><p>You can take a Bonus Action to magically coat the blade with poison. The poison remains for 1 minute or until an attack using this weapon hits a creature. That creature must succeed on a DC 15 Constitution saving throw or take 2d10 Poison damage and have the &amp;Reference[Poisoned apply=false] condition for 1 minute. The weapon can't be used this way again until the next dawn.</p>",
+          "chat": ""
+        },
+        "identifier": "dagger-of-venom",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "dagger"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 4,
+            "types": [
+              "piercing"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          }
+        },
+        "magicalBonus": 1,
+        "properties": [
+          "fin",
+          "lgt",
+          "mgc",
+          "thr"
+        ],
+        "range": {
+          "value": 20,
+          "long": 60,
+          "reach": null,
+          "units": "ft"
+        },
+        "mastery": "nick"
+      },
+      "effects": [
+        {
+          "name": "Poisoned",
+          "img": "systems/dnd5e/icons/svg/statuses/poisoned.svg",
+          "origin": null,
+          "transfer": false,
+          "_id": "Yl35dfOd8qmeMWBu",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>The creature has the &amp;Reference[Poisoned apply=false] condition for 1 minute.</p>",
+          "tint": "#ffffff",
+          "statuses": [
+            "poisoned"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729091648092,
+            "modifiedTime": 1783544094635,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.X0WPuepvo2QOKmsz.Yl35dfOd8qmeMWBu"
+        },
+        {
+          "type": "enchantment",
+          "name": "Poison Coat",
+          "img": "icons/skills/toxins/symbol-poison-drop-skull-green.webp",
+          "disabled": true,
+          "_id": "FL9qt8C54CL4E8YK",
+          "system": {
+            "changes": [
+              {
+                "key": "img",
+                "value": "icons/skills/melee/blade-tip-acid-poison-green.webp",
+                "priority": null,
+                "type": "override",
+                "phase": "initial",
+                "_id": "C6vv1wMqYQ65fHDQ"
+              },
+              {
+                "key": "activities[attack].description.chatFlavor",
+                "value": "{}  On Hit: Use <em>Poison Save</em> activity.",
+                "priority": null,
+                "type": "override",
+                "phase": "initial",
+                "_id": "C81KGTSnVHq6EcKI"
+              }
+            ]
+          },
+          "duration": {
+            "value": 60,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729091772989,
+            "modifiedTime": 1783544094635,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.X0WPuepvo2QOKmsz.FL9qt8C54CL4E8YK"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [
+              "VHStJ3hZGwHAHcUQ"
+            ]
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDaggerOfVenom"
+      },
+      "_id": "X0WPuepvo2QOKmsz",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.X0WPuepvo2QOKmsz"
+    },
+    {
+      "name": "Boots of Elvenkind",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p></div><p>While you wear these boots, your steps make no sound, regardless of the surface you are moving across. You also have Advantage on Dexterity (Stealth) checks.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-elvenkind",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Boots of Elvenkind",
+          "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+          "origin": null,
+          "_id": "urJVAS78KLGza028",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "",
+                "value": "",
+                "type": "add",
+                "phase": "initial",
+                "_id": "RHoNEHxHTNzZMBHD"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1768925670296,
+            "modifiedTime": 1783544093872,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.BHtbpJB5zvDC1xRs.urJVAS78KLGza028"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk"
+      },
+      "_id": "BHtbpJB5zvDC1xRs",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.BHtbpJB5zvDC1xRs"
+    },
+    {
+      "name": "Cloak of Elvenkind",
+      "type": "equipment",
+      "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>While you wear this cloak, Wisdom (Perception) checks made to perceive you have Disadvantage, and you have Advantage on Dexterity (Stealth) checks.</p>",
+          "chat": ""
+        },
+        "identifier": "cloak-of-elvenkind",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Cloak of Elvenkind",
+          "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+          "origin": null,
+          "_id": "QmoMU9fNSiisqdhg",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "",
+                "value": "",
+                "type": "add",
+                "phase": "initial",
+                "_id": "PNKmaFxqazGICEgn"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1768925573821,
+            "modifiedTime": 1783544094389,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.N29iw9BFKY5SY27Q.QmoMU9fNSiisqdhg"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgCloakOfElvenk"
+      },
+      "_id": "N29iw9BFKY5SY27Q",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.N29iw9BFKY5SY27Q"
+    },
+    {
+      "name": "Gloves of Thievery",
+      "type": "equipment",
+      "img": "icons/equipment/hand/glove-tooled-leather-red-purple.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>These gloves are imperceptible while worn. While wearing them, you gain a +5 bonus to Dexterity (Sleight of Hand) checks.</p><section id=\"secret-MTbVEJqcHy1oERli\" class=\"secret\"><p><strong>Foundry Note</strong></p><p>The <strong>Gloves On</strong> Active Effect automates the +5 to your Sleight of Hand checks.</p></section>",
+          "chat": ""
+        },
+        "identifier": "gloves-of-thievery",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Gloves On",
+          "img": "icons/equipment/hand/glove-tooled-leather-red-purple.webp",
+          "_id": "sY98w0iutZiClwr4",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.skills.slt.bonuses.check",
+                "value": 5,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "cX106VZdQfHKpjZp"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730728665344,
+            "modifiedTime": 1783544095982,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.xenWNpGzRBzIqxDy.sY98w0iutZiClwr4"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfThiev"
+      },
+      "_id": "xenWNpGzRBzIqxDy",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.xenWNpGzRBzIqxDy"
+    },
+    {
+      "name": "Dust of Disappearance",
+      "type": "consumable",
+      "img": "icons/magic/water/bubbles-air-water-light.webp",
+      "system": {
+        "activities": {
+          "OVcWAXY5IJGdKSqw": {
+            "type": "utility",
+            "_id": "OVcWAXY5IJGdKSqw",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "spec",
+              "concentration": false,
+              "override": false,
+              "special": "up to 2d4 minutes",
+              "value": ""
+            },
+            "effects": [
+              {
+                "_id": "MC5GAZMrAc4wSvAS",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "10",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "creatureOrObject",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "Duration (Minutes)",
+              "formula": "2d4"
+            },
+            "name": "Utilize",
+            "img": "",
+            "appliedEffects": [
+              "MC5GAZMrAc4wSvAS"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>This powder resembles fine sand. There is enough of it for one use. When you take a Utilize action to throw the dust into the air, you and each creature and object within a 10-foot Emanation originating from you have the Invisible condition for 2d4 minutes. The duration is the same for all subjects, and the dust is consumed when its magic takes effect. Immediately after an affected creature makes an attack roll, deals damage, or casts a spell, the Invisible condition ends for that creature.</p>",
+          "chat": ""
+        },
+        "identifier": "dust-of-disappearance",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 5,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": 0,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Invisible",
+          "img": "systems/dnd5e/icons/svg/statuses/invisible.svg",
+          "origin": null,
+          "transfer": false,
+          "_id": "a4VvoWkYcF3JqWrh",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p><em>Source: @UUID[Compendium.dnd5e.equipment24.Item.dmgDustOfDisappe]{Dust of Disappearance}</em></p><p>You have the &amp;Reference[Invisible] condition for 2d4 minutes or until you make an attack roll, deal damage, or cast a spell.</p>",
+          "tint": "#ffffff",
+          "statuses": [
+            "invisible"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729283147607,
+            "modifiedTime": 1783544095252,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.SpuCkDtukbMahcQZ.a4VvoWkYcF3JqWrh"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDustOfDisappe"
+      },
+      "_id": "SpuCkDtukbMahcQZ",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.SpuCkDtukbMahcQZ"
+    },
+    {
+      "name": "Dust of Sneezing and Choking",
+      "type": "consumable",
+      "img": "icons/magic/water/bubbles-air-water-light.webp",
+      "system": {
+        "activities": {
+          "GDzbsjaVxNM7nnBu": {
+            "type": "save",
+            "_id": "GDzbsjaVxNM7nnBu",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "AZcO17cLsTHbb0P9",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "30",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [],
+              "onSave": "none"
+            },
+            "save": {
+              "ability": "con",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": [
+              "AZcO17cLsTHbb0P9"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>Found in a small container, this powder resembles @UUID[Compendium.dnd5e.equipment24.Item.dmgDustOfDisappe]{Dust of Disappearance}, and <em>Identify</em> reveals it to be such. There is enough of it for one use.</p><p>As a Utilize action, you can throw the dust into the air, forcing yourself and every creature in a 30-foot Emanation originating from you to make a DC 15 Constitution saving throw. Constructs, Elementals, Oozes, Plants, and Undead succeed on the save automatically.</p><p>On a failed save, a creature begins sneezing uncontrollably; it has the Incapacitated condition and is suffocating. The creature [[/save ability=con dc=15]]{repeats the save} at the end of each of its turns, ending the effect on itself on a success. The effect also ends on any creature targeted by a <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplLesserRest]{Lesser Restoration}</em> spell.</p>",
+          "chat": ""
+        },
+        "identifier": "dust-of-sneezing-and-choking",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Incapacitated and Suffocating (Sneezing)",
+          "img": "systems/dnd5e/icons/svg/statuses/suffocation.svg",
+          "origin": null,
+          "transfer": false,
+          "_id": "GR9FX2oPbMFDnzTq",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p><em>Source: @UUID[Compendium.dnd5e.equipment24.Item.dmgDustOfSneezin]<br></em>The creature has the Incapacitated condition and is suffocating. The creature [[/save ability=con dc=15]]{repeats the save} at the end of each of its turns, ending the effect on itself on a success. The effect also ends on any creature targeted by a <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplLesserRest]{Lesser Restoration}</em> spell.</p>",
+          "tint": "#ffffff",
+          "statuses": [
+            "incapacitated",
+            "suffocation"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729285520227,
+            "modifiedTime": 1783544095289,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.Yja1MSNuRBChZ3sl.GR9FX2oPbMFDnzTq"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDustOfSneezin"
+      },
+      "_id": "Yja1MSNuRBChZ3sl",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.Yja1MSNuRBChZ3sl"
+    },
+    {
+      "name": "Potion of Poison",
+      "type": "consumable",
+      "img": "icons/consumables/potions/potion-bottle-skull-label-poison-teal.webp",
+      "system": {
+        "activities": {
+          "zlmOWbfYFIcJlBuN": {
+            "type": "save",
+            "name": "Drink",
+            "_id": "zlmOWbfYFIcJlBuN",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "hour",
+              "concentration": false,
+              "override": false,
+              "value": "1"
+            },
+            "effects": [
+              {
+                "_id": "lZOgSICPuR1fKxTL",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": 4,
+                  "denomination": 6,
+                  "bonus": "",
+                  "types": [
+                    "poison"
+                  ]
+                }
+              ],
+              "onSave": "full"
+            },
+            "save": {
+              "ability": "con",
+              "dc": {
+                "calculation": "",
+                "formula": "13"
+              }
+            },
+            "img": "",
+            "appliedEffects": [
+              "lZOgSICPuR1fKxTL"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Uncommon</em></p><p>This concoction looks, smells, and tastes like a Potion of Healing or another beneficial potion. However, it is actually poison masked by illusion magic. <em>Identify</em> reveals its true nature.</p><p>If you drink this potion, you take 4d6 Poison damage and must succeed on a DC 13 Constitution saving throw or have the Poisoned condition for 1 hour.</p>",
+          "chat": ""
+        },
+        "identifier": "potion-of-poison",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": "<p><em>Potion, Common</em></p><p>You regain 2d4 + 2 Hit Points when you drink this potion.</p><p>Whatever its potency, the potion’s red liquid glimmers when agitated.</p>",
+          "name": "Unidentified Consumable"
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Poisoned",
+          "img": "systems/dnd5e/icons/svg/statuses/poisoned.svg",
+          "origin": null,
+          "transfer": false,
+          "_id": "HDOBb0U5PCkAuWTB",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [
+            "poisoned"
+          ],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730864211372,
+            "modifiedTime": 1783544097535,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.U42s1SrsAcLTOvWA.HDOBb0U5PCkAuWTB"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfPoiso"
+      },
+      "_id": "U42s1SrsAcLTOvWA",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.U42s1SrsAcLTOvWA"
+    },
+    {
+      "name": "Dimensional Shackles",
+      "type": "equipment",
+      "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+      "system": {
+        "activities": {
+          "0OGzs95U70Iu6y5B": {
+            "type": "utility",
+            "_id": "0OGzs95U70Iu6y5B",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "JYlrfQOPp5jRIFK2",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": "Small to Large creature with the Incapacitated condition"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Place Shackles",
+            "img": "",
+            "appliedEffects": [
+              "JYlrfQOPp5jRIFK2"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "5jM3pBGMT6098rWY": {
+            "type": "check",
+            "name": "Attempt Escape",
+            "_id": "5jM3pBGMT6098rWY",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": "is bound by Dimensional Shackles"
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "Can be attempted once every 30 days"
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "Dimensional Shackles binding self"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "check": {
+              "associated": [
+                "ath"
+              ],
+              "dc": {
+                "calculation": "",
+                "formula": "30"
+              },
+              "ability": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare</em></p></div><p>You can take a Utilize action to place these shackles on a creature that has the &amp;Reference[Incapacitated apply=false] condition. The shackles adjust to fit a creature of Small to Large size. The shackles prevent a creature bound by them from using any method of extradimensional movement, including teleportation or travel to a different plane of existence. They don't prevent the creature from passing through an interdimensional portal.</p><p>You and any creature you designate when you use the shackles can take a Utilize action to remove them. Once every 30 days, the bound creature can make a [[/check ability=str skill=ath dc=30 format=long]]. On a successful check, the creature breaks free and destroys the shackles.</p>",
+          "chat": ""
+        },
+        "identifier": "dimensional-shackles",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 6,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Dimensionally Bound",
+          "img": "icons/magic/control/debuff-chains-shackles-movement-blue.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "fVvmvq9RcgDe7UyR",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>The shackles prevent a creature bound by them from using any method of extradimensional movement, including teleportation or travel to a different plane of existence. They don’t prevent the creature from passing through an interdimensional portal.</p><p>Once every 30 days, the bound creature can make a [[/check ability=str skill=ath dc=30 format=long]]. On a successful check, the creature breaks free and destroys the shackles.</p>",
+          "tint": "#ffffff",
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1729279459349,
+            "modifiedTime": 1783544094793,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!H5hL07qDuFQpaFT9.eY1uKey2OhaMXXSA.fVvmvq9RcgDe7UyR"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDimensionalSh"
+      },
+      "_id": "eY1uKey2OhaMXXSA",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.eY1uKey2OhaMXXSA"
+    },
+    {
+      "name": "Chime of Opening",
+      "type": "equipment",
+      "img": "icons/commodities/tech/pipe-cylinder.webp",
+      "system": {
+        "activities": {
+          "FW2x7qXh6xbtpxRQ": {
+            "type": "cast",
+            "_id": "FW2x7qXh6xbtpxRQ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [],
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplKnock00000",
+              "ability": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "10"
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare</em></p></div><p>This hollow metal tube measures about 1 foot long and weighs 1 pound. As a Magic action, you can strike the chime to cast <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplKnock00000]{Knock}</em>. The spell's customary knocking sound is replaced by the clear, ringing tone of the chime, which is audible out to 300 feet.</p><p>The chime can be used 10 times. After the tenth time, it cracks and becomes useless.</p>",
+          "chat": ""
+        },
+        "identifier": "chime-of-opening",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 1,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgChimeOfOpenin"
+      },
+      "_id": "nyLWRnvEcpMLNz65",
+      "_key": "!actors.items!H5hL07qDuFQpaFT9.nyLWRnvEcpMLNz65"
+    },
+    {
       "name": "Scimitar",
       "system": {
         "description": {
@@ -11185,6 +14065,90 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Potion of Invisibility": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Hat of Disguise": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Medallion of Thoughts": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Eyes of Charming": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Mind Shielding": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dagger of Venom": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of Elvenkind": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Cloak of Elvenkind": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gloves of Thievery": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dust of Disappearance": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dust of Sneezing and Choking": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Potion of Poison": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Dimensional Shackles": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Chime of Opening": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -11260,7 +14224,21 @@
             "aPE2MxL7UQpy4teJ": "1d4+2",
             "x5unsDUi6AmZf55P": "2d6+4",
             "jwrOKTTE6TlWidJr": "2d6+4",
-            "n5AGwnRcUTnnZpB3": "2d6+4"
+            "n5AGwnRcUTnnZpB3": "2d6+4",
+            "Xe1jjINpZG39sabg": "1d2-1",
+            "cr1C9IPY0mMGdDcT": "1d3",
+            "wAEcRT6qO3mCPmhH": "1d3",
+            "jz8lbUM7YPsKYhxR": "1d3",
+            "oDJ7EerYO3jATuWR": "1d3",
+            "7BEB9EqPEdxdwIfx": "1d2-1",
+            "iJX0MIJLCmmMUbpO": "1d3",
+            "tIZfm3Rw1hGyc1JO": "1d3",
+            "HzALlOU8YkJADr3m": "1d3",
+            "K6iTDmhLpEYKreqg": "1d4+2",
+            "RPK2Ry4VOvkwI4MD": "1d4+2",
+            "xe4Ks8jmCOXRO3fi": "1d4+2",
+            "ZLiFd8wMys03Knr1": "1d2-1",
+            "UOMK5t7jQCuMmXwa": "1d2-1"
           },
           "onOpen": true,
           "every": "1d4+2",
@@ -11364,7 +14342,21 @@
               "aPE2MxL7UQpy4teJ": "1d4+2",
               "x5unsDUi6AmZf55P": "2d6+4",
               "jwrOKTTE6TlWidJr": "2d6+4",
-              "n5AGwnRcUTnnZpB3": "2d6+4"
+              "n5AGwnRcUTnnZpB3": "2d6+4",
+              "Xe1jjINpZG39sabg": "1d2-1",
+              "cr1C9IPY0mMGdDcT": "1d3",
+              "wAEcRT6qO3mCPmhH": "1d3",
+              "jz8lbUM7YPsKYhxR": "1d3",
+              "oDJ7EerYO3jATuWR": "1d3",
+              "7BEB9EqPEdxdwIfx": "1d2-1",
+              "iJX0MIJLCmmMUbpO": "1d3",
+              "tIZfm3Rw1hGyc1JO": "1d3",
+              "HzALlOU8YkJADr3m": "1d3",
+              "K6iTDmhLpEYKreqg": "1d4+2",
+              "RPK2Ry4VOvkwI4MD": "1d4+2",
+              "xe4Ks8jmCOXRO3fi": "1d4+2",
+              "ZLiFd8wMys03Knr1": "1d2-1",
+              "UOMK5t7jQCuMmXwa": "1d2-1"
             }
           }
         ],

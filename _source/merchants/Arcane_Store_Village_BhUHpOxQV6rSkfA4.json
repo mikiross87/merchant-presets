@@ -3913,6 +3913,94 @@
       "_key": "!actors.items!BhUHpOxQV6rSkfA4.gSy4CVHxbJZu1F8q"
     },
     {
+      "name": "Pipe of Smoke Monsters",
+      "type": "equipment",
+      "img": "icons/sundries/misc/pipe-elegant.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Common</em></p><p>While smoking this pipe, you can take a Magic action to exhale a puff of smoke that takes the form of a creature, such as a dragon, a flumph, or a slaad. The form must be small enough to fit in a 1-foot cube and loses its shape after a few seconds, becoming an ordinary puff of smoke.</p>",
+          "chat": ""
+        },
+        "identifier": "pipe-of-smoke-monsters",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 100,
+          "denomination": "gp"
+        },
+        "rarity": "common",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPipeOfSmokeMo"
+      },
+      "_id": "jLrFEMgwzZILPEla",
+      "_key": "!actors.items!BhUHpOxQV6rSkfA4.jLrFEMgwzZILPEla"
+    },
+    {
       "name": "Club",
       "system": {
         "description": {
@@ -4404,6 +4492,12 @@
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Pipe of Smoke Monsters": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -4477,7 +4571,8 @@
             "iTKsaQxBSwjBXqSn": "1d2",
             "5qfCUKaAwN2SR0K7": "1d2",
             "T447mbWqq2pBqH4n": "1d4+1",
-            "7qjH9XKM9mFXoCBg": "1d2"
+            "7qjH9XKM9mFXoCBg": "1d2",
+            "RTnPrwUYhWFgpusv": "1d2"
           },
           "onOpen": true,
           "every": 28,
@@ -4576,7 +4671,8 @@
               "iTKsaQxBSwjBXqSn": "1d2",
               "5qfCUKaAwN2SR0K7": "1d2",
               "T447mbWqq2pBqH4n": "1d4+1",
-              "7qjH9XKM9mFXoCBg": "1d2"
+              "7qjH9XKM9mFXoCBg": "1d2",
+              "RTnPrwUYhWFgpusv": "1d2"
             }
           }
         ],

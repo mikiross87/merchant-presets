@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/gazebo.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d10",
+  "formula": "1d12",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -169,6 +169,38 @@
       "range": [
         10,
         10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dumyRA7pqoYlH0nQ",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.dumyRA7pqoYlH0nQ",
+      "type": "document",
+      "name": "Pipes of Haunting",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfHaunti",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QfPIh4UAAWInSyyl",
+      "_key": "!tables.results!qiDg3A5qn3vnQs8g.QfPIh4UAAWInSyyl",
+      "type": "document",
+      "name": "Pipes of the Sewers",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfTheSew",
+      "weight": 1,
+      "range": [
+        12,
+        12
       ],
       "drawn": false,
       "description": "",

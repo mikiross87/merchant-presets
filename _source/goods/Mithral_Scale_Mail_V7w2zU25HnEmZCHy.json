@@ -1,0 +1,88 @@
+{
+  "name": "Mithral Scale Mail",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 450,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 45,
+      "units": "lb"
+    },
+    "rarity": "uncommon",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 14,
+      "magicalBonus": null,
+      "dex": 2
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "medium",
+      "baseItem": "scalemail"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": 0,
+    "activities": {},
+    "identifier": "scale-mail"
+  },
+  "_id": "V7w2zU25HnEmZCHy",
+  "type": "equipment",
+  "img": "icons/equipment/chest/breastplate-banded-steel.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
+        "enchantment": "iopwvJrcnzObDYSR",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0"
+      }
+    }
+  },
+  "_key": "!items!V7w2zU25HnEmZCHy",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

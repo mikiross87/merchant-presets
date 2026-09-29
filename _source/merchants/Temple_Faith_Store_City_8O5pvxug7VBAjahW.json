@@ -6569,6 +6569,2330 @@
       "_key": "!actors.items!8O5pvxug7VBAjahW.vBoQDXpTTBvJWOpt"
     },
     {
+      "name": "Elixir of Health",
+      "type": "consumable",
+      "img": "icons/consumables/potions/potion-flask-corked-shiny-red.webp",
+      "system": {
+        "activities": {
+          "KGZw6qZsVqtfC19a": {
+            "type": "utility",
+            "_id": "KGZw6qZsVqtfC19a",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Utilize",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<div><p><em>Potion, Rare</em></p></div><p>When you drink this potion, you are cured of all magical contagions. In addition, the following conditions end on you: &amp;Reference[Blinded apply=false], &amp;Reference[Deafened apply=false], &amp;Reference[Paralyzed apply=false], and &amp;Reference[Poisoned apply=false].</p><p>The clear, red liquid has tiny bubbles of light in it.</p>",
+          "chat": ""
+        },
+        "identifier": "elixir-of-health",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgElixirOfHealt"
+      },
+      "_id": "gY4FgDUgr17TXVdp",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.gY4FgDUgr17TXVdp"
+    },
+    {
+      "name": "Potion of Heroism",
+      "type": "consumable",
+      "img": "icons/consumables/potions/bottle-conical-bubbling-blue.webp",
+      "system": {
+        "activities": {
+          "gdyQxFAXH5PM9qy5": {
+            "type": "heal",
+            "name": "Drink",
+            "_id": "gdyQxFAXH5PM9qy5",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "healing": {
+              "number": null,
+              "denomination": "",
+              "types": [
+                "temphp"
+              ],
+              "custom": {
+                "enabled": false
+              },
+              "scaling": {
+                "number": 1
+              },
+              "bonus": "10"
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Rare</em></p><p>When you drink this potion, you gain 10 Temporary Hit Points that last for 1 hour. For the same duration, you are under the effect of the @UUID[Compendium.dnd5e.spells24.Item.phbsplBless00000]{Bless} spell (no Concentration required).</p><p>This potion's blue liquid bubbles and steams as if boiling.</p>",
+          "chat": ""
+        },
+        "identifier": "potion-of-heroism",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 2000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "_id": "h7kJi0Dm0KbsvKtz",
+          "flags": {},
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": false,
+          "name": "Blessed",
+          "description": "<p>Whenever a target makes an attack roll or a saving throw before the effect ends, the target adds 1d4 to the attack roll or save.</p>",
+          "statuses": [],
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.spells.Item.8dzaICjGy6mTUaUr.ActiveEffect.8rP3gwmXVTgZqYZE",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730863613614,
+            "modifiedTime": 1783544097423,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "img": "icons/magic/holy/chalice-glowing-gold-water.webp",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.bonuses.abilities.save",
+                "value": "1d4",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "dZUwPKDZfOHhNdhG"
+              },
+              {
+                "key": "system.bonuses.mwak.attack",
+                "value": "1d4",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "7gnO26iwAtuFlQWX"
+              },
+              {
+                "key": "system.bonuses.msak.attack",
+                "value": "1d4",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "NUVBfooW53S4fv8m"
+              },
+              {
+                "key": "system.bonuses.rsak.attack",
+                "value": "1d4",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "g6xoEIgL1F3iKkgY"
+              },
+              {
+                "key": "system.bonuses.rwak.attack",
+                "value": "1d4",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "8l7e1p4KXlEhzQX9"
+              }
+            ],
+            "magical": true
+          },
+          "sort": 0,
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!8O5pvxug7VBAjahW.9mqABIML1psbxphr.h7kJi0Dm0KbsvKtz"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfHeroi"
+      },
+      "_id": "9mqABIML1psbxphr",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.9mqABIML1psbxphr"
+    },
+    {
+      "name": "Periapt of Health",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "system": {
+        "activities": {
+          "otEbvmR9v3TKQfpN": {
+            "type": "heal",
+            "_id": "otEbvmR9v3TKQfpN",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "healing": {
+              "number": 2,
+              "denomination": "4",
+              "types": [
+                "healing"
+              ],
+              "custom": {
+                "enabled": false
+              },
+              "scaling": {
+                "number": 1
+              },
+              "bonus": "2"
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ],
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this pendant, you can take a Magic action to regain 2d4 + 2 Hit Points. Once used, this property can't be used again until the next dawn.</p><p>In addition, you have Advantage on saving throws to avoid or end the &amp;Reference[Poisoned apply=false] condition while you wear this pendant.</p>",
+          "chat": ""
+        },
+        "identifier": "periapt-of-health",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfHeal"
+      },
+      "_id": "ekWvxLzYLoMXjtz5",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.ekWvxLzYLoMXjtz5"
+    },
+    {
+      "name": "Periapt of Wound Closure",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-faceted-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this pendant, you gain the following benefits.</p><p><em><strong>Life Preservation.</strong></em> Whenever you make a Death Saving Throw, you can change a roll of 9 or lower to a 10, turning a failed save into a successful one.</p><p><em><strong>Natural Healing Boost.</strong></em> Whenever you roll a Hit Point Die to regain Hit Points, double the number of Hit Points it restores.</p>",
+          "chat": ""
+        },
+        "identifier": "periapt-of-wound-closure",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfWoun"
+      },
+      "_id": "c8HdqVzHGv1UMUgc",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.c8HdqVzHGv1UMUgc"
+    },
+    {
+      "name": "Periapt of Proof against Poison",
+      "type": "equipment",
+      "img": "icons/equipment/neck/necklace-hook-brown.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare (Requires Attunement)</em></p><p>This delicate silver chain has a brilliant-cut black gem pendant. While you wear it, you have Immunity to the &amp;Reference[Poisoned apply=false] condition and Poison damage.</p>",
+          "chat": ""
+        },
+        "identifier": "periapt-of-proof-against-poison",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Protected Against Poison",
+          "img": "icons/magic/defensive/shield-barrier-flaming-diamond-acid.webp",
+          "_id": "ek8Q0yDvsIBBgrGu",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.traits.di.value",
+                "value": "poison",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "hbu88WbH3F98zMo4"
+              },
+              {
+                "key": "system.traits.ci.value",
+                "value": "poisoned",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "xLmY8uvmMYxTRDkT"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730688482111,
+            "modifiedTime": 1783544097201,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!8O5pvxug7VBAjahW.iP06Ga4gztbIRrl1.ek8Q0yDvsIBBgrGu"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfProo"
+      },
+      "_id": "iP06Ga4gztbIRrl1",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.iP06Ga4gztbIRrl1"
+    },
+    {
+      "name": "Necklace of Prayer Beads",
+      "type": "equipment",
+      "img": "icons/equipment/neck/necklace-runed-white-red.webp",
+      "system": {
+        "activities": {
+          "SEwmmaZFABa5L61F": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplBless00000",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "SEwmmaZFABa5L61F",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "i1xNzPeIb7VkHrh6": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplCureWounds",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "i1xNzPeIb7VkHrh6",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "yiGuTjneUv0F9NnC": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplGreaterRes",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "5",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "yiGuTjneUv0F9NnC",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "xjMwMrJpNfh3HZyP": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplShiningSmi",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "xjMwMrJpNfh3HZyP",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "FGwlSZAUgTaknnt1": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplGuardianof",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "4",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "FGwlSZAUgTaknnt1",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "VBwVZg8g1vPZ1xep": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplWindWalk00",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "6",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "VBwVZg8g1vPZ1xep",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": true,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "activityUses",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [
+                {
+                  "period": "dawn",
+                  "type": "recoverAll"
+                }
+              ],
+              "max": "1"
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare (Requires Attunement by a Cleric, Druid, or Paladin)</em></p><p>This necklace has [[/r 1d4 + 2#Magic beads]] magic beads made from aquamarine, black pearl, or topaz. It also has many nonmagical beads made from stones such as amber, bloodstone, citrine, coral, jade, pearl, or quartz. If a magic bead is removed from the necklace, that bead loses its magic.</p><p>Six types of magic beads exist. The GM decides the type of each bead on the necklace or determines it randomly by rolling on the table below. A necklace can have more than one bead of the same type. To use one, you must be wearing the necklace. Each bead contains a spell that you can cast from it as a Bonus Action (using your spell save DC if a save is necessary). Once a magic bead's spell is cast, that bead can't be used again until the next dawn.</p><p>@Embed[Compendium.dnd5e.tables24.RollTable.dmgNecklaceOfPra caption=false rollable]</p><section class=\"secret\" id=\"secret-T9EktTumIxEuAXft\"><p><strong>Foundry Note</strong></p><p>This item includes an activity for each spell with a limited use per dawn. You can remove the activities for the beads that aren't available on this necklace and duplicate ones that are included multiple times before giving it to a player.</p></section>",
+          "chat": ""
+        },
+        "identifier": "necklace-of-prayer-beads",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfPra"
+      },
+      "_id": "gnq3fpbNehMABsWU",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.gnq3fpbNehMABsWU"
+    },
+    {
+      "name": "Amulet of Health",
+      "type": "equipment",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare (Requires Attunement)</em></p><p>Your Constitution is 19 while you wear this amulet. It has no effect on you if your Constitution is 19 or higher without it.</p>",
+          "chat": ""
+        },
+        "identifier": "amulet-of-health",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Upgraded Constitution",
+          "img": "icons/magic/life/heart-shadow-red.webp",
+          "_id": "zqGBXw69QMRWwHHz",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.abilities.con.value",
+                "value": 19,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "09a3g66WpXITcagZ"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728433127976,
+            "modifiedTime": 1783544093339,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!8O5pvxug7VBAjahW.xIA46rgDdUTQkp1z.zqGBXw69QMRWwHHz"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAmuletOfHealt"
+      },
+      "_id": "xIA46rgDdUTQkp1z",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.xIA46rgDdUTQkp1z"
+    },
+    {
+      "name": "Mace of Disruption",
+      "type": "weapon",
+      "img": "icons/weapons/maces/shortmace-ornate-gold.webp",
+      "system": {
+        "activities": {
+          "sAaZZvhBiwjWHNXL": {
+            "_id": "sAaZZvhBiwjWHNXL",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "Bonus Damage: 2d6 Radiant vs Fiend/Undead"
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {
+                "value": "",
+                "classification": ""
+              },
+              "ability": "",
+              "bonus": ""
+            },
+            "damage": {
+              "critical": {
+                "bonus": ""
+              },
+              "includeBase": true,
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": null,
+                  "denomination": 0,
+                  "bonus": "0",
+                  "types": [
+                    "radiant"
+                  ],
+                  "scaling": {
+                    "number": 1
+                  }
+                }
+              ]
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": []
+          },
+          "sUoIpd68kJWIxRaU": {
+            "type": "save",
+            "_id": "sUoIpd68kJWIxRaU",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "Z49QSPjltZ1NT28K",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": "Fiend or Undead"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [],
+              "onSave": "none"
+            },
+            "save": {
+              "ability": "wis",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "name": "",
+            "img": "",
+            "appliedEffects": [
+              "Z49QSPjltZ1NT28K"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": false
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p>Weapon (@UUID[Compendium.dnd5e.equipment24.Item.phbwepMace000000]{Mace}), Rare (Requires Attunement)</p><p>When you hit a Fiend or an Undead with this magic weapon, that creature takes an extra 2d6 Radiant damage. If the target has 25 Hit Points or fewer after taking this damage, it must succeed on a DC 15 Wisdom saving throw or be destroyed. On a successful save, the creature has the &amp;Reference[Frightened apply=false] condition until the end of your next turn.</p><p><em><strong>Light.</strong></em> While you hold this weapon, it sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.</p>",
+          "chat": ""
+        },
+        "identifier": "mace-of-disruption",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "mace"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          }
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ],
+        "range": {
+          "value": null,
+          "long": null,
+          "reach": null,
+          "units": ""
+        },
+        "mastery": "sap"
+      },
+      "effects": [
+        {
+          "name": "Frightened",
+          "img": "systems/dnd5e/icons/svg/statuses/frightened.svg",
+          "origin": null,
+          "transfer": false,
+          "_id": "9zOgCIMcJiJ4IvB4",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 1,
+            "units": "turns",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>On a successful save, the creature has the &amp;Reference[Frightened apply=false] condition until the end of your next turn.</p>",
+          "tint": "#ffffff",
+          "statuses": [
+            "frightened"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1731082154282,
+            "modifiedTime": 1783544096679,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!8O5pvxug7VBAjahW.iTdLdPLZ066JnsLv.9zOgCIMcJiJ4IvB4"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgMaceOfDisrupt"
+      },
+      "_id": "iTdLdPLZ066JnsLv",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.iTdLdPLZ066JnsLv"
+    },
+    {
+      "name": "Staff of Healing",
+      "type": "weapon",
+      "img": "icons/weapons/staves/staff-ornate-cross.webp",
+      "system": {
+        "activities": {
+          "UNShiMCgYX6q4CUB": {
+            "_id": "UNShiMCgYX6q4CUB",
+            "type": "attack",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {},
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": []
+            },
+            "attack": {
+              "critical": {
+                "threshold": null
+              },
+              "flat": false,
+              "type": {}
+            },
+            "damage": {
+              "critical": {},
+              "includeBase": true,
+              "parts": []
+            }
+          },
+          "mkIIFw98V1d8uABu": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplCureWounds",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "mkIIFw98V1d8uABu",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "4"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": ""
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "MjiU3c8lzUOQk8sk": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplLesserRest",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "2",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "MjiU3c8lzUOQk8sk",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "2",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "tfGfEtth3JKF7BXQ": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplMassCureWo",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "5",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "tfGfEtth3JKF7BXQ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "5",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d6 + 4"
+            }
+          ],
+          "max": "10"
+        },
+        "description": {
+          "value": "<p><em>@UUID[Compendium.dnd5e.equipment24.Item.phbafcStaffalsoa]{Staff}, Rare (Requires Attunement by a Bard, Cleric, or Druid)</em></p><p>This staff has 10 charges. While holding the staff, you can cast one of the spells on the following table from it, using your spellcasting ability modifier. The table indicates how many charges you must expend to cast the spell.</p><table><thead><tr><th><p>Spell</p></th><th><p>Charge Cost</p></th><th></th></tr></thead><tbody><tr><td><p>@UUID[Compendium.dnd5e.spells24.Item.phbsplCureWounds]{Cure Wounds}</p></td><td><p>1 charge per spell level (maximum 4 for a <span>level 4</span> spell)</p></td><td></td></tr><tr><td><p>@UUID[Compendium.dnd5e.spells24.Item.phbsplLesserRest]{Lesser Restoration}</p></td><td><p>2</p></td><td></td></tr><tr><td><p>@UUID[Compendium.dnd5e.spells24.Item.phbsplMassCureWo]{Mass Cure Wounds}</p></td><td><p>5</p></td><td></td></tr></tbody></table><p><em><strong>Regaining Charges.</strong></em> The staff regains 1d6 + 4 expended charges daily at dawn. If you expend the last charge, roll [[/r 1d20]]. On a 1, the staff vanishes in a flash of light, lost forever.</p>",
+          "chat": ""
+        },
+        "identifier": "staff-of-healing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "simpleM",
+          "baseItem": "quarterstaff"
+        },
+        "ammunition": {},
+        "damage": {
+          "base": {
+            "number": 1,
+            "denomination": 6,
+            "types": [
+              "bludgeoning"
+            ],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          },
+          "versatile": {
+            "number": null,
+            "denomination": 0,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            },
+            "bonus": ""
+          }
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc",
+          "ver"
+        ],
+        "range": {
+          "value": null,
+          "long": null,
+          "reach": null,
+          "units": ""
+        },
+        "mastery": "topple"
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgStaffOfHealin"
+      },
+      "_id": "2bE9N153UaowoIts",
+      "_key": "!actors.items!8O5pvxug7VBAjahW.2bE9N153UaowoIts"
+    },
+    {
       "name": "Mace",
       "system": {
         "description": {
@@ -9823,6 +12147,60 @@
           "isService": false,
           "cantBeSoldToMerchants": false,
           "customCategory": "Valuables"
+        },
+        "Elixir of Health": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Potion of Heroism": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Periapt of Health": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Periapt of Wound Closure": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Periapt of Proof against Poison": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Necklace of Prayer Beads": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Amulet of Health": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Mace of Disruption": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Staff of Healing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -9921,7 +12299,16 @@
             "fEP7WCx86kAEowCL": "1d2-1",
             "cYpItabyy27C4w7F": "2d6+4",
             "l6B0Aw95iOqt75fM": "1d4+2",
-            "ho0SI12XTQiJEYlP": "1d2-1"
+            "ho0SI12XTQiJEYlP": "1d2-1",
+            "iuLa4e2XFAGrXcBu": "1d2-1",
+            "h2Aep83IhRsiuQGf": "1d2-1",
+            "cn9VmwZ9rbFFvxZc": "1d3",
+            "jZbIu3jsnye5viw8": "1d3",
+            "UtWDdAxroGuVao4D": "1d2-1",
+            "WqbLnNNoUf0FwFli": "1d2-1",
+            "ie2fVykXtACXT49X": "1d2-1",
+            "q2jFISzOitGiZJPr": "1d2-1",
+            "Fn3UzKFGKPMoiyfP": "1d2-1"
           },
           "onOpen": true,
           "every": 7,
@@ -10045,7 +12432,16 @@
               "fEP7WCx86kAEowCL": "1d2-1",
               "cYpItabyy27C4w7F": "2d6+4",
               "l6B0Aw95iOqt75fM": "1d4+2",
-              "ho0SI12XTQiJEYlP": "1d2-1"
+              "ho0SI12XTQiJEYlP": "1d2-1",
+              "iuLa4e2XFAGrXcBu": "1d2-1",
+              "h2Aep83IhRsiuQGf": "1d2-1",
+              "cn9VmwZ9rbFFvxZc": "1d3",
+              "jZbIu3jsnye5viw8": "1d3",
+              "UtWDdAxroGuVao4D": "1d2-1",
+              "WqbLnNNoUf0FwFli": "1d2-1",
+              "ie2fVykXtACXT49X": "1d2-1",
+              "q2jFISzOitGiZJPr": "1d2-1",
+              "Fn3UzKFGKPMoiyfP": "1d2-1"
             }
           }
         ],

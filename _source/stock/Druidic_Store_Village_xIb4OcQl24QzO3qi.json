@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/house-woods.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Bundles drying overhead and a floor of trodden rushes. Sells what grows, to people who know what to do with it.</p><p><em>Stock list for a village.</em></p>",
-  "formula": "1d41",
+  "formula": "1d42",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -665,6 +665,22 @@
       "range": [
         41,
         41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "p2l0nOmml1JZC5nL",
+      "_key": "!tables.results!xIb4OcQl24QzO3qi.p2l0nOmml1JZC5nL",
+      "type": "document",
+      "name": "Bead of Nourishment",
+      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish",
+      "weight": 1,
+      "range": [
+        42,
+        42
       ],
       "drawn": false,
       "description": "",

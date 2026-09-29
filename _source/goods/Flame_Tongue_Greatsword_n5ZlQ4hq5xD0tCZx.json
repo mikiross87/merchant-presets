@@ -1,0 +1,366 @@
+{
+  "name": "Flame Tongue Greatsword",
+  "system": {
+    "description": {
+      "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgFlameTongue00 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4050,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 6,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "required",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "range": {
+      "value": null,
+      "long": null,
+      "units": "ft",
+      "reach": null
+    },
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "damage": {
+      "versatile": {
+        "number": null,
+        "denomination": null,
+        "bonus": "",
+        "types": [],
+        "custom": {
+          "enabled": true,
+          "formula": ""
+        },
+        "scaling": {
+          "mode": "",
+          "number": null,
+          "formula": ""
+        }
+      },
+      "base": {
+        "number": 2,
+        "denomination": 6,
+        "types": [
+          "slashing"
+        ],
+        "custom": {
+          "enabled": false
+        },
+        "scaling": {
+          "number": 1
+        },
+        "bonus": ""
+      }
+    },
+    "armor": {
+      "value": null
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "martialM",
+      "baseItem": "greatsword"
+    },
+    "magicalBonus": null,
+    "properties": [
+      "hvy",
+      "two",
+      "mgc"
+    ],
+    "activities": {
+      "zi3BW6RGO2ugOyXu": {
+        "type": "attack",
+        "activation": {
+          "type": "action",
+          "value": 1,
+          "condition": "",
+          "override": false
+        },
+        "consumption": {
+          "targets": [],
+          "scaling": {
+            "allowed": false,
+            "max": ""
+          },
+          "spellSlot": true
+        },
+        "description": {
+          "chatFlavor": ""
+        },
+        "duration": {
+          "concentration": false,
+          "value": "",
+          "units": "inst",
+          "special": "",
+          "override": false
+        },
+        "effects": [],
+        "range": {
+          "value": "5",
+          "units": "ft",
+          "special": "",
+          "override": false
+        },
+        "target": {
+          "template": {
+            "count": "",
+            "contiguous": false,
+            "type": "",
+            "size": "",
+            "width": "",
+            "height": "",
+            "units": ""
+          },
+          "affects": {
+            "count": "",
+            "type": "",
+            "choice": false,
+            "special": ""
+          },
+          "prompt": false,
+          "override": false
+        },
+        "attack": {
+          "ability": "",
+          "bonus": "",
+          "critical": {
+            "threshold": null
+          },
+          "flat": false,
+          "type": {
+            "value": "melee",
+            "classification": "weapon"
+          }
+        },
+        "damage": {
+          "critical": {
+            "bonus": ""
+          },
+          "includeBase": true,
+          "parts": []
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "sort": 0,
+        "_id": "zi3BW6RGO2ugOyXu",
+        "name": "",
+        "img": "",
+        "appliedEffects": []
+      },
+      "mtDtxUd0VzmKq2X7": {
+        "type": "enchant",
+        "name": "Engulf in Flames",
+        "_id": "mtDtxUd0VzmKq2X7",
+        "sort": 0,
+        "activation": {
+          "type": "bonus",
+          "value": null,
+          "override": false,
+          "condition": ""
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": true,
+          "targets": []
+        },
+        "description": {
+          "chatFlavor": ""
+        },
+        "duration": {
+          "units": "disp",
+          "concentration": false,
+          "override": false
+        },
+        "effects": [
+          {
+            "_id": "MHnAqxEXBhUbnjPq",
+            "level": {
+              "min": null,
+              "max": null
+            },
+            "riders": {
+              "activity": [],
+              "effect": [],
+              "item": []
+            }
+          }
+        ],
+        "range": {
+          "override": true,
+          "units": "self",
+          "special": ""
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "units": "ft",
+            "type": ""
+          },
+          "affects": {
+            "choice": false,
+            "count": "1",
+            "type": "object",
+            "special": ""
+          },
+          "override": false,
+          "prompt": true
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "enchant": {
+          "identifier": "",
+          "self": true
+        },
+        "restrictions": {
+          "allowMagical": true,
+          "categories": [
+            "simpleM",
+            "martialM"
+          ],
+          "properties": [],
+          "type": "weapon"
+        },
+        "img": "",
+        "appliedEffects": [
+          "MHnAqxEXBhUbnjPq"
+        ],
+        "visibility": {
+          "requireMagic": true,
+          "level": {
+            "min": null,
+            "max": null
+          },
+          "identifier": "",
+          "requireIdentification": true,
+          "requireAttunement": true
+        }
+      }
+    },
+    "ammunition": {},
+    "mastery": "graze",
+    "identifier": "greatsword"
+  },
+  "_id": "n5ZlQ4hq5xD0tCZx",
+  "type": "weapon",
+  "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+  "effects": [
+    {
+      "type": "enchantment",
+      "name": "Ablaze",
+      "img": "icons/weapons/swords/greatsword-crossguard-flanged-red.webp",
+      "disabled": true,
+      "_id": "MHnAqxEXBhUbnjPq",
+      "system": {
+        "changes": [
+          {
+            "key": "system.damage.parts",
+            "value": [
+              [
+                "2d6",
+                "fire"
+              ]
+            ],
+            "priority": null,
+            "type": "add",
+            "phase": "initial",
+            "_id": "wleAjp1yjFbcMwsM"
+          },
+          {
+            "key": "name",
+            "value": "{} (Ablaze)",
+            "priority": null,
+            "type": "override",
+            "phase": "initial",
+            "_id": "gkpZ6V5dEYI8xzb3"
+          }
+        ]
+      },
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "statuses": []
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.364",
+        "systemId": "dnd5e",
+        "systemVersion": "6.0.0",
+        "createdTime": 1731004134526,
+        "modifiedTime": 1783544095612,
+        "lastModifiedBy": "dnd5ebuilder0000",
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!n5ZlQ4hq5xD0tCZx.MHnAqxEXBhUbnjPq"
+    }
+  ],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgFlameTongue00",
+        "enchantment": "VtBOwsAVipxkP2f5",
+        "base": "Compendium.dnd5e.equipment24.Item.phbwepGreatsword"
+      }
+    }
+  },
+  "_key": "!items!n5ZlQ4hq5xD0tCZx",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

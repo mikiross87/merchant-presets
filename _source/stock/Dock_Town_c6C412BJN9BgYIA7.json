@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/abandoned-pier.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d5",
+  "formula": "1d15",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -89,6 +89,166 @@
       "range": [
         5,
         5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "X0tIpfzqFyNU1VmD",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.X0tIpfzqFyNU1VmD",
+      "type": "document",
+      "name": "Potion of Water Breathing",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "42rXiFGzUZeFPaI9",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.42rXiFGzUZeFPaI9",
+      "type": "document",
+      "name": "Decanter of Endless Water",
+      "img": "icons/consumables/potions/potion-flask-corked-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDecanterOfEnd",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "j3kTPh6V5W30Ut2n",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.j3kTPh6V5W30Ut2n",
+      "type": "document",
+      "name": "Necklace of Adaptation",
+      "img": "icons/equipment/neck/amulet-carved-stone-spiral-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfAda",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oFz0gzkmlYpD8qMb",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.oFz0gzkmlYpD8qMb",
+      "type": "document",
+      "name": "Ring of Swimming",
+      "img": "icons/equipment/finger/ring-shell-white-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfSwimmin",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "vDJCyHFWcX9xphEE",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.vDJCyHFWcX9xphEE",
+      "type": "document",
+      "name": "Ring of Water Walking",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfWaterWa",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Cq1q9AuRSGjSwaXW",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.Cq1q9AuRSGjSwaXW",
+      "type": "document",
+      "name": "Feather Token (Anchor)",
+      "img": "icons/commodities/materials/feather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAnchorQuaalsF",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aHyzas2D7hsZU4mG",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.aHyzas2D7hsZU4mG",
+      "type": "document",
+      "name": "Feather Token (Fan)",
+      "img": "icons/commodities/materials/feather-colored-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFanQuaalsFeat",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jSr4mxiVMFaT3miP",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.jSr4mxiVMFaT3miP",
+      "type": "document",
+      "name": "Wind Fan",
+      "img": "icons/commodities/treasure/trinket-wing-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWindFan000000",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "H7Q8YXkYXj4EpvG7",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.H7Q8YXkYXj4EpvG7",
+      "type": "document",
+      "name": "Trident of Fish Command",
+      "img": "icons/weapons/polearms/trident-ice-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgTridentOfFish",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "p12G4zlH96gcfiPP",
+      "_key": "!tables.results!c6C412BJN9BgYIA7.p12G4zlH96gcfiPP",
+      "type": "document",
+      "name": "Cloak of the Manta Ray",
+      "img": "icons/equipment/head/hood-cloth-teal-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfTheMan",
+      "weight": 1,
+      "range": [
+        15,
+        15
       ],
       "drawn": false,
       "description": "",

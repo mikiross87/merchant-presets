@@ -1,0 +1,247 @@
+{
+  "name": "Silver Raven",
+  "system": {
+    "description": {
+      "value": "<p><em>See @UUID[Compendium.dnd5e.equipment24.Item.dmgFigurineOfWon]{Figurine of Wondrous Power}</em></p><p>This silver statuette of a raven can become a <strong>@UUID[Compendium.dnd5e.actors24.Actor.mmRaven000000000]{Raven}</strong> for up to 12 hours. Once it has been used, it can't be used again until 2 days have passed. While in raven form, the figurine grants you the ability to cast <em>@UUID[Compendium.dnd5e.spells24.Item.phbsplAnimalMess]{Animal Messenger}</em> on it.</p><section class=\"secret\" id=\"secret-1zjsYfZzKHfXhi9j\"><p><strong>Foundry Note</strong></p><p>This item's limited uses represent the 2 days required before the figurine can be used again.</p></section>",
+      "chat": ""
+    },
+    "price": {
+      "value": 400,
+      "denomination": "gp"
+    },
+    "activities": {
+      "H9avlnuBT1KSCMEp": {
+        "type": "summon",
+        "_id": "H9avlnuBT1KSCMEp",
+        "sort": 0,
+        "activation": {
+          "type": "action",
+          "value": null,
+          "override": false,
+          "condition": ""
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": true,
+          "targets": [
+            {
+              "type": "itemUses",
+              "value": "@item.uses.max",
+              "target": ""
+            }
+          ]
+        },
+        "description": {
+          "chatFlavor": ""
+        },
+        "duration": {
+          "units": "inst",
+          "concentration": false,
+          "override": false
+        },
+        "effects": [],
+        "range": {
+          "override": false,
+          "units": "self",
+          "special": ""
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "units": "ft",
+            "type": ""
+          },
+          "affects": {
+            "choice": false,
+            "count": "",
+            "type": ""
+          },
+          "override": false,
+          "prompt": true
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "bonuses": {
+          "ac": "",
+          "hd": "",
+          "hp": "",
+          "attackDamage": "",
+          "saveDamage": "",
+          "healing": ""
+        },
+        "creatureSizes": [],
+        "creatureTypes": [],
+        "match": {
+          "attacks": false,
+          "proficiency": false,
+          "saves": false,
+          "ability": ""
+        },
+        "profiles": [
+          {
+            "count": "",
+            "name": "",
+            "_id": "AUX3WzRv6PMEm7dn",
+            "uuid": "Compendium.dnd5e.actors24.Actor.phbmobRaven00000",
+            "level": {
+              "min": null,
+              "max": null
+            }
+          }
+        ],
+        "summon": {
+          "prompt": true,
+          "mode": "",
+          "identifier": ""
+        },
+        "name": "",
+        "img": "",
+        "appliedEffects": [],
+        "visibility": {
+          "requireMagic": true,
+          "level": {
+            "min": null,
+            "max": null
+          },
+          "identifier": ""
+        }
+      },
+      "bO4agG7byTwFTiFg": {
+        "type": "cast",
+        "spell": {
+          "uuid": "Compendium.dnd5e.spells24.Item.phbsplAnimalMess",
+          "challenge": {
+            "attack": null,
+            "save": null,
+            "override": false
+          },
+          "level": "2",
+          "properties": [],
+          "spellbook": true
+        },
+        "_id": "bO4agG7byTwFTiFg",
+        "sort": 0,
+        "activation": {
+          "type": "action",
+          "value": null,
+          "override": false
+        },
+        "consumption": {
+          "scaling": {
+            "allowed": false
+          },
+          "spellSlot": true,
+          "targets": []
+        },
+        "description": {
+          "chatFlavor": "Can target only the Silver Raven"
+        },
+        "duration": {
+          "units": "inst",
+          "concentration": false,
+          "override": false
+        },
+        "range": {
+          "override": false
+        },
+        "target": {
+          "template": {
+            "contiguous": false,
+            "units": "ft",
+            "type": ""
+          },
+          "affects": {
+            "choice": false,
+            "count": "1",
+            "type": "creature",
+            "special": "The Silver Raven in raven form"
+          },
+          "override": true,
+          "prompt": true
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "name": "",
+        "img": ""
+      }
+    },
+    "uses": {
+      "spent": 0,
+      "recovery": [
+        {
+          "period": "day",
+          "type": "formula",
+          "formula": "1"
+        }
+      ],
+      "max": "2"
+    },
+    "identifier": "silver-raven-uncommon",
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 0,
+      "units": "lb"
+    },
+    "rarity": "uncommon",
+    "attunement": "",
+    "attuned": false,
+    "armor": {
+      "value": null,
+      "magicalBonus": null,
+      "dex": null
+    },
+    "cover": null,
+    "crewed": false,
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "wondrous",
+      "baseItem": ""
+    },
+    "properties": [
+      "mgc"
+    ],
+    "strength": null
+  },
+  "_id": "oZ03PU7Sf2BzEfBg",
+  "type": "equipment",
+  "img": "icons/commodities/materials/feather-blue-grey.webp",
+  "effects": [],
+  "flags": {
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave",
+        "enchantment": null,
+        "base": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+      }
+    }
+  },
+  "_key": "!items!oZ03PU7Sf2BzEfBg",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

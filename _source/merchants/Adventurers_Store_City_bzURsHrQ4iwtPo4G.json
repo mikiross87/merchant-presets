@@ -5742,6 +5742,4317 @@
       "_key": "!actors.items!bzURsHrQ4iwtPo4G.DMFDWASEAIihe6eZ"
     },
     {
+      "name": "Potion of Climbing",
+      "type": "consumable",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "system": {
+        "activities": {
+          "RwfSYL6yjdvldoIH": {
+            "type": "utility",
+            "name": "Drink",
+            "_id": "RwfSYL6yjdvldoIH",
+            "sort": 0,
+            "activation": {
+              "type": "bonus",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "D6fYii3nkDC4Tsbi",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [
+              "D6fYii3nkDC4Tsbi"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": true,
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Potion, Common</em></p><p>When you drink this potion, you gain a Climb Speed equal to your Speed for 1 hour. During this time, you have Advantage on Strength (Athletics) checks to climb.</p><p>This potion is separated into brown, silver, and gray layers resembling bands of stone. Shaking the bottle fails to mix the colors.</p><section id=\"secret-HJGRSX6Nbv4iYQAX\" class=\"secret\"><p><strong>Foundry Note</strong></p><p>The <strong>Climber</strong> Active Effect can be used for tracking but can not automate the effects.</p></section>",
+          "chat": ""
+        },
+        "identifier": "potion-of-climbing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0.5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 50,
+          "denomination": "gp"
+        },
+        "rarity": "common",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "potion",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [
+        {
+          "name": "Climber",
+          "img": "icons/consumables/potions/vial-cork-empty.webp",
+          "_id": "740QfMGDbxFz9uAc",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730862196995,
+            "modifiedTime": 1783544097345,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.pZT1Tq7WmfNG3u1b.740QfMGDbxFz9uAc"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb"
+      },
+      "_id": "pZT1Tq7WmfNG3u1b",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.pZT1Tq7WmfNG3u1b"
+    },
+    {
+      "name": "Bag of Holding",
+      "type": "container",
+      "img": "icons/containers/bags/pack-engraved-leather-tan.webp",
+      "system": {
+        "description": {
+          "value": "<div><p>This bag has an interior space considerably larger than its outside dimensions—roughly 2 feet square and 4 feet deep on the inside. The bag can hold up to 500 pounds, not exceeding a volume of 64 <span class=\"no-break\">cubic</span> feet. The bag weighs 5 pounds, regardless of its contents. Retrieving an item from the bag requires a Utilize action.</p><p>If the bag is overloaded, pierced, or torn, it is destroyed, and its contents are scattered in the Astral Plane. If the bag is turned inside out, its contents spill forth unharmed, but the bag must be put right before it can be used again. The bag holds enough air for 10 minutes of breathing, divided by the number of breathing creatures inside.</p><p>Placing a <em>Bag of Holding</em> inside an extradimensional space created by a <em>@UUID[Compendium.dnd5e.equipment24.Item.dmgHewardsHandyH]{Handy Haversack}</em>, <em>@UUID[Compendium.dnd5e.equipment24.Item.dmgPortableHole0]{Portable Hole}</em>, or similar item instantly destroys both items and opens a gate to the Astral Plane. The gate originates where the one item was placed inside the other. Any creature within a 10-foot-radius Sphere centered on the gate is sucked through it to a random location on the Astral Plane. The gate then closes. The gate is one-way and can't be reopened.</p></div>",
+          "chat": ""
+        },
+        "identifier": "bag-of-holding",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [
+          "mgc",
+          "weightlessContents"
+        ],
+        "capacity": {
+          "type": "weight",
+          "value": 500
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBagOfHolding0"
+      },
+      "_id": "U2mpZEDZQBZJfeIj",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.U2mpZEDZQBZJfeIj"
+    },
+    {
+      "name": "Boots of Elvenkind",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p></div><p>While you wear these boots, your steps make no sound, regardless of the surface you are moving across. You also have Advantage on Dexterity (Stealth) checks.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-elvenkind",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Boots of Elvenkind",
+          "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+          "origin": null,
+          "_id": "6SckRbRwALuf1NfB",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "",
+                "value": "",
+                "type": "add",
+                "phase": "initial",
+                "_id": "RHoNEHxHTNzZMBHD"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1768925670296,
+            "modifiedTime": 1783544093872,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.ahwXDXdTMOKibJSu.6SckRbRwALuf1NfB"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk"
+      },
+      "_id": "ahwXDXdTMOKibJSu",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.ahwXDXdTMOKibJSu"
+    },
+    {
+      "name": "Cloak of Elvenkind",
+      "type": "equipment",
+      "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>While you wear this cloak, Wisdom (Perception) checks made to perceive you have Disadvantage, and you have Advantage on Dexterity (Stealth) checks.</p>",
+          "chat": ""
+        },
+        "identifier": "cloak-of-elvenkind",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Cloak of Elvenkind",
+          "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+          "origin": null,
+          "_id": "6E08vA6O7T0P30tN",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "",
+                "value": "",
+                "type": "add",
+                "phase": "initial",
+                "_id": "PNKmaFxqazGICEgn"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1768925573821,
+            "modifiedTime": 1783544094389,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.pTzrgxgBYBn79zXz.6E08vA6O7T0P30tN"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgCloakOfElvenk"
+      },
+      "_id": "pTzrgxgBYBn79zXz",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.pTzrgxgBYBn79zXz"
+    },
+    {
+      "name": "Rope of Climbing",
+      "type": "equipment",
+      "img": "icons/sundries/survival/rope-wrapped-red.webp",
+      "system": {
+        "activities": {
+          "JH4C7mTutLBmBJyi": {
+            "type": "utility",
+            "name": "Damage Rope",
+            "sort": 100000,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "20"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": ""
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "JH4C7mTutLBmBJyi",
+            "img": "systems/dnd5e/icons/svg/activity/damage.svg",
+            "appliedEffects": []
+          },
+          "1zQvPyT12aIg017J": {
+            "type": "utility",
+            "name": "Repair Rope",
+            "sort": 300000,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "20"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "-1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": "-1"
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "1zQvPyT12aIg017J",
+            "img": "systems/dnd5e/icons/svg/activity/heal.svg",
+            "appliedEffects": []
+          },
+          "0QUTFIBynESqw7XZ": {
+            "type": "utility",
+            "name": "Command",
+            "_id": "0QUTFIBynESqw7XZ",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            },
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "20"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>This 60-foot length of rope can hold up to 3,000 pounds. While holding one end of the rope, you can take a Magic action to command the other end of the rope to animate and move toward a destination you choose, up to the rope's length away from you. That end moves 10 feet on your turn when you first command it and 10 feet at the start of each of your subsequent turns until reaching its destination or until you tell it to stop. You can also tell the rope to fasten itself securely to an object or to unfasten itself, to knot or unknot itself, or to coil itself for carrying.</p><p>If you tell the rope to knot, large knots appear at 1-foot intervals along the rope. While knotted, the rope shortens to a 50-foot length and grants Advantage on ability checks made to climb using the rope.</p><p>The rope has AC 20, HP 20, and Immunity to Poison and Psychic damage. It regains 1 Hit Point every 5 minutes as long as it has at least 1 Hit Point. If the rope drops to 0 Hit Points, it is destroyed.</p><section class=\"secret\" id=\"secret-S4xxCILbyoIPQL7g\"><p><strong>Foundry Note</strong></p><p>The item includes 20 uses for tracking its HP. The <strong>Damage Rope</strong> activity can be used to apply damage and the <strong>Repair Rope</strong> activity can be used to restore its HP.</p></section>",
+          "chat": ""
+        },
+        "identifier": "rope-of-climbing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRopeOfClimbin"
+      },
+      "_id": "YRQJu8cRdeZae2Sb",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.YRQJu8cRdeZae2Sb"
+    },
+    {
+      "name": "Goggles of Night",
+      "type": "equipment",
+      "img": "icons/equipment/head/goggles-leather-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>While wearing these dark lenses, you have Darkvision out to 60 feet. If you already have Darkvision, wearing the goggles increases its range by 60 feet.</p>",
+          "chat": ""
+        },
+        "identifier": "goggles-of-night",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Goggles On",
+          "img": "icons/equipment/head/goggles-leather-blue.webp",
+          "_id": "stkeWWRwGijR7QbT",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.senses.darkvision",
+                "value": 60,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "knaOAKyb4WsEZoSV"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730728554207,
+            "modifiedTime": 1783544096016,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.DDw9FmMqME21xxaO.stkeWWRwGijR7QbT"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGogglesOfNigh"
+      },
+      "_id": "DDw9FmMqME21xxaO",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.DDw9FmMqME21xxaO"
+    },
+    {
+      "name": "Decanter of Endless Water",
+      "type": "equipment",
+      "img": "icons/consumables/potions/potion-flask-corked-blue.webp",
+      "system": {
+        "activities": {
+          "kqYptkTCtiFTlZJV": {
+            "type": "utility",
+            "_id": "kqYptkTCtiFTlZJV",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false,
+                "max": "5"
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "1 gallon of water"
+            },
+            "duration": {
+              "units": "round",
+              "concentration": false,
+              "override": false,
+              "value": "1"
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "The Decanter of Endless Water"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Splash",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "PdtjMpg7Bcqa1AVp": {
+            "type": "utility",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false,
+                "max": "5"
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "5 gallon of water"
+            },
+            "duration": {
+              "units": "round",
+              "concentration": false,
+              "override": false,
+              "value": "1"
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "object",
+                "special": "The Decanter of Endless Water"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "name": "Fountain",
+            "_id": "PdtjMpg7Bcqa1AVp",
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          },
+          "QObmaE8dWI8pIXFE": {
+            "type": "save",
+            "name": "Geyser",
+            "_id": "QObmaE8dWI8pIXFE",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": "30 gallons; save vs &Reference[prone]"
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "line",
+                "size": "30",
+                "width": "1",
+                "count": ""
+              },
+              "affects": {
+                "choice": true,
+                "count": "1",
+                "type": "creatureOrObject",
+                "special": "One creature or object of your choice in the Line"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [
+                {
+                  "custom": {
+                    "enabled": false,
+                    "formula": ""
+                  },
+                  "number": 1,
+                  "denomination": 4,
+                  "bonus": "",
+                  "types": [
+                    "bludgeoning"
+                  ]
+                }
+              ],
+              "onSave": "none"
+            },
+            "save": {
+              "ability": "str",
+              "dc": {
+                "calculation": "",
+                "formula": "13"
+              }
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "autoDestroy": false,
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon</em></p></div><p>This stoppered flask sloshes when shaken, as if it contains water. The decanter weighs 2 pounds.</p><p>You can take a Magic action to remove the stopper and issue one of three command words, whereupon an amount of @UUID[Compendium.dnd5e.equipment24.Item.dmgspWaterfresh0]{fresh water} or @UUID[Compendium.dnd5e.equipment24.Item.dmgspWatersalt00]{salt water} (your choice) pours out of the flask. The water stops pouring out at the start of your next turn. Choose from the following command words:</p><div class=\"def-block\"><p><strong>Splash.</strong> The decanter produces 1 gallon of water.</p><p><strong>Fountain.</strong> The decanter produces 5 gallons of water.</p><p><strong>Geyser.</strong> The decanter produces 30 gallons of water that gushes forth in a Line 30 feet long and 1 foot wide. If you're holding the decanter, you can aim the geyser in one direction (no action required). One creature of your choice in the Line must succeed on a DC 13 Strength saving throw or take 1d4 Bludgeoning damage and have the &amp;Reference[Prone] condition. Instead of a creature, you can target one object in the Line that isn't being worn or carried and that weighs no more than 200 pounds. The object is knocked over by the geyser.</p></div>",
+          "chat": ""
+        },
+        "identifier": "decanter-of-endless-water",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 2,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "type": {
+          "value": "wondrous",
+          "subtype": ""
+        },
+        "damage": {
+          "base": {
+            "number": null,
+            "denomination": null,
+            "types": [],
+            "custom": {
+              "enabled": false
+            },
+            "scaling": {
+              "number": 1
+            }
+          },
+          "replace": false
+        },
+        "magicalBonus": null,
+        "properties": [
+          "mgc"
+        ]
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgDecanterOfEnd"
+      },
+      "_id": "iiMExJmMCf7ijugY",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.iiMExJmMCf7ijugY"
+    },
+    {
+      "name": "Boots of Striding and Springing",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-collared-leather-brown.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>While you wear these boots, your Speed becomes 30 feet unless your Speed is higher, and your Speed isn't reduced by you carrying weight in excess of your carrying capacity or wearing Heavy Armor.</p><p>Once on each of your turns, you can jump up to 30 feet by spending only 10 feet of movement.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-striding-and-springing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Unburdened Movement",
+          "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+          "_id": "TxCqB80cbr10UdaH",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.walk",
+                "value": 30,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "w9tt06ONQPwBaJ2N"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>Your Speed becomes 30 feet unless your Speed is higher, and your Speed isn’t reduced by you carrying weight in excess of your carrying capacity or wearing Heavy Armor.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728681153281,
+            "modifiedTime": 1783544093953,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.L67UeRGFJ0B1jcIX.TxCqB80cbr10UdaH"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfStridi"
+      },
+      "_id": "L67UeRGFJ0B1jcIX",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.L67UeRGFJ0B1jcIX"
+    },
+    {
+      "name": "Gloves of Swimming and Climbing",
+      "type": "equipment",
+      "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing these gloves, you have a Climb Speed and a Swim Speed equal to your Speed, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim.</p><section class=\"secret\" id=\"secret-9sClXeq4AMq44GSR\"><p><strong>Foundry Note</strong></p><p>The +5 bonus to checks made to climb or swim should be added as a situational bonus when applicable.</p></section>",
+          "chat": ""
+        },
+        "identifier": "gloves-of-swimming-and-climbing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Gloves On",
+          "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+          "_id": "vCYoS83JdnfvCVJ0",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.skills.ath.bonuses.check",
+                "value": 5,
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "PTlDr6AmbDDZjWQY"
+              },
+              {
+                "key": "system.attributes.movement.climb",
+                "value": "@attributes.movement.walk",
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "YQfm6WvZKOLdBipn"
+              },
+              {
+                "key": "system.attributes.movement.swim",
+                "value": "@attributes.movement.walk",
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "LmERZSCb4kriGH4F"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You have a Climb Speed and a Swim Speed equal to your Speed, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfThiev.ActiveEffect.6f8ARzOvPmhNZ0NV",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730728909619,
+            "modifiedTime": 1783544095947,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.QhMv2nEoHQjpyWDo.vCYoS83JdnfvCVJ0"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfSwimm"
+      },
+      "_id": "QhMv2nEoHQjpyWDo",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.QhMv2nEoHQjpyWDo"
+    },
+    {
+      "name": "Necklace of Adaptation",
+      "type": "equipment",
+      "img": "icons/equipment/neck/amulet-carved-stone-spiral-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While wearing this necklace, you can breathe normally in any environment, and you have Advantage on saving throws made to avoid or end the &amp;Reference[Poisoned apply=false] condition.</p>",
+          "chat": ""
+        },
+        "identifier": "necklace-of-adaptation",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfAda"
+      },
+      "_id": "iDMvpN9lCLtltcvH",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.iDMvpN9lCLtltcvH"
+    },
+    {
+      "name": "Ring of Jumping",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-winged-gold-blue.webp",
+      "system": {
+        "activities": {
+          "7eb7D4APf14llP0v": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplJump000000",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "1",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": true,
+              "ability": ""
+            },
+            "_id": "7eb7D4APf14llP0v",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": true,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Ring, Uncommon (Requires Attunement)</em></p><p>While wearing this ring, you can cast @UUID[Compendium.dnd5e.spells24.Item.phbsplJump000000]{Jump} from it, but can target only yourself when you do so.</p>",
+          "chat": ""
+        },
+        "identifier": "ring-of-jumping",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfJumping"
+      },
+      "_id": "oUB7YgSd3Tp1UF8P",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.oUB7YgSd3Tp1UF8P"
+    },
+    {
+      "name": "Ring of Swimming",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-shell-white-blue.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Ring, Uncommon</em></p><p>You have a Swim Speed of 40 feet while wearing this ring.</p>",
+          "chat": ""
+        },
+        "identifier": "ring-of-swimming",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Swimmer",
+          "img": "icons/creatures/fish/fish-shark-swimming.webp",
+          "_id": "yIIIHKAuWLsRaMgj",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.swim",
+                "value": 40,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "qfloDtqd5f5foE4p"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730681172147,
+            "modifiedTime": 1783544097844,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.088GyhpU7aYPLM5a.yIIIHKAuWLsRaMgj"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfSwimmin"
+      },
+      "_id": "088GyhpU7aYPLM5a",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.088GyhpU7aYPLM5a"
+    },
+    {
+      "name": "Ring of Warmth",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-cabochon-gold-orange.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Ring, Uncommon (Requires Attunement)</em></p><p>If you take Cold damage while wearing this ring, the ring reduces the damage you take by [[/r 2d8]].</p><p>In addition, while wearing this ring, you and everything you wear and carry are unharmed by temperatures of 0 degrees Fahrenheit or lower.</p>",
+          "chat": ""
+        },
+        "identifier": "ring-of-warmth",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfWarmth0"
+      },
+      "_id": "VbQUPdc4AFaUZSSa",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.VbQUPdc4AFaUZSSa"
+    },
+    {
+      "name": "Ring of Water Walking",
+      "type": "equipment",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "system": {
+        "activities": {
+          "CMzzgJJphvrxbraj": {
+            "type": "cast",
+            "spell": {
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplWaterWalk0",
+              "challenge": {
+                "attack": null,
+                "save": null,
+                "override": false
+              },
+              "level": "3",
+              "properties": [
+                "vocal",
+                "somatic",
+                "material"
+              ],
+              "spellbook": false,
+              "ability": ""
+            },
+            "_id": "CMzzgJJphvrxbraj",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": true,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "name": "",
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Ring, Uncommon</em></p><p>While wearing this ring, you cast @UUID[Compendium.dnd5e.spells24.Item.phbsplWaterWalk0]{Water Walk} from it, targeting only yourself.</p>",
+          "chat": ""
+        },
+        "identifier": "ring-of-water-walking",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "ring",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRingOfWaterWa"
+      },
+      "_id": "VfhnGlxULbpmPpEl",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.VfhnGlxULbpmPpEl"
+    },
+    {
+      "name": "Boots of the Winterlands",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-leather-banded-furred.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p></div><p>These furred boots are snug and feel warm. While wearing them, you gain the following benefits.</p><p><strong>Cold Resistance.</strong> You have Resistance to Cold damage and can tolerate temperatures of 0 degrees Fahrenheit or lower without any additional protection.</p><p><strong>Winter Strider.</strong> You ignore Difficult Terrain created by ice or snow.</p>",
+          "chat": ""
+        },
+        "identifier": "boots-of-the-winterlands",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Cold Resistance",
+          "img": "icons/magic/water/snowflake-ice-gray.webp",
+          "_id": "iQ9Qr2HvYcMdV1qP",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.traits.dr.value",
+                "value": "cold",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "70xCV6nzrLqi1tvb"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You have Resistance to Cold damage and can tolerate temperatures of 0 degrees Fahrenheit or lower without any additional protection.</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1728681470080,
+            "modifiedTime": 1783544093987,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.NObOUPqflReWvLVU.iQ9Qr2HvYcMdV1qP"
+        },
+        {
+          "name": "Winter Strider",
+          "img": "icons/magic/water/barrier-ice-crystal-wall-faceted-blue.webp",
+          "origin": null,
+          "_id": "SGNsmHDtvYviJmqb",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.ignoredDifficultTerrain",
+                "value": "ice",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "Q3rfl32SNSPWmWlA"
+              },
+              {
+                "key": "system.attributes.movement.ignoredDifficultTerrain",
+                "value": "snow",
+                "priority": null,
+                "type": "add",
+                "phase": "initial",
+                "_id": "rc4I5R3cDwSGZA8d"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "<p>You ignore Difficult Terrain created by ice or snow.</p>",
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {
+            "dnd5e": {
+              "riders": {
+                "statuses": []
+              }
+            }
+          },
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "exportSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1753118928666,
+            "modifiedTime": 1783544093987,
+            "lastModifiedBy": "dnd5ebuilder0000"
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.NObOUPqflReWvLVU.SGNsmHDtvYviJmqb"
+        }
+      ],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgBootsOfTheWin"
+      },
+      "_id": "NObOUPqflReWvLVU",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.NObOUPqflReWvLVU"
+    },
+    {
+      "name": "Slippers of Spider Climbing",
+      "type": "equipment",
+      "img": "icons/equipment/feet/boots-leather-black.webp",
+      "system": {
+        "activities": {},
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": ""
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>While you wear these light shoes, you can move up, down, and across vertical surfaces and along ceilings, while leaving your hands free. You have a Climb Speed equal to your Speed. However, the slippers don't allow you to move this way on a slippery surface, such as one covered by ice or oil.</p>",
+          "chat": ""
+        },
+        "identifier": "slippers-of-spider-climbing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgSlippersOfSpi"
+      },
+      "_id": "XvPnigs6SDRJCOIW",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.XvPnigs6SDRJCOIW"
+    },
+    {
+      "name": "Lantern of Revealing",
+      "type": "equipment",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "system": {
+        "activities": {
+          "L8hUSl7lSC1PEqP4": {
+            "type": "utility",
+            "name": "Consume Oil",
+            "_id": "L8hUSl7lSC1PEqP4",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {}
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "radius",
+                "size": "30",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>While lit, this hooded lantern burns for 6 hours on 1 pint of oil, shedding Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. &amp;Reference[Invisible apply=false] creatures and objects are visible as long as they are in the lantern's Bright Light. You can take a Utilize action to lower the hood, reducing the lantern's light to Dim Light in a 5-foot radius.</p>",
+          "chat": ""
+        },
+        "identifier": "lantern-of-revealing",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "dnd5e": {
+          "riders": {
+            "activity": [],
+            "effect": []
+          }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve"
+      },
+      "_id": "3l0TpO0oyM9vZaJg",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.3l0TpO0oyM9vZaJg"
+    },
+    {
+      "name": "Rope of Entanglement",
+      "type": "equipment",
+      "img": "icons/sundries/survival/rope-wrapped-purple.webp",
+      "system": {
+        "activities": {
+          "oY5qoF7eii3fFuzY": {
+            "type": "save",
+            "name": "Entangle",
+            "_id": "oY5qoF7eii3fFuzY",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "sYzIZOD83JG2W6wh",
+                "onSave": false,
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "20"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "damage": {
+              "parts": [],
+              "onSave": "half"
+            },
+            "save": {
+              "ability": "dex",
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              }
+            },
+            "img": "",
+            "appliedEffects": [
+              "sYzIZOD83JG2W6wh"
+            ],
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireMagic": true
+            }
+          },
+          "4Zem04Lsz9nIP2qM": {
+            "type": "check",
+            "name": "Escape",
+            "_id": "4Zem04Lsz9nIP2qM",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": []
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "1",
+                "type": "creature",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "check": {
+              "associated": [
+                "acr",
+                "ath"
+              ],
+              "dc": {
+                "calculation": "",
+                "formula": "15"
+              },
+              "ability": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          },
+          "945K5l88AeS7w4hV": {
+            "type": "utility",
+            "name": "Damage Rope",
+            "_id": "945K5l88AeS7w4hV",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "20"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": ""
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": false
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "systems/dnd5e/icons/svg/activity/damage.svg",
+            "appliedEffects": []
+          },
+          "60i9AJLDM4Meg8TG": {
+            "type": "utility",
+            "name": "Repair Rope",
+            "_id": "60i9AJLDM4Meg8TG",
+            "sort": 0,
+            "activation": {
+              "type": "",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": true,
+                "max": "20"
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "-1",
+                  "target": "",
+                  "scaling": {
+                    "mode": "amount",
+                    "formula": "-1"
+                  }
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "systems/dnd5e/icons/svg/activity/heal.svg",
+            "appliedEffects": []
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "20"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Rare</em></p><p>This rope is 30 feet long. While holding one end of the rope, you can take a Magic action to command the other end to dart forward and entangle one creature you can see within 20 feet of yourself. The target must succeed on a DC 15 Dexterity saving throw or have the &amp;Reference[Restrained apply=false] condition. You can release the target by letting go of your end of the rope (causing the rope to coil up in the target's space) or by using a Bonus Action to repeat the command (causing the rope to coil up in your hand).</p><p>A target Restrained by the rope can take an action to make its choice of a DC 15 Strength (Athletics) or Dexterity (Acrobatics) check. On a successful check, the target is no longer Restrained by the rope. If you're still holding onto the rope when a target escapes from it, you can take a Reaction to command the rope to coil up in your hand; otherwise, the rope coils up in the target's space.</p><p>The rope has AC 20, HP 20, and Immunity to Poison and Psychic damage. It regains 1 Hit Point every 5 minutes as long as it has at least 1 Hit Point. If the rope drops to 0 Hit Points, it is destroyed.</p><section class=\"secret\" id=\"secret-7RGkmfY1bTmeeb5L\"><p><strong>Foundry Note</strong></p><p>The item includes 20 uses for tracking its HP. The <strong>Damage Rope</strong> activity can be used to apply damage and the <strong>Repair Rope</strong> activity can be used to restore its HP.</p><p>The <strong>Escape</strong> activity can be used to send an Athletics and Dexterity check to the chat for the target to roll for their escape.</p></section>",
+          "chat": ""
+        },
+        "identifier": "rope-of-entanglement",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 5,
+          "units": "lb"
+        },
+        "price": {
+          "value": 4000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Entangled",
+          "img": "icons/sundries/survival/rope-wrapped-purple.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "z1Uca5D6LCxGpPzZ",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": null,
+            "units": "seconds",
+            "expiry": null,
+            "expired": false
+          },
+          "description": "",
+          "tint": "#ffffff",
+          "statuses": [
+            "restrained"
+          ],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730668967369,
+            "modifiedTime": 1783544098173,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "showIcon": 2,
+          "start": null,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.YwVJjfGUF0LHVah9.z1Uca5D6LCxGpPzZ"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgRopeOfEntangl"
+      },
+      "_id": "YwVJjfGUF0LHVah9",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.YwVJjfGUF0LHVah9"
+    },
+    {
+      "name": "Feather Token (Anchor)",
+      "type": "consumable",
+      "img": "icons/commodities/materials/feather-blue.webp",
+      "system": {
+        "activities": {
+          "TGNJ1H4ZUTFR37aP": {
+            "type": "utility",
+            "name": "Use",
+            "_id": "TGNJ1H4ZUTFR37aP",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "Fvj9Ua7rVEqdfPz5",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [
+              "Fvj9Ua7rVEqdfPz5"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon, See: @UUID[Compendium.dnd5e.equipment24.Item.dmgQuaalsFeather]{Feather Token}</em></p><p>You can take a Magic action to touch the token to a boat or ship. For the next 24 hours, the vessel can't be moved by any means. Touching the token to the vessel again ends the effect. When the effect ends, the token disappears.</p>",
+          "chat": ""
+        },
+        "identifier": "anchor-feather-token",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 4,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Anchor",
+          "img": "icons/tools/nautical/anchor-blue-orange.webp",
+          "_id": "cBSYigCl07bQjOFv",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 86400,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAnchorQuaalsF caption=false]</p>",
+          "origin": null,
+          "tint": "#ffffff",
+          "transfer": true,
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730755411111,
+            "modifiedTime": 1783544093389,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.dWADBfOtFVXRSbPN.cBSYigCl07bQjOFv"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgAnchorQuaalsF"
+      },
+      "_id": "dWADBfOtFVXRSbPN",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.dWADBfOtFVXRSbPN"
+    },
+    {
+      "name": "Feather Token (Fan)",
+      "type": "consumable",
+      "img": "icons/commodities/materials/feather-colored-red.webp",
+      "system": {
+        "activities": {
+          "DEPDYI0M2exBq5rp": {
+            "type": "utility",
+            "_id": "DEPDYI0M2exBq5rp",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "xCyHeKeepXMk3KXZ",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "ft",
+              "special": "",
+              "value": "10"
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "name": "Use",
+            "img": "",
+            "appliedEffects": [
+              "xCyHeKeepXMk3KXZ"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon, See: @UUID[Compendium.dnd5e.equipment24.Item.dmgQuaalsFeather]{Feather Token}</em></p><p>If you are on a boat or ship, you can take a Magic action to toss the token up to 10 feet in the air. The token disappears, and a giant flapping fan takes its place. The fan floats and creates a strong wind. This wind can fill the sails of one ship, increasing its speed by 5 miles per hour for 8 hours. You can dismiss the fan as a Magic action.</p>",
+          "chat": ""
+        },
+        "identifier": "fan-feather-token",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 6,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Feather Token: Fan",
+          "img": "icons/magic/air/air-wave-gust-blue.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "up3cM0xtZ7HW0yZO",
+          "type": "base",
+          "system": {
+            "changes": [],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 28800,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>This wind can fill the sails of one ship, increasing its speed by 5 miles per hour for 8 hours. You can dismiss the fan as a Magic action.</p>",
+          "tint": "#ffffff",
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730769776812,
+            "modifiedTime": 1783544095502,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.GIqYyLvarhGs8rii.up3cM0xtZ7HW0yZO"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgFanQuaalsFeat"
+      },
+      "_id": "GIqYyLvarhGs8rii",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.GIqYyLvarhGs8rii"
+    },
+    {
+      "name": "Feather Token (Tree)",
+      "type": "consumable",
+      "img": "icons/commodities/materials/feather-colored-green.webp",
+      "system": {
+        "activities": {
+          "wG1nrX8zkBjD7S4W": {
+            "type": "utility",
+            "name": "Use",
+            "_id": "wG1nrX8zkBjD7S4W",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "perm",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [],
+            "range": {
+              "override": false,
+              "units": "touch",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": "cylinder",
+                "size": "2.5",
+                "height": "60",
+                "count": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "space",
+                "special": "unoccupied space on the ground"
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "name": "",
+              "formula": ""
+            },
+            "img": "",
+            "appliedEffects": [],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [],
+          "max": "1",
+          "autoDestroy": true
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon, See: @UUID[Compendium.dnd5e.equipment24.Item.dmgQuaalsFeather]{Feather Token}</em></p><p>You must be outdoors to use this token. You can take a Magic action to touch it to an unoccupied space on the ground. The token disappears, and in its place a nonmagical oak tree springs into existence. The tree is 60 feet tall and has a 5-foot-diameter trunk, and its branches at the top spread out in a 20-foot radius.</p>",
+          "chat": ""
+        },
+        "identifier": "tree-feather-token",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 3,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 200,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "trinket",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgTreeQuaalsFea"
+      },
+      "_id": "j84D2HkPcCc75hWC",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.j84D2HkPcCc75hWC"
+    },
+    {
+      "name": "Folding Boat",
+      "type": "container",
+      "img": "icons/environment/settlement/ship.webp",
+      "system": {
+        "description": {
+          "value": "<div><p><em>Wondrous Item, Rare</em></p></div><p>This object appears as a wooden box that measures 12 inches long, 6 inches wide, and 6 inches deep. It weighs 4 pounds and floats. It can be opened to store items inside. This item also has three command words, each requiring a Magic action to use:</p><p>@Embed[Compendium.dnd5e.equipment24.Item.dmgBoatUtility00 caption=false]</p>",
+          "chat": ""
+        },
+        "identifier": "folding-boat",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 4,
+          "units": "lb"
+        },
+        "price": {
+          "value": 7000,
+          "denomination": "gp"
+        },
+        "rarity": "rare",
+        "attunement": "",
+        "attuned": false,
+        "currency": {
+          "pp": 0,
+          "gp": 0,
+          "ep": 0,
+          "sp": 0,
+          "cp": 0
+        },
+        "properties": [
+          "mgc"
+        ],
+        "capacity": {
+          "type": "weight",
+          "value": null
+        }
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgFoldingBoat00"
+      },
+      "_id": "p49cvt1FYJlzEYQF",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.p49cvt1FYJlzEYQF"
+    },
+    {
+      "name": "Winged Boots",
+      "type": "equipment",
+      "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+      "system": {
+        "activities": {
+          "Ef5R7kWEyJZ765vY": {
+            "type": "utility",
+            "name": "Fly",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false,
+              "condition": ""
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "effects": [
+              {
+                "_id": "jKz5xLbftW2r0f3P",
+                "level": {
+                  "min": null,
+                  "max": null
+                }
+              }
+            ],
+            "range": {
+              "override": false,
+              "units": "self",
+              "special": ""
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft",
+                "type": ""
+              },
+              "affects": {
+                "choice": false,
+                "count": "",
+                "type": "self",
+                "special": ""
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "roll": {
+              "prompt": false,
+              "visible": false,
+              "formula": "",
+              "name": ""
+            },
+            "_id": "Ef5R7kWEyJZ765vY",
+            "img": "",
+            "appliedEffects": [
+              "jKz5xLbftW2r0f3P"
+            ],
+            "visibility": {
+              "requireMagic": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": "",
+              "requireIdentification": true
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "formula",
+              "formula": "1d4"
+            }
+          ],
+          "max": "4"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon (Requires Attunement)</em></p><p>These boots have 4 charges and regain 1d4 expended charges daily at dawn. While wearing the boots, you can take a Magic action to expend 1 charge, gaining a Fly Speed of 30 feet for 1 hour. If you are flying when the duration expires, you descend at a rate of 30 feet per round until you land.</p>",
+          "chat": ""
+        },
+        "identifier": "winged-boots",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 2,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "required",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [
+        {
+          "name": "Winged",
+          "img": "icons/magic/holy/angel-wings-gray.webp",
+          "origin": null,
+          "transfer": false,
+          "_id": "qI1QphRi7ZXkodmM",
+          "type": "base",
+          "system": {
+            "changes": [
+              {
+                "key": "system.attributes.movement.fly",
+                "value": 30,
+                "priority": null,
+                "type": "upgrade",
+                "phase": "initial",
+                "_id": "hDgVk6JQplgJfSNO"
+              }
+            ],
+            "magical": true
+          },
+          "disabled": false,
+          "duration": {
+            "value": 3600,
+            "units": "seconds",
+            "expiry": "turnStart",
+            "expired": false
+          },
+          "description": "<p>The wings lasts for 1 hour or until you end the effect early as a Magic action. The wings give you a Fly Speed of 60 feet.</p>",
+          "tint": "#ffffff",
+          "statuses": [],
+          "sort": 0,
+          "flags": {},
+          "_stats": {
+            "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgWingsOfFlying.ActiveEffect.JLR5JpSUgL3yYcvt",
+            "duplicateSource": null,
+            "coreVersion": "14.364",
+            "systemId": "dnd5e",
+            "systemVersion": "6.0.0",
+            "createdTime": 1730660820044,
+            "modifiedTime": 1783544099537,
+            "lastModifiedBy": "dnd5ebuilder0000",
+            "exportSource": null
+          },
+          "start": null,
+          "showIcon": 1,
+          "folder": null,
+          "_key": "!actors.items.effects!bzURsHrQ4iwtPo4G.jEs0LudAqULpQw12.qI1QphRi7ZXkodmM"
+        }
+      ],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgWingedBoots00"
+      },
+      "_id": "jEs0LudAqULpQw12",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.jEs0LudAqULpQw12"
+    },
+    {
+      "name": "Wind Fan",
+      "type": "equipment",
+      "img": "icons/commodities/treasure/trinket-wing-white.webp",
+      "system": {
+        "activities": {
+          "XDZGf9wOd5swcJJ3": {
+            "type": "cast",
+            "name": "Gust of Wind",
+            "_id": "XDZGf9wOd5swcJJ3",
+            "sort": 0,
+            "activation": {
+              "type": "action",
+              "value": null,
+              "override": false
+            },
+            "consumption": {
+              "scaling": {
+                "allowed": false
+              },
+              "spellSlot": true,
+              "targets": [
+                {
+                  "type": "itemUses",
+                  "value": "1",
+                  "target": ""
+                }
+              ]
+            },
+            "description": {
+              "chatFlavor": ""
+            },
+            "duration": {
+              "units": "inst",
+              "concentration": false,
+              "override": false
+            },
+            "range": {
+              "override": false
+            },
+            "target": {
+              "template": {
+                "contiguous": false,
+                "units": "ft"
+              },
+              "affects": {
+                "choice": false
+              },
+              "override": false,
+              "prompt": true
+            },
+            "uses": {
+              "spent": 0,
+              "recovery": [],
+              "max": ""
+            },
+            "spell": {
+              "challenge": {
+                "attack": null,
+                "save": 13,
+                "override": true
+              },
+              "level": "2",
+              "properties": [],
+              "spellbook": false,
+              "uuid": "Compendium.dnd5e.spells24.Item.phbsplGustofWind",
+              "ability": ""
+            },
+            "img": "",
+            "visibility": {
+              "requireIdentification": true,
+              "level": {
+                "min": null,
+                "max": null
+              },
+              "identifier": ""
+            }
+          }
+        },
+        "uses": {
+          "spent": 0,
+          "recovery": [
+            {
+              "period": "dawn",
+              "type": "recoverAll"
+            }
+          ],
+          "max": "5"
+        },
+        "description": {
+          "value": "<p><em>Wondrous Item, Uncommon</em></p><p>While holding this fan, you can cast @UUID[Compendium.dnd5e.spells24.Item.phbsplGustofWind]{Gust of Wind} (save DC 13) from it. Each subsequent time the fan is used before the next dawn, it has a cumulative 20 percent chance of not working; if the fan fails to work, it tears into useless, nonmagical tatters.</p><p><strong>Roll for Chance of Not Working:</strong> [[/r 1d5cs&gt;@item.uses.spent]]</p><section class=\"secret\" id=\"secret-hNmHToEJ6Gg4usEf\"><p><strong>Foundry Note</strong></p><p>Each of use of Gust of Wind expends a use of this item and is reset at dawn. The inline roll above rolls 1d5 and checks if the value is higher than the number of uses to handle the cumulative 20 percent chance of not working. It will return \"1\" if it's successful and \"0\" if it fails.</p></section>",
+          "chat": ""
+        },
+        "identifier": "wind-fan",
+        "source": {
+          "book": "SRD 5.2",
+          "license": "CC-BY-4.0",
+          "rules": "2024",
+          "revision": 1
+        },
+        "identified": true,
+        "unidentified": {
+          "description": ""
+        },
+        "container": null,
+        "quantity": 1,
+        "weight": {
+          "value": 0,
+          "units": "lb"
+        },
+        "price": {
+          "value": 400,
+          "denomination": "gp"
+        },
+        "rarity": "uncommon",
+        "attunement": "",
+        "attuned": false,
+        "armor": {
+          "value": null,
+          "magicalBonus": null,
+          "dex": null
+        },
+        "cover": null,
+        "crewed": false,
+        "hp": {
+          "value": null,
+          "max": null,
+          "dt": null,
+          "conditions": ""
+        },
+        "type": {
+          "value": "wondrous",
+          "baseItem": ""
+        },
+        "properties": [
+          "mgc"
+        ],
+        "strength": null
+      },
+      "effects": [],
+      "flags": {
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
+        },
+        "merchant-presets": {
+          "stock": {
+            "infinite": false,
+            "keep": false,
+            "service": false,
+            "noBuyback": false,
+            "category": "",
+            "bundle": 1,
+            "hidden": false,
+            "notForSale": false
+          }
+        }
+      },
+      "_stats": {
+        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgWindFan000000"
+      },
+      "_id": "23U7URZs44dfFI2q",
+      "_key": "!actors.items!bzURsHrQ4iwtPo4G.23U7URZs44dfFI2q"
+    },
+    {
       "name": "Greatsword",
       "system": {
         "description": {
@@ -6733,6 +11044,150 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
+        },
+        "Potion of Climbing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Bag of Holding": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of Elvenkind": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Cloak of Elvenkind": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rope of Climbing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Goggles of Night": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Decanter of Endless Water": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of Striding and Springing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Gloves of Swimming and Climbing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Necklace of Adaptation": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Jumping": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Swimming": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Warmth": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Ring of Water Walking": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Boots of the Winterlands": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Slippers of Spider Climbing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Lantern of Revealing": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Rope of Entanglement": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Feather Token (Anchor)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Feather Token (Fan)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Feather Token (Tree)": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Folding Boat": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Winged Boots": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
+        },
+        "Wind Fan": {
+          "infiniteQuantity": "no",
+          "keepOnMerchant": false,
+          "isService": false,
+          "cantBeSoldToMerchants": false
         }
       },
       "containers": {
@@ -6746,7 +11201,9 @@
         "Flask": 2,
         "Pot, Iron": 1,
         "Pouch": 4,
-        "Quiver": 1
+        "Quiver": 1,
+        "Bag of Holding": 1,
+        "Folding Boat": 1
       },
       "shop": {
         "version": 1,
@@ -6808,7 +11265,31 @@
             "tv7vHFO0Aq1yJv3k": "1",
             "jzIJkw53RNNEeDI4": "1",
             "EqzZYDdRsnVy5rfr": "4d10+20",
-            "qyUdFgHMehgqVENV": "3d8+8"
+            "qyUdFgHMehgqVENV": "3d8+8",
+            "eADqJnG8WAOY82c6": "1d4+2",
+            "tsb5ef1LRyr9DDFL": "1",
+            "Wcyrs67YfBgPRyHe": "1d3",
+            "tyykLHT3eDfSbrQv": "1d3",
+            "35mRSTVA9XsPbMQl": "1d3",
+            "S4d3dQs5w8wxgvXr": "1d3",
+            "99e1Uyo578ETV9lJ": "1d3",
+            "TWreJpemYU5mOPXN": "1d3",
+            "0Dv3SbmRL6yJEa8e": "1d3",
+            "OVd93fsuoJRMcGij": "1d3",
+            "jzFldCRHMoAv4GgS": "1d3",
+            "BRbNXkE0H0SgwUrK": "1d3",
+            "QaO1OIDse4zvzWAN": "1d3",
+            "vQWHAKoFXOQd7ywH": "1d3",
+            "9rO9X3INjQ9FhVDG": "1d3",
+            "HJOqjjB86WdafNnT": "1d3",
+            "0M4ydb8BU1dV8Shs": "1d3",
+            "5KPlbnSHZBlBw1oK": "1d2-1",
+            "s8zUPtXe85vExjy1": "1d4+2",
+            "Gi8k0V7l2N0eYq04": "1d4+2",
+            "YaXORVotUBjOhazr": "1d4+2",
+            "8PCHnEuiiWVsLcrI": "1",
+            "aqbXI6OqV5a7ntnE": "1d3",
+            "6H1RcCZlL3MHFRXN": "1d3"
           },
           "onOpen": true,
           "every": 3,
@@ -6908,7 +11389,31 @@
               "tv7vHFO0Aq1yJv3k": "1",
               "jzIJkw53RNNEeDI4": "1",
               "EqzZYDdRsnVy5rfr": "4d10+20",
-              "qyUdFgHMehgqVENV": "3d8+8"
+              "qyUdFgHMehgqVENV": "3d8+8",
+              "eADqJnG8WAOY82c6": "1d4+2",
+              "tsb5ef1LRyr9DDFL": "1",
+              "Wcyrs67YfBgPRyHe": "1d3",
+              "tyykLHT3eDfSbrQv": "1d3",
+              "35mRSTVA9XsPbMQl": "1d3",
+              "S4d3dQs5w8wxgvXr": "1d3",
+              "99e1Uyo578ETV9lJ": "1d3",
+              "TWreJpemYU5mOPXN": "1d3",
+              "0Dv3SbmRL6yJEa8e": "1d3",
+              "OVd93fsuoJRMcGij": "1d3",
+              "jzFldCRHMoAv4GgS": "1d3",
+              "BRbNXkE0H0SgwUrK": "1d3",
+              "QaO1OIDse4zvzWAN": "1d3",
+              "vQWHAKoFXOQd7ywH": "1d3",
+              "9rO9X3INjQ9FhVDG": "1d3",
+              "HJOqjjB86WdafNnT": "1d3",
+              "0M4ydb8BU1dV8Shs": "1d3",
+              "5KPlbnSHZBlBw1oK": "1d2-1",
+              "s8zUPtXe85vExjy1": "1d4+2",
+              "Gi8k0V7l2N0eYq04": "1d4+2",
+              "YaXORVotUBjOhazr": "1d4+2",
+              "8PCHnEuiiWVsLcrI": "1",
+              "aqbXI6OqV5a7ntnE": "1d3",
+              "6H1RcCZlL3MHFRXN": "1d3"
             }
           }
         ],

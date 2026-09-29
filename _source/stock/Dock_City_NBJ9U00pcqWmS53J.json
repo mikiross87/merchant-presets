@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/abandoned-pier.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d8",
+  "formula": "1d20",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -137,6 +137,198 @@
       "range": [
         8,
         8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4HUwe9PTDerwXj1m",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.4HUwe9PTDerwXj1m",
+      "type": "document",
+      "name": "Potion of Water Breathing",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bfCajAxDOuw2qOLK",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.bfCajAxDOuw2qOLK",
+      "type": "document",
+      "name": "Decanter of Endless Water",
+      "img": "icons/consumables/potions/potion-flask-corked-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDecanterOfEnd",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oVeZDrZoJl30puH8",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.oVeZDrZoJl30puH8",
+      "type": "document",
+      "name": "Necklace of Adaptation",
+      "img": "icons/equipment/neck/amulet-carved-stone-spiral-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfAda",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qGRQbxNuXVqnL3kt",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.qGRQbxNuXVqnL3kt",
+      "type": "document",
+      "name": "Ring of Swimming",
+      "img": "icons/equipment/finger/ring-shell-white-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfSwimmin",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Fs8spugbsSBDMtsU",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.Fs8spugbsSBDMtsU",
+      "type": "document",
+      "name": "Ring of Water Walking",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfWaterWa",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mnep2abzAmXQyAVw",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.mnep2abzAmXQyAVw",
+      "type": "document",
+      "name": "Feather Token (Anchor)",
+      "img": "icons/commodities/materials/feather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAnchorQuaalsF",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "P0S0o9tH3ZyS9gEz",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.P0S0o9tH3ZyS9gEz",
+      "type": "document",
+      "name": "Feather Token (Fan)",
+      "img": "icons/commodities/materials/feather-colored-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFanQuaalsFeat",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uDEOYyB9ucQbURKC",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.uDEOYyB9ucQbURKC",
+      "type": "document",
+      "name": "Folding Boat",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFoldingBoat00",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Zmcdk3rxRlOyMry8",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.Zmcdk3rxRlOyMry8",
+      "type": "document",
+      "name": "Wind Fan",
+      "img": "icons/commodities/treasure/trinket-wing-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWindFan000000",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qbwCQk8ATfy0Jpgn",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.qbwCQk8ATfy0Jpgn",
+      "type": "document",
+      "name": "Trident of Fish Command",
+      "img": "icons/weapons/polearms/trident-ice-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgTridentOfFish",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1pBF0WWPmUVelXR1",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.1pBF0WWPmUVelXR1",
+      "type": "document",
+      "name": "Cloak of the Manta Ray",
+      "img": "icons/equipment/head/hood-cloth-teal-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfTheMan",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KBg1WMwXhzpHK0PY",
+      "_key": "!tables.results!NBJ9U00pcqWmS53J.KBg1WMwXhzpHK0PY",
+      "type": "document",
+      "name": "Bowl of Commanding Water Elementals",
+      "img": "icons/commodities/materials/bowl-liquid-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBowlOfCommand",
+      "weight": 1,
+      "range": [
+        20,
+        20
       ],
       "drawn": false,
       "description": "",

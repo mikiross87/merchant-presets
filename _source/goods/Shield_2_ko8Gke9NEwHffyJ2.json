@@ -1,0 +1,88 @@
+{
+  "name": "Shield +2",
+  "system": {
+    "description": {
+      "value": "<p>You gain the Armor Class benefit of a Shield only if you have training with it.</p><p>@Embed[Compendium.dnd5e.equipment24.Item.dmgShield12or300 caption=false]</p>",
+      "chat": ""
+    },
+    "price": {
+      "value": 4010,
+      "denomination": "gp"
+    },
+    "source": {
+      "book": "SRD 5.2",
+      "license": "CC-BY-4.0",
+      "rules": "2024",
+      "revision": 1
+    },
+    "identified": true,
+    "unidentified": {
+      "description": ""
+    },
+    "quantity": 1,
+    "weight": {
+      "value": 6,
+      "units": "lb"
+    },
+    "rarity": "rare",
+    "attunement": "",
+    "attuned": false,
+    "cover": null,
+    "crewed": false,
+    "uses": {
+      "max": "",
+      "spent": 0,
+      "recovery": []
+    },
+    "armor": {
+      "value": 2,
+      "magicalBonus": 2,
+      "dex": null
+    },
+    "hp": {
+      "value": null,
+      "max": null,
+      "dt": null,
+      "conditions": ""
+    },
+    "type": {
+      "value": "shield",
+      "baseItem": "shield"
+    },
+    "properties": [
+      "mgc"
+    ],
+    "speed": {
+      "value": null,
+      "conditions": ""
+    },
+    "strength": null,
+    "activities": {},
+    "identifier": "shield"
+  },
+  "_id": "ko8Gke9NEwHffyJ2",
+  "type": "equipment",
+  "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+  "effects": [],
+  "flags": {
+    "dnd5e": {
+      "riders": {
+        "activity": [],
+        "effect": []
+      }
+    },
+    "merchant-presets": {
+      "magic": {
+        "template": "Compendium.dnd5e.equipment24.Item.dmgShield12or300",
+        "enchantment": "86wCNLX808Ta78E8",
+        "base": "Compendium.dnd5e.equipment24.Item.phbarmShield0000"
+      }
+    }
+  },
+  "_key": "!items!ko8Gke9NEwHffyJ2",
+  "folder": "4nS8o35xznVxlxdD",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  }
+}

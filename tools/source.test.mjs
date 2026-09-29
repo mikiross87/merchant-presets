@@ -59,7 +59,7 @@ test("every stock item's config validates; shopkeeper gear carries none", () => 
       checked++;
     }
   }
-  assert.equal(checked, 1551);
+  assert.equal(checked, 2017);
 });
 
 test("every good that carries Item Piles flags has a valid stock config", () => {

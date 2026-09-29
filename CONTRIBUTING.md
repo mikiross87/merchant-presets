@@ -62,8 +62,8 @@ actionlint`, or the install script in rhysd/actionlint) along with ShellCheck.
 Without ShellCheck on your PATH actionlint drops that rule and still exits 0, so
 the inline bash goes unchecked rather than unreported.
 
-`tools/build_srd.py`, `tools/build_spell_goods.py` and `tools/check_icons.sh`
-are not linted. They are maintainer scripts, run by hand and never shipped, and
+`tools/build_srd.py`, `tools/build_spell_goods.py`, `tools/build_magic_goods.py`
+and `tools/check_icons.sh` are not linted. They are maintainer scripts, run by hand and never shipped, and
 they fail visibly in front of the person who just changed them.
 
 > **Close the world before running `npm run pack`.** Foundry holds module packs
@@ -88,6 +88,19 @@ It also writes the spellcasting services sold by name (#55) and their lines.
 The seven level services (`Spellcasting: Cantrip` to `Level 9`) are edited by
 hand, and the named services take their prices from them.
 
+`data/magic.json` holds the magic items (#33), and `tools/build_magic_goods.py`
+writes their lines in `data/recipes.json` (category `Magic Items`; don't edit
+those by hand either). Items the SRD ships ready to use are listed by name. The
+magic weapons and armour dnd5e ships as *enchantments* to put on a base item
+(Flame Tongue, Mithral Armor, `Weapon, +1, +2, or +3`) are baked: each
+enchantment is applied onto the base items the file names, the way dnd5e
+applies it, its riders are copied in, and the result is written to
+`_source/goods` as this module's own good ("Flame Tongue Longsword"). Where an
+enchantment states no price or rarity, the template's own are used (Giant
+Slayer: rare, base price + 4,000 gp). dnd5e's enchanting leaves those as the
+base's. The live check that holds the baking to dnd5e's own enchanting is
+described on #33.
+
 Regenerating is a separate, rarer step than packing, because it needs five of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
 sell, the actors the shopkeepers are statted from, the monster features those
@@ -102,12 +115,14 @@ for p in equipment24 actors24 monsterfeatures24 spells24 content24; do
 done
 MP_SPELLS_DIR=/tmp/spells24 MP_CONTENT_DIR=/tmp/content24 \
   python3 tools/build_spell_goods.py
+MP_SRD_DIR=/tmp/equipment24 python3 tools/build_magic_goods.py
 MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 \
   MP_FEATS_DIR=/tmp/monsterfeatures24 python3 tools/build_srd.py
 npm run pack
 ```
 
-`build_spell_goods.py --check` validates without writing anything.
+`build_spell_goods.py --check` and `build_magic_goods.py --check` validate
+without writing anything.
 
 Document ids are content-derived hashes and the stock rolls are seeded per item,
 so regenerating reproduces the same packs rather than churning them. A stock line
@@ -129,6 +144,18 @@ Constraints worth knowing before changing the generator:
   `Scrolls`, `Tools`, `Holy Symbol`. Indexed by name they shadow the lookup, and
   a stock line naming one would resolve to the folder and be embedded as an item
   rather than being reported missing.
+- **Magic items need a price, and go by rarity.** About fifty SRD magic items
+  are unpriced: the `+1, +2, or +3` parents, the Deck of Many Things cards, and
+  real ones such as the Immovable Rod. The cheapest stock band would put dozens
+  on a city shelf, so `build_srd.py` reports and skips a magic stock line (one
+  with a rarity or the `mgc` property) whose item has no price (#33). A `price`
+  on the line doesn't help: it reaches only the shipped snapshot, and a shop
+  rolls its shelf, and restocks, from its stock table, which draws the SRD item
+  unpriced. Give the item a `price` in `data/magic.json` instead, and
+  `build_magic_goods.py` ships a priced copy as a good. Rarity sets where a magic item is stocked: common `vtc`,
+  uncommon `tc`, rare `c` with `limited`, and very rare and above nowhere. The
+  spell scrolls and *Potion of Healing (Supreme)* that shipped before are the
+  only exceptions.
 - **Shopkeeper gear is not stock.** `PROFILES` maps each shop and size to an SRD
   stat block, whose items ride along on the merchant tagged
   `flags.merchant-presets.kind: "gear"`. That kind is in every shop's refuse

@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/pottery-shop-shed-red.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d28",
+  "formula": "1d31",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -457,6 +457,54 @@
       "range": [
         28,
         28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Vwa09qLY3GEoVEhO",
+      "_key": "!tables.results!UysdBg3fbbpj8KH9.Vwa09qLY3GEoVEhO",
+      "type": "document",
+      "name": "Immovable Rod",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5xGKLPR0suZ1ZRsO",
+      "_key": "!tables.results!UysdBg3fbbpj8KH9.5xGKLPR0suZ1ZRsO",
+      "type": "document",
+      "name": "Lantern of Revealing",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BxLWpZhuer5nCB39",
+      "_key": "!tables.results!UysdBg3fbbpj8KH9.BxLWpZhuer5nCB39",
+      "type": "document",
+      "name": "Eversmoking Bottle",
+      "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEversmokingBo",
+      "weight": 1,
+      "range": [
+        31,
+        31
       ],
       "drawn": false,
       "description": "",
