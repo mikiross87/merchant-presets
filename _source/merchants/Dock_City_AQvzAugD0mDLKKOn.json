@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/abandoned-pier.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -4248,6 +4255,9 @@
     "default": 0
   },
   "flags": {
+    "core": {
+      "sheetClass": "merchant-presets.ShopSheet"
+    },
     "merchant-presets": {
       "purse": 12500,
       "profile": "Pirate Captain",
@@ -4443,7 +4453,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
         "merchantImage": "icons/environment/settlement/abandoned-pier.webp",

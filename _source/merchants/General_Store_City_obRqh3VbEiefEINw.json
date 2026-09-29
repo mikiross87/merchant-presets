@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/wood-stall.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -8649,6 +8656,9 @@
     "default": 0
   },
   "flags": {
+    "core": {
+      "sheetClass": "merchant-presets.ShopSheet"
+    },
     "merchant-presets": {
       "purse": 625,
       "profile": "Noble",
@@ -9045,7 +9055,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>",
         "merchantImage": "icons/environment/settlement/wood-stall.webp",

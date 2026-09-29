@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/stables-horses.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -2213,6 +2220,9 @@
     "default": 0
   },
   "flags": {
+    "core": {
+      "sheetClass": "merchant-presets.ShopSheet"
+    },
     "merchant-presets": {
       "purse": 600,
       "profile": "Scout",
@@ -2380,7 +2390,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>",
         "merchantImage": "icons/environment/settlement/stables-horses.webp",

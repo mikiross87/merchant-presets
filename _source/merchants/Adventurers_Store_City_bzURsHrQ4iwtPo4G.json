@@ -550,7 +550,14 @@
     "texture": {
       "src": "icons/environment/settlement/market-stall.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -10809,6 +10816,9 @@
     "default": 0
   },
   "flags": {
+    "core": {
+      "sheetClass": "merchant-presets.ShopSheet"
+    },
     "merchant-presets": {
       "purse": 1250,
       "profile": "Warrior Veteran",
@@ -11316,7 +11326,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>",
         "merchantImage": "icons/environment/settlement/market-stall.webp",

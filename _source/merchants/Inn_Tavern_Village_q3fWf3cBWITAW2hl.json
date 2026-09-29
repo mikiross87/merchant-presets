@@ -547,7 +547,14 @@
     "texture": {
       "src": "icons/environment/settlement/tavern.webp"
     },
-    "disposition": 0
+    "disposition": 0,
+    "flags": {
+      "item-piles": {
+        "data": {
+          "enabled": false
+        }
+      }
+    }
   },
   "items": [
     {
@@ -2222,6 +2229,9 @@
     "default": 0
   },
   "flags": {
+    "core": {
+      "sheetClass": "merchant-presets.ShopSheet"
+    },
     "merchant-presets": {
       "purse": 40,
       "profile": "Commoner",
@@ -2375,7 +2385,7 @@
     },
     "item-piles": {
       "data": {
-        "enabled": true,
+        "enabled": false,
         "type": "merchant",
         "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
         "merchantImage": "icons/environment/settlement/tavern.webp",

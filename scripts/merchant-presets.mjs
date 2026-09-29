@@ -1413,8 +1413,8 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
-    // Migrated to the shop window here (the plan copies the source's Item Piles data, still
-    // switched on), then the chosen merchant's table draws this shop's first shelf. Still held:
+    // Migrated to the shop window here (the plan copies the source's Item Piles data, switched
+    // on for this), then the chosen merchant's table draws this shop's first shelf. Still held:
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);

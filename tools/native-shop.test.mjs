@@ -229,7 +229,6 @@ test("of one GM's tabs only the one that claims trades takes in a shop that GM d
   await world.fire("createActor", shop, {}, "gm");
   await tick(40);
   assert.equal(shop.flags["merchant-presets"].shelf ?? null, null, "left to the claiming tab");
-  assert.equal(shop.flags.core?.sheetClass, undefined);
 });
 
 test("of one GM's tabs only the one that claims trades takes in a shop that GM replaced from the pack (#136)", async () => {
