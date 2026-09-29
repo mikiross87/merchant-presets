@@ -9943,7 +9943,7 @@
                       "name": "Ledger",
                       "clip": true,
                       "width": "fill_container",
-                      "height": 180,
+                      "height": 192,
                       "layout": "vertical",
                       "gap": 8,
                       "children": [
@@ -10103,7 +10103,7 @@
                                   "type": "text",
                                   "id": "U3DKZX",
                                   "x": 0,
-                                  "y": 2,
+                                  "y": 3,
                                   "name": "Inn Stay, Comfortable (per day) qty",
                                   "fill": "$accent-gold",
                                   "content": "2 ×",
@@ -33732,7 +33732,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "lBV98",
+                      "id": "AkshY",
                       "name": "Ledger",
                       "clip": true,
                       "width": "fill_container",
@@ -33741,7 +33741,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "j1OpRT",
+                          "id": "TO4Yk",
                           "name": "Line Protection from Evil and Good",
                           "width": "fill_container",
                           "layout": "vertical",
@@ -33749,88 +33749,79 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "Z9iDJ",
+                              "id": "xe04e",
                               "name": "Protection from Evil and Good entry",
                               "width": "fill_container",
-                              "layout": "vertical",
+                              "height": 34,
+                              "layout": "none",
                               "children": [
                                 {
-                                  "type": "frame",
-                                  "id": "N3CaAz",
-                                  "name": "Protection from Evil and Good name row",
-                                  "width": "fill_container",
-                                  "gap": 6,
-                                  "alignItems": "end",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "K13d7",
-                                      "name": "Protection from Evil and Good qty",
-                                      "fill": "$accent-gold",
-                                      "content": "1 ×",
-                                      "fontFamily": "$font-compact",
-                                      "fontSize": 13,
-                                      "fontWeight": "700"
-                                    },
-                                    {
-                                      "type": "text",
-                                      "id": "xePt3",
-                                      "name": "Protection from Evil and Good name",
-                                      "fill": "$ink",
-                                      "content": "Protection from Evil and Good",
-                                      "fontFamily": "$font-slip",
-                                      "fontSize": 15,
-                                      "fontWeight": "600"
-                                    }
-                                  ]
+                                  "type": "text",
+                                  "id": "iGV7U",
+                                  "x": 0,
+                                  "y": 3,
+                                  "name": "Protection from Evil and Good qty",
+                                  "fill": "$accent-gold",
+                                  "content": "1 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "JmS2k",
+                                  "x": 21.7,
+                                  "y": 0,
+                                  "name": "Protection from Evil and Good name",
+                                  "fill": "$ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": 141.6,
+                                  "content": "Protection from Evil and Good",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
                                 },
                                 {
                                   "type": "frame",
-                                  "id": "Mmo6V",
-                                  "name": "Protection from Evil and Good cost row",
-                                  "width": "fill_container",
-                                  "gap": 6,
-                                  "alignItems": "end",
+                                  "id": "pGixd",
+                                  "x": 87.7,
+                                  "y": 24,
+                                  "name": "Protection from Evil and Good leader",
+                                  "width": 90.3,
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "R1Ra3",
+                                  "x": 184,
+                                  "y": 16,
+                                  "name": "Protection from Evil and Good coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
                                   "children": [
                                     {
-                                      "type": "frame",
-                                      "id": "gQqxY",
-                                      "name": "Protection from Evil and Good leader",
-                                      "width": "fill_container",
-                                      "height": 10,
-                                      "stroke": "$slip-edge",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      }
-                                    },
-                                    {
-                                      "type": "frame",
-                                      "id": "UXHdP",
-                                      "name": "Protection from Evil and Good coins",
-                                      "gap": 5,
-                                      "alignItems": "center",
-                                      "children": [
-                                        {
-                                          "id": "QI1ef",
-                                          "type": "ref",
-                                          "ref": "uJ3dp",
-                                          "name": "gold 75",
-                                          "descendants": {
-                                            "e1b2b": {
-                                              "content": "75",
-                                              "fill": "$ink"
-                                            },
-                                            "B6r81": {
-                                              "fill": {
-                                                "type": "image",
-                                                "enabled": true,
-                                                "url": "assets/gold.webp",
-                                                "mode": "fill"
-                                              }
-                                            }
+                                      "id": "YWshe",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 75",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "75",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "fill"
                                           }
                                         }
-                                      ]
+                                      }
                                     }
                                   ]
                                 }
@@ -33838,7 +33829,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "vHYrx",
+                              "id": "WE2dC",
                               "name": "Protection from Evil and Good detail",
                               "width": "fill_container",
                               "padding": [
@@ -33852,14 +33843,14 @@
                               "children": [
                                 {
                                   "type": "frame",
-                                  "id": "i3CDC2",
+                                  "id": "Q4QhN",
                                   "name": "Protection from Evil and Good detail left",
                                   "gap": 5,
                                   "alignItems": "center",
                                   "children": [
                                     {
                                       "type": "icon",
-                                      "id": "v5htdQ",
+                                      "id": "GNLeW",
                                       "name": "Protection from Evil and Good svc icon",
                                       "width": 12,
                                       "height": 12,
@@ -33869,7 +33860,7 @@
                                     },
                                     {
                                       "type": "text",
-                                      "id": "dTKJO",
+                                      "id": "a9LQsY",
                                       "name": "Protection from Evil and Good each",
                                       "fill": "$text-secondary",
                                       "content": "Cast for Aria",
@@ -33880,7 +33871,7 @@
                                   ]
                                 },
                                 {
-                                  "id": "s3fgs",
+                                  "id": "rMnGM",
                                   "type": "ref",
                                   "ref": "obOO9",
                                   "name": "Protection from Evil and Good stepper",
@@ -33896,7 +33887,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "O0qqX",
+                          "id": "sSyXB",
                           "name": "Line Spellcasting: Cantrip",
                           "width": "fill_container",
                           "layout": "vertical",
@@ -33904,7 +33895,7 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "kansj",
+                              "id": "S4XMN",
                               "name": "Spellcasting: Cantrip entry",
                               "width": "fill_container",
                               "gap": 6,
@@ -33912,7 +33903,7 @@
                               "children": [
                                 {
                                   "type": "text",
-                                  "id": "jqJUb",
+                                  "id": "sk56r",
                                   "name": "Spellcasting: Cantrip qty",
                                   "fill": "$accent-gold",
                                   "content": "1 ×",
@@ -33922,7 +33913,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "id": "mtcGX",
+                                  "id": "EEWTH",
                                   "name": "Spellcasting: Cantrip name",
                                   "fill": "$ink",
                                   "content": "Spellcasting: Cantrip",
@@ -33932,7 +33923,7 @@
                                 },
                                 {
                                   "type": "frame",
-                                  "id": "ZLA70",
+                                  "id": "lADoU",
                                   "name": "Spellcasting: Cantrip leader",
                                   "width": "fill_container",
                                   "height": 10,
@@ -33943,13 +33934,13 @@
                                 },
                                 {
                                   "type": "frame",
-                                  "id": "LV3ZI",
+                                  "id": "P0pN8",
                                   "name": "Spellcasting: Cantrip coins",
                                   "gap": 5,
                                   "alignItems": "center",
                                   "children": [
                                     {
-                                      "id": "TzCgr",
+                                      "id": "tedys",
                                       "type": "ref",
                                       "ref": "uJ3dp",
                                       "name": "gold 30",
@@ -33974,7 +33965,7 @@
                             },
                             {
                               "type": "frame",
-                              "id": "B2Kwq",
+                              "id": "yAZqM",
                               "name": "Spellcasting: Cantrip detail",
                               "width": "fill_container",
                               "padding": [
@@ -33988,14 +33979,14 @@
                               "children": [
                                 {
                                   "type": "frame",
-                                  "id": "T4jpDm",
+                                  "id": "M9MGqy",
                                   "name": "Spellcasting: Cantrip detail left",
                                   "gap": 5,
                                   "alignItems": "center",
                                   "children": [
                                     {
                                       "type": "icon",
-                                      "id": "lb6Lx",
+                                      "id": "PnrOY",
                                       "name": "Spellcasting: Cantrip svc icon",
                                       "width": 12,
                                       "height": 12,
@@ -34005,7 +33996,7 @@
                                     },
                                     {
                                       "type": "text",
-                                      "id": "gpSBW",
+                                      "id": "mcIiS",
                                       "name": "Spellcasting: Cantrip each",
                                       "fill": "$text-secondary",
                                       "content": "Cast for Aria",
@@ -34016,7 +34007,7 @@
                                   ]
                                 },
                                 {
-                                  "id": "j9GnA",
+                                  "id": "yhQuS",
                                   "type": "ref",
                                   "ref": "obOO9",
                                   "name": "Spellcasting: Cantrip stepper",
