@@ -116,7 +116,7 @@ const plan = {
       { itemId: "arrows", item: { _id: "arrows", name: "Arrows", img: "arrows.webp" }, quantity: 20, bundlePriceCp: 50, lineTotalCp: 50, category: "consumable", layer: "world" }
     ]
   },
-  chatCard: { kind: "buy", shopName: "General Store", buyerName: "Tess", lines: [], totalCp: 150, direction: "Paid", footnote: { changeCp: 50, exact: false } }
+  chatCard: { kind: "buy", shopName: "General Store", buyerName: "Tess", lines: [], totalCp: 150, direction: "Paid" }
 };
 
 test("a planned trade seals with what was carried out, line by line", () => {
@@ -234,14 +234,14 @@ const t = (key, data) => (data ? `${key}(${Object.values(data).join(",")})` : ke
 const BOUGHT = {
   kind: "buy", shopName: "Armourer & Blacksmith", shopImg: "smith.webp", buyerName: "Aria <the bold>",
   lines: [{ icon: "sword.webp", label: "Longsword", quantity: 1, lineTotalCp: 1500 }, { icon: "axe.webp", label: "Handaxe", quantity: 2, lineTotalCp: 1000 }],
-  totalCp: 2500, direction: "Paid", footnote: { changeCp: 0, exact: true }, rate: null, tillCp: null
+  totalCp: 2500, direction: "Paid"
 };
 const layer = (html, name) => new RegExp(`data-pen="${name}"`).test(html);
 
 test("the receipt is the design's message: speaker, when and who sees it, the kicker, each line, the total (design z5RBkd)", () => {
   const html = receiptHtml(BOUGHT, CURRENCIES, { t, when: "14 Mirtul · mid-morning", whispered: false });
   for (const name of ["Speaker", "Speaker img", "Speaker name", "Speaker time", "Visibility", "Vis text", "Card header", "Kicker",
-    "Lines", "Line Longsword", "Longsword img", "Longsword text", "Longsword coins", "Rule", "Total", "Total label", "Total coins", "Foot"]) {
+    "Lines", "Line Longsword", "Longsword img", "Longsword text", "Longsword coins", "Rule", "Total", "Total label", "Total coins"]) {
     assert.ok(layer(html, name), name);
   }
   assert.match(html, /14 Mirtul · mid-morning/);
@@ -251,22 +251,22 @@ test("the receipt is the design's message: speaker, when and who sees it, the ki
   assert.match(html, /2 × Handaxe/);
   assert.match(html, /data-pen="gold 25"/, "coins are named as the window names them");
   assert.match(html, /Receipt\.Paid/);
-  assert.match(html, /Receipt\.Exact\(Aria &lt;the bold&gt;\)/);
+  assert.ok(html.trim().endsWith("</span></div></div>"), "the total ends the card");
 });
 
-test("a whispered receipt says GM only, and change given is named in the foot", () => {
-  const html = receiptHtml({ ...BOUGHT, footnote: { changeCp: 50, exact: false } }, CURRENCIES, { t, when: "", whispered: true });
-  assert.match(html, /Receipt\.GmOnly/);
-  assert.match(html, /Receipt\.Change\(Aria &lt;the bold&gt;,5 sp\)/);
+test("a whispered receipt says GM only", () => {
+  assert.match(receiptHtml(BOUGHT, CURRENCIES, { t, when: "", whispered: true }), /Receipt\.GmOnly/);
 });
 
-test("a sale's receipt says received, the rate it paid at and what the till holds (design z5RBkd)", () => {
-  const html = receiptHtml({ ...BOUGHT, kind: "sell", direction: "Received", rate: 0.5, tillCp: 15450 }, CURRENCIES, { t, when: "", whispered: true });
-  assert.match(html, /Receipt\.Sold/);
-  assert.match(html, /Receipt\.Received/);
-  assert.match(html, /Receipt\.AtRate\(½\) Receipt\.Till\(154 gp 5 sp\)/);
-  const bottomless = receiptHtml({ ...BOUGHT, kind: "sell", direction: "Received", rate: null, tillCp: null }, CURRENCIES, { t, when: "", whispered: true });
-  assert.doesNotMatch(bottomless, /AtRate|Till/, "mixed rates, or a bottomless till, go unsaid");
+test("a receipt ends at its total: no word on whose coins paid, the rate or the till (#179)", () => {
+  for (const card of [BOUGHT, { ...BOUGHT, kind: "sell", direction: "Received" }]) {
+    const html = receiptHtml(card, CURRENCIES, { t, when: "", whispered: true });
+    assert.ok(!layer(html, "Foot"), card.kind);
+    assert.doesNotMatch(html, /Receipt\.(Exact|Change|AtRate|Till)/, card.kind);
+  }
+  const sold = receiptHtml({ ...BOUGHT, kind: "sell", direction: "Received" }, CURRENCIES, { t, when: "", whispered: true });
+  assert.match(sold, /Receipt\.Sold/);
+  assert.match(sold, /Receipt\.Received/);
 });
 
 test("a receipt's icons survive chat: slots in the saved message, drawn in when it renders (design z5RBkd)", () => {

@@ -871,22 +871,12 @@ test("the chat card names a named spell as the shop window does, a level service
   assert.equal(result.plan.hook.lines[0].item.name, "Spellcasting: Identify");
 });
 
-test("a sale's chat card says the rate it paid at and what the till holds after (design z5RBkd)", () => {
-  const ctx = context({ buyer: { items: [dagger()] } });
-  const result = planTrade(sellRequest("Dagger000000001", 1), ctx);
-  assert.equal(result.ok, true);
-  assert.equal(result.plan.chatCard.rate, 0.5);
-  const shopUpdate = result.plan.updates.find(u => u.actorId === "Shop00000000001");
-  const tillCp = Object.entries(shopUpdate.currency).reduce((sum, [d, n]) => sum + n * { pp: 1000, gp: 100, ep: 50, sp: 10, cp: 1 }[d], 0);
-  assert.equal(result.plan.chatCard.tillCp, tillCp);
-});
-
-test("a sale to a shop with bottomless coin says nothing of its till, and a purchase names no rate", () => {
-  const sold = planTrade(sellRequest("Dagger000000001", 1), context({ buyer: { items: [dagger()] }, worldSettings: { ...WORLD, infinitePurse: true } }));
-  assert.equal(sold.plan.chatCard.tillCp, null);
+test("a trade's chat card carries no footnote, rate or till: the receipt ends at its total (#179)", () => {
+  const sold = planTrade(sellRequest("Dagger000000001", 1), context({ buyer: { items: [dagger()] } }));
   const bought = planTrade(buyRequest("Dagger000000001", 1), context({ shop: { items: [dagger()] } }));
-  assert.equal(bought.plan.chatCard.rate, null);
-  assert.equal(bought.plan.chatCard.tillCp, null);
+  for (const card of [sold.plan.chatCard, bought.plan.chatCard]) {
+    for (const key of ["footnote", "rate", "tillCp"]) assert.ok(!(key in card), `${card.kind} ${key}`);
+  }
 });
 
 test("an infinite purse leaves the shop's own currency out of the plan", () => {
