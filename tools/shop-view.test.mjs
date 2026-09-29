@@ -883,6 +883,11 @@ test("a narrow row's meta says what the good is, its weight and its stock, in on
   assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t, "7 left"), "Martial melee · 3 lb · 7 left");
   assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t, "Last one"), "Medium armor · Last one");
   assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t, "Sold out"), "+2 AC · Sold out");
+  // A magic good keeps its rarity, not its attunement, on the narrow line (design r7HIUl, #185).
+  assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["uncommon"], attunement: "required", ...lb(3) }), LABELS, t, "Last one"),
+    "Martial melee · Uncommon · 3 lb · Last one");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 15, dex: 2 }, rarity: "rare", ...lb(20) }), LABELS, t, "1 left"), "Medium armor · Rare · 1 left");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 3 }, rarities: ["uncommon"], identified: false, ...lb(6) }), LABELS, t, "1 left"), "+3 AC · 1 left");
 });
 
 test("the docked bill sums its lines up in one line", () => {
