@@ -240,20 +240,43 @@ def make_good(template, profile, riders, base, problems):
         "base": f"Compendium.{SRD_PACK}.Item.{base_doc['_id']}"}}
     return it
 
+def make_priced(item, price):
+    """An SRD magic item the SRD leaves unpriced (the Immovable Rod), as a good
+    of this module's own at its rarity's value. A price on the recipe line would
+    reach only the shipped snapshot: a shop rolls its shelf, and restocks, from
+    its stock table, which draws the item as the SRD has it."""
+    gid = fid("magic", "priced", item["_id"])
+    it = copy.deepcopy(item)
+    for k in ("_key", "folder", "sort", "ownership", "_stats"):
+        it.pop(k, None)
+    sysd = it["system"]
+    for k in ("equipped", "proficient", "prepared", "container"):
+        sysd.pop(k, None)
+    sysd["price"] = {"value": price, "denomination": "gp"}
+    sysd["attuned"] = False
+    sysd["identified"] = True
+    sysd["source"] = dict(SRD_SOURCE)
+    it.update({"_id": gid, "_key": f"!items!{gid}", "folder": MAGIC_FOLDER, "sort": 0, "ownership": {"default": 0}})
+    for e in it.get("effects") or []:
+        e["_key"] = f"!items.effects!{gid}.{e['_id']}"
+        e["origin"] = None
+    uuid = f"Compendium.{SRD_PACK}.Item.{item['_id']}"
+    it["flags"] = {k: v for k, v in (it.get("flags") or {}).items() if k not in ("merchant-presets", "item-piles")}
+    it["flags"]["merchant-presets"] = {"magic": {"template": uuid, "enchantment": None, "base": uuid}}
+    return it
+
 def tier_of(item):
     rarity = (item.get("system") or {}).get("rarity") or ""
     if rarity not in TIERS:
         raise MagicError(f"{item['name']} is {rarity or 'without rarity'}: only common, uncommon and rare are stocked")
     return TIERS[rarity]
 
-def line_for(item, name=None, uuid=None, price=None):
+def line_for(item, uuid=None):
     # Every magic item is limited: it sells out and comes back with a restock,
     # as the scrolls and components do, in worlds on unlimited stock too.
-    line = {"n": name or item["name"], "t": tier_of(item), "cat": MAGIC_CAT, "limited": True}
+    line = {"n": item["name"], "t": tier_of(item), "cat": MAGIC_CAT, "limited": True}
     if uuid:
         line["uuid"] = uuid
-    if price is not None:
-        line["price"] = price
     return line
 
 def resolve(srd, name):
@@ -272,10 +295,16 @@ def build(srd, data):
             raise MagicError(f"{row['n']} is not a magic item")
         if enchant_activities(item) and not (sysd.get("type") or {}).get("baseItem") and sysd.get("type", {}).get("value") != "wondrous":
             problems.append(f"{row['n']}: an enchantment template, stocked as it is")
-        if not (sysd.get("price") or {}).get("value") and row.get("price") is None:
-            raise MagicError(f"{row['n']} has no SRD price: give the line one")
+        unpriced = not (sysd.get("price") or {}).get("value")
+        if unpriced != (row.get("price") is not None):
+            raise MagicError(f"{row['n']}: give a price exactly when the SRD has none")
+        uuid = None
+        if unpriced:
+            item = make_priced(item, row["price"])
+            goods.append(item)
+            uuid = GOODS_UUID + item["_id"]
         for shop in row["shops"]:
-            lines.setdefault(shop, []).append(line_for(item, price=row.get("price")))
+            lines.setdefault(shop, []).append(line_for(item, uuid=uuid))
     for row in data["bake"]:
         template = resolve(srd, row["template"])
         profiles = profiles_of(template)
@@ -296,7 +325,7 @@ def build(srd, data):
     dupes = {n for n in names if names.count(n) > 1}
     if dupes:
         # The runtime keys a shop's item settings by name.
-        raise MagicError(f"two baked goods share a name: {sorted(dupes)}")
+        raise MagicError(f"two magic goods share a name: {sorted(dupes)}")
     for shop, ls in lines.items():
         seen = [l["n"] for l in ls]
         if len(seen) != len(set(seen)):
@@ -345,7 +374,7 @@ def main():
     for ls in lines.values():
         for l in ls:
             by_rarity[l["t"]] = by_rarity.get(l["t"], 0) + 1
-    print(f"magic: {len(data['srd'])} SRD items, {len(goods)} baked goods, "
+    print(f"magic: {len(data['srd'])} SRD items, {len(goods)} goods of our own, "
           f"{sum(len(l) for l in lines.values())} lines in {len(lines)} shops {by_rarity}")
     for p in problems:
         print(f"  {p}")

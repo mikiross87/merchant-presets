@@ -28,7 +28,9 @@ test("no shop stocks a magic item at no price", () => {
 });
 
 const goods = load("goods").filter(d => !d._key.startsWith("!folders"));
-const baked = goods.filter(g => g.flags?.["merchant-presets"]?.magic);
+// The module's own magic goods: an SRD enchantment baked onto a base, or an item the SRD leaves unpriced.
+const ours = goods.filter(g => g.flags?.["merchant-presets"]?.magic);
+const baked = ours.filter(g => g.flags["merchant-presets"].magic.enchantment);
 const recipes = JSON.parse(readFileSync(new URL("../data/recipes.json", import.meta.url), "utf8"));
 // The SRD's Magic Item Rarity table: what an item of each rarity is worth.
 const RARITY_VALUE = { common: 100, uncommon: 400, rare: 4000 };
@@ -37,9 +39,11 @@ const TIERS = { common: "vtc", uncommon: "tc", rare: "c" };
 const OLDER = /^(Spell Scroll, |Potion of Healing \(Supreme\)$)/;
 const tierOf = name => (/\((Village|Town|City)\)$/.exec(name) ?? [])[1]?.[0].toLowerCase();
 
-test("the baked magic goods: a hundred and twelve, each named once", () => {
+test("the magic goods: a hundred and twelve baked, four priced, each named once", () => {
   assert.equal(baked.length, 112);
-  const names = baked.map(g => g.name);
+  assert.deepEqual(ours.filter(g => !baked.includes(g)).map(g => g.name).sort(),
+    ["Headband of Intellect", "Immovable Rod", "Sentinel Shield", "Silver Raven"]);
+  const names = ours.map(g => g.name);
   assert.deepEqual(names.filter((n, i) => names.indexOf(n) !== i), []);
 });
 
@@ -55,8 +59,8 @@ test("a baked good works as an item: a weapon deals damage, armour and shields g
   assert.deepEqual(loose, []);
 });
 
-test("a baked good is magic, of a stocked rarity, at no less than the SRD's value for it", () => {
-  for (const g of baked) {
+test("a magic good is magic, of a stocked rarity, at no less than the SRD's value for it", () => {
+  for (const g of ours) {
     assert.ok(g.system.properties.includes("mgc"), g.name);
     assert.ok(g.system.rarity in RARITY_VALUE, `${g.name}: ${g.system.rarity}`);
     assert.ok(gp(g) >= RARITY_VALUE[g.system.rarity], `${g.name}: ${gp(g)} gp`);
@@ -94,7 +98,9 @@ test("every magic line is limited, and names a baked good only by its uuid", () 
   const magic = recipes.shops.flatMap(s => s.stock.filter(l => l.cat === "Magic Items").map(l => ({ shop: s.id, ...l })));
   assert.equal(magic.length, 310);
   assert.deepEqual(magic.filter(l => !l.limited).map(l => `${l.shop}: ${l.n}`), []);
-  const bakedUuids = new Set(baked.map(g => `Compendium.merchant-presets.goods.Item.${g._id}`));
+  // A price on a line reaches only the shipped snapshot: a shop rolls its shelf from the table.
+  assert.deepEqual(magic.filter(l => "price" in l).map(l => l.n), []);
+  const bakedUuids = new Set(ours.map(g => `Compendium.merchant-presets.goods.Item.${g._id}`));
   assert.deepEqual(magic.filter(l => l.uuid && !bakedUuids.has(l.uuid)).map(l => l.n), []);
   const stocked = new Set(magic.map(l => l.uuid).filter(Boolean));
   assert.deepEqual([...bakedUuids].filter(u => !stocked.has(u)), []);

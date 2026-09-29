@@ -5238,8 +5238,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
-        "quantity": 1,
+        "quantity": 2,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -5276,15 +5275,12 @@
       },
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -5295,13 +5291,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR"
       },
-      "_id": "JBvd7ZgD4QcDdi6L",
-      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.JBvd7ZgD4QcDdi6L"
+      "_id": "qpZUwFGzLKqLqFzQ",
+      "_key": "!actors.items!IZ2qsuJc4ynG0OMI.qpZUwFGzLKqLqFzQ"
     },
     {
       "name": "Lantern of Revealing",
@@ -6297,7 +6301,7 @@
             "7lWM72O5TFhmtY4B": "2d6+4",
             "f1SMhpGCDMT29Qsf": "2d6+4",
             "1ckfMUR1Fs3M5Fs2": "1d2",
-            "VKiwj66FzlPSLq1f": "1d2",
+            "Vwa09qLY3GEoVEhO": "1d2",
             "5xGKLPR0suZ1ZRsO": "1d2",
             "BxLWpZhuer5nCB39": "1d2"
           },
@@ -6384,7 +6388,7 @@
               "7lWM72O5TFhmtY4B": "2d6+4",
               "f1SMhpGCDMT29Qsf": "2d6+4",
               "1ckfMUR1Fs3M5Fs2": "1d2",
-              "VKiwj66FzlPSLq1f": "1d2",
+              "Vwa09qLY3GEoVEhO": "1d2",
               "5xGKLPR0suZ1ZRsO": "1d2",
               "BxLWpZhuer5nCB39": "1d2"
             }

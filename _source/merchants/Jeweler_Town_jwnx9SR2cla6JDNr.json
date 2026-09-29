@@ -2869,7 +2869,6 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
         "quantity": 1,
         "weight": {
           "value": 0,
@@ -2904,15 +2903,12 @@
       "img": "icons/commodities/materials/feather-blue-grey.webp",
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -2923,13 +2919,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg"
       },
-      "_id": "MdyjdUn9tRSWBxhn",
-      "_key": "!actors.items!jwnx9SR2cla6JDNr.MdyjdUn9tRSWBxhn"
+      "_id": "AVLj0hGsntTDpdBF",
+      "_key": "!actors.items!jwnx9SR2cla6JDNr.AVLj0hGsntTDpdBF"
     },
     {
       "name": "Rapier",
@@ -3560,7 +3564,7 @@
             "xaXGSLeoWIXlNDI0": "1d2",
             "iXs8iFLRM0WEAu38": "1d3+1",
             "vRzRILHh47vVW0K7": "1d2",
-            "hzw31ej79UtLjJci": "1d2"
+            "rAIy7HApOQIwb3eC": "1d2"
           },
           "onOpen": true,
           "every": 14,
@@ -3655,7 +3659,7 @@
               "xaXGSLeoWIXlNDI0": "1d2",
               "iXs8iFLRM0WEAu38": "1d3+1",
               "vRzRILHh47vVW0K7": "1d2",
-              "hzw31ej79UtLjJci": "1d2"
+              "rAIy7HApOQIwb3eC": "1d2"
             }
           }
         ],

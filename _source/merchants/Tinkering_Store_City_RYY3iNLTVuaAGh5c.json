@@ -5478,7 +5478,6 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
         "quantity": 1,
         "weight": {
           "value": 0,
@@ -5516,15 +5515,12 @@
       },
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -5535,13 +5531,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR"
       },
-      "_id": "MaVbjwUoHzbzsJb9",
-      "_key": "!actors.items!RYY3iNLTVuaAGh5c.MaVbjwUoHzbzsJb9"
+      "_id": "nBfciVQq4uzkq5rj",
+      "_key": "!actors.items!RYY3iNLTVuaAGh5c.nBfciVQq4uzkq5rj"
     },
     {
       "name": "Lantern of Revealing",
@@ -11525,7 +11529,7 @@
             "ttZGekYJPPjjrMxN": "3d8+8",
             "KinzSaXEnonPTLFp": "1d3",
             "N3HHY3o2etmzrpr1": "1d3",
-            "D4kniPwLDbaaxQLF": "1d3",
+            "nQAIovACp2xtSyrw": "1d3",
             "pPX8raMtjrzPPjmj": "1d3",
             "52A81hiJErRZtQOb": "1d2-1",
             "ifT6VyDEFeoWlKAM": "1d3",
@@ -11619,7 +11623,7 @@
               "ttZGekYJPPjjrMxN": "3d8+8",
               "KinzSaXEnonPTLFp": "1d3",
               "N3HHY3o2etmzrpr1": "1d3",
-              "D4kniPwLDbaaxQLF": "1d3",
+              "nQAIovACp2xtSyrw": "1d3",
               "pPX8raMtjrzPPjmj": "1d3",
               "52A81hiJErRZtQOb": "1d2-1",
               "ifT6VyDEFeoWlKAM": "1d3",

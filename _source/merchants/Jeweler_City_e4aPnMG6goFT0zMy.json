@@ -3939,8 +3939,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
-        "quantity": 2,
+        "quantity": 3,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -3974,15 +3973,12 @@
       "img": "icons/commodities/materials/feather-blue-grey.webp",
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -3993,13 +3989,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgFwpSilverRave"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg"
       },
-      "_id": "L1zydXJoW29MFyjm",
-      "_key": "!actors.items!e4aPnMG6goFT0zMy.L1zydXJoW29MFyjm"
+      "_id": "YzzOrCfZtEQwsxfE",
+      "_key": "!actors.items!e4aPnMG6goFT0zMy.YzzOrCfZtEQwsxfE"
     },
     {
       "name": "Onyx Dog",
@@ -8820,7 +8824,7 @@
             "WYLuPMzFRfpzxn9s": "1d3",
             "oy93UTpbyN0MsYQV": "1d4+2",
             "mNN4TJHZHekFxrZq": "1d3",
-            "lAjOMW5ibv2Gwi5u": "1d3",
+            "TzmqnrKPPftD8Jwr": "1d3",
             "vKJOwgGDoIO18lCp": "1d2-1",
             "BBeDmw60W35lAHY8": "1d2-1",
             "TIpaHTYHEMsxcyzF": "1d2-1",
@@ -8951,7 +8955,7 @@
               "WYLuPMzFRfpzxn9s": "1d3",
               "oy93UTpbyN0MsYQV": "1d4+2",
               "mNN4TJHZHekFxrZq": "1d3",
-              "lAjOMW5ibv2Gwi5u": "1d3",
+              "TzmqnrKPPftD8Jwr": "1d3",
               "vKJOwgGDoIO18lCp": "1d2-1",
               "BBeDmw60W35lAHY8": "1d2-1",
               "TIpaHTYHEMsxcyzF": "1d2-1",

@@ -148,8 +148,11 @@ Constraints worth knowing before changing the generator:
   are unpriced: the `+1, +2, or +3` parents, the Deck of Many Things cards, and
   real ones such as the Immovable Rod. The cheapest stock band would put dozens
   on a city shelf, so `build_srd.py` reports and skips a magic stock line (one
-  with a rarity or the `mgc` property) whose item has no price, unless the line
-  gives `price` (#33). Rarity sets where a magic item is stocked: common `vtc`,
+  with a rarity or the `mgc` property) whose item has no price (#33). A `price`
+  on the line doesn't help: it reaches only the shipped snapshot, and a shop
+  rolls its shelf, and restocks, from its stock table, which draws the SRD item
+  unpriced. Give the item a `price` in `data/magic.json` instead, and
+  `build_magic_goods.py` ships a priced copy as a good. Rarity sets where a magic item is stocked: common `vtc`,
   uncommon `tc`, rare `c` with `limited`, and very rare and above nowhere. The
   spell scrolls and *Potion of Healing (Supreme)* that shipped before are the
   only exceptions.

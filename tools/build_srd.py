@@ -493,8 +493,9 @@ def main():
     unresolved = collections.defaultdict(set)
     # About fifty SRD magic items carry no price: the "+1, +2, or +3" parents, the Deck of Many
     # Things cards, and real ones such as the Immovable Rod. Stocked as they are they would land in
-    # the cheapest stock band and a city would roll dozens of them (#33), so a line has to give
-    # the price itself.
+    # the cheapest stock band and a city would roll dozens of them (#33). A price on the line is no
+    # cure: it reaches only this snapshot, and a shop rolls its shelf from the stock table, which
+    # draws the SRD item unpriced. tools/build_magic_goods.py writes a priced good instead.
     unpriced = collections.defaultdict(set)
     counts = collections.Counter(); gear_counts = collections.Counter()
 
@@ -525,7 +526,7 @@ def main():
                     src = srd.get(norm(line["n"])); own = False
                     if not src: unresolved[line["n"]].add(shop["name"]); continue
                     uuid = f"Compendium.{SRD_PACK}.Item.{src['_id']}"
-                if is_magic(src) and not gp_price(src) and line.get("price") is None:
+                if is_magic(src) and not gp_price(src):
                     unpriced[line["n"]].add(shop["name"]); continue
 
                 it, is_container = make_item(src, line, aid, uuid, own, ti)

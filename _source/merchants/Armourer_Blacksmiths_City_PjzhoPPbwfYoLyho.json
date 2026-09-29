@@ -9892,8 +9892,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
-        "quantity": 1,
+        "quantity": 3,
         "weight": {
           "value": 6,
           "units": "lb"
@@ -9931,7 +9930,7 @@
         {
           "name": "Initiative Advantage",
           "img": "icons/equipment/shield/targe-copper-eye.webp",
-          "_id": "94vS5EIPC1pCaDla",
+          "_id": "CY0RGdnztzpNwgDC",
           "type": "base",
           "system": {
             "changes": [
@@ -9974,19 +9973,16 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!actors.items.effects!PjzhoPPbwfYoLyho.vaJ3GDauSHJMoksD.94vS5EIPC1pCaDla"
+          "_key": "!actors.items.effects!PjzhoPPbwfYoLyho.fvNpopQJvm1sCtA5.CY0RGdnztzpNwgDC"
         }
       ],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -9997,13 +9993,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.9fgRB1fykSFKXVFJ"
       },
-      "_id": "vaJ3GDauSHJMoksD",
-      "_key": "!actors.items!PjzhoPPbwfYoLyho.vaJ3GDauSHJMoksD"
+      "_id": "fvNpopQJvm1sCtA5",
+      "_key": "!actors.items!PjzhoPPbwfYoLyho.fvNpopQJvm1sCtA5"
     },
     {
       "name": "Arrow-Catching Shield",
@@ -31463,7 +31467,7 @@
             "VEm6yeo2nWZaqdIU": "3d8+8",
             "V0TI85yrDxljzWz0": "2d6+4",
             "zJhaWo92ROPRt80b": "3d8+8",
-            "Va8TRbsHl5Kg4wB9": "1d3",
+            "JbtRgEjgwfdKX88L": "1d3",
             "sazrFTWye8corG06": "1d2-1",
             "avqw19rVRwCpsfNA": "1d2-1",
             "C0H3CiKSGCftVFct": "1d2-1",
@@ -31668,7 +31672,7 @@
               "VEm6yeo2nWZaqdIU": "3d8+8",
               "V0TI85yrDxljzWz0": "2d6+4",
               "zJhaWo92ROPRt80b": "3d8+8",
-              "Va8TRbsHl5Kg4wB9": "1d3",
+              "JbtRgEjgwfdKX88L": "1d3",
               "sazrFTWye8corG06": "1d2-1",
               "avqw19rVRwCpsfNA": "1d2-1",
               "C0H3CiKSGCftVFct": "1d2-1",

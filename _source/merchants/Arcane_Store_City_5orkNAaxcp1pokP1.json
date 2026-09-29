@@ -9987,8 +9987,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
-        "quantity": 1,
+        "quantity": 2,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -10026,7 +10025,7 @@
         {
           "name": "Intelligent",
           "img": "icons/commodities/biological/organ-brain-red.webp",
-          "_id": "i1Zzzh1W6MsmkMKt",
+          "_id": "QCoDaFJYiZTeZVHO",
           "type": "base",
           "system": {
             "changes": [
@@ -10069,7 +10068,7 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!actors.items.effects!5orkNAaxcp1pokP1.XJ6smWnCC5wOeR5W.i1Zzzh1W6MsmkMKt"
+          "_key": "!actors.items.effects!5orkNAaxcp1pokP1.4xVicKW7Bn1fPf9Y.QCoDaFJYiZTeZVHO"
         }
       ],
       "flags": {
@@ -10079,15 +10078,12 @@
             "effect": []
           }
         },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgHeadbandOfInt",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgHeadbandOfInt"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -10098,13 +10094,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgHeadbandOfInt"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.wBDobMrWTrL1BjNS"
       },
-      "_id": "XJ6smWnCC5wOeR5W",
-      "_key": "!actors.items!5orkNAaxcp1pokP1.XJ6smWnCC5wOeR5W"
+      "_id": "4xVicKW7Bn1fPf9Y",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.4xVicKW7Bn1fPf9Y"
     },
     {
       "name": "Pearl of Power",
@@ -13300,8 +13304,7 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
-        "quantity": 1,
+        "quantity": 3,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -13338,15 +13341,12 @@
       },
       "effects": [],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -13357,13 +13357,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgImmovableRod0"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR"
       },
-      "_id": "Vb30pODmmvf2hgv0",
-      "_key": "!actors.items!5orkNAaxcp1pokP1.Vb30pODmmvf2hgv0"
+      "_id": "KWEaNeowaYmqyhLy",
+      "_key": "!actors.items!5orkNAaxcp1pokP1.KWEaNeowaYmqyhLy"
     },
     {
       "name": "Pipe of Smoke Monsters",
@@ -22658,7 +22666,7 @@
             "LNBVi1ETX2BLVJks": "1d2-1",
             "x0YZVPKRDCyH5AvZ": "1d2-1",
             "EdGEIsfopqNGiWzL": "1d2-1",
-            "gMMuJm9n27MxTP7G": "1d3",
+            "Px6UY66o4ePRX0El": "1d3",
             "06c9SETgrY8rgpED": "1d3",
             "bpZ7gWgop3bw7dKU": "1d3",
             "Od9mSrmcwfbIux0y": "1d3",
@@ -22677,7 +22685,7 @@
             "lGR0z1AvLh39ZcxH": "1d2-1",
             "RVZFpmxe8y10tpEO": "1d2-1",
             "Y2BitiVma4QCd0Xm": "1d3",
-            "cBb5bk9leJh4ZdD6": "1d3",
+            "jkg0gonWX9sQ6YbH": "1d3",
             "ms634oEXpSB33QkX": "1d4+2",
             "VTpJV3BRgrWr5p9w": "1d3",
             "krzdiQNP97Rmsyk2": "1d3",
@@ -22846,7 +22854,7 @@
               "LNBVi1ETX2BLVJks": "1d2-1",
               "x0YZVPKRDCyH5AvZ": "1d2-1",
               "EdGEIsfopqNGiWzL": "1d2-1",
-              "gMMuJm9n27MxTP7G": "1d3",
+              "Px6UY66o4ePRX0El": "1d3",
               "06c9SETgrY8rgpED": "1d3",
               "bpZ7gWgop3bw7dKU": "1d3",
               "Od9mSrmcwfbIux0y": "1d3",
@@ -22865,7 +22873,7 @@
               "lGR0z1AvLh39ZcxH": "1d2-1",
               "RVZFpmxe8y10tpEO": "1d2-1",
               "Y2BitiVma4QCd0Xm": "1d3",
-              "cBb5bk9leJh4ZdD6": "1d3",
+              "jkg0gonWX9sQ6YbH": "1d3",
               "ms634oEXpSB33QkX": "1d4+2",
               "VTpJV3BRgrWr5p9w": "1d3",
               "krzdiQNP97Rmsyk2": "1d3",

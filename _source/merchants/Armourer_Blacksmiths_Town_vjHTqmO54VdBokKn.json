@@ -9689,7 +9689,6 @@
         "unidentified": {
           "description": ""
         },
-        "container": null,
         "quantity": 1,
         "weight": {
           "value": 6,
@@ -9728,7 +9727,7 @@
         {
           "name": "Initiative Advantage",
           "img": "icons/equipment/shield/targe-copper-eye.webp",
-          "_id": "ZAvAoLlBaQ4M2QIK",
+          "_id": "73VNW7olvBpfmRiS",
           "type": "base",
           "system": {
             "changes": [
@@ -9771,19 +9770,16 @@
           "start": null,
           "showIcon": 1,
           "folder": null,
-          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.Xv4P4OFmFgkvWo4F.ZAvAoLlBaQ4M2QIK"
+          "_key": "!actors.items.effects!vjHTqmO54VdBokKn.QvUvY83U6xeECIis.73VNW7olvBpfmRiS"
         }
       ],
       "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        },
         "merchant-presets": {
+          "magic": {
+            "template": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel",
+            "enchantment": null,
+            "base": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel"
+          },
           "stock": {
             "infinite": false,
             "keep": false,
@@ -9794,13 +9790,21 @@
             "hidden": false,
             "notForSale": false
           }
+        },
+        "item-piles": {
+          "item": {
+            "infiniteQuantity": "no",
+            "keepOnMerchant": false,
+            "isService": false,
+            "cantBeSoldToMerchants": false
+          }
         }
       },
       "_stats": {
-        "compendiumSource": "Compendium.dnd5e.equipment24.Item.dmgSentinelShiel"
+        "compendiumSource": "Compendium.merchant-presets.goods.Item.9fgRB1fykSFKXVFJ"
       },
-      "_id": "Xv4P4OFmFgkvWo4F",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.Xv4P4OFmFgkvWo4F"
+      "_id": "QvUvY83U6xeECIis",
+      "_key": "!actors.items!vjHTqmO54VdBokKn.QvUvY83U6xeECIis"
     },
     {
       "name": "Javelin of Lightning",
@@ -16428,7 +16432,7 @@
             "yu5KkFlADbDmAMu0": "2d6+4",
             "k2GsZOuyIBgAnTNZ": "1d6+2",
             "3nsZO594u0Yfgir6": "2d6+4",
-            "UBRSHpx0D84z8Pw0": "1d2",
+            "ho24LrevJ1hxE2JA": "1d2",
             "lWEtHTAk7hWx695U": "1d2",
             "30fSmyxYh9TIYARf": "1d2",
             "VpZblNiabUJCBsYP": "1d2",
@@ -16568,7 +16572,7 @@
               "yu5KkFlADbDmAMu0": "2d6+4",
               "k2GsZOuyIBgAnTNZ": "1d6+2",
               "3nsZO594u0Yfgir6": "2d6+4",
-              "UBRSHpx0D84z8Pw0": "1d2",
+              "ho24LrevJ1hxE2JA": "1d2",
               "lWEtHTAk7hWx695U": "1d2",
               "30fSmyxYh9TIYARf": "1d2",
               "VpZblNiabUJCBsYP": "1d2",
