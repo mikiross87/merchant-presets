@@ -10093,107 +10093,99 @@
                           "children": [
                             {
                               "type": "frame",
-                              "id": "pDoEE",
+                              "id": "yn1kH",
                               "name": "Inn Stay, Comfortable (per day) entry",
                               "width": "fill_container",
-                              "layout": "vertical",
+                              "height": 51,
+                              "layout": "none",
                               "children": [
                                 {
-                                  "type": "frame",
-                                  "id": "qkw1z",
-                                  "name": "Inn Stay, Comfortable (per day) name row",
-                                  "gap": 6,
-                                  "alignItems": "end",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "Ex62A",
-                                      "name": "Inn Stay, Comfortable (per day) qty",
-                                      "fill": "$accent-gold",
-                                      "content": "2 ×",
-                                      "fontFamily": "$font-compact",
-                                      "fontSize": 13,
-                                      "fontWeight": "700"
-                                    },
-                                    {
-                                      "type": "text",
-                                      "id": "dLhWz",
-                                      "name": "Inn Stay, Comfortable (per day) name",
-                                      "fill": "$ink",
-                                      "content": "Inn Stay, Comfortable (per day)",
-                                      "fontFamily": "$font-slip",
-                                      "fontSize": 15,
-                                      "fontWeight": "600"
-                                    }
-                                  ]
+                                  "type": "text",
+                                  "id": "U3DKZX",
+                                  "x": 0,
+                                  "y": 2,
+                                  "name": "Inn Stay, Comfortable (per day) qty",
+                                  "fill": "$accent-gold",
+                                  "content": "2 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "SsSJF",
+                                  "x": 22,
+                                  "y": 0,
+                                  "name": "Inn Stay, Comfortable (per day) name",
+                                  "fill": "$ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": 117,
+                                  "content": "Inn Stay, Comfortable (per day)",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
                                 },
                                 {
                                   "type": "frame",
-                                  "id": "Juvpd",
-                                  "name": "Inn Stay, Comfortable (per day) cost row",
-                                  "width": "fill_container",
-                                  "gap": 6,
-                                  "alignItems": "end",
+                                  "id": "W9f4g",
+                                  "x": 56,
+                                  "y": 41,
+                                  "name": "Inn Stay, Comfortable (per day) leader",
+                                  "width": 97,
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "wqV3y",
+                                  "x": 159,
+                                  "y": 33,
+                                  "name": "Inn Stay, Comfortable (per day) coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
                                   "children": [
                                     {
-                                      "type": "frame",
-                                      "id": "EW2d8",
-                                      "name": "Inn Stay, Comfortable (per day) leader",
-                                      "width": "fill_container",
-                                      "height": 10,
-                                      "stroke": "$slip-edge",
-                                      "strokeWidth": {
-                                        "bottom": 1
+                                      "id": "VJHMR",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 1",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "1",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "fill"
+                                          }
+                                        }
                                       }
                                     },
                                     {
-                                      "type": "frame",
-                                      "id": "YXL1P",
-                                      "name": "Inn Stay, Comfortable (per day) coins",
-                                      "gap": 5,
-                                      "alignItems": "center",
-                                      "children": [
-                                        {
-                                          "id": "hmpAo",
-                                          "type": "ref",
-                                          "ref": "uJ3dp",
-                                          "name": "gold 1",
-                                          "descendants": {
-                                            "e1b2b": {
-                                              "content": "1",
-                                              "fill": "$ink"
-                                            },
-                                            "B6r81": {
-                                              "fill": {
-                                                "type": "image",
-                                                "enabled": true,
-                                                "url": "assets/gold.webp",
-                                                "mode": "fill"
-                                              }
-                                            }
-                                          }
+                                      "id": "U2ryu",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "silver 6",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "6",
+                                          "fill": "$ink"
                                         },
-                                        {
-                                          "id": "qiGrB",
-                                          "type": "ref",
-                                          "ref": "uJ3dp",
-                                          "name": "silver 6",
-                                          "descendants": {
-                                            "e1b2b": {
-                                              "content": "6",
-                                              "fill": "$ink"
-                                            },
-                                            "B6r81": {
-                                              "fill": {
-                                                "type": "image",
-                                                "enabled": true,
-                                                "url": "assets/silver.webp",
-                                                "mode": "fill"
-                                              }
-                                            }
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/silver.webp",
+                                            "mode": "fill"
                                           }
                                         }
-                                      ]
+                                      }
                                     }
                                   ]
                                 }
