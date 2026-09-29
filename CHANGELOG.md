@@ -164,8 +164,9 @@ trades out itself. For GMs upgrading a world:
   use: *Longsword +1*, *Mithral Half Plate Armor*, *Flame Tongue Longsword*,
   *Giant Slayer Greataxe* and 108 more, made from the SRD's own enchantments
   on its own weapons and armour. Very rare and legendary items are never
-  stocked. Merchants already in your world keep their old stock list; drag in
-  a fresh merchant to get these. (#33)
+  stocked, apart from the high-level spell scrolls and *Potion of Healing
+  (Supreme)* the city shops already sold. Merchants already in your world
+  keep their old stock list; drag in a fresh merchant to get these. (#33)
 - 2.0: a shop that sells no magic items won't buy them either: the General
   Stores, most village shops and the smaller stables turn away a Ring of
   Protection the party tries to sell, and the Sell tab says it won't buy magic
@@ -253,22 +254,20 @@ trades out itself. For GMs upgrading a world:
   restocked every later copy from the old stock list, so a change to what a
   shop sells never reached it. Merchants already in your world keep the list
   they have, along with any changes you made to it; drag in a fresh merchant
-  to get the new stock. Its table appears in *Merchant Stock* beside the old
-  one, with the version in its name, such as *Jeweler (Town) (v1.3.0)*. (#63)
+  to get the new stock. (#63)
 - Dragging in a shop your world already has and choosing *Replace Actor*,
-  Foundry's default, now gives a working merchant. The replaced merchant was
-  left on the compendium's stock table: its stock was never rolled, and opening
-  its *Populate Items* tab removed the table for good. A merchant replaced this
-  way whose tab hasn't been opened is fixed when the world next loads; one
-  whose tab was opened needs replacing again. (#66)
+  Foundry's default, now gives a working shop that rolls its own stock. The
+  replaced merchant used to be left with its stock never rolled. One replaced
+  this way under 1.x is fixed when the world next loads, unless Item Piles'
+  *Populate Items* tab was opened on it, which removed its stock table: that
+  one needs replacing again. (#66)
 - Rope, Robe, Ink, Ink Pen, Bedroll, Blanket, Tinderbox, Caltrops, Crowbar,
   Waterskin and Perfume show up in the shop window again. Every release so far
   stocked them as copies taken out of the SRD's equipment packs, and each copy
-  still said it was inside its pack. The merchant's sheet listed them, but the
-  shop window hid them, so players couldn't buy them. 36 of the 51 shops were
-  affected, the General Stores worst. Merchants already in your world are
-  repaired when the world loads. A merchant dragged in fresh gets a new stock
-  table with the version in its name. (#89)
+  still said it was inside its pack. The merchant's sheet listed them, but
+  Item Piles' shop window hid them, so players couldn't buy them. 36 of the 51
+  shops were affected, the General Stores worst. Merchants already in your
+  world are repaired when the world loads. (#89)
 
 ## [1.2.4] - 2026-09-14
 
