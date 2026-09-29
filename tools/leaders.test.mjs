@@ -86,6 +86,12 @@ test("a name squeezed under 5em by a crowded line (a deal tag, three coins) send
   assert.equal(names[0].nextElementSibling.style.marginLeft, "");
 });
 
+test("a short name on one line is under 5em by its own width, not crowded (Crystal on the cover)", () => {
+  const { names, ledger } = ledgerOf([{ box: [22, 1, 67, 18], rects: [[1, 67]], costTop: 0 }]);
+  hangLeaders(ledger);
+  assert.equal(names[0].parentElement.classList.contains("is-crowded"), false);
+});
+
 test("a line with room again is no longer crowded", () => {
   const { names, ledger } = ledgerOf([{ ...WRAPPED, classes: ["is-crowded"] }]);
   hangLeaders(ledger);
