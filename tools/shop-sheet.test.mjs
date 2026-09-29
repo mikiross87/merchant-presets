@@ -2088,7 +2088,7 @@ function gmOnScene(t, tokens) {
 /** A premade adventure's cast, none of them a player's: `type` as dnd5e has them. */
 const cast = (id, type = "npc") => Object.assign(actor(id, []), { type });
 
-test("a GM's Buying as lists the world's characters and whoever stands on the scene, not every actor (#201)", async t => {
+test("a GM's Buying as lists the world's characters and whoever stands linked on the scene, not every actor (#201)", async t => {
   const { sheet, shop } = openShop({ permission: OWNERSHIP.OWNER });
   const kess = cast("kess", "character");
   const [goblin, bandit, tomas] = [cast("goblin"), cast("bandit"), cast("tomas")];
@@ -2098,9 +2098,8 @@ test("a GM's Buying as lists the world's characters and whoever stands on the sc
   gmOnScene(t, [[shop], [goblin], [bandit, { linked: false }], [wolves], [inn]]);
   const { buyerPicker } = await sheet._prepareContext({});
   assert.deepEqual(buyerPicker.characters.map(e => e.name), ["kess"], "every character in the world, on the scene or not");
-  assert.deepEqual(buyerPicker.others.map(e => [e.name, e.uuid]),
-    [["bandit", "Scene.market.Token.t2.Actor.bandit"], ["goblin", "Actor.goblin"]],
-    "only who stands on the scene, an unlinked token as itself; no group, no shop, not hero or tomas off it");
+  assert.deepEqual(buyerPicker.others.map(e => [e.name, e.uuid]), [["goblin", "Actor.goblin"]],
+    "only a linked token on the scene: not the unlinked bandit, a group, a shop, or hero and tomas off it");
 });
 
 test("with no scene on the canvas, a GM's Buying as lists only the world's characters (#201)", async t => {
@@ -2126,16 +2125,15 @@ test("the deal form offers an NPC standing on the scene, for roleplay, where the
   assert.deepEqual(opened.warnings, []);
 });
 
-test("a deal for an unlinked token is named after the token's actor, which the sidebar doesn't hold (#200 live check)", async t => {
+test("the deal form never offers an unlinked token: an expendable copy has no deal to keep (#200)", async t => {
   const opened = openDeals(t);
   const { sheet, shop } = opened;
   const bandit = cast("bandit");
-  globalThis.game.actors = [shop];
+  globalThis.game.actors = [shop, bandit];
   gmOnScene(t, [[shop], [bandit, { linked: false }]]);
-  const uuid = "Scene.market.Token.t1.Actor.bandit";
-  opened.answer = { actor: uuid, buy: -10, sell: null, ends: "never", days: null, note: "" };
   await act(sheet, "addDeal");
-  assert.deepEqual(writtenShop(shop).deals.map(d => [d.actor, d.name]), [[uuid, "bandit"]]);
+  assert.equal(opened.asked.length, 0);
+  assert.deepEqual(opened.warnings, ["MERCHANT_PRESETS.Shop.Settings.Deals.NoOne"]);
 });
 
 test("with no one to offer, the deal form says there's no one, not that everyone has a deal (#200)", async t => {

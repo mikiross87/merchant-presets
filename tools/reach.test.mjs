@@ -211,19 +211,21 @@ test("switching to anywhere leaves a shop the GM opened to one player alone", ()
 
 /* ------------------------------------------------------ who a GM trades as (#200, #201) */
 
-test("a GM trades as every character, then whoever stands on the scene, each once (#200, #201)", () => {
+test("a GM trades as every character, then whoever stands linked on the scene, each once (#200, #201)", () => {
   const who = (id, type = "npc", extra = {}) => ({ id, uuid: `Actor.${id}`, type, flags: {}, ...extra });
   const shop = who("shop", "npc", { flags: { "merchant-presets": { shop: {} } } });
   const inn = who("inn", "npc", { flags: { "merchant-presets": { shop: {} } } });
   const [kess, aria] = [who("kess", "character"), who("aria", "character")];
   const [goblin, tomas, wolves, party] = [who("goblin"), who("tomas"), who("wolves", "encounter"), who("party", "group")];
+  // An unlinked token: an expendable copy with an actor of its own, never a buyer.
   const bandit = { ...who("bandit"), uuid: "Scene.s.Token.t9.Actor.bandit", isToken: true };
-  const scene = { tokens: [shop, kess, goblin, goblin, bandit, wolves, party, inn].map(actor => ({ actor })) };
+  const linked = actor => ({ actor, actorLink: true });
+  const scene = { tokens: [...[shop, kess, goblin, goblin, wolves, party, inn].map(linked), { actor: bandit, actorLink: false }] };
   const uuids = list => list.map(a => a.uuid);
   assert.deepEqual(uuids(gmCandidates([shop, inn, kess, aria, goblin, tomas, wolves, party], scene, shop)),
-    ["Actor.kess", "Actor.aria", "Actor.goblin", "Scene.s.Token.t9.Actor.bandit"]);
+    ["Actor.kess", "Actor.aria", "Actor.goblin"]);
   // No canvas: the characters alone.
   assert.deepEqual(uuids(gmCandidates([kess, goblin], null, shop)), ["Actor.kess"]);
   // A token whose actor is gone (deleted from the sidebar) is no one.
-  assert.deepEqual(uuids(gmCandidates([], { tokens: [{ actor: null }] }, shop)), []);
+  assert.deepEqual(uuids(gmCandidates([], { tokens: [{ actor: null, actorLink: true }] }, shop)), []);
 });
