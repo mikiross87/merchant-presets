@@ -666,17 +666,19 @@
 .shop-sheet .mp-line.is-struck .mp-line-name { text-decoration: line-through; color: var(--mp-danger-ink); animation: mp-flash 400ms ease-out; }
 /* A name too long for its line wraps in its own width, and the leader and coins stay on its last
    line (#198, design mRg3y): the sheet's hangLeaders starts the leader where that line ends. The
-   name takes all the room there is up to its own width; to the line's wrapping it counts as its
-   longest word, so only a line too crowded to hold even that (a deal tag, three coins) sends the
-   leader and coins below instead of breaking the name inside a word. They go together: .mp-cost
+   name takes all the room there is up to its own width, and a word wider than that breaks rather
+   than running out of the slip. A line so crowded that the name is left under 5em (a deal tag,
+   three coins) is marked is-crowded instead, and its leader and coins go below together: .mp-cost
    is a wrapper the design doesn't draw, which keeps them on one row. */
 .shop-sheet .mp-entry { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 6px; }
 .shop-sheet .mp-cost { flex: 1 1 auto; display: flex; align-items: flex-end; gap: 6px; }
+.shop-sheet .mp-entry.is-crowded > .mp-cost { flex-basis: 100%; }
 .shop-sheet .mp-qty { align-self: flex-start; margin-top: 3px; font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-gold); }
 .shop-sheet .mp-line-name {
   flex: 1000 1 0;
+  min-width: 0;
   max-width: max-content;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   font: 600 15px/17px "Crimson Pro", system-ui, sans-serif;
   color: var(--mp-paper-ink);
 }
