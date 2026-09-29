@@ -14,13 +14,13 @@ than for the code. Reference the issue or PR it closes.
 ### Fixed
 
 - A GM's *Buying as* no longer lists every actor in the world, which ran to
-  hundreds in a premade adventure. It lists the player characters, then whoever
-  has a token on the scene you're viewing; never shops or encounter and party
-  groups. (#201)
-- *Add deal* also offers the NPCs on the scene you're viewing, so a shop can
-  give a friend or rival its own terms for roleplay. With no one to offer, it
-  now says so instead of claiming every player character already has a deal.
-  (#200)
+  hundreds in a premade adventure. It lists the player characters, then the
+  actors with a linked token on the scene you're viewing; never unlinked
+  tokens, shops, or encounter and party groups. (#201)
+- *Add deal* also offers the NPCs with a linked token on the scene you're
+  viewing, so a shop can give a friend or rival its own terms for roleplay.
+  With no one to offer, it now says so instead of claiming every player
+  character already has a deal. (#200)
 
 ## [2.0.0] - 2026-09-29
 

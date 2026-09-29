@@ -187,10 +187,10 @@ const GROUP_TYPES = new Set(["group", "encounter"]);
 
 /**
  * Who a GM trades and makes deals as at `shop` (#200, #201): every character in the world, then
- * whoever stands on `scene`, the one the GM's canvas shows. A GM owns every actor, and a premade
- * adventure brings hundreds. A token stands for its own actor: a linked token for the world
- * actor, an unlinked one for its synthetic actor, with the token's own purse. Never a shop, nor a
- * group; each actor once, characters first.
+ * the actors of the linked tokens on `scene`, the one the GM's canvas shows. A GM owns every
+ * actor, and a premade adventure brings hundreds. An unlinked token is an expendable copy (the
+ * adventure's goblins), which doesn't trade or keep a deal, and five of them would read as five
+ * identical rows (#202). Never a shop, nor a group; each actor once, characters first.
  *
  * @param {Iterable<object>} actors  `game.actors`
  * @param {object|null} scene  `canvas.scene`, or null with no canvas
@@ -204,7 +204,7 @@ export function gmCandidates(actors, scene, shop) {
   const present = [];
   for (const token of scene?.tokens ?? []) {
     const a = token.actor;
-    if (!candidate(a) || seen.has(a.uuid)) continue;
+    if (!token.actorLink || !candidate(a) || seen.has(a.uuid)) continue;
     seen.add(a.uuid);
     present.push(a);
   }
