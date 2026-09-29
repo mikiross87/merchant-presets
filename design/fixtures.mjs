@@ -27,9 +27,10 @@ export const STABLE = "Stable";
  *   so moving the clock never redraws the shelf;
  * - *Armourer & Blacksmith*: a fresh import of the Town smith, renamed, with the frames'
  *   description, 07:00-19:00, the world's list/half, a 212 gp till, and exactly the stock rows the
- *   Storefront draws (Longsword 7, Handaxe 11, Javelin 21 new, Breastplate 1 new, Chain Mail 4,
- *   Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so the nav
- *   counts are the frames' own (All goods 19, Weapons 3, Armor 3, Tools 1, Gear 12);
+ *   Storefront draws (Longsword 7, Handaxe 11, Javelin 21 new, Longsword +1 1, Breastplate 1 new,
+ *   Chain Mail 4, Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so
+ *   the nav counts are the frames' own (All goods 20, Weapons 4, Armor 3, Tools 1, Gear 12); the
+ *   Longsword +1 is the pack's own line (#185), put on the shelf when the roll leaves it off;
  * - the Buyer Picker's cast, and no other actors but the shops (setup deletes the rest, strays
  *   from earlier checks included): Aria, P1's character, a Fighter 5 with 3 pp 47 gp 12 sp 30 cp;
  *   Tomas (a humanoid, 3 gp 4 sp) and Whisker (a beast, no purse), NPCs P1 owns; Brom (P2's
@@ -135,8 +136,15 @@ export async function setup() {
   const entry = (await pack.getIndex()).getName("Armourer & Blacksmiths (Town)");
   const shop = await game.actors.importFromCompendium(pack, entry._id);
   await rolled(shop, "the shop");
+  const magic = "Longsword +1";
+  if (!shop.items.some(i => i.name === magic && i.flags[MP]?.drawn)) {
+    const line = (await pack.getDocument(entry._id)).items.getName(magic)?.toObject();
+    if (!line) throw new Error(`the Town smith has no ${magic} line`);
+    delete line._id;
+    await shop.createEmbeddedDocuments("Item", [foundry.utils.mergeObject(line, { [`flags.${MP}.drawn`]: shop.flags[MP].shelf })]);
+  }
 
-  const rows = { Longsword: [7], Handaxe: [11], Javelin: [21, true], Breastplate: [1, true], "Chain Mail": [4], Shield: [0], "Smith's Tools": [4] };
+  const rows = { Longsword: [7], Handaxe: [11], Javelin: [21, true], "Longsword +1": [1], Breastplate: [1, true], "Chain Mail": [4], Shield: [0], "Smith's Tools": [4] };
   const drawn = shop.items.filter(i => i.flags[MP]?.drawn);
   const armsOrTools = i => i.type === "weapon" || i.type === "tool" || (i.type === "equipment" && i.system.type?.value in (CONFIG.DND5E.armorTypes ?? {}));
   const gear = drawn.filter(i => !armsOrTools(i)).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
@@ -206,7 +214,7 @@ export async function setup() {
 }
 
 /** The frames' shelf rows and their stock (setup draws the same; it can't see this module's names). */
-const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, Breastplate: 1, "Chain Mail": 4, Shield: 0, "Smith's Tools": 4 };
+const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, "Longsword +1": 1, Breastplate: 1, "Chain Mail": 4, Shield: 0, "Smith's Tools": 4 };
 
 /**
  * An `open` for the shop window: the frame's theme on this client, `before` (an in-page statement,

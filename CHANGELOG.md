@@ -172,6 +172,11 @@ trades out itself. For GMs upgrading a world:
   items. Each shop's Settings tab has a *Magic items* box under *Won't buy* to
   change that. Shops already in your world, and worlds upgrading from 1.x, keep
   buying them; drag in a fresh merchant to get the new rule. (#184)
+- 2.0: a magic item's row on the Buy and Sell tabs says its rarity:
+  "Martial melee · Versatile · Uncommon · 3 lb" for a *Longsword +1*,
+  "Wand · Uncommon" for a wand. Mundane goods read as before, and an
+  unidentified item keeps its rarity hidden. Whether it needs attunement is on
+  the item's card when you hover it. (#185)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler

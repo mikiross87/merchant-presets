@@ -564,10 +564,13 @@ const LABELS = {
   toolTypes: { art: "Artisan's Tools" },
   consumableTypes: { potion: { label: "Potion" }, food: { label: "Food" } },
   typeLabels: { loot: "Loot", tool: "Tool" },
-  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
-  weaponProperties: ["lgt", "thr", "ver"],
+  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" }, mgc: { label: "Magical" } },
+  // 6.0.5's validProperties.weapon counts "mgc" among a weapon's own rules.
+  weaponProperties: ["lgt", "mgc", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } },
-  goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" }
+  goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" },
+  rarities: { common: "Common", uncommon: "Uncommon", rare: "Rare", veryRare: "Very Rare" },
+  equipmentTypes: { trinket: "Trinket", wand: "Wand", wondrous: "Wondrous Item" }
 };
 const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
   AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "Worth {amount}", WorthEach: "Worth {amount} each", DealWorth: "Your deal · worth {amount}", DealWorthEach: "Your deal · worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
@@ -587,6 +590,38 @@ test("a row's meta line says what the good is, then what matters about it (desig
   // Anything else by its own type; a weightless good says nothing of weight.
   assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
   assert.equal(itemMeta(gear("loot", {}), LABELS, t), "Loot");
+});
+
+test("a magic good's meta line says its rarity before its weight, and leaves attunement to its card (#185)", () => {
+  const lb = value => ({ weight: { value, units: "lb" } });
+  const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarity: "uncommon", ...lb(3) });
+  assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · Uncommon · 3 lb");
+  assert.equal(sellRowMeta(sword, LABELS, t), "Martial melee · Versatile · Uncommon · 3 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wondrous" }, rarity: "veryRare", attunement: "required" }), LABELS, t),
+    "Wondrous item · Very rare");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 3 }, rarity: "uncommon", attunement: "optional", ...lb(6) }), LABELS, t),
+    "+3 AC · Uncommon · 6 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 15, dex: 2 }, rarity: "uncommon", ...lb(20) }), LABELS, t),
+    "Medium armor · AC 15 + Dex (max 2) · Uncommon");
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "common", ...lb(0.5) }), LABELS, t), "Potion · Common · 0.5 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarity: "uncommon", ...lb(1) }), LABELS, t), "Wand · Uncommon · 1 lb");
+  // dnd5e 6 stores a set of rarities (an array in toObject()), and its rarity is the first (#185 live).
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["uncommon"], ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile · Uncommon · 3 lb");
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarities: ["common"], ...lb(0.5) }), LABELS, t), "Potion · Common · 0.5 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarities: ["uncommon"], ...lb(1) }), LABELS, t), "Wand · Uncommon · 1 lb");
+  // A magic weapon with no rarity still says it's magical: nothing else would.
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: [], ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile, magical · 3 lb");
+  // Mundane goods are unchanged (dnd5e stores their rarity as ""), and an unidentified good keeps its secret, as dnd5e's card does.
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], rarity: "", attunement: "", ...lb(3) }), LABELS, t), "Martial melee · Versatile · 3 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "trinket" }, rarity: "", ...lb(2) }), { ...LABELS, typeLabels: { equipment: "Equipment" } }, t), "Equipment · 2 lb");
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "uncommon", identified: false, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["rare"], identified: false, ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile, magical · 3 lb");
+  // Nor does it take a magic kind's name: an unidentified ring is Equipment, like a mundane one (#189 review).
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarities: ["uncommon"], identified: false, ...lb(1) }), { ...LABELS, typeLabels: { equipment: "Equipment" } }, t),
+    "Equipment · 1 lb");
 });
 
 test("a good sits under the category its line names, else its kind of good", () => {
@@ -788,6 +823,10 @@ test("a shop that won't buy magic items turns away anything magic, whatever its 
   const magicRations = { type: "consumable", system: { rarity: "common" }, flags: { "merchant-presets": { kind: "food-drink" } } };
   assert.deepEqual(wontBuyReason(magicRations, shop), { kind: "food-drink" });
   assert.deepEqual(wontBuyReason({ type: "loot", system: { rarity: "uncommon" }, flags: {} }, shop), { kind: "magic" });
+  // dnd5e 6 stores rarities, not rarity: the SRD's Pipe of Smoke Monsters is magic by its rarity alone (#185).
+  const pipe = { type: "equipment", system: { type: { value: "wondrous" }, rarities: ["common"], properties: [] }, flags: {} };
+  assert.equal(dealtIn(pipe, shop), false);
+  assert.deepEqual(wontBuyReason(pipe, shop), { kind: "magic" });
   // Without the entry, magic is bought like anything else.
   assert.equal(dealtIn(ring, { wontBuy: { types: [], kinds: ["food-drink"] } }), true);
 });
@@ -847,6 +886,11 @@ test("a narrow row's meta says what the good is, its weight and its stock, in on
   assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t, "7 left"), "Martial melee · 3 lb · 7 left");
   assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t, "Last one"), "Medium armor · Last one");
   assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t, "Sold out"), "+2 AC · Sold out");
+  // A magic good keeps its rarity on the narrow line too (design r7HIUl, #185).
+  assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["uncommon"], attunement: "required", ...lb(3) }), LABELS, t, "Last one"),
+    "Martial melee · Uncommon · 3 lb · Last one");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 15, dex: 2 }, rarity: "rare", ...lb(20) }), LABELS, t, "1 left"), "Medium armor · Rare · 1 left");
+  assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 3 }, rarities: ["uncommon"], identified: false, ...lb(6) }), LABELS, t, "1 left"), "+3 AC · 1 left");
 });
 
 test("the docked bill sums its lines up in one line", () => {

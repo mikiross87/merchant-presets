@@ -140,7 +140,8 @@ function metaLabels() {
     weaponTypes: D.weaponTypes, armorTypes: D.armorTypes, toolTypes: D.toolTypes, consumableTypes: D.consumableTypes,
     typeLabels: Object.fromEntries(Object.entries(CONFIG.Item.typeLabels ?? {}).map(([k, v]) => [k, game.i18n.localize(v)])),
     goodKinds: Object.fromEntries(["vehicle", "tack", "mount"].map(k => [k, game.i18n.localize(`MERCHANT_PRESETS.Shop.Meta.Kind.${k}`)])),
-    properties: D.itemProperties, weaponProperties: [...(D.validProperties?.weapon ?? [])], weightUnits: D.weightUnits
+    properties: D.itemProperties, weaponProperties: [...(D.validProperties?.weapon ?? [])], weightUnits: D.weightUnits,
+    rarities: D.itemRarity, equipmentTypes: D.miscEquipmentTypes
   };
 }
 
