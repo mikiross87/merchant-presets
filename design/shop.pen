@@ -8228,7 +8228,7 @@
                       "id": "dItrz",
                       "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "19",
+                      "content": "20",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -8277,7 +8277,7 @@
                       "id": "tANrl",
                       "name": "Weapons count",
                       "fill": "$text-secondary",
-                      "content": "3",
+                      "content": "4",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -8602,6 +8602,49 @@
                         "type": "image",
                         "enabled": true,
                         "url": "assets/silver.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "POqhA",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Longsword +1",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/greatsword-guard.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Longsword +1"
+                    },
+                    "vYzUL": {
+                      "content": "Martial melee · Versatile · Uncommon · 3 lb"
+                    },
+                    "UB234": {
+                      "content": "Last one",
+                      "fill": "#b86a12",
+                      "fontWeight": "700"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "415"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
                         "mode": "fill"
                       }
                     },
@@ -11308,7 +11351,7 @@
                   "id": "eBj6W",
                   "name": "Cat count",
                   "fill": "$text-secondary",
-                  "content": "19",
+                  "content": "20",
                   "fontFamily": "$font-compact",
                   "fontSize": 12,
                   "fontWeight": "normal"
@@ -11521,6 +11564,54 @@
                 "R8Rhev": {
                   "icon": "check",
                   "fill": "#ffffff"
+                }
+              }
+            },
+            {
+              "id": "PgAuj",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Longsword +1",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/greatsword-guard.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Longsword +1"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Martial melee · Uncommon · 3 lb · Last one"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "415"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": true
                 }
               }
             },
@@ -26094,7 +26185,7 @@
                   "id": "gs6uH",
                   "name": "Cat count",
                   "fill": "$text-secondary",
-                  "content": "19",
+                  "content": "20",
                   "fontFamily": "$font-compact",
                   "fontSize": 12,
                   "fontWeight": "normal"
@@ -26307,6 +26398,54 @@
                 "R8Rhev": {
                   "icon": "check",
                   "fill": "#ffffff"
+                }
+              }
+            },
+            {
+              "id": "eAJTr",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Longsword +1",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/greatsword-guard.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Longsword +1"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Martial melee · Uncommon · 3 lb · Last one"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "415"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": true
                 }
               }
             },
