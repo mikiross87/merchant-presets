@@ -452,9 +452,11 @@ export function compactMeta(item, labels, t, stockText) {
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
-  const parts = item.type === "equipment" && type === "shield" ? [t("ShieldAc", { ac: sys.armor?.value ?? 0 })]
-    : item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "") ? [whatItIs(item, labels)]
-      : [whatItIs(item, labels), weight];
+  // A magic good's rarity, not its attunement: the narrow line has room for one (design r7HIUl, #185).
+  const rarity = sys.identified !== false ? sentenceCase(labelOf(labels.rarities?.[rarityOf(item)])) : "";
+  const parts = item.type === "equipment" && type === "shield" ? [t("ShieldAc", { ac: sys.armor?.value ?? 0 }), rarity]
+    : item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "") ? [whatItIs(item, labels), rarity]
+      : [whatItIs(item, labels), rarity, weight];
   return [...parts, stockText].filter(Boolean).join(" · ");
 }
 

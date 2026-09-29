@@ -569,7 +569,7 @@ const LABELS = {
   weaponProperties: ["lgt", "mgc", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } },
   goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" },
-  rarities: { common: "Common", uncommon: "Uncommon", veryRare: "Very Rare" },
+  rarities: { common: "Common", uncommon: "Uncommon", rare: "Rare", veryRare: "Very Rare" },
   equipmentTypes: { trinket: "Trinket", wand: "Wand", wondrous: "Wondrous Item" }
 };
 const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
