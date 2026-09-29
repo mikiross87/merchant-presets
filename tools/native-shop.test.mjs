@@ -233,7 +233,9 @@ test("a shop arriving with a GM's own sheet choice keeps it (#204 review)", asyn
 
 test("a shop exported into a world compendium gets no sheet there (#204 review)", async () => {
   const { world, shop } = await setUp();
-  await world.fire("preCreateActor", shop, {}, { pack: "world.my-shops" }, "gm");
+  // V14 names the pack on the document; the create options arrive without it (live probe, #204).
+  shop.pack = "world.my-shops";
+  await world.fire("preCreateActor", shop, {}, { keepId: true, clearOwnership: true, action: "create", render: true }, "gm");
   assert.equal(shop.flags.core?.sheetClass, undefined);
 });
 
