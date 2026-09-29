@@ -564,8 +564,9 @@ const LABELS = {
   toolTypes: { art: "Artisan's Tools" },
   consumableTypes: { potion: { label: "Potion" }, food: { label: "Food" } },
   typeLabels: { loot: "Loot", tool: "Tool" },
-  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" } },
-  weaponProperties: ["lgt", "thr", "ver"],
+  properties: { ver: { label: "Versatile" }, lgt: { label: "Light" }, thr: { label: "Thrown" }, gear: { label: "Gear" }, mgc: { label: "Magical" } },
+  // 6.0.5's validProperties.weapon counts "mgc" among a weapon's own rules.
+  weaponProperties: ["lgt", "mgc", "thr", "ver"],
   weightUnits: { lb: { abbreviation: "lb" } },
   goodKinds: { vehicle: "Vehicle", tack: "Tack", mount: "Mount" },
   rarities: { common: "Common", uncommon: "Uncommon", veryRare: "Very Rare" },
@@ -604,10 +605,20 @@ test("a magic good's meta line says its rarity and attunement before its weight 
     "Medium armor · AC 15 + Dex (max 2) · Uncommon");
   assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "common", ...lb(0.5) }), LABELS, t), "Potion · Common · 0.5 lb");
   assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarity: "uncommon", ...lb(1) }), LABELS, t), "Wand · Uncommon · 1 lb");
+  // dnd5e 6 stores a set of rarities (an array in toObject()), and its rarity is the first (#185 live).
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["uncommon"], ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile · Uncommon · 3 lb");
+  assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarities: ["common"], ...lb(0.5) }), LABELS, t), "Potion · Common · 0.5 lb");
+  assert.equal(itemMeta(gear("equipment", { type: { value: "wand" }, rarities: ["uncommon"], ...lb(1) }), LABELS, t), "Wand · Uncommon · 1 lb");
+  // A magic weapon with no rarity still says it's magical: nothing else would.
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: [], ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile, magical · 3 lb");
   // Mundane goods are unchanged (dnd5e stores their rarity as ""), and an unidentified good keeps its secret, as dnd5e's card does.
   assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], rarity: "", attunement: "", ...lb(3) }), LABELS, t), "Martial melee · Versatile · 3 lb");
   assert.equal(itemMeta(gear("equipment", { type: { value: "trinket" }, rarity: "", ...lb(2) }), { ...LABELS, typeLabels: { equipment: "Equipment" } }, t), "Equipment · 2 lb");
   assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "uncommon", identified: false, ...lb(0.5) }), LABELS, t), "Potion · 0.5 lb");
+  assert.equal(itemMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["rare"], identified: false, ...lb(3) }), LABELS, t),
+    "Martial melee · Versatile, magical · 3 lb");
 });
 
 test("a good sits under the category its line names, else its kind of good", () => {
