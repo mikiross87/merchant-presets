@@ -18835,6 +18835,61 @@
                                   "fontWeight": "normal"
                                 }
                               ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "h12Vvz",
+                              "name": "Check Magic items",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "lJhCv",
+                                  "name": "Magic items box",
+                                  "width": 16,
+                                  "height": 16,
+                                  "fill": "$surface-card",
+                                  "cornerRadius": 3,
+                                  "stroke": "$border-faint",
+                                  "strokeWidth": 1,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "GWB5m",
+                                      "x": 2.5,
+                                      "y": 2.5,
+                                      "name": "Tick",
+                                      "enabled": false,
+                                      "width": 11,
+                                      "height": 11,
+                                      "icon": "check",
+                                      "library": "lucide",
+                                      "fill": "$text-on-dark"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "LwRWV",
+                                  "name": "Magic items label",
+                                  "fill": "$text-primary",
+                                  "content": "Magic items",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FCO7a",
+                              "name": "Kinds of goods filler",
+                              "width": "fill_container",
+                              "height": 16
                             }
                           ]
                         }
