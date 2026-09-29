@@ -52,7 +52,7 @@ trades out itself. For GMs upgrading a world:
 
 ### Added
 
-- 2.0: the service shops say what their goods do. At a temple, arcane or
+- The service shops say what their goods do. At a temple, arcane or
   druidic store a named spell shows by name with its level and school
   ("Level 3 Necromancy"), a level service reads "any Level 1 spell", and the
   bill says who it's cast for. The receipt in chat names a bought spell the
@@ -60,24 +60,24 @@ trades out itself. For GMs upgrading a world:
   bought animals arrive as actors) and the bill says so; saddles, carts and
   boats read as tack and vehicles, not loot. A long shop description stops at
   two lines, and long category names wrap. (#151)
-- 2.0: a *Till* section in the shop window's Settings tab, where the GM sets
+- A *Till* section in the shop window's Settings tab, where the GM sets
   the coins a shop holds, coin by coin, and the gold each restock refills it
   to, shown beside the preset's own amount. A restock tops the gold up to that
   amount and never takes coin away; set it to 0 and restocks leave the till
   alone. Under *Merchant coin: Unlimited* the till is bottomless and the
   section says so. (#147)
-- 2.0: a world setting, *Shops follow the world clock*: *Auto* (the default),
+- A world setting, *Shops follow the world clock*: *Auto* (the default),
   *Always* or *Never*. In a world that doesn't keep time, shops no longer sit
   closed for good at the hour the clock stopped: they're always open, restock
   only by hand, and put no date on a bill or a receipt. *Auto* follows the
   clock wherever anything keeps time: dnd5e's calendar is on, a calendar module
   runs it, or a whole day has passed on the clock. (#149)
-- 2.0: after a restock, the goods that came back in stock wear a *New* badge
+- After a restock, the goods that came back in stock wear a *New* badge
   and the shop shows *Fresh stock today*, until the shop next closes. A shop
   that doesn't close (no hours, open round the clock, or *Shops keep their
   trading hours* off) keeps them for a day. A restock while the shop is closed
   is fresh for its next opening. A good that sells out loses its badge. (#152)
-- 2.0: each shop's own window — its portrait, hours, tier and terms of trade
+- Each shop's own window — its portrait, hours, tier and terms of trade
   up top, a Buy tab with categories and stock, a Sell tab that shows what the
   shop deals in and what it won't touch, and a running Bill of Sale that
   totals the basket and what's left in the buyer's purse. Players pick which
@@ -85,7 +85,7 @@ trades out itself. For GMs upgrading a world:
   buy or sell as anyone, and get a Settings tab and a button back to the
   NPC's own stat sheet. It opens like any other actor sheet — double-click
   the shop's token. (#103)
-- 2.0: the shop window's GM-only Settings tab, where each shop's terms are
+- The shop window's GM-only Settings tab, where each shop's terms are
   changed: what it sells and buys at (or the world default), category rules,
   what it won't buy, its hours, and how often and how it restocks, with
   *Restock now*, *Players can visit* and *Reset to preset*. The tab scrolls as
@@ -98,7 +98,7 @@ trades out itself. For GMs upgrading a world:
   and art at full value sell them at their own rate, and never pay more for
   them than they charge: below 100% sells, they buy them back at that rate
   too. (#110, #141)
-- 2.0: deals — give one character their own price at one shop, from the
+- Deals — give one character their own price at one shop, from the
   Settings tab: cheaper when they buy, more when they sell, or both, with an
   optional note and an end (when the shop next closes, after some days, or
   never). Only that character sees it: their shop window shows "Your price
@@ -108,7 +108,7 @@ trades out itself. For GMs upgrading a world:
   remove it. No deal can make selling pay more than buying. The note is never
   shown to players, but it's saved on the shop, so a player could read it
   from the browser console. (#111, #145)
-- 2.0: sealing a bargain in the shop window carries the trade out on the GM's
+- Sealing a bargain in the shop window carries the trade out on the GM's
   side, with no Item Piles involved: the goods, the coin and the shop's stock
   all move at once, two players can't both buy the last one, and a trade sent
   twice over a flaky connection only happens once. A GM has to be logged in;
@@ -118,18 +118,18 @@ trades out itself. For GMs upgrading a world:
   who can see it, each good with its picture and price, and the total. Meals,
   bought animals and spellcasting work the same way they did through Item
   Piles. (#102, #145, #179)
-- 2.0: shops restock on their own schedule, now on by default: each kind every
+- Shops restock on their own schedule, now on by default: each kind every
   so many days (an inn daily, a general store every 3, a jeweler every 14),
   when its doors open on the due day. A restock redraws only what the shop's
   stock table put on the shelf. Goods you added by hand stay, and a line you
   hid or edited keeps your settings. Worlds upgrading from 1.x keep restocking
   off until you turn it on. (#105)
-- 2.0: the shops run without Item Piles. Double-clicking a shop's token opens
+- The shops run without Item Piles. Double-clicking a shop's token opens
   its shop window, for players and GMs alike. Every shop you drag in rolls its
   own shelf, and *Set up as shop…* works without Item Piles too. Shops already
   in your world move over on their own the first time you load, tokens
   included. (#104)
-- 2.0: players shop at the counter. A shop stays out of players' Actors
+- Players shop at the counter. A shop stays out of players' Actors
   sidebar, and a player opens it by double-clicking its token while a token of
   theirs stands within 5 ft of it; too far, and they're told to step up.
   Walking away closes the window, *Buying as* lists only the characters
@@ -137,21 +137,21 @@ trades out itself. For GMs upgrading a world:
   player you give a permission of their own on a shop opens it from anywhere.
   For games without a map, the new *Shop access* setting's *From anywhere*
   opens a shop to every player once its token is placed. (#166)
-- 2.0: see what a good is from the shop window, as on a character sheet.
+- See what a good is from the shop window, as on a character sheet.
   Hovering a good's picture or name shows dnd5e's item card, with its
   description and properties, and clicking opens its page from the
   compendium. The GM opens the shop's own copy to edit it, and on the Sell
   tab each good opens as the seller's own. An unidentified good gives nothing
   away. (#168)
-- 2.0: a shop's goods no longer say "Not Equipped" or "Proficient" in their
+- A shop's goods no longer say "Not Equipped" or "Proficient" in their
   item card, which dnd5e worked out for the shopkeeper; "Requires
   Attunement" stays. On the Sell tab, the character's equipped items are
   tagged *Equipped*. (#170)
-- 2.0: on the Sell tab, a good's line under its name reads as it does on the
+- On the Sell tab, a good's line under its name reads as it does on the
   Buy tab (its kind, properties and weight, or its armour class), and what
   one is worth at list moves to the tooltip on the offer's ratio (or on
   *Your deal*), next to the price it explains. (#177)
-- 2.0: rations and water count as food and drink. Shops that won't buy food
+- Rations and water count as food and drink. Shops that won't buy food
   and drink, the smith among them, now turn away a party's rations and water,
   and the shop window lists them under Food & drink. The general, adventurers'
   and druidic stores, which sell rations, now buy food and drink too, ale and
@@ -169,13 +169,13 @@ trades out itself. For GMs upgrading a world:
   stocked, apart from the high-level spell scrolls and *Potion of Healing
   (Supreme)* the city shops already sold. Merchants already in your world
   keep their old stock list; drag in a fresh merchant to get these. (#33)
-- 2.0: a shop that sells no magic items won't buy them either: the General
+- A shop that sells no magic items won't buy them either: the General
   Stores, most village shops and the smaller stables turn away a Ring of
   Protection the party tries to sell, and the Sell tab says it won't buy magic
   items. Each shop's Settings tab has a *Magic items* box under *Won't buy* to
   change that. Shops already in your world, and worlds upgrading from 1.x, keep
   buying them; drag in a fresh merchant to get the new rule. (#184)
-- 2.0: a magic item's row on the Buy and Sell tabs says its rarity:
+- A magic item's row on the Buy and Sell tabs says its rarity:
   "Martial melee · Versatile · Uncommon · 3 lb" for a *Longsword +1*,
   "Wand · Uncommon" for a wand. Mundane goods read as before, and an
   unidentified item keeps its rarity hidden. Whether it needs attunement is on
@@ -238,7 +238,7 @@ trades out itself. For GMs upgrading a world:
 
 ### Removed
 
-- 2.0: Item Piles and itempilesdnd5e are no longer required, and nothing here
+- Item Piles and itempilesdnd5e are no longer required, and nothing here
   talks to Item Piles any more; a world that keeps it for its own merchants
   or loot can. Macros calling the module's Item Piles-era functions
   (`rewire`, `rewireAll`, `restockOnTimeChange`, `reapplyItemFlags`,
