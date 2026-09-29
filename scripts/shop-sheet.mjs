@@ -372,7 +372,9 @@ function windowBar(frame, { npcSheet }) {
  * A bill line's name wraps in its own width, and its leader starts where the name's last line ends
  * (#198, design mRg3y). A wrapped name is as wide as the line lets it be, so the part after the
  * last line is empty: pull what follows the name (the leader, or a deal tag) back over it, and
- * hold the name at the width it wrapped to, or the room it gives up would re-wrap it.
+ * hold the name at the width it wrapped to, or the room it gives up would re-wrap it. Not when
+ * what follows went below the name (a crowded line), nor in a right-to-left window, whose last
+ * line ends on the left.
  */
 function hangLeaders(ledger) {
   const lines = [...ledger.querySelectorAll(".mp-entry > .mp-line-name")].map(name => ({ name, next: name.nextElementSibling }));
@@ -381,18 +383,23 @@ function hangLeaders(ledger) {
     if (next) next.style.marginLeft = "";
   }
   // Every line measured before any is changed: one layout, not one per line.
-  const range = document.createRange();
-  const measured = lines.map(({ name }) => {
-    range.selectNodeContents(name);
-    const rects = range.getClientRects();
+  const range = ledger.ownerDocument.createRange();
+  const measured = lines.map(({ name, next }) => {
+    if (!next || getComputedStyle(name).direction === "rtl") return null;
     const box = name.getBoundingClientRect();
-    return { width: box.width, slack: rects.length ? box.right - rects[rects.length - 1].right : 0 };
+    if (next.getBoundingClientRect().top >= box.bottom) return null;
+    range.selectNodeContents(name);
+    const rects = [...range.getClientRects()];
+    if (!rects.length) return null;
+    // The last line's right end: a name mixing scripts can make it of several boxes.
+    const last = rects.at(-1);
+    const end = Math.max(...rects.filter(r => Math.abs(r.top - last.top) < 1).map(r => r.right));
+    return { width: box.width, slack: box.right - end };
   });
   lines.forEach(({ name, next }, i) => {
-    const { width, slack } = measured[i];
-    if (!next || slack < 0.5) return;
-    name.style.maxWidth = `${width}px`;
-    next.style.marginLeft = `${-slack}px`;
+    if (!measured[i] || measured[i].slack < 0.5) return;
+    name.style.maxWidth = `${measured[i].width}px`;
+    next.style.marginLeft = `${-measured[i].slack}px`;
   });
 }
 
@@ -649,15 +656,28 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
-    // The bill's leaders follow its names' last lines (#198): again when the window's width
-    // changes, and once the ledger's font has loaded, since either can move where a name wraps.
+    // The bill's leaders follow its names' last lines (#198): again when a ledger's width changes
+    // (not its height: a taller window wraps no name), and once the names' font has loaded, since
+    // either can move where a name wraps. The window's own document: it can be popped out.
     this._leaderObserver?.disconnect();
     this._leaderObserver = null;
     const ledgers = [...this.element?.querySelectorAll(".mp-ledger") ?? []];
     if (ledgers.length) {
-      this._leaderObserver = new ResizeObserver(entries => entries.forEach(entry => hangLeaders(entry.target)));
+      const doc = this.element.ownerDocument;
+      const widths = new WeakMap();
+      this._leaderObserver = new doc.defaultView.ResizeObserver(entries => entries.forEach(({ target, contentRect }) => {
+        if (widths.get(target) === contentRect.width) return;
+        widths.set(target, contentRect.width);
+        hangLeaders(target);
+      }));
       for (const ledger of ledgers) this._leaderObserver.observe(ledger);
-      document.fonts?.ready.then(() => ledgers.forEach(ledger => ledger.isConnected && hangLeaders(ledger)));
+      const name = ledgers[0].querySelector(".mp-line-name");
+      const font = name && getComputedStyle(name).font;
+      // A font not loaded yet swaps in later without resizing anything the observer sees. A font
+      // the browser can't parse just keeps the first measure.
+      if (font && doc.fonts && !doc.fonts.check(font)) {
+        doc.fonts.load(font).then(() => ledgers.forEach(ledger => ledger.isConnected && hangLeaders(ledger)), () => {});
+      }
     }
     // A narrow window's category dropdown: a native select, which reports a change, not a click.
     for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
