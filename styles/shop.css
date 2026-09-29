@@ -112,6 +112,9 @@
 
 .shop-sheet .mp-icon { display: block; flex: none; width: 14px; height: 14px; }
 .shop-sheet .mp-visually-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; margin: 0; }
+/* The labels that hide one: without them the input takes the window as its containing block, sits
+   below it instead of scrolling with the form, and focusing it scrolls the whole window (#176). */
+.shop-sheet :is(.mp-option, .mp-check, .mp-visit) { position: relative; }
 
 /* Every control the design draws starts from nothing: core's and dnd5e's button styles set sizes,
    borders and fonts the frames don't have. Only single classes go in this list: :is() takes its

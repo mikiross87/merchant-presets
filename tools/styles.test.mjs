@@ -6,7 +6,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 
 const SCOPE = ".shop-sheet";
 const RECEIPT = ".chat-message:has(> .message-content > .mp-receipt)";
@@ -71,4 +71,24 @@ test("the shop stylesheet never re-uses a dnd5e background that carries a relati
   // .dnd5e2.application itself, where it resolves.
   const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8");
   assert.doesNotMatch(css, /var\(--dnd5e-(application-background|background-texture-[a-z-]+|journal-content-background)\)/);
+});
+
+test("every visually hidden input is positioned by its own label, not the window (#176)", () => {
+  // `.mp-visually-hidden` is position: absolute. With no positioned ancestor inside the scrolling
+  // form it takes the window as its containing block, so it doesn't scroll with the form: it sits
+  // where it was laid out, below the window, and focusing it scrolls the whole window to it.
+  const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const positioned = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter(([, , body]) => /position:\s*relative/.test(body)).map(([, prelude]) => prelude);
+  const dir = new URL("../templates/parts/", import.meta.url);
+  const wrappers = readdirSync(dir).filter(f => f.endsWith(".hbs")).flatMap(f => {
+    const hbs = readFileSync(new URL(f, dir), "utf8");
+    return [...hbs.matchAll(/<input\b[^>]*class="[^"]*\bmp-visually-hidden\b/g)].map(m => {
+      const label = [...hbs.slice(0, m.index).matchAll(/<label\b[^>]*class="([\w-]+)/g)].at(-1);
+      return { file: f, label: label?.[1] ?? null };
+    });
+  });
+  assert.ok(wrappers.length > 0);
+  const loose = wrappers.filter(w => !w.label || !positioned.some(p => new RegExp(`\\.${w.label}(?![\\w-])`).test(p)));
+  assert.deepEqual(loose, []);
 });
