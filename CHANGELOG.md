@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-29
+
 ### Upgrading from 1.x
 
 2.0 drops Item Piles: each shop gets its own window, and the module carries
@@ -389,7 +391,8 @@ trades out itself. For GMs upgrading a world:
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/mikiross87/merchant-presets/compare/v1.2.4...v2.0.0
 [1.2.4]: https://github.com/mikiross87/merchant-presets/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/mikiross87/merchant-presets/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/mikiross87/merchant-presets/compare/v1.2.1...v1.2.2
