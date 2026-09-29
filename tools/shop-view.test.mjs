@@ -573,7 +573,7 @@ const LABELS = {
   equipmentTypes: { trinket: "Trinket", wand: "Wand", wondrous: "Wondrous Item" }
 };
 const words = { JoinsBuyer: "joins the buyer", SpellOf: "Level {level} {school}", CantripOf: "{school} cantrip", AnyCantrip: "any cantrip",
-  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "Worth {amount}", WorthEach: "Worth {amount} each", DealWorth: "Your deal · worth {amount}", DealWorthEach: "Your deal · worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC", Attunement: "Attunement", AttunementOptional: "Attunement optional" };
+  AnySpell: "any Level {level} spell", AnySpells: "any Level {min} or {max} spell", AnySpellRange: "any Level {min}–{max} spell", Service: "Service", FeedsBuyer: "feeds the buyer", Drink: "Drink", CountsAsWater: "counts as water", Worth: "Worth {amount}", WorthEach: "Worth {amount} each", DealWorth: "Your deal · worth {amount}", DealWorthEach: "Your deal · worth {amount} each", Weight: "{weight} {units}", Ac: "AC {ac}", Dex: " + Dex", DexMax: " + Dex (max {max})", Str: "Str {str}", ShieldAc: "+{ac} AC" };
 const t = (key, data = {}) => words[key].replace(/\{(\w+)\}/g, (_, k) => data[k]);
 const gear = (type, system) => ({ type, system: { weight: { value: 0, units: "lb" }, ...system } });
 
@@ -592,15 +592,15 @@ test("a row's meta line says what the good is, then what matters about it (desig
   assert.equal(itemMeta(gear("loot", {}), LABELS, t), "Loot");
 });
 
-test("a magic good's meta line says its rarity and attunement before its weight (#185)", () => {
+test("a magic good's meta line says its rarity before its weight, and leaves attunement to its card (#185)", () => {
   const lb = value => ({ weight: { value, units: "lb" } });
   const sword = gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarity: "uncommon", ...lb(3) });
   assert.equal(itemMeta(sword, LABELS, t), "Martial melee · Versatile · Uncommon · 3 lb");
   assert.equal(sellRowMeta(sword, LABELS, t), "Martial melee · Versatile · Uncommon · 3 lb");
   assert.equal(itemMeta(gear("equipment", { type: { value: "wondrous" }, rarity: "veryRare", attunement: "required" }), LABELS, t),
-    "Wondrous item · Very rare · Attunement");
+    "Wondrous item · Very rare");
   assert.equal(itemMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 3 }, rarity: "uncommon", attunement: "optional", ...lb(6) }), LABELS, t),
-    "+3 AC · Uncommon · Attunement optional · 6 lb");
+    "+3 AC · Uncommon · 6 lb");
   assert.equal(itemMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 15, dex: 2 }, rarity: "uncommon", ...lb(20) }), LABELS, t),
     "Medium armor · AC 15 + Dex (max 2) · Uncommon");
   assert.equal(itemMeta(gear("consumable", { type: { value: "potion" }, rarity: "common", ...lb(0.5) }), LABELS, t), "Potion · Common · 0.5 lb");
@@ -883,7 +883,7 @@ test("a narrow row's meta says what the good is, its weight and its stock, in on
   assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver"], ...lb(3) }), LABELS, t, "7 left"), "Martial melee · 3 lb · 7 left");
   assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 14, dex: 2 }, ...lb(20) }), LABELS, t, "Last one"), "Medium armor · Last one");
   assert.equal(compactMeta(gear("equipment", { type: { value: "shield" }, armor: { value: 2 }, ...lb(6) }), LABELS, t, "Sold out"), "+2 AC · Sold out");
-  // A magic good keeps its rarity, not its attunement, on the narrow line (design r7HIUl, #185).
+  // A magic good keeps its rarity on the narrow line too (design r7HIUl, #185).
   assert.equal(compactMeta(gear("weapon", { type: { value: "martialM" }, properties: ["ver", "mgc"], rarities: ["uncommon"], attunement: "required", ...lb(3) }), LABELS, t, "Last one"),
     "Martial melee · Uncommon · 3 lb · Last one");
   assert.equal(compactMeta(gear("equipment", { type: { value: "medium" }, armor: { value: 15, dex: 2 }, rarity: "rare", ...lb(20) }), LABELS, t, "1 left"), "Medium armor · Rare · 1 left");

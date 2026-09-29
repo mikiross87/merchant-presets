@@ -275,7 +275,7 @@ const sentenceCase = text => (text ? text.charAt(0) + text.slice(1).toLowerCase(
  * A good's line under its name (design y6iNf): what it is, then what matters about it.
  * "Martial melee · Versatile · 3 lb", "Medium armor · AC 14 + Dex (max 2)", "+2 AC · 6 lb",
  * "Artisan's tools · 8 lb"; anything else by its type, then its weight. A magic good adds its rarity
- * and attunement before its weight: "Martial melee · Versatile · Uncommon · 3 lb" (#185).
+ * before its weight: "Martial melee · Versatile · Uncommon · 3 lb" (#185); its attunement is on its card.
  *
  * @param {object} item  an item's `toObject()`
  * @param {{weaponTypes: object, armorTypes: object, toolTypes: object, consumableTypes: object,
@@ -291,12 +291,9 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
   // Simple Nutrition takes meals, and ale or wine counts as water only where drinks hydrate.
   if (service) return [t("Service"), feeds && item.flags?.["merchant-presets"]?.kind === "meal" ? t("FeedsBuyer") : spellWords(item, spell, t)].filter(Boolean).join(" · ");
   if (DRINKS.includes(sys.identifier)) return [t("Drink"), hydrates && DRINK_IDENTIFIERS.includes(sys.identifier) ? t("CountsAsWater") : null].filter(Boolean).join(" · ");
-  // A magic good's rarity and attunement come before its weight (#185); an unidentified one keeps
-  // them secret, as dnd5e's own card does.
-  const known = sys.identified !== false;
-  const rarity = known ? sentenceCase(labelOf(labels.rarities?.[rarityOf(item)])) : "";
-  const magic = known ? [rarity,
-    sys.attunement === "required" ? t("Attunement") : sys.attunement === "optional" ? t("AttunementOptional") : null] : [];
+  // A magic good's rarity comes before its weight (#185); an unidentified one keeps it secret, as
+  // dnd5e's own card does.
+  const rarity = rarityLabel(item, labels);
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
@@ -308,17 +305,17 @@ export function itemMeta(item, labels, t, { service = false, feeds = false, hydr
     const props = [...(sys.properties ?? [])].filter(p => labels.weaponProperties?.includes(p) && !(p === "mgc" && rarity))
       .map(p => labelOf(labels.properties?.[p])).filter(Boolean);
     if (props.length) parts.push(sentenceCase(props.join(", ")));
-    parts.push(...magic, weight);
+    parts.push(rarity, weight);
   } else if (item.type === "equipment" && sys.type?.value === "shield") {
-    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), ...magic, weight);
+    parts.push(t("ShieldAc", { ac: sys.armor?.value ?? 0 }), rarity, weight);
   } else if (item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, sys.type?.value ?? "")) {
     // Armour's weight goes unsaid: its AC and what wearing it asks are what a buyer weighs.
     const dex = sys.armor?.dex;
     const ac = t("Ac", { ac: sys.armor?.value ?? 0 })
       + (sys.type.value === "heavy" ? "" : dex ? t("DexMax", { max: dex }) : t("Dex"));
-    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null, ...magic);
+    parts.push(whatItIs(item, labels), ac, sys.strength ? t("Str", { str: sys.strength }) : null, rarity);
   } else {
-    parts.push(whatItIs(item, labels), ...magic, weight);
+    parts.push(whatItIs(item, labels), rarity, weight);
     // A mount joins the buyer only where bought animals spawn, from its stat block (design pI7Yd).
     if (spawns && joinsBuyer(item)) parts.push(t("JoinsBuyer"));
   }
@@ -452,8 +449,8 @@ export function compactMeta(item, labels, t, stockText) {
   const weight = sys.weight?.value > 0
     ? t("Weight", { weight: sys.weight.value, units: labels.weightUnits?.[sys.weight.units ?? "lb"]?.abbreviation ?? sys.weight.units ?? "lb" })
     : null;
-  // A magic good's rarity, not its attunement: the narrow line has room for one (design r7HIUl, #185).
-  const rarity = sys.identified !== false ? sentenceCase(labelOf(labels.rarities?.[rarityOf(item)])) : "";
+  // A magic good's rarity, as the wide line says it (design r7HIUl, #185).
+  const rarity = rarityLabel(item, labels);
   const parts = item.type === "equipment" && type === "shield" ? [t("ShieldAc", { ac: sys.armor?.value ?? 0 }), rarity]
     : item.type === "equipment" && Object.hasOwn(labels.armorTypes ?? {}, type ?? "") ? [whatItIs(item, labels), rarity]
       : [whatItIs(item, labels), rarity, weight];
@@ -467,6 +464,9 @@ export function billSummary(lines) {
 
 /** A CONFIG.DND5E entry's label: some are plain strings, some `{label}` objects. */
 const labelOf = entry => (typeof entry === "string" ? entry : entry?.label ?? "");
+
+/** A good's rarity as its row says it ("Very rare"), or "" for a mundane or unidentified one (#185). */
+const rarityLabel = (item, labels) => (item.system?.identified !== false ? sentenceCase(labelOf(labels.rarities?.[rarityOf(item)])) : "");
 
 /** What a good is, as the first part of its meta line says it: "Martial melee", "Medium armor", "Potion". */
 function whatItIs(item, labels) {
