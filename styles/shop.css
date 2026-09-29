@@ -1398,7 +1398,6 @@
 .mp-receipt-rule { flex: none; height: 1px; margin: 0; border: none; background: var(--mp-paper-ink); }
 .mp-receipt-total { display: flex; align-items: center; justify-content: space-between; }
 .mp-receipt-total b { font: 700 15px/21px "Alegreya SC", system-ui, sans-serif; color: var(--mp-paper-ink); }
-.mp-receipt-foot { margin: 0; font: italic 400 12px/13px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* -------------------------------------------------------------- motion */
 

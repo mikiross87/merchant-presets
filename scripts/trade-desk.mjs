@@ -18,7 +18,7 @@
  *   2026-09-25).
  */
 
-import { COIN_METALS, coinBreakdown, rateFraction } from "./shop-view.mjs";
+import { COIN_METALS, coinBreakdown } from "./shop-view.mjs";
 import { ICONS, icon } from "./icons.mjs";
 
 /**
@@ -252,12 +252,6 @@ export function recipients(mode, gmIds) {
 
 const escape = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[c]);
 
-/** `amountCp` in the fewest everyday coins, "1 gp 5 sp"; nothing at all reads as "free". */
-function coins(amountCp, currencies) {
-  const parts = coinBreakdown(amountCp, currencies);
-  return parts.length ? parts.map(c => `${c.count} ${c.abbreviation}`).join(" ") : "free";
-}
-
 /**
  * Where a receipt's icon goes: an empty slot, since Foundry strips <svg> from a message's content
  * when it's saved. `receiptIcons` draws the icon in when the message renders.
@@ -286,7 +280,7 @@ function coinsHtml(amountCp, currencies, free) {
 
 /**
  * The one chat message a trade posts (design z5RBkd): the shop speaking, when in the world and who
- * sees it, then what changed hands, the total and a word on the coins. `planTrade`'s `chatCard`,
+ * sees it, then what changed hands and the total, which ends it (#179). `planTrade`'s `chatCard`,
  * as HTML; the meal, animal and spellcasting messages still post beside it on their own. Foundry's
  * own message header is hidden for it (styles/shop.css): the receipt draws its own speaker.
  *
@@ -304,11 +298,6 @@ export function receiptHtml(card, currencies, { t, when, whispered }) {
       + `<span class="mp-receipt-good" data-pen="${name} text">${l.quantity} × ${name}</span>`
       + `<span class="mp-receipt-coins" data-pen="${name} coins">${coinsHtml(l.lineTotalCp, currencies, t("Receipt.Free"))}</span></div>`;
   }).join("");
-  const foot = card.kind === "buy"
-    ? (card.footnote?.changeCp > 0 ? t("Receipt.Change", { name: card.buyerName, change: coins(card.footnote.changeCp, currencies) })
-      : t("Receipt.Exact", { name: card.buyerName }))
-    : [card.rate != null && t("Receipt.AtRate", { fraction: rateFraction(card.rate) }),
-      card.tillCp != null && t("Receipt.Till", { coins: coins(card.tillCp, currencies) })].filter(Boolean).join(" ");
   return `<div class="merchant-presets mp-receipt">`
     + `<div class="mp-receipt-speaker" data-pen="Speaker">`
     + `<img class="mp-receipt-portrait" data-pen="Speaker img" src="${escape(card.shopImg ?? "")}" alt="" />`
@@ -323,7 +312,6 @@ export function receiptHtml(card, currencies, { t, when, whispered }) {
     + `<hr class="mp-receipt-rule" data-pen="Rule" />`
     + `<div class="mp-receipt-total" data-pen="Total"><b data-pen="Total label">${escape(t(card.kind === "buy" ? "Receipt.Paid" : "Receipt.Received"))}</b>`
     + `<span class="mp-receipt-coins" data-pen="Total coins">${coinsHtml(card.totalCp, currencies, t("Receipt.Free"))}</span></div>`
-    + (foot ? `<p class="mp-receipt-foot" data-pen="Foot">${escape(foot)}</p>` : "")
     + `</div>`;
 }
 

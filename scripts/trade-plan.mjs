@@ -239,7 +239,7 @@
  *   earlier sale created carries only the flag.
  */
 
-import { EVERYDAY_COINS, effectiveRates, itemPriceCp, pay, payExact, totalCp as coinsCp } from "./pricing.mjs";
+import { EVERYDAY_COINS, effectiveRates, itemPriceCp, pay, payExact } from "./pricing.mjs";
 import { shopFrom, stockFrom } from "./schema.mjs";
 
 const MODULE = "merchant-presets";
@@ -790,8 +790,7 @@ function planSell(request, context) {
   for (const [denomination, count] of Object.entries(paid.given)) {
     buyerCurrency[denomination] = (buyerCurrency[denomination] ?? 0) + count;
   }
-  // What the till holds once it has paid, for the receipt (design z5RBkd); a bottomless one holds no sum.
-  const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0, tillCp: worldSettings.infinitePurse ? null : coinsCp(paid.remaining, currencies) };
+  const payment = { purse: paid.remaining, till: buyerCurrency, changeCp: 0 };
 
   // Never stacks onto shopkeeper gear, so a sold item can't disappear into the merchant's own kit.
   // A hidden or delisted line is a target, though: the GM's choice holds for what joins it, and
@@ -840,12 +839,7 @@ function buildPlan(request, kind, shop, buyer, lines, totalCp, payment, updates)
       // Each good by the name the window gave it (#164): a named spell by the spell alone.
       lines: hookLines.map(l => ({ icon: l.item.img, label: goodName(l.item), quantity: l.quantity, lineTotalCp: l.lineTotalCp })),
       totalCp,
-      direction: kind === "buy" ? "Paid" : "Received",
-      footnote: { changeCp: payment.changeCp, exact: payment.changeCp === 0 },
-      // A sale's receipt says the rate the shop paid at, when every line sold at the same one, and
-      // what its till holds after (design z5RBkd, "At ½ of value. The till holds 154 gp 5 sp.").
-      rate: kind === "sell" && new Set(lines.map(l => l.rate)).size === 1 ? lines[0].rate : null,
-      tillCp: payment.tillCp ?? null
+      direction: kind === "buy" ? "Paid" : "Received"
     }
   };
 }

@@ -1559,7 +1559,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       : (!seal.disabled || state === "sealing" || state === "no-gm") ? "after" : null;
     const foot = state === "sealing" ? i18n("Seal.WaitingFoot") : state === "cant-afford" ? i18n("Seal.CantAffordFoot")
       : ["sealed", "no-gm", "till-short"].includes(state) ? null
-        : kind === "sell" ? (tillAfterText ? `${i18n("Bill.TillDrops", { amount: tillAfterText })}.` : null) : i18n("Bill.ExactChange");
+        : kind === "sell" && tillAfterText ? `${i18n("Bill.TillDrops", { amount: tillAfterText })}.` : null;
     let delivered = null;
     if (state === "sealed" && sealed) {
       const goods = sealed.lines.map(l => `${l.quantity} × ${l.name}`);

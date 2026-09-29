@@ -139,6 +139,7 @@ The basket is a **Bill of Sale**: a parchment slip with ledger lines, dotted lea
 
 - Each line: quantity × name, the line total in coins, then the unit price and a stepper.
 - Under the sum: the buyer's purse after the bargain, so nobody has to do coin arithmetic.
+- Nothing under the seal on a purchase. A sale says what the till drops to, since the till caps what the shop can pay. Rejected (#179): "Exact change is counted from your coins." under a purchase, which told the buyer nothing they needed.
 - The heading shows the world date and time of day, from the world clock. Where shops don't follow the world clock (#149), it shows no date, and neither do the SEALED stamp and the chat receipt (band 13).
 - Idea, not yet decided: the slip's name could follow the shop kind, such as "Your tab" at an inn or tavern and "Offering" at a temple.
 
@@ -225,8 +226,9 @@ A 300 px message in the chat log, in the same parchment. It has:
 - a visibility pill: "Public" or "GM only"
 - a maroon strip: "Aria bought" or "Aria sold"
 - one line per item: icon, "qty × name", coins
-- a rule, then "Paid" or "Received" with the total
-- a footnote: "Exact change, counted from Aria's coins." or "At ½ of value. The till holds 154 gp 5 sp."
+- a rule, then "Paid" or "Received" with the total, which ends the card
+
+Rejected (#179): a footnote under the total ("Exact change, counted from Aria's coins.", "At ½ of value. The till holds 154 gp 5 sp."). The strip already says who bought or sold, and the till's balance is none of the chat's business.
 
 The world setting from #102 chooses off, GM only or public.
 

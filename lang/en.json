@@ -162,7 +162,6 @@
         "FromTonight": "From tonight",
         "Fewer": "One fewer",
         "More": "One more",
-        "ExactChange": "Exact change is counted from your coins.",
         "TitleSealed": "Bill of Sale · Sealed",
         "Paid": "Paid",
         "Received": "Received",
@@ -432,11 +431,7 @@
         "Sold": "{name} sold",
         "Paid": "Paid",
         "Received": "Received",
-        "Free": "free",
-        "Exact": "Exact change, counted from {name}'s coins.",
-        "Change": "Counted from {name}'s coins, with {change} back in change.",
-        "AtRate": "At {fraction} of value.",
-        "Till": "The till holds {coins}."
+        "Free": "free"
       }
     }
   }
