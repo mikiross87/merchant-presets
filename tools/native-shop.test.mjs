@@ -210,6 +210,8 @@ test("placing a token of an actor that isn't a shop changes nothing (#104)", asy
 
 test("a shop imported from the pack opens as the shop window and rolls its own shelf, no Item Piles (#104)", async () => {
   const { world, shop } = await setUp();
+  assert.equal(shop.flags.core?.sheetClass, undefined, "the pack copy keeps the NPC sheet (#204 review)");
+  await world.fire("preCreateActor", shop, {}, {}, "gm");
   world.actors.push(shop);
   await world.fire("createActor", shop, {}, "gm");
   await tick(40);
@@ -220,6 +222,13 @@ test("a shop imported from the pack opens as the shop window and rolls its own s
     "every good on the shelf was drawn by it");
   assert.ok(shop.items.every(i => i.flags["merchant-presets"]?.newAt === undefined), "a shop just placed has nothing New (#152 review)");
   assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null, "nor fresh stock");
+});
+
+test("a shop arriving with a GM's own sheet choice keeps it (#204 review)", async () => {
+  const { world, shop } = await setUp();
+  shop.flags.core = { sheetClass: "dnd5e.NPCActorSheet" };
+  await world.fire("preCreateActor", shop, {}, {}, "gm");
+  assert.equal(shop.flags.core.sheetClass, "dnd5e.NPCActorSheet");
 });
 
 test("of one GM's tabs only the one that claims trades takes in a shop that GM dragged in: two would each roll a shelf (#136)", async () => {

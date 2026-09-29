@@ -6,7 +6,7 @@ import { planShop } from "../scripts/shop.mjs";
 import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planRestockStock, planTokenDisable, planTokenUpdates,
-  shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
+  shopSheetOnArrival, shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
   worldHasLegacyShops, derivedShop
 } from "../scripts/migrate.mjs";
 
@@ -472,9 +472,23 @@ test("a freshly imported pack merchant is already in its 2.0 shape: nothing to m
     for (const access of ["reach", "anywhere"]) {
       assert.equal(planActorUpdate(m, { access }).update, null, `${m.name}, ${access}`);
     }
-    assert.equal(m.flags.core?.sheetClass, SHOP_SHEET_ID, m.name);
     assert.equal(m.prototypeToken.flags?.["item-piles"]?.data?.enabled, false, m.name);
+    // Core reads a sheet class on a compendium copy too, and the shop window has no read-only mode
+    // for one: the sheet goes on as the merchant arrives in the world instead (#204 review).
+    assert.equal(m.flags.core?.sheetClass, undefined, m.name);
+    assert.equal(shopSheetOnArrival(m), SHOP_SHEET_ID, m.name);
   }
+});
+
+test("shopSheetOnArrival: any shop arriving without a sheet of its own gets the shop window (#204 review)", () => {
+  const store = shipped("General_Store_Village_");
+  assert.equal(shopSheetOnArrival(store), SHOP_SHEET_ID);
+  assert.equal(shopSheetOnArrival(legacy(store)), SHOP_SHEET_ID);        // a 1.x merchant, from an Adventure say
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: SHOP_SHEET_ID } } }), null);
+  // A GM's own sheet choice, carried on an export or a duplicate, stands — Foundry's default included.
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: "dnd5e.NPCActorSheet" } } }), null);
+  assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: "" } } }), null);
+  assert.equal(shopSheetOnArrival({ name: "Goblin", flags: {} }), null);  // not a shop
 });
 
 test("planActorUpdate migrates shop config, disables Item Piles, sets the sheet and (hidden) ownership", () => {
