@@ -19,13 +19,19 @@ function ledgerOf(lines, { scale = 1, direction = "ltr" } = {}) {
   const names = lines.map(line => {
     const cost = { style: {}, getBoundingClientRect: () => rect([0, line.costTop, 0, line.costTop + 18]) };
     const tag = line.tag ? { style: {} } : null;
+    const classes = new Set(line.classes ?? []);
+    const entry = {
+      classList: { add: c => classes.add(c), remove: c => classes.delete(c), contains: c => classes.has(c) },
+      querySelector: selector => (selector === ":scope > .mp-cost" ? cost : null)
+    };
     const name = {
       style: { maxWidth: "stale", ...line.style },
       line,
-      // What getComputedStyle reports: the used width, in unscaled CSS pixels.
+      // What getComputedStyle reports: the used width, in unscaled CSS pixels, and the font size.
       cssWidth: `${line.box[2] - line.box[0]}px`,
+      fontSize: "15px",
       nextElementSibling: tag ?? cost,
-      parentElement: { querySelector: selector => (selector === ":scope > .mp-cost" ? cost : null) },
+      parentElement: entry,
       getBoundingClientRect: () => rect(line.box)
     };
     return name;
@@ -36,7 +42,7 @@ function ledgerOf(lines, { scale = 1, direction = "ltr" } = {}) {
       selectNodeContents: name => { selected = name; },
       getClientRects: () => selected.line.rects.map(([top, right]) => rect([selected.line.box[0], top, right, top + 17]))
     }),
-    defaultView: { getComputedStyle: el => ({ direction, width: el.cssWidth }) }
+    defaultView: { getComputedStyle: el => ({ direction, width: el.cssWidth, fontSize: el.fontSize }) }
   };
   return { names, ledger: { ownerDocument: doc, querySelectorAll: () => names } };
 }
@@ -70,6 +76,21 @@ test("a crowded line, whose leader and coins went below the name, keeps them the
   hangLeaders(ledger);
   assert.equal(names[0].style.maxWidth, "");
   assert.equal(names[0].nextElementSibling.style.marginLeft, "");
+});
+
+test("a name squeezed under 5em by a crowded line (a deal tag, three coins) sends its leader and coins below", () => {
+  // "10 × Potion of Greater Healing −10% — 19 gp 1 sp 7 cp": 40 px left for the name, in pieces of words.
+  const { names, ledger } = ledgerOf([{ box: [28, 0, 68, 102], rects: [[0, 66], [17, 60], [34, 67], [51, 62], [68, 66], [85, 55]], costTop: 84 }]);
+  hangLeaders(ledger);
+  assert.equal(names[0].parentElement.classList.contains("is-crowded"), true);
+  assert.equal(names[0].nextElementSibling.style.marginLeft, "");
+});
+
+test("a line with room again is no longer crowded", () => {
+  const { names, ledger } = ledgerOf([{ ...WRAPPED, classes: ["is-crowded"] }]);
+  hangLeaders(ledger);
+  assert.equal(names[0].parentElement.classList.contains("is-crowded"), false);
+  assert.equal(names[0].nextElementSibling.style.marginLeft, "-89px");
 });
 
 test("a last line of several boxes (a name mixing scripts) ends at the rightmost", () => {
