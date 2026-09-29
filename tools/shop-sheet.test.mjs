@@ -2060,3 +2060,78 @@ test("clicking a good's picture or name opens the page its row names (#168)", as
   await actions.inspect.call(sheet, {}, { dataset: {} });
   assert.equal(opened.length, 1);
 });
+
+/* ------------------------------------------------ who a GM trades and deals as (#200, #201) */
+
+/**
+ * The GM's canvas on a scene holding `tokens`, each `[actor, { linked = true }]`. An unlinked
+ * token carries its own synthetic actor, as core gives it: `isToken`, and a uuid under the token.
+ */
+function gmOnScene(t, tokens) {
+  const saved = { isGM: globalThis.game.user.isGM, canvas: globalThis.canvas };
+  t.after(() => { globalThis.game.user.isGM = saved.isGM; globalThis.canvas = saved.canvas; });
+  globalThis.game.user.isGM = true;
+  const token = ([a, { linked = true } = {}], i) => {
+    const id = `t${i}`;
+    const tokenActor = linked ? a
+      : { ...a, isToken: true, token: { id }, uuid: `Scene.market.Token.${id}.Actor.${a.id}` };
+    return { id, actorId: a.id, actorLink: linked, hidden: false, x: i * 300, y: 0, width: 1, height: 1, actor: tokenActor };
+  };
+  globalThis.canvas = { ready: true, scene: { id: "market", grid: { size: 100, distance: 5, type: 1 }, tokens: tokens.map(token) } };
+}
+
+/** A premade adventure's cast, none of them a player's: `type` as dnd5e has them. */
+const cast = (id, type = "npc") => Object.assign(actor(id, []), { type });
+
+test("a GM's Buying as lists the world's characters and whoever stands on the scene, not every actor (#201)", async t => {
+  const { sheet, shop } = openShop({ permission: OWNERSHIP.OWNER });
+  const kess = cast("kess", "character");
+  const [goblin, bandit, tomas] = [cast("goblin"), cast("bandit"), cast("tomas")];
+  const wolves = cast("wolves", "encounter");
+  const inn = actor("inn", [], { shop: true });
+  globalThis.game.actors.push(kess, goblin, bandit, tomas, wolves, inn);
+  gmOnScene(t, [[shop], [goblin], [bandit, { linked: false }], [wolves], [inn]]);
+  const { buyerPicker } = await sheet._prepareContext({});
+  assert.deepEqual(buyerPicker.characters.map(e => e.name), ["kess"], "every character in the world, on the scene or not");
+  assert.deepEqual(buyerPicker.others.map(e => [e.name, e.uuid]),
+    [["bandit", "Scene.market.Token.t2.Actor.bandit"], ["goblin", "Actor.goblin"]],
+    "only who stands on the scene, an unlinked token as itself; no group, no shop, not hero or tomas off it");
+});
+
+test("with no scene on the canvas, a GM's Buying as lists only the world's characters (#201)", async t => {
+  const { sheet } = openShop({ permission: OWNERSHIP.OWNER });
+  const kess = cast("kess", "character");
+  globalThis.game.actors.push(kess, cast("goblin"));
+  gmOnScene(t, []);
+  globalThis.canvas = undefined;
+  const { buyerPicker } = await sheet._prepareContext({});
+  assert.deepEqual(buyerPicker.characters.map(e => e.name), ["kess"]);
+  assert.deepEqual(buyerPicker.others, []);
+});
+
+test("the deal form offers an NPC standing on the scene, for roleplay, where the world has no characters (#200)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop } = opened;
+  const goblin = cast("goblin");
+  globalThis.game.actors = [shop, cast("tomas"), goblin, cast("wolves", "encounter")];
+  gmOnScene(t, [[shop], [goblin], [globalThis.game.actors[3]]]);
+  opened.answer = null;
+  await act(sheet, "addDeal");
+  assert.deepEqual(opened.asked[0]?.characters.map(c => c.uuid), ["Actor.goblin"]);
+  assert.deepEqual(opened.warnings, []);
+});
+
+test("with no one to offer, the deal form says there's no one, not that everyone has a deal (#200)", async t => {
+  const opened = openDeals(t);
+  const { sheet, shop, buyer } = opened;
+  globalThis.game.actors = [shop, cast("tomas")];
+  gmOnScene(t, [[shop]]);
+  await act(sheet, "addDeal");
+  assert.deepEqual(opened.warnings, ["MERCHANT_PRESETS.Shop.Settings.Deals.NoOne"]);
+  // Everyone offered already has a deal: that message still says so.
+  globalThis.game.actors = [shop, buyer];
+  sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
+  await act(sheet, "addDeal");
+  assert.deepEqual(opened.warnings.at(-1), "MERCHANT_PRESETS.Shop.Settings.Deals.NoCharacters");
+  assert.equal(opened.asked.length, 0);
+});
