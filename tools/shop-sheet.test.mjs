@@ -2152,3 +2152,20 @@ test("with no one to offer, the deal form says there's no one, not that everyone
   assert.deepEqual(opened.warnings.at(-1), "MERCHANT_PRESETS.Shop.Settings.Deals.NoCharacters");
   assert.equal(opened.asked.length, 0);
 });
+
+test("a GM's open window re-reads Buying as when a token comes or goes on the viewed scene, or the scene changes (#202 review)", t => {
+  const { sheet, shop } = openShop({ permission: OWNERSHIP.OWNER });
+  gmOnScene(t, [[shop]]);
+  sheet.rendered = true;
+  t.after(() => { sheet.rendered = false; });
+  const scene = globalThis.canvas.scene;
+  const before = sheet.renders;
+  fire("createToken", { parent: scene });
+  fire("deleteToken", { parent: scene });
+  fire("canvasReady", globalThis.canvas);
+  // Nothing that changes who's listed: another scene's token, a move, an actor's update.
+  fire("createToken", { parent: { id: "elsewhere" } });
+  fire("updateToken", { parent: scene });
+  fire("updateActor", actor("stranger", []));
+  assert.equal(sheet.renders - before, 3);
+});
