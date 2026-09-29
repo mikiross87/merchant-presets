@@ -29,7 +29,7 @@ import {
   inspectTargets, itemTooltipHtml, currentSection
 } from "./shop-view.mjs";
 
-import { accessModeOf, accessOf, canOpenOn, canVisit, reachOnScene, tokensOf } from "./reach.mjs";
+import { accessModeOf, accessOf, canOpenOn, canVisit, gmCandidates, reachOnScene, tokensOf } from "./reach.mjs";
 
 const MODULE = "merchant-presets";
 const TEMPLATES = `modules/${MODULE}/templates`;
@@ -923,11 +923,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /* -------------------------------------------------------------- buyer */
 
   /**
-   * Every actor this window could trade as: the user's own owned actors, or, for a GM, every actor.
-   * A player at the counter (#166) trades as the characters standing there: only those with a
-   * token in reach of this shop on the scene they're viewing.
+   * Every actor this window could trade as: the user's own owned actors, or, for a GM, the world's
+   * characters and whoever stands on the scene they're viewing (#201, `gmCandidates`). A player at
+   * the counter (#166) trades as the characters standing there: only those with a token in reach
+   * of this shop on the scene they're viewing.
    */
   #candidateBuyers() {
+    if (game.user.isGM) return gmCandidates(game.actors, globalThis.canvas?.ready ? globalThis.canvas.scene : null, this.document);
     const shopId = this.document.id;
     // Merchants aren't buyers: a shop's own coin is its till.
     const owned = game.actors.filter(a => a.id !== shopId && !a.flags?.[MODULE]?.shop && a.testUserPermission(game.user, "OWNER"));
@@ -2329,10 +2331,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     const i18n = key => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Deals.${key}`);
-    // A character with no deal here yet: not the mounts, shops and summons players also own.
-    const candidates = previous ? [] : game.actors.filter(a => a.type === "character" && !shop.deals.some(d => d.actor === a.uuid));
+    // Whoever the GM could trade as (#200): the world's characters, then an NPC on the scene for
+    // roleplay; not the mounts, shops and summons players own elsewhere. Only those with no deal here yet.
+    const offered = previous ? [] : gmCandidates(game.actors, globalThis.canvas?.ready ? globalThis.canvas.scene : null, this.document);
+    const candidates = offered.filter(a => !shop.deals.some(d => d.actor === a.uuid));
     if (!previous && !candidates.length) {
-      ui.notifications.warn(i18n("NoCharacters"));
+      ui.notifications.warn(i18n(offered.length ? "NoCharacters" : "NoOne"));
       return;
     }
     const percent = factor => (factor ? percentOf(factor) : "");
@@ -2473,16 +2477,28 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       Hooks.on(hook, item => ShopSheet.#liveDataChanged(app => !!item.parent && app._buyerUuid === item.parent.uuid));
     }
     // Reach (#166): a player's window stays open only while they may visit, so walking away from
-    // the counter closes it, and "Buying as" follows whose tokens stand at it.
+    // the counter closes it, and "Buying as" follows whose tokens stand at it. A GM's "Buying as"
+    // follows who stands on the scene they're viewing (#201).
     for (const hook of ["createToken", "updateToken", "deleteToken", "canvasReady", "updateActor"]) {
-      Hooks.on(hook, () => ShopSheet.#reachChanged());
+      Hooks.on(hook, doc => ShopSheet.#reachChanged(hook, doc));
     }
-    Hooks.on("updateSetting", setting => { if (setting.key === `${MODULE}.shopAccess`) ShopSheet.#reachChanged(); });
+    Hooks.on("updateSetting", setting => { if (setting.key === `${MODULE}.shopAccess`) ShopSheet.#reachChanged("updateSetting"); });
   }
 
-  /** A player's open shop windows, after a token, the scene or access changed: out of reach closes, in reach re-reads its buyers. */
-  static #reachChanged() {
-    if (game.user.isGM) return;
+  /**
+   * Open shop windows, after a token, the scene or access changed. A player's: out of reach closes,
+   * in reach re-reads its buyers. A GM's re-reads its buyers only when someone came or went on the
+   * scene they're viewing, or they switched scene: moves and actor updates change no one's place in it.
+   */
+  static #reachChanged(hook, doc) {
+    if (game.user.isGM) {
+      const onViewed = (hook === "createToken" || hook === "deleteToken") && doc?.parent === globalThis.canvas?.scene;
+      if (hook !== "canvasReady" && !onViewed) return;
+      for (const app of foundry.applications.instances.values()) {
+        if (app instanceof ShopSheet && app.rendered) app.render({ parts: ["body"] });
+      }
+      return;
+    }
     for (const app of foundry.applications.instances.values()) {
       if (!(app instanceof ShopSheet) || !app.rendered) continue;
       if (!app.isVisible) app.close();
