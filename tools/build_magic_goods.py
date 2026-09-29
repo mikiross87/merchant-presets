@@ -20,7 +20,7 @@ Needs MP_SRD_DIR, the unpacked dnd5e.equipment24 pack. `--check` resolves and
 flattens everything without writing.
 """
 import json, os, re, sys, copy
-from build_srd import MOD, SRD, SRD_SOURCE, fid, load_srd, norm
+from build_srd import COIN, MOD, SRD, SRD_SOURCE, fid, load_srd, norm
 
 SRD_PACK = "dnd5e.equipment24"
 GOODS_DIR = os.path.join(MOD, "_source/goods")
@@ -150,7 +150,12 @@ def flatten(template, profile, riders, base, gid, problems):
         sysd["activities"] = {k: a for k, a in (sysd.get("activities") or {}).items() if k not in drop_acts}
         item["effects"] = [e for e in item.get("effects") or [] if e["_id"] not in r_effs and e.get("type") != "enchantment"]
         (item.get("flags") or {}).get("dnd5e", {}).pop("riders", None)
-    base_price = get(item, "system.price.value") or 0
+    # In gp before anything adds to it: an enchantment adds its value in gp and
+    # sets the coin to gp, so a Quarterstaff's 2 sp would otherwise read as 2 gp
+    # (402 gp for a Quarterstaff +1, where dnd5e's own enchanting leaves it).
+    price = sysd.get("price") or {}
+    base_price = round((price.get("value") or 0) * COIN.get(price.get("denomination") or "gp", 1), 2)
+    sysd["price"] = {"value": base_price, "denomination": "gp"}
 
     # Riders first: dnd5e adds them when the enchantment goes on, and an
     # `activities[attack]` change then reaches a rider attack too.
@@ -285,9 +290,12 @@ def resolve(srd, name):
         raise MagicError(f"{name!r} is not in {SRD_PACK}")
     return doc
 
-def build(srd, data):
-    """(goods, {shop id: [lines]}, problems)."""
+def build(srd, data, shop_ids):
+    """(goods, {shop id: [lines]}, problems). Checks everything before anything is written."""
     goods, lines, problems = [], {}, []
+    unknown = sorted({s for row in data["srd"] + data["bake"] for s in row["shops"]} - shop_ids)
+    if unknown:
+        raise MagicError(f"no such shop: {unknown}")
     for row in data["srd"]:
         item = resolve(srd, row["n"])
         sysd = item["system"]
@@ -350,10 +358,6 @@ def write(goods, lines, recipes):
         with open(os.path.join(GOODS_DIR, name), "w") as out:
             json.dump(doc, out, indent=2, ensure_ascii=False)
             out.write("\n")
-    ids = {s["id"] for s in recipes["shops"]}
-    unknown = set(lines) - ids
-    if unknown:
-        raise MagicError(f"no such shop: {sorted(unknown)}")
     for shop in recipes["shops"]:
         # Replace this generator's lines, at the end of the shop's stock.
         shop["stock"] = [l for l in shop["stock"] if l.get("cat") != MAGIC_CAT] + lines.get(shop["id"], [])
@@ -365,7 +369,7 @@ def main():
     data = json.load(open(os.path.join(MOD, "data/magic.json")))
     recipes = json.load(open(os.path.join(MOD, "data/recipes.json")))
     try:
-        goods, lines, problems = build(srd, data)
+        goods, lines, problems = build(srd, data, {s["id"] for s in recipes["shops"]})
         if "--check" not in sys.argv:
             write(goods, lines, recipes)
     except MagicError as e:
