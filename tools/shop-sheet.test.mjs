@@ -786,7 +786,7 @@ test("the buyer search hides a group's heading once it filters out everyone unde
 
 /**
  * A window whose document holds one bill ledger: the font set and the observers it gets, so a test
- * can see what the sheet listens to. `fonts.check` throws, as it does for a font it can't parse.
+ * can see what the sheet listens to.
  */
 function billWindow(sheet) {
   const listeners = new Map();
@@ -794,9 +794,7 @@ function billWindow(sheet) {
   const doc = {
     fonts: {
       addEventListener: (type, fn) => listeners.set(fn, type),
-      removeEventListener: (type, fn) => { if (listeners.get(fn) === type) listeners.delete(fn); },
-      check: () => { throw new SyntaxError("Could not resolve the font"); },
-      load: () => Promise.resolve([])
+      removeEventListener: (type, fn) => { if (listeners.get(fn) === type) listeners.delete(fn); }
     },
     defaultView: { ResizeObserver: class { observe(el) { observed.push(el); } disconnect() { observed.length = 0; } } }
   };
