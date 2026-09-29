@@ -113,3 +113,11 @@ test("a shop holds one of each magic container, not a pile of Bags of Holding", 
     assert.deepEqual(Object.entries(counts).filter(([, n]) => n > 1), [], m.name);
   }
 });
+
+test("a shop that stocks no magic item won't buy one; every shop that stocks one will (#184)", () => {
+  const wrong = merchants.filter(m => stock(m).some(isMagic) === m.flags["merchant-presets"].shop.wontBuy.kinds.includes("magic"))
+    .map(m => m.name);
+  assert.deepEqual(wrong, []);
+  // The General Stores and most village shops: #33 starts uncommon items at town.
+  assert.equal(merchants.filter(m => m.flags["merchant-presets"].shop.wontBuy.kinds.includes("magic")).length, 14);
+});

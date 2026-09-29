@@ -174,7 +174,8 @@ test("each shop's terms, hours and restock table agree with its Item Piles data"
     assert.deepEqual(shop.restock.quantities, expected.quantities, m.name);
     assert.equal(shop.restock.onOpen, expected.onOpen, m.name);
     assert.deepEqual(shop.wontBuy.types, expected.types, m.name);
-    assert.deepEqual(shop.wontBuy.kinds, expected.kinds, m.name);
+    // "magic" is any magic item, whatever its kind (#184): Item Piles' filters can't say it.
+    assert.deepEqual(shop.wontBuy.kinds.filter(k => k !== "magic"), expected.kinds, m.name);
   }
 });
 

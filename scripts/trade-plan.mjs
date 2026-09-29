@@ -266,6 +266,15 @@ const shopOf = actor => shopFrom(actor.flags?.[MODULE]?.shop ?? {});
 export const kindOf = item => item.flags?.[MODULE]?.kind
   ?? (item.type === "consumable" && item.system?.type?.value === "food" ? "food-drink" : null);
 export const isGear = item => kindOf(item) === "gear";
+/**
+ * A magic item, as the SRD marks one: a rarity, or the Magical property (a live document's
+ * properties are a Set, its stored data an array). A shop turns these away when its `wontBuy.kinds`
+ * holds "magic" (#184), whatever the item's own kind.
+ */
+export const isMagic = item => {
+  const props = item.system?.properties;
+  return Boolean(item.system?.rarity) || (props instanceof Set ? props.has("mgc") : (props ?? []).includes("mgc"));
+};
 export const sourceOf = item => item._stats?.compendiumSource ?? item.flags?.core?.sourceId ?? null;
 
 const SPELL_PREFIX = "Spellcasting: ";
@@ -328,7 +337,8 @@ export function dealtIn(item, shop) {
   if (isFixedExcluded(item)) return false;
   if (shop.wontBuy.types.includes(item.type)) return false;
   const kind = kindOf(item);
-  return !(kind && shop.wontBuy.kinds.includes(kind));
+  if (kind && shop.wontBuy.kinds.includes(kind)) return false;
+  return !(shop.wontBuy.kinds.includes("magic") && isMagic(item));
 }
 
 /**

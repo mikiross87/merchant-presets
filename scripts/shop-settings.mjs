@@ -16,10 +16,11 @@ export const WONT_BUY_TYPES = ["weapon", "equipment", "consumable", "tool", "loo
 
 /**
  * The goods kinds a shop can refuse (tools/build_srd.py `GOODS_KINDS`), less "gear": the
- * shopkeeper's own kit is never bought whatever the shop says.
+ * shopkeeper's own kit is never bought whatever the shop says. "magic" is any magic item,
+ * whatever its kind (#184).
  */
 export const WONT_BUY_KINDS = ["vehicle", "mount", "tack", "food-drink", "meal", "lodging", "service",
-  "spellcasting", "component", "travel"];
+  "spellcasting", "component", "travel", "magic"];
 
 /** The restock schedules offered as chips, in days; anything else is a dice formula. */
 export const EVERY_CHOICES = [1, 3, 7, 14];

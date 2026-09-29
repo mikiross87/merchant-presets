@@ -166,6 +166,12 @@ trades out itself. For GMs upgrading a world:
   on its own weapons and armour. Very rare and legendary items are never
   stocked. Merchants already in your world keep their old stock list; drag in
   a fresh merchant to get these. (#33)
+- 2.0: a shop that sells no magic items won't buy them either: the General
+  Stores, most village shops and the smaller stables turn away a Ring of
+  Protection the party tries to sell, and the Sell tab says it won't buy magic
+  items. Each shop's Settings tab has a *Magic items* box under *Won't buy* to
+  change that. Shops already in your world, and worlds upgrading from 1.x, keep
+  buying them; drag in a fresh merchant to get the new rule. (#184)
 - Shops sell the spell components SRD 5.2 spells put a price on, as real items
   that go in the buyer's pack: 43 of them, from a Diamond (300 GP) for
   Revivify to the Diamonds (25,000 GP) for True Resurrection. The Jeweler

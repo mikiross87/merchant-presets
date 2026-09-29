@@ -846,10 +846,12 @@ test("deriveShop reproduces every shipped merchant's own committed shop config (
     // World default, and a Valuables rule leaves selling to the shop (#143 review), so its migrated
     // twin states them outright, as Item Piles did.
     const sellsAt = committed.terms.sellsAt ?? 1;
+    // A 1.x shop bought magic items, and keeps buying them: only a fresh import of a preset that
+    // stocks none refuses them (#184), which Item Piles had no way to say.
     const expected = { ...committed, terms: {
       sellsAt, buysAt: committed.terms.buysAt ?? 0.5,
       categories: committed.terms.categories.map(c => ({ ...c, sellsAt: c.sellsAt ?? sellsAt }))
-    } };
+    }, wontBuy: { ...committed.wontBuy, kinds: committed.wontBuy.kinds.filter(k => k !== "magic") } };
     assert.deepEqual(derived, expected, doc.name);
   }
 });
