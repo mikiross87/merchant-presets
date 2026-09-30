@@ -2208,6 +2208,20 @@ test("a world shop's window is no preview (#199)", async t => {
   assert.deepEqual(sheet._getTabsConfig("primary").tabs.map(tab => tab.id), ["buy", "sell", "settings"]);
 });
 
+test("a preview wears no Fresh chip or New badge: a world's restock isn't the compendium copy's (#199)", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 8 * 3600, drawn: true } } })] });
+  shop.flags["merchant-presets"].restockedAt = 8 * 3600;      // exported the morning it restocked
+  shop.pack = "world.my-shops";
+  const before = globalThis.game.time.worldTime;
+  try {
+    globalThis.game.time.worldTime = 12 * 3600;
+    const { header, buy } = await sheet._prepareContext({});
+    assert.deepEqual([header.fresh, buy.sections[0].rows[0].isNew], [false, false]);
+  } finally {
+    globalThis.game.time.worldTime = before;
+  }
+});
+
 test("a preview puts nothing on the bill and seals nothing (#199)", async t => {
   const { sheet } = openPreview(t);
   let sent = null;
