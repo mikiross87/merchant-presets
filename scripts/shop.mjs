@@ -41,6 +41,18 @@ export function needsWiring(actor) {
     && tables.some(t => typeof t?.uuid === "string" && t.uuid.startsWith(STOCK_PREFIX));
 }
 
+/**
+ * Whether a shop rolls its own shelf when it arrives in the world: fresh pack data, still on its
+ * compendium stock table with no shelf key (#66). A shop rolled in a world, or wired to a world
+ * table by 1.x, keeps the shelf it has, brought back from a world compendium too (#214).
+ *
+ * @param {object|undefined} actor  An Actor document or its data.
+ * @returns {boolean}
+ */
+export function rollsOnArrival(actor) {
+  return needsWiring(actor) && !actor.flags?.["merchant-presets"]?.shelf;
+}
+
 /* -------------------------------------------------------- setting up a shop */
 
 /** Settlement sizes, in stock-band order. */

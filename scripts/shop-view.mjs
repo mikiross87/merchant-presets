@@ -1,4 +1,5 @@
 import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
+import { rollsOnArrival } from "./shop.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isMagic, isNamedSpell, kindOf, lineTotalCp, rarityOf } from "./trade-plan.mjs";
 
@@ -973,12 +974,17 @@ export function sealState(state, hasLines, { gmOnline = true } = {}) {
 /**
  * Whether the shop window is a compendium preview (#199, design band 16): a shop that sits in a
  * compendium, ours or a world one it was exported to, rather than the world. Nothing in a preview
- * trades or edits; a GM can import it from there. `null` for a shop in the world.
+ * trades or edits; a GM can import it from there. `sample` when its goods are the pack's sample
+ * roll, which importing replaces with a roll of its own; a shop exported from a world brings the
+ * goods shown (#214). `null` for a shop in the world.
  *
- * @param {{pack?: string|null}} actor
+ * @param {{pack?: string|null, toObject?: Function}} actor  An Actor document or its data.
  * @param {{isGM?: boolean}} [user]
- * @returns {{canImport: boolean}|null}
+ * @returns {{canImport: boolean, sample: boolean}|null}
  */
 export function compendiumPreview(actor, user) {
-  return actor?.pack ? { canImport: !!user?.isGM } : null;
+  if (!actor?.pack) return null;
+  // Asked of the shop as it would arrive in the world: a compendium copy is never ours to roll.
+  const data = actor.toObject?.() ?? actor;
+  return { canImport: !!user?.isGM, sample: rollsOnArrival({ ...data, pack: null }) };
 }

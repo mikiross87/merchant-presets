@@ -2186,7 +2186,7 @@ function openPreview(t, { gm = true, permission = OWNERSHIP.OBSERVER } = {}) {
 test("a shop opened inside a compendium previews its shelf: no buyer, no Sell tab, nothing to add (#199)", async t => {
   const { sheet } = openPreview(t);
   const context = await sheet._prepareContext({});
-  assert.deepEqual(context.preview, { canImport: true });
+  assert.equal(context.preview.canImport, true);
   assert.equal(context.buyer, null, "no Buying as");
   assert.equal(context.canAdd, false, "no add buttons, open or not");
   assert.equal(context.stockClosed, false, "the shelf isn't dimmed as closed");
@@ -2197,7 +2197,7 @@ test("a shop opened inside a compendium previews its shelf: no buyer, no Sell ta
 test("a player's preview has the Buy tab alone and no Import shop (#199)", async t => {
   const { sheet } = openPreview(t, { gm: false });
   const context = await sheet._prepareContext({});
-  assert.deepEqual(context.preview, { canImport: false });
+  assert.equal(context.preview.canImport, false);
   assert.deepEqual(sheet._getTabsConfig("primary").tabs.map(tab => tab.id), ["buy"]);
 });
 
