@@ -52,6 +52,10 @@ All three sit in a **Merchant Presets** compendium folder.
 
 ## Usage
 
+Double-click a merchant in the compendium to preview its shop window: what it
+sells, its terms and hours, and its settings, read-only. Nothing can be bought
+or sold there. *Import shop* brings it into the world, as dragging it does.
+
 Drag a merchant out of the compendium into the Actors sidebar, rename it to
 whatever the local shopkeeper is called, and drop a token on the scene. On
 arrival the shop rolls its own stock for its size, so two copies of the same
