@@ -738,34 +738,44 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** Re-measures the bill's leaders whenever a bill line's box changes size; made at each render with a bill. */
   #leaderObserver = null;
 
+  /** Ends the re-measure on a web font's arrival; made with the observer. */
+  #fontsWatch = null;
+
   /** @override */
   _onClose(options) {
     super._onClose(options);
     this.#leaderObserver?.disconnect();
+    this.#fontsWatch?.abort();
   }
 
   /**
-   * A bill name that wraps keeps its box at full width: its leader starts where the last line
-   * ends, not after that box (#198, design IeGac). The name is held at its wrapped width, or the
-   * room the leader gives back would unwrap it. Measured once layout settles and again whenever a
-   * line's box resizes (the window's width arrives after the first render; a resize). A web font
-   * arriving late re-measures only if it changes a line's box.
+   * A bill name that wraps keeps its box at full width: what follows it (the leader, or the deal
+   * tag before it) starts where the last line ends, not after that box (#198, design IeGac; #208,
+   * design Q6UvA). The name is held at its wrapped width, or the room given back would unwrap it.
+   * Measured once layout settles, again whenever a line's box resizes (the window's width arrives
+   * after the first render; a resize), and when a web font finishes loading: a swap that keeps
+   * every line's box leaves the observer silent.
    */
   #observeLeaders() {
     this.#leaderObserver?.disconnect();
     this.#leaderObserver = null;
+    this.#fontsWatch?.abort();
+    this.#fontsWatch = null;
     const entries = this.element?.querySelectorAll(".mp-entry") ?? [];
     if (!entries.length) return;
-    // Its own window's observer: a popped-out window (ApplicationV2#detachWindow) isn't the main one.
-    this.#leaderObserver = new entries[0].ownerDocument.defaultView.ResizeObserver(() => this.#pullLeaders());
+    // Its own window's observer and fonts: a popped-out window (ApplicationV2#detachWindow) isn't the main one.
+    const doc = entries[0].ownerDocument;
+    this.#leaderObserver = new doc.defaultView.ResizeObserver(() => this.#pullLeaders());
     for (const entry of entries) this.#leaderObserver.observe(entry);
+    this.#fontsWatch = new AbortController();
+    doc.fonts.addEventListener("loadingdone", () => this.#pullLeaders(), { signal: this.#fontsWatch.signal });
   }
 
   #pullLeaders() {
     for (const name of this.element?.querySelectorAll(".mp-line-name") ?? []) {
-      const leader = name.nextElementSibling;
-      if (!leader?.classList.contains("mp-leader")) continue;
-      name.style.maxWidth = leader.style.marginLeft = "";
+      const next = name.nextElementSibling;
+      if (!next?.matches(".mp-leader, .mp-tag")) continue;
+      name.style.maxWidth = next.style.marginLeft = "";
       const range = name.ownerDocument.createRange();
       range.selectNodeContents(name);
       const last = [...range.getClientRects()].at(-1);
@@ -773,7 +783,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const gap = last ? box.right - last.right : 0;
       if (gap <= 0.5) continue;
       name.style.maxWidth = `${box.width}px`;
-      leader.style.marginLeft = `${-gap}px`;
+      next.style.marginLeft = `${-gap}px`;
     }
   }
 
