@@ -39585,6 +39585,385 @@
       "theme": {
         "mode": "dark"
       }
+    },
+    {
+      "type": "frame",
+      "id": "W9SYUv",
+      "x": 2800,
+      "y": 13854,
+      "name": "16 Compendium Preview · Exported shop — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "fill": "$surface-app",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "Fawph",
+          "name": "Board title",
+          "fill": "$text-title",
+          "content": "Compendium preview · a shop exported from a world",
+          "fontFamily": "$font-title",
+          "fontSize": 28,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "igvhx",
+          "name": "Board note",
+          "fill": "$text-secondary",
+          "textGrowth": "fixed-width",
+          "width": 800,
+          "content": "A shop rolled in a world and exported to a world compendium keeps its goods: importing brings them as they are, so the card and the narrow dock say so instead of promising a new roll.",
+          "fontFamily": "$font-body",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "vjppJ",
+          "name": "Exported views",
+          "gap": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "UUhf8",
+              "name": "1 · Card",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d4r7IS",
+                  "name": "1 · Card title",
+                  "fill": "$text-title",
+                  "content": "1 · Card",
+                  "fontFamily": "$font-title",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "GI0EQ",
+                  "name": "1 · Card note",
+                  "fill": "$text-secondary",
+                  "content": "The wide window's card (band 16).",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "AvEBQ",
+                  "name": "Basket",
+                  "width": 280,
+                  "height": 461,
+                  "fill": "$surface-app",
+                  "stroke": "$border-faint",
+                  "strokeWidth": {
+                    "left": 1
+                  },
+                  "layout": "vertical",
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZO0Ui",
+                      "name": "Preview Card",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "fill": "$slip",
+                      "cornerRadius": 2,
+                      "stroke": "$slip-edge",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        28,
+                        18
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LjSbQ",
+                          "name": "Badge",
+                          "width": 56,
+                          "height": 56,
+                          "fill": "$header-1",
+                          "cornerRadius": 28,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "EhP1a",
+                              "name": "Badge icon",
+                              "width": 26,
+                              "height": 26,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$accent-on-dark"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "bcnc7",
+                          "name": "Preview title",
+                          "fill": "$ink",
+                          "content": "Compendium preview",
+                          "fontFamily": "$font-title",
+                          "fontSize": 20,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "R4gwaW",
+                          "name": "Preview sub",
+                          "fill": "$text-secondary",
+                          "content": "Not in this world yet",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 15,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "lDnLN",
+                          "name": "Preview rule",
+                          "fill": "$slip-edge",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "bYrR3",
+                          "name": "Preview body",
+                          "fill": "$ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "These are the goods it had when it was exported. Importing brings them as they are.",
+                          "lineHeight": 1.4,
+                          "textAlign": "center",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kj0kk",
+                          "name": "Preview note",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Nothing can be bought or sold in a preview.",
+                          "lineHeight": 1.4,
+                          "textAlign": "center",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "DoyXe",
+                          "type": "ref",
+                          "ref": "cuFJz",
+                          "name": "Import button",
+                          "width": "fill_container",
+                          "descendants": {
+                            "HoVd8": {
+                              "icon": "download"
+                            },
+                            "fvB3n": {
+                              "content": "Import shop"
+                            }
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "id": "NPKHd",
+                          "name": "Import hint",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Or drag it onto a scene or into the Actors directory.",
+                          "lineHeight": 1.3,
+                          "textAlign": "center",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 13,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "i2sOl",
+              "name": "2 · Narrow dock",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ubEtC",
+                  "name": "2 · Narrow dock title",
+                  "fill": "$text-title",
+                  "content": "2 · Narrow dock",
+                  "fontFamily": "$font-title",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Vd2Yx",
+                  "name": "2 · Narrow dock note",
+                  "fill": "$text-secondary",
+                  "content": "The narrow window's dock (band 17).",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "TnVwq",
+                  "name": "Preview dock",
+                  "width": 480,
+                  "fill": "$slip",
+                  "stroke": "$slip-edge",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0000001f",
+                    "offset": {
+                      "x": 0,
+                      "y": -4
+                    },
+                    "blur": 12
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    16,
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "u3TB8V",
+                      "name": "Dock summary",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "KYMMW",
+                          "name": "Dock badge",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "$header-1",
+                          "cornerRadius": 16,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Jp48c",
+                              "name": "Dock badge icon",
+                              "width": 16,
+                              "height": 16,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$accent-on-dark"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "T0Rgn",
+                          "name": "Dock text",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 1,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "l4vyrb",
+                              "name": "Dock kicker",
+                              "fill": "$accent-gold",
+                              "content": "COMPENDIUM PREVIEW",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 10,
+                              "fontWeight": "700",
+                              "letterSpacing": 2
+                            },
+                            {
+                              "type": "text",
+                              "id": "yW1GG",
+                              "name": "Dock lines",
+                              "fill": "$ink",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Its goods as exported. Importing brings them as they are.",
+                              "lineHeight": 1.3,
+                              "fontFamily": "$font-slip",
+                              "fontSize": 15,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "AyXsa",
+                      "type": "ref",
+                      "ref": "cuFJz",
+                      "name": "Import button",
+                      "width": "fill_container",
+                      "descendants": {
+                        "HoVd8": {
+                          "icon": "download"
+                        },
+                        "fvB3n": {
+                          "content": "Import shop"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S7wWTs",
+      "type": "ref",
+      "ref": "W9SYUv",
+      "name": "16 Compendium Preview · Exported shop — Dark",
+      "x": 3800,
+      "y": 13854,
+      "theme": {
+        "mode": "dark"
+      }
     }
   ],
   "themes": {

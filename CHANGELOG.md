@@ -17,6 +17,10 @@ than for the code. Reference the issue or PR it closes.
   leader and price right after its last line, instead of leaving a gap after
   it. The first opening of a shop no longer leaves the leader a few pixels off
   while the window's font loads. (#208)
+- Previewing a shop you exported from a world to a world compendium no longer
+  says its goods are a sample roll that importing will replace: importing
+  brings that shop's own goods as they are, and the preview now says so.
+  Shops in the *Merchants* compendium keep their wording. (#214)
 
 ## [2.1.0] - 2026-09-30
 

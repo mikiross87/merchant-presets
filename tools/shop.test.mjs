@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, tierOf }
+import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, tierOf }
   from "../scripts/shop.mjs";
 
 /** A real shipped document, as the generator writes it. */
@@ -56,6 +56,25 @@ test("a merchant wired to a world table, a compendium copy, or a GM's own mercha
   delete own.flags["merchant-presets"];
   assert.equal(needsWiring(own), false);
   assert.equal(needsWiring(undefined), false);
+});
+
+/* ------------------------------------------------------ rolls on arrival */
+
+/** A shop rolled in the world: still on its compendium stock table (as 2.x leaves it), with a shelf of its own. */
+function rolled() {
+  const actor = dragged();
+  actor.flags["merchant-presets"].shelf = { key: "shelf1" };
+  return actor;
+}
+
+test("fresh pack data rolls its own shelf when it arrives (#66)", () => {
+  assert.equal(rollsOnArrival(dragged()), true);
+});
+
+test("a shop rolled in a world keeps its shelf when it arrives again, from a world compendium too (#214)", () => {
+  assert.equal(rollsOnArrival(rolled()), false);
+  assert.equal(rollsOnArrival(imported()), false);
+  assert.equal(rollsOnArrival(undefined), false);
 });
 
 /* ------------------------------------------------------- setting up a shop */

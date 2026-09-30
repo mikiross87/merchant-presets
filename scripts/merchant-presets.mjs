@@ -11,7 +11,7 @@ import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
 import { accessModeOf, accessOf, accessOwnership, actorInReach, canOpenOn, canVisit } from "./reach.mjs";
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, TIERS, tierOf } from "./shop.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
@@ -1877,7 +1877,7 @@ Hooks.once("ready", async () => {
   // actor as an update (#66). Fresh pack data, still on its compendium stock table with no shelf
   // key, rolls its own shelf (`arrive`); an ordinary edit never re-rolls a shop.
   Hooks.on("updateActor", (actor, _changes, _options, userId) => {
-    if (!takesIn(userId) || !needsWiring(actor) || actor.flags?.[MODULE]?.shelf) return;
+    if (!takesIn(userId) || !rollsOnArrival(actor)) return;
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
   releaseStraysAll().then(n => { if (n) log(`let go of stray kit ids on ${n} merchant(s)`); });
@@ -1887,7 +1887,7 @@ Hooks.once("ready", async () => {
     // One GM does it, as for the migration: two would each adopt and draw a shelf (#138 review).
     .then(() => {
       if (game.users.activeGM !== game.user) return;
-      return Promise.all(game.actors.filter(a => isPreset(a) && needsWiring(a) && !a.flags?.[MODULE]?.shelf).map(arrive));
+      return Promise.all(game.actors.filter(rollsOnArrival).map(arrive));
     })
     // Every shop as *Shop access* has it now, not only when the GM switches it: the default is never
     // stored, so a shop an earlier build opened on placing its token would otherwise stay open to
@@ -1923,7 +1923,7 @@ async function arrive(actor) {
     if (sheetClass) await actor.update({ "flags.core.sheetClass": sheetClass });
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
-    if (needsWiring(actor) && !actor.flags?.[MODULE]?.shelf) await restock(actor);
+    if (rollsOnArrival(actor)) await restock(actor);
   } finally {
     arriving.delete(actor.id);
   }

@@ -33,6 +33,8 @@
         "Import": "Import shop",
         "Hint": "Or drag it onto a scene or into the Actors directory.",
         "Dock": "A sample roll. Importing rolls the shop's own stock for a {tier}.",
+        "BodyExported": "These are the goods it had when it was exported. Importing brings them as they are.",
+        "DockExported": "Its goods as exported. Importing brings them as they are.",
         "Settings": "A compendium preview. Import the shop to change its settings."
       },
       "ClosedOpensAt": "Closed · opens at {time}",

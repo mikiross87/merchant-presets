@@ -1,5 +1,6 @@
 {{!-- A compendium preview's stand-in for the Bill of Sale (#199, design L4tb2b): the shelf is the
-      compendium's sample roll, to look over, and the card says so and offers Import shop. A narrow
+      compendium's sample roll, to look over, and the card says so and offers Import shop; a shop
+      exported from a world shows the goods it brings instead (#214, design W9SYUv). A narrow
       window docks it at the bottom instead (design M9qII3). `preview` is the sheet's, `tier` the
       shop's size. --}}
 <aside class="mp-basket" data-pen="Basket">
@@ -8,7 +9,7 @@
     <h2 class="mp-closed-title" data-pen="Preview title">{{localize "MERCHANT_PRESETS.Shop.Preview.Title"}}</h2>
     <p class="mp-closed-when" data-pen="Preview sub">{{localize "MERCHANT_PRESETS.Shop.Preview.Sub"}}</p>
     <span class="mp-closed-rule" data-pen="Preview rule"></span>
-    <p class="mp-closed-body" data-pen="Preview body">{{localize "MERCHANT_PRESETS.Shop.Preview.Body" tier=tier}}</p>
+    <p class="mp-closed-body" data-pen="Preview body">{{#if preview.sample}}{{localize "MERCHANT_PRESETS.Shop.Preview.Body" tier=tier}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Preview.BodyExported"}}{{/if}}</p>
     <p class="mp-closed-body mp-preview-note" data-pen="Preview note">{{localize "MERCHANT_PRESETS.Shop.Preview.Note"}}</p>
     {{#if preview.canImport}}
       <button type="button" class="mp-button is-large is-primary mp-import" data-action="importShop" data-pen="Import button">{{mpIcon "download" pen="Icon"}}<span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Preview.Import"}}</span></button>
@@ -21,7 +22,7 @@
     <span class="mp-moon" data-pen="Dock badge">{{mpIcon "book-open" pen="Dock badge icon"}}</span>
     <div class="mp-dock-text" data-pen="Dock text">
       <span class="mp-slip-kicker" data-pen="Dock kicker">{{localize "MERCHANT_PRESETS.Shop.Preview.Title"}}</span>
-      <span class="mp-dock-lines" data-pen="Dock lines">{{localize "MERCHANT_PRESETS.Shop.Preview.Dock" tier=tier}}</span>
+      <span class="mp-dock-lines" data-pen="Dock lines">{{#if preview.sample}}{{localize "MERCHANT_PRESETS.Shop.Preview.Dock" tier=tier}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Preview.DockExported"}}{{/if}}</span>
     </div>
   </div>
   {{#if preview.canImport}}

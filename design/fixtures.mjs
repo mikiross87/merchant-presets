@@ -523,9 +523,11 @@ const PREVIEW_ROWS = { ...ROWS, Shield: 3 };
 /**
  * The compendium preview frames' shop (#199, bands 16 and 17): the smith, deals cleared, copied
  * into a world compendium ("Design previews", made the first time) as a pack's merchant would sit
- * there: its shelf rolled once, never restocked or sold from. Each open replaces the copy.
+ * there: its shelf rolled once, never restocked or sold from, and no shelf key of its own, so it
+ * reads as fresh pack data. `exported` keeps the key, as a shop a GM rolled in a world and exported
+ * to a world compendium does (#214). Each open replaces the copy.
  */
-const previewCopy = `await (async () => {
+const previewCopy = (exported = false) => `await (async () => {
   const smith = game.actors.getName(${JSON.stringify(SHOP)});
   const Packs = foundry.documents.collections.CompendiumCollection;
   const pack = game.packs.get("world.design-previews")
@@ -537,6 +539,7 @@ const previewCopy = `await (async () => {
   delete data._id;
   data.flags["merchant-presets"].shop.deals = [];
   delete data.flags["merchant-presets"].restockedAt;
+  if (!${exported}) delete data.flags["merchant-presets"].shelf;
   const rows = ${JSON.stringify(PREVIEW_ROWS)};
   for (const item of data.items) {
     if (item.name in rows) item.system.quantity = rows[item.name];
@@ -546,8 +549,17 @@ const previewCopy = `await (async () => {
   await pack.configure({ locked: true });
   return copy;
 })()`;
-const preview = openShop({ from: previewCopy });
-const previewSettings = openShop({ tab: "settings", from: previewCopy, before: `shop.sheet._settingsSection = "terms";` });
+const preview = openShop({ from: previewCopy() });
+const previewSettings = openShop({ tab: "settings", from: previewCopy(), before: `shop.sheet._settingsSection = "terms";` });
+/** The exported shop's board (#214, design W9SYUv): its card in the wide window, its dock in the narrow one. */
+const exportedCard = openShop({ from: previewCopy(true), size: { width: 920, height: 680 },
+  then: `app.element.querySelector('.tab.active [data-pen="Basket"]').id = app.id + "-basket";`, root: "`${app.id}-basket`" });
+const exportedDock = openShop({ from: previewCopy(true), size: { width: 480, height: 780 },
+  then: `app.element.querySelector('.tab.active [data-pen="Preview dock"]').id = app.id + "-dock";`, root: "`${app.id}-dock`" });
+const exportedFrames = Object.fromEntries(["light", "dark"].flatMap(theme => [["card", "AvEBQ", exportedCard], ["dock", "TnVwq", exportedDock]].map(([part, node, open]) => [
+  `${theme === "light" ? "W9SYUv" : "S7wWTs"}:${part}`,
+  frame(`16 Compendium Preview · Exported shop — ${theme === "light" ? "Light" : "Dark"} · ${part}`, theme, 880, 713, "Gamemaster", open, { export: theme === "light" ? "W9SYUv" : "S7wWTs", part: node })
+])));
 
 const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill], ["long", "X2JhqQ", dealLongName]];
 const dealFrames = Object.fromEntries(["light", "dark"].flatMap(theme => DEAL_PARTS.map(([part, node, open]) => [
@@ -611,5 +623,6 @@ export const FRAMES = {
   Zm5HK: frame("16 Compendium Preview · Settings — Light", "light", 920, 760, "Gamemaster", previewSettings),
   SWg3z: frame("16 Compendium Preview · Settings — Dark", "dark", 920, 760, "Gamemaster", previewSettings),
   M9qII3: frame("17 Compendium Preview — Narrow (Light)", "light", 480, 780, "Gamemaster", preview),
-  j7ja1: frame("17 Compendium Preview — Narrow (Dark)", "dark", 480, 780, "Gamemaster", preview)
+  j7ja1: frame("17 Compendium Preview — Narrow (Dark)", "dark", 480, 780, "Gamemaster", preview),
+  ...exportedFrames
 };
