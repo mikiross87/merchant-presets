@@ -11,6 +11,13 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- In the Bill of Sale, a long name that wraps now keeps its deal tag, dotted
+  leader and price right after its last line, instead of leaving a gap after
+  it. The first opening of a shop no longer leaves the leader a few pixels off
+  while the window's font loads. (#208)
+
 ## [2.1.0] - 2026-09-30
 
 ### Added

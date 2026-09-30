@@ -22507,6 +22507,677 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "h0tFq",
+              "name": "4 · A long name",
+              "width": 252,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kmtOH",
+                  "name": "4 · A long name title",
+                  "fill": "$text-primary",
+                  "content": "4 · A long name",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "tfiMD",
+                  "name": "4 · A long name note",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "A name too long for its line wraps; her deal tag, the leader and the price follow its last line.",
+                  "fontFamily": "$font-compact",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "X2JhqQ",
+                  "name": "Slip Long name",
+                  "width": "fill_container",
+                  "fill": "$slip",
+                  "cornerRadius": 2,
+                  "stroke": "$slip-edge",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0000002e",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 6
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    16,
+                    14,
+                    16
+                  ],
+                  "children": [
+                    {
+                      "id": "g7yCmq",
+                      "type": "ref",
+                      "ref": "L2azKq",
+                      "name": "Slip Head",
+                      "width": "fill_container",
+                      "descendants": {
+                        "khLWB": {
+                          "content": "Temple & Faith Store"
+                        },
+                        "PO46Q": {
+                          "content": "14th of Mirtul · mid-morning"
+                        }
+                      }
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "xRW2k",
+                      "name": "Head Rule",
+                      "fill": "$slip-edge",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fbjC0",
+                      "name": "Ledger",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dNjz3",
+                          "name": "Line Protection from Evil and Good",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "HqDV2",
+                              "name": "Protection from Evil and Good entry",
+                              "width": "fill_container",
+                              "height": 51,
+                              "layout": "none",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "RIpTr",
+                                  "x": 0,
+                                  "y": 3,
+                                  "name": "Protection from Evil and Good qty",
+                                  "fill": "$accent-gold",
+                                  "content": "1 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "OiFkq",
+                                  "x": 21.7,
+                                  "y": 0,
+                                  "name": "Protection from Evil and Good name",
+                                  "fill": "$ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": 71.3,
+                                  "content": "Protection from Evil and Good",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "oSHgm",
+                                  "x": 87.7,
+                                  "y": 37,
+                                  "name": "Protection from Evil and Good deal tag",
+                                  "fill": "#26b23126",
+                                  "cornerRadius": 3,
+                                  "padding": [
+                                    1,
+                                    5
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "cmfQz",
+                                      "name": "Protection from Evil and Good deal tag text",
+                                      "fill": "#1d7a26",
+                                      "content": "−10%",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 10,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "wPWnU",
+                                  "x": 125.7,
+                                  "y": 41,
+                                  "name": "Protection from Evil and Good leader",
+                                  "width": 19.299999999999997,
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "M3Xeg",
+                                  "x": 151,
+                                  "y": 33,
+                                  "name": "Protection from Evil and Good coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "id": "qjQ41",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 67",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "67",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "cover"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "ua5vD",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "silver 5",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "5",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/silver.webp",
+                                            "mode": "cover"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Kwhy7",
+                              "name": "Protection from Evil and Good detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "gEaEU",
+                                  "name": "Protection from Evil and Good detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "UtHg8",
+                                      "name": "Protection from Evil and Good svc icon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "icon": "sparkles",
+                                      "library": "lucide",
+                                      "fill": "$accent-gold"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "ltQag",
+                                      "name": "Protection from Evil and Good each",
+                                      "fill": "$text-secondary",
+                                      "content": "Cast for Aria",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "P88FKU",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Protection from Evil and Good stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CgTnr",
+                          "name": "Line Spellcasting: Cantrip",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "sJseR",
+                              "name": "Spellcasting: Cantrip entry",
+                              "width": "fill_container",
+                              "height": 34,
+                              "layout": "none",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "QJ8xR",
+                                  "x": 0,
+                                  "y": 3,
+                                  "name": "Spellcasting: Cantrip qty",
+                                  "fill": "$accent-gold",
+                                  "content": "1 ×",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "qVjlG",
+                                  "x": 21.7,
+                                  "y": 0,
+                                  "name": "Spellcasting: Cantrip name",
+                                  "fill": "$ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": 104.3,
+                                  "content": "Spellcasting: Cantrip",
+                                  "fontFamily": "$font-slip",
+                                  "fontSize": 15,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "decq0",
+                                  "x": 75.7,
+                                  "y": 20,
+                                  "name": "Spellcasting: Cantrip deal tag",
+                                  "fill": "#26b23126",
+                                  "cornerRadius": 3,
+                                  "padding": [
+                                    1,
+                                    5
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "n0GFsS",
+                                      "name": "Spellcasting: Cantrip deal tag text",
+                                      "fill": "#1d7a26",
+                                      "content": "−10%",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 10,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "vXgu3",
+                                  "x": 113.7,
+                                  "y": 24,
+                                  "name": "Spellcasting: Cantrip leader",
+                                  "width": 64.3,
+                                  "height": 10,
+                                  "stroke": "$slip-edge",
+                                  "strokeWidth": {
+                                    "bottom": 1
+                                  }
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "W1eECu",
+                                  "x": 184,
+                                  "y": 16,
+                                  "name": "Spellcasting: Cantrip coins",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "id": "jjUCO",
+                                      "type": "ref",
+                                      "ref": "uJ3dp",
+                                      "name": "gold 27",
+                                      "descendants": {
+                                        "e1b2b": {
+                                          "content": "27",
+                                          "fill": "$ink"
+                                        },
+                                        "B6r81": {
+                                          "fill": {
+                                            "type": "image",
+                                            "enabled": true,
+                                            "url": "assets/gold.webp",
+                                            "mode": "cover"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "o4Qzqg",
+                              "name": "Spellcasting: Cantrip detail",
+                              "width": "fill_container",
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                24
+                              ],
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "R4j8jF",
+                                  "name": "Spellcasting: Cantrip detail left",
+                                  "gap": 5,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "TqSJz",
+                                      "name": "Spellcasting: Cantrip svc icon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "icon": "sparkles",
+                                      "library": "lucide",
+                                      "fill": "$accent-gold"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "lRpIJ",
+                                      "name": "Spellcasting: Cantrip each",
+                                      "fill": "$text-secondary",
+                                      "content": "Cast for Aria",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "sUOI5",
+                                  "type": "ref",
+                                  "ref": "obOO9",
+                                  "name": "Spellcasting: Cantrip stepper",
+                                  "descendants": {
+                                    "QRqWk": {
+                                      "content": "1"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ORFpx",
+                      "name": "Total Block",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "k1Uu7h",
+                          "name": "Rule 1",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "BC5IM",
+                          "name": "Rule 2",
+                          "fill": "$ink",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "C1WXk",
+                          "name": "Total Row",
+                          "width": "fill_container",
+                          "padding": [
+                            6,
+                            0,
+                            0,
+                            0
+                          ],
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "iKyR8",
+                              "name": "Total label",
+                              "fill": "$ink",
+                              "content": "Sum owed",
+                              "fontFamily": "$font-title",
+                              "fontSize": 17,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "u8Hf1",
+                              "name": "Total coins",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "id": "xB8NC",
+                                  "type": "ref",
+                                  "ref": "uJ3dp",
+                                  "name": "gold 94",
+                                  "descendants": {
+                                    "e1b2b": {
+                                      "content": "94",
+                                      "fill": "$ink"
+                                    },
+                                    "B6r81": {
+                                      "fill": {
+                                        "type": "image",
+                                        "enabled": true,
+                                        "url": "assets/gold.webp",
+                                        "mode": "cover"
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "p1UAN",
+                                  "type": "ref",
+                                  "ref": "uJ3dp",
+                                  "name": "silver 5",
+                                  "descendants": {
+                                    "e1b2b": {
+                                      "content": "5",
+                                      "fill": "$ink"
+                                    },
+                                    "B6r81": {
+                                      "fill": {
+                                        "type": "image",
+                                        "enabled": true,
+                                        "url": "assets/silver.webp",
+                                        "mode": "cover"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "v0118m",
+                      "name": "Deal saving",
+                      "fill": "#1d7a26",
+                      "content": "Your deal saves you 10 gp 5 sp.",
+                      "fontFamily": "$font-slip",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "q1kLZS",
+                      "name": "Purse After",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "H99IY9",
+                          "name": "After label",
+                          "fill": "$text-secondary",
+                          "content": "Aria's purse after the bargain",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 13,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "oyOzI",
+                          "name": "After coins",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "gNCou",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "gold 83",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "83",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/gold.webp",
+                                    "mode": "cover"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "m5Ua1A",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "silver 7",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "7",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/silver.webp",
+                                    "mode": "cover"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "id": "CvNnv",
+                              "type": "ref",
+                              "ref": "uJ3dp",
+                              "name": "copper 30",
+                              "descendants": {
+                                "e1b2b": {
+                                  "content": "30",
+                                  "fill": "$ink"
+                                },
+                                "B6r81": {
+                                  "fill": {
+                                    "type": "image",
+                                    "enabled": true,
+                                    "url": "assets/copper.webp",
+                                    "mode": "cover"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "syqZu",
+                      "type": "ref",
+                      "ref": "UFsFb",
+                      "name": "Seal Button",
+                      "width": "fill_container",
+                      "descendants": {
+                        "iLCwo": {
+                          "content": "Seal it · 94 gp 5 sp"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

@@ -335,7 +335,7 @@ const shelfAsPacked = name => `{
  * The service shops (#151), yesterday's restock so nothing is fresh, the list scrolled to `group`
  * as its frame draws it. At the temple Aria has saved 100 gp more, for a named spell and a cantrip.
  */
-const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: restocked(1) + shelfAsPacked(name) + before,
+const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: withoutDeals + restocked(1) + shelfAsPacked(name) + before,
   then: `const stock = app.element.querySelector(".buy-tab .mp-stock");
   const first = stock.querySelector('[data-pen^="Group "]'), to = stock.querySelector('[data-pen="Group ${group}"]');
   stock.scrollTop = to.getBoundingClientRect().top - first.getBoundingClientRect().top;` });
@@ -403,9 +403,9 @@ const receiptSell = receipt({ kind: "sell", lines: [["Longsword", 1], ["Potion o
  * slip, and the window's height is fitted so the slip is as tall as its contents, as the board draws
  * each one (the slip fills the column in a taller window).
  */
-const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = "", act = "", gm = true, clock = "auto" }) => openShop({
-  tab, basket, sellBasket, clock, size: { width: 920, height: 680 },
-  before: gm ? withoutDeals + restocked(0) + newBadges(true) + before : "",
+const tradeState = ({ tab = "buy", basket = BASKET, sellBasket = [], before = "", act = "", gm = true, clock = "auto", name = SHOP }) => openShop({
+  tab, basket, sellBasket, clock, name, size: { width: 920, height: 680 },
+  before: gm ? withoutDeals + restocked(0) + (name === SHOP ? newBadges(true) : "") + before : "",
   then: `${act}
   await new Promise(r => setTimeout(r, 500));
   const slipOf = () => app.element.querySelector(".tab.active .mp-basket .mp-slip");
@@ -509,6 +509,9 @@ const dealEnded = openShop({ tab: "settings", size: { width: 920, height: 760 },
   const section = app.element.querySelector('.settings-section[data-section="deals"]');
   section.id = app.id + "-deals";`, root: "`${app.id}-deals`" });
 const dealBill = tradeState({ before: ariaDeal(false) });
+/** Aria's deal on a name that wraps (#208): the Temple's bill of band 15, at her deal's price. */
+const dealLongName = tradeState({ name: TEMPLE, basket: [["Spellcasting: Protection from Evil and Good", 1], ["Spellcasting: Cantrip", 1]],
+  before: shelfAsPacked(TEMPLE) + ariaDeal(false) + `await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 147, ep: 0, sp: 12, cp: 30 } });` });
 /** The narrow window's bill, opened from its dock (design mVjRf). */
 const billOpen = openShop({ size: { width: 480, height: 780 }, before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET,
   then: `app.element.querySelector('.tab.active [data-action="toggleBill"]').click();` });
@@ -546,10 +549,10 @@ const previewCopy = `await (async () => {
 const preview = openShop({ from: previewCopy });
 const previewSettings = openShop({ tab: "settings", from: previewCopy, before: `shop.sheet._settingsSection = "terms";` });
 
-const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill]];
+const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill], ["long", "X2JhqQ", dealLongName]];
 const dealFrames = Object.fromEntries(["light", "dark"].flatMap(theme => DEAL_PARTS.map(([part, node, open]) => [
   `${theme === "light" ? "Q6UvA" : "pMFqj"}:${part}`,
-  frame(`10 Deals — ${theme === "light" ? "Light" : "Dark"} · ${part}`, theme, 1192, 690, "Gamemaster", open, { export: theme === "light" ? "Q6UvA" : "pMFqj", part: node })
+  frame(`10 Deals — ${theme === "light" ? "Light" : "Dark"} · ${part}`, theme, 1484, 690, "Gamemaster", open, { export: theme === "light" ? "Q6UvA" : "pMFqj", part: node })
 ])));
 
 export const FRAMES = {
