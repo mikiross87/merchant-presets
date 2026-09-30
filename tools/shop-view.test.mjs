@@ -1049,7 +1049,26 @@ test("no sections, no current one (#172)", () => {
 test("compendiumPreview: a shop inside a compendium previews; only a GM may import it (#199)", () => {
   assert.equal(compendiumPreview({ pack: null }, { isGM: true }), null);
   assert.equal(compendiumPreview({}, { isGM: true }), null);
-  assert.deepEqual(compendiumPreview({ pack: "merchant-presets.merchants" }, { isGM: true }), { canImport: true });
-  assert.deepEqual(compendiumPreview({ pack: "world.my-shops" }, { isGM: false }), { canImport: false });
-  assert.deepEqual(compendiumPreview({ pack: "world.my-shops" }, undefined), { canImport: false });
+  assert.equal(compendiumPreview({ pack: "merchant-presets.merchants" }, { isGM: true }).canImport, true);
+  assert.equal(compendiumPreview({ pack: "world.my-shops" }, { isGM: false }).canImport, false);
+  assert.equal(compendiumPreview({ pack: "world.my-shops" }, undefined).canImport, false);
+});
+
+/** A merchant as it sits in a compendium: on its compendium stock table, `shelf` if a world rolled it. */
+const packMerchant = (pack, shelf) => ({
+  pack,
+  flags: {
+    "item-piles": { data: { tablesForPopulate: [{ uuid: "Compendium.merchant-presets.stock.RollTable.heUNjkuD4vpWOpQG" }] } },
+    "merchant-presets": { profile: "Priest", ...(shelf ? { shelf: { key: "shelf1" } } : {}) }
+  }
+});
+
+test("compendiumPreview: fresh pack data shows a sample roll; a shop exported from a world shows its own goods (#214)", () => {
+  assert.equal(compendiumPreview(packMerchant("merchant-presets.merchants", false), { isGM: true }).sample, true);
+  assert.equal(compendiumPreview(packMerchant("world.my-shops", true), { isGM: true }).sample, false);
+  // A document: its data is read through toObject, which carries no pack.
+  const doc = { pack: "world.my-shops", toObject: () => ({ ...packMerchant(undefined, true), pack: undefined }) };
+  assert.equal(compendiumPreview(doc, { isGM: true }).sample, false);
+  const fresh = { pack: "merchant-presets.merchants", toObject: () => ({ ...packMerchant(undefined, false), pack: undefined }) };
+  assert.equal(compendiumPreview(fresh, { isGM: true }).sample, true);
 });
