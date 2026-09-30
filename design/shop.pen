@@ -6053,6 +6053,7 @@
                       "id": "FZBbC",
                       "name": "Deals foot",
                       "width": "fill_container",
+                      "gap": 8,
                       "justifyContent": "space_between",
                       "alignItems": "center",
                       "children": [
@@ -6061,10 +6062,28 @@
                           "id": "RqgqT",
                           "name": "Cap note",
                           "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "No deal can make selling pay more than buying.",
                           "fontFamily": "$font-compact",
                           "fontSize": 11,
                           "fontWeight": "normal"
+                        },
+                        {
+                          "id": "KCGWi",
+                          "type": "ref",
+                          "ref": "dLVfp",
+                          "name": "Call haggle",
+                          "padding": [
+                            5,
+                            10
+                          ],
+                          "descendants": {
+                            "QWwfV": {
+                              "content": "Call for a haggle",
+                              "fontSize": 12
+                            }
+                          }
                         },
                         {
                           "id": "o04wE0",
@@ -21748,6 +21767,7 @@
                       "id": "F2L7Y3",
                       "name": "Deals foot",
                       "width": "fill_container",
+                      "gap": 8,
                       "justifyContent": "space_between",
                       "alignItems": "center",
                       "children": [
@@ -21756,10 +21776,28 @@
                           "id": "kD16F",
                           "name": "Cap note",
                           "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "No deal can make selling pay more than buying.",
                           "fontFamily": "$font-compact",
                           "fontSize": 11,
                           "fontWeight": "normal"
+                        },
+                        {
+                          "id": "K8Psm",
+                          "type": "ref",
+                          "ref": "dLVfp",
+                          "name": "Call haggle",
+                          "padding": [
+                            5,
+                            10
+                          ],
+                          "descendants": {
+                            "QWwfV": {
+                              "content": "Call for a haggle",
+                              "fontSize": 12
+                            }
+                          }
                         },
                         {
                           "id": "ufTos",
@@ -26028,6 +26066,7 @@
                   "id": "N8SGcQ",
                   "name": "Deals foot",
                   "width": "fill_container",
+                  "gap": 8,
                   "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
@@ -26036,10 +26075,28 @@
                       "id": "gCWHa",
                       "name": "Cap note",
                       "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "No deal can make selling pay more than buying.",
                       "fontFamily": "$font-compact",
                       "fontSize": 11,
                       "fontWeight": "normal"
+                    },
+                    {
+                      "id": "dN3wm",
+                      "type": "ref",
+                      "ref": "dLVfp",
+                      "name": "Call haggle",
+                      "padding": [
+                        5,
+                        10
+                      ],
+                      "descendants": {
+                        "QWwfV": {
+                          "content": "Call for a haggle",
+                          "fontSize": 12
+                        }
+                      }
                     },
                     {
                       "id": "Uxrsm",
