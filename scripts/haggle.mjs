@@ -99,9 +99,18 @@ export function callable(shop, characters, worldTime) {
   return characters.filter(c => !activeDeal(shop, c.uuid, worldTime));
 }
 
-/** Whether a call (a card's `haggle` flag) can no longer be rolled on. */
+/**
+ * Whether a GM's call request can be posted: `side` one the shop trades on (`sell` only when it
+ * `buys`), `dc` a whole number from 1 to 40, and `skill` a haggle skill or null (the player's choice).
+ */
+export function validCall({ side, dc, skill }, buys) {
+  return (side === "buy" || (side === "sell" && buys)) && Number.isInteger(dc) && dc >= 1 && dc <= 40
+    && (skill === null || HAGGLE_SKILLS.includes(skill));
+}
+
+/** Whether a call (a card's `haggle` flag) can no longer be rolled on. A card without a numeric end has lapsed. */
 export function callLapsed(call, shop, worldTime) {
-  return call.state !== "open" || worldTime >= call.ends || !!activeDeal(shop, call.actor, worldTime);
+  return call.state !== "open" || !Number.isFinite(call.ends) || worldTime >= call.ends || !!activeDeal(shop, call.actor, worldTime);
 }
 
 /**

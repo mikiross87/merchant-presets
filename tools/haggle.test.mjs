@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { shopFrom } from "../scripts/schema.mjs";
 import {
   allowedSkills, callable, callLapsed, checkRollMessage, haggleAdjustment, haggleCard, haggleDeal, haggleEnds, haggleOutcome,
-  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS
+  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, validCall
 } from "../scripts/haggle.mjs";
 
 const CAL = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
@@ -85,6 +85,21 @@ test("an open call lapses at its end, once used, or when its character got a dea
   assert.equal(callLapsed(call(), shop(), at(2, 19, 1)), true);
   assert.equal(callLapsed(call({ state: "rolled" }), shop(), at(2, 11)), true);
   assert.equal(callLapsed(call(), shop({ deals: [deal()] }), at(2, 11)), true);
+});
+
+test("a card whose end isn't a number reads as lapsed: its flags are untrusted", () => {
+  for (const ends of [undefined, null, "999999999", NaN, Infinity]) assert.equal(callLapsed(call({ ends }), shop(), at(2, 11)), true);
+});
+
+test("a call is valid for a side the shop trades on, a whole DC from 1 to 40, and a social skill or none", () => {
+  assert.equal(validCall({ side: "buy", dc: 14, skill: null }, false), true);
+  assert.equal(validCall({ side: "sell", dc: 14, skill: "dec" }, true), true);
+  assert.equal(validCall({ side: "sell", dc: 14, skill: null }, false), false);
+  assert.equal(validCall({ side: "steal", dc: 14, skill: null }, true), false);
+  for (const dc of [0, 41, 14.5, "14", null]) assert.equal(validCall({ side: "buy", dc, skill: null }, true), false);
+  assert.equal(validCall({ side: "buy", dc: 1, skill: "per" }, true), true);
+  assert.equal(validCall({ side: "buy", dc: 40, skill: "itm" }, true), true);
+  assert.equal(validCall({ side: "buy", dc: 14, skill: "ins" }, true), false);
 });
 
 test("rolling on an open call gives the outcome and its deal, ending at the next close", () => {

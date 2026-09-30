@@ -448,6 +448,33 @@
         "Received": "Received",
         "Free": "free"
       }
+    },
+    "Haggle": {
+      "Call": "{shop} will hear {character} out on {side}.",
+      "CallSkill": "{shop} will hear {character} out on {side} ({skillName}).",
+      "SidePrice": "price",
+      "SideOffer": "their offer",
+      "Roll": "Roll {skill}",
+      "Result": {
+        "buy": { "great": "{percent}% off until closing.", "success": "{percent}% off until closing.", "fail": "no better.", "botch": "{percent}% more until closing." },
+        "sell": { "great": "{percent}% more on their offers until closing.", "success": "{percent}% more on their offers until closing.", "fail": "no better.", "botch": "{percent}% less on their offers until closing." }
+      },
+      "Rolled": "{character} haggled with {shop} on {side}: {result}",
+      "Lapsed": "The call lapsed.",
+      "GmCall": "DC {dc}",
+      "GmRolled": "{skillName} {total} vs DC {dc}",
+      "Refusal": {
+        "missing": "The roll didn't reach the GM.",
+        "lapsed": "That offer has lapsed.",
+        "owner": "That character isn't yours.",
+        "author": "That roll isn't yours.",
+        "speaker": "That roll isn't this character's.",
+        "wrong-skill": "That isn't a skill this haggle allows.",
+        "stale": "That roll is too old.",
+        "used": "That roll was already used.",
+        "no-gm": "No GM is here to hear the haggle.",
+        "unconfirmed": "The GM didn't answer in time."
+      }
     }
   }
 }
