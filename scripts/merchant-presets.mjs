@@ -17,6 +17,7 @@ import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
 import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, rollable, validCall } from "./haggle.mjs";
 import { effectiveRates } from "./pricing.mjs";
+import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
   adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
@@ -1014,14 +1015,15 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   if (!call || !card || !message.author?.isGM) return;
   if (game.user.isGM) {
     const line = call.state === "rolled" ? haggleText("GmRolled", call) : haggleText("GmCall", call);
-    card.insertAdjacentHTML("beforeend", `<p class="mp-haggle-gm" data-pen="Haggle GM line">${escapeHtml(line)}</p>`);
+    card.insertAdjacentHTML("beforeend", `<p class="mp-haggle-gm" data-pen="GM row">${icon("eye-off", { "data-pen": "GM line icon" })}`
+      + `<span data-pen="Haggle GM line">${escapeHtml(line)}</span></p>`);
   }
   const actor = typeof call.actor === "string" ? fromUuidSync(call.actor, { strict: false }) : null;
   // Past its end the buttons go; nothing sweeps the card itself, and a click still lapses it.
   if (!rollable(call, game.time.worldTime) || !actor?.testUserPermission(game.user, "OWNER")) return;
   const buttons = allowedSkills(call).map(skill => {
-    card.insertAdjacentHTML("beforeend", `<button type="button" class="mp-button" data-pen="Roll ${escapeHtml(skill)}">`
-      + `${escapeHtml(haggleText("Roll", { skill: skillName(skill) }))}</button>`);
+    card.insertAdjacentHTML("beforeend", `<button type="button" class="mp-haggle-roll" data-pen="Roll ${escapeHtml(skill)}">`
+      + `${icon("dices", { "data-pen": "Icon" })}<span data-pen="Label">${escapeHtml(haggleText("Roll", { skill: skillName(skill) }))}</span></button>`);
     return [card.lastElementChild, skill];
   });
   const disable = disabled => buttons.forEach(([b]) => { b.disabled = disabled; });
@@ -1165,9 +1167,21 @@ const haggleSide = side => haggleText(side === "buy" ? "SidePrice" : "SideOffer"
 const escapeHtml = text => foundry.utils.escapeHTML(text);
 /** A dnd5e skill's name ("Persuasion"): its config label, localized in case it's still a key. */
 const skillName = id => game.i18n.localize(CONFIG.DND5E.skills[id]?.label ?? id);
-/** A card's markup: its lines as `[layer, text]`, each named for its layer in the band 18 frames. */
-const haggleCardHtml = (...lines) => `<div class="mp-haggle-card" data-pen="Haggle card">`
-  + lines.map(([pen, text]) => `<p data-pen="${pen}">${escapeHtml(text)}</p>`).join("") + `</div>`;
+/** A receipt's icon slot (trade-desk.mjs `receiptIcons` draws it in): a message's saved content can't hold an <svg>. */
+const iconSlot = (name, pen) => `<span class="mp-icon-slot" data-icon="${name}" data-pen="${pen}"></span>`;
+/**
+ * A card's markup (design XAkJh): a trade receipt's head, the shop speaking, when (`call.when`,
+ * none without a clock) and whispered, under the "Haggle" strip; then its lines as `[layer, text]`,
+ * each named for its layer in the band 18 frames. It's a receipt to the stylesheet (`mp-receipt`).
+ */
+const haggleCardHtml = (call, ...lines) => `<div class="merchant-presets mp-receipt mp-haggle-card" data-pen="Haggle card">`
+  + `<div class="mp-receipt-speaker" data-pen="Speaker">`
+  + `<img class="mp-receipt-portrait" data-pen="Speaker img" src="${escapeHtml(call.shopImg ?? "")}" alt="" />`
+  + `<span class="mp-receipt-who" data-pen="Speaker text"><b data-pen="Speaker name">${escapeHtml(call.shopName)}</b>`
+  + (call.when ? `<span data-pen="Speaker time">${escapeHtml(call.when)}</span>` : "") + `</span>`
+  + `<span class="mp-receipt-vis" data-pen="Visibility">${iconSlot("eye-off", "Vis icon")}<span data-pen="Vis text">${escapeHtml(haggleText("Whisper"))}</span></span></div>`
+  + `<div class="mp-receipt-head" data-pen="Card header">${iconSlot("messages-square", "Kicker icon")}<b data-pen="Kicker">${escapeHtml(haggleText("Kicker"))}</b></div>`
+  + lines.map(([pen, text]) => `<p class="mp-haggle-${pen === "Lapsed" ? "lapsed" : "line"}" data-pen="${pen}">${escapeHtml(text)}</p>`).join("") + `</div>`;
 /** The open card's line (design `Haggle call`), naming the skill only when the GM chose one. */
 const callText = ({ shopName, name, side, skill }) => skill
   ? haggleText("CallSkill", { shop: shopName, character: name, side: haggleSide(side), skillName: skillName(skill) })
@@ -1191,11 +1205,12 @@ async function callHaggle({ shopUuid, actorUuid, side, dc, skill } = {}, user) {
     && m.flags[MODULE].haggle.shopUuid === shopActor.uuid && m.flags[MODULE].haggle.actor === actor.uuid)) await lapseCard(old);
 
   const ends = haggleEnds(shop.hours, worldTime, game.time.calendar.days, worldFollowsClock()).at;
-  const call = { shopUuid: shopActor.uuid, shopName: shopActor.name, actor: actor.uuid, name: actor.name, side, skill, dc, ends, state: "open" };
+  const call = { shopUuid: shopActor.uuid, shopName: shopActor.name, shopImg: shopActor.img ?? "", when: receiptWhen(worldTime),
+    actor: actor.uuid, name: actor.name, side, skill, dc, ends, state: "open" };
   const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id);
   const message = await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: shopActor }),
-    content: haggleCardHtml(["Haggle call", callText(call)]),
+    content: haggleCardHtml(call, ["Haggle call", callText(call)]),
     whisper: [...game.users.filter(u => u.isGM).map(u => u.id), ...owners],
     flags: { [MODULE]: { haggle: call } }
   });
@@ -1206,7 +1221,7 @@ async function callHaggle({ shopUuid, actorUuid, side, dc, skill } = {}, user) {
 async function lapseCard(message) {
   const call = message.flags[MODULE].haggle;
   await message.update({ [`flags.${MODULE}.haggle.state`]: "lapsed",
-    content: haggleCardHtml(["Haggle call", callText(call)], ["Lapsed", haggleText("Lapsed")]) });
+    content: haggleCardHtml(call, ["Haggle call", callText(call)], ["Lapsed", haggleText("Lapsed")]) });
 }
 
 /**
@@ -1252,7 +1267,7 @@ async function rollHaggle({ messageId, rollId } = {}, user) {
     [`flags.${MODULE}.haggle.state`]: "rolled",
     [`flags.${MODULE}.haggle.total`]: total,
     [`flags.${MODULE}.haggle.skillName`]: rolled.skillName,
-    content: haggleCardHtml(["Haggle result", haggleText("Rolled", { character: call.name, shop: call.shopName, side: haggleSide(call.side),
+    content: haggleCardHtml(call, ["Haggle result", haggleText("Rolled", { character: call.name, shop: call.shopName, side: haggleSide(call.side),
       result: haggleText(`Result.${key}`, { percent }) })])
   });
   return { status: "rolled", outcome: result.outcome };

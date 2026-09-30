@@ -1135,8 +1135,10 @@
 .shop-sheet .mp-tag { display: flex; padding: 1px 6px; border-radius: 3px; }
 .shop-sheet .mp-tag.is-good { background: var(--mp-green-tint); }
 .shop-sheet .mp-tag span { font: 700 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-green-ink); }
-.shop-sheet .mp-deals-foot { display: flex; align-items: center; justify-content: space-between; }
+.shop-sheet .mp-deals-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .shop-sheet .mp-cap-note { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+/* The note takes the room Call for a haggle and Add deal leave (design hiyHK); a read-only preview has neither (Zm5HK). */
+.shop-sheet .mp-deals-foot:has(.mp-button) .mp-cap-note { flex: 1 1 0; min-width: 0; }
 
 .shop-sheet .mp-players-see {
   flex: none;
@@ -1422,6 +1424,44 @@
 .mp-receipt-total { display: flex; align-items: center; justify-content: space-between; }
 .mp-receipt-total b { font: 700 15px/21px "Alegreya SC", system-ui, sans-serif; color: var(--mp-paper-ink); }
 
+/* -------------------------------------------------------------- haggle card (#112, design XAkJh) */
+
+/* A receipt's head (`.mp-receipt`), then the call or its result, the GM's line and the Roll buttons. */
+.mp-receipt.mp-haggle-card p { margin: 0; }
+.mp-receipt.mp-haggle-card .mp-haggle-line { font: 400 13px/1.35 Roboto, system-ui, sans-serif; color: var(--mp-paper-ink); }
+.mp-receipt.mp-haggle-card .mp-haggle-lapsed { align-self: flex-start; font: italic 400 14px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+.mp-receipt.mp-haggle-card .mp-haggle-gm {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--mp-inset);
+}
+.mp-receipt.mp-haggle-card .mp-haggle-gm .mp-icon { flex: none; width: 12px; height: 12px; color: var(--mp-muted); }
+.mp-receipt.mp-haggle-card .mp-haggle-gm span { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+.mp-receipt.mp-haggle-card .mp-haggle-roll {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: var(--mp-seal);
+  outline: 1px solid var(--mp-gold);
+  outline-offset: -1px;
+  color: var(--mp-on-dark);
+  font: 500 13px/15px Roboto, system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.mp-receipt.mp-haggle-card .mp-haggle-roll:disabled { opacity: 0.5; cursor: not-allowed; }
+.mp-receipt.mp-haggle-card .mp-haggle-roll:focus-visible { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.mp-receipt.mp-haggle-card .mp-haggle-roll .mp-icon { flex: none; width: 14px; height: 14px; }
+
 /* -------------------------------------------------------------- motion */
 
 @keyframes mp-line-in {
@@ -1600,3 +1640,15 @@
 .shop-sheet .mp-button.is-large { padding: 8px 16px; font: 500 14px/16px Roboto, system-ui, sans-serif; }
 .shop-sheet .mp-button.is-primary { background: var(--mp-seal); outline-color: var(--mp-gold); color: var(--mp-on-dark); }
 .shop-sheet .mp-button.is-primary .mp-icon { width: 16px; height: 16px; }
+
+/* -------------------------------------------------------------- the call for a haggle (#112, design hQVb5) */
+
+/* The deal form's dialog; only the Side radios and the DC's two-line reading are its own. */
+.shop-sheet .mp-side-options { display: flex; align-items: center; gap: 18px; }
+.shop-sheet .mp-side { position: relative; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.shop-sheet .mp-side input:checked + .mp-radio { outline-color: var(--mp-accent); }
+.shop-sheet .mp-side input:focus-visible + .mp-radio { box-shadow: 0 0 0 2px var(--mp-gold-light); }
+.shop-sheet .mp-side input:checked + .mp-radio .mp-radio-dot { display: block; }
+.shop-sheet .mp-side-title { font: 400 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+.shop-sheet .mp-side input:checked ~ .mp-side-title { font-weight: 700; }
+.shop-sheet.mp-haggle-form .mp-plain { line-height: 18px; }

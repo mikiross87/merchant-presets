@@ -19,6 +19,7 @@ import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.
 import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText, wholeCoins } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
+import { HAGGLE_SKILLS, callable } from "./haggle.mjs";
 import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
 import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
@@ -405,7 +406,7 @@ const DealForm = hasApplicationsApi && globalThis.foundry.applications.api.Appli
 
   /** Opens the form on `context` (ShopSheet#dealForm's) and waits for its answer. */
   static ask(context) {
-    return new Promise(resolve => new DealForm({ context, resolve }).render({ force: true }));
+    return new Promise(resolve => new this({ context, resolve }).render({ force: true }));
   }
 
   /** @override */
@@ -454,6 +455,18 @@ const DealForm = hasApplicationsApi && globalThis.foundry.applications.api.Appli
   }
 } : null;
 
+/**
+ * The call for a haggle (#112, design hQVb5): the deal form's dialog, with its own fields. `ask`
+ * resolves with the form's fields as picked, or null when it's closed without them.
+ */
+const HaggleForm = DealForm ? class HaggleForm extends DealForm {
+  /** @override */
+  static DEFAULT_OPTIONS = { classes: ["mp-haggle-form"] };
+
+  /** @override */
+  static PARTS = { form: { template: `${TEMPLATES}/haggle-form.hbs` } };
+} : null;
+
 const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.sheets.ActorSheetV2
 ) {
@@ -481,6 +494,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       addRule: ShopSheet.#onAddRule,
       removeRule: ShopSheet.#onRemoveRule,
       addDeal: ShopSheet.#onAddDeal,
+      callHaggle: ShopSheet.#onCallHaggle,
       editDeal: ShopSheet.#onEditDeal,
       removeDeal: ShopSheet.#onRemoveDeal,
       restockNow: ShopSheet.#onRestockNow,
@@ -2397,6 +2411,57 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** Asks for a deal (the form, DealForm): its fields as typed, or null. A seam the tests replace. */
   static askDeal(context) {
     return DealForm.ask(context);
+  }
+
+  /** Asks for a haggle's call (the form, HaggleForm): its fields as picked, or null. A seam the tests replace. */
+  static askHaggle(context) {
+    return HaggleForm.ask(context);
+  }
+
+  /**
+   * Calls for a haggle (#112, design hiyHK): the form picks a player character with no deal in
+   * force here, the side, the skill (the player's choice by default) and the DC, prefilled with the
+   * shopkeeper's passive Insight. The GM's desk posts the card (`api.callHaggle`); anything but a
+   * card posted is said, with the desk's reason.
+   */
+  static async #onCallHaggle() {
+    if (!game.user.isGM || this.preview) return;
+    const shop = safeShopOf(this.document);
+    if (!shop) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
+      return;
+    }
+    const i18n = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Haggle.${key}`, data);
+    // The deal form's candidates (#200), but only player characters: a haggle is a player's roll.
+    const offered = gmCandidates(game.actors, globalThis.canvas?.ready ? globalThis.canvas.scene : null, this.document)
+      .filter(a => a.type === "character");
+    const characters = callable(shop, offered, game.time.worldTime);
+    if (!characters.length) {
+      ui.notifications.warn(i18n("Form.NoOne"));
+      return;
+    }
+    const buys = effectiveRates(worldOf().rates, shop.terms).buysAt.rate > 0;
+    const passive = this.document.system?.skills?.ins?.passive ?? 10;
+    const skillLabel = id => game.i18n.localize(CONFIG.DND5E?.skills?.[id]?.label ?? id);
+    const skills = [...HAGGLE_SKILLS.map(id => ({ value: id, label: skillLabel(id) })),
+      { value: "", label: i18n("Form.PlayerChoice"), selected: true }];
+    const answer = await ShopSheet.askHaggle({
+      title: i18n("Form.Title"),
+      characters: characters.map((a, i) => ({ uuid: a.uuid, name: a.name, selected: i === 0 })),
+      characterName: characters[0].name,
+      buys,
+      skills, skillName: i18n("Form.PlayerChoice"),
+      dc: passive,
+      dcHint: i18n("Form.DcHint", { shop: this.document.name, passive })
+    });
+    if (!answer) return;
+    const result = await game.modules.get(MODULE).api?.callHaggle?.({
+      shopUuid: this.document.uuid, actorUuid: answer.actor, side: answer.side,
+      skill: answer.skill || null, dc: Number(answer.dc)
+    });
+    if (result?.status === "called") return;
+    const why = result?.status === "refused" ? result.reason : result?.status ?? "no-gm";
+    ui.notifications.warn(i18n(`Refusal.${why}`));
   }
 
   static async #onAddDeal() {

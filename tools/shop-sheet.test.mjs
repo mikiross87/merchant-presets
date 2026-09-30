@@ -2315,3 +2315,94 @@ test("a preview opens on the compendium's own permission, not at a counter (#199
   assert.equal(openPreview(t, { gm: false, permission: OWNERSHIP.LIMITED }).sheet.isVisible, true);
   assert.equal(openPreview(t, { gm: false, permission: OWNERSHIP.NONE }).sheet.isVisible, false);
 });
+
+/* ------------------------------------------------------------ calling for a haggle (#112) */
+
+/** The GM's Deals section with `api.callHaggle` answering `opened.result`, and the call form answering `opened.answer`. */
+function openHaggle(t, deals = []) {
+  const opened = openDeals(t, deals);
+  const Sheet = opened.sheet.constructor;
+  const ask = Sheet.askHaggle;
+  opened.forms = [];
+  opened.calls = [];
+  opened.result = { status: "called", messageId: "m1" };
+  Sheet.askHaggle = async context => { opened.forms.push(context); return opened.answer; };
+  api.callHaggle = async call => { opened.calls.push(call); return opened.result; };
+  t.after(() => { Sheet.askHaggle = ask; delete api.callHaggle; });
+  return opened;
+}
+
+test("Call for a haggle offers the player characters with no deal, and calls the desk with the form's answer (design hQVb5)", async t => {
+  await withLabels(async () => {
+    const opened = openHaggle(t);
+    const { sheet, shop, buyer, warnings } = opened;
+    shop.name = "Smith";
+    shop.system.skills = { ins: { passive: 14 } };
+    const kess = { uuid: "Actor.kess", name: "Kess", type: "character" };
+    const tomas = { uuid: "Actor.tomas", name: "Tomas", type: "npc" };
+    globalThis.game.actors = [shop, buyer, kess, tomas];
+    sheet.document.flags["merchant-presets"].shop.deals = [{ actor: kess.uuid, name: "Kess", buy: -0.1, sell: null, note: "", ends: null }];
+    opened.answer = { actor: buyer.uuid, side: "sell", skill: "", dc: "15" };
+    await act(sheet, "callHaggle");
+    const [form] = opened.forms;
+    assert.deepEqual(form.characters, [{ uuid: buyer.uuid, name: "Aria", selected: true }]);
+    assert.equal(form.dc, 14);
+    assert.equal(form.dcHint, "DcHint(Smith,14)");
+    // The player's choice is the default, and its value is empty.
+    assert.deepEqual(form.skills.map(s => [s.value, !!s.selected]), [["per", false], ["dec", false], ["itm", false], ["", true]]);
+    assert.equal(form.buys, true);
+    assert.deepEqual(opened.calls, [{ shopUuid: shop.uuid, actorUuid: buyer.uuid, side: "sell", skill: null, dc: 15 }]);
+    assert.deepEqual(warnings, []);
+  });
+});
+
+test("a shop that doesn't buy offers no Offer side, and a named skill goes to the desk as picked", async t => {
+  const opened = openHaggle(t);
+  const { sheet, buyer } = opened;
+  globalThis.game.settings.values.buysAt = 0;
+  opened.answer = { actor: buyer.uuid, side: "buy", skill: "dec", dc: "12" };
+  await act(sheet, "callHaggle");
+  assert.equal(opened.forms[0].buys, false);
+  assert.equal(opened.calls[0].skill, "dec");
+});
+
+test("with every character already dealt with, Call for a haggle warns and opens nothing", async t => {
+  const opened = openHaggle(t);
+  const { sheet, buyer, warnings } = opened;
+  sheet.document.flags["merchant-presets"].shop.deals = [ARIA_DEAL(buyer.uuid)];
+  await act(sheet, "callHaggle");
+  assert.equal(opened.forms.length, 0);
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Haggle.Form.NoOne"]);
+});
+
+test("a call the desk doesn't post is said, with its reason; a cancelled form calls nothing", async t => {
+  const opened = openHaggle(t);
+  const { sheet, buyer, warnings } = opened;
+  opened.answer = null;
+  await act(sheet, "callHaggle");
+  assert.equal(opened.calls.length, 0);
+  opened.answer = { actor: buyer.uuid, side: "buy", skill: "", dc: "99" };
+  opened.result = { status: "refused", reason: "invalid-call" };
+  await act(sheet, "callHaggle");
+  opened.result = { status: "no-gm" };
+  await act(sheet, "callHaggle");
+  opened.result = undefined;
+  await act(sheet, "callHaggle");
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Haggle.Refusal.invalid-call", "MERCHANT_PRESETS.Haggle.Refusal.no-gm",
+    "MERCHANT_PRESETS.Haggle.Refusal.no-gm"]);
+});
+
+test("a player's window can't call for a haggle", async t => {
+  const opened = openHaggle(t);
+  globalThis.game.user.isGM = false;
+  await act(opened.sheet, "callHaggle");
+  assert.equal(opened.forms.length, 0);
+  assert.equal(opened.calls.length, 0);
+});
+
+test("the Deals foot has Call for a haggle beside Add deal, and a read-only preview has neither (design hiyHK)", () => {
+  const hbs = readFileSync(new URL("../templates/parts/settings-tab.hbs", import.meta.url), "utf8");
+  const foot = hbs.slice(hbs.indexOf('data-pen="Deals foot"'), hbs.indexOf("</section>", hbs.indexOf('data-pen="Deals foot"')));
+  assert.match(foot, /\{\{#unless readOnly\}\}<button[^>]*data-action="callHaggle" data-pen="Call haggle"/);
+  assert.ok(foot.indexOf("callHaggle") < foot.indexOf("addDeal"));
+});
