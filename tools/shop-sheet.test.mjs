@@ -22,6 +22,8 @@ class ActorSheetV2 {
     globalThis.foundry.applications.instances.set(Symbol("app"), this);
   }
   get isEditable() { return this.document.testUserPermission(globalThis.game.user, this.options.editPermission); }
+  get isVisible() { return this.document.testUserPermission(globalThis.game.user, this.options.viewPermission); }
+  _canDragDrop() { return this.isEditable; }
   _toggleDisabled(disabled) { this.disabled = disabled; }
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
   render() { this.renders++; }
@@ -2271,9 +2273,31 @@ test("Import shop imports the merchant, closes the preview and opens the world s
   let closed = 0;
   sheet.close = async () => { closed++; };
   await act(sheet, "importShop");
-  assert.deepEqual(calls, [[pack, "smith"]]);
+  // Core's own import options (DocumentSheetV2's importDocument): a shop already in the world asks
+  // Replace or New instead of being overwritten, and ownership stays as the pack has it.
+  assert.deepEqual(calls, [[pack, "smith", {}, { clearOwnership: false, dialog: true }]]);
   assert.equal(closed, 1);
   assert.deepEqual(opened, [true]);
+});
+
+test("an import the GM cancels leaves the preview open (#199 review)", async t => {
+  const { sheet, shop } = openPreview(t);
+  shop.id = "smith";
+  const saved = { packs: globalThis.game.packs, actors: globalThis.game.actors };
+  t.after(() => Object.assign(globalThis.game, saved));
+  globalThis.game.packs = { get: () => ({ collection: "merchant-presets.merchants" }) };
+  globalThis.game.actors = Object.assign([], { importFromCompendium: async () => undefined });
+  let closed = 0;
+  sheet.close = async () => { closed++; };
+  await act(sheet, "importShop");
+  assert.equal(closed, 0);
+});
+
+test("nothing can be dropped on a preview, even from an unlocked world compendium (#199 review)", t => {
+  const { sheet } = openPreview(t, { permission: OWNERSHIP.OWNER });
+  assert.equal(sheet.isEditable, true, "core would let the GM edit it");
+  assert.equal(sheet._canDragDrop(".mp-stock"), false);
+  assert.equal(openSettings(t).sheet._canDragDrop(".mp-stock"), true, "a world shop still takes drops");
 });
 
 test("a player can't import from a preview (#199)", async t => {
