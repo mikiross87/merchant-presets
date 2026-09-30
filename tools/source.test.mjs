@@ -36,6 +36,17 @@ test("no merchant refuses the food and drink it stocks, SRD rations and water in
   }
 });
 
+test("every merchant's token has its size, depth included, so Foundry V14 loads it without a warning (#194)", () => {
+  // V14's migration fills a prototype token's missing depth with null, then warns that it must be a
+  // number, once per merchant on every world launch.
+  for (const m of merchants) {
+    for (const key of ["width", "height", "depth"]) {
+      const value = m.prototypeToken[key];
+      assert.ok(typeof value === "number" && value > 0, `${m.name}: prototypeToken.${key} is ${value}`);
+    }
+  }
+});
+
 test("every merchant's shop config validates", () => {
   assert.equal(merchants.length, 51);
   for (const m of merchants) {

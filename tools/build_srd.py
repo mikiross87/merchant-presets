@@ -658,6 +658,10 @@ def main():
                 "img": shop["img"], "folder": fold_a[key], "sort": 0,
                 "system": sysd,
                 "prototypeToken": {"name": name, "actorLink": True, "texture": {"src": shop["img"]},
+                                   # The stat block's own token size. Without a depth, Foundry
+                                   # V14's migration fills in null and warns on every world
+                                   # launch, once per merchant (#194).
+                                   **{k: (npc.get("prototypeToken") or {}).get(k, 1) for k in ("width", "height", "depth")},
                                    # Unset, Foundry defaults a token to HOSTILE: a shopkeeper
                                    # with a red border, listed as an enemy in the tracker.
                                    # Neutral is what a tradesperson is — not on the party's
