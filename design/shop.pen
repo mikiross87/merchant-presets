@@ -35578,6 +35578,3342 @@
       "theme": {
         "mode": "dark"
       }
+    },
+    {
+      "type": "frame",
+      "id": "L4tb2b",
+      "x": 800,
+      "y": 12974,
+      "name": "16 Compendium Preview — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 920,
+      "height": 680,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "F7YhD",
+          "type": "ref",
+          "ref": "m382Vk",
+          "name": "Window Bar"
+        },
+        {
+          "id": "H8aPH",
+          "type": "ref",
+          "ref": "UiMqw",
+          "name": "Hero",
+          "descendants": {
+            "uYCYY": {
+              "enabled": false
+            },
+            "I9iGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "id": "Y5jtw",
+          "type": "ref",
+          "ref": "ZwEAx",
+          "name": "Tabs",
+          "descendants": {
+            "dX3T8": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "on3AD",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Fi2uf",
+              "name": "Categories",
+              "width": 180,
+              "height": "fill_container",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "right": 1
+              },
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eNQ6r",
+                  "name": "Cat All goods",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "aEvT6",
+                      "name": "All goods icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "layout-grid",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "kSGFZ",
+                      "name": "All goods label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "All goods",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vRJ4Z",
+                      "name": "All goods count",
+                      "fill": "$text-secondary",
+                      "content": "20",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yoobO",
+                  "name": "Cat Weapons",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Q3zOrz",
+                      "name": "Weapons icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "sword",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "i0GXO",
+                      "name": "Weapons label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Weapons",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lg2RA",
+                      "name": "Weapons count",
+                      "fill": "$text-secondary",
+                      "content": "4",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZXNhU",
+                  "name": "Cat Armor",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "J7bltY",
+                      "name": "Armor icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "shield",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "c8mLdl",
+                      "name": "Armor label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Armor",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g910k",
+                      "name": "Armor count",
+                      "fill": "$text-secondary",
+                      "content": "3",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "RyOI2",
+                  "name": "Cat Tools",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "FYlXK",
+                      "name": "Tools icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "wrench",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "iXl1v",
+                      "name": "Tools label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Tools",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "CzZsx",
+                      "name": "Tools count",
+                      "fill": "$text-secondary",
+                      "content": "1",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mdiCA",
+                  "name": "Cat Adventuring gear",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "VkfoT",
+                      "name": "Adventuring gear icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "backpack",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FO6kO",
+                      "name": "Adventuring gear label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Gear",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "py2WS",
+                      "name": "Adventuring gear count",
+                      "fill": "$text-secondary",
+                      "content": "12",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YCgdo",
+              "name": "Stock",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                12,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "k9HONN",
+                  "name": "Group Weapons",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ya7sg",
+                      "name": "Weapons heading",
+                      "fill": "$text-title",
+                      "content": "Weapons",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "OEL1m",
+                      "name": "Weapons rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "qIlcu",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Longsword",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/greatsword-guard.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Longsword"
+                    },
+                    "vYzUL": {
+                      "content": "Martial melee · Versatile · 3 lb"
+                    },
+                    "UB234": {
+                      "content": "7 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "15"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "aUUov",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Handaxe",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/axe-broad-black.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Handaxe"
+                    },
+                    "vYzUL": {
+                      "content": "Simple melee · Light, thrown · 2 lb"
+                    },
+                    "UB234": {
+                      "content": "11 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "5"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "RRKt3",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Javelin",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/javelin-flared.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Javelin"
+                    },
+                    "vYzUL": {
+                      "content": "Simple melee · Thrown · 2 lb"
+                    },
+                    "UB234": {
+                      "content": "21 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "5"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/silver.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "SNVav",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Longsword +1",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/greatsword-guard.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Longsword +1"
+                    },
+                    "vYzUL": {
+                      "content": "Martial melee · Versatile · Uncommon · 3 lb"
+                    },
+                    "UB234": {
+                      "content": "Last one",
+                      "fill": "#b86a12",
+                      "fontWeight": "700"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "415"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "yPcnx",
+                  "name": "Group Armor",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "byzxX",
+                      "name": "Armor heading",
+                      "fill": "$text-title",
+                      "content": "Armor",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "a7L4W",
+                      "name": "Armor rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "K15nN8",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Breastplate",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/breastplate-collared-steel-grey.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Breastplate"
+                    },
+                    "vYzUL": {
+                      "content": "Medium armor · AC 14 + Dex (max 2)"
+                    },
+                    "UB234": {
+                      "content": "Last one",
+                      "fill": "#b86a12",
+                      "fontWeight": "700"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "400"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "itsVN",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Chain Mail",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/breastplate-metal-scaled-grey.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Chain Mail"
+                    },
+                    "vYzUL": {
+                      "content": "Heavy armor · AC 16 · Str 13"
+                    },
+                    "UB234": {
+                      "content": "4 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "75"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "id": "CMcTI",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Shield",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/round-wooden-boss-steel-brown.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Shield"
+                    },
+                    "vYzUL": {
+                      "content": "+2 AC · 6 lb"
+                    },
+                    "UB234": {
+                      "content": "3 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "10"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "g1UBOj",
+                  "name": "Group Tools",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    0,
+                    6,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VWx66",
+                      "name": "Tools heading",
+                      "fill": "$text-title",
+                      "content": "Tools",
+                      "fontFamily": "$font-title",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "u4ii0",
+                      "name": "Tools rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "id": "tFlCv",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Row Smith's Tools",
+                  "width": "fill_container",
+                  "opacity": 1,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/smithing-tongs-metal-red.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "BZVOe": {
+                      "content": "Smith's Tools"
+                    },
+                    "vYzUL": {
+                      "content": "Artisan's tools · 8 lb"
+                    },
+                    "UB234": {
+                      "content": "4 left",
+                      "fill": "$text-secondary",
+                      "fontWeight": "400"
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "20"
+                    },
+                    "CZ7Dq/B6r81": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/gold.webp",
+                        "mode": "fill"
+                      }
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "v1iwZ",
+              "name": "Basket",
+              "width": 280,
+              "height": "fill_container",
+              "fill": "$surface-app",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "left": 1
+              },
+              "layout": "vertical",
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kqRNw",
+                  "name": "Preview Card",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$slip",
+                  "cornerRadius": 2,
+                  "stroke": "$slip-edge",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    28,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "d9Ti7",
+                      "name": "Badge",
+                      "width": 56,
+                      "height": 56,
+                      "fill": "$header-1",
+                      "cornerRadius": 28,
+                      "stroke": "$accent-gold",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "r1jpsY",
+                          "name": "Badge icon",
+                          "width": 26,
+                          "height": 26,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Y8pC1",
+                      "name": "Preview title",
+                      "fill": "$ink",
+                      "content": "Compendium preview",
+                      "fontFamily": "$font-title",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "o6GsX",
+                      "name": "Preview sub",
+                      "fill": "$text-secondary",
+                      "content": "Not in this world yet",
+                      "fontFamily": "$font-slip",
+                      "fontSize": 15,
+                      "fontWeight": "normal",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "YPEXu",
+                      "name": "Preview rule",
+                      "fill": "$slip-edge",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "IRXFE",
+                      "name": "Preview body",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "These goods are the compendium's sample roll. Importing rolls the shop's own stock for a Town, so its goods and quantities will differ.",
+                      "lineHeight": 1.4,
+                      "textAlign": "center",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "U2KBb",
+                      "name": "Preview note",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Nothing can be bought or sold in a preview.",
+                      "lineHeight": 1.4,
+                      "textAlign": "center",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "f7bzR",
+                      "type": "ref",
+                      "ref": "cuFJz",
+                      "name": "Import button",
+                      "width": "fill_container",
+                      "descendants": {
+                        "HoVd8": {
+                          "icon": "download"
+                        },
+                        "fvB3n": {
+                          "content": "Import shop"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "JPiKr",
+                      "name": "Import hint",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Or drag it onto a scene or into the Actors directory.",
+                      "lineHeight": 1.3,
+                      "textAlign": "center",
+                      "fontFamily": "$font-slip",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fontStyle": "italic"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Zm5HK",
+      "x": 2800,
+      "y": 12974,
+      "name": "16 Compendium Preview · Settings — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 920,
+      "height": 760,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "SnLCk",
+          "type": "ref",
+          "ref": "m382Vk",
+          "name": "Window Bar"
+        },
+        {
+          "id": "AbuBA",
+          "type": "ref",
+          "ref": "UiMqw",
+          "name": "Hero",
+          "descendants": {
+            "uYCYY": {
+              "enabled": false
+            },
+            "I9iGQ": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "id": "dOsSr",
+          "type": "ref",
+          "ref": "ZwEAx",
+          "name": "Tabs",
+          "descendants": {
+            "gJ7DQ": {
+              "stroke": "#00000000"
+            },
+            "Kwsll": {
+              "fill": "$text-secondary"
+            },
+            "JEMqJ": {
+              "fill": "$text-secondary",
+              "fontWeight": "500"
+            },
+            "dX3T8": {
+              "enabled": false
+            },
+            "K2bP5": {
+              "stroke": "$accent-strong"
+            },
+            "vAzyi": {
+              "fill": "$accent-strong"
+            },
+            "gFtDe": {
+              "fill": "$text-primary",
+              "fontWeight": "700"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "joqiU",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "B07Tv",
+              "name": "Section Nav",
+              "width": 180,
+              "height": "fill_container",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "right": 1
+              },
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vYgMc",
+                  "x": 10,
+                  "y": 16,
+                  "name": "Visit toggle",
+                  "enabled": false,
+                  "opacity": 0.45,
+                  "width": "fill_container(160)",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ho2LH",
+                      "name": "Visit row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "H5QLZs",
+                          "name": "Visit label",
+                          "fill": "$text-primary",
+                          "content": "Players can visit",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gb30o",
+                          "name": "Switch",
+                          "width": 30,
+                          "height": 16,
+                          "fill": "$success",
+                          "cornerRadius": 8,
+                          "padding": 2,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "MXdug",
+                              "name": "Knob",
+                              "fill": "#ffffff",
+                              "width": 12,
+                              "height": 12
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "gzcuw",
+                      "name": "Visit hint",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Off hides the shop from players entirely.",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "PXELG",
+                  "x": 10,
+                  "y": 86,
+                  "name": "Visit gap",
+                  "enabled": false,
+                  "fill": "#00000000",
+                  "width": "fill_container(160)",
+                  "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "L4Q78",
+                  "name": "Nav Terms",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "d7KDhq",
+                      "name": "Terms icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "scale",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "LYdLj",
+                      "name": "Terms label",
+                      "fill": "$text-primary",
+                      "content": "Terms",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uFXx5",
+                  "name": "Nav Deals",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "E43FN",
+                      "name": "Deals icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "handshake",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "kBqN0",
+                      "name": "Deals label",
+                      "fill": "$text-primary",
+                      "content": "Deals",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gWm5m",
+                  "name": "Nav Won't buy",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "LBkRT",
+                      "name": "Won't buy icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "ban",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "h7OPj",
+                      "name": "Won't buy label",
+                      "fill": "$text-primary",
+                      "content": "Won't buy",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xQcu4",
+                  "name": "Nav Hours",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "qiOqz",
+                      "name": "Hours icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "hourglass",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "BBAUM",
+                      "name": "Hours label",
+                      "fill": "$text-primary",
+                      "content": "Hours",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k3SUAW",
+                  "name": "Nav Restock",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "A2TrWH",
+                      "name": "Restock icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "refresh-cw",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NUvbL",
+                      "name": "Restock label",
+                      "fill": "$text-primary",
+                      "content": "Restock",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "E8Wzw",
+                  "name": "Nav Till",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "lMwoY",
+                      "name": "Till icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "coins",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RRyG8",
+                      "name": "Till label",
+                      "fill": "$text-primary",
+                      "content": "Till",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "URVCG",
+                  "name": "Nav spacer",
+                  "width": "fill_container",
+                  "height": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "I0TX4",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Reset",
+                  "enabled": false,
+                  "width": "fill_container(0)",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "DZjha",
+                      "name": "Reset icon",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "rotate-ccw",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AKASu",
+                      "name": "Reset label",
+                      "fill": "$text-secondary",
+                      "content": "Reset to preset",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "blOYx",
+              "name": "Form",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                16,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Hd6iU",
+                  "name": "Preview notice",
+                  "width": "fill_container",
+                  "fill": "$surface-row-alt",
+                  "cornerRadius": 4,
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "x7Ci2",
+                      "name": "Notice icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "book-open",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "t5KP7",
+                      "name": "Notice text",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "A compendium preview. Import the shop to change its settings.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "j7Iysf",
+                  "name": "Section Terms",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "y9j4HY",
+                      "name": "Terms head",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uyZn2",
+                          "name": "Terms title",
+                          "fill": "$text-title",
+                          "content": "Terms",
+                          "fontFamily": "$font-title",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "dzpTW",
+                          "name": "Terms rule",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "afAhw",
+                      "name": "Terms hint",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Rates apply to every item unless a category rule or a deal says otherwise.",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nhQr2",
+                      "name": "Row Sells at",
+                      "opacity": 0.45,
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "NU7Gx",
+                          "name": "Sells at label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Sells at",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "opSUt",
+                          "name": "Field 100",
+                          "width": 84,
+                          "fill": "$surface-card",
+                          "cornerRadius": 4,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "gap": 4,
+                          "padding": [
+                            6,
+                            10
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "r1iVE",
+                              "name": "Value",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "100",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "q82bAH",
+                              "name": "Suffix",
+                              "fill": "$text-secondary",
+                              "content": "%",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "vJ3ZL",
+                          "name": "Sells at plain",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "list price",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "C6yq5E",
+                          "name": "Check World default",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "a8hUZ",
+                              "name": "Box",
+                              "width": 16,
+                              "height": 16,
+                              "fill": "$accent-strong",
+                              "cornerRadius": 3,
+                              "stroke": "$accent-strong",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "bvHcu",
+                                  "name": "Tick",
+                                  "width": 11,
+                                  "height": 11,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$text-on-dark"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "o9Dsoi",
+                              "name": "Check label",
+                              "fill": "$text-secondary",
+                              "content": "World default",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LCVbf",
+                      "name": "Row Buys at",
+                      "opacity": 0.45,
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "s0TgtI",
+                          "name": "Buys at label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Buys at",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xGxDu",
+                          "name": "Field 50",
+                          "width": 84,
+                          "fill": "$surface-card",
+                          "cornerRadius": 4,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "gap": 4,
+                          "padding": [
+                            6,
+                            10
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "OgBIA",
+                              "name": "Value",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "50",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "dI44A",
+                              "name": "Suffix",
+                              "fill": "$text-secondary",
+                              "content": "%",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "lItuD",
+                          "name": "Buys at plain",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "½ of value",
+                          "fontFamily": "$font-slip",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "fontStyle": "italic"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "h1O1G",
+                          "name": "Check World default",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "CaQqA",
+                              "name": "Box",
+                              "width": 16,
+                              "height": 16,
+                              "fill": "$accent-strong",
+                              "cornerRadius": 3,
+                              "stroke": "$accent-strong",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "o8RbsC",
+                                  "name": "Tick",
+                                  "width": 11,
+                                  "height": 11,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$text-on-dark"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "usdZT",
+                              "name": "Check label",
+                              "fill": "$text-secondary",
+                              "content": "World default",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IOTfi",
+                      "name": "Live example",
+                      "width": "fill_container",
+                      "fill": "$surface-row-alt",
+                      "cornerRadius": 4,
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "vZvlP",
+                          "name": "Example icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "lightbulb",
+                          "library": "lucide",
+                          "fill": "$accent-gold"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YGSmQ",
+                          "name": "Example a",
+                          "fill": "$text-secondary",
+                          "content": "Longsword (15 gp) sells for",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "UW8pp",
+                          "type": "ref",
+                          "ref": "uJ3dp",
+                          "name": "gold 15",
+                          "descendants": {
+                            "e1b2b": {
+                              "content": "15"
+                            },
+                            "B6r81": {
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "assets/gold.webp",
+                                "mode": "fill"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "id": "b6odEH",
+                          "name": "Example b",
+                          "fill": "$text-secondary",
+                          "content": "· buys back for",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "Y0uNkM",
+                          "type": "ref",
+                          "ref": "uJ3dp",
+                          "name": "gold 7",
+                          "descendants": {
+                            "e1b2b": {
+                              "content": "7"
+                            },
+                            "B6r81": {
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "assets/gold.webp",
+                                "mode": "fill"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "id": "VgZf9",
+                          "type": "ref",
+                          "ref": "uJ3dp",
+                          "name": "silver 5",
+                          "descendants": {
+                            "e1b2b": {
+                              "content": "5"
+                            },
+                            "B6r81": {
+                              "fill": {
+                                "type": "image",
+                                "enabled": true,
+                                "url": "assets/silver.webp",
+                                "mode": "fill"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PGlu5",
+                      "name": "Category rules",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "r3acTy",
+                          "name": "Cat rules label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Category rules",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "uoEVz",
+                          "name": "Cat rules none",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "None. Every category trades at the rates above.",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "M7cAg",
+                          "type": "ref",
+                          "ref": "dLVfp",
+                          "name": "Add rule",
+                          "padding": [
+                            5,
+                            10
+                          ],
+                          "enabled": false,
+                          "descendants": {
+                            "QWwfV": {
+                              "content": "+ Add rule",
+                              "fontSize": 12
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JAA6i",
+                  "name": "Section Deals",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "aqheZ",
+                      "name": "Deals head",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Y1vxhK",
+                          "name": "Deals title",
+                          "fill": "$text-title",
+                          "content": "Deals",
+                          "fontFamily": "$font-title",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "myoOZ",
+                          "name": "Deals rule",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "hYY2i",
+                      "name": "Deals hint",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Special prices for one character. Only that character sees them.",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "t9Nvb",
+                      "name": "Deals none",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "No deals yet.",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pS4gt",
+                      "name": "Deals foot",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gMaQW",
+                          "name": "Cap note",
+                          "fill": "$text-secondary",
+                          "content": "No deal can make selling pay more than buying.",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "F2J0qB",
+                          "type": "ref",
+                          "ref": "dLVfp",
+                          "name": "Add deal",
+                          "padding": [
+                            5,
+                            10
+                          ],
+                          "enabled": false,
+                          "descendants": {
+                            "QWwfV": {
+                              "content": "+ Add deal",
+                              "fontSize": 12
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EWEku",
+              "name": "Players See",
+              "width": 280,
+              "height": "fill_container",
+              "fill": "$surface-card",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "left": 1
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "m5q2gA",
+                  "name": "Preview head",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "M7n5l",
+                      "name": "Eye",
+                      "width": 15,
+                      "height": 15,
+                      "icon": "eye",
+                      "library": "lucide",
+                      "fill": "$accent-gold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "wakRv",
+                      "name": "Preview title",
+                      "fill": "$text-title",
+                      "content": "Players see",
+                      "fontFamily": "$font-title",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "eHdsa",
+                  "name": "Everyone label",
+                  "fill": "$text-secondary",
+                  "content": "EVERYONE",
+                  "fontFamily": "$font-compact",
+                  "fontSize": 10,
+                  "fontWeight": "700",
+                  "letterSpacing": 1.5
+                },
+                {
+                  "type": "frame",
+                  "id": "X9xtq",
+                  "name": "Chip Sells at list · Buys at ½",
+                  "fill": "$header-1",
+                  "cornerRadius": 999,
+                  "gap": 6,
+                  "padding": [
+                    3,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "yPmq7",
+                      "name": "Chip icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "scale",
+                      "library": "lucide",
+                      "fill": "$accent-on-dark"
+                    },
+                    {
+                      "type": "text",
+                      "id": "aCBzg",
+                      "name": "Chip text",
+                      "fill": "$text-on-dark",
+                      "content": "Sells at list · Buys at ½",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "RwxR4",
+                  "type": "ref",
+                  "ref": "wUkvn",
+                  "name": "Preview Longsword",
+                  "width": "fill_container",
+                  "padding": [
+                    6,
+                    8
+                  ],
+                  "gap": 8,
+                  "descendants": {
+                    "MY7RE": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "assets/items/greatsword-guard.webp",
+                        "mode": "fill"
+                      },
+                      "width": 32,
+                      "height": 32
+                    },
+                    "BZVOe": {
+                      "content": "Longsword",
+                      "fontSize": 13
+                    },
+                    "vYzUL": {
+                      "enabled": false
+                    },
+                    "UB234": {
+                      "enabled": false
+                    },
+                    "CZ7Dq/e1b2b": {
+                      "content": "15"
+                    },
+                    "xqAHK": {
+                      "enabled": false
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "ezq30",
+                  "name": "Preview foot",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Open shop windows refresh for everyone when a change is saved.",
+                  "fontFamily": "$font-slip",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ChCwP",
+      "type": "ref",
+      "ref": "L4tb2b",
+      "name": "16 Compendium Preview — Dark",
+      "x": 1800,
+      "y": 12974,
+      "theme": {
+        "mode": "dark"
+      }
+    },
+    {
+      "id": "SWg3z",
+      "type": "ref",
+      "ref": "Zm5HK",
+      "name": "16 Compendium Preview · Settings — Dark",
+      "x": 3800,
+      "y": 12974,
+      "theme": {
+        "mode": "dark"
+      }
+    },
+    {
+      "type": "frame",
+      "id": "M9qII3",
+      "x": 800,
+      "y": 13854,
+      "name": "17 Compendium Preview — Narrow (Light)",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 480,
+      "height": 780,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "C1rf10",
+          "name": "Window Bar",
+          "width": "fill_container",
+          "height": 30,
+          "fill": "#191813",
+          "padding": [
+            0,
+            12
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "P7pCl1",
+              "name": "Window Title",
+              "fill": "$text-on-dark-muted",
+              "content": "Armourer & Blacksmith",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "CGjfF",
+              "name": "Bar right",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K1wDcZ",
+                  "name": "NPC sheet button",
+                  "cornerRadius": 3,
+                  "stroke": "#c9c7b866",
+                  "strokeWidth": 1,
+                  "gap": 5,
+                  "padding": [
+                    2,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Ydj2y",
+                      "name": "NPC sheet icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "user-round",
+                      "library": "lucide",
+                      "fill": "$text-on-dark-muted"
+                    },
+                    {
+                      "type": "text",
+                      "id": "QzDbx",
+                      "name": "NPC sheet label",
+                      "fill": "$text-on-dark-muted",
+                      "content": "NPC sheet",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "J54xT",
+                  "name": "Close",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "x",
+                  "library": "lucide",
+                  "fill": "$text-on-dark-muted"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x7qAh4",
+          "name": "Hero",
+          "width": "fill_container",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "$header-1",
+                "position": 0
+              },
+              {
+                "color": "$header-2",
+                "position": 1
+              }
+            ]
+          },
+          "gap": 12,
+          "padding": [
+            14,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "B8gSJd",
+              "name": "Merchant Portrait",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "assets/items/blacksmith.webp",
+                "mode": "fill"
+              },
+              "width": 52,
+              "height": 52,
+              "stroke": "$accent-gold",
+              "strokeWidth": 2
+            },
+            {
+              "type": "frame",
+              "id": "amDZf",
+              "name": "Identity",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "UhFR2",
+                  "name": "Shop Name",
+                  "fill": "$text-on-dark",
+                  "content": "Armourer & Blacksmith",
+                  "fontFamily": "$font-title",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "BU3q9",
+                  "name": "Chips",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Y1TQCp",
+                      "name": "Chip Open until 19:00",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "gap": 5,
+                      "padding": [
+                        2,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "dDYNJ",
+                          "name": "Dot",
+                          "fill": "$success",
+                          "width": 6,
+                          "height": 6
+                        },
+                        {
+                          "type": "text",
+                          "id": "iFuBm",
+                          "name": "Chip text",
+                          "fill": "$text-on-dark",
+                          "content": "Open until 19:00",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "aUDEu",
+                      "name": "Chip Town",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "gap": 5,
+                      "padding": [
+                        2,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "MhjyK",
+                          "name": "Chip icon",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "hammer",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YlUiy",
+                          "name": "Chip text",
+                          "fill": "$text-on-dark",
+                          "content": "Town",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fqmmJ",
+                      "name": "Chip List · ½",
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "gap": 5,
+                      "padding": [
+                        2,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "d5JAD8",
+                          "name": "Chip icon",
+                          "width": 11,
+                          "height": 11,
+                          "icon": "scale",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "u3pu1k",
+                          "name": "Chip text",
+                          "fill": "$text-on-dark",
+                          "content": "List · ½",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "Clurf",
+              "name": "Info",
+              "width": 16,
+              "height": 16,
+              "icon": "info",
+              "library": "lucide",
+              "fill": "$accent-on-dark"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "lR08b",
+          "name": "Tabs",
+          "width": "fill_container",
+          "height": 38,
+          "fill": "$surface-card",
+          "stroke": "$border-faint",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 20,
+          "padding": [
+            0,
+            16
+          ],
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "B7dE5s",
+              "name": "Tab Buy",
+              "stroke": "$accent-strong",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                9,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "r9FKH",
+                  "name": "Buy icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "shopping-bag",
+                  "library": "lucide",
+                  "fill": "$accent-strong"
+                },
+                {
+                  "type": "text",
+                  "id": "gskg7",
+                  "name": "Buy label",
+                  "fill": "$text-primary",
+                  "content": "Buy",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "A9x6A",
+              "x": 0,
+              "y": 0,
+              "name": "Tab Sell",
+              "enabled": false,
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                9,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "cJe2A",
+                  "name": "Sell icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "hand-coins",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "OaZqu",
+                  "name": "Sell label",
+                  "fill": "$text-secondary",
+                  "content": "Sell",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OUGw2",
+              "name": "Tab Settings",
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 2
+              },
+              "gap": 6,
+              "padding": [
+                0,
+                2,
+                9,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "JpDdE",
+                  "name": "Settings icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "settings-2",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "W1Wk7",
+                  "name": "Settings label",
+                  "fill": "$text-secondary",
+                  "content": "Settings",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "t2GJFJ",
+                  "name": "GM badge",
+                  "fill": "$accent-strong",
+                  "cornerRadius": 3,
+                  "padding": [
+                    1,
+                    5
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "q6ZzQ",
+                      "name": "GM badge text",
+                      "fill": "$text-on-dark",
+                      "content": "GM",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 9,
+                      "fontWeight": "700",
+                      "letterSpacing": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mp5RG",
+          "name": "Category bar",
+          "width": "fill_container",
+          "gap": 8,
+          "padding": [
+            10,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "WtNO5",
+              "name": "Category select",
+              "width": "fill_container",
+              "fill": "$surface-card",
+              "cornerRadius": 4,
+              "stroke": "$border-faint",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                7,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "U0FL6W",
+                  "name": "Cat icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "layout-grid",
+                  "library": "lucide",
+                  "fill": "$accent-strong"
+                },
+                {
+                  "type": "text",
+                  "id": "I6ZHA",
+                  "name": "Cat value",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "All goods",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "VeN35",
+                  "name": "Cat count",
+                  "fill": "$text-secondary",
+                  "content": "20",
+                  "fontFamily": "$font-compact",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "icon",
+                  "id": "Yh16A",
+                  "name": "Cat chevron",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "c6gfl",
+          "name": "Stock",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            0,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "XSpkN",
+              "name": "Group Weapons",
+              "width": "fill_container",
+              "gap": 10,
+              "padding": [
+                4,
+                0,
+                6,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IDIej",
+                  "name": "Weapons heading",
+                  "fill": "$text-title",
+                  "content": "Weapons",
+                  "fontFamily": "$font-title",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "yh284",
+                  "name": "Weapons rule",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            },
+            {
+              "id": "u16dAz",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Longsword",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/greatsword-guard.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Longsword"
+                },
+                "vYzUL": {
+                  "content": "Martial melee · 3 lb · 7 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "15"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "id": "N6m9jd",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Handaxe",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/axe-broad-black.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Handaxe"
+                },
+                "vYzUL": {
+                  "content": "Simple melee · 2 lb · 11 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "5"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "id": "P6Aybr",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Javelin",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/javelin-flared.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Javelin"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Simple melee · 2 lb · 21 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "5"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/silver.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "id": "i3Y5G3",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Longsword +1",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/greatsword-guard.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Longsword +1"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Martial melee · Uncommon · 3 lb · Last one"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "415"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "VZZJB",
+              "name": "Group Armor",
+              "width": "fill_container",
+              "gap": 10,
+              "padding": [
+                12,
+                0,
+                6,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Oue9x",
+                  "name": "Armor heading",
+                  "fill": "$text-title",
+                  "content": "Armor",
+                  "fontFamily": "$font-title",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "xalg6",
+                  "name": "Armor rule",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            },
+            {
+              "id": "Pu9OJ",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Breastplate",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/breastplate-collared-steel-grey.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Breastplate"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Medium armor · Last one"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "400"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "id": "iJEQh",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Chain Mail",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/breastplate-metal-scaled-grey.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Chain Mail"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Heavy armor · 4 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "75"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "id": "JsPe7",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Shield",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/round-wooden-boss-steel-brown.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Shield"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "+2 AC · 3 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "10"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "b1kvC",
+              "name": "Group Tools",
+              "width": "fill_container",
+              "gap": 10,
+              "padding": [
+                12,
+                0,
+                6,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "X7tNXV",
+                  "name": "Tools heading",
+                  "fill": "$text-title",
+                  "content": "Tools",
+                  "fontFamily": "$font-title",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "uC5tR",
+                  "name": "Tools rule",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                }
+              ]
+            },
+            {
+              "id": "YTR3x",
+              "type": "ref",
+              "ref": "wUkvn",
+              "name": "Row Smith's Tools",
+              "width": "fill_container",
+              "padding": 8,
+              "gap": 10,
+              "opacity": 1,
+              "descendants": {
+                "MY7RE": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/items/smithing-tongs-metal-red.webp",
+                    "mode": "fill"
+                  },
+                  "width": 34,
+                  "height": 34
+                },
+                "BZVOe": {
+                  "content": "Smith's Tools"
+                },
+                "p7o2oz": {
+                  "enabled": false
+                },
+                "vYzUL": {
+                  "content": "Artisan's tools · 8 lb · 4 left"
+                },
+                "UB234": {
+                  "enabled": false
+                },
+                "CZ7Dq/e1b2b": {
+                  "content": "20"
+                },
+                "CZ7Dq/B6r81": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "assets/gold.webp",
+                    "mode": "fill"
+                  }
+                },
+                "xqAHK": {
+                  "enabled": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "OL341",
+          "name": "Preview dock",
+          "width": "fill_container",
+          "fill": "$slip",
+          "stroke": "$slip-edge",
+          "strokeWidth": {
+            "top": 1
+          },
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#0000001f",
+            "offset": {
+              "x": 0,
+              "y": -4
+            },
+            "blur": 12
+          },
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            12,
+            16,
+            14,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "i8Njq",
+              "name": "Dock summary",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Z2GC33",
+                  "name": "Dock badge",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "$header-1",
+                  "cornerRadius": 16,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "SBx6H",
+                      "name": "Dock badge icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "book-open",
+                      "library": "lucide",
+                      "fill": "$accent-on-dark"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "r0uZF2",
+                  "name": "Dock text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fwBdq",
+                      "name": "Dock kicker",
+                      "fill": "$accent-gold",
+                      "content": "COMPENDIUM PREVIEW",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 10,
+                      "fontWeight": "700",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "SYF7p",
+                      "name": "Dock lines",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "A sample roll. Importing rolls the shop's own stock for a Town.",
+                      "lineHeight": 1.3,
+                      "fontFamily": "$font-slip",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "DoQfJ",
+              "type": "ref",
+              "ref": "cuFJz",
+              "name": "Import button",
+              "width": "fill_container",
+              "descendants": {
+                "HoVd8": {
+                  "icon": "download"
+                },
+                "fvB3n": {
+                  "content": "Import shop"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "j7ja1",
+      "type": "ref",
+      "ref": "M9qII3",
+      "name": "17 Compendium Preview — Narrow (Dark)",
+      "x": 1800,
+      "y": 13854,
+      "theme": {
+        "mode": "dark"
+      }
     }
   ],
   "themes": {

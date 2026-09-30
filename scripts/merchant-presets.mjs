@@ -1856,10 +1856,9 @@ Hooks.once("ready", async () => {
     const flags = actor.flags?.[MODULE];
     if (flags?.madeVisitable != null) actor.updateSource({ [`flags.${MODULE}.madeVisitable`]: null });
     if (flags?.visibility === true) actor.updateSource({ [`flags.${MODULE}.visibility`]: null });
-    // A pack merchant arrives already 2.0 but without its sheet, which stays off a compendium copy,
-    // a world compendium's included (#203, #204 review). V14 names that pack on the document; the
-    // create options arrive without it.
-    const sheetClass = actor.pack ? null : shopSheetOnArrival(actor);
+    // A pack merchant arrives with its sheet (#199); a shop without one (a 1.x one, from an
+    // Adventure say) gets it here, in a world compendium too, where it opens as a preview.
+    const sheetClass = shopSheetOnArrival(actor);
     if (sheetClass) actor.updateSource({ "flags.core.sheetClass": sheetClass });
   });
   Hooks.on("createToken", token => {

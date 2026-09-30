@@ -85,12 +85,15 @@
   {{#if header.descriptionText}}
     <button type="button" class="mp-info mp-narrow-only" data-tooltip="{{header.descriptionText}}" aria-label="{{header.descriptionText}}">{{mpIcon "info" pen="Info"}}</button>
   {{/if}}
+  {{!-- A compendium preview trades as no one (#199, design L4tb2b): no purse, no buyer strip. --}}
+  {{#unless preview}}
   <div class="mp-purse mp-wide-only" data-pen="Purse">
     <span class="mp-purse-label" data-pen="Purse Label">{{localize "MERCHANT_PRESETS.Shop.BuyingAs"}}</span>
     {{> buyerRow}}
   </div>
+  {{/unless}}
 </header>
-<div class="mp-buyer-strip mp-narrow-only" data-pen="Buyer strip">{{> buyerRow}}</div>
+{{#unless preview}}<div class="mp-buyer-strip mp-narrow-only" data-pen="Buyer strip">{{> buyerRow}}</div>{{/unless}}
 
 {{!-- Anchored under its chip (the chip names the anchor, per window). --}}
 <div id="{{appId}}-terms-popover" popover class="mp-terms-popover" style="position-anchor: --{{appId}}-terms">
@@ -108,6 +111,7 @@
 </div>
 
 {{!-- Anchored under the Buying as row, as the Terms popover is under its chip. --}}
+{{#unless preview}}
 <div id="{{appId}}-buyer-picker" popover class="mp-picker buyer-picker" style="position-anchor: --{{appId}}-buyer"
   data-pen="{{#if buyerPicker.gm}}Menu GM{{else}}Menu Player{{/if}}">
   {{#if buyerPicker.gm}}
@@ -127,6 +131,7 @@
     {{#each buyerPicker.actors}}{{> "modules/merchant-presets/templates/parts/buyer-entry.hbs" this}}{{/each}}
   {{/if}}
 </div>
+{{/unless}}
 
 <nav class="mp-tabs sheet-tabs tabs" data-group="primary" data-pen="Tabs">
   {{#each tabs}}
@@ -140,7 +145,7 @@
 <section class="tab buy-tab {{#if (eq kind "buy")}}active{{/if}} {{#if billOpen}}is-bill-open{{/if}}" data-group="primary" data-tab="buy" data-pen="Body">
   {{> categoryBar categories=buy.categories active=buy.activeCategory kind="buy"}}
   <nav class="mp-categories mp-wide-only" data-pen="Categories">{{> mpCategoryLinks categories=buy.categories kind="buy"}}</nav>
-  <div class="mp-stock shop-stock {{#unless open}}is-closed{{/unless}}" data-pen="Stock">
+  <div class="mp-stock shop-stock {{#if stockClosed}}is-closed{{/if}}" data-pen="Stock">
     {{#each buy.sections}}
       <div class="mp-group" data-pen="Group {{pen}}">
         <h2 class="mp-group-heading" data-pen="{{pen}} heading">{{label}}</h2><span class="mp-rule" data-pen="{{pen}} rule"></span>
@@ -172,9 +177,9 @@
               </span>
             {{/if}}
           </div>
-          {{!-- A sold-out line has nothing to add (design: the Shield row), and a closed shop nothing at
-                all (x9IX9); the rows stay, to look over. --}}
-          {{#if (and ../../open (not (eq stock.state "soldOut")))}}
+          {{!-- A sold-out line has nothing to add (design: the Shield row), and a closed shop or a
+                compendium preview nothing at all (x9IX9, L4tb2b); the rows stay, to look over. --}}
+          {{#if (and ../../canAdd (not (eq stock.state "soldOut")))}}
             <button type="button" class="mp-add" data-action="addLine" data-item-id="{{id}}" data-pen="Add"
               aria-label="{{localize 'MERCHANT_PRESETS.Shop.Buy.AddToBill'}}"
               {{#if (or unpriced worthless)}}disabled{{/if}}>
@@ -187,13 +192,16 @@
       <p class="shop-empty">{{localize "MERCHANT_PRESETS.Shop.Buy.Empty"}}</p>
     {{/each}}
   </div>
-  {{#if buy.showClosed}}
+  {{#if preview}}
+    {{> "modules/merchant-presets/templates/parts/preview-card.hbs" preview=preview tier=header.tier}}
+  {{else if buy.showClosed}}
     {{> "modules/merchant-presets/templates/parts/closed-card.hbs" closed}}
   {{else}}
     {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" buy}}
   {{/if}}
 </section>
 
+{{#unless preview}}
 <section class="tab sell-tab {{#if (eq kind "sell")}}active{{/if}} {{#if billOpen}}is-bill-open{{/if}}" data-group="primary" data-tab="sell" data-pen="Body">
   {{> categoryBar categories=sell.categories active=sell.activeCategory kind="sell"}}
   <nav class="mp-categories mp-wide-only" data-pen="Categories">
@@ -276,9 +284,10 @@
     {{> "modules/merchant-presets/templates/parts/bill-of-sale.hbs" sell}}
   {{/if}}
 </section>
+{{/unless}}
 
 {{#if settings}}
-  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}} {{#if settings.previewOpen}}is-preview-open{{/if}}" data-group="primary" data-tab="settings" data-pen="Body">
+  <section class="tab settings-tab {{#if (eq kind "settings")}}active{{/if}} {{#if settings.previewOpen}}is-preview-open{{/if}} {{#if settings.readOnly}}is-readonly{{/if}}" data-group="primary" data-tab="settings" data-pen="Body">
     {{> "modules/merchant-presets/templates/parts/settings-tab.hbs" settings}}
   </section>
 {{/if}}

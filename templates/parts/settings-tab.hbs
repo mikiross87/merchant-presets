@@ -105,22 +105,32 @@
   </label>
 </div>
 <nav class="mp-section-nav mp-wide-only" data-pen="Section Nav">
+  {{!-- A compendium preview (#199, design Zm5HK) reads its settings: nothing here writes, and
+        whether players can visit is the world's own business. --}}
+  {{#unless readOnly}}
   {{> visitToggle}}
   <span class="mp-visit-gap" data-pen="Visit gap"></span>
+  {{/unless}}
   {{#each sections}}
     <button type="button" class="mp-nav-link {{#if active}}active{{/if}}" data-action="settingsSection" data-section="{{id}}" data-pen="Nav {{label}}">
       {{mpIcon icon pen=(concat label " icon")}}<span data-pen="{{label}} label">{{label}}</span>
     </button>
   {{/each}}
   <span class="mp-nav-spacer" data-pen="Nav spacer"></span>
+  {{#unless readOnly}}
   <button type="button" class="mp-reset" data-action="resetToPreset" data-pen="Reset" {{disabled (not canReset)}}
     {{#unless canReset}}data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Reset.NoPreset'}}"{{/unless}}>
     {{mpIcon "rotate-ccw" pen="Reset icon"}}<span data-pen="Reset label">{{localize "MERCHANT_PRESETS.Shop.Settings.Reset.Label"}}</span>
   </button>
+  {{/unless}}
 </nav>
 
 <div class="mp-form settings-body" data-pen="Form">
-  {{> visitToggle class="mp-narrow-only"}}
+  {{#if readOnly}}
+    <div class="mp-preview-notice" data-pen="Preview notice">{{mpIcon "book-open" pen="Notice icon"}}<span data-pen="Notice text">{{localize "MERCHANT_PRESETS.Shop.Preview.Settings"}}</span></div>
+  {{else}}
+    {{> visitToggle class="mp-narrow-only"}}
+  {{/if}}
   {{#if broken}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Broken"}}</p>{{/if}}
 
   <section class="settings-section" data-section="terms" data-pen="Section Terms">
@@ -137,7 +147,7 @@
     <div class="mp-rules" data-pen="Category rules">
       <span class="mp-rate-label" data-pen="Cat rules label">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Title"}}</span>
       {{#unless terms.rules.length}}<span class="mp-rules-none" data-pen="Cat rules none">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.None"}}</span>{{/unless}}
-      {{#if terms.ruleChoices.length}}
+      {{#if (and terms.ruleChoices.length (not readOnly))}}
         <button type="button" class="mp-button" data-action="addRule" data-pen="Add rule"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Add"}}</span></button>
       {{/if}}
     </div>
@@ -148,10 +158,12 @@
           <input type="text" inputmode="decimal" value="{{sellsPercent}}" placeholder="{{sellsFollows}}" data-op="ruleRate" data-category="{{category}}" data-side="sellsAt" />%</span>
         <span class="settings-percent">{{localize "MERCHANT_PRESETS.Shop.Settings.Rules.Buys"}}
           <input type="text" inputmode="decimal" value="{{buysPercent}}" placeholder="{{buysFollows}}" data-op="ruleRate" data-category="{{category}}" data-side="buysAt" />%</span>
+        {{#unless ../readOnly}}
         <button type="button" class="mp-icon-button" data-action="removeRule" data-category="{{category}}"
           data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Rules.Remove'}}">
           {{mpIcon "trash-2"}}
         </button>
+        {{/unless}}
       </div>
     {{/each}}
   </section>
@@ -169,6 +181,7 @@
           </span>
           <span class="mp-deal-note" data-pen="{{name}} note">{{line}}</span>
         </span>
+        {{#unless ../readOnly}}
         <button type="button" class="mp-icon-button" data-action="editDeal" data-actor="{{actor}}"
           data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Edit'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Edit'}}">
           {{mpIcon "pencil" pen=(concat name " pencil")}}
@@ -177,13 +190,14 @@
           data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Remove'}}" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Deals.Remove'}}">
           {{mpIcon "trash-2" pen=(concat name " trash-2")}}
         </button>
+        {{/unless}}
       </div>
     {{else}}
-      <p class="mp-hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.None"}}</p>
+      <p class="mp-hint" data-pen="Deals none">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.None"}}</p>
     {{/each}}
     <div class="mp-deals-foot" data-pen="Deals foot">
       <span class="mp-cap-note" data-pen="Cap note">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Cap"}}</span>
-      <button type="button" class="mp-button" data-action="addDeal" data-pen="Add deal"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Add"}}</span></button>
+      {{#unless readOnly}}<button type="button" class="mp-button" data-action="addDeal" data-pen="Add deal"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Add"}}</span></button>{{/unless}}
     </div>
   </section>
 
@@ -271,9 +285,11 @@
           {{#if restock.next}}<span class="mp-hint" data-pen="Next line">{{restock.next}}</span>{{/if}}
         {{/if}}
       </div>
+      {{#unless readOnly}}
       <button type="button" class="mp-restock-now" data-action="restockNow" data-pen="Restock now" {{disabled (not restock.table)}}>
         {{mpIcon "refresh-cw" pen="Icon"}}<span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Now"}}</span>
       </button>
+      {{/unless}}
     </div>
   </section>
 
@@ -307,9 +323,11 @@
     <p class="mp-hint {{#if till.unlimited}}mp-dim{{/if}}" data-pen="Till note">{{localize "MERCHANT_PRESETS.Shop.Settings.Till.Note"}}</p>
   </section>
   {{!-- The nav's reset, for a narrow window, which hides the nav. --}}
+  {{#unless readOnly}}
   <button type="button" class="mp-reset mp-narrow-only" data-action="resetToPreset" {{disabled (not canReset)}}>
     {{mpIcon "rotate-ccw"}}<span>{{localize "MERCHANT_PRESETS.Shop.Settings.Reset.Label"}}</span>
   </button>
+  {{/unless}}
   </div>
 </div>
 

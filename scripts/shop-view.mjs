@@ -969,3 +969,16 @@ export function sealState(state, hasLines, { gmOnline = true } = {}) {
     default: return { labelKey: "MERCHANT_PRESETS.Shop.Seal.Invalid", disabled: true, icon: "lucide:circle-slash" };
   }
 }
+
+/**
+ * Whether the shop window is a compendium preview (#199, design band 16): a shop that sits in a
+ * compendium, ours or a world one it was exported to, rather than the world. Nothing in a preview
+ * trades or edits; a GM can import it from there. `null` for a shop in the world.
+ *
+ * @param {{pack?: string|null}} actor
+ * @param {{isGM?: boolean}} [user]
+ * @returns {{canImport: boolean}|null}
+ */
+export function compendiumPreview(actor, user) {
+  return actor?.pack ? { canImport: !!user?.isGM } : null;
+}

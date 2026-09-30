@@ -22,6 +22,8 @@ class ActorSheetV2 {
     globalThis.foundry.applications.instances.set(Symbol("app"), this);
   }
   get isEditable() { return this.document.testUserPermission(globalThis.game.user, this.options.editPermission); }
+  get isVisible() { return this.document.testUserPermission(globalThis.game.user, this.options.viewPermission); }
+  _canDragDrop() { return this.isEditable; }
   _toggleDisabled(disabled) { this.disabled = disabled; }
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
   render() { this.renders++; }
@@ -2166,4 +2168,150 @@ test("a GM's open window re-reads Buying as when a token comes or goes on the vi
   fire("updateToken", { parent: scene });
   fire("updateActor", actor("stranger", []));
   assert.equal(sheet.renders - before, 3);
+});
+
+/* ------------------------------------------------------------ compendium preview (#199) */
+
+/**
+ * A shop window opened on a merchant inside a compendium (design band 16): the Merchants pack's,
+ * or a world compendium a shop was exported to. `gm` opens it as the GM; the shop records updates.
+ */
+function openPreview(t, { gm = true, permission = OWNERSHIP.OBSERVER } = {}) {
+  const opened = openSettings(t, { gm });
+  opened.shop.pack = "merchant-presets.merchants";
+  opened.shop.testUserPermission = (_user, level) => permission >= (OWNERSHIP[level] ?? level);
+  return opened;
+}
+
+test("a shop opened inside a compendium previews its shelf: no buyer, no Sell tab, nothing to add (#199)", async t => {
+  const { sheet } = openPreview(t);
+  const context = await sheet._prepareContext({});
+  assert.deepEqual(context.preview, { canImport: true });
+  assert.equal(context.buyer, null, "no Buying as");
+  assert.equal(context.canAdd, false, "no add buttons, open or not");
+  assert.equal(context.stockClosed, false, "the shelf isn't dimmed as closed");
+  assert.deepEqual(sheet._getTabsConfig("primary").tabs.map(tab => tab.id), ["buy", "settings"]);
+  assert.equal(context.settings.readOnly, true);
+});
+
+test("a player's preview has the Buy tab alone and no Import shop (#199)", async t => {
+  const { sheet } = openPreview(t, { gm: false });
+  const context = await sheet._prepareContext({});
+  assert.deepEqual(context.preview, { canImport: false });
+  assert.deepEqual(sheet._getTabsConfig("primary").tabs.map(tab => tab.id), ["buy"]);
+});
+
+test("a world shop's window is no preview (#199)", async t => {
+  const { sheet } = openSettings(t);
+  const context = await sheet._prepareContext({});
+  assert.equal(context.preview, null);
+  assert.equal(context.canAdd, true);
+  assert.equal(context.settings.readOnly, false);
+  assert.deepEqual(sheet._getTabsConfig("primary").tabs.map(tab => tab.id), ["buy", "sell", "settings"]);
+});
+
+test("a preview wears no Fresh chip or New badge: a world's restock isn't the compendium copy's (#199)", async () => {
+  const { sheet, shop } = openShop({ shopItems: [item("rope", { quantity: 5, flags: { "merchant-presets": { newAt: 8 * 3600, drawn: true } } })] });
+  shop.flags["merchant-presets"].restockedAt = 8 * 3600;      // exported the morning it restocked
+  shop.pack = "world.my-shops";
+  const before = globalThis.game.time.worldTime;
+  try {
+    globalThis.game.time.worldTime = 12 * 3600;
+    const { header, buy } = await sheet._prepareContext({});
+    assert.deepEqual([header.fresh, buy.sections[0].rows[0].isNew], [false, false]);
+  } finally {
+    globalThis.game.time.worldTime = before;
+  }
+});
+
+test("a preview puts nothing on the bill and seals nothing (#199)", async t => {
+  const { sheet } = openPreview(t);
+  let sent = null;
+  api.trade = async request => { sent = request; return { status: "sealed" }; };
+  await act(sheet, "addLine", { itemId: "rope" });
+  assert.equal(sheet._baskets.buy.size, 0);
+  sheet._baskets.buy.set("rope", 1);   // however a line got there
+  await act(sheet, "seal");
+  assert.equal(sent, null);
+});
+
+test("a preview's Settings write nothing to the compendium copy (#199)", async t => {
+  const { sheet, shop } = openPreview(t);
+  const restocked = [];
+  api.requestRestock = async actor => { restocked.push(actor); return { status: "restocked", restocked: [] }; };
+  t.after(() => { delete api.requestRestock; });
+  const control = (op, extra = {}) => ({ dataset: { op, ...extra }, value: "120", checked: true });
+  await sheet._onSettingChange(control("rate", { side: "sellsAt" }));
+  await sheet._onSettingChange(control("visit"));
+  await sheet._onSettingChange(control("till", { denomination: "gp" }));
+  await act(sheet, "setEvery", { every: "3" });
+  await act(sheet, "addRule", { category: "weapon" });
+  await act(sheet, "removeDeal", { actor: "Actor.hero" });
+  await act(sheet, "resetToPreset");
+  await act(sheet, "restockNow");
+  let asked = 0;
+  const askDeal = ShopSheet.askDeal;
+  ShopSheet.askDeal = async () => { asked++; return null; };
+  t.after(() => { ShopSheet.askDeal = askDeal; });
+  await act(sheet, "addDeal");
+  assert.deepEqual(shop.updates, []);
+  assert.deepEqual(restocked, []);
+  assert.equal(asked, 0);
+});
+
+test("Import shop imports the merchant, closes the preview and opens the world shop (#199)", async t => {
+  const { sheet, shop } = openPreview(t);
+  shop.id = "smith";
+  const pack = { collection: "merchant-presets.merchants" };
+  const opened = [];
+  const imported = { sheet: { render: force => opened.push(force) } };
+  const calls = [];
+  const saved = { packs: globalThis.game.packs, actors: globalThis.game.actors };
+  t.after(() => Object.assign(globalThis.game, saved));
+  globalThis.game.packs = { get: id => (id === pack.collection ? pack : undefined) };
+  globalThis.game.actors = Object.assign([], { importFromCompendium: async (...args) => { calls.push(args); return imported; } });
+  let closed = 0;
+  sheet.close = async () => { closed++; };
+  await act(sheet, "importShop");
+  // Core's own import options (DocumentSheetV2's importDocument): a shop already in the world asks
+  // Replace or New instead of being overwritten, and ownership stays as the pack has it.
+  assert.deepEqual(calls, [[pack, "smith", {}, { clearOwnership: false, dialog: true }]]);
+  assert.equal(closed, 1);
+  assert.deepEqual(opened, [true]);
+});
+
+test("an import the GM cancels leaves the preview open (#199 review)", async t => {
+  const { sheet, shop } = openPreview(t);
+  shop.id = "smith";
+  const saved = { packs: globalThis.game.packs, actors: globalThis.game.actors };
+  t.after(() => Object.assign(globalThis.game, saved));
+  globalThis.game.packs = { get: () => ({ collection: "merchant-presets.merchants" }) };
+  globalThis.game.actors = Object.assign([], { importFromCompendium: async () => undefined });
+  let closed = 0;
+  sheet.close = async () => { closed++; };
+  await act(sheet, "importShop");
+  assert.equal(closed, 0);
+});
+
+test("nothing can be dropped on a preview, even from an unlocked world compendium (#199 review)", t => {
+  const { sheet } = openPreview(t, { permission: OWNERSHIP.OWNER });
+  assert.equal(sheet.isEditable, true, "core would let the GM edit it");
+  assert.equal(sheet._canDragDrop(".mp-stock"), false);
+  assert.equal(openSettings(t).sheet._canDragDrop(".mp-stock"), true, "a world shop still takes drops");
+});
+
+test("a player can't import from a preview (#199)", async t => {
+  const { sheet } = openPreview(t, { gm: false });
+  const calls = [];
+  const saved = globalThis.game.actors;
+  t.after(() => { globalThis.game.actors = saved; });
+  globalThis.game.actors = Object.assign([], { importFromCompendium: async (...args) => { calls.push(args); } });
+  await act(sheet, "importShop");
+  assert.deepEqual(calls, []);
+});
+
+test("a preview opens on the compendium's own permission, not at a counter (#199)", t => {
+  atCounter(t, { tokens: [] });
+  assert.equal(openPreview(t, { gm: false, permission: OWNERSHIP.LIMITED }).sheet.isVisible, true);
+  assert.equal(openPreview(t, { gm: false, permission: OWNERSHIP.NONE }).sheet.isVisible, false);
 });

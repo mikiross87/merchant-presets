@@ -125,7 +125,9 @@ export async function setup() {
     for (let t = 0; t < 60 && steady < 3; t++) {
       await new Promise(r => setTimeout(r, 500));
       const now = drawnHere();
-      steady = now > 0 && now === seen ? steady + 1 : 0;
+      // Adoption stamps the goods already there before the roll replaces them: a steady count means
+      // nothing until the roll's last write, lastRestockAt, has landed too (#199).
+      steady = now > 0 && now === seen && actor.flags[MP]?.lastRestockAt != null ? steady + 1 : 0;
       seen = now;
     }
     if (steady < 3) throw new Error(`${what}'s arrival roll never finished`);
@@ -220,9 +222,10 @@ const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, "Longsword +1": 1, Breast
  * An `open` for the shop window: the frame's theme on this client, `before` (an in-page statement,
  * `shop` in scope; the GM's frames only), Aria as the buyer, `basket` and `sellBasket` ([name,
  * quantity] pairs: the shop's goods, Aria's) on the Buy and Sell bills, the window at the frame's
- * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders.
+ * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders. `from`
+ * (an in-page expression) is the shop, when it isn't the world actor called `name`.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", coin = "finite", name = SHOP } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", coin = "finite", name = SHOP, from = null } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
   if (game.user.isGM) {
@@ -249,7 +252,7 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   ui.colorScheme = { applications: theme, interface: theme };
   await game.settings.set("core", "uiConfig", ui);
   await redrawn;
-  const shop = game.actors.getName(${JSON.stringify(name)});
+  const shop = ${from ?? `game.actors.getName(${JSON.stringify(name)})`};
   ${before}
   const app = shop.sheet;
   app._buyerUuid = game.actors.getName("Aria").uuid;
@@ -512,6 +515,37 @@ const billOpen = openShop({ size: { width: 480, height: 780 }, before: withoutDe
 const sellNarrow = openShop({ tab: "sell", before: withoutDeals + restocked(1), sellBasket: [["Longsword", 1], ["Potion of Healing", 2]] });
 /** The Sell tab's receipt (design euA99): Aria's sale sealed, then the goods put back. */
 const sellSealed = tradeState({ tab: "sell", basket: [], sellBasket: [["Longsword", 1], ["Potion of Healing", 2]], act: sealThenPutBack("sell") });
+/** The compendium preview's shelf (#199, design L4tb2b): the frames' rows as a pack's roll holds them, nothing sold out. */
+const PREVIEW_ROWS = { ...ROWS, Shield: 3 };
+/**
+ * The compendium preview frames' shop (#199, bands 16 and 17): the smith, deals cleared, copied
+ * into a world compendium ("Design previews", made the first time) as a pack's merchant would sit
+ * there: its shelf rolled once, never restocked or sold from. Each open replaces the copy.
+ */
+const previewCopy = `await (async () => {
+  const smith = game.actors.getName(${JSON.stringify(SHOP)});
+  const Packs = foundry.documents.collections.CompendiumCollection;
+  const pack = game.packs.get("world.design-previews")
+    ?? await Packs.createCompendium({ type: "Actor", label: "Design previews", name: "design-previews" });
+  if (pack.locked) await pack.configure({ locked: false });
+  const index = await pack.getIndex();
+  if (index.size) await Actor.deleteDocuments([...index.keys()], { pack: pack.collection });
+  const data = smith.toObject();
+  delete data._id;
+  data.flags["merchant-presets"].shop.deals = [];
+  delete data.flags["merchant-presets"].restockedAt;
+  const rows = ${JSON.stringify(PREVIEW_ROWS)};
+  for (const item of data.items) {
+    if (item.name in rows) item.system.quantity = rows[item.name];
+    if (item.flags["merchant-presets"]) delete item.flags["merchant-presets"].newAt;
+  }
+  const [copy] = await Actor.createDocuments([data], { pack: pack.collection });
+  await pack.configure({ locked: true });
+  return copy;
+})()`;
+const preview = openShop({ from: previewCopy });
+const previewSettings = openShop({ tab: "settings", from: previewCopy, before: `shop.sheet._settingsSection = "terms";` });
+
 const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill]];
 const dealFrames = Object.fromEntries(["light", "dark"].flatMap(theme => DEAL_PARTS.map(([part, node, open]) => [
   `${theme === "light" ? "Q6UvA" : "pMFqj"}:${part}`,
@@ -568,5 +602,11 @@ export const FRAMES = {
   IeGac: frame("15 Temple & Faith Store — Light", "light", 920, 760, "Gamemaster", temple),
   iczDO: frame("15 Temple & Faith Store — Dark", "dark", 920, 760, "Gamemaster", temple),
   pI7Yd: frame("15 Stable — Light", "light", 920, 760, "Gamemaster", stable),
-  ldd9L: frame("15 Stable — Dark", "dark", 920, 760, "Gamemaster", stable)
+  ldd9L: frame("15 Stable — Dark", "dark", 920, 760, "Gamemaster", stable),
+  L4tb2b: frame("16 Compendium Preview — Light", "light", 920, 680, "Gamemaster", preview),
+  ChCwP: frame("16 Compendium Preview — Dark", "dark", 920, 680, "Gamemaster", preview),
+  Zm5HK: frame("16 Compendium Preview · Settings — Light", "light", 920, 760, "Gamemaster", previewSettings),
+  SWg3z: frame("16 Compendium Preview · Settings — Dark", "dark", 920, 760, "Gamemaster", previewSettings),
+  M9qII3: frame("17 Compendium Preview — Narrow (Light)", "light", 480, 780, "Gamemaster", preview),
+  j7ja1: frame("17 Compendium Preview — Narrow (Dark)", "dark", 480, 780, "Gamemaster", preview)
 };

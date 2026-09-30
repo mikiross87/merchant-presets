@@ -26,7 +26,7 @@ import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, sa
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
   COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRowMeta, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
-  inspectTargets, itemTooltipHtml, currentSection
+  inspectTargets, itemTooltipHtml, currentSection, compendiumPreview
 } from "./shop-view.mjs";
 
 import { accessModeOf, accessOf, canOpenOn, canVisit, gmCandidates, reachOnScene, tokensOf } from "./reach.mjs";
@@ -485,7 +485,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       removeDeal: ShopSheet.#onRemoveDeal,
       restockNow: ShopSheet.#onRestockNow,
       resetToPreset: ShopSheet.#onResetToPreset,
-      openTable: ShopSheet.#onOpenTable
+      openTable: ShopSheet.#onOpenTable,
+      importShop: ShopSheet.#onImportShop
     }
   };
 
@@ -498,6 +499,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       templates: [
         `${TEMPLATES}/parts/bill-of-sale.hbs`,
         `${TEMPLATES}/parts/closed-card.hbs`,
+        `${TEMPLATES}/parts/preview-card.hbs`,
         `${TEMPLATES}/parts/buyer-entry.hbs`,
         `${TEMPLATES}/parts/settings-tab.hbs`
       ]
@@ -515,6 +517,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * @override
    */
   get isVisible() {
+    // A compendium preview (#199) stands at no counter: core's own check, which asks the compendium.
+    if (this.preview) return super.isVisible;
     const scene = globalThis.canvas?.ready ? globalThis.canvas.scene : null;
     return canOpenOn(scene, this.document, game.user, accessModeOf(game.settings.get(MODULE, "shopAccess")), gridless());
   }
@@ -557,6 +561,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._everyDice = false;
   }
 
+  /**
+   * Whether this window is a compendium preview (#199, design band 16): the shop sits in a
+   * compendium, not the world, so nothing here trades or edits. `{canImport}`, or null.
+   */
+  get preview() {
+    return compendiumPreview(this.document, game.user);
+  }
+
   /** The shop's name, as its own heading shows it: no "Non-Player Character:" and no tier (#145). */
   get title() {
     return titleParts(this.document.name).title;
@@ -578,6 +590,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * @override
    */
   _toggleDisabled() {}
+
+  /**
+   * Nothing is dropped on a compendium preview (#199 review): core lets a GM edit a copy in an
+   * unlocked world compendium, and a dropped item would be written to it.
+   * @override
+   */
+  _canDragDrop(selector) {
+    return !this.preview && super._canDragDrop(selector);
+  }
 
   /**
    * A re-render replaces the popovers, and one comes on every clock tick or buyer update (see
@@ -671,6 +692,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         });
       } else control.addEventListener("change", () => this._onSettingChange(control));
     }
+    // A compendium preview's settings are read, not changed (#199, design Zm5HK): every control
+    // that would edit is off, dimmed by the tab's is-readonly styles.
+    if (this.preview) {
+      for (const control of this.element?.querySelectorAll(".settings-tab :is([data-op], [data-action='setEvery'])") ?? []) control.disabled = true;
+    }
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
       const { dirty, value, selection } = this._settingFocus;
@@ -756,9 +782,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /** @override */
   _getTabsConfig(group) {
     if (group !== "primary") return super._getTabsConfig(group);
+    // A compendium preview has no one to sell for it (#199).
     const tabs = [
       { id: "buy", icon: "lucide:shopping-bag" },
-      { id: "sell", icon: "lucide:hand-coins" }
+      ...(this.preview ? [] : [{ id: "sell", icon: "lucide:hand-coins" }])
     ];
     if (game.user.isGM) tabs.push({ id: "settings", icon: "lucide:settings-2", gm: true });
     return { tabs, initial: "buy", labelPrefix: "MERCHANT_PRESETS.Shop.Tabs" };
@@ -786,7 +813,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const calendarDays = game.time.calendar.days;
     const minute = this.#minuteOfDay();
     const open = isOpen(config.hours, minute, calendarDays);
-    const buyer = this.#resolveBuyer();
+    // A compendium preview (#199) trades as no one: it reads at the shop's own terms.
+    const preview = this.preview;
+    const buyer = preview ? null : this.#resolveBuyer();
     const kind = this.tabGroups.primary;
     this.#pruneBaskets();
 
@@ -804,6 +833,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       actor,
       config,
       open,
+      preview,
+      // A good goes on the bill only in an open shop in the world (#199: a preview has no bill); a
+      // preview's shelf is its sample roll to look over, never dimmed as closed.
+      canAdd: open && !preview,
+      stockClosed: !open && !preview,
       header,
       buyerPicker: this.#buyerPickerContext(buyer, currencies),
       buyer,
@@ -850,8 +884,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tier,
       kindIcon: kindIcon(actor, config),
       // "Fresh stock today" until the shop closes after the restock (#152).
-      // Not without a clock, which is what clears it (#149).
-      fresh: worldFollowsClock() && isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
+      // Not without a clock, which is what clears it (#149), nor in a compendium preview, whose
+      // copy never restocked: a world's restock came along on the export (#199).
+      fresh: !this.preview && worldFollowsClock() && isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -1110,8 +1145,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
-        // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
-        row.isNew = worldFollowsClock() && isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
+        // "New" until the shop closes after the restock that brought it back, while it's still in
+        // stock (#152). Never in a compendium preview (#199), as with the Fresh chip.
+        row.isNew = !this.preview && worldFollowsClock() && isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
@@ -1185,6 +1221,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static async #onAddLine(_event, target) {
+    if (this.preview) return;   // no bill in a compendium preview (#199)
     const kind = this.tabGroups.primary;
     // The bill that's out is the one the answer settles; changing it mid-flight would stamp a
     // different bill, or lose the id a retry needs.
@@ -1660,6 +1697,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /* -------------------------------------------------------------- sealing */
 
   static async #onSeal(_event, _target) {
+    if (this.preview) return;
     const kind = this.tabGroups.primary;
     // The button disables on the re-render, but a second click can land before that does.
     if (this._tradeState[kind] === "sealing") return;
@@ -1867,6 +1905,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }
 
     return {
+      // A compendium preview's settings can be read, not changed (#199, design Zm5HK).
+      readOnly: !!this.preview,
       // A config that failed validation shows the defaults here; editing is refused (see `#edit`).
       broken: !safeShopOf(actor),
       // One page: the nav jumps to a section, and marks the one last jumped to.
@@ -2123,7 +2163,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * couldn't write the shop anyway.
    */
   async _onSettingChange(control) {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM || this.preview) return;
     const { op, side, list, end } = control.dataset;
     // Read now, while the control still holds what the GM set; applied when its turn comes.
     const value = control.value, checked = control.checked;
@@ -2212,6 +2252,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * moved on to and is typing in.
    */
   #queue(task, field = null) {
+    // A compendium copy is never written (#199): its window is a read-only preview.
+    if (this.preview) return this._edits ?? Promise.resolve();
     this._edits = (this._edits ?? Promise.resolve()).then(task).catch(err => {
       console.error(`${MODULE} | a shop setting wasn't saved`, err);
       ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.SaveFailed"));
@@ -2348,12 +2390,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static async #onAddDeal() {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM || this.preview) return;
     await this.#dealForm(null);
   }
 
   static async #onEditDeal(_event, target) {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM || this.preview) return;
     const deal = safeShopOf(this.document)?.deals.find(d => d.actor === target.dataset.actor);
     if (deal) await this.#dealForm(deal);
   }
@@ -2422,7 +2464,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static async #onRestockNow() {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM || this.preview) return;
     const answer = await game.modules.get(MODULE).api?.requestRestock?.(this.document);
     const status = answer?.status ?? "no-answer";
     if (status === "failed") ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Failed"));
@@ -2430,7 +2472,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static async #onResetToPreset() {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM || this.preview) return;
     const shop = safeShopOf(this.document);
     if (!shop) {
       ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
@@ -2444,6 +2486,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     });
     if (!yes) return;
     await this.#edit(() => ({ op: "reset", preset }));
+  }
+
+  /**
+   * Import shop (#199): the previewed merchant goes into the Actors directory by core's own import,
+   * which rolls its shelf and gives it its sheet as any import does, and its window replaces this one.
+   * Core's own options (DocumentSheetV2's importDocument): a shop already in the world under that id
+   * asks Replace or New, never overwritten unasked (#199 review); cancelled, the preview stays.
+   */
+  static async #onImportShop() {
+    if (!this.preview?.canImport) return;
+    const pack = game.packs.get(this.document.pack);
+    const imported = pack ? await game.actors.importFromCompendium(pack, this.document.id, {}, { clearOwnership: false, dialog: true }) : null;
+    if (!imported) return;
+    await this.close();
+    imported.sheet?.render(true);
   }
 
   static async #onOpenTable() {

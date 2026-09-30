@@ -11,6 +11,15 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Added
+
+- Opening a merchant in the *Merchants* compendium shows its shop window as a
+  preview, so you can see what a shop sells, at what terms and hours, before
+  importing it. The goods are the compendium's sample roll (importing rolls the
+  shop's own), nothing can be bought or sold, and its Settings can be read but
+  not changed. *Import shop* brings it into the world and opens its window.
+  (#199)
+
 ### Changed
 
 - In the Bill of Sale, a name too long for its line now wraps onto a second
