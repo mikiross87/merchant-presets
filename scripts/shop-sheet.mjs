@@ -709,7 +709,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     search.addEventListener("input", filter);
   }
 
-  /** Re-measures the bill's leaders whenever a bill line's box changes size; made at the first bill. */
+  /** Re-measures the bill's leaders whenever a bill line's box changes size; made at each render with a bill. */
   #leaderObserver = null;
 
   /** @override */
@@ -722,13 +722,16 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * A bill name that wraps keeps its box at full width: its leader starts where the last line
    * ends, not after that box (#198, design IeGac). The name is held at its wrapped width, or the
    * room the leader gives back would unwrap it. Measured once layout settles and again whenever a
-   * line's box resizes (the window's width arrives after the first render; a resize; a font).
+   * line's box resizes (the window's width arrives after the first render; a resize). A web font
+   * arriving late re-measures only if it changes a line's box.
    */
   #observeLeaders() {
     this.#leaderObserver?.disconnect();
+    this.#leaderObserver = null;
     const entries = this.element?.querySelectorAll(".mp-entry") ?? [];
     if (!entries.length) return;
-    this.#leaderObserver ??= new ResizeObserver(() => this.#pullLeaders());
+    // Its own window's observer: a popped-out window (ApplicationV2#detachWindow) isn't the main one.
+    this.#leaderObserver = new entries[0].ownerDocument.defaultView.ResizeObserver(() => this.#pullLeaders());
     for (const entry of entries) this.#leaderObserver.observe(entry);
   }
 
@@ -737,7 +740,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const leader = name.nextElementSibling;
       if (!leader?.classList.contains("mp-leader")) continue;
       name.style.maxWidth = leader.style.marginLeft = "";
-      const range = document.createRange();
+      const range = name.ownerDocument.createRange();
       range.selectNodeContents(name);
       const last = [...range.getClientRects()].at(-1);
       const box = name.getBoundingClientRect();
