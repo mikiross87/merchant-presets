@@ -125,7 +125,9 @@ export async function setup() {
     for (let t = 0; t < 60 && steady < 3; t++) {
       await new Promise(r => setTimeout(r, 500));
       const now = drawnHere();
-      steady = now > 0 && now === seen ? steady + 1 : 0;
+      // Adoption stamps the goods already there before the roll replaces them: a steady count means
+      // nothing until the roll's last write, lastRestockAt, has landed too (#199).
+      steady = now > 0 && now === seen && actor.flags[MP]?.lastRestockAt != null ? steady + 1 : 0;
       seen = now;
     }
     if (steady < 3) throw new Error(`${what}'s arrival roll never finished`);
