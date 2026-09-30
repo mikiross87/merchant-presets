@@ -26,9 +26,11 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 13 | No world clock (#149): Settings (GM) · No world clock — Light / Dark; below it, the Bill and receipt boards with no dates, light and dark |
 | 14 | Settings (GM) · Till (#147) — Light / Dark; Settings (GM) · Till, unlimited coin — Light / Dark |
 | 15 | Service shops (#151): Temple & Faith Store — Light / Dark (spellcasting: named spells by name with their level and school, level services "any Level N spell", "Cast for Aria" on the bill); Stable — Light / Dark (tack and mounts as goods, "Joins Aria" on the bill). The Dock follows the Stable's rows |
+| 16 | Compendium preview (#199): Compendium Preview — Light / Dark (the Buy tab of a merchant opened inside a compendium); Compendium Preview · Settings — Light / Dark |
+| 17 | Compendium preview, narrow (#199): Compendium Preview — Narrow (Light) / (Dark) |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (16, at y 12974) and gets a row here.
+A new agreed screen goes in the next band (18, at y 14754) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
@@ -121,6 +123,18 @@ The shop window **is the NPC's sheet**. It's registered as an actor sheet (never
 
 - **Players** need Limited permission, because core only opens a sheet on double-click for Limited or above. The GM tab's **"Players can visit"** switch sets it; off hides the shop entirely.
 - **GM:** the same window plus the Settings tab. An **NPC sheet** button in the window bar opens dnd5e's own sheet for stats.
+
+## Compendium preview (#199, band 16)
+
+A merchant opened inside a compendium (ours, or a world compendium a shop was exported to) opens the shop window as a read-only preview. The GM can see what a shop sells, at what terms and hours, before importing it.
+
+- **Buy tab:** the pack's stock, as the compendium rolled it, with no add buttons. The bill's place holds the **Compendium preview** card: the goods are a sample roll, importing rolls the shop's own stock for its size, nothing can be bought or sold here, then **Import shop** and a pointer to drag and drop.
+- **Import shop** imports the merchant into the Actors directory, which rolls its stock as any import does, closes the preview and opens the imported shop's window.
+- **No trading:** no purse panel (no *Buying as*), no Sell tab, no bill and no seal.
+- **Settings (GM):** readable, not editable. A note heads the form, and every control is at 0.45 opacity as in band 13. *Add rule*, *Add deal*, *Restock now* and *Reset to preset* are gone, and so is *Players can visit*, which is world state. The stock table link still opens the table.
+- **Narrow (band 17):** no buyer strip. The card becomes a dock in the bill dock's place: the kicker, one line on the sample roll, and *Import shop*, always visible.
+- **Players** who can open the compendium get the Buy tab preview without *Import shop*.
+- The stock drawn is what a pack snapshot can hold: no *New* badges and nothing sold out, since the pack copy has never restocked or sold anything.
 
 ## Buying as (#103)
 
