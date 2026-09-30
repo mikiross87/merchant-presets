@@ -517,8 +517,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * @override
    */
   get isVisible() {
-    // A compendium preview (#199) stands at no counter: the compendium's own permission decides.
-    if (this.preview) return this.document.testUserPermission(game.user, this.options.viewPermission ?? "LIMITED");
+    // A compendium preview (#199) stands at no counter: core's own check, which asks the compendium.
+    if (this.preview) return super.isVisible;
     const scene = globalThis.canvas?.ready ? globalThis.canvas.scene : null;
     return canOpenOn(scene, this.document, game.user, accessModeOf(game.settings.get(MODULE, "shopAccess")), gridless());
   }
@@ -590,6 +590,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * @override
    */
   _toggleDisabled() {}
+
+  /**
+   * Nothing is dropped on a compendium preview (#199 review): core lets a GM edit a copy in an
+   * unlocked world compendium, and a dropped item would be written to it.
+   * @override
+   */
+  _canDragDrop(selector) {
+    return !this.preview && super._canDragDrop(selector);
+  }
 
   /**
    * A re-render replaces the popovers, and one comes on every clock tick or buyer update (see
@@ -2482,11 +2491,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /**
    * Import shop (#199): the previewed merchant goes into the Actors directory by core's own import,
    * which rolls its shelf and gives it its sheet as any import does, and its window replaces this one.
+   * Core's own options (DocumentSheetV2's importDocument): a shop already in the world under that id
+   * asks Replace or New, never overwritten unasked (#199 review); cancelled, the preview stays.
    */
   static async #onImportShop() {
     if (!this.preview?.canImport) return;
     const pack = game.packs.get(this.document.pack);
-    const imported = pack ? await game.actors.importFromCompendium(pack, this.document.id) : null;
+    const imported = pack ? await game.actors.importFromCompendium(pack, this.document.id, {}, { clearOwnership: false, dialog: true }) : null;
     if (!imported) return;
     await this.close();
     imported.sheet?.render(true);
