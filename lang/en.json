@@ -25,6 +25,16 @@
         "NextRestock": "Next restock",
         "NextRestockAt": "{date}, at opening"
       },
+      "Preview": {
+        "Title": "Compendium preview",
+        "Sub": "Not in this world yet",
+        "Body": "These goods are the compendium's sample roll. Importing rolls the shop's own stock for a {tier}, so its goods and quantities will differ.",
+        "Note": "Nothing can be bought or sold in a preview.",
+        "Import": "Import shop",
+        "Hint": "Or drag it onto a scene or into the Actors directory.",
+        "Dock": "A sample roll. Importing rolls the shop's own stock for a {tier}.",
+        "Settings": "A compendium preview. Import the shop to change its settings."
+      },
       "ClosedOpensAt": "Closed · opens at {time}",
       "TermsChip": "Sells at {sells} · Buys at {buys}",
       "TermsChipSells": "Sells at {sells}",

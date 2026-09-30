@@ -890,6 +890,26 @@
 .shop-sheet .mp-hours-row { display: flex; justify-content: space-between; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-hours-row b { color: var(--mp-paper-ink); }
 
+/* -------------------------------------------------------------- compendium preview (#199, design L4tb2b, Zm5HK, M9qII3) */
+
+.shop-sheet .mp-preview-note { color: var(--mp-muted); }
+.shop-sheet .mp-import { align-self: stretch; justify-content: center; gap: 8px; }
+.shop-sheet .mp-import .mp-icon { width: 16px; height: 16px; }
+.shop-sheet .mp-preview-hint { margin: 0; font: italic 400 13px/17px "Crimson Pro", system-ui, sans-serif; text-align: center; color: var(--mp-muted); }
+.shop-sheet .mp-preview-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: var(--mp-inset);
+  font: 400 13px/18px Roboto, system-ui, sans-serif;
+  color: var(--mp-paper-ink);
+}
+.shop-sheet .mp-preview-notice .mp-icon { flex: none; width: 16px; height: 16px; color: var(--mp-muted); }
+/* What would edit is dimmed, as where shops keep no clock (design RRqQ7); the controls themselves are disabled at render. */
+.shop-sheet .settings-tab.is-readonly :is(.mp-rate-row, .mp-check.is-option, .mp-schedule, .mp-option, .settings-rule) { opacity: 0.45; }
+
 /* -------------------------------------------------------------- settings tab (#110, design v8ap9) */
 
 .shop-sheet .settings-tab.active { display: flex; flex-direction: row; gap: 0; }
@@ -1540,6 +1560,11 @@
   }
   .shop-sheet .mp-dock .mp-coin b { color: var(--mp-paper-ink); }
   .shop-sheet .mp-dock-expand .mp-icon { width: 16px; height: 16px; color: var(--mp-muted); }
+  /* A compendium preview's dock (design M9qII3): the badge, a wrapped line, and Import shop. */
+  .shop-sheet .mp-preview-dock.mp-narrow-only { padding: 12px 16px 14px; }
+  .shop-sheet .mp-preview-dock .mp-moon { width: 32px; height: 32px; border-radius: 16px; }
+  .shop-sheet .mp-preview-dock .mp-moon .mp-icon { width: 16px; height: 16px; }
+  .shop-sheet .mp-preview-dock .mp-dock-lines { white-space: normal; line-height: 1.3; }
 }
 
 /* -------------------------------------------------------------- the deal form (#111, design Q6UvA) */
