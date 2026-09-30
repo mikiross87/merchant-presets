@@ -210,7 +210,7 @@ test("placing a token of an actor that isn't a shop changes nothing (#104)", asy
 
 test("a shop imported from the pack opens as the shop window and rolls its own shelf, no Item Piles (#104)", async () => {
   const { world, shop } = await setUp();
-  assert.equal(shop.flags.core?.sheetClass, undefined, "the pack copy keeps the NPC sheet (#204 review)");
+  assert.equal(shop.flags.core?.sheetClass, "merchant-presets.ShopSheet", "the pack copy previews as the shop window (#199)");
   await world.fire("preCreateActor", shop, {}, {}, "gm");
   world.actors.push(shop);
   await world.fire("createActor", shop, {}, "gm");
@@ -231,12 +231,13 @@ test("a shop arriving with a GM's own sheet choice keeps it (#204 review)", asyn
   assert.equal(shop.flags.core.sheetClass, "dnd5e.NPCActorSheet");
 });
 
-test("a shop exported into a world compendium gets no sheet there (#204 review)", async () => {
+test("a shop without a sheet put into a world compendium gets the shop window, which previews there (#199)", async () => {
   const { world, shop } = await setUp();
+  delete shop.flags.core;   // a 1.x shop, say, or one whose GM cleared its sheet
   // V14 names the pack on the document; the create options arrive without it (live probe, #204).
   shop.pack = "world.my-shops";
   await world.fire("preCreateActor", shop, {}, { keepId: true, clearOwnership: true, action: "create", render: true }, "gm");
-  assert.equal(shop.flags.core?.sheetClass, undefined);
+  assert.equal(shop.flags.core?.sheetClass, "merchant-presets.ShopSheet");
 });
 
 test("of one GM's tabs only the one that claims trades takes in a shop that GM dragged in: two would each roll a shelf (#136)", async () => {

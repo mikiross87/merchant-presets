@@ -473,10 +473,10 @@ test("a freshly imported pack merchant is already in its 2.0 shape: nothing to m
       assert.equal(planActorUpdate(m, { access }).update, null, `${m.name}, ${access}`);
     }
     assert.equal(m.prototypeToken.flags?.["item-piles"]?.data?.enabled, false, m.name);
-    // Core reads a sheet class on a compendium copy too, and the shop window has no read-only mode
-    // for one: the sheet goes on as the merchant arrives in the world instead (#204 review).
-    assert.equal(m.flags.core?.sheetClass, undefined, m.name);
-    assert.equal(shopSheetOnArrival(m), SHOP_SHEET_ID, m.name);
+    // Shipped with the shop window, which core opens on the compendium copy too, as a read-only
+    // preview (#199); arriving in the world, it already has its sheet.
+    assert.equal(m.flags.core?.sheetClass, SHOP_SHEET_ID, m.name);
+    assert.equal(shopSheetOnArrival(m), null, m.name);
   }
 });
 
