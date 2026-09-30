@@ -19,7 +19,7 @@ import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.
 import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText, wholeCoins } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
-import { HAGGLE_SKILLS, callable } from "./haggle.mjs";
+import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
 import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
 import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
@@ -2432,12 +2432,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     const i18n = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Haggle.${key}`, data);
-    // The deal form's candidates (#200), but only player characters: a haggle is a player's roll.
-    const offered = gmCandidates(game.actors, globalThis.canvas?.ready ? globalThis.canvas.scene : null, this.document)
-      .filter(a => a.type === "character");
+    // The deal form's candidates (#200), but only player characters a player owns: a haggle is a player's roll.
+    const offered = playerOwned(gmCandidates(game.actors, globalThis.canvas?.ready ? globalThis.canvas.scene : null, this.document)
+      .filter(a => a.type === "character"), game.users);
     const characters = callable(shop, offered, game.time.worldTime);
     if (!characters.length) {
-      ui.notifications.warn(i18n("Form.NoOne"));
+      ui.notifications.warn(i18n(offered.length ? "Form.NoOne" : "Form.NoCharacters"));
       return;
     }
     const buys = effectiveRates(worldOf().rates, shop.terms).buysAt.rate > 0;

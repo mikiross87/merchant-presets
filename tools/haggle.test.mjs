@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { shopFrom } from "../scripts/schema.mjs";
 import {
   allowedSkills, callable, callLapsed, checkRollMessage, haggleAdjustment, haggleCard, haggleDeal, haggleEnds, haggleOutcome,
-  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, rollable, showsRollButtons, validCall
+  HAGGLE_SKILLS, playerOwned, resolveCall, rollable, showsRollButtons, validCall
 } from "../scripts/haggle.mjs";
 
 const CAL = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
@@ -168,7 +168,7 @@ test("on a player's-choice call each social skill is accepted and Insight is not
 const NOW = 1_800_000_000_000;
 const message = (over = {}) => ({ id: "msg1", author: "user1", speakerActor: "aria", type: "check", skill: "per",
   total: 17, timestamp: NOW - 1000, ...over });
-const request = { userId: "user1", actorId: "aria", skills: ["per"], used: new Set(), now: NOW, since: 0 };
+const request = { userId: "user1", actorId: "aria", skills: ["per"], used: new Set(), since: 0 };
 
 test("a fresh check of the allowed skill by the roller, for the called character, is accepted", () => {
   assert.equal(checkRollMessage(message(), request), null);
@@ -193,16 +193,28 @@ test("anything else about the roll message refuses it, in order", () => {
   assert.equal(checkRollMessage(message({ skill: "ins" }), request), "wrong-skill");
   assert.equal(checkRollMessage(message({ type: "base" }), request), "wrong-skill");
   assert.equal(checkRollMessage(message({ total: undefined }), request), "wrong-skill");
-  assert.equal(checkRollMessage(message({ timestamp: NOW - ROLL_FRESH_MS - 1 }), request), "stale");
   assert.equal(checkRollMessage(message({ timestamp: undefined }), request), "stale");
-  assert.equal(checkRollMessage(message({ timestamp: NOW + 60_000 }), request), "stale");
+  assert.equal(checkRollMessage(message({ timestamp: NaN }), request), "stale");
   assert.equal(checkRollMessage(message(), { ...request, used: new Set(["msg1"]) }), "used");
+});
+
+test("a roll the server stamped after the card is fresh whatever the GM's clock says", () => {
+  // A GM clock an hour behind the server: the old `now` bound called this roll stale.
+  assert.equal(checkRollMessage(message(), { ...request, now: NOW - 3_600_000, since: NOW - 2000 }), null);
+  assert.equal(checkRollMessage(message({ timestamp: NOW + 3_600_000 }), { ...request, since: NOW }), null);
 });
 
 test("a roll made before the card was posted is stale: no picking the best of earlier rolls", () => {
   assert.equal(checkRollMessage(message(), { ...request, since: NOW - 999 }), "stale");
   assert.equal(checkRollMessage(message(), { ...request, since: NOW - 1000 }), null);
   assert.equal(checkRollMessage(message(), { ...request, since: undefined }), "stale");
+});
+
+test("only characters a non-GM user owns can be rolled for", () => {
+  const owned = by => ({ uuid: "x", testUserPermission: (u, level) => level === "OWNER" && by.includes(u.id) });
+  const users = [{ id: "gm", isGM: true }, { id: "p1", isGM: false }];
+  const mine = owned(["p1"]);
+  assert.deepEqual(playerOwned([mine, owned(["gm"]), owned([])], users), [mine]);
 });
 
 /* ---------------------------------------------------------------- the card */

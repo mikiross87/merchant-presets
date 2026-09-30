@@ -1144,7 +1144,7 @@ async function requestSetUp(actor, sourceUuid, keepIds = []) {
 
 /* ---------------------------------------------------------------- haggling (#112) */
 
-/** Roll messages already spent on a haggle, on this (the claiming) tab. */
+/** Roll messages already spent on a haggle, in memory on the claiming tab (a reload forgets them; `since` still binds a roll to a card newer than it). */
 const usedHaggleRolls = new Set();
 
 /**
@@ -1243,7 +1243,7 @@ async function rollHaggle({ messageId, rollId } = {}, user) {
   const reason = checkRollMessage(roll && {
     id: roll.id, author: roll.author?.id, speakerActor: roll.speaker?.actor,
     type: roll.type, skill: roll.system?.skill, total: roll.rolls?.[0]?.total, timestamp: roll.timestamp
-  }, { userId: user.id, actorId: actor.id, skills: allowedSkills(call), used: usedHaggleRolls, now: Date.now(), since: card.timestamp });
+  }, { userId: user.id, actorId: actor.id, skills: allowedSkills(call), used: usedHaggleRolls, since: card.timestamp });
   if (reason) return { status: "refused", reason };
   usedHaggleRolls.add(roll.id);
 

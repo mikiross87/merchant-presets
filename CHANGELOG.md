@@ -15,8 +15,8 @@ than for the code. Reference the issue or PR it closes.
 
 - Haggling: when a player bargains, call for a haggle from the shop's Deals.
   The player rolls Persuasion, Deception or Intimidation from chat against the
-  shopkeeper's Insight, and a win takes up to 20% off their price, or adds it
-  to the shop's offers, until closing. (#112)
+  shopkeeper's Insight: a win takes up to 20% off their price, or adds it to
+  the shop's offers, until closing, and a bad miss costs them 10%. (#112)
 
 ### Fixed
 

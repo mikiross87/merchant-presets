@@ -10,13 +10,11 @@ import { nextCloseAt, secondsPerDay } from "./schedule.mjs";
  * tab reads the roll back from the chat message it made (`checkRollMessage`), never from a number
  * the socket carries, and turns the result into an ordinary #111 deal that ends when the shop
  * closes. Known limits: a player who forges a chat roll from the console can cheat this as they
- * can any dnd5e roll, and the call's DC sits in the card's flags, which a player's console reads.
+ * can any dnd5e roll, and the call's DC sits in the card's flags; core sends every whisper to every
+ * client, so any player's console can read it, as it can the shopkeeper's passive Insight on the actor itself.
  *
  * Times are world seconds; the calendar is the world clock's own numbers, as in schedule.mjs.
  */
-
-/** How long a roll message stays usable for a haggle, in real milliseconds. */
-export const ROLL_FRESH_MS = 5 * 60_000;
 
 /** The dnd5e skill ids a haggle may be rolled with: Persuasion, Deception, Intimidation. */
 export const HAGGLE_SKILLS = ["per", "dec", "itm"];
@@ -99,6 +97,11 @@ export function callable(shop, characters, worldTime) {
   return characters.filter(c => !activeDeal(shop, c.uuid, worldTime));
 }
 
+/** The characters some non-GM user owns, the only ones anyone can roll a haggle for. */
+export function playerOwned(characters, users) {
+  return characters.filter(c => users.some(u => !u.isGM && c.testUserPermission(u, "OWNER")));
+}
+
 /**
  * Whether a GM's call request can be posted: `side` one the shop trades on (`sell` only when it
  * `buys`), `dc` a whole number from 1 to 40, and `skill` a haggle skill or null (the player's choice).
@@ -152,19 +155,19 @@ export function resolveCall(call, shop, { total, skill, skillName }, { worldTime
 /**
  * Why a roll message can't back a haggle, or null when it can. `message` is the chat message
  * as plain data: `author` and `speakerActor` are ids, `type` and `skill` dnd5e's own
- * (`type: "check"`, `system.skill`), `total` the first roll's, `timestamp` real milliseconds. `skills` are the skill
+ * (`type: "check"`, `system.skill`), `total` the first roll's, `timestamp` the server's milliseconds. `skills` are the skill
  * ids the call allows (`allowedSkills`); `since` is the card's timestamp, so a roll made before the
  * card (the best of earlier rolls) is stale.
  *
  * @returns {null|"missing"|"author"|"speaker"|"wrong-skill"|"stale"|"used"}
  */
-export function checkRollMessage(message, { userId, actorId, skills, used, now, since }) {
+export function checkRollMessage(message, { userId, actorId, skills, used, since }) {
   if (!message) return "missing";
   if (message.author !== userId) return "author";
   if (message.speakerActor !== actorId) return "speaker";
   if (message.type !== "check" || !skills.includes(message.skill) || !Number.isFinite(message.total)) return "wrong-skill";
-  const age = now - message.timestamp;
-  if (!(age >= 0 && age <= ROLL_FRESH_MS && message.timestamp >= since)) return "stale";
+  // Both stamps are the server's, so the GM's own clock never enters into it.
+  if (!(Number.isFinite(message.timestamp) && message.timestamp >= since)) return "stale";
   if (used.has(message.id)) return "used";
   return null;
 }

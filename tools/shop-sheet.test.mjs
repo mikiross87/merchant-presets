@@ -2328,7 +2328,9 @@ function openHaggle(t, deals = []) {
   opened.result = { status: "called", messageId: "m1" };
   Sheet.askHaggle = async context => { opened.forms.push(context); return opened.answer; };
   api.callHaggle = async call => { opened.calls.push(call); return opened.result; };
-  t.after(() => { Sheet.askHaggle = ask; delete api.callHaggle; });
+  const users = globalThis.game.users;
+  globalThis.game.users = [{ id: "gm1", isGM: true }, { id: "p1", isGM: false }];
+  t.after(() => { Sheet.askHaggle = ask; delete api.callHaggle; globalThis.game.users = users; });
   return opened;
 }
 
@@ -2338,7 +2340,7 @@ test("Call for a haggle offers the player characters with no deal, and calls the
     const { sheet, shop, buyer, warnings } = opened;
     shop.name = "Smith";
     shop.system.skills = { ins: { passive: 14 } };
-    const kess = { uuid: "Actor.kess", name: "Kess", type: "character" };
+    const kess = { uuid: "Actor.kess", name: "Kess", type: "character", testUserPermission: () => true };
     const tomas = { uuid: "Actor.tomas", name: "Tomas", type: "npc" };
     globalThis.game.actors = [shop, buyer, kess, tomas];
     sheet.document.flags["merchant-presets"].shop.deals = [{ actor: kess.uuid, name: "Kess", buy: -0.1, sell: null, note: "", ends: null }];
@@ -2373,6 +2375,18 @@ test("with every character already dealt with, Call for a haggle warns and opens
   await act(sheet, "callHaggle");
   assert.equal(opened.forms.length, 0);
   assert.deepEqual(warnings, ["MERCHANT_PRESETS.Haggle.Form.NoOne"]);
+});
+
+test("with no player character anyone owns, Call for a haggle says so rather than that all have deals", async t => {
+  const opened = openHaggle(t);
+  const { sheet, buyer, warnings } = opened;
+  buyer.testUserPermission = (user, level) => user.isGM && level === "OWNER";
+  await act(sheet, "callHaggle");
+  assert.equal(opened.forms.length, 0);
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Haggle.Form.NoCharacters"]);
+  buyer.type = "npc";
+  await act(sheet, "callHaggle");
+  assert.deepEqual(warnings, Array(2).fill("MERCHANT_PRESETS.Haggle.Form.NoCharacters"));
 });
 
 test("a call the desk doesn't post is said, with its reason; a cancelled form calls nothing", async t => {
