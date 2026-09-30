@@ -335,7 +335,7 @@ const shelfAsPacked = name => `{
  * The service shops (#151), yesterday's restock so nothing is fresh, the list scrolled to `group`
  * as its frame draws it. At the temple Aria has saved 100 gp more, for a named spell and a cantrip.
  */
-const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: restocked(1) + shelfAsPacked(name) + before,
+const serviceShop = (name, group, basket, before = "") => openShop({ name, basket, before: withoutDeals + restocked(1) + shelfAsPacked(name) + before,
   then: `const stock = app.element.querySelector(".buy-tab .mp-stock");
   const first = stock.querySelector('[data-pen^="Group "]'), to = stock.querySelector('[data-pen="Group ${group}"]');
   stock.scrollTop = to.getBoundingClientRect().top - first.getBoundingClientRect().top;` });
