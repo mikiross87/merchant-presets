@@ -28,6 +28,9 @@ than for the code. Reference the issue or PR it closes.
 
 ### Fixed
 
+- Foundry no longer logs a validation warning for each of the 51 merchants
+  ("depth: must be a number") every time a world launches: their tokens now
+  ship with their size. (#194)
 - A trade's receipt in chat draws the whole gold ring around the merchant's
   portrait and each item's picture; its left side (and the portrait's top) was
   cut off. (#211)
