@@ -73,6 +73,16 @@ test("the shop stylesheet never re-uses a dnd5e background that carries a relati
   assert.doesNotMatch(css, /var\(--dnd5e-(application-background|background-texture-[a-z-]+|journal-content-background)\)/);
 });
 
+test("a receipt's message content doesn't clip its pictures' rings (#211)", () => {
+  // Foundry's `.chat-message .message-content` is overflow: hidden. The receipt takes that box's
+  // padding away, so its portrait and goods sit on the box's edge, and their 1px outline, drawn
+  // outside them, was cut off on the left and top.
+  const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const content = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter(([, prelude]) => split(prelude).includes(`${RECEIPT} > .message-content`)).map(([, , body]) => body).join(";");
+  assert.match(content, /(^|;)\s*overflow:\s*visible\s*(;|$)/);
+});
+
 test("every visually hidden input is positioned by its own label, not the window (#176)", () => {
   // `.mp-visually-hidden` is position: absolute. With no positioned ancestor inside the scrolling
   // form it takes the window as its containing block, so it doesn't scroll with the form: it sits
