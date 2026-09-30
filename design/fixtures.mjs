@@ -113,6 +113,9 @@ export async function setup() {
   const kess = await Actor.create({ name: "Kess", type: "character", "system.currency": { pp: 0, gp: 41, ep: 0, sp: 7, cp: 0 } });
   await withClass(kess, "Rogue", 5);
   const ownedBy = user => ({ default: 0, ...(user ? { [user.id]: 3 } : {}) });
+  // Aria is P1's own: assigned as P1's character isn't owned in V14, and a whisper to her owners (a
+  // haggle card, #112) or the player's Buyer Picker goes by ownership.
+  if (p1 && aria.ownership?.[p1.id] !== 3) await aria.update({ [`ownership.${p1.id}`]: 3 });
   await Actor.create({ name: "Tomas", type: "npc", ownership: ownedBy(p1), "system.details.type.value": "humanoid",
     "system.currency": { pp: 0, gp: 3, ep: 0, sp: 4, cp: 0 } });
   await Actor.create({ name: "Whisker", type: "npc", ownership: ownedBy(p1), "system.details.type.value": "beast" });
@@ -388,7 +391,8 @@ const receipt = ({ kind, lines, chat, clock = "auto" }) => `async ({ theme }) =>
   ui.sidebar.expand();
   ui.sidebar.changeTab("chat", "primary");
   await new Promise(r => setTimeout(r, 800));
-  const message = game.messages.contents.filter(m => m.content.includes("mp-receipt")).at(-1);
+  // A haggle card (#112) is drawn as a receipt too: not this frame's.
+  const message = game.messages.contents.filter(m => m.content.includes("mp-receipt") && !m.flags["merchant-presets"]?.haggle).at(-1);
   const li = document.querySelector('#sidebar [data-message-id="' + message.id + '"]');
   li.scrollIntoView({ block: "center" });
   li.id = "mp-receipt-under-check";
@@ -561,6 +565,97 @@ const exportedFrames = Object.fromEntries(["light", "dark"].flatMap(theme => [["
   frame(`16 Compendium Preview · Exported shop — ${theme === "light" ? "Light" : "Dark"} · ${part}`, theme, 880, 713, "Gamemaster", open, { export: theme === "light" ? "W9SYUv" : "S7wWTs", part: node })
 ])));
 
+/**
+ * Band 18 (#112): the call form (design hQVb5), opened from Settings → Deals with no deals, filled
+ * in as the frame draws it: Aria, on price, at the player's choice, with the smith's passive Insight
+ * as the DC. The fixture smith's is set to the frame's 14.
+ */
+const callForm = openShop({ tab: "settings", size: { width: 920, height: 760 },
+  before: withoutDeals + restocked(1) + `
+  await shop.update({ "system.skills.ins.bonuses.passive": "" });
+  const bonus = 14 - shop.system.skills.ins.passive;
+  if (bonus) await shop.update({ "system.skills.ins.bonuses.passive": String(bonus) });`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="deals"]').click();
+  app.element.querySelector('[data-action="callHaggle"]').click();
+  ${until("document.querySelector('.mp-haggle-form')")}
+  const form = document.querySelector(".mp-haggle-form");
+  const select = form.querySelector('[name="actor"]');
+  select.value = game.actors.getName("Aria").uuid;
+  select.dispatchEvent(new Event("change", { bubbles: true }));
+  form.id = "mp-haggle-form-under-check";`, root: '"mp-haggle-form-under-check"' });
+
+/**
+ * A Haggle card part (#112, design XAkJh): a real call through the API at 10:00 on the 14th, the
+ * card as `user` sees it in the chat log. The parts run in the board's story, each on the cards the
+ * one before it left (HAGGLE_PARTS order; `--frames` must keep it):
+ *
+ * - `open` (the GM): no deals, then Aria's call on price at the player's choice, DC 14 (card A);
+ * - `choice` (P1, Aria's player): card A, open, with its three Roll buttons;
+ * - `rolled` (the GM): Aria's call at Deception (card B, which lapses A), rolled for her with a d20
+ *   fixed at 16 (her Deception is +0) and sent to the desk as her player's Roll button sends it (the
+ *   haggle query; a GM's card has no buttons): 10% off. Then her deal is cleared and the same call
+ *   made again (card C), for the next part;
+ * - `chosen` (P1): card C, open, with its one Roll button;
+ * - `lapsed` (P1): card A.
+ */
+const haggleCard = step => `async ({ theme }) => {
+  const MP = "merchant-presets";
+  const cfg = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
+  cfg.colorScheme = { applications: theme, interface: theme };
+  await game.settings.set("core", "uiConfig", cfg);
+  const shop = game.actors.getName(${JSON.stringify(SHOP)});
+  const aria = game.actors.getName("Aria");
+  const cards = () => game.messages.contents.filter(m => m.flags[MP]?.haggle?.actor === aria.uuid && m.flags[MP].haggle.shopUuid === shop.uuid);
+  const call = async skill => {
+    ${withoutDeals}
+    const answer = await game.modules.get(MP).api.callHaggle({ shopUuid: shop.uuid, actorUuid: aria.uuid, side: "buy", skill, dc: 14 });
+    if (answer?.status !== "called") throw new Error("the fixture's call wasn't posted: " + JSON.stringify(answer));
+    return game.messages.get(answer.messageId);
+  };
+  ui.sidebar.expand();
+  ui.sidebar.changeTab("chat", "primary");
+  let message;
+  if (game.user.isGM) {
+    const perDay = game.time.calendar.days.hoursPerDay * game.time.calendar.days.minutesPerHour * game.time.calendar.days.secondsPerMinute;
+    const at = Math.floor(game.time.worldTime / perDay) * perDay + 10 * 3600;
+    if (at !== game.time.worldTime) await game.time.advance(at - game.time.worldTime);
+    await game.settings.set(MP, "followClock", "auto");
+  }
+  if (${JSON.stringify(step)} === "open") message = await call(null);
+  if (${JSON.stringify(step)} === "rolled") {
+    message = await call("dec");
+    const random = CONFIG.Dice.randomUniform;
+    // A d20 face is ceil((1 - u) * 20): 16 for u in [0.2, 0.25).
+    CONFIG.Dice.randomUniform = () => 0.225;
+    const quiet = Hooks.on("dnd5e.preRollSkillV2", (config, dialog) => { dialog.configure = false; });
+    try {
+      const rolls = await aria.rollSkill({ skill: "dec" });
+      const answer = await game.users.activeGM.query("merchant-presets.haggle", { roll: { messageId: message.id, rollId: rolls?.[0]?.parent?.id } });
+      if (answer?.status !== "rolled") throw new Error("the fixture's roll was refused: " + JSON.stringify(answer));
+    } finally {
+      CONFIG.Dice.randomUniform = random;
+      Hooks.off("dnd5e.preRollSkillV2", quiet);
+    }
+    if (game.messages.get(message.id).flags[MP].haggle.state !== "rolled") throw new Error("the fixture's roll wasn't settled");
+    await call("dec");
+  }
+  if (${JSON.stringify(step)} === "choice") message = cards().filter(m => m.flags[MP].haggle.state === "open" && !m.flags[MP].haggle.skill).at(-1);
+  if (${JSON.stringify(step)} === "chosen") message = cards().filter(m => m.flags[MP].haggle.state === "open" && m.flags[MP].haggle.skill === "dec").at(-1);
+  if (${JSON.stringify(step)} === "lapsed") message = cards().filter(m => m.flags[MP].haggle.state === "lapsed" && !m.flags[MP].haggle.skill).at(-1);
+  if (!message) throw new Error("no haggle card for ${step}: run the band 18 card parts in order (open, choice, rolled, chosen, lapsed)");
+  await new Promise(r => setTimeout(r, 800));
+  const li = document.querySelector('#sidebar [data-message-id="' + message.id + '"]');
+  li.scrollIntoView({ block: "center" });
+  li.id = "mp-haggle-under-check";
+  return li.id;
+}`;
+const HAGGLE_PARTS = [["open", "TAgKK", "Gamemaster"], ["choice", "lC50W", "P1"], ["rolled", "kA5Xw", "Gamemaster"], ["chosen", "b5cMp", "P1"], ["lapsed", "C4Jbd", "P1"]];
+const haggleFrames = Object.fromEntries(["light", "dark"].flatMap(theme => HAGGLE_PARTS.map(([step, part, user]) => [
+  `${theme === "light" ? "XAkJh" : "PtsKV"}:${step}`,
+  frame(`18 Haggling · Chat Card — ${theme === "light" ? "Light" : "Dark"} · ${step}`, theme, 1620, 386, user, haggleCard(step),
+    { export: theme === "light" ? "XAkJh" : "PtsKV", part })
+])));
+
 const DEAL_PARTS = [["form", "ckj1c", dealForm], ["ended", "YPFms", dealEnded], ["bill", "uKlTo", dealBill], ["long", "X2JhqQ", dealLongName]];
 const dealFrames = Object.fromEntries(["light", "dark"].flatMap(theme => DEAL_PARTS.map(([part, node, open]) => [
   `${theme === "light" ? "Q6UvA" : "pMFqj"}:${part}`,
@@ -624,5 +719,10 @@ export const FRAMES = {
   SWg3z: frame("16 Compendium Preview · Settings — Dark", "dark", 920, 760, "Gamemaster", previewSettings),
   M9qII3: frame("17 Compendium Preview — Narrow (Light)", "light", 480, 780, "Gamemaster", preview),
   j7ja1: frame("17 Compendium Preview — Narrow (Dark)", "dark", 480, 780, "Gamemaster", preview),
-  ...exportedFrames
+  ...exportedFrames,
+  hiyHK: frame("18 Haggling · Settings (GM) · Deals — Light", "light", 920, 760, "Gamemaster", settingsAt("deals", true)),
+  qG7TB: frame("18 Haggling · Settings (GM) · Deals — Dark", "dark", 920, 760, "Gamemaster", settingsAt("deals", true)),
+  hQVb5: frame("18 Haggling · Call form — Light", "light", 360, 252, "Gamemaster", callForm),
+  Ty8DX: frame("18 Haggling · Call form — Dark", "dark", 360, 252, "Gamemaster", callForm),
+  ...haggleFrames
 };

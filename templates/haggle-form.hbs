@@ -1,0 +1,49 @@
+{{!-- The call for a haggle (#112), built to design hQVb5: `this` is ShopSheet#onCallHaggle's context. --}}
+<div class="mp-form-body" data-pen="Form body">
+  <div class="mp-rate-row" data-pen="Row Character">
+    <span class="mp-rate-label" data-pen="Character label">{{localize "MERCHANT_PRESETS.Haggle.Form.Character"}}</span>
+    <label class="mp-select" data-pen="Character select">
+      <span class="mp-select-value" data-pen="Character value">{{characterName}}</span>{{mpIcon "chevron-down" pen="Character chevron"}}
+      <select class="mp-select-native" name="actor" aria-label="{{localize 'MERCHANT_PRESETS.Haggle.Form.Character'}}">
+        {{#each characters}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+      </select>
+    </label>
+  </div>
+  <div class="mp-rate-row" data-pen="Row Side">
+    <span class="mp-rate-label" data-pen="Side label">{{localize "MERCHANT_PRESETS.Haggle.Form.Side"}}</span>
+    <div class="mp-side-options" data-pen="Side options" role="radiogroup" aria-label="{{localize 'MERCHANT_PRESETS.Haggle.Form.Side'}}">
+      <label class="mp-side" data-pen="Side Price">
+        <input type="radio" class="mp-visually-hidden" name="side" value="buy" checked />
+        <span class="mp-radio" data-pen="Price radio"><span class="mp-radio-dot" data-pen="Dot"></span></span>
+        <span class="mp-side-title" data-pen="Price title">{{localize "MERCHANT_PRESETS.Haggle.Form.Price"}}</span>
+      </label>
+      {{#if buys}}
+      <label class="mp-side" data-pen="Side Offer">
+        <input type="radio" class="mp-visually-hidden" name="side" value="sell" />
+        <span class="mp-radio" data-pen="Offer radio"><span class="mp-radio-dot" data-pen="Dot"></span></span>
+        <span class="mp-side-title" data-pen="Offer title">{{localize "MERCHANT_PRESETS.Haggle.Form.Offer"}}</span>
+      </label>
+      {{/if}}
+    </div>
+  </div>
+  <div class="mp-rate-row" data-pen="Row Skill">
+    <span class="mp-rate-label" data-pen="Skill label">{{localize "MERCHANT_PRESETS.Haggle.Form.Skill"}}</span>
+    <label class="mp-select" data-pen="Skill field">
+      <span class="mp-select-value" data-pen="Skill value">{{skillName}}</span>{{mpIcon "chevron-down" pen="Skill chevron"}}
+      <select class="mp-select-native" name="skill" aria-label="{{localize 'MERCHANT_PRESETS.Haggle.Form.Skill'}}">
+        {{#each skills}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </label>
+  </div>
+  <div class="mp-rate-row" data-pen="Row DC">
+    <span class="mp-rate-label" data-pen="DC label">{{localize "MERCHANT_PRESETS.Haggle.Form.Dc"}}</span>
+    <label class="mp-field" data-pen="DC field">
+      <input type="text" inputmode="numeric" name="dc" value="{{dc}}" data-pen="DC value" aria-label="{{localize 'MERCHANT_PRESETS.Haggle.Form.Dc'}}" />
+    </label>
+    <em class="mp-plain" data-pen="DC hint">{{dcHint}}</em>
+  </div>
+  <div class="mp-form-foot" data-pen="Form foot">
+    <button type="button" class="mp-button is-large" data-action="cancel" data-pen="Cancel"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Haggle.Form.Cancel"}}</span></button>
+    <button type="submit" class="mp-button is-large is-primary" data-pen="Call">{{mpIcon "check" pen="Icon"}}<span data-pen="Label">{{localize "MERCHANT_PRESETS.Haggle.Form.Call"}}</span></button>
+  </div>
+</div>

@@ -15,13 +15,17 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArriv
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
+import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, showsRollButtons, validCall } from "./haggle.mjs";
+import { effectiveRates } from "./pricing.mjs";
+import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
   adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
-  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS, RESTOCK_QUERY, SETUP_QUERY,
-  receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord, worldTerms
+  bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
+  RESTOCK_QUERY, SETUP_QUERY, receiptHtml, receiptIcons, recipients, recordedOutcome, resultOf, serial, shouldReclaim, TRADE_HOOK, withRecord,
+  worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
 import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
@@ -998,10 +1002,44 @@ async function carryOutTrade(request, user) {
   return result;
 }
 
-/** A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs `receiptIcons`). */
-Hooks.on("renderChatMessageHTML", (_message, html) => {
+/**
+ * A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs
+ * `receiptIcons`). A haggle card (#112) gets its GM line for GMs, and while it's open a Roll button
+ * per allowed skill for the players who own its character (haggle.mjs `showsRollButtons`; not GMs, design TAgKK).
+ */
+Hooks.on("renderChatMessageHTML", (message, html) => {
   const receipt = html?.querySelector?.(".message-content .mp-receipt");
   if (receipt?.querySelector(".mp-icon-slot")) receipt.innerHTML = receiptIcons(receipt.innerHTML);
+  const call = message.flags?.[MODULE]?.haggle;
+  const card = html?.querySelector?.(".message-content .mp-haggle-card");
+  if (!call || !card || !message.author?.isGM) return;
+  if (game.user.isGM) {
+    const line = call.state === "rolled" ? haggleText("GmRolled", call) : haggleText("GmCall", call);
+    card.insertAdjacentHTML("beforeend", `<p class="mp-haggle-gm" data-pen="GM row">${icon("eye-off", { "data-pen": "GM line icon" })}`
+      + `<span data-pen="Haggle GM line">${escapeHtml(line)}</span></p>`);
+  }
+  const actor = typeof call.actor === "string" ? fromUuidSync(call.actor, { strict: false }) : null;
+  // Past its end the buttons go; nothing sweeps the card itself, and a click still lapses it.
+  if (!showsRollButtons(call, game.time.worldTime, { isGM: game.user.isGM, owner: !!actor?.testUserPermission(game.user, "OWNER") })) return;
+  const buttons = allowedSkills(call).map(skill => {
+    card.insertAdjacentHTML("beforeend", `<button type="button" class="mp-haggle-roll" data-pen="Roll ${escapeHtml(skill)}">`
+      + `${icon("dices", { "data-pen": "Icon" })}<span data-pen="Label">${escapeHtml(haggleText("Roll", { skill: skillName(skill) }))}</span></button>`);
+    return [card.lastElementChild, skill];
+  });
+  const disable = disabled => buttons.forEach(([b]) => { b.disabled = disabled; });
+  for (const [button, skill] of buttons) button.addEventListener("click", async () => {
+    disable(true);
+    try {
+      const rolls = await actor.rollSkill({ skill });
+      const rollId = rolls?.[0]?.parent?.id;
+      if (!rollId) return;   // the roll dialog was closed
+      const answer = await requestHaggle({ roll: { messageId: message.id, rollId } });
+      if (answer?.status !== "rolled") ui.notifications.warn(haggleText(`Refusal.${answer?.reason ?? answer?.status ?? "unconfirmed"}`));
+    } finally {
+      // A settled card re-renders without its buttons; these are left enabled only for a retry.
+      disable(false);
+    }
+  });
 });
 
 /** "14 Mirtul · mid-morning" (design z5RBkd): the world's date and part of the day, as a receipt says when. None without a clock (#149). */
@@ -1101,6 +1139,156 @@ async function requestSetUp(actor, sourceUuid, keepIds = []) {
   } catch (err) {
     console.warn(`${MODULE} | setting up "${actor.name}" as a shop unconfirmed:`, err.message);
     return { status: "no-answer", lines: null };
+  }
+}
+
+/* ---------------------------------------------------------------- haggling (#112) */
+
+/** Roll messages already spent on a haggle, in memory on the claiming tab (a reload forgets them; `since` still binds a roll to a card newer than it). */
+const usedHaggleRolls = new Set();
+
+/**
+ * The haggle query's handler (#112): a GM's call for a haggle, or a player's roll on its card,
+ * carried out on the claiming tab's trade queue, where every other write to a shop runs. Like a
+ * trade, a tab without the claim never answers.
+ */
+function handleHaggleQuery(request, { user }) {
+  if (!claimsTrades(tradeClaim(), thisTab())) return new Promise(() => {});
+  if (request?.call) return runTrade(() => settled(callHaggle(request.call, user), "calling for a haggle"));
+  if (request?.roll) return runTrade(() => settled(rollHaggle(request.roll, user), "settling a haggle roll"));
+  return { status: "refused", reason: "missing" };
+}
+
+/** A haggle job that throws has stopped: answered as failed, logged here, as a restock that throws is (`handleRestockQuery`). */
+const settled = (job, what) => job.catch(err => { console.error(`${MODULE} | ${what} failed`, err); return { status: "failed" }; });
+
+const haggleText = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Haggle.${key}`, data);
+const haggleSide = side => haggleText(side === "buy" ? "SidePrice" : "SideOffer");
+const escapeHtml = text => foundry.utils.escapeHTML(text);
+/** A dnd5e skill's name ("Persuasion"): its config label, localized in case it's still a key. */
+const skillName = id => game.i18n.localize(CONFIG.DND5E.skills[id]?.label ?? id);
+/** A receipt's icon slot (trade-desk.mjs `receiptIcons` draws it in): a message's saved content can't hold an <svg>. */
+const iconSlot = (name, pen) => `<span class="mp-icon-slot" data-icon="${name}" data-pen="${pen}"></span>`;
+/**
+ * A card's markup (design XAkJh): a trade receipt's head, the shop speaking, when (`call.when`,
+ * none without a clock) and whispered, under the "Haggle" strip; then its lines as `[layer, text]`,
+ * each named for its layer in the band 18 frames. It's a receipt to the stylesheet (`mp-receipt`).
+ */
+const haggleCardHtml = (call, ...lines) => `<div class="merchant-presets mp-receipt mp-haggle-card" data-pen="Haggle card">`
+  + `<div class="mp-receipt-speaker" data-pen="Speaker">`
+  + `<img class="mp-receipt-portrait" data-pen="Speaker img" src="${escapeHtml(call.shopImg ?? "")}" alt="" />`
+  + `<span class="mp-receipt-who" data-pen="Speaker text"><b data-pen="Speaker name">${escapeHtml(call.shopName)}</b>`
+  + (call.when ? `<span data-pen="Speaker time">${escapeHtml(call.when)}</span>` : "") + `</span>`
+  + `<span class="mp-receipt-vis" data-pen="Visibility">${iconSlot("eye-off", "Vis icon")}<span data-pen="Vis text">${escapeHtml(haggleText("Whisper"))}</span></span></div>`
+  + `<div class="mp-receipt-head" data-pen="Card header">${iconSlot("messages-square", "Kicker icon")}<b data-pen="Kicker">${escapeHtml(haggleText("Kicker"))}</b></div>`
+  + lines.map(([pen, text]) => `<p class="mp-haggle-${pen === "Lapsed" ? "lapsed" : "line"}" data-pen="${pen}">${escapeHtml(text)}</p>`).join("") + `</div>`;
+/** The open card's line (design `Haggle call`), naming the skill only when the GM chose one. */
+const callText = ({ shopName, name, side, skill }) => skill
+  ? haggleText("CallSkill", { shop: shopName, character: name, side: haggleSide(side), skillName: skillName(skill) })
+  : haggleText("Call", { shop: shopName, character: name, side: haggleSide(side) });
+
+/** Post a GM's call for a haggle: `{shopUuid, actorUuid, side, dc, skill}`, `skill` null (or left out) for the player's choice. */
+async function callHaggle({ shopUuid, actorUuid, side, dc, skill } = {}, user) {
+  skill ||= null;   // the form's "Player's choice" is empty
+  const shopActor = user?.isGM ? await actorAt(shopUuid) : null;
+  const actor = await actorAt(actorUuid);
+  // Only a shop: `safeShopOf` reads any actor as one, and a deal written there would make it one.
+  const shop = isShopActor(shopActor) ? safeShopOf(shopActor) : null;
+  const worldTime = game.time.worldTime;
+  const buys = !!shop && effectiveRates(worldTerms(k => game.settings.get(MODULE, k)).rates, shop.terms).buysAt.rate > 0;
+  if (!shop || !actor || !validCall({ side, dc, skill }, buys) || !callable(shop, [actor], worldTime).length) {
+    return { status: "refused", reason: "invalid-call" };
+  }
+
+  // A second call for the same character here lapses the first.
+  for (const old of game.messages.filter(m => m.author?.isGM && m.flags?.[MODULE]?.haggle?.state === "open"
+    && m.flags[MODULE].haggle.shopUuid === shopActor.uuid && m.flags[MODULE].haggle.actor === actor.uuid)) await lapseCard(old);
+
+  const ends = haggleEnds(shop.hours, worldTime, game.time.calendar.days, worldFollowsClock()).at;
+  const call = { shopUuid: shopActor.uuid, shopName: shopActor.name, shopImg: shopActor.img ?? "", when: receiptWhen(worldTime),
+    actor: actor.uuid, name: actor.name, side, skill, dc, ends, state: "open" };
+  const owners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id);
+  const message = await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor: shopActor }),
+    content: haggleCardHtml(call, ["Haggle call", callText(call)]),
+    whisper: [...game.users.filter(u => u.isGM).map(u => u.id), ...owners],
+    flags: { [MODULE]: { haggle: call } }
+  });
+  return { status: "called", messageId: message.id };
+}
+
+/** Lapse an open card: it keeps its call line and says it lapsed (design `Lapsed`). */
+async function lapseCard(message) {
+  const call = message.flags[MODULE].haggle;
+  await message.update({ [`flags.${MODULE}.haggle.state`]: "lapsed",
+    content: haggleCardHtml(call, ["Haggle call", callText(call)], ["Lapsed", haggleText("Lapsed")]) });
+}
+
+/**
+ * Settle a player's roll on a call card: `{messageId, rollId}`, the card's and the roll's chat
+ * message ids. The roll is read back from the chat message dnd5e made (haggle.mjs `checkRollMessage`).
+ */
+async function rollHaggle({ messageId, rollId } = {}, user) {
+  const card = typeof messageId === "string" ? game.messages.get(messageId) : null;
+  // Only a GM (or its author) can write a message's flags, so only a GM's card is a call: a player
+  // could post one of their own with any DC.
+  const call = card?.author?.isGM ? card.flags?.[MODULE]?.haggle : null;
+  const actor = call ? await actorAt(call.actor) : null;
+  const shopActor = call ? await actorAt(call.shopUuid) : null;
+  const shop = isShopActor(shopActor) ? safeShopOf(shopActor) : null;
+  if (!call || !actor || !shop) return { status: "refused", reason: "missing" };
+  if (!actor.testUserPermission(user, "OWNER")) return { status: "refused", reason: "owner" };
+
+  const roll = typeof rollId === "string" ? game.messages.get(rollId) : null;
+  const reason = checkRollMessage(roll && {
+    id: roll.id, author: roll.author?.id, speakerActor: roll.speaker?.actor,
+    type: roll.type, skill: roll.system?.skill, total: roll.rolls?.[0]?.total, timestamp: roll.timestamp
+  }, { userId: user.id, actorId: actor.id, skills: allowedSkills(call), used: usedHaggleRolls, since: card.timestamp });
+  if (reason) return { status: "refused", reason };
+  usedHaggleRolls.add(roll.id);
+
+  const total = roll.rolls[0].total;
+  const rolled = { total, skill: roll.system.skill, skillName: skillName(roll.system.skill) };
+  const result = resolveCall(call, shop, rolled, { worldTime: game.time.worldTime, calendar: game.time.calendar.days,
+    hours: shop.hours, clock: worldFollowsClock() });
+  if (result.state === "wrong-skill") return { status: "refused", reason: "wrong-skill" };
+  if (result.state === "lapsed") {
+    if (call.state === "open") await lapseCard(card);
+    return { status: "refused", reason: "lapsed" };
+  }
+  if (result.deal) {
+    const next = foundry.utils.deepClone(shop);
+    // An ended deal of this character's may still be listed; deals are keyed by actor.
+    next.deals = [...next.deals.filter(d => d.actor !== call.actor), result.deal];
+    await shopActor.update({ [`flags.${MODULE}.shop`]: _replace(next) });
+  }
+  const { key, percent } = haggleCard({ side: call.side, outcome: result.outcome });
+  await card.update({
+    [`flags.${MODULE}.haggle.state`]: "rolled",
+    [`flags.${MODULE}.haggle.total`]: total,
+    [`flags.${MODULE}.haggle.skillName`]: rolled.skillName,
+    content: haggleCardHtml(call, ["Haggle result", haggleText("Rolled", { character: call.name, shop: call.shopName, side: haggleSide(call.side),
+      result: haggleText(`Result.${key}`, { percent }) })])
+  });
+  return { status: "rolled", outcome: result.outcome };
+}
+
+/**
+ * A haggle request, sent to the active GM's claiming tab (see `handleHaggleQuery`): `{call}` from
+ * the GM, `{roll}` from the card. Resolves to its answer, `no-gm` without an active GM, refused
+ * `no-permission` when this user's role can't query (as `trade` is), or `unconfirmed` when no
+ * answer came in time.
+ */
+async function requestHaggle(request) {
+  const gm = game.users.activeGM;
+  if (!gm) return { status: "no-gm" };
+  // Core refuses to send a query without this permission; caught, it would read as no answer (`trade`).
+  if (!game.user.hasPermission("QUERY_USER")) return { status: "refused", reason: "no-permission" };
+  try {
+    return (await gm.query(HAGGLE_QUERY, request, { timeout: QUERY_TIMEOUT_MS })) ?? { status: "unconfirmed" };
+  } catch (err) {
+    console.warn(`${MODULE} | haggle unconfirmed:`, err.message);
+    return { status: "unconfirmed" };
   }
 }
 
@@ -1519,6 +1707,7 @@ Hooks.once("init", () => {
   (CONFIG.queries ??= {})[QUERY] = handleTradeQuery;
   CONFIG.queries[RESTOCK_QUERY] = handleRestockQuery;
   CONFIG.queries[SETUP_QUERY] = handleSetupQuery;
+  CONFIG.queries[HAGGLE_QUERY] = handleHaggleQuery;
   game.settings.register(MODULE, "stockMode", {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
@@ -1811,7 +2000,8 @@ async function sweepAccess() {
 
 Hooks.once("ready", async () => {
   game.modules.get(MODULE).api = { registerDrinks, restock: async actor => (await requestRestock(actor)).restocked, requestRestock, scheduledRestocks, syncStockWeight, syncStockWeightAll,
-    setUpShop: async (actor, sourceUuid, keepIds) => (await requestSetUp(actor, sourceUuid, keepIds)).lines, requestSetUp, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item) };
+    setUpShop: async (actor, sourceUuid, keepIds) => (await requestSetUp(actor, sourceUuid, keepIds)).lines, requestSetUp, migrateShop, migrateAll, trade, bundleOf: item => bundleOf(item),
+    callHaggle: call => requestHaggle({ call }) };
 
   // Every client evaluates its own nutrition candidates, so this must run for
   // players too.

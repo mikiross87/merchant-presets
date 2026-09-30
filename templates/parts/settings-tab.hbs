@@ -197,6 +197,7 @@
     {{/each}}
     <div class="mp-deals-foot" data-pen="Deals foot">
       <span class="mp-cap-note" data-pen="Cap note">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Cap"}}</span>
+      {{#unless readOnly}}<button type="button" class="mp-button" data-action="callHaggle" data-pen="Call haggle"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Call"}}</span></button>{{/unless}}
       {{#unless readOnly}}<button type="button" class="mp-button" data-action="addDeal" data-pen="Add deal"><span data-pen="Label">{{localize "MERCHANT_PRESETS.Shop.Settings.Deals.Add"}}</span></button>{{/unless}}
     </div>
   </section>
