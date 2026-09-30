@@ -5,7 +5,8 @@ import { nextCloseAt, secondsPerDay } from "./schedule.mjs";
  * Haggling (#112), kept free of Foundry so it runs under plain Node (tools/haggle.test.mjs).
  *
  * The GM calls for a haggle when the roleplay gets there: a chat card, whose flags hold the call,
- * lets the character's owner roll Persuasion through dnd5e on their own client. The GM's claiming
+ * lets the character's owner roll Persuasion, Deception or Intimidation (the GM's pick, or the
+ * player's when the call names none) through dnd5e on their own client. The GM's claiming
  * tab reads the roll back from the chat message it made (`checkRollMessage`), never from a number
  * the socket carries, and turns the result into an ordinary #111 deal that ends when the shop
  * closes. Known limits: a player who forges a chat roll from the console can cheat this as they
@@ -17,10 +18,23 @@ import { nextCloseAt, secondsPerDay } from "./schedule.mjs";
 /** How long a roll message stays usable for a haggle, in real milliseconds. */
 export const ROLL_FRESH_MS = 5 * 60_000;
 
+/** The dnd5e skill ids a haggle may be rolled with: Persuasion, Deception, Intimidation. */
+export const HAGGLE_SKILLS = ["per", "dec", "itm"];
+
 const STEPS = { great: 0.2, success: 0.1, fail: null, botch: -0.1 };
 
 /**
- * @param {number} total  the Persuasion roll's total
+ * The skills a call may be rolled with: the one the GM named, or all three when it's left to the player.
+ *
+ * @param {{skill?: string|null}} call
+ * @returns {string[]}
+ */
+export function allowedSkills(call) {
+  return call.skill ? [call.skill] : HAGGLE_SKILLS;
+}
+
+/**
+ * @param {number} total  the skill roll's total
  * @param {number} dc
  * @returns {"great"|"success"|"fail"|"botch"}
  */
@@ -59,15 +73,15 @@ export function haggleEnds(hours, worldTime, calendar, clock) {
   return { at: (Math.floor(worldTime / day) + 1) * day, when: "date" };
 }
 
-/** The #111 deal a haggle writes, or null when the outcome changes nothing. */
-export function haggleDeal({ actor, name, side, outcome, total, dc, ends }) {
+/** The #111 deal a haggle writes (its note names `skillName`, the rolled skill's label), or null when the outcome changes nothing. */
+export function haggleDeal({ actor, name, side, outcome, skillName, total, dc, ends }) {
   const adjustment = haggleAdjustment(side, outcome);
   if (adjustment === null) return null;
   return {
     actor, name,
     buy: side === "buy" ? adjustment : null,
     sell: side === "sell" ? adjustment : null,
-    note: `Haggled: Persuasion ${total} vs DC ${dc}`,
+    note: `Haggled: ${skillName} ${total} vs DC ${dc}`,
     ends
   };
 }
@@ -91,33 +105,36 @@ export function callLapsed(call, shop, worldTime) {
 }
 
 /**
- * A roll of `total` on `call`: the outcome and the deal it writes (null on a fail), or a lapse.
+ * A roll on `call`: the outcome and the deal it writes (null on a fail), a lapse, or a refusal when
+ * `roll.skill` isn't one the call allows. `roll.skillName` is the skill's label, for the deal's note.
  *
- * @param {{actor: string, name: string, side: "buy"|"sell", dc: number, ends: number, state: string}} call
+ * @param {{actor: string, name: string, side: "buy"|"sell", skill?: string|null, dc: number, ends: number, state: string}} call
  * @param {object} shop  a full shop config
- * @param {number} total
+ * @param {{total: number, skill: string, skillName: string}} roll
  * @param {{worldTime: number, calendar: object, hours: object|null, clock: boolean}} context
- * @returns {{state: "rolled", outcome: string, deal: object|null} | {state: "lapsed"}}
+ * @returns {{state: "rolled", outcome: string, deal: object|null} | {state: "lapsed"} | {state: "wrong-skill"}}
  */
-export function resolveCall(call, shop, total, { worldTime, calendar, hours, clock }) {
+export function resolveCall(call, shop, { total, skill, skillName }, { worldTime, calendar, hours, clock }) {
   if (callLapsed(call, shop, worldTime)) return { state: "lapsed" };
+  if (!allowedSkills(call).includes(skill)) return { state: "wrong-skill" };
   const outcome = haggleOutcome(total, call.dc);
-  const deal = haggleDeal({ ...call, outcome, total, ends: haggleEnds(hours, worldTime, calendar, clock) });
+  const deal = haggleDeal({ ...call, outcome, skillName, total, ends: haggleEnds(hours, worldTime, calendar, clock) });
   return { state: "rolled", outcome, deal };
 }
 
 /**
  * Why a roll message can't back a haggle, or null when it can. `message` is the chat message
  * as plain data: `author` and `speakerActor` are ids, `type` and `skill` dnd5e's own
- * (`type: "check"`, `system.skill`), `total` the first roll's, `timestamp` real milliseconds.
+ * (`type: "check"`, `system.skill`), `total` the first roll's, `timestamp` real milliseconds. `skills` are the skill
+ * ids the call allows (`allowedSkills`).
  *
- * @returns {null|"missing"|"author"|"speaker"|"not-persuasion"|"stale"|"used"}
+ * @returns {null|"missing"|"author"|"speaker"|"wrong-skill"|"stale"|"used"}
  */
-export function checkRollMessage(message, { userId, actorId, used, now }) {
+export function checkRollMessage(message, { userId, actorId, skills, used, now }) {
   if (!message) return "missing";
   if (message.author !== userId) return "author";
   if (message.speakerActor !== actorId) return "speaker";
-  if (message.type !== "check" || message.skill !== "per" || !Number.isFinite(message.total)) return "not-persuasion";
+  if (message.type !== "check" || !skills.includes(message.skill) || !Number.isFinite(message.total)) return "wrong-skill";
   const age = now - message.timestamp;
   if (!(age >= 0 && age <= ROLL_FRESH_MS)) return "stale";
   if (used.has(message.id)) return "used";
