@@ -11,6 +11,12 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Changed
+
+- In the Bill of Sale, a name too long for its line now wraps onto a second
+  line with its price kept beside it, instead of the price dropping to a line
+  of its own under the name. (#198)
+
 ### Fixed
 
 - A GM's *Buying as* no longer lists every actor in the world, which ran to
