@@ -621,6 +621,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     if (this._openPopover) this.element?.querySelector(`[id="${this._openPopover}"]`)?.showPopover();
+    this.#observeLeaders();
     // A narrow window's category dropdown: a native select, which reports a change, not a click.
     for (const select of this.element?.querySelectorAll(".mp-category-native") ?? []) {
       select.addEventListener("change", () => {
@@ -706,6 +707,45 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     filter();
     search.addEventListener("keydown", event => { if (event.key === "Enter") event.preventDefault(); });
     search.addEventListener("input", filter);
+  }
+
+  /** Re-measures the bill's leaders whenever a bill line's box changes size; made at the first bill. */
+  #leaderObserver = null;
+
+  /** @override */
+  _onClose(options) {
+    super._onClose(options);
+    this.#leaderObserver?.disconnect();
+  }
+
+  /**
+   * A bill name that wraps keeps its box at full width: its leader starts where the last line
+   * ends, not after that box (#198, design IeGac). The name is held at its wrapped width, or the
+   * room the leader gives back would unwrap it. Measured once layout settles and again whenever a
+   * line's box resizes (the window's width arrives after the first render; a resize; a font).
+   */
+  #observeLeaders() {
+    this.#leaderObserver?.disconnect();
+    const entries = this.element?.querySelectorAll(".mp-entry") ?? [];
+    if (!entries.length) return;
+    this.#leaderObserver ??= new ResizeObserver(() => this.#pullLeaders());
+    for (const entry of entries) this.#leaderObserver.observe(entry);
+  }
+
+  #pullLeaders() {
+    for (const name of this.element?.querySelectorAll(".mp-line-name") ?? []) {
+      const leader = name.nextElementSibling;
+      if (!leader?.classList.contains("mp-leader")) continue;
+      name.style.maxWidth = leader.style.marginLeft = "";
+      const range = document.createRange();
+      range.selectNodeContents(name);
+      const last = [...range.getClientRects()].at(-1);
+      const box = name.getBoundingClientRect();
+      const gap = last ? box.right - last.right : 0;
+      if (gap <= 0.5) continue;
+      name.style.maxWidth = `${box.width}px`;
+      leader.style.marginLeft = `${-gap}px`;
+    }
   }
 
   /* -------------------------------------------------------------- tabs */
