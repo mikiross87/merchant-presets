@@ -1066,9 +1066,7 @@ const packMerchant = (pack, shelf) => ({
 test("compendiumPreview: fresh pack data shows a sample roll; a shop exported from a world shows its own goods (#214)", () => {
   assert.equal(compendiumPreview(packMerchant("merchant-presets.merchants", false), { isGM: true }).sample, true);
   assert.equal(compendiumPreview(packMerchant("world.my-shops", true), { isGM: true }).sample, false);
-  // A document: its data is read through toObject, which carries no pack.
-  const doc = { pack: "world.my-shops", toObject: () => ({ ...packMerchant(undefined, true), pack: undefined }) };
+  // Read from the flags alone, never by copying the document (the sheet asks once per shelf row).
+  const doc = { ...packMerchant("world.my-shops", true), toObject: () => assert.fail("no copy of the actor") };
   assert.equal(compendiumPreview(doc, { isGM: true }).sample, false);
-  const fresh = { pack: "merchant-presets.merchants", toObject: () => ({ ...packMerchant(undefined, false), pack: undefined }) };
-  assert.equal(compendiumPreview(fresh, { isGM: true }).sample, true);
 });

@@ -978,13 +978,13 @@ export function sealState(state, hasLines, { gmOnline = true } = {}) {
  * roll, which importing replaces with a roll of its own; a shop exported from a world brings the
  * goods shown (#214). `null` for a shop in the world.
  *
- * @param {{pack?: string|null, toObject?: Function}} actor  An Actor document or its data.
+ * @param {{pack?: string|null, flags?: object}} actor  An Actor document or its data.
  * @param {{isGM?: boolean}} [user]
  * @returns {{canImport: boolean, sample: boolean}|null}
  */
 export function compendiumPreview(actor, user) {
   if (!actor?.pack) return null;
-  // Asked of the shop as it would arrive in the world: a compendium copy is never ours to roll.
-  const data = actor.toObject?.() ?? actor;
-  return { canImport: !!user?.isGM, sample: rollsOnArrival({ ...data, pack: null }) };
+  // Asked of the shop as it would arrive in the world (a compendium copy is never ours to roll),
+  // from its flags alone: the sheet reads this once per shelf row.
+  return { canImport: !!user?.isGM, sample: rollsOnArrival({ flags: actor.flags }) };
 }
