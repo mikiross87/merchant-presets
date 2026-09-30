@@ -473,7 +473,10 @@
         "stale": "That roll is too old.",
         "used": "That roll was already used.",
         "no-gm": "No GM is here to hear the haggle.",
-        "unconfirmed": "The GM didn't answer in time."
+        "unconfirmed": "The GM didn't answer in time.",
+        "failed": "The haggle couldn't be settled. The GM's console says why.",
+        "invalid-call": "That haggle can't be called: pick a character without a deal here, a side this shop trades on, and a DC from 1 to 40.",
+        "no-permission": "Your role doesn't have permission to query users, which haggling needs. Ask the GM to grant it in Configure Permissions."
       }
     }
   }

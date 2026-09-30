@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { shopFrom } from "../scripts/schema.mjs";
 import {
   allowedSkills, callable, callLapsed, checkRollMessage, haggleAdjustment, haggleCard, haggleDeal, haggleEnds, haggleOutcome,
-  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, validCall
+  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, rollable, validCall
 } from "../scripts/haggle.mjs";
 
 const CAL = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
@@ -91,6 +91,13 @@ test("a card whose end isn't a number reads as lapsed: its flags are untrusted",
   for (const ends of [undefined, null, "999999999", NaN, Infinity]) assert.equal(callLapsed(call({ ends }), shop(), at(2, 11)), true);
 });
 
+test("a card shows its Roll buttons while open and before its end, whatever the deals", () => {
+  assert.equal(rollable(call(), at(2, 11)), true);
+  assert.equal(rollable(call(), at(2, 19, 1)), false);
+  assert.equal(rollable(call({ state: "lapsed" }), at(2, 11)), false);
+  assert.equal(rollable(call({ ends: undefined }), at(2, 11)), false);
+});
+
 test("a call is valid for a side the shop trades on, a whole DC from 1 to 40, and a social skill or none", () => {
   assert.equal(validCall({ side: "buy", dc: 14, skill: null }, false), true);
   assert.equal(validCall({ side: "sell", dc: 14, skill: "dec" }, true), true);
@@ -151,7 +158,7 @@ test("on a player's-choice call each social skill is accepted and Insight is not
 const NOW = 1_800_000_000_000;
 const message = (over = {}) => ({ id: "msg1", author: "user1", speakerActor: "aria", type: "check", skill: "per",
   total: 17, timestamp: NOW - 1000, ...over });
-const request = { userId: "user1", actorId: "aria", skills: ["per"], used: new Set(), now: NOW };
+const request = { userId: "user1", actorId: "aria", skills: ["per"], used: new Set(), now: NOW, since: 0 };
 
 test("a fresh check of the allowed skill by the roller, for the called character, is accepted", () => {
   assert.equal(checkRollMessage(message(), request), null);
@@ -180,6 +187,12 @@ test("anything else about the roll message refuses it, in order", () => {
   assert.equal(checkRollMessage(message({ timestamp: undefined }), request), "stale");
   assert.equal(checkRollMessage(message({ timestamp: NOW + 60_000 }), request), "stale");
   assert.equal(checkRollMessage(message(), { ...request, used: new Set(["msg1"]) }), "used");
+});
+
+test("a roll made before the card was posted is stale: no picking the best of earlier rolls", () => {
+  assert.equal(checkRollMessage(message(), { ...request, since: NOW - 999 }), "stale");
+  assert.equal(checkRollMessage(message(), { ...request, since: NOW - 1000 }), null);
+  assert.equal(checkRollMessage(message(), { ...request, since: undefined }), "stale");
 });
 
 /* ---------------------------------------------------------------- the card */

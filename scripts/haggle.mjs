@@ -108,9 +108,14 @@ export function validCall({ side, dc, skill }, buys) {
     && (skill === null || HAGGLE_SKILLS.includes(skill));
 }
 
-/** Whether a call (a card's `haggle` flag) can no longer be rolled on. A card without a numeric end has lapsed. */
+/** Whether a card shows its Roll buttons: open, and before its end. A card without a numeric end has lapsed. */
+export function rollable(call, worldTime) {
+  return call.state === "open" && Number.isFinite(call.ends) && worldTime < call.ends;
+}
+
+/** Whether a call (a card's `haggle` flag) can no longer be rolled on: past `rollable`, or its character got a deal. */
 export function callLapsed(call, shop, worldTime) {
-  return call.state !== "open" || !Number.isFinite(call.ends) || worldTime >= call.ends || !!activeDeal(shop, call.actor, worldTime);
+  return !rollable(call, worldTime) || !!activeDeal(shop, call.actor, worldTime);
 }
 
 /**
@@ -135,17 +140,18 @@ export function resolveCall(call, shop, { total, skill, skillName }, { worldTime
  * Why a roll message can't back a haggle, or null when it can. `message` is the chat message
  * as plain data: `author` and `speakerActor` are ids, `type` and `skill` dnd5e's own
  * (`type: "check"`, `system.skill`), `total` the first roll's, `timestamp` real milliseconds. `skills` are the skill
- * ids the call allows (`allowedSkills`).
+ * ids the call allows (`allowedSkills`); `since` is the card's timestamp, so a roll made before the
+ * card (the best of earlier rolls) is stale.
  *
  * @returns {null|"missing"|"author"|"speaker"|"wrong-skill"|"stale"|"used"}
  */
-export function checkRollMessage(message, { userId, actorId, skills, used, now }) {
+export function checkRollMessage(message, { userId, actorId, skills, used, now, since }) {
   if (!message) return "missing";
   if (message.author !== userId) return "author";
   if (message.speakerActor !== actorId) return "speaker";
   if (message.type !== "check" || !skills.includes(message.skill) || !Number.isFinite(message.total)) return "wrong-skill";
   const age = now - message.timestamp;
-  if (!(age >= 0 && age <= ROLL_FRESH_MS)) return "stale";
+  if (!(age >= 0 && age <= ROLL_FRESH_MS && message.timestamp >= since)) return "stale";
   if (used.has(message.id)) return "used";
   return null;
 }
