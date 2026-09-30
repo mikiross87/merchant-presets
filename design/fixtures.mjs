@@ -592,8 +592,9 @@ const callForm = openShop({ tab: "settings", size: { width: 920, height: 760 },
  * - `open` (the GM): no deals, then Aria's call on price at the player's choice, DC 14 (card A);
  * - `choice` (P1, Aria's player): card A, open, with its three Roll buttons;
  * - `rolled` (the GM): Aria's call at Deception (card B, which lapses A), rolled for her with a d20
- *   fixed at 16 (her Deception is +0): 10% off. Then her deal is cleared and the same call made
- *   again (card C), for the next part;
+ *   fixed at 16 (her Deception is +0) and sent to the desk as her player's Roll button sends it (the
+ *   haggle query; a GM's card has no buttons): 10% off. Then her deal is cleared and the same call
+ *   made again (card C), for the next part;
  * - `chosen` (P1): card C, open, with its one Roll button;
  * - `lapsed` (P1): card A.
  */
@@ -623,16 +624,14 @@ const haggleCard = step => `async ({ theme }) => {
   if (${JSON.stringify(step)} === "open") message = await call(null);
   if (${JSON.stringify(step)} === "rolled") {
     message = await call("dec");
-    await new Promise(r => setTimeout(r, 800));
-    const button = () => document.querySelector('#sidebar [data-message-id="' + message.id + '"] [data-pen="Roll dec"]');
-    ${until("button()")}
     const random = CONFIG.Dice.randomUniform;
     // A d20 face is ceil((1 - u) * 20): 16 for u in [0.2, 0.25).
     CONFIG.Dice.randomUniform = () => 0.225;
     const quiet = Hooks.on("dnd5e.preRollSkillV2", (config, dialog) => { dialog.configure = false; });
     try {
-      button().click();
-      ${until('game.messages.get(message.id).flags[MP].haggle.state === "rolled"')}
+      const rolls = await aria.rollSkill({ skill: "dec" });
+      const answer = await game.users.activeGM.query("merchant-presets.haggle", { roll: { messageId: message.id, rollId: rolls?.[0]?.parent?.id } });
+      if (answer?.status !== "rolled") throw new Error("the fixture's roll was refused: " + JSON.stringify(answer));
     } finally {
       CONFIG.Dice.randomUniform = random;
       Hooks.off("dnd5e.preRollSkillV2", quiet);

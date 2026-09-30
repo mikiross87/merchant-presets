@@ -113,6 +113,19 @@ export function rollable(call, worldTime) {
   return call.state === "open" && Number.isFinite(call.ends) && worldTime < call.ends;
 }
 
+/**
+ * Whether this user's card shows the Roll buttons (design XAkJh): a player who owns the call's
+ * character, while the call is rollable. Never a GM, who sees the GM line instead (TAgKK); the desk
+ * still takes a roll from any owner.
+ *
+ * @param {object} call  a card's `haggle` flag
+ * @param {number} worldTime
+ * @param {{isGM: boolean, owner: boolean}} viewer
+ */
+export function showsRollButtons(call, worldTime, { isGM, owner }) {
+  return !isGM && owner && rollable(call, worldTime);
+}
+
 /** Whether a call (a card's `haggle` flag) can no longer be rolled on: past `rollable`, or its character got a deal. */
 export function callLapsed(call, shop, worldTime) {
   return !rollable(call, worldTime) || !!activeDeal(shop, call.actor, worldTime);

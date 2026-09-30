@@ -15,7 +15,7 @@ import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArriv
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { planTrade, safeShopOf } from "./trade-plan.mjs";
 import { activeDeal } from "./deals.mjs";
-import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, rollable, validCall } from "./haggle.mjs";
+import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, showsRollButtons, validCall } from "./haggle.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
@@ -1005,7 +1005,7 @@ async function carryOutTrade(request, user) {
 /**
  * A trade receipt's icons, drawn into its slots on every client as it renders (trade-desk.mjs
  * `receiptIcons`). A haggle card (#112) gets its GM line for GMs, and while it's open a Roll button
- * per allowed skill for the owners of its character (every GM too, who can roll for an absent player).
+ * per allowed skill for the players who own its character (haggle.mjs `showsRollButtons`; not GMs, design TAgKK).
  */
 Hooks.on("renderChatMessageHTML", (message, html) => {
   const receipt = html?.querySelector?.(".message-content .mp-receipt");
@@ -1020,7 +1020,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
   }
   const actor = typeof call.actor === "string" ? fromUuidSync(call.actor, { strict: false }) : null;
   // Past its end the buttons go; nothing sweeps the card itself, and a click still lapses it.
-  if (!rollable(call, game.time.worldTime) || !actor?.testUserPermission(game.user, "OWNER")) return;
+  if (!showsRollButtons(call, game.time.worldTime, { isGM: game.user.isGM, owner: !!actor?.testUserPermission(game.user, "OWNER") })) return;
   const buttons = allowedSkills(call).map(skill => {
     card.insertAdjacentHTML("beforeend", `<button type="button" class="mp-haggle-roll" data-pen="Roll ${escapeHtml(skill)}">`
       + `${icon("dices", { "data-pen": "Icon" })}<span data-pen="Label">${escapeHtml(haggleText("Roll", { skill: skillName(skill) }))}</span></button>`);

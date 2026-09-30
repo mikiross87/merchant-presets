@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { shopFrom } from "../scripts/schema.mjs";
 import {
   allowedSkills, callable, callLapsed, checkRollMessage, haggleAdjustment, haggleCard, haggleDeal, haggleEnds, haggleOutcome,
-  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, rollable, validCall
+  HAGGLE_SKILLS, resolveCall, ROLL_FRESH_MS, rollable, showsRollButtons, validCall
 } from "../scripts/haggle.mjs";
 
 const CAL = { secondsPerMinute: 60, minutesPerHour: 60, hoursPerDay: 24 };
@@ -96,6 +96,16 @@ test("a card shows its Roll buttons while open and before its end, whatever the 
   assert.equal(rollable(call(), at(2, 19, 1)), false);
   assert.equal(rollable(call({ state: "lapsed" }), at(2, 11)), false);
   assert.equal(rollable(call({ ends: undefined }), at(2, 11)), false);
+});
+
+test("only a player who owns the character sees the Roll buttons, and only while the call is rollable (design TAgKK)", () => {
+  const player = { isGM: false, owner: true };
+  assert.equal(showsRollButtons(call(), at(2, 11), player), true);
+  // A GM owns every actor, and sees the GM line instead.
+  assert.equal(showsRollButtons(call(), at(2, 11), { isGM: true, owner: true }), false);
+  assert.equal(showsRollButtons(call(), at(2, 11), { isGM: false, owner: false }), false);
+  assert.equal(showsRollButtons(call({ state: "rolled" }), at(2, 11), player), false);
+  assert.equal(showsRollButtons(call(), at(2, 19, 1), player), false);
 });
 
 test("a call is valid for a side the shop trades on, a whole DC from 1 to 40, and a social skill or none", () => {
