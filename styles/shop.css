@@ -1371,7 +1371,9 @@
   color: var(--mp-paper-ink);
 }
 .chat-message:has(> .message-content > .mp-receipt) > .message-header { display: none; }
-.chat-message:has(> .message-content > .mp-receipt) > .message-content { margin: 0; padding: 0; }
+/* Foundry's message content clips (overflow: hidden): with no padding, the portrait's and goods'
+   rings, outlines drawn outside them, would be cut off on the left and top (#211). */
+.chat-message:has(> .message-content > .mp-receipt) > .message-content { margin: 0; padding: 0; overflow: visible; }
 .mp-receipt { display: flex; flex-direction: column; gap: 10px; }
 .mp-receipt-speaker { display: flex; align-items: center; gap: 8px; }
 .mp-receipt-portrait { flex: none; width: 32px; height: 32px; margin: 0; border: none; border-radius: 50%; outline: 1px solid var(--mp-gold); object-fit: cover; }

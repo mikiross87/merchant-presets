@@ -19,6 +19,9 @@ than for the code. Reference the issue or PR it closes.
 
 ### Fixed
 
+- A trade's receipt in chat draws the whole gold ring around the merchant's
+  portrait and each item's picture; its left side (and the portrait's top) was
+  cut off. (#211)
 - A GM's *Buying as* no longer lists every actor in the world, which ran to
   hundreds in a premade adventure. It lists the player characters, then the
   actors with a linked token on the scene you're viewing; never unlinked
