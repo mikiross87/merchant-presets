@@ -875,8 +875,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       tier,
       kindIcon: kindIcon(actor, config),
       // "Fresh stock today" until the shop closes after the restock (#152).
-      // Not without a clock, which is what clears it (#149).
-      fresh: worldFollowsClock() && isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
+      // Not without a clock, which is what clears it (#149), nor in a compendium preview, whose
+      // copy never restocked: a world's restock came along on the export (#199).
+      fresh: !this.preview && worldFollowsClock() && isFresh(actor.flags?.[MODULE]?.restockedAt, game.time.worldTime, config.hours, game.time.calendar.days),
       // A flag any owner of the shop can write, so it's cleaned before it goes into the page raw.
       description: foundry.utils.cleanHTML(config.description ?? ""),
       open,
@@ -1135,8 +1136,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rows = this.#shelf(actor)
       .map(({ data, stock }) => {
         const row = buyRow(data, stock, rates, rates.deal, currencies, worldInfiniteStock(), bundleOf);
-        // "New" until the shop closes after the restock that brought it back, while it's still in stock (#152).
-        row.isNew = worldFollowsClock() && isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
+        // "New" until the shop closes after the restock that brought it back, while it's still in
+        // stock (#152). Never in a compendium preview (#199), as with the Fresh chip.
+        row.isNew = !this.preview && worldFollowsClock() && isNewGood(data, shelf, game.time.worldTime, config.hours, game.time.calendar.days);
         this._minQuantity.buy.set(row.id, row.minQuantity);
         return {
           ...row,
