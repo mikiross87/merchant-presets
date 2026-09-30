@@ -4,7 +4,7 @@ import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
   fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellRowMeta, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties,
-  currentSection
+  currentSection, compendiumPreview
 } from "../scripts/shop-view.mjs";
 
 /** CONFIG.DND5E.currencies, 6.0.5 shape. */
@@ -1044,4 +1044,12 @@ test("scrolled to the bottom, the last heading in view is current, so a short la
 
 test("no sections, no current one (#172)", () => {
   assert.equal(currentSection([], view(0)), null);
+});
+
+test("compendiumPreview: a shop inside a compendium previews; only a GM may import it (#199)", () => {
+  assert.equal(compendiumPreview({ pack: null }, { isGM: true }), null);
+  assert.equal(compendiumPreview({}, { isGM: true }), null);
+  assert.deepEqual(compendiumPreview({ pack: "merchant-presets.merchants" }, { isGM: true }), { canImport: true });
+  assert.deepEqual(compendiumPreview({ pack: "world.my-shops" }, { isGM: false }), { canImport: false });
+  assert.deepEqual(compendiumPreview({ pack: "world.my-shops" }, undefined), { canImport: false });
 });
