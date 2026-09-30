@@ -481,7 +481,9 @@ test("a freshly imported pack merchant is already in its 2.0 shape: nothing to m
 });
 
 test("shopSheetOnArrival: any shop arriving without a sheet of its own gets the shop window (#204 review)", () => {
+  // The pack ships its sheet (#199): take it off for a shop that comes without one.
   const store = shipped("General_Store_Village_");
+  delete store.flags.core;
   assert.equal(shopSheetOnArrival(store), SHOP_SHEET_ID);
   assert.equal(shopSheetOnArrival(legacy(store)), SHOP_SHEET_ID);        // a 1.x merchant, from an Adventure say
   assert.equal(shopSheetOnArrival({ ...store, flags: { ...store.flags, core: { sheetClass: SHOP_SHEET_ID } } }), null);

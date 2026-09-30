@@ -614,8 +614,8 @@ export function stockFromRecord(recorded) {
 /**
  * The sheet a shop arriving in the world should open with: the shop window, unless it already
  * names a sheet of its own (ours, or a GM's choice carried on an export or a duplicate, Foundry's
- * default `""` included). The pack merchants ship without one, since core reads it on a compendium
- * copy too, and the shop window has no read-only mode for one (#204 review, #199).
+ * default `""` included). The pack merchants ship with it (#199), so this is for a shop that came
+ * without: a 1.x merchant, from an Adventure or a world compendium, say.
  *
  * @param {object} actor  The arriving actor's data.
  * @returns {string|null} `SHOP_SHEET_ID` to write, or `null`.

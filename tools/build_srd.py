@@ -667,12 +667,12 @@ def main():
                                    "flags": {"item-piles": {"data": {"enabled": False}}}},
                 "items": items + gear, "effects": [], "ownership": {"default": 0},
                 "flags": {
+                    "core": {"sheetClass": "merchant-presets.ShopSheet"},
                     # Shipped already cut over to 2.0 (#203): Item Piles switched off
                     # below and on the prototype token, or every fresh import runs
                     # migrate.mjs's 1.x cut-over and can't be told apart from a real
-                    # 1.x upgrade. No flags.core.sheetClass: core reads it on the
-                    # compendium copy too, and the shop window has no read-only mode
-                    # for one (#199); the runtime sets it as the merchant arrives.
+                    # 1.x upgrade. The shop window is its sheet from the pack on: core
+                    # opens it on the compendium copy too, as a read-only preview (#199).
                     # The shop's own record of itself: what its purse should be
                     # refilled to, and the item flags a restock must restore.
                     "merchant-presets": {"purse": round(shop["purse"] * purse_mul),
