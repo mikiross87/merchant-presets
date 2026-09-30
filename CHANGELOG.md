@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-30
+
 ### Added
 
 - Opening a merchant in the *Merchants* compendium shows its shop window as a
@@ -426,7 +428,8 @@ trades out itself. For GMs upgrading a world:
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/mikiross87/merchant-presets/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/mikiross87/merchant-presets/compare/v1.2.4...v2.0.0
 [1.2.4]: https://github.com/mikiross87/merchant-presets/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/mikiross87/merchant-presets/compare/v1.2.2...v1.2.3
