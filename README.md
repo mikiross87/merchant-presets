@@ -11,9 +11,9 @@ A module for **[Foundry Virtual Tabletop](https://foundryvtt.com/)** v14 and the
 **dnd5e** system.
 
 Seventeen ready-made shops: drag one out, drop a token, and your players can
-shop. No other modules required. Each comes in Village / Town / City sizes —
-**51 merchants, 1,551 stock lines** — with its own shop window, stock that runs
-out and comes back, a purse that runs dry, and hours it keeps.
+shop. No other modules required. Each comes in Village, Town and City sizes,
+**51 merchants and 1,551 stock lines** in all, and each has its own shop window,
+stock that runs out and comes back, a purse that runs dry, and hours it keeps.
 
 ![A shop window open at the counter, with the bill of sale filled in](docs/media/cover.webp)
 
@@ -21,8 +21,8 @@ Built entirely from **SRD 5.2** (CC-BY-4.0) plus this module's own goods, so it
 works in any `dnd5e` world and redistributes no paid content.
 
 Inspired by the free homebrew *Stores for D&D 2024* by
-[The Inspired Arcana](https://www.patreon.com/TheInspiredArcana) — worth your
-time, and worth a follow.
+[The Inspired Arcana](https://www.patreon.com/TheInspiredArcana). It's worth
+your time, and worth a follow.
 
 ## Install
 
@@ -46,9 +46,9 @@ Guide modules are not consulted even when installed.
 
 All three sit in a **Merchant Presets** compendium folder.
 
-- **Merchants** (Actor) — 51 statted shopkeepers in `Village` / `Town` / `City` folders.
-- **Shop Stock Tables** (RollTable) — one stock list per shop per size.
-- **Merchant Goods** (Item) — 127 goods no 2024 book ships as items.
+- **Merchants** (Actor): 51 statted shopkeepers in `Village` / `Town` / `City` folders.
+- **Shop Stock Tables** (RollTable): one stock list per shop per size.
+- **Merchant Goods** (Item): 127 goods no 2024 book ships as items.
 
 ## Usage
 
@@ -84,14 +84,14 @@ and works without it.
 
 ![The Buy tab: stock by category and a running bill of sale](docs/media/buy.webp)
 
-- **Buy** — the stock by category, with what's left of each, and a running
+- **Buy**: the stock by category, with what's left of each, and a running
   **Bill of Sale** that totals the basket and shows what's left in the buyer's
   purse. *Seal the bargain* makes the trade.
-- **Sell** — everything the character carries, split into what this shop will
+- **Sell**: everything the character carries, split into what this shop will
   buy (and for how much) and what it won't touch, with the reason.
-- **Up top** — the shop's hours, size and terms of trade: what it sells and buys
+- **Up top**: the shop's hours, size and terms of trade: what it sells and buys
   at, with a worked example, any category rules, and what it won't buy.
-- **Who's buying** — a player picks which of their own characters they're
+- **Who's buying**: a player picks which of their own characters they're
   trading as; a GM can trade as anyone.
 
 ![The Sell tab: what the shop pays for each item, and what it won't buy](docs/media/sell.webp)
@@ -100,8 +100,8 @@ A trade is carried out by a GM's client, so **a GM has to be logged in**. With
 none, the window says so and keeps the bill for when one arrives. Goods, coin
 and stock all move at once, two players can't both buy the last one, and a
 trade sent twice over a flaky connection only happens once. Each trade posts a
-receipt in chat — public, whispered to the GMs, or none, by the *Trades in chat*
-setting.
+receipt in chat. The *Trades in chat* setting makes it public, whispers it to
+the GMs, or turns it off.
 
 <img src="docs/media/receipt.webp" alt="A trade's receipt in chat" width="292">
 
@@ -112,17 +112,17 @@ you make it, and every open window reprices at once:
 
 ![The Settings tab: terms, deals, what it won't buy, hours, restock and the till](docs/media/settings.webp)
 
-- **Terms** — what it sells and buys at, or *World default* to follow the
+- **Terms**: what it sells and buys at, or *World default* to follow the
   world's *Shops sell at (%)* and *Shops buy at (%)* settings; and category
   rules, such as Valuables at full value.
-- **Deals** — one character's own price here: cheaper when they buy, more when
+- **Deals**: one character's own price here: cheaper when they buy, more when
   they sell, or both, with a note and an optional end (when the shop next
   closes, after some days, or never). Only that character sees it. No deal can
   make selling pay more than buying. The note is never shown to players, but
   it's saved on the shop, so a player could read it from the browser console.
-- **Won't buy** — item types and kinds of goods the shop turns away.
-- **Hours** — when it opens and closes, or open around the clock.
-- **Restock** — how often, whether it re-rolls or tops up, and *Restock now*.
+- **Won't buy**: item types and kinds of goods the shop turns away.
+- **Hours**: when it opens and closes, or open around the clock.
+- **Restock**: how often, whether it re-rolls or tops up, and *Restock now*.
 - **Players can visit**, and **Reset to preset** to put the shop back as it
   shipped (its deals stay).
 
@@ -130,11 +130,11 @@ The *NPC sheet* button in the window's header opens the dnd5e stat sheet.
 
 ### Your own NPCs as shops
 
-Already have a shopkeeper — Sister Garaele in Phandelver, say? Right-click her
+Already have a shopkeeper, such as Sister Garaele in Phandelver? Right-click her
 in the Actors sidebar and choose **Set up as shop…**. Pick one of the shops and
 a settlement size, tick the items she should keep as her own gear, and confirm.
-Everything physical left unticked — weapons, armour, equipment, consumables,
-tools, loot, containers and what's in them — is deleted for good, so read the
+Every physical item left unticked is deleted for good: weapons, armour,
+equipment, consumables, tools, loot, containers and what's in them. Read the
 dialog's warning before you click through.
 
 She becomes that merchant: stock rolled for the size you chose, its buying
@@ -144,13 +144,13 @@ she kept never shows up in the shop window and survives a restock, exactly like
 a shipped shopkeeper's own weapon and armour.
 
 Setting her up again, with another shop or another size, keeps whatever gear
-she's already holding — the dialog only offers her gear this time round — and
+she's already holding (the dialog only offers her gear this time round) and
 replaces the stock. Anything added to her since the last setup, spells and
 features included, goes with the old stock: she comes back as she was set up.
 There's no one-click way to undo the setup.
 
 The dialog is a thin wrapper around the module's API, so a macro can drive it
-too — physical items left out of `keepIds` are deleted, same as the dialog's
+too. Physical items left out of `keepIds` are deleted, like the dialog's
 unticked items, so an empty array strips all of a fresh NPC's gear:
 
 ```js
@@ -174,18 +174,18 @@ Store · Stable · Tailor & Textile Store · Temple & Faith Store · Tinkering S
 
 ### The shopkeepers
 
-Every merchant is a working NPC, not an empty till. Each shop and size is statted
-from an SRD 5.2 block, so the counter escalates with the settlement: a village
+Every merchant is a working NPC. Each shop and size is statted from an SRD 5.2
+block, and the shopkeeper gets tougher as the settlement grows: a village
 smith is a **Commoner** with a hammer, a town smith a **Warrior Infantry**, a city
 smith a **Warrior Veteran**. A village arcane shop is a commoner; the city one is
-a **Mage**. Criminal & Illicit runs Bandit → Spy → Bandit Captain, the Dock runs
-Commoner → Pirate → Pirate Captain.
+a **Mage**. Criminal & Illicit runs from Bandit to Spy to Bandit Captain, and the Dock from
+Commoner to Pirate to Pirate Captain.
 
-That means a shopkeeper has ability scores to roll against when the party tries
-to haggle, lie or intimidate, and real AC, hit points and actions if the party
+A shopkeeper has ability scores to roll against when the party tries to
+haggle, lie or intimidate, and real AC, hit points and actions if the party
 decides to rob the place instead.
 
-Their gear is on the stat block, not the shelf — the smith's warhammer and splint
+Their gear is on the stat block, not the shelf. The smith's warhammer and splint
 armour never appear as stock, and a restock will not sell, re-roll or delete
 them. The whole shopkeeper comes from `dnd5e.actors24`, the same SRD 5.2 the
 stock does, so nothing here needs a book module either.
@@ -194,24 +194,24 @@ stock does, so nothing here needs a book module either.
 
 127 items the 2024 rules describe in their *Food, Drink, and Lodging*,
 *Spellcasting Services* and *Mounts and Vehicles* tables, or in their spells'
-material components, but never publish as items — ale, bread, cheese, wine,
+material components, but never publish as items: ale, bread, cheese, wine,
 meals, lodging, mounts, vehicles, saddles, stabling, feed, ship passage,
 spellcasting services and spell components. Without them the Inn & Tavern,
 Stable and Dock would have almost nothing to sell.
 
 Prices and weights are the SRD's, verified line by line against those tables and
 that spell text, so 124 of them are marked `SRD 5.2 · CC-BY-4.0` even though this
-module authors the item document — the content is the SRD's, and CC-BY asks to
-be told so.
+module authors the item document. The content is the SRD's, and CC-BY asks for
+that to be stated.
 
-The eight animals are the one place the SRD does publish the thing itself — as a
-stat block in the system's own SRD actor compendium, not as an item. So with the
+The eight animals are the one place the SRD does publish the thing itself, as a
+stat block in the system's own SRD actor compendium rather than an item. With the
 *Bought animals are added to the world* setting on (it is by default), buying a
 riding horse copies the SRD Riding Horse into the world as an actor in a
 *Purchased Animals* folder, owned by whoever owns the buying character, and the
 item in their pack becomes the bill of sale, linking to the creature. Nothing is
 placed on a scene; the GM drags it in from the sidebar. Selling the deed back to
-a stable is money only — the animal stays for the GM to remove or keep.
+a stable is money only; the animal stays for the GM to remove or keep.
 
 Three carry no source at all, being neither in the SRD nor in the 2024 rules: the
 two coach rides and the road toll, carried over from the 2014 *Services* table
@@ -227,7 +227,7 @@ ivory, silver and scrying foci; the Alchemist mushroom powder, and a city
 Druidic Store rare oils. They are limited
 stock, so they sell out and restock like the poisons and scrolls. A Holy Symbol,
 Holy Water and Ink are already on the shelves as SRD equipment, and components
-made to order — statuettes, Clone's vessel, Secret Chest's chest — are not
+made to order (statuettes, Clone's vessel, Secret Chest's chest) are not
 stocked.
 
 Spellcasting is sold by level, and SRD 5.2 adds the cost of any expensive
@@ -271,40 +271,40 @@ spell is on a sheet. Casting then offers to use the component, lowers its
 quantity, and refuses the cast without one. The module does not set this up
 itself.
 
-Ale, bread, cheese and wine are weighted consumables so Simple Nutrition 5e
+Ale, bread, cheese and wine are weighted consumables, so Simple Nutrition 5e
 counts them as meals; their weights are chosen for that (nutrition equals weight
 in pounds) rather than taken from a table, since the SRD gives food no weight.
 With the *Ale and wine slake thirst* setting on, ale and wine count towards
-water instead — that module treats an item as food or water, never both. One
+water instead, since that module treats an item as food or water, never both. One
 drink is a pint; a Medium creature needs a gallon a day.
 
-Meals are services — you eat at the inn's table, and nothing goes in the pack —
-so with the *Meals feed the buyer* setting on, buying one asks the buyer whether
+Meals are services: you eat at the inn's table, and nothing goes in the pack.
+With the *Meals feed the buyer* setting on, buying one asks the buyer whether
 to eat it there and then, and credits today's food and drink by quality: a
 squalid meal is a quarter of a Medium creature's day with nothing to drink, a
 modest one a full day's food and a pint, a wealthy one two days' food and half a
-gallon, an aristocratic one a feast — four days' food and a gallon — enough to
-feed a Large character in one sitting. Simple Nutrition resets the tally when
-a new day begins — at midnight when dnd5e's calendar handles daily recovery
-(dnd5e 6.0 or later), otherwise at a long rest that starts a new day — so
-surplus is flavour rather than stockpiling. Crediting meals, and ale, wine,
+gallon, and an aristocratic one a feast of four days' food and a gallon, enough
+to feed a Large character in one sitting. Simple Nutrition resets the tally
+when a new day begins, at midnight when dnd5e's calendar handles daily recovery
+(dnd5e 6.0 or later) and otherwise at a long rest that starts a new day, so a
+surplus can't be stockpiled. Crediting meals, and ale, wine,
 bread or cheese consumed from the sheet, needs Simple Nutrition 1.0 or later,
 which counts the tally as a share of the day; with an older version nothing is
 recorded and the GM is warned at load.
 
 ## How stock behaves
 
-- **Finite (default)** — the packs ship a rolled stock snapshot, so a merchant
+- **Finite (default)**: the packs ship a rolled stock snapshot, so a merchant
   previewed in the compendium looks like a stocked shop rather than one of
   everything. Importing it re-rolls from the item's price and the settlement
   size, so two copies of the same shop differ, and expensive goods may not be in
   stock at all.
-- **Unlimited** — shops never run out of ordinary goods.
-- **Always limited either way** — poisons, spell scrolls and other consumables
+- **Unlimited**: shops never run out of ordinary goods.
+- **Always limited either way**: poisons, spell scrolls and other consumables
   a party would not find in unlimited supply. Sell out and they're gone until
   the next restock.
 - **Containers are stocked as separate items.** Backpacks, pouches, chests and
-  the like can't carry a quantity in dnd5e — each container is its own object
+  the like can't carry a quantity in dnd5e. Each container is its own object
   with its own contents, exactly as two pouches on a character sheet are two
   items. So a shop with four pouches lists four pouches, bought one at a time.
   Buying one brings what's visibly in it; a container with anything still
@@ -312,15 +312,15 @@ recorded and the GM is warned at load.
 - **Bundled goods** (Arrows ×20, Bolts ×20, Sling Bullets ×20, Needles ×50,
   Firearm Bullets ×10, Iron Spikes ×10) are priced per bundle and bought in
   whole bundles: the row reads "per 20", and the bill steps by the bundle.
-- **Services** — lodging, meals, ship passage, stabling, coach rides, tolls and
-  spellcasting — are bought without an item changing hands, never run out, and
+- **Services** (lodging, meals, ship passage, stabling, coach rides, tolls and
+  spellcasting) are bought without an item changing hands, never run out, and
   can't be sold back.
 
 ### Trading hours and restocking
 
-Every merchant ships with hours — a jeweler keeps 09:00–17:00, a dock opens at
-05:00, the tavern runs 06:00 to 02:00, and the fence trades 20:00 to 04:00 —
-driven by Foundry's own world clock, so anything that advances time works. With
+Every merchant ships with hours, driven by Foundry's own world clock, so
+anything that advances time works. A jeweler keeps 09:00 to 17:00, a dock opens
+at 05:00, the tavern runs 06:00 to 02:00, and the fence trades 20:00 to 04:00. With
 *Shops keep their trading hours* on (the default), a shop outside its hours
 closes to players and says when it opens again; turn the setting off and every
 shop stays open around the clock. Change one shop's hours on its Settings tab.
@@ -334,8 +334,8 @@ follow the clock, they're always open, restock only by hand with *Restock now*,
 show no *Fresh stock today* or *New*, and put no date on a bill or a receipt;
 their Settings tab says so.
 
-Shops **restock on their own schedule**, by trade and settlement size — an inn
-daily, a jeweler fortnightly — when their doors open on the due day, via the
+Shops **restock on their own schedule**, by trade and settlement size (an inn
+daily, a jeweler fortnightly), when their doors open on the due day, via the
 *Shops restock on their schedule* setting. It is on in new worlds; a world
 upgraded from 1.x keeps it off until you turn it on. A restock redraws only
 what the shop's stock table put there: anything you added by hand stays. A shop
@@ -351,18 +351,18 @@ To restock one shop by hand, use *Restock now* on its Settings tab, or:
 game.modules.get("merchant-presets").api.restock(actor)
 ```
 
-Not supported: **closed days and holidays** — a shop keeps the same hours every
+**Closed days and holidays** aren't supported: a shop keeps the same hours every
 day of the year.
 
 ## What a shop will buy, and with what
 
 **Coin is finite.** Each merchant has a purse scaled to its trade and the
-settlement — 40 gp for a village innkeeper, 12,500 gp for a city dock — and
+settlement (40 gp for a village innkeeper, 12,500 gp for a city dock) and
 cannot buy past it. Most shops pay **50%** of list, the world default; the
 Jeweler pays **60%**, and the Criminal & Illicit Store pays **35%** while
 charging **125%**, the only markup in the set. A merchant's coin depletes as it
 buys and is topped back up to the shop's own purse on restock, so a party
-carrying 3,000 gp of loot has to find someone who can afford it — or come back
+carrying 3,000 gp of loot has to find someone who can afford it, or come back
 another day. A shop never pays more for an item than it would charge for it. Switch the *Merchant coin* setting to *Unlimited* to go back to shops that
 can always pay.
 
@@ -371,8 +371,8 @@ not itself stock: a fletcher takes weapons and ammunition but not plate armour,
 a jeweler takes gems and jewellery but not a galley. What each will accept is
 derived from its own stock list, so a shop can never refuse something it sells.
 
-Item type alone is not enough to tell a galley from a gemstone — dnd5e calls
-both `loot` — so this module's goods each carry a kind (vehicle, mount, tack,
+Item type alone can't tell a galley from a gemstone, since dnd5e calls both
+`loot`, so this module's goods each carry a kind (vehicle, mount, tack,
 food-drink, meal, lodging, service, spellcasting, component, travel) that the
 filters match on.
 
@@ -389,7 +389,7 @@ against the shopkeeper: a city stable carries 14,775 lb of horses and wagons
 against a capacity of 240.
 
 This costs nothing while dnd5e's **Encumbrance** variant is off, which is how
-the system ships — the figure is shown but no condition is applied. Turn that
+the system ships: the figure is shown but no condition is applied. Turn that
 variant on and every shopkeeper is permanently Exceeding Carrying Capacity,
 which under the 2024 rules is Speed 0.
 
@@ -404,7 +404,7 @@ worth turning on if you run encumbrance.
 2.0 drops Item Piles. The first time a GM loads an upgraded world, every shop
 from this module moves to 2.0's own shop window, keeping its terms, hours,
 stock and settings; other Item Piles merchants in the world are left alone, and
-Item Piles can stay installed. **Back up the world before upgrading** — going
+Item Piles can stay installed. **Back up the world before upgrading**: going
 back to 1.x means restoring that backup. [CHANGELOG.md](CHANGELOG.md) lists
 what migrates and what doesn't.
 

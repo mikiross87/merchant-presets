@@ -47,8 +47,8 @@ body:
     attributes:
       label: Does it still happen with other modules disabled?
       options:
-        - "Yes — only Merchant Presets enabled"
-        - "No — it needs another module active (name it above)"
+        - "Yes, with only Merchant Presets enabled"
+        - "No, it needs another module active (name it above)"
         - "Haven't tried"
     validations:
       required: true
