@@ -22,7 +22,7 @@ In scope:
   chat message that lets one user act for another, such as buying as someone
   else's character, or that renders script from item or actor data.
 - `.github/workflows/`: anything that would let someone else publish a release,
-  read a repository secret, or run their own commands in a workflow — including
+  read a repository secret, or run their own commands in a workflow, including
   through the text of an issue, which the triage workflow parses.
 
 Report these upstream instead:

@@ -678,7 +678,7 @@ async function countActivityMeal(activity, usageConfig) {
   const what = nutrition.water
     ? `Drink ${sn.formatNutritionAmount("water", nutrition.water)}`
     : `Food ${sn.formatNutritionAmount("food", nutrition.food)}`;
-  ui.notifications.info(`${actor.name}: ${item.name} — ${what}`);
+  ui.notifications.info(`${item.name} counted for ${actor.name}: ${what}`);
   log(`${actor.name} consumed ${item.name} by activity: today's tally food ${result.state.food}, `
     + `water ${result.state.water} (days)`);
 }
@@ -1712,14 +1712,14 @@ Hooks.once("init", () => {
     name: "Shop stock",
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
       + "firearms are always limited, and containers are always one-of). Finite: every good gets "
-      + "a rolled stock count scaled to its price and the settlement size, and can sell out — an "
+      + "a rolled stock count scaled to its price and the settlement size, and can sell out, so an "
       + "expensive item may not be in stock at all. Applies to merchants imported after the change.",
     scope: "world",
     config: true,
     type: String,
     choices: {
-      unlimited: "Unlimited — shops never run out",
-      finite: "Finite — rolled stock, can sell out (default)"
+      unlimited: "Unlimited: shops never run out",
+      finite: "Finite: rolled stock that can sell out (default)"
     },
     default: "finite"
   });
@@ -1734,8 +1734,8 @@ Hooks.once("init", () => {
     config: true,
     type: String,
     choices: {
-      finite: "Finite — shops can run out of coin (default)",
-      unlimited: "Unlimited — shops can always pay"
+      finite: "Finite: shops can run out of coin (default)",
+      unlimited: "Unlimited: shops can always pay"
     },
     default: "finite"
   });
@@ -1808,9 +1808,9 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "tradingHours", {
     name: "Shops keep their trading hours",
-    hint: "Every merchant ships with hours — a jeweler keeps 09:00-17:00, a dock opens at 05:00, "
-      + "a fence trades 20:00 to 04:00 — and closes to players outside them, on Foundry's own "
-      + "world clock, so any calendar that advances time works. Turn it off and every shop stays "
+    hint: "Every merchant ships with hours and closes to players outside them, on Foundry's own "
+      + "world clock, so any calendar that advances time works. A jeweler keeps 09:00 to 17:00, a "
+      + "dock opens at 05:00, and a fence trades 20:00 to 04:00. Turn it off and every shop stays "
       + "open around the clock.",
     scope: "world",
     config: true,
@@ -1821,11 +1821,10 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "ignoreStockWeight", {
     name: "Shop stock is not carried",
     hint: "A merchant's wares and till sit in its own inventory, so dnd5e has the shopkeeper "
-      + "carrying the whole shelf — a city "
-      + "stable holds 14,775 lb against a capacity of 240 — which does nothing until you turn on "
-      + "dnd5e's Encumbrance variant, and then leaves every shopkeeper permanently Exceeding "
-      + "Carrying Capacity. Turn this on to cancel the weight of the stock and the purse, leaving "
-      + "the shopkeeper's own equipment to count normally. Off by default, because encumbrance is.",
+      + "carrying the whole shelf: a city stable holds 14,775 lb against a capacity of 240. That "
+      + "does nothing until you turn on dnd5e's Encumbrance variant, which then leaves every "
+      + "shopkeeper permanently Exceeding Carrying Capacity. Turn this on to cancel the weight of "
+      + "the stock and the purse, leaving the shopkeeper's own equipment to count normally. Off by default, because encumbrance is.",
     scope: "world",
     config: true,
     type: Boolean,
@@ -1847,7 +1846,7 @@ Hooks.once("init", () => {
   game.settings.register(MODULE, "mealsFeed", {
     name: "Meals feed the buyer",
     hint: "With Simple Nutrition 5e 1.0 or later installed, buying a meal at an inn asks the buyer whether to "
-      + "eat it there and then, and credits today's food and drink by the meal's quality — a "
+      + "eat it there and then, and credits today's food and drink by the meal's quality: a "
       + "squalid meal is a quarter of a Medium creature's day with nothing to drink, a modest one "
       + "a full day's food and a pint, an aristocratic one a feast. Meals are services, so no item "
       + "changes hands either way.",
@@ -1870,7 +1869,7 @@ Hooks.once("init", () => {
 
   game.settings.register(MODULE, "animalsSpawn", {
     name: "Bought animals are added to the world",
-    hint: "The SRD has no animal items — a riding horse is a stat block — so the goods a stable "
+    hint: "The SRD has no animal items (a riding horse is a stat block), so the goods a stable "
       + "sells are placeholders at the SRD price. With this on, buying one copies the SRD stat "
       + "block into the world as an actor in a \"Purchased Animals\" folder, owned by whoever owns "
       + "the buying character, and the item in their pack becomes the bill of sale linking to it. "
