@@ -7066,11 +7066,9 @@
                               "children": [
                                 {
                                   "type": "text",
-                                  "id": "YfobQ",
+                                  "id": "HGLhF",
                                   "name": "Value",
                                   "fill": "$text-secondary",
-                                  "textGrowth": "fixed-width",
-                                  "width": "fill_container",
                                   "content": "1",
                                   "fontFamily": "$font-compact",
                                   "fontSize": 14,
@@ -20956,11 +20954,9 @@
                               "children": [
                                 {
                                   "type": "text",
-                                  "id": "tJ4wE",
+                                  "id": "TW0UG",
                                   "name": "Value",
                                   "fill": "$text-secondary",
-                                  "textGrowth": "fixed-width",
-                                  "width": "fill_container",
                                   "content": "1",
                                   "fontFamily": "$font-compact",
                                   "fontSize": 14,
@@ -30885,11 +30881,9 @@
                               "children": [
                                 {
                                   "type": "text",
-                                  "id": "o8ksDz",
+                                  "id": "s0JsU",
                                   "name": "Value",
                                   "fill": "$text-secondary",
-                                  "textGrowth": "fixed-width",
-                                  "width": "fill_container",
                                   "content": "1",
                                   "fontFamily": "$font-compact",
                                   "fontSize": 14,
@@ -45891,7 +45885,7 @@
                               "id": "qGDu9",
                               "name": "Table name",
                               "fill": "$text-primary",
-                              "content": "Armourer & Blacksmiths (Ironbridge)",
+                              "content": "Ironbridge Smithy",
                               "fontFamily": "$font-body",
                               "fontSize": 13,
                               "fontWeight": "700"
@@ -46504,11 +46498,9 @@
                                   "children": [
                                     {
                                       "type": "text",
-                                      "id": "e6E2r",
+                                      "id": "IynkG",
                                       "name": "Shovel formula",
                                       "fill": "$text-secondary",
-                                      "textGrowth": "fixed-width",
-                                      "width": "fill_container",
                                       "content": "1d4",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
