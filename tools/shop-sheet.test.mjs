@@ -1224,6 +1224,47 @@ test("a refused formula stays in its field, marked, until it's left with one tha
   assert.deepEqual([restock.newLines, restock.newLinesRefused], ["", null], "left blank: the fallback, and the mark goes");
 });
 
+test("a schedule picked another way lets go of a refused formula (#229 review, round 2)", async t => {
+  const { sheet } = openRestock(t, { table: PRESET_TABLE, every: "1d4+2" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  await act(sheet, "setEvery", { every: "7" });
+  const restock = await restockOf(sheet);
+  assert.deepEqual([restock.showFormula, restock.formulaRefused], [false, null], "7 days: no formula field, no mark");
+});
+
+test("Reset, Reset to preset and another table let go of refused formulas (#229 review, round 2)", async t => {
+  const { sheet, preset } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "3" }, default: "1d4" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  const refuseBoth = async () => {
+    await change(sheet, { op: "quantity", id: "r1" }, { value: "2d" });
+    await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  };
+  const marks = async () => {
+    const restock = await restockOf(sheet);
+    return [restock.quantities.find(q => q.id === "r1")?.refused ?? null, restock.newLinesRefused];
+  };
+
+  await refuseBoth();
+  await change(sheet, { op: "table" }, { value: OWN_TABLE.uuid });
+  assert.deepEqual(await marks(), [null, null], "another table");
+
+  await refuseBoth();
+  await act(sheet, "resetTable");
+  // Back on the preset's table, which this harness doesn't resolve: no lines, so read the map itself.
+  assert.equal(sheet._refused.size, 0, "Reset");
+
+  await change(sheet, { op: "table" }, { value: OWN_TABLE.uuid });
+  await refuseBoth();
+  preset.restock.table = OWN_TABLE.uuid;
+  await act(sheet, "resetToPreset");
+  assert.equal(sheet._refused.size, 0, "Reset to preset");
+});
+
 test("a refused schedule formula stays in its field, marked, the same way (#229 review)", async t => {
   const { sheet, shop } = openRestock(t, { table: PRESET_TABLE, every: "1d4+2" });
   globalThis.Roll = StrictRoll;
