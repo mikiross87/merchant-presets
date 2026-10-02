@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, quantityFormula, restockStockFlags,
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, quantityFormula, restockStockFlags, rolledCount,
   scheduleNext
 } from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
@@ -713,6 +713,14 @@ test("only this shop's own drawn copy sets a line's config, not a same-named goo
 
 test("a shop first seen by the schedule is due a whole interval from that day", () => {
   assert.deepEqual(initialSchedule(at(3, 15), 3, calendar), { lastRestock: at(3, 15), dueAt: at(6) });
+});
+
+test("a roll that comes out Infinity, NaN or below zero counts as none (#229 review)", () => {
+  assert.equal(rolledCount(3), 3);
+  assert.equal(rolledCount(-2), 0);
+  assert.equal(rolledCount(Infinity), 0);
+  assert.equal(rolledCount(-Infinity), 0);
+  assert.equal(rolledCount(NaN), 0);
 });
 
 test("a table line rolls its own formula, else the shop's New lines formula, else 1 (#190)", () => {

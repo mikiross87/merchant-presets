@@ -70,6 +70,13 @@ globalThis.foundry = {
 globalThis.ui = { notifications: { warn() {} } };
 // A GM's window looks up the shop's preset and stock table (#110); nothing resolves unless a test says so.
 globalThis.fromUuid = async () => null;
+/** Foundry's Roll, as the Settings tab checks a typed formula (#229 review): every formula rolls, to 1. */
+const FairRoll = class {
+  constructor(formula) { this.formula = formula; }
+  static validate() { return true; }
+  evaluateSync() { return { total: 1 }; }
+};
+globalThis.Roll = FairRoll;
 const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
@@ -1129,10 +1136,7 @@ function openRestock(t, restock) {
   globalThis.fromUuid = async uuid => (uuid === OWN_TABLE.uuid ? OWN_TABLE : presetUuid(uuid));
   const tables = globalThis.game.tables;
   globalThis.game.tables = { contents: [OWN_TABLE] };
-  // Foundry's dice check: every formula these tests type rolls.
-  const roll = globalThis.Roll;
-  globalThis.Roll = { validate: () => true };
-  t.after(() => { globalThis.game.tables = tables; globalThis.Roll = roll; });
+  t.after(() => { globalThis.game.tables = tables; });
   return opened;
 }
 
@@ -1180,9 +1184,8 @@ test("a table that can't be found is refused with a warning, and nothing is writ
 test("a formula that wouldn't roll is refused before it's saved, so the shop can still restock (#229 review)", async t => {
   const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4" } });
   // Foundry's own check tries the roll: "1d4+" parses as characters but not as dice.
-  const saved = globalThis.Roll;
-  globalThis.Roll = { validate: formula => !/[+\-*/d]$/.test(formula) };
-  t.after(() => { globalThis.Roll = saved; });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
   let renders = 0;
   sheet.render = () => { renders++; };
   await change(sheet, { op: "quantity", id: "r1" }, { value: "1d4+" });
@@ -1192,6 +1195,38 @@ test("a formula that wouldn't roll is refused before it's saved, so the shop can
   assert.equal(renders, 2, "each field is put back to what's saved");
   await change(sheet, { op: "quantity", id: "r1" }, { value: "" });
   assert.equal(writtenShop(shop).restock.quantities.r1, "2d6+4", "a blank field isn't a formula to check");
+});
+
+/** A Roll that refuses a formula ending in an operator or a bare `d`, and rolls Infinity for one dividing by 0. */
+const StrictRoll = class extends FairRoll {
+  static validate(formula) { return !/[+\-*/d]$/.test(formula); }
+  evaluateSync() { return { total: /\/\s*0\b/.test(this.formula) ? Infinity : 1 }; }
+};
+
+test("a quantity that would roll Infinity is refused too (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4" } });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1/0" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d6/0" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+});
+
+test("the schedule's dice formula must roll a number of days too (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  await change(sheet, { op: "every" }, { value: "7/0" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+  await change(sheet, { op: "every" }, { value: "1d4+2" });
+  assert.equal(writtenShop(shop).restock.every, "1d4+2");
+  await change(sheet, { op: "every" }, { value: "3" });
+  assert.equal(writtenShop(shop).restock.every, 3, "a number of days needs no roll");
 });
 
 test("a table that can't be found puts the Change menu back on the shop's own (#229 review)", async t => {
