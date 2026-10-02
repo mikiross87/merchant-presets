@@ -2450,6 +2450,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static async #onSetEvery(_event, target) {
     if (!game.user.isGM) return;
     const every = target.dataset.every;
+    // A schedule picked here replaces whatever the formula field was refused (#229 review, round 2).
+    if (every !== "dice") this._refused.delete("every");
     if (every === "dice") {
       this._everyDice = true;
       this.render({ parts: ["body"] });
@@ -2634,6 +2636,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       content: `<p>${game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Reset.Question")}</p>`
     });
     if (!yes) return;
+    // The whole config goes back, the schedule's formula with it (#229 review, round 2).
+    this._refused.clear();
     await this.#edit(() => ({ op: "reset", preset }));
   }
 
@@ -2657,8 +2661,17 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!game.user.isGM || this.preview) return;
     await this.#edit(async shop => {
       const preset = await this.#presetShop(shop);
+      if (preset) this.#letGoOfQuantities();
       return preset ? { op: "resetTable", preset } : null;
     });
+  }
+
+  /**
+   * Drops the refused quantity and New lines formulas (#229 review, round 2): a Reset or another
+   * table writes over them, and the fields should show what it wrote.
+   */
+  #letGoOfQuantities() {
+    for (const key of [...this._refused.keys()]) if (key !== "every") this._refused.delete(key);
   }
 
   /**
@@ -2673,6 +2686,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       this.render({ parts: ["body"] });
       return null;
     }
+    this.#letGoOfQuantities();
     return { op: "table", uuid: table.uuid, resultIds: [...table.results].map(r => r.id ?? r._id) };
   }
 
