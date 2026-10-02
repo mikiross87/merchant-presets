@@ -1129,7 +1129,10 @@ function openRestock(t, restock) {
   globalThis.fromUuid = async uuid => (uuid === OWN_TABLE.uuid ? OWN_TABLE : presetUuid(uuid));
   const tables = globalThis.game.tables;
   globalThis.game.tables = { contents: [OWN_TABLE] };
-  t.after(() => { globalThis.game.tables = tables; });
+  // Foundry's dice check: every formula these tests type rolls.
+  const roll = globalThis.Roll;
+  globalThis.Roll = { validate: () => true };
+  t.after(() => { globalThis.game.tables = tables; globalThis.Roll = roll; });
   return opened;
 }
 

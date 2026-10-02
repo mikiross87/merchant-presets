@@ -2248,6 +2248,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }[op];
     // The schedule's select (design aaJcp) offers what its pills do: the same choice.
     if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
+    // A quantity the GM typed must roll (#229 review): the schema checks only its characters, and
+    // "1d4+" saved would throw at every restock, so the shop would never restock again.
+    if ((op === "quantity" || op === "defaultQuantity") && value.trim() && !Roll.validate(value.trim())) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: value.trim() }));
+      this._resetTyping = settingSelector(control);
+      this.render({ parts: ["body"] });
+      return;
+    }
     if (change) await this.#edit(change, settingSelector(control));
   }
 
@@ -2630,6 +2638,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const table = uuid ? await Promise.resolve(fromUuid(uuid)).catch(() => null) : null;
     if (table?.documentName !== "RollTable") {
       ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NoSuchTable"));
+      // Change goes back to the table the shop still has (#229 review).
+      this.render({ parts: ["body"] });
       return null;
     }
     return { op: "table", uuid: table.uuid, resultIds: [...table.results].map(r => r.id ?? r._id) };
