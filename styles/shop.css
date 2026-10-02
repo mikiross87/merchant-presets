@@ -1313,7 +1313,15 @@
 .shop-sheet .mp-quantity-rows { flex: 1 1 0; min-height: 0; overflow-y: auto; padding-bottom: 6px; }
 .shop-sheet .mp-quantity-row { display: flex; align-items: center; gap: 10px; padding: 4px 10px; }
 .shop-sheet .mp-quantity-row[hidden] { display: none; }
-.shop-sheet .mp-quantity-row:nth-child(even) { background: var(--mp-inset); }
+.shop-sheet .mp-quantity-rows > .is-alt { background: var(--mp-inset); }
+/* A formula that doesn't roll (#229 review, design U9Jt8Z): outlined, and why under it. */
+.shop-sheet .mp-field.is-refused, .shop-sheet .mp-field.is-refused:focus-within { outline-color: var(--mp-red); }
+.shop-sheet .settings-formula.is-refused { outline: 1px solid var(--mp-red); }
+.shop-sheet .mp-refused { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-danger-ink); }
+.shop-sheet .mp-refused.is-new-lines { padding-left: 90px; }
+.shop-sheet .mp-refused.is-line { padding: 0 10px 5px; }
+.shop-sheet .mp-refused[hidden] { display: none; }
+.shop-sheet .mp-refused > span { display: block; }
 .shop-sheet .mp-quantity-row > span { flex: 1 1 0; min-width: 0; font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
 .shop-sheet .mp-quantity-row .mp-field { padding: 3px 8px; }
 .shop-sheet .mp-quantity-row .mp-field input { font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; }

@@ -368,7 +368,7 @@
           "NoTableName": "No stock table",
           "NoTable": "can't restock · drop a table here to use one",
           "NoSuchTable": "That stock table can't be found.",
-          "NotDice": "{formula} doesn't roll a number a restock can use. Use a number or dice, like 1d4+2.",
+          "NotDice": "{formula} doesn't roll a number. Use a number or dice, like 1d4+2.",
           "Change": "Change",
           "ChangeLabel": "Stock table",
           "ResetTable": "Reset",

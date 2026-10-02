@@ -266,6 +266,8 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   const shop = ${from ?? `game.actors.getName(${JSON.stringify(name)})`};
   ${before}
   const app = shop.sheet;
+  // No formula left refused from an earlier frame (#229 review, band 19).
+  app._refused?.clear();
   app._buyerUuid = game.actors.getName("Aria").uuid;
   for (const [name, quantity] of ${JSON.stringify(basket)}) app._baskets.buy.set(shop.items.getName(name).id, quantity);
   const aria = game.actors.getName("Aria");
@@ -319,7 +321,13 @@ const restockTab = openShop({ tab: "settings", autoRestock: true,
  * quantity list scrolled to its last seven lines, where the Shovel takes New lines'.
  */
 const OWN_TABLE = "Ironbridge Smithy";
-const ownTableTab = openShop({ tab: "settings", autoRestock: true,
+/** In-page: the quantity list scrolled so Mithral Chain Mail is its first line, as band 19 draws it. */
+const scrollToMithral = `
+  const rows = app.element.querySelector(".mp-quantity-rows");
+  const first = rows.querySelector('[data-name="mithral chain mail"]');
+  rows.scrollTop += first.getBoundingClientRect().top - rows.getBoundingClientRect().top;`;
+/** The own-table frame's state, then `then` (in-page). */
+const ownTable = (then = "") => openShop({ tab: "settings", autoRestock: true,
   before: withoutDeals + restocked(0) + newBadges(true) + `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: ${opening(0)}, dueAt: ${opening(-7)}, every: 7 } });
   const preset = shop.flags["merchant-presets"].shop.restock;
   let own = game.tables.getName(${JSON.stringify(OWN_TABLE)});
@@ -334,9 +342,16 @@ const ownTableTab = openShop({ tab: "settings", autoRestock: true,
   shop.sheet._settingsSection = "restock";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="restock"]').click();
   await new Promise(r => setTimeout(r, 400));
-  const rows = app.element.querySelector(".mp-quantity-rows");
-  const first = rows.querySelector('[data-name="mithral chain mail"]');
-  rows.scrollTop += first.getBoundingClientRect().top - rows.getBoundingClientRect().top;` });
+  ${then}${scrollToMithral}` });
+const ownTableTab = ownTable();
+/**
+ * Band 19's refused frames (#229 review, design U9Jt8Z): New lines typed "2d" and Mithral Plate
+ * Armor "1d2-", each left as the GM leaves a field, so the window refuses them as it would.
+ */
+const refusedTab = ownTable(`
+  const leave = async (input, text) => { input.focus(); input.value = text; input.blur(); await new Promise(r => setTimeout(r, 600)); };
+  await leave(app.element.querySelector('[data-op="defaultQuantity"]'), "2d");
+  await leave(app.element.querySelector('.mp-quantity-row[data-name="mithral plate armor"] input'), "1d2-");`);
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
@@ -758,5 +773,7 @@ export const FRAMES = {
   Ty8DX: frame("18 Haggling · Call form — Dark", "dark", 360, 252, "Gamemaster", callForm),
   ...haggleFrames,
   PfjAq: frame("19 Settings (GM) · Restock, own table — Light", "light", 920, 760, "Gamemaster", ownTableTab),
-  Y4CVJo: frame("19 Settings (GM) · Restock, own table — Dark", "dark", 920, 760, "Gamemaster", ownTableTab)
+  Y4CVJo: frame("19 Settings (GM) · Restock, own table — Dark", "dark", 920, 760, "Gamemaster", ownTableTab),
+  U9Jt8Z: frame("19 Settings (GM) · Restock, formula refused — Light", "light", 920, 760, "Gamemaster", refusedTab),
+  vFOQJ: frame("19 Settings (GM) · Restock, formula refused — Dark", "dark", 920, 760, "Gamemaster", refusedTab)
 };

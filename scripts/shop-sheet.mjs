@@ -585,6 +585,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._previewOpen = false;
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
     this._everyDice = false;
+    /**
+     * Restock formulas the GM typed that don't roll (#229 review, design U9Jt8Z), by field
+     * ("quantity:<result id>", "defaultQuantity", "every"): what was typed and why it was refused,
+     * shown on the field until it's left with one that rolls.
+     */
+    this._refused = new Map();
   }
 
   /**
@@ -730,7 +736,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       const narrow = () => {
         this._quantityFilter = find.value;
         const query = find.value.trim().toLocaleLowerCase();
-        for (const row of this.element.querySelectorAll(".mp-quantity-row")) row.hidden = !!query && !row.dataset.name.includes(query);
+        // A line and its refusal go together.
+        for (const row of this.element.querySelectorAll(".mp-quantity-rows > [data-name]")) row.hidden = !!query && !row.dataset.name.includes(query);
       };
       narrow();
       find.addEventListener("input", narrow);
@@ -2009,8 +2016,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // Another table (#190): the world's, and the preset's wherever it lives (design GfO9j).
         tables: this.#tableChoices(shop, preset),
         canResetTable: !!preset && !tableIsPreset(shop.restock, preset.restock),
-        quantities: quantityRows(lines, shop.restock).map(row => ({ ...row, key: row.name.toLocaleLowerCase() })),
-        newLines: shop.restock.default ?? "",
+        // Striped by place, so a line's refusal (design U9Jt8Z) shares its stripe.
+        quantities: quantityRows(lines, shop.restock).map((row, i) => {
+          const refused = this._refused.get(`quantity:${row.id}`);
+          return { ...row, key: row.name.toLocaleLowerCase(), alt: i % 2 === 1,
+            value: refused?.value ?? row.value, refused: refused?.message ?? null };
+        }),
+        newLines: this._refused.get("defaultQuantity")?.value ?? shop.restock.default ?? "",
+        newLinesRefused: this._refused.get("defaultQuantity")?.message ?? null,
         find: this._quantityFilter ?? "",
         chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
           // "Dice…" just picked, no formula saved yet: it's the one lit.
@@ -2018,8 +2031,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           label: id === "dice" ? i18n("Restock.Dice") : id === "never" ? everyLabel("never")
             : id === "1" ? everyLabel(1) : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: id })
         })),
-        showFormula: chip === "dice" || this._everyDice,
-        formula,
+        showFormula: chip === "dice" || this._everyDice || this._refused.has("every"),
+        formula: this._refused.get("every")?.value ?? formula,
+        formulaRefused: this._refused.get("every")?.message ?? null,
         current: chip === "never" ? everyLabel("never") : everyLabel(shop.restock.every),
         presetLine: presetOf ? await this.#presetLine(presetOf.merchant, preset, pillLabel) : null,
         reroll: shop.restock.mode === "reroll",
@@ -2261,14 +2275,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A formula the GM typed, a quantity or the schedule's days, must roll a number (#229 review):
     // the schema checks only its characters, and "1d4+" saved would throw at every restock, so
     // the shop would never restock again. A plain number of days, or "never", rolls nothing.
+    // Refused, the field keeps what was typed and says why (design U9Jt8Z); left with one that
+    // rolls, or blank, the mark goes.
     const typed = value.trim();
-    const rolls = op === "quantity" || op === "defaultQuantity" || (op === "every" && !/^\d+$/.test(typed) && typed !== "never");
+    const formulaField = op === "quantity" ? `quantity:${control.dataset.id}` : op === "defaultQuantity" || op === "every" ? op : null;
+    const rolls = formulaField && (op !== "every" || (!/^\d+$/.test(typed) && typed !== "never"));
     if (rolls && typed && !rollsACount(typed)) {
-      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: typed }));
-      this._resetTyping = settingSelector(control);
+      this._refused.set(formulaField, { value: typed,
+        message: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: typed }) });
       this.render({ parts: ["body"] });
       return;
     }
+    if (formulaField) this._refused.delete(formulaField);
     if (change) await this.#edit(change, settingSelector(control));
   }
 

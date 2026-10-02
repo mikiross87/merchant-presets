@@ -1191,10 +1191,50 @@ test("a formula that wouldn't roll is refused before it's saved, so the shop can
   await change(sheet, { op: "quantity", id: "r1" }, { value: "1d4+" });
   await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
   assert.equal(shop.updates.length, 0);
-  assert.equal(warnings.length, 2);
-  assert.equal(renders, 2, "each field is put back to what's saved");
+  assert.equal(renders, 2, "each field shows it was refused");
   await change(sheet, { op: "quantity", id: "r1" }, { value: "" });
   assert.equal(writtenShop(shop).restock.quantities.r1, "2d6+4", "a blank field isn't a formula to check");
+  assert.deepEqual(warnings, [], "the field says so, not a notification (design U9Jt8Z)");
+});
+
+/** The Restock context the window would render now. */
+const restockOf = async sheet => (await sheet._prepareContext({})).settings.restock;
+const REFUSED = "MERCHANT_PRESETS.Shop.Settings.Restock.NotDice";
+
+test("a refused formula stays in its field, marked, until it's left with one that rolls (#229 review, design U9Jt8Z)", async t => {
+  const { sheet, shop } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" }, default: "1d4" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1d2-" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  let restock = await restockOf(sheet);
+  const chain = () => restock.quantities.find(q => q.id === "r1");
+  assert.deepEqual([chain().value, chain().refused], ["1d2-", REFUSED], "what was typed, and why");
+  assert.deepEqual([restock.newLines, restock.newLinesRefused], ["2d", REFUSED]);
+  assert.equal(restock.quantities.find(q => q.id === "gm1").refused, null, "only the field that was refused");
+  restock = await restockOf(sheet);
+  assert.equal(chain().refused, REFUSED, "a re-render (a clock tick) keeps it");
+  assert.equal(shop.updates.length, 0);
+
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "3" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "" });
+  restock = await restockOf(sheet);
+  assert.deepEqual([chain().value, chain().refused], ["3", null], "left with one that rolls: saved, and the mark goes");
+  assert.deepEqual([restock.newLines, restock.newLinesRefused], ["", null], "left blank: the fallback, and the mark goes");
+});
+
+test("a refused schedule formula stays in its field, marked, the same way (#229 review)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE, every: "1d4+2" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  let restock = await restockOf(sheet);
+  assert.deepEqual([restock.formula, restock.formulaRefused], ["1d4+", REFUSED]);
+  await change(sheet, { op: "every" }, { value: "2d6" });
+  restock = await restockOf(sheet);
+  assert.deepEqual([writtenShop(shop).restock.every, restock.formulaRefused], ["2d6", null]);
 });
 
 /** A Roll that refuses a formula ending in an operator or a bare `d`, and rolls Infinity for one dividing by 0. */
@@ -1204,14 +1244,17 @@ const StrictRoll = class extends FairRoll {
 };
 
 test("a quantity that would roll Infinity is refused too (#229 review)", async t => {
-  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4" } });
+  const { sheet, shop, warnings } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" } });
   globalThis.Roll = StrictRoll;
   t.after(() => { globalThis.Roll = FairRoll; });
   sheet.render = () => {};
   await change(sheet, { op: "quantity", id: "r1" }, { value: "1/0" });
   await change(sheet, { op: "defaultQuantity" }, { value: "2d6/0" });
   assert.equal(shop.updates.length, 0);
-  assert.equal(warnings.length, 2);
+  assert.deepEqual(warnings, []);
+  const restock = await restockOf(sheet);
+  assert.equal(restock.quantities.find(q => q.id === "r1").refused, REFUSED);
+  assert.equal(restock.newLinesRefused, REFUSED);
 });
 
 test("the schedule's dice formula must roll a number of days too (#229 review)", async t => {
@@ -1222,7 +1265,8 @@ test("the schedule's dice formula must roll a number of days too (#229 review)",
   await change(sheet, { op: "every" }, { value: "1d4+" });
   await change(sheet, { op: "every" }, { value: "7/0" });
   assert.equal(shop.updates.length, 0);
-  assert.equal(warnings.length, 2);
+  assert.deepEqual(warnings, []);
+  assert.equal((await restockOf(sheet)).formulaRefused, REFUSED);
   await change(sheet, { op: "every" }, { value: "1d4+2" });
   assert.equal(writtenShop(shop).restock.every, "1d4+2");
   await change(sheet, { op: "every" }, { value: "3" });
