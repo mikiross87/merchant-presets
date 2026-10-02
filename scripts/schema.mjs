@@ -32,7 +32,8 @@ export const SHOP_DEFAULTS = deepFreeze({
   description: "",
   terms: { sellsAt: null, buysAt: null, categories: [] },
   hours: { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } },   // null: always open
-  restock: { table: null, quantities: {}, onOpen: true, every: 7, mode: "reroll" },   // #105
+  // #105; `default`: the formula a table line with none of its own rolls, null for 1 (#190)
+  restock: { table: null, quantities: {}, default: null, onOpen: true, every: 7, mode: "reroll" },
   wontBuy: { types: [], kinds: [] },
   deals: []                // one character's own price here (#111)
 });
@@ -154,6 +155,7 @@ const shopShape = shape({
       if (!isObject(v)) return errors.push(`${path}: must be an object`);
       for (const [id, f] of Object.entries(v)) formula(f, `${path}.${id}`, errors);
     },
+    default: nullOr(formula),
     onOpen: bool,
     every: (v, path, errors) => {
       if (v === "never" || isInt(v, 1, Infinity)) return;

@@ -20,7 +20,7 @@ import { effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, restockStockFlags, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, quantityFormula, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -248,12 +248,12 @@ async function lineNames(table) {
  * This restock's draw from a shop's stock table: each line's document, with
  * its compendium source recorded as an import would (stacking, the shelf match
  * and the bundle fallback all read it), and its quantity freshly rolled from
- * the shop's own `restock.quantities`. Null if any line's document can't be
+ * the shop's own formula for that line, or its New lines one (#190). Null if any line's document can't be
  * found (the SRD pack not loaded, a world item deleted): a reroll would delete
  * that line's drawn copy and have nothing to replace it with, so the whole
  * restock waits for the table to resolve (#135 review).
  */
-async function drawsFor(table, quantities) {
+async function drawsFor(table, restock) {
   const draws = [];
   for (const result of table.results ?? []) {
     if (!isItemLine(result)) continue;
@@ -265,8 +265,7 @@ async function drawsFor(table, quantities) {
     const data = doc.toObject();
     // A world item that already records where it came from keeps that source (#135 review).
     data._stats = { ...data._stats, compendiumSource: data._stats?.compendiumSource ?? doc.uuid ?? result.documentUuid };
-    const formula = quantities?.[result.id ?? result._id] ?? "1";
-    draws.push({ name: doc.name, data, quantity: await rollStock(formula) });
+    draws.push({ name: doc.name, data, quantity: await rollStock(quantityFormula(restock, result.id ?? result._id)) });
   }
   return draws;
 }
@@ -360,7 +359,7 @@ async function restockNow(actor, { at = game.time.worldTime } = {}) {
   if (!shelf) return null;
 
   const items = actor.items.map(i => i.toObject());
-  const draws = await drawsFor(table, shop.restock.quantities);
+  const draws = await drawsFor(table, shop.restock);
   if (!draws) return null;
   const record = actor.flags?.[MODULE]?.itemFlags ?? {};
   // What the shelf says of each line now, over what it said at earlier restocks: a line that

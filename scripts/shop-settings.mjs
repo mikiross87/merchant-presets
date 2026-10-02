@@ -120,6 +120,33 @@ const CHANGES = {
   mode(shop, { mode }) {
     shop.restock.mode = mode;
   },
+  // A table line's formula (#190), named by its result id. Blank puts back the preset's formula
+  // for that line, or, for a line the preset never had, leaves it to New lines.
+  quantity(shop, { id, formula, preset }) {
+    if (typeof id !== "string" || !id) return "no such line";
+    const typed = String(formula ?? "").trim();
+    const fallback = preset?.restock?.quantities?.[id];
+    if (typed) shop.restock.quantities[id] = typed;
+    else if (fallback !== undefined) shop.restock.quantities[id] = fallback;
+    else delete shop.restock.quantities[id];
+  },
+  defaultQuantity(shop, { formula }) {
+    shop.restock.default = String(formula ?? "").trim() || null;
+  },
+  // Another stock table: the formulas of the lines it shares with the old one stay, by result id
+  // (an imported or duplicated table keeps its results' ids).
+  table(shop, { uuid, resultIds }) {
+    if (typeof uuid !== "string" || !uuid) return "no such table";
+    if (!Array.isArray(resultIds)) return "the table's lines are unknown";
+    const keep = new Set(resultIds);
+    shop.restock.table = uuid;
+    shop.restock.quantities = Object.fromEntries(Object.entries(shop.restock.quantities).filter(([id]) => keep.has(id)));
+  },
+  resetTable(shop, { preset }) {
+    if (!preset?.restock) return "no preset to reset to";
+    const { table, quantities } = shopFrom(preset).restock;
+    Object.assign(shop.restock, { table, quantities: structuredClone(quantities), default: null });
+  },
   // Deals are named by their character, as rules are by category (see `ruleRate`).
   addDeal(shop, change) {
     if (shop.deals.some(d => d.actor === change.actor)) return `${change.name} already has a deal here`;
@@ -149,7 +176,9 @@ const CHANGES = {
  * @param {{op: string}} change  `{op: "rate", side, percent|null}`, `{op: "addRule", category,
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
- *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "addDeal"|"editDeal", actor, name, buy, sell,
+ *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
+ *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`
+ *   (#190; `preset` the preset merchant's shop config), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
  *   (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}
@@ -230,6 +259,35 @@ export function resetToPreset(shop, sourceShop) {
   if (!ok) return { ok, errors };
   // Deals are with a character, not part of the preset: a reset keeps them.
   return { ok, shop: { ...shopFrom(sourceShop), source: shop.source, deals: shop.deals } };
+}
+
+/**
+ * Whether a shop's stock table, its formulas and New lines are still its preset's, so the table
+ * card offers no Reset (design aaJcp vs PfjAq). With no preset there is nothing to reset to.
+ *
+ * @param {{table: string|null, quantities: Record<string, string>, default?: string|null}} restock
+ * @param {object|null} presetRestock  the preset merchant's `restock`
+ * @returns {boolean}
+ */
+export function tableIsPreset(restock, presetRestock) {
+  if (!presetRestock) return true;
+  const own = Object.entries(restock.quantities ?? {});
+  const theirs = presetRestock.quantities ?? {};
+  return restock.table === presetRestock.table && (restock.default ?? null) === null
+    && own.length === Object.keys(theirs).length && own.every(([id, f]) => theirs[id] === f);
+}
+
+/**
+ * The quantity list's rows (design HKGIx): each stock table line with its own formula, blank if
+ * it has none, and the New lines formula it then rolls as the placeholder.
+ *
+ * @param {{id: string, name: string}[]} lines  The table's item lines, in table order.
+ * @param {{quantities: Record<string, string>, default?: string|null}} restock
+ * @returns {{id: string, name: string, value: string, placeholder: string}[]}
+ */
+export function quantityRows(lines, restock) {
+  const placeholder = restock.default ?? "1";
+  return lines.map(({ id, name }) => ({ id, name, value: restock.quantities?.[id] ?? "", placeholder }));
 }
 
 /** A time of day as minutes past midnight on `calendar`'s clock. */

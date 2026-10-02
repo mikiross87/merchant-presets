@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SHOP_DEFAULTS, shopFrom, validateShop } from "../scripts/schema.mjs";
-import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, resetToPreset, timeText, wholeCoins } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, quantityRows, resetToPreset, tableIsPreset, timeText, wholeCoins } from "../scripts/shop-settings.mjs";
 
 const WORLD = { sellsAt: 1, buysAt: 0.5 };
 const shop = (over = {}) => shopFrom({ version: 1, ...over });
@@ -149,6 +149,69 @@ test("a restock re-rolls the shelf or tops it up", () => {
 test("an unknown change is refused", () => {
   refused(shop(), { op: "paint" });
   refused(shop(), null);
+});
+
+/* ------------------------------------------------------------ quantities and table (#190) */
+
+const PRESET_TABLE = "Compendium.merchant-presets.stock.RollTable.QxBxVISyvQqNO94G";
+const preset190 = shop({ restock: { table: PRESET_TABLE, quantities: { r1: "2d6+4", r2: "1d2" } } });
+
+test("a line's formula is set, and blanking it puts the preset's back, or hands it to New lines", () => {
+  let config = applied(preset190, { op: "quantity", id: "r1", formula: " 1d4 ", preset: preset190 });
+  assert.equal(config.restock.quantities.r1, "1d4", "trimmed");
+  config = applied(config, { op: "quantity", id: "r1", formula: "", preset: preset190 });
+  assert.equal(config.restock.quantities.r1, "2d6+4", "the preset's own formula");
+  config = applied(config, { op: "quantity", id: "gm1", formula: "3", preset: preset190 });
+  assert.equal(config.restock.quantities.gm1, "3");
+  config = applied(config, { op: "quantity", id: "gm1", formula: "  ", preset: preset190 });
+  assert.equal(Object.hasOwn(config.restock.quantities, "gm1"), false, "a line the preset never had falls to New lines");
+  config = applied(config, { op: "quantity", id: "r2", formula: "", preset: null });
+  assert.equal(Object.hasOwn(config.restock.quantities, "r2"), false, "no preset to restore from");
+  refused(config, { op: "quantity", id: "r1", formula: "lots", preset: preset190 });
+  refused(config, { op: "quantity", id: "", formula: "1", preset: preset190 });
+});
+
+test("New lines takes a formula, and blank sets it back to 1", () => {
+  let config = applied(preset190, { op: "defaultQuantity", formula: "1d4" });
+  assert.equal(config.restock.default, "1d4");
+  config = applied(config, { op: "defaultQuantity", formula: "" });
+  assert.equal(config.restock.default, null);
+  refused(config, { op: "defaultQuantity", formula: "some" });
+});
+
+test("a new stock table keeps the formulas of the lines it shares with the old one", () => {
+  const config = applied(preset190, { op: "table", uuid: "RollTable.mine", resultIds: ["r1", "new"] });
+  assert.equal(config.restock.table, "RollTable.mine");
+  assert.deepEqual(config.restock.quantities, { r1: "2d6+4" });
+  refused(preset190, { op: "table", uuid: "", resultIds: [] });
+  refused(preset190, { op: "table", uuid: "RollTable.mine" });
+});
+
+test("resetting the table puts back the preset's table and formulas, and nothing else", () => {
+  let config = applied(preset190, { op: "table", uuid: "RollTable.mine", resultIds: ["new"] });
+  config = applied(config, { op: "defaultQuantity", formula: "2" });
+  config = applied(config, { op: "mode", mode: "topup" });
+  config = applied(config, { op: "resetTable", preset: preset190 });
+  assert.deepEqual(config.restock, { ...preset190.restock, mode: "topup" });
+  refused(config, { op: "resetTable", preset: null });
+});
+
+test("the table matches its preset until the table, a formula or New lines changes", () => {
+  assert.equal(tableIsPreset(preset190.restock, preset190.restock), true);
+  assert.equal(tableIsPreset(preset190.restock, null), true, "no preset: nothing to reset to");
+  assert.equal(tableIsPreset({ ...preset190.restock, table: "RollTable.mine" }, preset190.restock), false);
+  assert.equal(tableIsPreset({ ...preset190.restock, quantities: { r1: "1", r2: "1d2" } }, preset190.restock), false);
+  assert.equal(tableIsPreset({ ...preset190.restock, quantities: { r2: "1d2", r1: "2d6+4" } }, preset190.restock), true, "key order doesn't matter");
+  assert.equal(tableIsPreset({ ...preset190.restock, default: "2" }, preset190.restock), false);
+});
+
+test("the quantity list shows each line's own formula, or New lines as its placeholder", () => {
+  const lines = [{ id: "r1", name: "Chain" }, { id: "gm1", name: "Shovel" }];
+  assert.deepEqual(quantityRows(lines, { quantities: { r1: "2d6+4" }, default: "1d4" }), [
+    { id: "r1", name: "Chain", value: "2d6+4", placeholder: "1d4" },
+    { id: "gm1", name: "Shovel", value: "", placeholder: "1d4" }
+  ]);
+  assert.equal(quantityRows(lines, { quantities: {}, default: null })[1].placeholder, "1");
 });
 
 /* ------------------------------------------------------------ reset, misc */

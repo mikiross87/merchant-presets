@@ -326,3 +326,11 @@ test("a category rule may leave one side to the shop's rate, not both (#143 revi
   assert.equal(rule({ sellsAt: null, buysAt: null }), false);
   assert.equal(rule({ sellsAt: 0, buysAt: 1 }), false);
 });
+
+test("a shop's New lines formula is optional: null until a GM sets one, then a dice formula (#190)", () => {
+  assert.equal(shopFrom({ version: SHOP_VERSION }).restock.default, null);
+  assert.equal(shopFrom({ version: SHOP_VERSION, restock: { table: null } }).restock.default, null, "a config stored before #190 completes to null");
+  assert.ok(validateShop({ version: SHOP_VERSION, restock: { default: "1d4+1" } }).ok);
+  assert.equal(validateShop({ version: SHOP_VERSION, restock: { default: "lots" } }).ok, false);
+  assert.equal(validateShop({ version: SHOP_VERSION, restock: { default: 2 } }).ok, false, "a formula is text, as quantities are");
+});

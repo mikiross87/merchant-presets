@@ -378,23 +378,37 @@ export const isDrawn = (item, drawnBy) => {
  * whatever the compendium good's own copy says (#119 point 1). `system`
  * overrides the copy's quantity (and, for a container, drops its `container`
  * pointer — #89). `newAt` is when it came back in stock, if it's New (#152).
+ * `rolled` is the quantity this restock rolled for its line (#190); a container
+ * has none, its count being how many copies there are.
  */
-function drawnItem(draw, context, system, newAt) {
+function drawnItem(draw, context, system, newAt, rolled) {
   const data = structuredClone(draw.data);
   delete data._id;
   data.system = { ...data.system, ...system };
-  // Its own New time, or none: never one the drawn document carried from another shelf.
+  // Its own New time and roll, or none: never ones the drawn document carried from another shelf.
   const own = { ...data.flags?.["merchant-presets"] };
   delete own.newAt;
+  delete own.rolled;
   data.flags = {
     ...data.flags,
     // The shop's record wins; a line it has none for keeps the config its good ships with.
     "merchant-presets": { ...own, drawn: context.drawnBy ?? true,
       stock: context.stockFlags[draw.name] ?? own.stock,
-      ...(newAt === undefined ? {} : { newAt }) }
+      ...(newAt === undefined ? {} : { newAt }),
+      ...(rolled === undefined ? {} : { rolled }) }
   };
   return data;
 }
+
+/**
+ * The dice a stock table line rolls at a restock: its own formula, else the shop's New lines
+ * formula, else 1 (#190).
+ *
+ * @param {{quantities: Record<string, string>, default?: string|null}} restock
+ * @param {string} resultId  The table result's id.
+ * @returns {string}
+ */
+export const quantityFormula = (restock, resultId) => restock.quantities?.[resultId] ?? restock.default ?? "1";
 
 /**
  * The till's new gp — never below the shop's starting purse, but a surplus
@@ -501,9 +515,10 @@ export function planRestock(shop, items, draws, context) {
       if (existing) {
         // Not New this time: an earlier restock's mark goes, rather than showing again.
         updates.push({ _id: existing._id, "system.quantity": quantity,
-          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.newAt": back ?? null });
+          "flags.merchant-presets.stock": context.stockFlags[draw.name], "flags.merchant-presets.newAt": back ?? null,
+          "flags.merchant-presets.rolled": quantity });
       } else {
-        creates.push(drawnItem(draw, context, { quantity }, back));
+        creates.push(drawnItem(draw, context, { quantity }, back, quantity));
       }
       restocked.push(draw.name);
     }
@@ -529,7 +544,7 @@ export function planRestock(shop, items, draws, context) {
       continue;
     }
     const quantity = Math.max(0, draw.quantity ?? 0);
-    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name)));   // 0: not in stock today
+    if (quantity > 0) creates.push(drawnItem(draw, context, { quantity }, newAt(draw.name), quantity));   // 0: not in stock today
   }
   // One mention per line: a container's several copies share its one name.
   const restocked = [...new Set(creates.map(c => c.name))];
