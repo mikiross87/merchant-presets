@@ -237,17 +237,73 @@
       <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
       {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
     {{/if}}
-    {{#if restock.table}}
-      <button type="button" class="mp-table-card" data-action="openTable" data-pen="Table card">
-        {{mpIcon "dices" pen="Table icon"}}
-        <span class="mp-table-text" data-pen="Table text">
+    {{!-- The stock table (design GfO9j): Change picks another, a RollTable dropped on the section
+          becomes it (#190), Reset puts the preset's back, and the icon opens it. --}}
+    <div class="mp-table-card" data-pen="Table card">
+      {{mpIcon "dices" pen="Table icon"}}
+      <span class="mp-table-text" data-pen="Table text">
+        {{#if restock.table}}
           <b data-pen="Table name">{{restock.table.name}}</b>
           <span data-pen="Table meta">{{restock.table.meta}}</span>
-        </span>
-        {{mpIcon "external-link" pen="Table open"}}
-      </button>
-    {{else}}
-      <p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTable"}}</p>
+        {{else}}
+          <b data-pen="Table name">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTableName"}}</b>
+          <span data-pen="Table meta">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoTable"}}</span>
+        {{/if}}
+      </span>
+      {{#unless readOnly}}
+        <label class="mp-select mp-table-change" data-pen="Table change">
+          <span class="mp-select-value" data-pen="Change text">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Change"}}</span>{{mpIcon "chevron-down" pen="Change chevron"}}
+          <select class="mp-select-native" data-op="table" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.ChangeLabel'}}">
+            {{#unless restock.table}}<option value="" selected></option>{{/unless}}
+            {{#each restock.tables}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+          </select>
+        </label>
+        {{#if restock.canResetTable}}
+          <button type="button" class="mp-table-reset" data-action="resetTable" data-pen="Table reset" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.ResetTableHint'}}">
+            {{mpIcon "rotate-ccw" pen="Reset icon"}}<span data-pen="Reset text">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.ResetTable"}}</span>
+          </button>
+        {{/if}}
+      {{/unless}}
+      {{#if restock.table}}
+        <button type="button" class="mp-table-open" data-action="openTable" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.OpenTable'}}">{{mpIcon "external-link" pen="Table open"}}</button>
+      {{/if}}
+    </div>
+    {{#if restock.table}}
+      {{!-- How many a restock stocks of each line (#190, design HKGIx). --}}
+      <div class="mp-quantities" data-pen="Quantities">
+        <span class="mp-how" data-pen="Quantities label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Quantities"}}</span>
+        <div class="mp-schedule-row" data-pen="New lines row">
+          <span class="mp-rate-label" data-pen="New lines label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NewLines"}}</span>
+          <label class="mp-field {{#if restock.newLinesRefused}}is-refused{{/if}}" data-pen="Field New lines">
+            <input type="text" data-pen="Value" value="{{restock.newLines}}" placeholder="1" data-op="defaultQuantity" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.NewLines'}}" {{#if restock.newLinesRefused}}aria-invalid="true"{{/if}} />
+          </label>
+          <em class="mp-plain" data-pen="New lines plain">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NewLinesPlain"}}</em>
+        </div>
+        {{!-- A formula that doesn't roll stays as typed, and says why (#229 review, design U9Jt8Z). --}}
+        {{#if restock.newLinesRefused}}
+          <div class="mp-refused is-new-lines" data-pen="New lines error"><span data-pen="New lines error text" role="alert">{{restock.newLinesRefused}}</span></div>
+        {{/if}}
+        <div class="mp-quantity-list" data-pen="Quantity list">
+          <label class="mp-quantity-find" data-pen="Find row">
+            {{mpIcon "search" pen="Find icon"}}
+            <input type="search" data-pen="Find text" value="{{restock.find}}" data-op="findGood" placeholder="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Find'}}" />
+          </label>
+          <div class="mp-quantity-rule" data-pen="Find rule"></div>
+          <div class="mp-quantity-rows">
+            {{#each restock.quantities}}
+              <div class="mp-quantity-row {{#if alt}}is-alt{{/if}}" data-pen="Line {{name}}" data-name="{{key}}">
+                <span data-pen="{{name}} name">{{name}}</span>
+                <label class="mp-field {{#if refused}}is-refused{{/if}}" data-pen="{{name}} field">
+                  <input type="text" data-pen="{{name}} formula" value="{{value}}" placeholder="{{placeholder}}" data-op="quantity" data-id="{{id}}" aria-label="{{name}}" {{#if refused}}aria-invalid="true"{{/if}} />
+                </label>
+              </div>
+              {{#if refused}}
+                <div class="mp-refused is-line {{#if alt}}is-alt{{/if}}" data-pen="{{name}} error" data-name="{{key}}"><span data-pen="{{name}} error text" role="alert">{{refused}}</span></div>
+              {{/if}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
     {{/if}}
     <div class="mp-schedule {{#if restock.noClock}}mp-dim{{/if}}" data-pen="Schedule">
       <div class="mp-schedule-row" data-pen="Schedule row">
@@ -267,7 +323,8 @@
       </div>
       {{#if restock.showFormula}}
         <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
-          <input type="text" class="settings-formula" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" {{disabled restock.noClock}} /></label>
+          <input type="text" class="settings-formula {{#if restock.formulaRefused}}is-refused{{/if}}" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" {{disabled restock.noClock}} {{#if restock.formulaRefused}}aria-invalid="true"{{/if}} /></label>
+        {{#if restock.formulaRefused}}<p class="mp-refused" role="alert">{{restock.formulaRefused}}</p>{{/if}}
       {{/if}}
       {{#if restock.presetLine}}<p class="mp-hint" data-pen="Schedule default">{{restock.presetLine}}</p>{{/if}}
     </div>

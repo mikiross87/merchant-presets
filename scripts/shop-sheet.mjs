@@ -16,17 +16,17 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, timeText, wholeCoins } from "./shop-settings.mjs";
+import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
 import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
-import { isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
+import { isItemLine, isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
-  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRowMeta, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
+  COIN_METALS, fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, itemMeta, matchingStockLine, partOfDay, purseAfter, rateFraction, sealState, sellRowMeta, sellWorth, sellRow, wontBuyReason, wontBuyTerms, compactMeta, billSummary, shelfGroup, signedPercent, stepQuantity, titleParts, goodName, isNamedSpell, joinsBuyer, sealsShort,
   inspectTargets, itemTooltipHtml, currentSection, compendiumPreview
 } from "./shop-view.mjs";
 
@@ -195,14 +195,25 @@ const NONE = 0, LIMITED = 1;
 /** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
 const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
 
+/**
+ * Whether a typed formula rolls a count a restock can use (#229 review): Foundry's own check,
+ * which tries the roll, and a finite total, since "1/0" passes it and rolls Infinity.
+ */
+function rollsACount(formula) {
+  if (!Roll.validate(formula)) return false;
+  try { return Number.isFinite(new Roll(formula).evaluateSync({ strict: false }).total); }
+  catch { return false; }
+}
+
 /** A value quoted for an attribute selector. */
 const attr = value => String(value).replace(/["\\]/g, "\\$&");
 
 /**
- * A selector that finds `control` again in the next render: its data-op and the data it edits,
- * and a radio's own value (the restock mode's two radios share everything else).
+ * A selector that finds `control` again in the next render: its data-op and the data it edits
+ * (a quantity field's table line, #190), and a radio's own value (the restock mode's two radios
+ * share everything else).
  */
-const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end", "denomination"]
+const settingSelector = control => `.settings-tab ${["op", "side", "category", "list", "value", "end", "denomination", "id"]
   .filter(key => control.dataset[key] != null)
   .map(key => `[data-${key}="${attr(control.dataset[key])}"]`).join("")}${
   control.type === "radio" ? `[value="${attr(control.value)}"]` : ""}`;
@@ -500,6 +511,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       restockNow: ShopSheet.#onRestockNow,
       resetToPreset: ShopSheet.#onResetToPreset,
       openTable: ShopSheet.#onOpenTable,
+      resetTable: ShopSheet.#onResetTable,
       importShop: ShopSheet.#onImportShop
     }
   };
@@ -509,7 +521,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     body: {
       template: `${TEMPLATES}/shop-sheet.hbs`,
       root: true,
-      scrollable: [".shop-stock", ".sell-stock", ".settings-body", ".settings-preview"],
+      scrollable: [".shop-stock", ".sell-stock", ".settings-body", ".settings-preview", ".mp-quantity-rows"],
       templates: [
         `${TEMPLATES}/parts/bill-of-sale.hbs`,
         `${TEMPLATES}/parts/closed-card.hbs`,
@@ -573,6 +585,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._previewOpen = false;
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
     this._everyDice = false;
+    /**
+     * Restock formulas the GM typed that don't roll (#229 review, design U9Jt8Z), by field
+     * ("quantity:<result id>", "defaultQuantity", "every"): what was typed and why it was refused,
+     * shown on the field until it's left with one that rolls.
+     */
+    this._refused = new Map();
   }
 
   /**
@@ -709,7 +727,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A compendium preview's settings are read, not changed (#199, design Zm5HK): every control
     // that would edit is off, dimmed by the tab's is-readonly styles.
     if (this.preview) {
-      for (const control of this.element?.querySelectorAll(".settings-tab :is([data-op], [data-action='setEvery'])") ?? []) control.disabled = true;
+      for (const control of this.element?.querySelectorAll(".settings-tab :is([data-op]:not([data-op='findGood']), [data-action='setEvery'])") ?? []) control.disabled = true;
+    }
+    // The quantity list's Find (#190, design HKGIx) narrows it to the goods whose name it holds.
+    // Its own op only so a re-render keeps the GM's typing and caret, as every Settings field's.
+    const find = this.element?.querySelector(".mp-quantity-find input");
+    if (find) {
+      const narrow = () => {
+        this._quantityFilter = find.value;
+        const query = find.value.trim().toLocaleLowerCase();
+        // A line and its refusal go together.
+        for (const row of this.element.querySelectorAll(".mp-quantity-rows > [data-name]")) row.hidden = !!query && !row.dataset.name.includes(query);
+      };
+      narrow();
+      find.addEventListener("input", narrow);
     }
     const focus = this._settingFocus && this.element?.querySelector(this._settingFocus.selector);
     if (focus) {
@@ -1885,6 +1916,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const ruleChoices = this.#ruleChoices(actor, shop);
 
     const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
+    // The lines a restock rolls a quantity for, in table order (#190, design HKGIx).
+    const lines = table ? [...(table.results ?? [])].filter(isItemLine).map(r => ({ id: r.id ?? r._id, name: r.name || r.text || r.description || "" })) : [];
     const { chip, formula } = everyChoice(shop.restock);
     // As the schedule's pills name it ("7 days"): the preset line (design aaJcp).
     const pillLabel = every => (every === "never" ? i18n("Restock.Never") : every === 1 ? i18n("Restock.Daily")
@@ -1978,15 +2011,29 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         noClock: !worldFollowsClock()
       },
       restock: {
-        table: table ? { name: table.name, uuid: table.uuid, meta: this.#tableMeta(table, shop) } : null,
+        table: table ? { name: table.name, uuid: table.uuid,
+          meta: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.TableMeta", { count: lines.length }) } : null,
+        // Another table (#190): the world's, and the preset's wherever it lives (design GfO9j).
+        tables: this.#tableChoices(shop, preset),
+        canResetTable: !!preset && !tableIsPreset(shop.restock, preset.restock),
+        // Striped by place, so a line's refusal (design U9Jt8Z) shares its stripe.
+        quantities: quantityRows(lines, shop.restock).map((row, i) => {
+          const refused = this._refused.get(`quantity:${row.id}`);
+          return { ...row, key: row.name.toLocaleLowerCase(), alt: i % 2 === 1,
+            value: refused?.value ?? row.value, refused: refused?.message ?? null };
+        }),
+        newLines: this._refused.get("defaultQuantity")?.value ?? shop.restock.default ?? "",
+        newLinesRefused: this._refused.get("defaultQuantity")?.message ?? null,
+        find: this._quantityFilter ?? "",
         chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
           // "Dice…" just picked, no formula saved yet: it's the one lit.
           id, active: this._everyDice ? id === "dice" : id === chip,
           label: id === "dice" ? i18n("Restock.Dice") : id === "never" ? everyLabel("never")
             : id === "1" ? everyLabel(1) : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: id })
         })),
-        showFormula: chip === "dice" || this._everyDice,
-        formula,
+        showFormula: chip === "dice" || this._everyDice || this._refused.has("every"),
+        formula: this._refused.get("every")?.value ?? formula,
+        formulaRefused: this._refused.get("every")?.message ?? null,
         current: chip === "never" ? everyLabel("never") : everyLabel(shop.restock.every),
         presetLine: presetOf ? await this.#presetLine(presetOf.merchant, preset, pillLabel) : null,
         reroll: shop.restock.mode === "reroll",
@@ -2128,12 +2175,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     };
   }
 
-  /** The stock table card's second line (design aaJcp): how many goods it lists, and how many of each a restock stocks. */
-  #tableMeta(table, shop) {
-    const count = table.results?.size ?? table.results?.length ?? 0;
-    const formula = commonFormula(shop.restock.quantities);
-    const key = "MERCHANT_PRESETS.Shop.Settings.Restock";
-    return formula ? game.i18n.localize(`${key}.TableMeta`, { count, formula }) : game.i18n.localize(`${key}.TableMetaOne`, { count });
+  /**
+   * The tables the card's Change offers (#190): the world's, by name, with the preset's own and
+   * the one in use added wherever they live (a compendium's), the one in use selected.
+   */
+  #tableChoices(shop, preset) {
+    const choices = new Map(game.tables.contents.map(t => [t.uuid, t.name]));
+    for (const uuid of [preset?.restock.table, shop.restock.table]) {
+      if (!uuid || choices.has(uuid)) continue;
+      let name = null;
+      try { name = fromUuidSync(uuid, { strict: false })?.name ?? null; } catch { /* a pack not indexed */ }
+      choices.set(uuid, name ?? uuid);
+    }
+    return [...choices].map(([uuid, name]) => ({ uuid, name, selected: uuid === shop.restock.table }))
+      .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
   }
 
   /** "Next: 21 Mirtul at 7:00, in 7 days" (design aaJcp). */
@@ -2209,10 +2264,29 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       keepHours: async shop => ({ op, on: checked, fallback: (await this.#presetShop(shop))?.hours ?? SHOP_DEFAULTS.hours }),
       hour: () => ({ op, end, time: value }),
       every: () => ({ op, every: value.trim() }),
-      mode: () => ({ op, mode: value })
+      mode: () => ({ op, mode: value }),
+      // #190: a line's formula, blank putting the preset's back; New lines; another table.
+      quantity: async shop => ({ op, id: control.dataset.id, formula: value, preset: await this.#presetShop(shop) }),
+      defaultQuantity: () => ({ op, formula: value }),
+      table: () => this.#tableChange(value)
     }[op];
     // The schedule's select (design aaJcp) offers what its pills do: the same choice.
     if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
+    // A formula the GM typed, a quantity or the schedule's days, must roll a number (#229 review):
+    // the schema checks only its characters, and "1d4+" saved would throw at every restock, so
+    // the shop would never restock again. A plain number of days, or "never", rolls nothing.
+    // Refused, the field keeps what was typed and says why (design U9Jt8Z); left with one that
+    // rolls, or blank, the mark goes.
+    const typed = value.trim();
+    const formulaField = op === "quantity" ? `quantity:${control.dataset.id}` : op === "defaultQuantity" || op === "every" ? op : null;
+    const rolls = formulaField && (op !== "every" || (!/^\d+$/.test(typed) && typed !== "never"));
+    if (rolls && typed && !rollsACount(typed)) {
+      this._refused.set(formulaField, { value: typed,
+        message: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: typed }) });
+      this.render({ parts: ["body"] });
+      return;
+    }
+    if (formulaField) this._refused.delete(formulaField);
     if (change) await this.#edit(change, settingSelector(control));
   }
 
@@ -2376,6 +2450,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   static async #onSetEvery(_event, target) {
     if (!game.user.isGM) return;
     const every = target.dataset.every;
+    // A schedule picked here replaces whatever the formula field was refused (#229 review, round 2).
+    if (every !== "dice") this._refused.delete("every");
     if (every === "dice") {
       this._everyDice = true;
       this.render({ parts: ["body"] });
@@ -2560,6 +2636,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       content: `<p>${game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Reset.Question")}</p>`
     });
     if (!yes) return;
+    // The whole config goes back, the schedule's formula with it (#229 review, round 2).
+    this._refused.clear();
     await this.#edit(() => ({ op: "reset", preset }));
   }
 
@@ -2576,6 +2654,52 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (!imported) return;
     await this.close();
     imported.sheet?.render(true);
+  }
+
+  /** The table card's Reset (#190, design PfjAq): the preset's stock table and formulas back. */
+  static async #onResetTable() {
+    if (!game.user.isGM || this.preview) return;
+    await this.#edit(async shop => {
+      const preset = await this.#presetShop(shop);
+      if (preset) this.#letGoOfQuantities();
+      return preset ? { op: "resetTable", preset } : null;
+    });
+  }
+
+  /**
+   * Drops the refused quantity and New lines formulas (#229 review, round 2): a Reset or another
+   * table writes over them, and the fields should show what it wrote.
+   */
+  #letGoOfQuantities() {
+    for (const key of [...this._refused.keys()]) if (key !== "every") this._refused.delete(key);
+  }
+
+  /**
+   * The change that makes `uuid` the shop's stock table (#190), with its lines' ids so the formulas
+   * it shares with the old table stay; null, and a warning, for one that can't be found.
+   */
+  async #tableChange(uuid) {
+    const table = uuid ? await Promise.resolve(fromUuid(uuid)).catch(() => null) : null;
+    if (table?.documentName !== "RollTable") {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NoSuchTable"));
+      // Change goes back to the table the shop still has (#229 review).
+      this.render({ parts: ["body"] });
+      return null;
+    }
+    this.#letGoOfQuantities();
+    return { op: "table", uuid: table.uuid, resultIds: [...table.results].map(r => r.id ?? r._id) };
+  }
+
+  /**
+   * A RollTable dropped on the Restock section becomes the shop's stock table (#190, design
+   * GfO9j: "drop a table here"). Everything else drops as core and dnd5e handle it.
+   * @override
+   */
+  async _onDropDocument(event, document) {
+    if (document?.documentName !== "RollTable") return super._onDropDocument(event, document);
+    if (!game.user.isGM || this.preview || !event.target?.closest?.("[data-section='restock']")) return null;
+    await this.#edit(() => this.#tableChange(document.uuid));
+    return document;
   }
 
   static async #onOpenTable() {

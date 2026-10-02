@@ -70,6 +70,13 @@ globalThis.foundry = {
 globalThis.ui = { notifications: { warn() {} } };
 // A GM's window looks up the shop's preset and stock table (#110); nothing resolves unless a test says so.
 globalThis.fromUuid = async () => null;
+/** Foundry's Roll, as the Settings tab checks a typed formula (#229 review): every formula rolls, to 1. */
+const FairRoll = class {
+  constructor(formula) { this.formula = formula; }
+  static validate() { return true; }
+  evaluateSync() { return { total: 1 }; }
+};
+globalThis.Roll = FairRoll;
 const api = {};
 globalThis.game = {
   user: { isGM: false, character: null },
@@ -80,6 +87,8 @@ globalThis.game = {
   // which has its own tests (#166) below.
   settings: { values: { merchantPurse: "finite", tradingHours: true, stockMode: "finite", followClock: "always", shopAccess: "anywhere" }, get(_module, key) { return this.values[key]; } },
   actors: [],
+  // The world's roll tables, which the Restock card's Change offers (#190).
+  tables: { contents: [] },
   i18n: { localize: key => key },
   // Noon on a 24-hour day: inside the shop's default 07:00-19:00.
   time: {
@@ -1104,6 +1113,223 @@ test("a shop imported from the pack resets to the merchant it was imported from"
   assert.equal((await sheet._prepareContext({})).settings.canReset, true);
   await act(sheet, "resetToPreset");
   assert.deepEqual(writtenShop(shop), { ...preset, source: null });
+});
+
+/* ------------------------------------------------------------ #190 restock quantities and table */
+
+const PRESET_TABLE = "Compendium.merchant-presets.stock.RollTable.smith";
+/** The GM's own copy of the smith's table: its Chain line kept its id, Shovel added, and a text line. */
+const OWN_TABLE = {
+  documentName: "RollTable", uuid: "RollTable.mine", name: "Smith (Ironbridge)",
+  results: [
+    { id: "r1", name: "Chain", documentUuid: "Compendium.dnd5e.equipment24.Item.chain" },
+    { id: "gm1", name: "Shovel", documentUuid: "Item.shovel" },
+    { id: "t1", name: "Nothing today", documentUuid: null }
+  ]
+};
+
+/** A GM's Settings on a shop that restocks from `table`; its preset's table is the pack's. */
+function openRestock(t, restock) {
+  const opened = openSettings(t, { shopConfig: { restock: { ...structuredClone(SHOP_DEFAULTS.restock), ...restock } } });
+  opened.preset.restock = { ...structuredClone(SHOP_DEFAULTS.restock), table: PRESET_TABLE, quantities: { r1: "2d6+4", r2: "1d2" } };
+  const presetUuid = globalThis.fromUuid;
+  globalThis.fromUuid = async uuid => (uuid === OWN_TABLE.uuid ? OWN_TABLE : presetUuid(uuid));
+  const tables = globalThis.game.tables;
+  globalThis.game.tables = { contents: [OWN_TABLE] };
+  t.after(() => { globalThis.game.tables = tables; });
+  return opened;
+}
+
+test("Restock lists each item line of the shop's table with its formula, New lines its placeholder (#190, design PfjAq)", async t => {
+  const { sheet } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" }, default: "1d4" });
+  const { restock } = (await sheet._prepareContext({})).settings;
+  assert.equal(restock.table.meta, "MERCHANT_PRESETS.Shop.Settings.Restock.TableMeta");
+  assert.deepEqual(restock.quantities.map(q => [q.id, q.name, q.value, q.placeholder]),
+    [["r1", "Chain", "2d6+4", "1d4"], ["gm1", "Shovel", "", "1d4"]], "the text line has no quantity");
+  assert.equal(restock.newLines, "1d4");
+  assert.equal(restock.canResetTable, true, "another table than the preset's");
+  assert.equal(restock.tables.length, 2, "the world's table and the preset's");
+  assert.ok(restock.tables.some(o => o.uuid === PRESET_TABLE), "the preset's own table is offered back");
+  assert.ok(restock.tables.find(o => o.uuid === OWN_TABLE.uuid).selected);
+});
+
+test("a shop on its preset's table and formulas offers no Reset (#190, design aaJcp)", async t => {
+  const { sheet } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4", r2: "1d2" } });
+  assert.equal((await sheet._prepareContext({})).settings.restock.canResetTable, false);
+});
+
+test("a line's formula, New lines, another table and Reset each write the shop (#190)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4", r2: "1d2" } });
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "" });
+  assert.equal(writtenShop(shop).restock.quantities.r1, "2d6+4", "blank puts the preset's back");
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "3" });
+  assert.equal(writtenShop(shop).restock.quantities.r1, "3");
+  await change(sheet, { op: "defaultQuantity" }, { value: "1d4" });
+  assert.equal(writtenShop(shop).restock.default, "1d4");
+  await change(sheet, { op: "table" }, { value: OWN_TABLE.uuid });
+  assert.equal(writtenShop(shop).restock.table, OWN_TABLE.uuid);
+  assert.deepEqual(writtenShop(shop).restock.quantities, { r1: "3" }, "r2 isn't on the new table");
+  await act(sheet, "resetTable");
+  const { table, quantities, default: newLines } = writtenShop(shop).restock;
+  assert.deepEqual([table, quantities, newLines], [PRESET_TABLE, { r1: "2d6+4", r2: "1d2" }, null]);
+});
+
+test("a table that can't be found is refused with a warning, and nothing is written (#190)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE });
+  await change(sheet, { op: "table" }, { value: "RollTable.gone" });
+  assert.equal(shop.updates.length, 0);
+  assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.Restock.NoSuchTable"]);
+});
+
+test("a formula that wouldn't roll is refused before it's saved, so the shop can still restock (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4" } });
+  // Foundry's own check tries the roll: "1d4+" parses as characters but not as dice.
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  let renders = 0;
+  sheet.render = () => { renders++; };
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1d4+" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(renders, 2, "each field shows it was refused");
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "" });
+  assert.equal(writtenShop(shop).restock.quantities.r1, "2d6+4", "a blank field isn't a formula to check");
+  assert.deepEqual(warnings, [], "the field says so, not a notification (design U9Jt8Z)");
+});
+
+/** The Restock context the window would render now. */
+const restockOf = async sheet => (await sheet._prepareContext({})).settings.restock;
+const REFUSED = "MERCHANT_PRESETS.Shop.Settings.Restock.NotDice";
+
+test("a refused formula stays in its field, marked, until it's left with one that rolls (#229 review, design U9Jt8Z)", async t => {
+  const { sheet, shop } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" }, default: "1d4" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1d2-" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  let restock = await restockOf(sheet);
+  const chain = () => restock.quantities.find(q => q.id === "r1");
+  assert.deepEqual([chain().value, chain().refused], ["1d2-", REFUSED], "what was typed, and why");
+  assert.deepEqual([restock.newLines, restock.newLinesRefused], ["2d", REFUSED]);
+  assert.equal(restock.quantities.find(q => q.id === "gm1").refused, null, "only the field that was refused");
+  restock = await restockOf(sheet);
+  assert.equal(chain().refused, REFUSED, "a re-render (a clock tick) keeps it");
+  assert.equal(shop.updates.length, 0);
+
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "3" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "" });
+  restock = await restockOf(sheet);
+  assert.deepEqual([chain().value, chain().refused], ["3", null], "left with one that rolls: saved, and the mark goes");
+  assert.deepEqual([restock.newLines, restock.newLinesRefused], ["", null], "left blank: the fallback, and the mark goes");
+});
+
+test("a schedule picked another way lets go of a refused formula (#229 review, round 2)", async t => {
+  const { sheet } = openRestock(t, { table: PRESET_TABLE, every: "1d4+2" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  await act(sheet, "setEvery", { every: "7" });
+  const restock = await restockOf(sheet);
+  assert.deepEqual([restock.showFormula, restock.formulaRefused], [false, null], "7 days: no formula field, no mark");
+});
+
+test("Reset, Reset to preset and another table let go of refused formulas (#229 review, round 2)", async t => {
+  const { sheet, preset } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "3" }, default: "1d4" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  const refuseBoth = async () => {
+    await change(sheet, { op: "quantity", id: "r1" }, { value: "2d" });
+    await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  };
+  const marks = async () => {
+    const restock = await restockOf(sheet);
+    return [restock.quantities.find(q => q.id === "r1")?.refused ?? null, restock.newLinesRefused];
+  };
+
+  await refuseBoth();
+  await change(sheet, { op: "table" }, { value: OWN_TABLE.uuid });
+  assert.deepEqual(await marks(), [null, null], "another table");
+
+  await refuseBoth();
+  await act(sheet, "resetTable");
+  // Back on the preset's table, which this harness doesn't resolve: no lines, so read the map itself.
+  assert.equal(sheet._refused.size, 0, "Reset");
+
+  await change(sheet, { op: "table" }, { value: OWN_TABLE.uuid });
+  await refuseBoth();
+  preset.restock.table = OWN_TABLE.uuid;
+  await act(sheet, "resetToPreset");
+  assert.equal(sheet._refused.size, 0, "Reset to preset");
+});
+
+test("a refused schedule formula stays in its field, marked, the same way (#229 review)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE, every: "1d4+2" });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  let restock = await restockOf(sheet);
+  assert.deepEqual([restock.formula, restock.formulaRefused], ["1d4+", REFUSED]);
+  await change(sheet, { op: "every" }, { value: "2d6" });
+  restock = await restockOf(sheet);
+  assert.deepEqual([writtenShop(shop).restock.every, restock.formulaRefused], ["2d6", null]);
+});
+
+/** A Roll that refuses a formula ending in an operator or a bare `d`, and rolls Infinity for one dividing by 0. */
+const StrictRoll = class extends FairRoll {
+  static validate(formula) { return !/[+\-*/d]$/.test(formula); }
+  evaluateSync() { return { total: /\/\s*0\b/.test(this.formula) ? Infinity : 1 }; }
+};
+
+test("a quantity that would roll Infinity is refused too (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" } });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1/0" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d6/0" });
+  assert.equal(shop.updates.length, 0);
+  assert.deepEqual(warnings, []);
+  const restock = await restockOf(sheet);
+  assert.equal(restock.quantities.find(q => q.id === "r1").refused, REFUSED);
+  assert.equal(restock.newLinesRefused, REFUSED);
+});
+
+test("the schedule's dice formula must roll a number of days too (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE });
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "every" }, { value: "1d4+" });
+  await change(sheet, { op: "every" }, { value: "7/0" });
+  assert.equal(shop.updates.length, 0);
+  assert.deepEqual(warnings, []);
+  assert.equal((await restockOf(sheet)).formulaRefused, REFUSED);
+  await change(sheet, { op: "every" }, { value: "1d4+2" });
+  assert.equal(writtenShop(shop).restock.every, "1d4+2");
+  await change(sheet, { op: "every" }, { value: "3" });
+  assert.equal(writtenShop(shop).restock.every, 3, "a number of days needs no roll");
+});
+
+test("a table that can't be found puts the Change menu back on the shop's own (#229 review)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE });
+  let renders = 0;
+  sheet.render = () => { renders++; };
+  await change(sheet, { op: "table" }, { value: "RollTable.gone" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(renders, 1);
+});
+
+test("a RollTable dropped on Restock becomes the stock table; dropped elsewhere it does nothing (#190)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE });
+  const on = inRestock => ({ target: { closest: selector => (inRestock && selector === "[data-section='restock']" ? {} : null) } });
+  assert.equal(await sheet._onDropDocument(on(false), OWN_TABLE), null);
+  assert.equal(shop.updates.length, 0);
+  await sheet._onDropDocument(on(true), OWN_TABLE);
+  assert.equal(writtenShop(shop).restock.table, OWN_TABLE.uuid);
 });
 
 /* ------------------------------------------------------------ #140 review, round 1 */

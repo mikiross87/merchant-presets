@@ -1260,13 +1260,72 @@
   background: var(--mp-surface);
   outline: 1px solid var(--mp-line);
   text-align: left;
-  cursor: pointer;
 }
-.shop-sheet .mp-table-card > .mp-icon:first-child { width: 18px; height: 18px; color: var(--mp-gold); }
-.shop-sheet .mp-table-card > .mp-icon:last-child { width: 14px; height: 14px; color: var(--mp-muted); }
+.shop-sheet .mp-table-card > .mp-icon:first-child { flex: none; width: 18px; height: 18px; color: var(--mp-gold); }
+/* Its controls (#190, design GfO9j): Change, Reset and the open icon, each as drawn. */
+.shop-sheet .mp-table-card .mp-table-change { width: auto; gap: 4px; padding: 4px 8px; background: none; }
+.shop-sheet .mp-table-change .mp-select-value { flex: none; font: 700 12px/14px "Roboto Condensed", system-ui, sans-serif; }
+.shop-sheet .mp-table-card .mp-table-change .mp-icon { width: 12px; height: 12px; }
+/* A long table name gives way to the controls beside it, cut short rather than running under them. */
+.shop-sheet .mp-table-text :is(b, span) { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.shop-sheet :is(.mp-table-reset, .mp-table-open) {
+  all: unset;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--mp-muted);
+}
+.shop-sheet .mp-table-reset { padding: 4px 2px; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; }
+.shop-sheet .mp-table-reset .mp-icon { width: 12px; height: 12px; }
+.shop-sheet .mp-table-open .mp-icon { width: 14px; height: 14px; }
+.shop-sheet :is(.mp-table-reset, .mp-table-open):focus-visible { outline: 1px solid var(--mp-accent); border-radius: 2px; }
 .shop-sheet .mp-table-text { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
 .shop-sheet .mp-table-text b { font: 700 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
 .shop-sheet .mp-table-text span { font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
+/* How many a restock stocks (#190, design HKGIx): New lines, then every table line's formula in a
+   box that scrolls under its Find. */
+.shop-sheet .mp-quantities { display: flex; flex-direction: column; gap: 8px; align-self: stretch; }
+/* A formula left blank shows what it rolls instead (New lines', or 1) in the regular weight, as drawn. */
+.shop-sheet .mp-quantities .mp-field input:placeholder-shown { font-weight: 400; }
+.shop-sheet .mp-quantity-list {
+  display: flex;
+  flex-direction: column;
+  height: 236px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+  overflow: hidden;
+}
+.shop-sheet .mp-quantity-find { flex: none; display: flex; align-items: center; gap: 6px; padding: 6px 10px; }
+.shop-sheet .mp-quantity-find .mp-icon { width: 13px; height: 13px; color: var(--mp-muted); }
+.shop-sheet .mp-quantity-find input {
+  all: unset;
+  flex: 1 1 0;
+  min-width: 0;
+  font: 400 12px/14px Roboto, system-ui, sans-serif;
+  color: var(--mp-text);
+}
+.shop-sheet .mp-quantity-find input::placeholder { color: var(--mp-muted); opacity: 1; }
+.shop-sheet .mp-quantity-rule { flex: none; height: 1px; background: var(--mp-line); }
+/* Scrolled to its end, the last line keeps the 6px the frame leaves under it (design PfjAq). */
+.shop-sheet .mp-quantity-rows { flex: 1 1 0; min-height: 0; overflow-y: auto; padding-bottom: 6px; }
+.shop-sheet .mp-quantity-row { display: flex; align-items: center; gap: 10px; padding: 4px 10px; }
+.shop-sheet .mp-quantity-row[hidden] { display: none; }
+.shop-sheet .mp-quantity-rows > .is-alt { background: var(--mp-inset); }
+/* A formula that doesn't roll (#229 review, design U9Jt8Z): outlined, and why under it. */
+.shop-sheet .mp-field.is-refused, .shop-sheet .mp-field.is-refused:focus-within { outline-color: var(--mp-red); }
+.shop-sheet .settings-formula.is-refused { outline: 1px solid var(--mp-red); }
+.shop-sheet .mp-refused { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-danger-ink); }
+.shop-sheet .mp-refused.is-new-lines { padding-left: 90px; }
+.shop-sheet .mp-refused.is-line { padding: 0 10px 5px; }
+.shop-sheet .mp-refused[hidden] { display: none; }
+.shop-sheet .mp-refused > span { display: block; }
+.shop-sheet .mp-quantity-row > span { flex: 1 1 0; min-width: 0; font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-quantity-row .mp-field { padding: 3px 8px; }
+.shop-sheet .mp-quantity-row .mp-field input { font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; }
+
 .shop-sheet .mp-schedule { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; align-self: stretch; }
 .shop-sheet .mp-schedule-row { display: flex; align-items: center; gap: 10px; align-self: stretch; }
 .shop-sheet .mp-select {

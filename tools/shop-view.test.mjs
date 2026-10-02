@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, dealtIn, groupCategories, isGearItem, isVisibleStock,
-  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, commonFormula, itemMeta, matchingStockLine, sellRowMeta, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
+  fitQuantity, isFresh, isNewGood, daysUntil, presetSchedule, itemMeta, matchingStockLine, sellRowMeta, sellWorth, wontBuyReason, wontBuyTerms, compactMeta, billSummary, partOfDay, purseAfter, rateFraction, rateTag, sealState, sellRow, shelfGroup, signedPercent,
   stepQuantity, stockLabel, titleParts, goodName, levelService, sealsShort, inspectTargets, itemTooltipHtml, shelfCardProperties,
   currentSection, compendiumPreview
 } from "../scripts/shop-view.mjs";
@@ -767,12 +767,6 @@ test("the preset line names the preset's tier and only the tiers that restock on
     [{ tier: "City", every: "7 days" }, { tier: "Town", every: "7 days" }, { tier: "Village", every: "14 days" }]);
   assert.deepEqual(line, { tier: "Town", every: "7 days", others: [{ tier: "Village", every: "14 days" }] });
   assert.deepEqual(presetSchedule({ tier: null, every: "Daily" }, []), { tier: null, every: "Daily", others: [] });
-});
-
-test("a stock table's quantities read as the formula most of its goods roll, or none when all are one", () => {
-  assert.equal(commonFormula({ a: "2d6+4", b: "2d6+4", c: "1d4" }), "2d6+4");
-  assert.equal(commonFormula({ a: "1", b: "1" }), null);
-  assert.equal(commonFormula({}), null);
 });
 
 test("a weapon's meta line lists only weapon properties, not dnd5e's other tags (a restocked copy's \"gear\")", () => {

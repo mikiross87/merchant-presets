@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, restockStockFlags,
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, quantityFormula, restockStockFlags, rolledCount,
   scheduleNext
 } from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
@@ -596,7 +596,8 @@ test("topup redraws a sold-out line whether it's still on the shelf at zero or g
 
   // Still there at zero: refilled in place, not replaced.
   assert.deepEqual(plan.updates, [
-    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock, "flags.merchant-presets.newAt": null }
+    { _id: "i5", "system.quantity": 5, "flags.merchant-presets.stock": rationsStock, "flags.merchant-presets.newAt": null,
+      "flags.merchant-presets.rolled": 5 }
   ]);
 
   const backpacks = plan.creates.filter(c => c.name === "Backpack");
@@ -712,4 +713,38 @@ test("only this shop's own drawn copy sets a line's config, not a same-named goo
 
 test("a shop first seen by the schedule is due a whole interval from that day", () => {
   assert.deepEqual(initialSchedule(at(3, 15), 3, calendar), { lastRestock: at(3, 15), dueAt: at(6) });
+});
+
+test("a roll that comes out Infinity, NaN or below zero counts as none (#229 review)", () => {
+  assert.equal(rolledCount(3), 3);
+  assert.equal(rolledCount(-2), 0);
+  assert.equal(rolledCount(Infinity), 0);
+  assert.equal(rolledCount(-Infinity), 0);
+  assert.equal(rolledCount(NaN), 0);
+});
+
+test("a table line rolls its own formula, else the shop's New lines formula, else 1 (#190)", () => {
+  const restock = { quantities: { r1: "2d6+4" }, default: "1d4" };
+  assert.equal(quantityFormula(restock, "r1"), "2d6+4");
+  assert.equal(quantityFormula(restock, "r2"), "1d4");
+  assert.equal(quantityFormula({ quantities: {}, default: null }, "r2"), "1");
+  assert.equal(quantityFormula({ quantities: { r1: "3" } }, "r1"), "3", "a config with no default yet");
+});
+
+test("every drawn good records the quantity it rolled, a refill too, but a container doesn't (#190)", () => {
+  const reroll = planRestock(shop, [], [{ ...draws[0], quantity: 12 }, draws[1], draws[2]], context);
+  assert.equal(reroll.creates.find(c => c.name === "Arrows").flags["merchant-presets"].rolled, 12);
+  assert.equal(reroll.creates.find(c => c.name === "Spellcasting: Level 1").flags["merchant-presets"].rolled, 1);
+  for (const b of reroll.creates.filter(c => c.name === "Backpack")) assert.equal("rolled" in b.flags["merchant-presets"], false);
+
+  const items = [drawn("i5", "Rations", "consumable", 0)];
+  const topup = planRestock(topupShop, items, [{ ...draws[0], quantity: 7 }, { ...rationsDraw, quantity: 4 }], topupContext);
+  assert.equal(topup.creates.find(c => c.name === "Arrows").flags["merchant-presets"].rolled, 7);
+  assert.equal(topup.updates.find(u => u._id === "i5")["flags.merchant-presets.rolled"], 4);
+});
+
+test("a container copy doesn't carry a rolled record from the good it was drawn from (#190)", () => {
+  const backpack = { ...draws[2], data: { ...draws[2].data, flags: { "merchant-presets": { rolled: 9 } } } };
+  const plan = planRestock(shop, [], [backpack], context);
+  for (const b of plan.creates) assert.equal("rolled" in b.flags["merchant-presets"], false);
 });
