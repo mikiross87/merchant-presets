@@ -11,6 +11,11 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Fixed
+
+- A shop's description that runs past two lines in the shop window's header
+  now shows in full when you hover over it, instead of stopping at "…". (#231)
+
 ## [2.2.0] - 2026-10-02
 
 ### Added
