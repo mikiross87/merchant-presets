@@ -29,9 +29,10 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 16 | Compendium preview (#199): Compendium Preview — Light / Dark (the Buy tab of a merchant opened inside a compendium); Compendium Preview · Settings — Light / Dark |
 | 17 | Compendium preview, narrow (#199): Compendium Preview — Narrow (Light) / (Dark) |
 | 18 | Haggling (#112): Settings (GM) · Deals — Light / Dark (**Call for a haggle** beside **Add deal**); Call form — Light / Dark (built like the deal form: Character, Side, Skill with "Player's choice" as the default, DC with the shopkeeper's passive Insight); below them, the Haggle chat card board, light and dark: the call open as the player sees it at the player's choice (**Roll Persuasion**, **Roll Deception**, **Roll Intimidation**) and at a skill the GM chose (one **Roll Deception**), open as a GM sees it (the GM line "DC 14"), rolled (the GM line names the skill: "Deception 16 vs DC 14"), and lapsed. The Settings frame draws the GM's window, as every Settings frame does |
+| 19 | Restock quantities (#190): Settings (GM) · Restock, own table — Light / Dark: a GM's own stock table assigned (**Change** and **Reset** on the table card), **New lines** set to 1d4, and the quantity list scrolled to its end, where a line the GM added (Shovel) shows the New lines formula as its placeholder. The preset state of the same card and list (**Change** only, New lines blank) is drawn in bands 03, 09 and 13 |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (19, at y 16140) and gets a row here.
+A new agreed screen goes in the next band (20, at y 17020) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
