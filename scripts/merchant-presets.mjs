@@ -20,7 +20,7 @@ import { effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, planRestock, quantityFormula, restockStockFlags, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, planRestock, quantityFormula, restockStockFlags, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -211,13 +211,6 @@ async function daysOf(every) {
   if (!interval) return null;
   return interval.days ?? rollStock(interval.formula);
 }
-
-/**
- * Whether a stock table result can put an item on the shelf: one pointing at an Item. A text
- * line ("Nothing today") or one pointing at another document (a nested table, a journal) never
- * becomes stock, so it's neither drawn nor waited for (#135 review).
- */
-const isItemLine = result => /(^|\.)Item\.[^.]+$/.test(result.documentUuid ?? "");
 
 /** Shops already warned this session that their table doesn't resolve: once each, not every tick. */
 const unresolvedWarned = new Set();

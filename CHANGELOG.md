@@ -17,6 +17,14 @@ than for the code. Reference the issue or PR it closes.
   The player rolls Persuasion, Deception or Intimidation from chat against the
   shopkeeper's Insight: a win takes up to 20% off their price, or adds it to
   the shop's offers, until closing, and a bad miss costs them 10%. (#112)
+- Restock quantities and the stock table are now in a shop's Settings, under
+  Restock. Every good on the stock table has its own quantity, a number or
+  dice like 1d4+2, so you can make a shop scarcer or better stocked. **New
+  lines** sets what goods without one of their own stock up to, such as goods
+  you added to the table (1 if left blank). To restock from a table of your
+  own, import the shop's table, edit it, then drop it on the table card or pick
+  it from **Change**: the quantities of goods it shares with the old table
+  carry over. **Reset** puts the preset's table and quantities back. (#190)
 
 ### Fixed
 

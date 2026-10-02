@@ -401,6 +401,14 @@ function drawnItem(draw, context, system, newAt, rolled) {
 }
 
 /**
+ * Whether a stock table result can put an item on the shelf: one pointing at an Item. A text
+ * line ("Nothing today") or one pointing at another document (a nested table, a journal) never
+ * becomes stock, so it's neither drawn nor waited for (#135 review), nor listed for a quantity
+ * (#190).
+ */
+export const isItemLine = result => /(^|\.)Item\.[^.]+$/.test(result.documentUuid ?? "");
+
+/**
  * The dice a stock table line rolls at a restock: its own formula, else the shop's New lines
  * formula, else 1 (#190).
  *

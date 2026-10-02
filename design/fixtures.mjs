@@ -247,6 +247,14 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     await smith.updateEmbeddedDocuments("Item", Object.entries(${JSON.stringify(ROWS)})
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
+    // And from its preset's stock table and quantities (#190): band 19 gives it a table of its own.
+    const presetRestock = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop.restock;
+    const restock = smith.flags["merchant-presets"].shop.restock;
+    if (presetRestock && (restock.table !== presetRestock.table || restock.default != null
+      || JSON.stringify(restock.quantities) !== JSON.stringify(presetRestock.quantities))) {
+      await smith.update({ "flags.merchant-presets.shop.restock": _replace({ ...restock, table: presetRestock.table,
+        quantities: presetRestock.quantities, default: null }) });
+    }
   }
   const ui = foundry.utils.deepClone(game.settings.get("core", "uiConfig"));
   // Writing the scheme redraws the canvas (even unchanged), and until it's back a player stands at
@@ -305,6 +313,30 @@ const restockTab = openShop({ tab: "settings", autoRestock: true,
   before: withoutDeals + restocked(0) + newBadges(true) + `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: ${opening(0)}, dueAt: ${opening(-7)}, every: 7 } });
   shop.sheet._settingsSection = "restock";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="restock"]').click();` });
+/**
+ * Band 19 (#190): the Restock frame with a table of the GM's own. The smith's preset table imported
+ * as "Ironbridge Smithy" (made once, kept), a Shovel line added at its end, New lines 1d4, and the
+ * quantity list scrolled to its last seven lines, where the Shovel takes New lines'.
+ */
+const OWN_TABLE = "Ironbridge Smithy";
+const ownTableTab = openShop({ tab: "settings", autoRestock: true,
+  before: withoutDeals + restocked(0) + newBadges(true) + `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: ${opening(0)}, dueAt: ${opening(-7)}, every: 7 } });
+  const preset = shop.flags["merchant-presets"].shop.restock;
+  let own = game.tables.getName(${JSON.stringify(OWN_TABLE)});
+  if (!own) {
+    const source = await fromUuid(preset.table);
+    own = await game.tables.importFromCompendium(game.packs.get(source.pack), source.id, { name: ${JSON.stringify(OWN_TABLE)} });
+    const shovel = await fromUuid("Compendium.dnd5e.equipment24.Item.phbagShovel00000");
+    await own.createEmbeddedDocuments("TableResult", [{ type: "document", name: shovel.name, img: shovel.img, documentUuid: shovel.uuid,
+      weight: 1, range: [own.results.size + 1, own.results.size + 1] }]);
+  }
+  await shop.update({ "flags.merchant-presets.shop.restock": _replace({ ...preset, table: own.uuid, default: "1d4" }) });
+  shop.sheet._settingsSection = "restock";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="restock"]').click();
+  await new Promise(r => setTimeout(r, 400));
+  const rows = app.element.querySelector(".mp-quantity-rows");
+  const first = rows.querySelector('[data-name="mithral chain mail"]');
+  rows.scrollTop += first.getBoundingClientRect().top - rows.getBoundingClientRect().top;` });
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
@@ -724,5 +756,7 @@ export const FRAMES = {
   qG7TB: frame("18 Haggling · Settings (GM) · Deals — Dark", "dark", 920, 760, "Gamemaster", settingsAt("deals", true)),
   hQVb5: frame("18 Haggling · Call form — Light", "light", 360, 252, "Gamemaster", callForm),
   Ty8DX: frame("18 Haggling · Call form — Dark", "dark", 360, 252, "Gamemaster", callForm),
-  ...haggleFrames
+  ...haggleFrames,
+  PfjAq: frame("19 Settings (GM) · Restock, own table — Light", "light", 920, 760, "Gamemaster", ownTableTab),
+  Y4CVJo: frame("19 Settings (GM) · Restock, own table — Dark", "dark", 920, 760, "Gamemaster", ownTableTab)
 };

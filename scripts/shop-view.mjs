@@ -634,21 +634,6 @@ export function presetSchedule(preset, tiers) {
   return { ...preset, others: tiers.filter(t => t.tier !== preset.tier && t.every !== preset.every) };
 }
 
-/**
- * The quantity formula most of a stock table's goods roll (`restock.quantities`), for the table
- * card's "quantity rolled (e.g. 2d6+4)"; null when every good comes one at a time.
- *
- * @param {Record<string, string>} quantities
- * @returns {string|null}
- */
-export function commonFormula(quantities) {
-  const counts = new Map();
-  for (const f of Object.values(quantities ?? {})) if (String(f).trim() !== "1") counts.set(f, (counts.get(f) ?? 0) + 1);
-  let best = null;
-  for (const [f, n] of counts) if (best === null || n > counts.get(best)) best = f;
-  return best;
-}
-
 /* -------------------------------------------------------------- basket */
 
 /**
