@@ -55,8 +55,9 @@
       {{/if}}
     </div>
     {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
-          this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. --}}
-    <div class="mp-description mp-wide-only" data-pen="Shop Description">{{{header.description}}}</div>
+          this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. Its
+          tooltip holds the whole text, which the two-line clamp can cut short (#231). --}}
+    <div class="mp-description mp-wide-only" data-pen="Shop Description" data-tooltip="{{header.descriptionText}}">{{{header.description}}}</div>
     <div class="mp-chips mp-wide-only" data-pen="Chips">
       {{!-- No hours chip where shops don't follow the world clock (#149, design RRqQ7). --}}
       {{#if header.hoursChip}}

@@ -208,7 +208,7 @@
 .shop-sheet .mp-description { align-self: stretch; font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
 .shop-sheet .mp-description p { margin: 0; }
 /* Two lines at most, its paragraphs run on (design IeGac): a shop's long notes (the temple's spell
-   slots) would otherwise push the window's body down. */
+   slots) would otherwise push the window's body down. Its tooltip shows the rest (#231). */
 .shop-sheet .mp-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .shop-sheet .mp-description p { display: inline; }
 .shop-sheet .mp-description p + p::before { content: " "; }
