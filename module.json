@@ -2,7 +2,7 @@
   "id": "merchant-presets",
   "title": "Merchant Presets — Shops for 5e",
   "description": "<p><strong>Ready-made shops for dnd5e.</strong> Drag a shop out of the compendium, drop its token, and your players can shop. No other modules required.</p><ul><li>Each shop has its own window, with stock by category, a running bill of sale that shows the buyer's purse, and a Sell tab listing what the shop pays for each item and what it won't touch.</li><li>Stock is rolled, sells out and restocks on the shop's own schedule. The till can run dry, shops keep trading hours on the world clock, and merchants only buy what they deal in.</li><li>Every shop comes in village, town and city sizes, stocked and priced to match, with magic items up to rare in the cities.</li><li>Meals, lodging, stabling, passage and spellcasting are sold like any item. A bought spell is announced in chat, and a bought mount arrives as an actor.</li><li>The GM gets a Settings tab for rates, category rules, per-character deals, hours, restocks and the till, and <em>Set up as shop…</em> to turn any NPC into a shop.</li><li>Trades are carried out on the GM's side, so two players can't both buy the last one, and each trade posts a receipt in chat.</li></ul><p>Built entirely from <strong>SRD 5.2</strong> (CC-BY-4.0), so it works in any dnd5e world and redistributes no paid content. Inspired by The Inspired Arcana's free homebrew shop guide.</p>",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "compatibility": {
     "minimum": "14",
     "verified": "14"
