@@ -1174,6 +1174,32 @@ test("a table that can't be found is refused with a warning, and nothing is writ
   assert.deepEqual(warnings, ["MERCHANT_PRESETS.Shop.Settings.Restock.NoSuchTable"]);
 });
 
+test("a formula that wouldn't roll is refused before it's saved, so the shop can still restock (#229 review)", async t => {
+  const { sheet, shop, warnings } = openRestock(t, { table: PRESET_TABLE, quantities: { r1: "2d6+4" } });
+  // Foundry's own check tries the roll: "1d4+" parses as characters but not as dice.
+  const saved = globalThis.Roll;
+  globalThis.Roll = { validate: formula => !/[+\-*/d]$/.test(formula) };
+  t.after(() => { globalThis.Roll = saved; });
+  let renders = 0;
+  sheet.render = () => { renders++; };
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "1d4+" });
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(warnings.length, 2);
+  assert.equal(renders, 2, "each field is put back to what's saved");
+  await change(sheet, { op: "quantity", id: "r1" }, { value: "" });
+  assert.equal(writtenShop(shop).restock.quantities.r1, "2d6+4", "a blank field isn't a formula to check");
+});
+
+test("a table that can't be found puts the Change menu back on the shop's own (#229 review)", async t => {
+  const { sheet, shop } = openRestock(t, { table: PRESET_TABLE });
+  let renders = 0;
+  sheet.render = () => { renders++; };
+  await change(sheet, { op: "table" }, { value: "RollTable.gone" });
+  assert.equal(shop.updates.length, 0);
+  assert.equal(renders, 1);
+});
+
 test("a RollTable dropped on Restock becomes the stock table; dropped elsewhere it does nothing (#190)", async t => {
   const { sheet, shop } = openRestock(t, { table: PRESET_TABLE });
   const on = inRestock => ({ target: { closest: selector => (inRestock && selector === "[data-section='restock']" ? {} : null) } });
