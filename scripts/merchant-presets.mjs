@@ -20,7 +20,7 @@ import { effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, planRestock, quantityFormula, restockStockFlags, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, planRestock, quantityFormula, restockStockFlags, rolledCount, scheduleNext
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -60,7 +60,7 @@ const log = (...args) => console.log(`${MODULE} |`, ...args);
  * fulfillment from being asked to physically roll a thousand stock counts.
  */
 const rollStock = async formula =>
-  Math.max(0, (await new Roll(formula).evaluate({ allowInteractive: false })).total);
+  rolledCount((await new Roll(formula).evaluate({ allowInteractive: false })).total);
 
 /**
  * Whether an item is the shopkeeper's own kit rather than stock.

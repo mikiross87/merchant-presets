@@ -195,6 +195,16 @@ const NONE = 0, LIMITED = 1;
 /** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
 const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
 
+/**
+ * Whether a typed formula rolls a count a restock can use (#229 review): Foundry's own check,
+ * which tries the roll, and a finite total, since "1/0" passes it and rolls Infinity.
+ */
+function rollsACount(formula) {
+  if (!Roll.validate(formula)) return false;
+  try { return Number.isFinite(new Roll(formula).evaluateSync({ strict: false }).total); }
+  catch { return false; }
+}
+
 /** A value quoted for an attribute selector. */
 const attr = value => String(value).replace(/["\\]/g, "\\$&");
 
@@ -2248,10 +2258,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }[op];
     // The schedule's select (design aaJcp) offers what its pills do: the same choice.
     if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
-    // A quantity the GM typed must roll (#229 review): the schema checks only its characters, and
-    // "1d4+" saved would throw at every restock, so the shop would never restock again.
-    if ((op === "quantity" || op === "defaultQuantity") && value.trim() && !Roll.validate(value.trim())) {
-      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: value.trim() }));
+    // A formula the GM typed, a quantity or the schedule's days, must roll a number (#229 review):
+    // the schema checks only its characters, and "1d4+" saved would throw at every restock, so
+    // the shop would never restock again. A plain number of days, or "never", rolls nothing.
+    const typed = value.trim();
+    const rolls = op === "quantity" || op === "defaultQuantity" || (op === "every" && !/^\d+$/.test(typed) && typed !== "never");
+    if (rolls && typed && !rollsACount(typed)) {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NotDice", { formula: typed }));
       this._resetTyping = settingSelector(control);
       this.render({ parts: ["body"] });
       return;

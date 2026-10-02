@@ -409,6 +409,15 @@ function drawnItem(draw, context, system, newAt, rolled) {
 export const isItemLine = result => /(^|\.)Item\.[^.]+$/.test(result.documentUuid ?? "");
 
 /**
+ * A rolled count as a restock uses it, for stock or days: none below zero, and none for a roll
+ * that came out Infinity or NaN (a formula dividing by zero, #229 review).
+ *
+ * @param {number} total  The roll's total.
+ * @returns {number}
+ */
+export const rolledCount = total => (Number.isFinite(total) ? Math.max(0, total) : 0);
+
+/**
  * The dice a stock table line rolls at a restock: its own formula, else the shop's New lines
  * formula, else 1 (#190).
  *
