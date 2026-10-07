@@ -7070,7 +7070,7 @@
                               "id": "lZDs1",
                               "name": "Table meta",
                               "fill": "$text-secondary",
-                              "content": "84 goods · drop a table here to use another",
+                              "content": "76 goods · drop a table here to use another",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -21032,7 +21032,7 @@
                               "id": "u7pmU",
                               "name": "Table meta",
                               "fill": "$text-secondary",
-                              "content": "84 goods · drop a table here to use another",
+                              "content": "76 goods · drop a table here to use another",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -30996,7 +30996,7 @@
                               "id": "KvVdN",
                               "name": "Table meta",
                               "fill": "$text-secondary",
-                              "content": "84 goods · drop a table here to use another",
+                              "content": "76 goods · drop a table here to use another",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -46305,7 +46305,7 @@
                               "id": "fLLud",
                               "name": "Table meta",
                               "fill": "$text-secondary",
-                              "content": "85 goods · drop a table here to use another",
+                              "content": "77 goods · drop a table here to use another",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -46532,10 +46532,66 @@
                             },
                             {
                               "type": "frame",
+                              "id": "f2uRvM",
+                              "name": "Line Mithral Breastplate",
+                              "width": "fill_container",
+                              "fill": "#00000000",
+                              "gap": 10,
+                              "padding": [
+                                4,
+                                10
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "l7VVO3",
+                                  "name": "Mithral Breastplate name",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Mithral Breastplate",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "vvcJC",
+                                  "name": "Mithral Breastplate field",
+                                  "width": 84,
+                                  "fill": "$surface-card",
+                                  "cornerRadius": 4,
+                                  "stroke": "$border-faint",
+                                  "strokeWidth": 1,
+                                  "padding": [
+                                    3,
+                                    8
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "U7v6Q",
+                                      "name": "Mithral Breastplate formula",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "1d6-5",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 13,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
                               "id": "nQj8i",
                               "name": "Line Mithral Chain Mail",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -46577,63 +46633,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
-                                      "fontFamily": "$font-compact",
-                                      "fontSize": 13,
-                                      "fontWeight": "700"
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "f2uRvM",
-                              "name": "Line Mithral Splint Armor",
-                              "width": "fill_container",
-                              "fill": "$surface-row-alt",
-                              "gap": 10,
-                              "padding": [
-                                4,
-                                10
-                              ],
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "l7VVO3",
-                                  "name": "Mithral Splint Armor name",
-                                  "fill": "$text-primary",
-                                  "textGrowth": "fixed-width",
-                                  "width": "fill_container",
-                                  "content": "Mithral Splint Armor",
-                                  "fontFamily": "$font-body",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                },
-                                {
-                                  "type": "frame",
-                                  "id": "vvcJC",
-                                  "name": "Mithral Splint Armor field",
-                                  "width": 84,
-                                  "fill": "$surface-card",
-                                  "cornerRadius": 4,
-                                  "stroke": "$border-faint",
-                                  "strokeWidth": 1,
-                                  "padding": [
-                                    3,
-                                    8
-                                  ],
-                                  "alignItems": "center",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "U7v6Q",
-                                      "name": "Mithral Splint Armor formula",
-                                      "fill": "$text-primary",
-                                      "textGrowth": "fixed-width",
-                                      "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -46689,7 +46689,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2-1",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -46745,7 +46745,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -46801,7 +46801,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -46857,7 +46857,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -48663,7 +48663,7 @@
                               "id": "V3tRo",
                               "name": "Table meta",
                               "fill": "$text-secondary",
-                              "content": "85 goods · drop a table here to use another",
+                              "content": "77 goods · drop a table here to use another",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -48916,10 +48916,70 @@
                             },
                             {
                               "type": "frame",
+                              "id": "tHfMb",
+                              "name": "Line Mithral Breastplate",
+                              "clip": true,
+                              "width": "fill_container",
+                              "height": 10,
+                              "fill": "#00000000",
+                              "gap": 10,
+                              "padding": [
+                                0,
+                                10,
+                                4,
+                                10
+                              ],
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "N8jbL",
+                                  "name": "Mithral Breastplate name",
+                                  "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Mithral Breastplate",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "jY5oj",
+                                  "name": "Mithral Breastplate field",
+                                  "width": 84,
+                                  "fill": "$surface-card",
+                                  "cornerRadius": 4,
+                                  "stroke": "$border-faint",
+                                  "strokeWidth": 1,
+                                  "padding": [
+                                    3,
+                                    8
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "mGljo",
+                                      "name": "Mithral Breastplate formula",
+                                      "fill": "$text-primary",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "1d6-5",
+                                      "fontFamily": "$font-compact",
+                                      "fontSize": 13,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
                               "id": "TAKyA",
                               "name": "Line Mithral Chain Mail",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -48961,63 +49021,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
-                                      "fontFamily": "$font-compact",
-                                      "fontSize": 13,
-                                      "fontWeight": "700"
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "tHfMb",
-                              "name": "Line Mithral Splint Armor",
-                              "width": "fill_container",
-                              "fill": "$surface-row-alt",
-                              "gap": 10,
-                              "padding": [
-                                4,
-                                10
-                              ],
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "N8jbL",
-                                  "name": "Mithral Splint Armor name",
-                                  "fill": "$text-primary",
-                                  "textGrowth": "fixed-width",
-                                  "width": "fill_container",
-                                  "content": "Mithral Splint Armor",
-                                  "fontFamily": "$font-body",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                },
-                                {
-                                  "type": "frame",
-                                  "id": "jY5oj",
-                                  "name": "Mithral Splint Armor field",
-                                  "width": 84,
-                                  "fill": "$surface-card",
-                                  "cornerRadius": 4,
-                                  "stroke": "$border-faint",
-                                  "strokeWidth": 1,
-                                  "padding": [
-                                    3,
-                                    8
-                                  ],
-                                  "alignItems": "center",
-                                  "children": [
-                                    {
-                                      "type": "text",
-                                      "id": "mGljo",
-                                      "name": "Mithral Splint Armor formula",
-                                      "fill": "$text-primary",
-                                      "textGrowth": "fixed-width",
-                                      "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -49156,7 +49160,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -49212,7 +49216,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -49268,7 +49272,7 @@
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
-                                      "content": "1d2",
+                                      "content": "1d6-5",
                                       "fontFamily": "$font-compact",
                                       "fontSize": 13,
                                       "fontWeight": "700"
@@ -50523,6 +50527,9 @@
             },
             "RetMP": {
               "content": "Sells at list · Buys at ½"
+            },
+            "OmdZ0": {
+              "enabled": true
             }
           }
         },
@@ -51094,7 +51101,7 @@
                           "id": "y97uHT",
                           "name": "Today kicker",
                           "fill": "$accent-gold",
-                          "content": "TODAY · 15 MIRTUL",
+                          "content": "TODAY · 14 MIRTUL",
                           "fontFamily": "$font-compact",
                           "fontSize": 10,
                           "fontWeight": "700",
