@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { openSecondsPerDay, openSpansByDay } from "../scripts/schedule.mjs";
 import { coinsFor } from "../scripts/pricing.mjs";
 import {
-  RATES, demandCategory, planCustomersDefault, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
+  RATES, boostGroups, demandCategory, planCustomersDefault, todayOf, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
   settlementMultiplier, tableAverage
 } from "../scripts/customers.mjs";
 
@@ -212,4 +212,22 @@ test("the setting starts Busy in a new world and Off in one that already has sho
   assert.equal(planCustomersDefault(false, true), "off");
   assert.equal(planCustomersDefault(false, false), null);
   assert.equal(planCustomersDefault(true, true), null);
+});
+
+const MARKET = { id: "m", name: "Market day", text: "Stalls filled the square.", global: 3, boosts: {} };
+const SLOW = { id: "s", name: "Slow", text: "A sleepy day.", global: 0.5, boosts: {} };
+
+test("today's kind of day: the GM's pick over the roll, and nothing from another day (#226)", () => {
+  assert.deepEqual(todayOf({ day: { index: 3, rolled: MARKET, override: null } }, 3), { day: MARKET, rolled: MARKET, overridden: false });
+  assert.deepEqual(todayOf({ day: { index: 3, rolled: MARKET, override: SLOW } }, 3), { day: SLOW, rolled: MARKET, overridden: true });
+  assert.equal(todayOf({ day: { index: 2, rolled: MARKET, override: null } }, 3), null, "yesterday's");
+  assert.equal(todayOf({}, 3), null);
+  assert.equal(todayOf(undefined, 3), null);
+});
+
+test("a day's boosts, grouped by size, biggest first, for the card's line (#226)", () => {
+  assert.deepEqual(boostGroups({ boosts: { "Food & Drink": 3, "Adventuring Gear": 3, "Mounts & Animals": 2 } }),
+    [{ multiplier: 3, categories: ["Food & Drink", "Adventuring Gear"] }, { multiplier: 2, categories: ["Mounts & Animals"] }]);
+  assert.deepEqual(boostGroups(MARKET), []);
+  assert.deepEqual(boostGroups(null), []);
 });

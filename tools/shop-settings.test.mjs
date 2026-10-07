@@ -304,3 +304,10 @@ test("a till field takes a whole number of coins, and nothing else (#147)", () =
   for (const [text, count] of [["212", 212], [" 0 ", 0], ["07", 7]]) assert.equal(wholeCoins(text), count, text);
   for (const text of ["", "  ", "-3", "1.5", "12gp", "abc", "1e3", "+5"]) assert.equal(wholeCoins(text), null, text);
 });
+
+test("the Customers table card names a busy-day table, or goes back to the shipped one (#226)", () => {
+  const own = applyChange(shop(), { op: "customersTable", uuid: "RollTable.mine" });
+  assert.equal(own.ok, true);
+  assert.equal(own.shop.customers.table, "RollTable.mine");
+  assert.equal(applyChange(own.shop, { op: "customersTable", uuid: null }).shop.customers.table, null);
+});
