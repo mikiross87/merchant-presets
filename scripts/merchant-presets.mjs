@@ -518,10 +518,12 @@ async function drainShop(actor, from, to, calendar, level) {
   const today = Math.floor(to / secondsPerDay(calendar));
   let kept = state.day ?? null;
   for (const span of spans) {
-    if (kept?.index === span.day) span.result = kept.override ?? kept.rolled;
+    const known = kept?.index === span.day ? kept.override ?? kept.rolled : null;
+    if (known) span.result = known;
     else {
       span.result = await rollDay(table);
-      if (span.day === today) kept = { index: today, rolled: span.result, override: null };
+      // A day the GM set back to As rolled before it was ever rolled keeps the roll it now gets.
+      if (span.day === today) kept = { index: today, rolled: span.result, override: kept?.index === today ? kept.override ?? null : null };
     }
   }
   const world = worldTerms(key => game.settings.get(MODULE, key));

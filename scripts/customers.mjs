@@ -235,3 +235,25 @@ export function planDrain({ items, spans, perDay, from = 0, tier, average, level
 export function planCustomersDefault(hasStoredValue, worldHasShops) {
   return !hasStoredValue && worldHasShops ? "off" : null;
 }
+
+/**
+ * Today's kind of day as a shop keeps it (`flags.merchant-presets.customers`): the GM's pick over
+ * the roll. Null when nothing is kept for `todayIndex`, the calendar day's number.
+ *
+ * @returns {{day: object|null, rolled: object|null, overridden: boolean}|null}
+ */
+export function todayOf(state, todayIndex) {
+  const kept = state?.day;
+  if (!kept || kept.index !== todayIndex) return null;
+  return { day: kept.override ?? kept.rolled ?? null, rolled: kept.rolled ?? null, overridden: !!kept.override };
+}
+
+/** A day's category boosts, grouped by size, biggest first: `[{multiplier, categories}]`. */
+export function boostGroups(day) {
+  const groups = new Map();
+  for (const [category, multiplier] of Object.entries(day?.boosts ?? {})) {
+    if (multiplier === 1) continue;
+    groups.set(multiplier, [...(groups.get(multiplier) ?? []), category]);
+  }
+  return [...groups].sort((a, b) => b[0] - a[0]).map(([multiplier, categories]) => ({ multiplier, categories }));
+}

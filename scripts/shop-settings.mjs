@@ -73,6 +73,8 @@ const dealOf = ({ actor, name, buy, sell, note, ends }) =>
 
 /** The edits, each on a fresh copy of the config; an error message refuses the change outright. */
 const CHANGES = {
+  // The busy-day table other customers' days roll on (#226); null goes back to the shipped one for the shop's size.
+  customersTable(shop, { uuid }) { shop.customers = { ...shop.customers, table: uuid ?? null }; },
   rate(shop, { side, percent }) {
     if (side !== "sellsAt" && side !== "buysAt") return "no such rate";
     shop.terms[side] = percent === null ? null : rateOf(percent);
@@ -177,7 +179,7 @@ const CHANGES = {
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
- *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`
+ *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226)
  *   (#190; `preset` the preset merchant's shop config), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
  *   (`resetToPreset`)
