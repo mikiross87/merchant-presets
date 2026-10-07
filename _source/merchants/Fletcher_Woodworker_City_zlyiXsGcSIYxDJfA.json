@@ -4362,7 +4362,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -4642,7 +4642,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -4867,7 +4867,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -5316,7 +5316,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 18,
           "units": "lb"
@@ -5542,7 +5542,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 3,
           "units": "lb"
@@ -7755,18 +7755,18 @@
             "9YxKcOhD9n3styek": "1d4+2",
             "hYD6UhVY4Rg9FtzN": "1d4+2",
             "eKvTMeTkz05XdcTc": "1d4+2",
-            "OMyF1vW1bUNSnfsc": "1d3",
-            "n4CTC9c5wV60Of5g": "1",
-            "wyy9Hl3iYYJpJCN1": "1d3",
-            "ay1ou4XMIqwGzkJ2": "1d3",
-            "we71Ol5hZfHWOt4h": "1d3",
-            "NfaN1mbBviF3parz": "1d3",
-            "jLykIRM4cGn1551P": "1d3",
-            "FieFIGqyNOgmSR5r": "1d2-1",
-            "4KdQMTd0Hqri8nqp": "1d2-1",
-            "COUslav4dMoPhbGK": "1d2-1",
-            "ztZHbzbMsefEF6CZ": "1d2-1",
-            "xFuaRPLJOyTwEa3g": "1d2-1"
+            "OMyF1vW1bUNSnfsc": "1d4-3",
+            "n4CTC9c5wV60Of5g": "1d4-3",
+            "wyy9Hl3iYYJpJCN1": "1d4-3",
+            "ay1ou4XMIqwGzkJ2": "1d4-3",
+            "we71Ol5hZfHWOt4h": "1d4-3",
+            "NfaN1mbBviF3parz": "1d4-3",
+            "jLykIRM4cGn1551P": "1d4-3",
+            "FieFIGqyNOgmSR5r": "1d10-9",
+            "4KdQMTd0Hqri8nqp": "1d10-9",
+            "COUslav4dMoPhbGK": "1d10-9",
+            "ztZHbzbMsefEF6CZ": "1d10-9",
+            "xFuaRPLJOyTwEa3g": "1d10-9"
           },
           "onOpen": true,
           "every": 5,
@@ -7849,18 +7849,18 @@
               "9YxKcOhD9n3styek": "1d4+2",
               "hYD6UhVY4Rg9FtzN": "1d4+2",
               "eKvTMeTkz05XdcTc": "1d4+2",
-              "OMyF1vW1bUNSnfsc": "1d3",
-              "n4CTC9c5wV60Of5g": "1",
-              "wyy9Hl3iYYJpJCN1": "1d3",
-              "ay1ou4XMIqwGzkJ2": "1d3",
-              "we71Ol5hZfHWOt4h": "1d3",
-              "NfaN1mbBviF3parz": "1d3",
-              "jLykIRM4cGn1551P": "1d3",
-              "FieFIGqyNOgmSR5r": "1d2-1",
-              "4KdQMTd0Hqri8nqp": "1d2-1",
-              "COUslav4dMoPhbGK": "1d2-1",
-              "ztZHbzbMsefEF6CZ": "1d2-1",
-              "xFuaRPLJOyTwEa3g": "1d2-1"
+              "OMyF1vW1bUNSnfsc": "1d4-3",
+              "n4CTC9c5wV60Of5g": "1d4-3",
+              "wyy9Hl3iYYJpJCN1": "1d4-3",
+              "ay1ou4XMIqwGzkJ2": "1d4-3",
+              "we71Ol5hZfHWOt4h": "1d4-3",
+              "NfaN1mbBviF3parz": "1d4-3",
+              "jLykIRM4cGn1551P": "1d4-3",
+              "FieFIGqyNOgmSR5r": "1d10-9",
+              "4KdQMTd0Hqri8nqp": "1d10-9",
+              "COUslav4dMoPhbGK": "1d10-9",
+              "ztZHbzbMsefEF6CZ": "1d10-9",
+              "xFuaRPLJOyTwEa3g": "1d10-9"
             }
           }
         ],

@@ -7437,7 +7437,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -7620,7 +7620,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -7834,7 +7834,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8457,7 +8457,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -11696,13 +11696,13 @@
             "aqWGTcrz7Aub9br3": "1",
             "1j8mNya1elM6E3Sq": "1",
             "Ema3IO4SZscqwywu": "1",
-            "VBOQlU6cuvL4NGRy": "1d3+1",
-            "Mcznl3M9ZdxaieHM": "1d3+1",
-            "sXaWCsaYoqcpmCzG": "1d3+1",
-            "MXl4TsPJzO9qgD5K": "1d2",
-            "7ki8bB1tdflwOWtj": "1d2",
-            "WZ13BaIP3r6Y2ioi": "1d2",
-            "V3nRFVtg5pOb0g3t": "1d2"
+            "VBOQlU6cuvL4NGRy": "1d6-5",
+            "Mcznl3M9ZdxaieHM": "1d6-5",
+            "sXaWCsaYoqcpmCzG": "1d3-2",
+            "MXl4TsPJzO9qgD5K": "1d6-5",
+            "7ki8bB1tdflwOWtj": "1d6-5",
+            "WZ13BaIP3r6Y2ioi": "1d6-5",
+            "V3nRFVtg5pOb0g3t": "1d6-5"
           },
           "onOpen": true,
           "every": 7,
@@ -11808,13 +11808,13 @@
               "aqWGTcrz7Aub9br3": "1",
               "1j8mNya1elM6E3Sq": "1",
               "Ema3IO4SZscqwywu": "1",
-              "VBOQlU6cuvL4NGRy": "1d3+1",
-              "Mcznl3M9ZdxaieHM": "1d3+1",
-              "sXaWCsaYoqcpmCzG": "1d3+1",
-              "MXl4TsPJzO9qgD5K": "1d2",
-              "7ki8bB1tdflwOWtj": "1d2",
-              "WZ13BaIP3r6Y2ioi": "1d2",
-              "V3nRFVtg5pOb0g3t": "1d2"
+              "VBOQlU6cuvL4NGRy": "1d6-5",
+              "Mcznl3M9ZdxaieHM": "1d6-5",
+              "sXaWCsaYoqcpmCzG": "1d3-2",
+              "MXl4TsPJzO9qgD5K": "1d6-5",
+              "7ki8bB1tdflwOWtj": "1d6-5",
+              "WZ13BaIP3r6Y2ioi": "1d6-5",
+              "V3nRFVtg5pOb0g3t": "1d6-5"
             }
           }
         ],

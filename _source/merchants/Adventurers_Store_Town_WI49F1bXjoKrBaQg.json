@@ -5303,7 +5303,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -6579,7 +6579,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -6718,7 +6718,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -7050,7 +7050,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -7140,7 +7140,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8096,7 +8096,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 4,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8314,7 +8314,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8525,7 +8525,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 4,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8708,7 +8708,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -10038,28 +10038,28 @@
             "NeVPFzKASb4rFFQk": "1",
             "Vq6p8ICXiXJl7nsh": "3d6+8",
             "VXjbf3FST3WAzBbi": "2d6+4",
-            "kaG9wjn3aILlA24O": "1d3+1",
-            "fNc6X4x5a4AOVmhi": "1",
-            "SvPvCUR58PrGXxeo": "1d2",
-            "6EqXPhFiQnsGh3LL": "1d2",
-            "FMzNSIOuWMvweeET": "1d2",
-            "5dTQPniKgq5dFf1L": "1d2",
-            "vWehTQW0KSfXgOxR": "1d2",
-            "Nuk1kaL0ckiRXWoV": "1d2",
-            "y8ROG4yfTPaAeVJT": "1d2",
-            "7iLXh4FseH3IoEYC": "1d2",
-            "2mcTj9Jg0oGJUYnP": "1d2",
-            "Sw8JFJUjQhPbthQ9": "1d2",
-            "kg1CHoky04T94cxJ": "1d2",
-            "s7ShuwWxYSVEdmyj": "1d2",
-            "6EPmHzUFIQE14MVf": "1d2",
-            "IkreENfL0xNxj2AC": "1d2",
-            "05Bn1K8qIbHtR4ax": "1d2",
-            "TrCv7dsYaQyjBFlU": "1d3+1",
-            "IjRAZnpoKmWk3wed": "1d3+1",
-            "8a9LW7XUw9HeqPOu": "1d3+1",
-            "Zyuc9Bnd62uclcXw": "1d2",
-            "jDaJxpcNm0aXA0kw": "1d2"
+            "kaG9wjn3aILlA24O": "1d3-2",
+            "fNc6X4x5a4AOVmhi": "1d6-5",
+            "SvPvCUR58PrGXxeo": "1d6-5",
+            "6EqXPhFiQnsGh3LL": "1d6-5",
+            "FMzNSIOuWMvweeET": "1d6-5",
+            "5dTQPniKgq5dFf1L": "1d6-5",
+            "vWehTQW0KSfXgOxR": "1d6-5",
+            "Nuk1kaL0ckiRXWoV": "1d6-5",
+            "y8ROG4yfTPaAeVJT": "1d6-5",
+            "7iLXh4FseH3IoEYC": "1d6-5",
+            "2mcTj9Jg0oGJUYnP": "1d6-5",
+            "Sw8JFJUjQhPbthQ9": "1d6-5",
+            "kg1CHoky04T94cxJ": "1d6-5",
+            "s7ShuwWxYSVEdmyj": "1d6-5",
+            "6EPmHzUFIQE14MVf": "1d6-5",
+            "IkreENfL0xNxj2AC": "1d6-5",
+            "05Bn1K8qIbHtR4ax": "1d6-5",
+            "TrCv7dsYaQyjBFlU": "1d6-5",
+            "IjRAZnpoKmWk3wed": "1d6-5",
+            "8a9LW7XUw9HeqPOu": "1d6-5",
+            "Zyuc9Bnd62uclcXw": "1d6-5",
+            "jDaJxpcNm0aXA0kw": "1d6-5"
           },
           "onOpen": true,
           "every": 3,
@@ -10156,28 +10156,28 @@
               "NeVPFzKASb4rFFQk": "1",
               "Vq6p8ICXiXJl7nsh": "3d6+8",
               "VXjbf3FST3WAzBbi": "2d6+4",
-              "kaG9wjn3aILlA24O": "1d3+1",
-              "fNc6X4x5a4AOVmhi": "1",
-              "SvPvCUR58PrGXxeo": "1d2",
-              "6EqXPhFiQnsGh3LL": "1d2",
-              "FMzNSIOuWMvweeET": "1d2",
-              "5dTQPniKgq5dFf1L": "1d2",
-              "vWehTQW0KSfXgOxR": "1d2",
-              "Nuk1kaL0ckiRXWoV": "1d2",
-              "y8ROG4yfTPaAeVJT": "1d2",
-              "7iLXh4FseH3IoEYC": "1d2",
-              "2mcTj9Jg0oGJUYnP": "1d2",
-              "Sw8JFJUjQhPbthQ9": "1d2",
-              "kg1CHoky04T94cxJ": "1d2",
-              "s7ShuwWxYSVEdmyj": "1d2",
-              "6EPmHzUFIQE14MVf": "1d2",
-              "IkreENfL0xNxj2AC": "1d2",
-              "05Bn1K8qIbHtR4ax": "1d2",
-              "TrCv7dsYaQyjBFlU": "1d3+1",
-              "IjRAZnpoKmWk3wed": "1d3+1",
-              "8a9LW7XUw9HeqPOu": "1d3+1",
-              "Zyuc9Bnd62uclcXw": "1d2",
-              "jDaJxpcNm0aXA0kw": "1d2"
+              "kaG9wjn3aILlA24O": "1d3-2",
+              "fNc6X4x5a4AOVmhi": "1d6-5",
+              "SvPvCUR58PrGXxeo": "1d6-5",
+              "6EqXPhFiQnsGh3LL": "1d6-5",
+              "FMzNSIOuWMvweeET": "1d6-5",
+              "5dTQPniKgq5dFf1L": "1d6-5",
+              "vWehTQW0KSfXgOxR": "1d6-5",
+              "Nuk1kaL0ckiRXWoV": "1d6-5",
+              "y8ROG4yfTPaAeVJT": "1d6-5",
+              "7iLXh4FseH3IoEYC": "1d6-5",
+              "2mcTj9Jg0oGJUYnP": "1d6-5",
+              "Sw8JFJUjQhPbthQ9": "1d6-5",
+              "kg1CHoky04T94cxJ": "1d6-5",
+              "s7ShuwWxYSVEdmyj": "1d6-5",
+              "6EPmHzUFIQE14MVf": "1d6-5",
+              "IkreENfL0xNxj2AC": "1d6-5",
+              "05Bn1K8qIbHtR4ax": "1d6-5",
+              "TrCv7dsYaQyjBFlU": "1d6-5",
+              "IjRAZnpoKmWk3wed": "1d6-5",
+              "8a9LW7XUw9HeqPOu": "1d6-5",
+              "Zyuc9Bnd62uclcXw": "1d6-5",
+              "jDaJxpcNm0aXA0kw": "1d6-5"
             }
           }
         ],

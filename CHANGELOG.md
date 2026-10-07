@@ -11,6 +11,14 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Changed
+
+- Magic items are now rare finds: each restock gives every magic item a small
+  chance to appear, one at a time, instead of stocking most of them every time.
+  Potions of healing and spell scrolls stock as before. Adamantine and Mithral
+  Armor now come as a Chain Shirt, Breastplate, Chain Mail or Plate Armor.
+  Applies to merchants imported from this version on. (#233)
+
 ### Fixed
 
 - A shop's description that runs past two lines in the shop window's header

@@ -8354,7 +8354,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 5,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -8537,7 +8537,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -8751,7 +8751,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 6,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8994,7 +8994,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 4,
           "units": "lb"
@@ -11112,7 +11112,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -11647,7 +11647,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -15217,17 +15217,17 @@
             "ptekCddUvmnldATP": "1",
             "0zXkVui9oO0h3Sn1": "1",
             "segqU17MkbJdZzvC": "1d2-1",
-            "EWoLh1gHFeF7oxfG": "1d4+2",
-            "YcwxMiJN0kXCUH23": "1d4+2",
-            "aQDgum2PMANv5Sro": "1d4+2",
-            "1GkxKXlrBfqjbm7q": "1d3",
-            "WgMPoPwJohCaIkyA": "1d2-1",
-            "kBpK8FcCZDVpAHAZ": "1d2-1",
-            "R7MgZDFbm4PT9HU8": "1d2-1",
-            "tfnAsHFyMyDjxUuh": "1d2-1",
-            "kw3ce2dI7ZwQeCQR": "1d3",
-            "yEa0CWASUtZYA858": "1d3",
-            "ADeYgp2vaf4fCSM9": "1d3"
+            "EWoLh1gHFeF7oxfG": "1d4-3",
+            "YcwxMiJN0kXCUH23": "1d4-3",
+            "aQDgum2PMANv5Sro": "1d2-1",
+            "1GkxKXlrBfqjbm7q": "1d4-3",
+            "WgMPoPwJohCaIkyA": "1d10-9",
+            "kBpK8FcCZDVpAHAZ": "1d10-9",
+            "R7MgZDFbm4PT9HU8": "1d10-9",
+            "tfnAsHFyMyDjxUuh": "1d10-9",
+            "kw3ce2dI7ZwQeCQR": "1d4-3",
+            "yEa0CWASUtZYA858": "1d4-3",
+            "ADeYgp2vaf4fCSM9": "1d4-3"
           },
           "onOpen": true,
           "every": 7,
@@ -15347,17 +15347,17 @@
               "ptekCddUvmnldATP": "1",
               "0zXkVui9oO0h3Sn1": "1",
               "segqU17MkbJdZzvC": "1d2-1",
-              "EWoLh1gHFeF7oxfG": "1d4+2",
-              "YcwxMiJN0kXCUH23": "1d4+2",
-              "aQDgum2PMANv5Sro": "1d4+2",
-              "1GkxKXlrBfqjbm7q": "1d3",
-              "WgMPoPwJohCaIkyA": "1d2-1",
-              "kBpK8FcCZDVpAHAZ": "1d2-1",
-              "R7MgZDFbm4PT9HU8": "1d2-1",
-              "tfnAsHFyMyDjxUuh": "1d2-1",
-              "kw3ce2dI7ZwQeCQR": "1d3",
-              "yEa0CWASUtZYA858": "1d3",
-              "ADeYgp2vaf4fCSM9": "1d3"
+              "EWoLh1gHFeF7oxfG": "1d4-3",
+              "YcwxMiJN0kXCUH23": "1d4-3",
+              "aQDgum2PMANv5Sro": "1d2-1",
+              "1GkxKXlrBfqjbm7q": "1d4-3",
+              "WgMPoPwJohCaIkyA": "1d10-9",
+              "kBpK8FcCZDVpAHAZ": "1d10-9",
+              "R7MgZDFbm4PT9HU8": "1d10-9",
+              "tfnAsHFyMyDjxUuh": "1d10-9",
+              "kw3ce2dI7ZwQeCQR": "1d4-3",
+              "yEa0CWASUtZYA858": "1d4-3",
+              "ADeYgp2vaf4fCSM9": "1d4-3"
             }
           }
         ],

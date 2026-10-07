@@ -3949,7 +3949,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -4585,7 +4585,7 @@
             "5qfCUKaAwN2SR0K7": "1d2",
             "T447mbWqq2pBqH4n": "1d4+1",
             "7qjH9XKM9mFXoCBg": "1d2",
-            "RTnPrwUYhWFgpusv": "1d2"
+            "RTnPrwUYhWFgpusv": "1d4-3"
           },
           "onOpen": true,
           "every": 28,
@@ -4685,7 +4685,7 @@
               "5qfCUKaAwN2SR0K7": "1d2",
               "T447mbWqq2pBqH4n": "1d4+1",
               "7qjH9XKM9mFXoCBg": "1d2",
-              "RTnPrwUYhWFgpusv": "1d2"
+              "RTnPrwUYhWFgpusv": "1d4-3"
             }
           }
         ],

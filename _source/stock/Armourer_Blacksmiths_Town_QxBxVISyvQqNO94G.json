@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/blacksmith.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d84",
+  "formula": "1d76",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -1071,22 +1071,6 @@
       "flags": {}
     },
     {
-      "_id": "0BoYY5LwzSxfh7uI",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.0BoYY5LwzSxfh7uI",
-      "type": "document",
-      "name": "Adamantine Scale Mail",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.RboTJBGN8Jlmo1lk",
-      "weight": 1,
-      "range": [
-        67,
-        67
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "f4IizkMQ2ImXnLKv",
       "_key": "!tables.results!QxBxVISyvQqNO94G.f4IizkMQ2ImXnLKv",
       "type": "document",
@@ -1095,40 +1079,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.XYZrjTyO1V5TtVq6",
       "weight": 1,
       "range": [
-        68,
-        68
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "bxKowuSwRbmxArTl",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.bxKowuSwRbmxArTl",
-      "type": "document",
-      "name": "Adamantine Half Plate Armor",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.oNLgUga3i81qkA73",
-      "weight": 1,
-      "range": [
-        69,
-        69
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "HQAdYYHZuyIenZT3",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.HQAdYYHZuyIenZT3",
-      "type": "document",
-      "name": "Adamantine Ring Mail",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.zf8nXDXf6YWXIwwF",
-      "weight": 1,
-      "range": [
-        70,
-        70
+        67,
+        67
       ],
       "drawn": false,
       "description": "",
@@ -1143,24 +1095,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.WYfRYzF2KQE6WJHL",
       "weight": 1,
       "range": [
-        71,
-        71
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "0kosNOY4kiFJlFS8",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.0kosNOY4kiFJlFS8",
-      "type": "document",
-      "name": "Adamantine Splint Armor",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.y6BtXVILdYJdcMAi",
-      "weight": 1,
-      "range": [
-        72,
-        72
+        68,
+        68
       ],
       "drawn": false,
       "description": "",
@@ -1175,8 +1111,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bN2aGZ4dLvrrbhP0",
       "weight": 1,
       "range": [
-        73,
-        73
+        69,
+        69
       ],
       "drawn": false,
       "description": "",
@@ -1191,24 +1127,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.HtNevYf68na1T6bk",
       "weight": 1,
       "range": [
-        74,
-        74
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "8dEXQ0PH7ppragF8",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.8dEXQ0PH7ppragF8",
-      "type": "document",
-      "name": "Mithral Scale Mail",
-      "img": "icons/equipment/chest/breastplate-banded-steel.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.V7w2zU25HnEmZCHy",
-      "weight": 1,
-      "range": [
-        75,
-        75
+        70,
+        70
       ],
       "drawn": false,
       "description": "",
@@ -1223,40 +1143,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.VXZcgr5aRqSpd1aG",
       "weight": 1,
       "range": [
-        76,
-        76
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "YSHifaI33HXdNKS9",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.YSHifaI33HXdNKS9",
-      "type": "document",
-      "name": "Mithral Half Plate Armor",
-      "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.UVWh1LRoWSomsy7t",
-      "weight": 1,
-      "range": [
-        77,
-        77
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "5plmKWdAXeyr6dGj",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.5plmKWdAXeyr6dGj",
-      "type": "document",
-      "name": "Mithral Ring Mail",
-      "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.AmngrLaNvTKI5jQh",
-      "weight": 1,
-      "range": [
-        78,
-        78
+        71,
+        71
       ],
       "drawn": false,
       "description": "",
@@ -1271,24 +1159,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.nfVd8WoIB76u6LOp",
       "weight": 1,
       "range": [
-        79,
-        79
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "380iDlwdWoYlWNlT",
-      "_key": "!tables.results!QxBxVISyvQqNO94G.380iDlwdWoYlWNlT",
-      "type": "document",
-      "name": "Mithral Splint Armor",
-      "img": "icons/equipment/chest/breastplate-layered-steel.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.b66Sk2702xnRQgme",
-      "weight": 1,
-      "range": [
-        80,
-        80
+        72,
+        72
       ],
       "drawn": false,
       "description": "",
@@ -1303,8 +1175,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.50YYfhNo7T5hGyjj",
       "weight": 1,
       "range": [
-        81,
-        81
+        73,
+        73
       ],
       "drawn": false,
       "description": "",
@@ -1319,8 +1191,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.uk3OV57ljuNGjmXF",
       "weight": 1,
       "range": [
-        82,
-        82
+        74,
+        74
       ],
       "drawn": false,
       "description": "",
@@ -1335,8 +1207,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.hwCBLZ7PoyT1554w",
       "weight": 1,
       "range": [
-        83,
-        83
+        75,
+        75
       ],
       "drawn": false,
       "description": "",
@@ -1351,8 +1223,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.SnjQVEh2vh3pN0XO",
       "weight": 1,
       "range": [
-        84,
-        84
+        76,
+        76
       ],
       "drawn": false,
       "description": "",

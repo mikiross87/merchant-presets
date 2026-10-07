@@ -108,6 +108,22 @@ def load_goods():
 # ---------------------------------------------------------------- shape
 
 TIERS = [("v", "Village", 0.4, 0), ("t", "Town", 1.0, 1), ("c", "City", 2.5, 2)]
+# A magic item is a rare find (#233): on the shelf 1 restock in N, and one copy
+# when it is. N by rarity, as (village, town, city); None where no shop of that
+# size stocks the rarity. The potions of healing and spell scrolls predate the
+# magic items (#33) and keep their price bands.
+MAGIC_ODDS = {"common": (4, 3, 2), "uncommon": (None, 6, 4), "rare": (None, None, 10)}
+MAGIC_CAT = "Magic Items"
+
+def rare_find(src, line, ti):
+    """The stock formula for a magic line, 1dN-(N-1); None for any other line."""
+    if line.get("cat") != MAGIC_CAT:
+        return None
+    rarity = (src.get("system") or {}).get("rarity")
+    n = MAGIC_ODDS.get(rarity, (None, None, None))[ti]
+    if not n:
+        sys.exit(f"{line['n']}: no odds for a {rarity or 'rarity-less'} item at {TIERS[ti][1]} size")
+    return f"1d{n}-{n - 1}"
 # Settlement size reads at a glance: hamlet green, river-town blue, city gold.
 TIER_COLOR = {"Village": "#4f7d5f", "Town": "#4f6a8c", "City": "#a8823c"}
 STOCK_COLOR = "#6b4f7d"   # the module's own colour, as on the compendium folder
@@ -337,7 +353,7 @@ def make_item(src, line, actor_id, uuid, own, tier_index, copy=0):
     else:
         price = sysd.get("price") or {}
         gp = (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
-        count = roll(band(gp, tier_index), f"{actor_id}|{uuid}")
+        count = roll(rare_find(src, line, tier_index) or band(gp, tier_index), f"{actor_id}|{uuid}")
         # A zero here would mean shipping a shop that is out of something for
         # everyone forever; the import re-roll is what makes things sell out.
         sysd["quantity"] = max(1, count) * bundle
@@ -548,7 +564,12 @@ def main():
                 price = (it["system"].get("price") or {})
                 gp = (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
                 bundle = line.get("bundle", 1)
-                if line.get("service") or is_container:
+                if line.get("service"):
+                    formula = "1"
+                elif rare_find(src, line, ti):
+                    # A Bag of Holding takes the same odds; its one copy is above.
+                    formula = rare_find(src, line, ti)
+                elif is_container:
                     formula = "1"
                 else:
                     stock_roll = band(gp, ti)

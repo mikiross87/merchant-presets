@@ -122,7 +122,9 @@ test("a shop that stocks no magic item won't buy one; every shop that stocks one
   assert.equal(merchants.filter(m => m.flags["merchant-presets"].shop.wontBuy.kinds.includes("magic")).length, 14);
 });
 
-// A magic item is a rare find (#233): on the shelf 1 restock in N, one copy when it is.
+// A magic item is a rare find (#233): on the shelf 1 restock in N, one copy when it is. The potions
+// of healing and spell scrolls shipped before #33 and keep their price bands.
+const STAPLE = /^(Spell Scroll, |Potion of Healing\b)/;
 const ODDS = { common: { v: 4, t: 3, c: 2 }, uncommon: { t: 6, c: 4 }, rare: { c: 10 } };
 const stockTables = new Map(load("stock").filter(d => d._key.startsWith("!tables!")).map(t => [`Compendium.merchant-presets.stock.RollTable.${t._id}`, t]));
 
@@ -132,7 +134,7 @@ test("each magic line is a rare find: 1dN-(N-1) by its rarity and the shop's siz
     const { table, quantities } = m.flags["merchant-presets"].shop.restock;
     const results = stockTables.get(table).results;
     for (const i of stock(m).filter(isMagic)) {
-      if (OLDER.test(i.name)) continue;
+      if (STAPLE.test(i.name)) continue;
       const n = ODDS[i.system.rarity]?.[tierOf(m.name)];
       const r = results.find(r => r.documentUuid === i._stats.compendiumSource);
       const formula = quantities[r?._id];
@@ -145,7 +147,7 @@ test("each magic line is a rare find: 1dN-(N-1) by its rarity and the shop's siz
 test("no magic item ships more than one copy (#233)", () => {
   const many = [];
   for (const m of merchants) {
-    const magic = stock(m).filter(i => isMagic(i) && !OLDER.test(i.name));
+    const magic = stock(m).filter(i => isMagic(i) && !STAPLE.test(i.name));
     const names = magic.map(i => i.name);
     for (const i of magic) {
       if (i.system.quantity !== 1 || names.indexOf(i.name) !== names.lastIndexOf(i.name)) many.push(`${m.name}: ${i.name}`);

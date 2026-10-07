@@ -7119,7 +7119,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -7209,7 +7209,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -12313,15 +12313,15 @@
             "cYpItabyy27C4w7F": "2d6+4",
             "l6B0Aw95iOqt75fM": "1d4+2",
             "ho0SI12XTQiJEYlP": "1d2-1",
-            "iuLa4e2XFAGrXcBu": "1d2-1",
-            "h2Aep83IhRsiuQGf": "1d2-1",
-            "cn9VmwZ9rbFFvxZc": "1d3",
-            "jZbIu3jsnye5viw8": "1d3",
-            "UtWDdAxroGuVao4D": "1d2-1",
-            "WqbLnNNoUf0FwFli": "1d2-1",
-            "ie2fVykXtACXT49X": "1d2-1",
-            "q2jFISzOitGiZJPr": "1d2-1",
-            "Fn3UzKFGKPMoiyfP": "1d2-1"
+            "iuLa4e2XFAGrXcBu": "1d10-9",
+            "h2Aep83IhRsiuQGf": "1d10-9",
+            "cn9VmwZ9rbFFvxZc": "1d4-3",
+            "jZbIu3jsnye5viw8": "1d4-3",
+            "UtWDdAxroGuVao4D": "1d10-9",
+            "WqbLnNNoUf0FwFli": "1d10-9",
+            "ie2fVykXtACXT49X": "1d10-9",
+            "q2jFISzOitGiZJPr": "1d10-9",
+            "Fn3UzKFGKPMoiyfP": "1d10-9"
           },
           "onOpen": true,
           "every": 7,
@@ -12446,15 +12446,15 @@
               "cYpItabyy27C4w7F": "2d6+4",
               "l6B0Aw95iOqt75fM": "1d4+2",
               "ho0SI12XTQiJEYlP": "1d2-1",
-              "iuLa4e2XFAGrXcBu": "1d2-1",
-              "h2Aep83IhRsiuQGf": "1d2-1",
-              "cn9VmwZ9rbFFvxZc": "1d3",
-              "jZbIu3jsnye5viw8": "1d3",
-              "UtWDdAxroGuVao4D": "1d2-1",
-              "WqbLnNNoUf0FwFli": "1d2-1",
-              "ie2fVykXtACXT49X": "1d2-1",
-              "q2jFISzOitGiZJPr": "1d2-1",
-              "Fn3UzKFGKPMoiyfP": "1d2-1"
+              "iuLa4e2XFAGrXcBu": "1d10-9",
+              "h2Aep83IhRsiuQGf": "1d10-9",
+              "cn9VmwZ9rbFFvxZc": "1d4-3",
+              "jZbIu3jsnye5viw8": "1d4-3",
+              "UtWDdAxroGuVao4D": "1d10-9",
+              "WqbLnNNoUf0FwFli": "1d10-9",
+              "ie2fVykXtACXT49X": "1d10-9",
+              "q2jFISzOitGiZJPr": "1d10-9",
+              "Fn3UzKFGKPMoiyfP": "1d10-9"
             }
           }
         ],

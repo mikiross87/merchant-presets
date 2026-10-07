@@ -5984,7 +5984,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -11542,13 +11542,13 @@
             "ttZGekYJPPjjrMxN": "3d8+8",
             "KinzSaXEnonPTLFp": "1d3",
             "N3HHY3o2etmzrpr1": "1d3",
-            "nQAIovACp2xtSyrw": "1d3",
-            "pPX8raMtjrzPPjmj": "1d3",
-            "52A81hiJErRZtQOb": "1d2-1",
-            "ifT6VyDEFeoWlKAM": "1d3",
-            "QFjBndhoeIKL18RK": "1d2-1",
-            "GwSaT6ze9yjDt1en": "1d2-1",
-            "GO9hM4WLZmAOStSA": "1d2-1"
+            "nQAIovACp2xtSyrw": "1d4-3",
+            "pPX8raMtjrzPPjmj": "1d4-3",
+            "52A81hiJErRZtQOb": "1d10-9",
+            "ifT6VyDEFeoWlKAM": "1d4-3",
+            "QFjBndhoeIKL18RK": "1d10-9",
+            "GwSaT6ze9yjDt1en": "1d10-9",
+            "GO9hM4WLZmAOStSA": "1d10-9"
           },
           "onOpen": true,
           "every": 7,
@@ -11636,13 +11636,13 @@
               "ttZGekYJPPjjrMxN": "3d8+8",
               "KinzSaXEnonPTLFp": "1d3",
               "N3HHY3o2etmzrpr1": "1d3",
-              "nQAIovACp2xtSyrw": "1d3",
-              "pPX8raMtjrzPPjmj": "1d3",
-              "52A81hiJErRZtQOb": "1d2-1",
-              "ifT6VyDEFeoWlKAM": "1d3",
-              "QFjBndhoeIKL18RK": "1d2-1",
-              "GwSaT6ze9yjDt1en": "1d2-1",
-              "GO9hM4WLZmAOStSA": "1d2-1"
+              "nQAIovACp2xtSyrw": "1d4-3",
+              "pPX8raMtjrzPPjmj": "1d4-3",
+              "52A81hiJErRZtQOb": "1d10-9",
+              "ifT6VyDEFeoWlKAM": "1d4-3",
+              "QFjBndhoeIKL18RK": "1d10-9",
+              "GwSaT6ze9yjDt1en": "1d10-9",
+              "GO9hM4WLZmAOStSA": "1d10-9"
             }
           }
         ],
