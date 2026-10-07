@@ -176,3 +176,18 @@ test("Off drains nothing, and a line that sells out stops there", () => {
   assert.deepEqual(busy.updates, [{ _id: "a", "system.quantity": 0 }]);
   assert.equal(busy.earnedCp, 1000);
 });
+
+test("the stock pack ships a Trade Days table per size, found by its flag, averaging as the data says", () => {
+  const dir = new URL("../_source/stock/", import.meta.url);
+  const tables = readdirSync(dir).filter(f => f.endsWith(".json")).map(f => JSON.parse(readFileSync(new URL(f, dir), "utf8")))
+    .filter(t => t.flags?.["merchant-presets"]?.tradeDays);
+  const bySize = Object.fromEntries(tables.map(t => [t.flags["merchant-presets"].tradeDays, t]));
+  assert.deepEqual(Object.keys(bySize).sort(), ["City", "Town", "Village"]);
+  for (const [size, avg, n] of [["Village", 0.9175, 9], ["Town", 1.1375, 11], ["City", 1.385, 11]]) {
+    const t = bySize[size];
+    assert.ok(Math.abs(tableAverage(t.results) - avg) < 1e-12, size);
+    assert.equal(t.results.length, n, `${size}: no Militia or Wealthy visitors in a village`);
+    assert.equal(t.formula, `1d${t.results.at(-1).range[1]}`);
+    assert.ok(t.results.every(r => r.type === "text" && r.description && r.range[1] - r.range[0] + 1 === r.weight), size);
+  }
+});

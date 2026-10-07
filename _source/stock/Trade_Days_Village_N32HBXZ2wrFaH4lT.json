@@ -1,0 +1,236 @@
+{
+  "_id": "N32HBXZ2wrFaH4lT",
+  "_key": "!tables!N32HBXZ2wrFaH4lT",
+  "name": "Trade Days (Village)",
+  "img": "icons/environment/people/group.webp",
+  "folder": "9hKlRjsQzLJHoL0J",
+  "description": "<p>What kind of day a village shop is having: how busy it is, and what sells. A shop rolls once per open day; each result's flags carry its multipliers.</p>",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "merchant-presets": {
+      "tradeDays": "Village"
+    }
+  },
+  "results": [
+    {
+      "_id": "CnBe7YVKVieP6hn5",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.CnBe7YVKVieP6hn5",
+      "type": "text",
+      "name": "Dead quiet",
+      "img": "icons/environment/people/group.webp",
+      "description": "Hardly a soul came through the door.",
+      "weight": 15,
+      "range": [
+        1,
+        15
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 0.25,
+            "boosts": {}
+          }
+        }
+      }
+    },
+    {
+      "_id": "6chRuuENJDvpmW9V",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.6chRuuENJDvpmW9V",
+      "type": "text",
+      "name": "Slow",
+      "img": "icons/environment/people/group.webp",
+      "description": "A sleepy day; a few browsers.",
+      "weight": 25,
+      "range": [
+        16,
+        40
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 0.5,
+            "boosts": {}
+          }
+        }
+      }
+    },
+    {
+      "_id": "Q2PlzlT8TY8aQNYl",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.Q2PlzlT8TY8aQNYl",
+      "type": "text",
+      "name": "Fever in the lanes",
+      "img": "icons/environment/people/group.webp",
+      "description": "Folk stayed in, or bought remedies.",
+      "weight": 5,
+      "range": [
+        41,
+        45
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 0.5,
+            "boosts": {
+              "Potions": 3,
+              "Holy Symbols": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "_id": "NAifWo9qthnKrLcz",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.NAifWo9qthnKrLcz",
+      "type": "text",
+      "name": "Steady",
+      "img": "icons/environment/people/group.webp",
+      "description": "The usual trickle of regulars.",
+      "weight": 32,
+      "range": [
+        46,
+        77
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 1,
+            "boosts": {}
+          }
+        }
+      }
+    },
+    {
+      "_id": "ZvIoqzoRR0ryaq7C",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.ZvIoqzoRR0ryaq7C",
+      "type": "text",
+      "name": "Busy",
+      "img": "icons/environment/people/group.webp",
+      "description": "Locals kept the till ringing.",
+      "weight": 8,
+      "range": [
+        78,
+        85
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 2,
+            "boosts": {}
+          }
+        }
+      }
+    },
+    {
+      "_id": "2sQ01keqYpXNUcMu",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.2sQ01keqYpXNUcMu",
+      "type": "text",
+      "name": "Market day",
+      "img": "icons/environment/people/group.webp",
+      "description": "Stalls filled the square and the crowd followed.",
+      "weight": 5,
+      "range": [
+        86,
+        90
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 3,
+            "boosts": {}
+          }
+        }
+      }
+    },
+    {
+      "_id": "ZAen9NCtMD2bhPfY",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.ZAen9NCtMD2bhPfY",
+      "type": "text",
+      "name": "Caravan in town",
+      "img": "icons/environment/people/group.webp",
+      "description": "A merchant train rolled in, hungry and short of supplies.",
+      "weight": 4,
+      "range": [
+        91,
+        94
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 1,
+            "boosts": {
+              "Food & Drink": 3,
+              "Adventuring Gear": 3,
+              "Tack & Harness": 3,
+              "Mounts & Animals": 2,
+              "Vehicles": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "_id": "4ZqMNNsluCIn4gP3",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.4ZqMNNsluCIn4gP3",
+      "type": "text",
+      "name": "Festival",
+      "img": "icons/environment/people/group.webp",
+      "description": "Bunting, bells and a thirsty crowd.",
+      "weight": 4,
+      "range": [
+        95,
+        98
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 1,
+            "boosts": {
+              "Food & Drink": 3,
+              "Instruments": 3
+            }
+          }
+        }
+      }
+    },
+    {
+      "_id": "5F0npsVce5po7fFe",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.5F0npsVce5po7fFe",
+      "type": "text",
+      "name": "Pilgrims / holy day",
+      "img": "icons/environment/people/group.webp",
+      "description": "Pilgrims came to give thanks.",
+      "weight": 2,
+      "range": [
+        99,
+        100
+      ],
+      "drawn": false,
+      "flags": {
+        "merchant-presets": {
+          "day": {
+            "global": 1,
+            "boosts": {
+              "Holy Symbols": 4,
+              "Potions": 2,
+              "Food & Drink": 2
+            }
+          }
+        }
+      }
+    }
+  ]
+}
