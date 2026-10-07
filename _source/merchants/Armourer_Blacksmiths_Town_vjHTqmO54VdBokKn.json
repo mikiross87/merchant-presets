@@ -10000,7 +10000,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -10271,7 +10271,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 3,
           "units": "lb"
@@ -10492,7 +10492,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -10714,7 +10714,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 6,
           "units": "lb"
@@ -10936,7 +10936,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -11379,7 +11379,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 4,
           "units": "lb"
@@ -12263,7 +12263,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -12708,7 +12708,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 4,
           "units": "lb"
@@ -12929,7 +12929,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 6,
           "units": "lb"
@@ -13033,7 +13033,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 20,
           "units": "lb"
@@ -13118,112 +13118,6 @@
       "_key": "!actors.items!vjHTqmO54VdBokKn.wr6yVFtUJtlYWD7L"
     },
     {
-      "name": "Adamantine Scale Mail",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 450,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 45,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 14,
-          "magicalBonus": null,
-          "dex": 2
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "medium",
-          "baseItem": "scalemail"
-        },
-        "properties": [
-          "stealthDisadvantage",
-          "mgc",
-          "ada"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": null,
-        "activities": {},
-        "identifier": "scale-mail"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
-            "enchantment": "nqdPjlPUrizNLhug",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.RboTJBGN8Jlmo1lk"
-      },
-      "_id": "Q4IqbFOLQin0GnlY",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.Q4IqbFOLQin0GnlY"
-    },
-    {
       "name": "Adamantine Breastplate",
       "system": {
         "description": {
@@ -13244,7 +13138,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 20,
           "units": "lb"
@@ -13327,218 +13221,6 @@
       },
       "_id": "v5Rt8OSJr7OoT8Eg",
       "_key": "!actors.items!vjHTqmO54VdBokKn.v5Rt8OSJr7OoT8Eg"
-    },
-    {
-      "name": "Adamantine Half Plate Armor",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 1150,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 40,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 15,
-          "magicalBonus": null,
-          "dex": 2
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "medium",
-          "baseItem": "halfplate"
-        },
-        "properties": [
-          "stealthDisadvantage",
-          "mgc",
-          "ada"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": null,
-        "activities": {},
-        "identifier": "half-plate-armor"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
-            "enchantment": "nqdPjlPUrizNLhug",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmHalfPlateA"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.oNLgUga3i81qkA73"
-      },
-      "_id": "JWXlIXbMILb8c2mR",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.JWXlIXbMILb8c2mR"
-    },
-    {
-      "name": "Adamantine Ring Mail",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 430,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 2,
-        "weight": {
-          "value": 40,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 14,
-          "magicalBonus": null,
-          "dex": 0
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "heavy",
-          "baseItem": "ringmail"
-        },
-        "properties": [
-          "stealthDisadvantage",
-          "mgc",
-          "ada"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": null,
-        "activities": {},
-        "identifier": "ring-mail"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
-            "enchantment": "nqdPjlPUrizNLhug",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmRingMail00"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.zf8nXDXf6YWXIwwF"
-      },
-      "_id": "9FH4bVY7lmUm3iTw",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.9FH4bVY7lmUm3iTw"
     },
     {
       "name": "Adamantine Chain Mail",
@@ -13645,112 +13327,6 @@
       },
       "_id": "mvtmIvO6RnEbV2pP",
       "_key": "!actors.items!vjHTqmO54VdBokKn.mvtmIvO6RnEbV2pP"
-    },
-    {
-      "name": "Adamantine Splint Armor",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgAdamantineArm caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 600,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 2,
-        "weight": {
-          "value": 60,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 17,
-          "magicalBonus": null,
-          "dex": 0
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "heavy",
-          "baseItem": "splint"
-        },
-        "properties": [
-          "stealthDisadvantage",
-          "mgc",
-          "ada"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": 15,
-        "activities": {},
-        "identifier": "splint-armor"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgAdamantineArm",
-            "enchantment": "nqdPjlPUrizNLhug",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmSplintArmo"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.y6BtXVILdYJdcMAi"
-      },
-      "_id": "VA0jqvEOFsn3sJdN",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.VA0jqvEOFsn3sJdN"
     },
     {
       "name": "Adamantine Plate Armor",
@@ -13963,110 +13539,6 @@
       "_key": "!actors.items!vjHTqmO54VdBokKn.GX3EHCoQTOtQg5Nt"
     },
     {
-      "name": "Mithral Scale Mail",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 450,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 45,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 14,
-          "magicalBonus": null,
-          "dex": 2
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "medium",
-          "baseItem": "scalemail"
-        },
-        "properties": [
-          "mgc"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": 0,
-        "activities": {},
-        "identifier": "scale-mail"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-banded-steel.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
-            "enchantment": "iopwvJrcnzObDYSR",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmScaleMail0"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.V7w2zU25HnEmZCHy"
-      },
-      "_id": "jMpj7vp54GUKqNfW",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.jMpj7vp54GUKqNfW"
-    },
-    {
       "name": "Mithral Breastplate",
       "system": {
         "description": {
@@ -14171,214 +13643,6 @@
       "_key": "!actors.items!vjHTqmO54VdBokKn.13rN5LhQgVqvsv6m"
     },
     {
-      "name": "Mithral Half Plate Armor",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 1150,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 40,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 15,
-          "magicalBonus": null,
-          "dex": 2
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "medium",
-          "baseItem": "halfplate"
-        },
-        "properties": [
-          "mgc"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": 0,
-        "activities": {},
-        "identifier": "half-plate-armor"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
-            "enchantment": "iopwvJrcnzObDYSR",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmHalfPlateA"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.UVWh1LRoWSomsy7t"
-      },
-      "_id": "TFVviB3GqNYaPpE0",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.TFVviB3GqNYaPpE0"
-    },
-    {
-      "name": "Mithral Ring Mail",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 430,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 2,
-        "weight": {
-          "value": 40,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 14,
-          "magicalBonus": null,
-          "dex": 0
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "heavy",
-          "baseItem": "ringmail"
-        },
-        "properties": [
-          "mgc"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": 0,
-        "activities": {},
-        "identifier": "ring-mail"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
-            "enchantment": "iopwvJrcnzObDYSR",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmRingMail00"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.AmngrLaNvTKI5jQh"
-      },
-      "_id": "t99qUHHQiJxp7Sas",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.t99qUHHQiJxp7Sas"
-    },
-    {
       "name": "Mithral Chain Mail",
       "system": {
         "description": {
@@ -14399,7 +13663,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 55,
           "units": "lb"
@@ -14481,110 +13745,6 @@
       },
       "_id": "aeqOaJxBRPrbxNNi",
       "_key": "!actors.items!vjHTqmO54VdBokKn.aeqOaJxBRPrbxNNi"
-    },
-    {
-      "name": "Mithral Splint Armor",
-      "system": {
-        "description": {
-          "value": "<p>@Embed[Compendium.dnd5e.equipment24.Item.dmgMithralArmor0 caption=false]</p>",
-          "chat": ""
-        },
-        "price": {
-          "value": 600,
-          "denomination": "gp"
-        },
-        "source": {
-          "book": "SRD 5.2",
-          "license": "CC-BY-4.0",
-          "rules": "2024",
-          "revision": 1
-        },
-        "identified": true,
-        "unidentified": {
-          "description": ""
-        },
-        "quantity": 2,
-        "weight": {
-          "value": 60,
-          "units": "lb"
-        },
-        "rarity": "uncommon",
-        "attunement": "",
-        "attuned": false,
-        "cover": null,
-        "crewed": false,
-        "uses": {
-          "max": "",
-          "spent": 0,
-          "recovery": []
-        },
-        "armor": {
-          "value": 17,
-          "magicalBonus": null,
-          "dex": 0
-        },
-        "hp": {
-          "value": null,
-          "max": null,
-          "dt": null,
-          "conditions": ""
-        },
-        "type": {
-          "value": "heavy",
-          "baseItem": "splint"
-        },
-        "properties": [
-          "mgc"
-        ],
-        "speed": {
-          "value": null,
-          "conditions": ""
-        },
-        "strength": 0,
-        "activities": {},
-        "identifier": "splint-armor"
-      },
-      "type": "equipment",
-      "img": "icons/equipment/chest/breastplate-layered-steel.webp",
-      "effects": [],
-      "flags": {
-        "dnd5e": {
-          "riders": {
-            "activity": [],
-            "effect": []
-          }
-        },
-        "merchant-presets": {
-          "magic": {
-            "template": "Compendium.dnd5e.equipment24.Item.dmgMithralArmor0",
-            "enchantment": "iopwvJrcnzObDYSR",
-            "base": "Compendium.dnd5e.equipment24.Item.phbarmSplintArmo"
-          },
-          "stock": {
-            "infinite": false,
-            "keep": false,
-            "service": false,
-            "noBuyback": false,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        },
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "no",
-            "keepOnMerchant": false,
-            "isService": false,
-            "cantBeSoldToMerchants": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.b66Sk2702xnRQgme"
-      },
-      "_id": "P0bDdKA1CxPPLYN6",
-      "_key": "!actors.items!vjHTqmO54VdBokKn.P0bDdKA1CxPPLYN6"
     },
     {
       "name": "Mithral Plate Armor",
@@ -14711,7 +13871,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 3,
           "units": "lb"
@@ -14981,7 +14141,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -15251,7 +14411,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -16261,37 +15421,13 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         },
-        "Adamantine Scale Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
         "Adamantine Breastplate": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
         },
-        "Adamantine Half Plate Armor": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
-        "Adamantine Ring Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
         "Adamantine Chain Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
-        "Adamantine Splint Armor": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
@@ -16309,37 +15445,13 @@
           "isService": false,
           "cantBeSoldToMerchants": false
         },
-        "Mithral Scale Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
         "Mithral Breastplate": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
           "cantBeSoldToMerchants": false
         },
-        "Mithral Half Plate Armor": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
-        "Mithral Ring Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
         "Mithral Chain Mail": {
-          "infiniteQuantity": "no",
-          "keepOnMerchant": false,
-          "isService": false,
-          "cantBeSoldToMerchants": false
-        },
-        "Mithral Splint Armor": {
           "infiniteQuantity": "no",
           "keepOnMerchant": false,
           "isService": false,
@@ -16445,41 +15557,33 @@
             "yu5KkFlADbDmAMu0": "2d6+4",
             "k2GsZOuyIBgAnTNZ": "1d6+2",
             "3nsZO594u0Yfgir6": "2d6+4",
-            "ho24LrevJ1hxE2JA": "1d2",
-            "lWEtHTAk7hWx695U": "1d2",
-            "30fSmyxYh9TIYARf": "1d2",
-            "VpZblNiabUJCBsYP": "1d2",
-            "7IOVZZLH7rbQn3rh": "1d2",
-            "n65eDCpnoZ50oGYD": "1d2",
-            "mhSb3PcYsFlVGmMD": "1d2",
-            "rLJYPmtgYbS8ntsC": "1d2",
-            "fLQIeFo0JLcWCwpH": "1d2",
-            "YqwtuwRc3i9ZhIFD": "1d2",
-            "5F4fna5jSOIleXQt": "1d2",
-            "gliRtGw2VhA0Xk2l": "1d2",
-            "mRHuAxaEE77fQi8J": "1d2",
-            "vDpKCjMIuw9zayNq": "1d2",
-            "ywX9vXdpRbmocL5L": "1d2",
-            "oYzq1GtdDprasa85": "1d2",
-            "DAsABAc6vohllRiU": "1d2",
-            "0BoYY5LwzSxfh7uI": "1d2",
-            "f4IizkMQ2ImXnLKv": "1d2",
-            "bxKowuSwRbmxArTl": "1d2-1",
-            "HQAdYYHZuyIenZT3": "1d2",
-            "sr0KycPjieUTkZQy": "1d2",
-            "0kosNOY4kiFJlFS8": "1d2",
-            "oCrjSbjJf4U1RCj8": "1d2-1",
-            "7NoEvuG1qzvgsE3a": "1d2",
-            "8dEXQ0PH7ppragF8": "1d2",
-            "3CTYkDxXpcWePm4b": "1d2",
-            "YSHifaI33HXdNKS9": "1d2-1",
-            "5plmKWdAXeyr6dGj": "1d2",
-            "y9SDuRFFCxkc5m9X": "1d2",
-            "380iDlwdWoYlWNlT": "1d2",
-            "KTSrX5NGiBwF0SS7": "1d2-1",
-            "gT5VyDnkkudgoai3": "1d2",
-            "yd35IVQ5nOYcav56": "1d2",
-            "hGJFt7TFsLiOLpxP": "1d2"
+            "ho24LrevJ1hxE2JA": "1d6-5",
+            "lWEtHTAk7hWx695U": "1d6-5",
+            "30fSmyxYh9TIYARf": "1d6-5",
+            "VpZblNiabUJCBsYP": "1d6-5",
+            "7IOVZZLH7rbQn3rh": "1d6-5",
+            "n65eDCpnoZ50oGYD": "1d6-5",
+            "mhSb3PcYsFlVGmMD": "1d6-5",
+            "rLJYPmtgYbS8ntsC": "1d6-5",
+            "fLQIeFo0JLcWCwpH": "1d6-5",
+            "YqwtuwRc3i9ZhIFD": "1d6-5",
+            "5F4fna5jSOIleXQt": "1d6-5",
+            "gliRtGw2VhA0Xk2l": "1d6-5",
+            "mRHuAxaEE77fQi8J": "1d6-5",
+            "vDpKCjMIuw9zayNq": "1d6-5",
+            "ywX9vXdpRbmocL5L": "1d6-5",
+            "oYzq1GtdDprasa85": "1d6-5",
+            "DAsABAc6vohllRiU": "1d6-5",
+            "f4IizkMQ2ImXnLKv": "1d6-5",
+            "sr0KycPjieUTkZQy": "1d6-5",
+            "oCrjSbjJf4U1RCj8": "1d6-5",
+            "7NoEvuG1qzvgsE3a": "1d6-5",
+            "3CTYkDxXpcWePm4b": "1d6-5",
+            "y9SDuRFFCxkc5m9X": "1d6-5",
+            "KTSrX5NGiBwF0SS7": "1d6-5",
+            "gT5VyDnkkudgoai3": "1d6-5",
+            "yd35IVQ5nOYcav56": "1d6-5",
+            "hGJFt7TFsLiOLpxP": "1d6-5"
           },
           "onOpen": true,
           "every": 7,
@@ -16585,41 +15689,33 @@
               "yu5KkFlADbDmAMu0": "2d6+4",
               "k2GsZOuyIBgAnTNZ": "1d6+2",
               "3nsZO594u0Yfgir6": "2d6+4",
-              "ho24LrevJ1hxE2JA": "1d2",
-              "lWEtHTAk7hWx695U": "1d2",
-              "30fSmyxYh9TIYARf": "1d2",
-              "VpZblNiabUJCBsYP": "1d2",
-              "7IOVZZLH7rbQn3rh": "1d2",
-              "n65eDCpnoZ50oGYD": "1d2",
-              "mhSb3PcYsFlVGmMD": "1d2",
-              "rLJYPmtgYbS8ntsC": "1d2",
-              "fLQIeFo0JLcWCwpH": "1d2",
-              "YqwtuwRc3i9ZhIFD": "1d2",
-              "5F4fna5jSOIleXQt": "1d2",
-              "gliRtGw2VhA0Xk2l": "1d2",
-              "mRHuAxaEE77fQi8J": "1d2",
-              "vDpKCjMIuw9zayNq": "1d2",
-              "ywX9vXdpRbmocL5L": "1d2",
-              "oYzq1GtdDprasa85": "1d2",
-              "DAsABAc6vohllRiU": "1d2",
-              "0BoYY5LwzSxfh7uI": "1d2",
-              "f4IizkMQ2ImXnLKv": "1d2",
-              "bxKowuSwRbmxArTl": "1d2-1",
-              "HQAdYYHZuyIenZT3": "1d2",
-              "sr0KycPjieUTkZQy": "1d2",
-              "0kosNOY4kiFJlFS8": "1d2",
-              "oCrjSbjJf4U1RCj8": "1d2-1",
-              "7NoEvuG1qzvgsE3a": "1d2",
-              "8dEXQ0PH7ppragF8": "1d2",
-              "3CTYkDxXpcWePm4b": "1d2",
-              "YSHifaI33HXdNKS9": "1d2-1",
-              "5plmKWdAXeyr6dGj": "1d2",
-              "y9SDuRFFCxkc5m9X": "1d2",
-              "380iDlwdWoYlWNlT": "1d2",
-              "KTSrX5NGiBwF0SS7": "1d2-1",
-              "gT5VyDnkkudgoai3": "1d2",
-              "yd35IVQ5nOYcav56": "1d2",
-              "hGJFt7TFsLiOLpxP": "1d2"
+              "ho24LrevJ1hxE2JA": "1d6-5",
+              "lWEtHTAk7hWx695U": "1d6-5",
+              "30fSmyxYh9TIYARf": "1d6-5",
+              "VpZblNiabUJCBsYP": "1d6-5",
+              "7IOVZZLH7rbQn3rh": "1d6-5",
+              "n65eDCpnoZ50oGYD": "1d6-5",
+              "mhSb3PcYsFlVGmMD": "1d6-5",
+              "rLJYPmtgYbS8ntsC": "1d6-5",
+              "fLQIeFo0JLcWCwpH": "1d6-5",
+              "YqwtuwRc3i9ZhIFD": "1d6-5",
+              "5F4fna5jSOIleXQt": "1d6-5",
+              "gliRtGw2VhA0Xk2l": "1d6-5",
+              "mRHuAxaEE77fQi8J": "1d6-5",
+              "vDpKCjMIuw9zayNq": "1d6-5",
+              "ywX9vXdpRbmocL5L": "1d6-5",
+              "oYzq1GtdDprasa85": "1d6-5",
+              "DAsABAc6vohllRiU": "1d6-5",
+              "f4IizkMQ2ImXnLKv": "1d6-5",
+              "sr0KycPjieUTkZQy": "1d6-5",
+              "oCrjSbjJf4U1RCj8": "1d6-5",
+              "7NoEvuG1qzvgsE3a": "1d6-5",
+              "3CTYkDxXpcWePm4b": "1d6-5",
+              "y9SDuRFFCxkc5m9X": "1d6-5",
+              "KTSrX5NGiBwF0SS7": "1d6-5",
+              "gT5VyDnkkudgoai3": "1d6-5",
+              "yd35IVQ5nOYcav56": "1d6-5",
+              "hGJFt7TFsLiOLpxP": "1d6-5"
             }
           }
         ],

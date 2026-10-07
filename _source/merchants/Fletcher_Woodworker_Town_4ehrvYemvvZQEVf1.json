@@ -3994,7 +3994,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 1,
           "units": "lb"
@@ -4499,7 +4499,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -4948,7 +4948,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 18,
           "units": "lb"
@@ -6225,13 +6225,13 @@
             "okkOHzTGsEIRyekD": "1d6+2",
             "joUBqlro57KHnI3n": "1d3+1",
             "ZU1l0QLc0mVNbiWD": "1d3+1",
-            "QgffCj6huJz9Pk9j": "1d2",
-            "wUEnw6FvBSYqyLqV": "1",
-            "8e7UdqEcw60o1Ca8": "1d2",
-            "XiQfq6svNOiRmvsx": "1d2",
-            "BI9IjqRSXj22eHk7": "1d2",
-            "6smqc6filxIbEi6h": "1d2",
-            "VZZRnosNXOtTy7wd": "1d2"
+            "QgffCj6huJz9Pk9j": "1d6-5",
+            "wUEnw6FvBSYqyLqV": "1d6-5",
+            "8e7UdqEcw60o1Ca8": "1d6-5",
+            "XiQfq6svNOiRmvsx": "1d6-5",
+            "BI9IjqRSXj22eHk7": "1d6-5",
+            "6smqc6filxIbEi6h": "1d6-5",
+            "VZZRnosNXOtTy7wd": "1d6-5"
           },
           "onOpen": true,
           "every": 5,
@@ -6313,13 +6313,13 @@
               "okkOHzTGsEIRyekD": "1d6+2",
               "joUBqlro57KHnI3n": "1d3+1",
               "ZU1l0QLc0mVNbiWD": "1d3+1",
-              "QgffCj6huJz9Pk9j": "1d2",
-              "wUEnw6FvBSYqyLqV": "1",
-              "8e7UdqEcw60o1Ca8": "1d2",
-              "XiQfq6svNOiRmvsx": "1d2",
-              "BI9IjqRSXj22eHk7": "1d2",
-              "6smqc6filxIbEi6h": "1d2",
-              "VZZRnosNXOtTy7wd": "1d2"
+              "QgffCj6huJz9Pk9j": "1d6-5",
+              "wUEnw6FvBSYqyLqV": "1d6-5",
+              "8e7UdqEcw60o1Ca8": "1d6-5",
+              "XiQfq6svNOiRmvsx": "1d6-5",
+              "BI9IjqRSXj22eHk7": "1d6-5",
+              "6smqc6filxIbEi6h": "1d6-5",
+              "VZZRnosNXOtTy7wd": "1d6-5"
             }
           }
         ],

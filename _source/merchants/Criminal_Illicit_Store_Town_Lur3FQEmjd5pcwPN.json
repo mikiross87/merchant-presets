@@ -8444,7 +8444,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -8789,7 +8789,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -9113,7 +9113,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 2,
           "units": "lb"
@@ -9257,7 +9257,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -9493,7 +9493,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 4,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -9722,7 +9722,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 4,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -9963,7 +9963,7 @@
           "name": "Unidentified Consumable"
         },
         "container": null,
-        "quantity": 3,
+        "quantity": 1,
         "weight": {
           "value": 0.5,
           "units": "lb"
@@ -11180,16 +11180,16 @@
             "gjgHtvbWQGXE4Ugk": "1d6+2",
             "3WpEOO49Wb076mO0": "1d6+2",
             "TZkZVV2Wod8AjFRy": "1d6+2",
-            "WyL4ckp0ki5A5UMv": "1d2",
-            "X9e6g1Z94UWhsazl": "1d2",
-            "9skBCvaH5YnEGKEi": "1d2",
-            "TUacJqBkD04EKlep": "1d2",
-            "Zyl8WqZdu3q2fGCg": "1d2",
-            "YhRfPkWrjQcFcdwF": "1d2",
-            "Fg5Ly55dowMXSYey": "1d2",
-            "7gC7Pd0jgB01N0H3": "1d3+1",
-            "BjbMX60oFXn65TU0": "1d3+1",
-            "K3fzkQot8xFfxhaT": "1d3+1"
+            "WyL4ckp0ki5A5UMv": "1d6-5",
+            "X9e6g1Z94UWhsazl": "1d6-5",
+            "9skBCvaH5YnEGKEi": "1d6-5",
+            "TUacJqBkD04EKlep": "1d6-5",
+            "Zyl8WqZdu3q2fGCg": "1d6-5",
+            "YhRfPkWrjQcFcdwF": "1d6-5",
+            "Fg5Ly55dowMXSYey": "1d6-5",
+            "7gC7Pd0jgB01N0H3": "1d6-5",
+            "BjbMX60oFXn65TU0": "1d6-5",
+            "K3fzkQot8xFfxhaT": "1d6-5"
           },
           "onOpen": true,
           "every": "1d4+2",
@@ -11286,16 +11286,16 @@
               "gjgHtvbWQGXE4Ugk": "1d6+2",
               "3WpEOO49Wb076mO0": "1d6+2",
               "TZkZVV2Wod8AjFRy": "1d6+2",
-              "WyL4ckp0ki5A5UMv": "1d2",
-              "X9e6g1Z94UWhsazl": "1d2",
-              "9skBCvaH5YnEGKEi": "1d2",
-              "TUacJqBkD04EKlep": "1d2",
-              "Zyl8WqZdu3q2fGCg": "1d2",
-              "YhRfPkWrjQcFcdwF": "1d2",
-              "Fg5Ly55dowMXSYey": "1d2",
-              "7gC7Pd0jgB01N0H3": "1d3+1",
-              "BjbMX60oFXn65TU0": "1d3+1",
-              "K3fzkQot8xFfxhaT": "1d3+1"
+              "WyL4ckp0ki5A5UMv": "1d6-5",
+              "X9e6g1Z94UWhsazl": "1d6-5",
+              "9skBCvaH5YnEGKEi": "1d6-5",
+              "TUacJqBkD04EKlep": "1d6-5",
+              "Zyl8WqZdu3q2fGCg": "1d6-5",
+              "YhRfPkWrjQcFcdwF": "1d6-5",
+              "Fg5Ly55dowMXSYey": "1d6-5",
+              "7gC7Pd0jgB01N0H3": "1d6-5",
+              "BjbMX60oFXn65TU0": "1d6-5",
+              "K3fzkQot8xFfxhaT": "1d6-5"
             }
           }
         ],

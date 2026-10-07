@@ -1705,7 +1705,8 @@ Hooks.once("init", () => {
     hint: "Unlimited: shops never run out of ordinary goods (poisons, scrolls, gunpowder and "
       + "firearms are always limited, and containers are always one-of). Finite: every good gets "
       + "a rolled stock count scaled to its price and the settlement size, and can sell out, so an "
-      + "expensive item may not be in stock at all. Applies to merchants imported after the change.",
+      + "expensive item may not be in stock at all. Either way, a magic item is a rare find: on the "
+      + "shelf at some restocks, one at a time. Applies to merchants imported after the change.",
     scope: "world",
     config: true,
     type: String,

@@ -74,7 +74,7 @@ test("every shipped merchant's config validates in the new shape", () => {
 });
 
 test("every shipped stock line validates in the new shape", () => {
-  assert.equal(stockLines.length, 2017);
+  assert.equal(stockLines.length, 2001);
   for (const i of stockLines) {
     const r = validateStock(stockOf(i));
     assert.ok(r.ok, `${i.name}: ${errorsOf(r)}`);

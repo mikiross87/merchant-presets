@@ -908,7 +908,7 @@ test("planItemUpdates reproduces every shipped stock line's own committed config
       checked++;
     }
   }
-  assert.equal(checked, 2017);   // every stock line schema.test.mjs counts, none silently skipped
+  assert.equal(checked, 2001);   // every stock line schema.test.mjs counts, none silently skipped
 });
 
 test("a shop derived for setUpShop is repaired like a migrated one (#120 review)", () => {

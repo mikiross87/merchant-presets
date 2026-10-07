@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/blacksmith.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d149",
+  "formula": "1d141",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -1519,22 +1519,6 @@
       "flags": {}
     },
     {
-      "_id": "LMJHdqdrNTOARBQd",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.LMJHdqdrNTOARBQd",
-      "type": "document",
-      "name": "Adamantine Scale Mail",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.RboTJBGN8Jlmo1lk",
-      "weight": 1,
-      "range": [
-        95,
-        95
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "DN0aGbots6F9ChIL",
       "_key": "!tables.results!skUKXQOB8G2reOpu.DN0aGbots6F9ChIL",
       "type": "document",
@@ -1543,40 +1527,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.XYZrjTyO1V5TtVq6",
       "weight": 1,
       "range": [
-        96,
-        96
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "1kc5FWozJxle9K43",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.1kc5FWozJxle9K43",
-      "type": "document",
-      "name": "Adamantine Half Plate Armor",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.oNLgUga3i81qkA73",
-      "weight": 1,
-      "range": [
-        97,
-        97
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "mRIyw18mIRL2mN6o",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.mRIyw18mIRL2mN6o",
-      "type": "document",
-      "name": "Adamantine Ring Mail",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.zf8nXDXf6YWXIwwF",
-      "weight": 1,
-      "range": [
-        98,
-        98
+        95,
+        95
       ],
       "drawn": false,
       "description": "",
@@ -1591,24 +1543,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.WYfRYzF2KQE6WJHL",
       "weight": 1,
       "range": [
-        99,
-        99
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "xmqaKQvfreVQJfic",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.xmqaKQvfreVQJfic",
-      "type": "document",
-      "name": "Adamantine Splint Armor",
-      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.y6BtXVILdYJdcMAi",
-      "weight": 1,
-      "range": [
-        100,
-        100
+        96,
+        96
       ],
       "drawn": false,
       "description": "",
@@ -1623,8 +1559,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bN2aGZ4dLvrrbhP0",
       "weight": 1,
       "range": [
-        101,
-        101
+        97,
+        97
       ],
       "drawn": false,
       "description": "",
@@ -1639,24 +1575,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.HtNevYf68na1T6bk",
       "weight": 1,
       "range": [
-        102,
-        102
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "36YnVmInKIyLKMk0",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.36YnVmInKIyLKMk0",
-      "type": "document",
-      "name": "Mithral Scale Mail",
-      "img": "icons/equipment/chest/breastplate-banded-steel.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.V7w2zU25HnEmZCHy",
-      "weight": 1,
-      "range": [
-        103,
-        103
+        98,
+        98
       ],
       "drawn": false,
       "description": "",
@@ -1671,40 +1591,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.VXZcgr5aRqSpd1aG",
       "weight": 1,
       "range": [
-        104,
-        104
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "5yOgUuSNzSQ666Ri",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.5yOgUuSNzSQ666Ri",
-      "type": "document",
-      "name": "Mithral Half Plate Armor",
-      "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.UVWh1LRoWSomsy7t",
-      "weight": 1,
-      "range": [
-        105,
-        105
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "pK2Jnxj1Sp1ikdhm",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.pK2Jnxj1Sp1ikdhm",
-      "type": "document",
-      "name": "Mithral Ring Mail",
-      "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.AmngrLaNvTKI5jQh",
-      "weight": 1,
-      "range": [
-        106,
-        106
+        99,
+        99
       ],
       "drawn": false,
       "description": "",
@@ -1719,24 +1607,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.nfVd8WoIB76u6LOp",
       "weight": 1,
       "range": [
-        107,
-        107
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "0EI2v804LPWG1dff",
-      "_key": "!tables.results!skUKXQOB8G2reOpu.0EI2v804LPWG1dff",
-      "type": "document",
-      "name": "Mithral Splint Armor",
-      "img": "icons/equipment/chest/breastplate-layered-steel.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.b66Sk2702xnRQgme",
-      "weight": 1,
-      "range": [
-        108,
-        108
+        100,
+        100
       ],
       "drawn": false,
       "description": "",
@@ -1751,8 +1623,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.50YYfhNo7T5hGyjj",
       "weight": 1,
       "range": [
-        109,
-        109
+        101,
+        101
       ],
       "drawn": false,
       "description": "",
@@ -1767,8 +1639,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.5iec2goJzVsCP2fg",
       "weight": 1,
       "range": [
-        110,
-        110
+        102,
+        102
       ],
       "drawn": false,
       "description": "",
@@ -1783,8 +1655,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.fxvkgPAadTTYXi8z",
       "weight": 1,
       "range": [
-        111,
-        111
+        103,
+        103
       ],
       "drawn": false,
       "description": "",
@@ -1799,8 +1671,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.jq96nVO1EMYkfcGs",
       "weight": 1,
       "range": [
-        112,
-        112
+        104,
+        104
       ],
       "drawn": false,
       "description": "",
@@ -1815,8 +1687,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ypBQcH4IwGzpVBuU",
       "weight": 1,
       "range": [
-        113,
-        113
+        105,
+        105
       ],
       "drawn": false,
       "description": "",
@@ -1831,8 +1703,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.hACLXKgcyNCtRShC",
       "weight": 1,
       "range": [
-        114,
-        114
+        106,
+        106
       ],
       "drawn": false,
       "description": "",
@@ -1847,8 +1719,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.nXSwG2wv571qCjRa",
       "weight": 1,
       "range": [
-        115,
-        115
+        107,
+        107
       ],
       "drawn": false,
       "description": "",
@@ -1863,8 +1735,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.4WnDUg0pcTTkBH7P",
       "weight": 1,
       "range": [
-        116,
-        116
+        108,
+        108
       ],
       "drawn": false,
       "description": "",
@@ -1879,8 +1751,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Krm6D7PpRVdUYrAG",
       "weight": 1,
       "range": [
-        117,
-        117
+        109,
+        109
       ],
       "drawn": false,
       "description": "",
@@ -1895,8 +1767,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.MMMI10R3bJdiLZ9D",
       "weight": 1,
       "range": [
-        118,
-        118
+        110,
+        110
       ],
       "drawn": false,
       "description": "",
@@ -1911,8 +1783,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.KXHDtS0q8LUUrTqN",
       "weight": 1,
       "range": [
-        119,
-        119
+        111,
+        111
       ],
       "drawn": false,
       "description": "",
@@ -1927,8 +1799,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.F3n6nGZq5cX3RNWM",
       "weight": 1,
       "range": [
-        120,
-        120
+        112,
+        112
       ],
       "drawn": false,
       "description": "",
@@ -1943,8 +1815,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.QIpTVmkrxPDleNbg",
       "weight": 1,
       "range": [
-        121,
-        121
+        113,
+        113
       ],
       "drawn": false,
       "description": "",
@@ -1959,8 +1831,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Ke78Mh25cwcm6I2W",
       "weight": 1,
       "range": [
-        122,
-        122
+        114,
+        114
       ],
       "drawn": false,
       "description": "",
@@ -1975,8 +1847,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.paBKXDzcZP6jS5mC",
       "weight": 1,
       "range": [
-        123,
-        123
+        115,
+        115
       ],
       "drawn": false,
       "description": "",
@@ -1991,8 +1863,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.n5ZlQ4hq5xD0tCZx",
       "weight": 1,
       "range": [
-        124,
-        124
+        116,
+        116
       ],
       "drawn": false,
       "description": "",
@@ -2007,8 +1879,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.yBeG0T6iMr2r8F71",
       "weight": 1,
       "range": [
-        125,
-        125
+        117,
+        117
       ],
       "drawn": false,
       "description": "",
@@ -2023,8 +1895,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.7QCvWHI66Dt3c0ib",
       "weight": 1,
       "range": [
-        126,
-        126
+        118,
+        118
       ],
       "drawn": false,
       "description": "",
@@ -2039,8 +1911,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.COAcmWhQNtJXaCK0",
       "weight": 1,
       "range": [
-        127,
-        127
+        119,
+        119
       ],
       "drawn": false,
       "description": "",
@@ -2055,8 +1927,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.D8DNt5aCvCXvcr9r",
       "weight": 1,
       "range": [
-        128,
-        128
+        120,
+        120
       ],
       "drawn": false,
       "description": "",
@@ -2071,8 +1943,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.9TTIzUJcINqfvN1D",
       "weight": 1,
       "range": [
-        129,
-        129
+        121,
+        121
       ],
       "drawn": false,
       "description": "",
@@ -2087,8 +1959,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.ZneeK8AJxIUMlxes",
       "weight": 1,
       "range": [
-        130,
-        130
+        122,
+        122
       ],
       "drawn": false,
       "description": "",
@@ -2103,8 +1975,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bO2TNWjXS3LHCPMP",
       "weight": 1,
       "range": [
-        131,
-        131
+        123,
+        123
       ],
       "drawn": false,
       "description": "",
@@ -2119,8 +1991,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.GpKNvsz0qZte1fnP",
       "weight": 1,
       "range": [
-        132,
-        132
+        124,
+        124
       ],
       "drawn": false,
       "description": "",
@@ -2135,8 +2007,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.5S3XDExToqMDT8jc",
       "weight": 1,
       "range": [
-        133,
-        133
+        125,
+        125
       ],
       "drawn": false,
       "description": "",
@@ -2151,8 +2023,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.H8hDr4v3HOeBKSpx",
       "weight": 1,
       "range": [
-        134,
-        134
+        126,
+        126
       ],
       "drawn": false,
       "description": "",
@@ -2167,8 +2039,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.bTUfD8vvYK70hzpu",
       "weight": 1,
       "range": [
-        135,
-        135
+        127,
+        127
       ],
       "drawn": false,
       "description": "",
@@ -2183,8 +2055,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.F0IKSiamv2BuQEKK",
       "weight": 1,
       "range": [
-        136,
-        136
+        128,
+        128
       ],
       "drawn": false,
       "description": "",
@@ -2199,8 +2071,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.gCIs2P5MNW9uNEAg",
       "weight": 1,
       "range": [
-        137,
-        137
+        129,
+        129
       ],
       "drawn": false,
       "description": "",
@@ -2215,8 +2087,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.lhpdKc0dYkaDzNxr",
       "weight": 1,
       "range": [
-        138,
-        138
+        130,
+        130
       ],
       "drawn": false,
       "description": "",
@@ -2231,8 +2103,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.Av9H0aAh6aJ6IlCU",
       "weight": 1,
       "range": [
-        139,
-        139
+        131,
+        131
       ],
       "drawn": false,
       "description": "",
@@ -2247,8 +2119,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.cATMGbxBqcwCZ9Mc",
       "weight": 1,
       "range": [
-        140,
-        140
+        132,
+        132
       ],
       "drawn": false,
       "description": "",
@@ -2263,8 +2135,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.XcKeQ1LFBgD8Km3w",
       "weight": 1,
       "range": [
-        141,
-        141
+        133,
+        133
       ],
       "drawn": false,
       "description": "",
@@ -2279,8 +2151,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.An86yv6Oe3rg9iGU",
       "weight": 1,
       "range": [
-        142,
-        142
+        134,
+        134
       ],
       "drawn": false,
       "description": "",
@@ -2295,8 +2167,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.7vWzVYRGjQcdI1YJ",
       "weight": 1,
       "range": [
-        143,
-        143
+        135,
+        135
       ],
       "drawn": false,
       "description": "",
@@ -2311,8 +2183,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.15qudKV3olZXdgVy",
       "weight": 1,
       "range": [
-        144,
-        144
+        136,
+        136
       ],
       "drawn": false,
       "description": "",
@@ -2327,8 +2199,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.brJvb01QIYSPPoUz",
       "weight": 1,
       "range": [
-        145,
-        145
+        137,
+        137
       ],
       "drawn": false,
       "description": "",
@@ -2343,8 +2215,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.mJpmJ83fF2Fyw2qg",
       "weight": 1,
       "range": [
-        146,
-        146
+        138,
+        138
       ],
       "drawn": false,
       "description": "",
@@ -2359,8 +2231,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.uk3OV57ljuNGjmXF",
       "weight": 1,
       "range": [
-        147,
-        147
+        139,
+        139
       ],
       "drawn": false,
       "description": "",
@@ -2375,8 +2247,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.hwCBLZ7PoyT1554w",
       "weight": 1,
       "range": [
-        148,
-        148
+        140,
+        140
       ],
       "drawn": false,
       "description": "",
@@ -2391,8 +2263,8 @@
       "documentUuid": "Compendium.merchant-presets.goods.Item.SnjQVEh2vh3pN0XO",
       "weight": 1,
       "range": [
-        149,
-        149
+        141,
+        141
       ],
       "drawn": false,
       "description": "",

@@ -5248,7 +5248,7 @@
         "unidentified": {
           "description": ""
         },
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -5582,7 +5582,7 @@
           "description": ""
         },
         "container": null,
-        "quantity": 2,
+        "quantity": 1,
         "weight": {
           "value": 0,
           "units": "lb"
@@ -6314,9 +6314,9 @@
             "7lWM72O5TFhmtY4B": "2d6+4",
             "f1SMhpGCDMT29Qsf": "2d6+4",
             "1ckfMUR1Fs3M5Fs2": "1d2",
-            "Vwa09qLY3GEoVEhO": "1d2",
-            "5xGKLPR0suZ1ZRsO": "1d2",
-            "BxLWpZhuer5nCB39": "1d2"
+            "Vwa09qLY3GEoVEhO": "1d6-5",
+            "5xGKLPR0suZ1ZRsO": "1d6-5",
+            "BxLWpZhuer5nCB39": "1d6-5"
           },
           "onOpen": true,
           "every": 7,
@@ -6401,9 +6401,9 @@
               "7lWM72O5TFhmtY4B": "2d6+4",
               "f1SMhpGCDMT29Qsf": "2d6+4",
               "1ckfMUR1Fs3M5Fs2": "1d2",
-              "Vwa09qLY3GEoVEhO": "1d2",
-              "5xGKLPR0suZ1ZRsO": "1d2",
-              "BxLWpZhuer5nCB39": "1d2"
+              "Vwa09qLY3GEoVEhO": "1d6-5",
+              "5xGKLPR0suZ1ZRsO": "1d6-5",
+              "BxLWpZhuer5nCB39": "1d6-5"
             }
           }
         ],
