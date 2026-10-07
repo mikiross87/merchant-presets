@@ -39,8 +39,8 @@ const TIERS = { common: "vtc", uncommon: "tc", rare: "c" };
 const OLDER = /^(Spell Scroll, |Potion of Healing \(Supreme\)$)/;
 const tierOf = name => (/\((Village|Town|City)\)$/.exec(name) ?? [])[1]?.[0].toLowerCase();
 
-test("the magic goods: a hundred and twelve baked, four priced, each named once", () => {
-  assert.equal(baked.length, 112);
+test("the magic goods: a hundred and four baked, four priced, each named once", () => {
+  assert.equal(baked.length, 104);
   assert.deepEqual(ours.filter(g => !baked.includes(g)).map(g => g.name).sort(),
     ["Headband of Intellect", "Immovable Rod", "Sentinel Shield", "Silver Raven"]);
   const names = ours.map(g => g.name);
@@ -96,7 +96,7 @@ test("magic is stocked by rarity: common everywhere, uncommon in towns and citie
 
 test("every magic line is limited, and names a baked good only by its uuid", () => {
   const magic = recipes.shops.flatMap(s => s.stock.filter(l => l.cat === "Magic Items").map(l => ({ shop: s.id, ...l })));
-  assert.equal(magic.length, 310);
+  assert.equal(magic.length, 302);
   assert.deepEqual(magic.filter(l => !l.limited).map(l => `${l.shop}: ${l.n}`), []);
   // A price on a line reaches only the shipped snapshot: a shop rolls its shelf from the table.
   assert.deepEqual(magic.filter(l => "price" in l).map(l => l.n), []);
@@ -120,4 +120,43 @@ test("a shop that stocks no magic item won't buy one; every shop that stocks one
   assert.deepEqual(wrong, []);
   // The General Stores and most village shops: #33 starts uncommon items at town.
   assert.equal(merchants.filter(m => m.flags["merchant-presets"].shop.wontBuy.kinds.includes("magic")).length, 14);
+});
+
+// A magic item is a rare find (#233): on the shelf 1 restock in N, one copy when it is.
+const ODDS = { common: { v: 4, t: 3, c: 2 }, uncommon: { t: 6, c: 4 }, rare: { c: 10 } };
+const stockTables = new Map(load("stock").filter(d => d._key.startsWith("!tables!")).map(t => [`Compendium.merchant-presets.stock.RollTable.${t._id}`, t]));
+
+test("each magic line is a rare find: 1dN-(N-1) by its rarity and the shop's size (#233)", () => {
+  const wrong = [];
+  for (const m of merchants) {
+    const { table, quantities } = m.flags["merchant-presets"].shop.restock;
+    const results = stockTables.get(table).results;
+    for (const i of stock(m).filter(isMagic)) {
+      if (OLDER.test(i.name)) continue;
+      const n = ODDS[i.system.rarity]?.[tierOf(m.name)];
+      const r = results.find(r => r.documentUuid === i._stats.compendiumSource);
+      const formula = quantities[r?._id];
+      if (!n || formula !== `1d${n}-${n - 1}`) wrong.push(`${m.name}: ${i.name} (${i.system.rarity}) ${formula}`);
+    }
+  }
+  assert.deepEqual(wrong, []);
+});
+
+test("no magic item ships more than one copy (#233)", () => {
+  const many = [];
+  for (const m of merchants) {
+    const magic = stock(m).filter(i => isMagic(i) && !OLDER.test(i.name));
+    const names = magic.map(i => i.name);
+    for (const i of magic) {
+      if (i.system.quantity !== 1 || names.indexOf(i.name) !== names.lastIndexOf(i.name)) many.push(`${m.name}: ${i.name}`);
+    }
+  }
+  assert.deepEqual([...new Set(many)], []);
+});
+
+test("Adamantine and Mithral Armor come on four bases each, not eight (#233)", () => {
+  for (const metal of ["Adamantine", "Mithral"]) {
+    assert.deepEqual(baked.filter(g => g.name.startsWith(`${metal} `)).map(g => g.name).sort(),
+      ["Breastplate", "Chain Mail", "Chain Shirt", "Plate Armor"].map(b => `${metal} ${b}`), metal);
+  }
 });
