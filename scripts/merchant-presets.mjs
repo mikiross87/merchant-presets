@@ -13,14 +13,16 @@ import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfI
 import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
-import { planTrade, safeShopOf } from "./trade-plan.mjs";
+import { categoryFor, lineTotalCp, planTrade, safeShopOf } from "./trade-plan.mjs";
+import { dayOf, LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
 import { activeDeal } from "./deals.mjs";
 import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, showsRollButtons, validCall } from "./haggle.mjs";
-import { effectiveRates } from "./pricing.mjs";
+import { coinsFor, effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, planRestock, quantityFormula, restockStockFlags, rolledCount, scheduleNext
+  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, openSecondsPerDay, openSpansByDay, planRestock,
+  quantityFormula, restockStockFlags, rolledCount, scheduleNext, secondsPerDay
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -394,7 +396,11 @@ async function restockNow(actor, { at = game.time.worldTime } = {}) {
  *
  * @returns {Promise<string[]|null>} the lines restocked, or null if it wasn't due
  */
-async function scheduleShop(actor, now, previous, calendar) {
+async function scheduleShop(actor, now, previous, calendar, { restocks = true, level = 0 } = {}) {
+  if (!restocks) {
+    await drainShop(actor, previous, now, calendar, level);
+    return null;
+  }
   const raw = actor.flags[MODULE].shop;
   let state = actor.flags[MODULE].schedule;
   if (!state) {
@@ -420,8 +426,15 @@ async function scheduleShop(actor, now, previous, calendar) {
     }
   }
   const due = dueRestock(raw, state, previous, now, calendar);
-  if (!due.due) return null;
+  if (!due.due) {
+    await drainShop(actor, previous, now, calendar, level);
+    return null;
+  }
+  // Other customers shop up to the restock, and again from it (#226): a shop restocked at dawn has
+  // lost stock by dusk.
+  await drainShop(actor, previous, due.at, calendar, level);
   const restocked = await restockNow(actor, { at: due.at });
+  await drainShop(actor, due.at, now, calendar, level);
   // Couldn't run (its table or a line's document is missing): still due, so the next opening
   // tries again, rather than the shop skipping a whole cycle.
   if (restocked === null) return null;
@@ -438,13 +451,13 @@ async function scheduleShop(actor, now, previous, calendar) {
  * @param {number} previous   The world time last processed.
  * @returns {Promise<number>} how many shops were restocked
  */
-async function scheduledRestocks(worldTime, previous) {
+async function scheduledRestocks(worldTime, previous, options = {}) {
   const calendar = game.time.calendar.days;
   const restocked = [];
   for (const actor of game.actors) {
     if (!actor.flags?.[MODULE]?.shop || actor.pack) continue;
     try {
-      const lines = await runTrade(() => scheduleShop(actor, worldTime, previous, calendar));
+      const lines = await runTrade(() => scheduleShop(actor, worldTime, previous, calendar, options));
       if (lines?.length) restocked.push(actor.name);
     } catch (err) {
       console.error(`${MODULE} | could not restock "${actor.name}"`, err);
@@ -455,6 +468,83 @@ async function scheduledRestocks(worldTime, previous) {
     ui.notifications.info(`Merchant Presets: ${restocked.length} shop(s) restocked for the new day.`);
   }
   return restocked.length;
+}
+
+/* ---------------------------------------------------------------- other customers (#226) */
+
+/**
+ * The busy-day table a shop rolls on: its own, or the shipped one for its size, found in the stock
+ * pack by its tradeDays flag. Null when neither can be found.
+ */
+async function customersTable(shop) {
+  if (shop.customers.table) return fromUuid(shop.customers.table).catch(() => null);
+  const pack = game.packs.get(`${MODULE}.stock`);
+  if (!pack) return null;
+  const index = await pack.getIndex({ fields: [`flags.${MODULE}.tradeDays`] });
+  const entry = index.find(e => e.flags?.[MODULE]?.tradeDays === (shop.tier ?? "Town"));
+  return entry ? pack.getDocument(entry._id) : null;
+}
+
+/** A table result as the shop keeps it: what players read, and the multipliers behind it. */
+function daySnapshot(result) {
+  const day = dayOf(result) ?? {};
+  const text = String(result.description ?? "").replace(/<[^>]*>/g, "").trim();
+  return { id: result.id ?? result._id, name: result.name ?? "", text, global: day.global ?? 1, boosts: day.boosts ?? {} };
+}
+
+/** Rolls the kind of day on `table`, quietly: no chat card, nothing marked drawn. */
+async function rollDay(table) {
+  if (!table) return null;
+  const { results } = await table.roll();
+  return results?.[0] ? daySnapshot(results[0]) : null;
+}
+
+/**
+ * What other customers bought from `actor` between `from` and `to` (#226): stock leaves the shelf
+ * over the hours it was open, and the coin goes into the till. Each open day rolls its kind of
+ * day once; today's is kept on the shop, for its window and for a GM to override. Nothing is
+ * written unless something sold or the day changed.
+ */
+async function drainShop(actor, from, to, calendar, level) {
+  if (!level) return;
+  const shop = safeShopOf(actor);
+  const shelf = shelfKeyOf(actor);
+  if (!shop || !shelf) return;
+  const state = actor.flags[MODULE].customers ?? {};
+  const start = Math.max(from, state.drainedTo ?? from);
+  const spans = openSpansByDay(shop.hours, start, to, calendar);
+  if (!spans.length) return;
+  const table = await customersTable(shop);
+  const today = Math.floor(to / secondsPerDay(calendar));
+  let kept = state.day ?? null;
+  for (const span of spans) {
+    if (kept?.index === span.day) span.result = kept.override ?? kept.rolled;
+    else {
+      span.result = await rollDay(table);
+      if (span.day === today) kept = { index: today, rolled: span.result, override: null };
+    }
+  }
+  const world = worldTerms(key => game.settings.get(MODULE, key));
+  const currencies = CONFIG.DND5E.currencies;
+  const plan = planDrain({
+    items: actor.items.map(i => i.toObject()), spans, perDay: openSecondsPerDay(shop.hours, calendar), from: start,
+    tier: shop.tier, average: table ? tableAverage(table.results) : null, level, drawnBy: shelf, infiniteStock: world.infiniteStock,
+    unitPriceCpOf: (item, stock) => lineTotalCp(item, effectiveRates(world.rates, shop.terms, categoryFor(item, stock)).sellsAt.rate,
+      stock.bundle, 1, currencies)
+  });
+  const sold = plan.updates.length || plan.deletes.length;
+  if (!sold && kept === state.day) return;
+  if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
+  if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
+  const coins = !world.infinitePurse && plan.earnedCp > 0 ? coinsFor(plan.earnedCp, currencies) : {};
+  await actor.update({
+    ...Object.fromEntries(Object.entries(coins).map(([k, n]) => [`system.currency.${k}`, (actor.system.currency?.[k] ?? 0) + n])),
+    [`flags.${MODULE}.customers`]: { drainedTo: to, day: kept }
+  });
+  if (sold) {
+    await syncStockWeight(actor);
+    log(`"${actor.name}": other customers bought ${plan.sold.map(s => `${s.quantity} ${s.name}`).join(", ")}`);
+  }
 }
 
 /**
@@ -472,7 +562,9 @@ function registerRestock() {
   const loadedAt = game.time.worldTime;
 
   Hooks.on("updateWorldTime", async worldTime => {
-    if (!game.settings.get(MODULE, "autoRestock")) return;
+    const restocks = game.settings.get(MODULE, "autoRestock");
+    const level = LEVELS[game.settings.get(MODULE, "otherCustomers")] ?? 0;
+    if (!restocks && !level) return;
     if (game.users.activeGM !== game.user || !claimsTrades(tradeClaim(), thisTab())) return;
     // Not without a clock (#149): a restock happens by hand, with Restock now. The time passed is
     // still marked gone through, so following the clock again doesn't replay it (#161 review).
@@ -484,7 +576,7 @@ function registerRestock() {
     if (worldTime === from) return;
     await game.settings.set(MODULE, "lastRestockTime", worldTime);
     // Rewinding the clock should not trigger a day's worth of restocks.
-    if (worldTime > from) await scheduledRestocks(worldTime, from);
+    if (worldTime > from) await scheduledRestocks(worldTime, from, { restocks, level });
   });
   // The switch is read per tick, so it can change mid-session; this only says how the world loaded.
   if (game.settings.get(MODULE, "autoRestock")) {
@@ -1528,6 +1620,19 @@ async function applyAutoRestockDefault() {
   await game.settings.set(MODULE, "autoRestockDecided", true);
 }
 
+/**
+ * Turn other customers off on this world's first load with them, where shops are already trading
+ * (#226): their shelves shouldn't start emptying on an upgrade nobody asked for. Decided once.
+ */
+async function applyCustomersDefault() {
+  if (game.settings.get(MODULE, "otherCustomersDecided")) return;
+  const key = `${MODULE}.otherCustomers`;
+  const stored = !!game.settings.storage.get("world").find(s => s.key === key);
+  const value = planCustomersDefault(stored, game.actors.some(a => a.flags?.[MODULE]?.shop || a.flags?.[MODULE]?.itemFlags));
+  if (value !== null) await game.settings.set(MODULE, "otherCustomers", value);
+  await game.settings.set(MODULE, "otherCustomersDecided", true);
+}
+
 /* -------------------------------------------------------- setting up a shop */
 
 /**
@@ -1772,6 +1877,24 @@ Hooks.once("init", () => {
     default: true
   });
 
+  game.settings.register(MODULE, "otherCustomers", {
+    name: "Other customers",
+    hint: "Between restocks, other people buy from each shop while it's open: stock leaves the shelf "
+      + "and their coin goes into the till. Quiet is half as busy as Busy. Each shop has a kind of day "
+      + "(a market day, a festival), shown in its window and changeable in its settings. Worlds that "
+      + "already had shops start with this off.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: { off: "Off", quiet: "Quiet", busy: "Busy" },
+    default: "busy"
+  });
+
+  // Whether the otherCustomers default (#226) has been decided: once, at this world's first load with it.
+  game.settings.register(MODULE, "otherCustomersDecided", {
+    scope: "world", config: false, type: Boolean, default: false
+  });
+
   // Last world time a restock pass ran for, so a reload cannot re-fire one.
   game.settings.register(MODULE, "lastRestockTime", {
     scope: "world", config: false, type: Number, default: 0
@@ -2009,6 +2132,8 @@ Hooks.once("ready", async () => {
 
   // The world's one-time autoRestock decision (#105), before any shop migrates. Awaited: a failed
   // write here must close migrationGateOpen before anything below can migrate a shop (#100 review).
+  try { await applyCustomersDefault(); }
+  catch (err) { console.error(`${MODULE} | could not apply the other customers default`, err); }
   try { await applyAutoRestockDefault(); }
   catch (err) {
     migrationGateOpen = false;
