@@ -489,6 +489,19 @@ test("a restock is fresh stock only when it brings back something players can se
   assert.equal(planRestock(shop, [], [{ ...draws[0], quantity: 10 }], { ...context, at: T }).fresh, true, "a reroll's visible lines");
 });
 
+test("a container line that rolled 0 is not on the shelf this restock, in either mode (#233)", () => {
+  // A Bag of Holding restocks on 1d4-3 like any magic item: a 0 leaves it off, however many copies a 1 brings.
+  const none = { ...draws[2], quantity: 0 };
+  assert.deepEqual(planRestock(shop, [], [none], { ...context, at: T }).creates, [], "reroll");
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const bought = drawn("i3", "Backpack", "container", 0, { container: null });
+  const plan = planRestock(topup, [bought], [none], { ...context, containers: { Backpack: 1 }, at: T });
+  assert.deepEqual(plan.deletes, ["i3"], "the sold-out copy still goes");
+  assert.deepEqual(plan.creates, [], "top-up: none comes back");
+  assert.deepEqual(plan.restocked, []);
+  assert.equal(planRestock(shop, [], [{ ...draws[2], quantity: 1 }], { ...context, at: T }).creates.length, 3, "a 1 brings its three copies");
+});
+
 test("a top-up replaces a container bought down to 0, and the new one is New (#152 review)", () => {
   const topup = rawShop({ restock: { mode: "topup" } });
   const bought = drawn("i3", "Backpack", "container", 0, { container: null });
