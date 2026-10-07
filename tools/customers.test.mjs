@@ -5,8 +5,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { openSecondsPerDay, openSpansByDay } from "../scripts/schedule.mjs";
+import { coinsFor } from "../scripts/pricing.mjs";
 import {
-  RATES, demandCategory, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
+  RATES, demandCategory, planCustomersDefault, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
   settlementMultiplier, tableAverage
 } from "../scripts/customers.mjs";
 
@@ -171,7 +172,7 @@ test("a drain plan is deterministic, clamps to stock, leaves hand-added goods, a
 });
 
 test("Off drains nothing, and a line that sells out stops there", () => {
-  assert.deepEqual(plan({ level: 0 }), { updates: [], sold: [], earnedCp: 0 });
+  assert.deepEqual(plan({ level: 0 }), { updates: [], deletes: [], sold: [], earnedCp: 0 });
   const busy = plan({ items: [good("a", "Longsword", 1)], spans: Array.from({ length: 400 }, (_, d) => ({ day: d, seconds: 12 * H, result: steady })) });
   assert.deepEqual(busy.updates, [{ _id: "a", "system.quantity": 0 }]);
   assert.equal(busy.earnedCp, 1000);
@@ -190,4 +191,25 @@ test("the stock pack ships a Trade Days table per size, found by its flag, avera
     assert.equal(t.formula, `1d${t.results.at(-1).range[1]}`);
     assert.ok(t.results.every(r => r.type === "text" && r.description && r.range[1] - r.range[0] + 1 === r.weight), size);
   }
+});
+
+test("a line other customers empty goes, as a sold-out good with keep off does at a trade", () => {
+  const gone = plan({ items: [good("a", "Longsword", 1, { stock: { keep: false } })], spans: Array.from({ length: 400 }, (_, d) => ({ day: d, seconds: 12 * H, result: steady })) });
+  assert.deepEqual(gone.updates, []);
+  assert.deepEqual(gone.deletes, ["a"]);
+  assert.equal(gone.earnedCp, 1000);
+});
+
+const CURRENCIES = { pp: { conversion: 0.1 }, gp: { conversion: 1 }, ep: { conversion: 2 }, sp: { conversion: 10 }, cp: { conversion: 100 } };
+
+test("what other customers paid lands in the till as gold, silver and copper", () => {
+  assert.deepEqual(coinsFor(2345, CURRENCIES), { gp: 23, sp: 4, cp: 5 });
+  assert.deepEqual(coinsFor(0, CURRENCIES), {});
+  assert.deepEqual(coinsFor(7, { gp: { conversion: 1 }, cp: { conversion: 100 } }), { cp: 7 }, "no silver in this world");
+});
+
+test("the setting starts Busy in a new world and Off in one that already has shops, unless the GM chose", () => {
+  assert.equal(planCustomersDefault(false, true), "off");
+  assert.equal(planCustomersDefault(false, false), null);
+  assert.equal(planCustomersDefault(true, true), null);
 });
