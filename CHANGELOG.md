@@ -11,6 +11,20 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Added
+
+- Shops have other customers. Between restocks, other people buy from each
+  shop while it's open: stock leaves the shelf, cheap everyday goods fastest,
+  and what they pay goes into the till. Each shop has a kind of day (a market
+  day, a festival, a dead quiet one) that sets how busy it is and what sells;
+  players see it as a chip in the shop's header. In a shop's Settings, the new
+  Customers section shows today's kind of day, lets you pick another, and
+  changes the busy-day table it rolls on. A new world setting, Other
+  customers, is Off, Quiet or Busy; worlds that already had shops start Off.
+  (#226)
+- A top-up restock now refills a line other customers half emptied back to its
+  last roll, not only lines that sold out. (#226)
+
 ### Changed
 
 - Magic items are now rare finds: each restock gives every magic item a small
