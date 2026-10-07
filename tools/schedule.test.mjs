@@ -507,6 +507,16 @@ test("a top-up refills a line other customers drew down to the quantity it last 
   assert.deepEqual(refill([drawn("i1", "Arrows", "consumable", 3)]).updates, [], "no roll recorded (before #190): left alone");
 });
 
+test("a drawn-down line refills with its own stock config, so a hidden one isn't fresh stock (#226 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const hidden = drawn("i1", "Arrows", "consumable", 3);
+  const own = { ...arrowsStock, hidden: true };
+  Object.assign(hidden.flags["merchant-presets"], { rolled: 20, stock: own });
+  const plan = planRestock(topup, [hidden], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.deepEqual(plan.updates.map(u => u["flags.merchant-presets.stock"]), [own]);
+  assert.equal(plan.fresh, false, "nothing players can see came back");
+});
+
 test("a container line that rolled 0 is not on the shelf this restock, in either mode (#233)", () => {
   // A Bag of Holding restocks on 1d4-3 like any magic item: a 0 leaves it off, however many copies a 1 brings.
   const none = { ...draws[2], quantity: 0 };

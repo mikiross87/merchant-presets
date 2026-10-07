@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { openSecondsPerDay, openSpansByDay } from "../scripts/schedule.mjs";
 import { coinsFor } from "../scripts/pricing.mjs";
 import {
-  RATES, boostGroups, demandCategory, planCustomersDefault, todayOf, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
+  RATES, boostGroups, demandCategory, keptDay, planCustomersDefault, todayOf, expectedSales, isDrainable, planDrain, poisson, priceModifier, seededRandom,
   settlementMultiplier, tableAverage
 } from "../scripts/customers.mjs";
 
@@ -159,7 +159,7 @@ test("only drawn, finite, physical goods drain: never gear, services, hand-added
 
 const shelf = [good("a", "Longsword", 40), good("b", "Dagger", 40, {}), good("c", "Shovel", 3, { drawn: undefined })];
 const plan = (o = {}) => planDrain({ items: shelf, spans: [{ day: 0, seconds: 12 * H, result: { global: 3, boosts: {} } }, { day: 1, seconds: 12 * H, result: steady }],
-  perDay: 12 * H, tier: "City", average: 1.385, level: 1, drawnBy: "shelf", infiniteStock: false, unitPriceCpOf: () => 1000, ...o });
+  perDay: 12 * H, tier: "City", average: 1.385, level: 1, drawnBy: "shelf", infiniteStock: false, priceCpOf: (item, stock, n) => 1000 * n, ...o });
 
 test("a drain plan is deterministic, clamps to stock, leaves hand-added goods, and earns what it sold", () => {
   const p = plan();
@@ -230,4 +230,23 @@ test("a day's boosts, grouped by size, biggest first, for the card's line (#226)
     [{ multiplier: 3, categories: ["Food & Drink", "Adventuring Gear"] }, { multiplier: 2, categories: ["Mounts & Animals"] }]);
   assert.deepEqual(boostGroups(MARKET), []);
   assert.deepEqual(boostGroups(null), []);
+});
+
+test("what sold is priced as one lot, so goods cheaper than a copper each still earn (#226 review)", () => {
+  const bearings = good("a", "Ball Bearings", 1000, { stock: { bundle: 1000 } });
+  bearings.type = "loot";
+  const p = plan({ items: [bearings], spans: Array.from({ length: 30 }, (_, d) => ({ day: d, seconds: 12 * H, result: { global: 3, boosts: {} } })),
+    priceCpOf: (item, stock, n) => Math.floor(100 * n / stock.bundle) });
+  const sold = p.sold[0].quantity;
+  assert.ok(sold >= 10, `sold ${sold}`);
+  assert.equal(p.earnedCp, Math.floor(100 * sold / 1000));
+});
+
+test("a drain keeps the GM's Today pick written while it ran (#226 review)", () => {
+  const rolled = { index: 3, rolled: { name: "Slow" }, override: null };
+  const written = { index: 3, rolled: null, override: { name: "Market day" } };
+  assert.deepEqual(keptDay(written, rolled), { index: 3, rolled: { name: "Slow" }, override: { name: "Market day" } });
+  assert.deepEqual(keptDay(null, rolled), rolled);
+  assert.deepEqual(keptDay(written, null), written);
+  assert.deepEqual(keptDay({ index: 2, rolled: null, override: { name: "Festival" } }, rolled), rolled, "yesterday's pick is gone");
 });
