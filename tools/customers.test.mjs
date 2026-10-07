@@ -68,9 +68,10 @@ test("a shipped good's demand category is its recipe's, bar the few the recipe f
   for (const i of shipped) seen.set(i.name, [recipeCat.get(i.name), demandCategory(i, i.flags["merchant-presets"].stock)]);
   const off = [...seen].filter(([, [want, got]]) => want !== got && !(want === "Spell Scrolls" && got === "Spell Scrolls"))
     .map(([n, [want, got]]) => `${n}: ${want} → ${got}`).sort();
-  // Filed under Adventuring Gear in the recipes, but plainly what dnd5e says they are; and the two holy
-  // symbols, which dnd5e draws as plain trinkets.
-  assert.deepEqual(off.filter(l => !/: Adventuring Gear → (Ammunition|Potions|Food & Drink|Weapons)$/.test(l) && !/: Holy Symbols → Adventuring Gear$/.test(l)), []);
+  // Filed under Adventuring Gear in the recipes, but plainly what dnd5e says they are; the two holy
+  // symbols, which dnd5e draws as plain trinkets; and Truth Serum, a poison dnd5e files as a potion.
+  assert.deepEqual(off.filter(l => !/: Adventuring Gear → (Ammunition|Potions|Food & Drink|Weapons)$/.test(l)
+    && !/: Holy Symbols → Adventuring Gear$/.test(l) && l !== "Truth Serum: Poisons → Potions"), []);
   assert.ok(off.length <= 16, `${off.length} loose: ${off.join("; ")}`);
 });
 

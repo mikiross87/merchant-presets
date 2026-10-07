@@ -128,6 +128,46 @@ export function nextCloseAt(hours, worldTime, calendar) {
 }
 
 /**
+ * The stretches of one calendar day a shop keeping `hours` is open, as `[start, end)` seconds
+ * from midnight. The closing minute counts as open, as `isOpen` counts it; an overnight window
+ * opens both ends of the day.
+ */
+function openWindows(hours, calendar) {
+  const day = secondsPerDay(calendar);
+  if (!hours) return [[0, day]];
+  const open = minutesOf(hours.open, calendar) * calendar.secondsPerMinute;
+  const end = (minutesOf(hours.close, calendar) + 1) * calendar.secondsPerMinute;
+  return open < end ? [[open, end]] : [[0, end], [open, day]];
+}
+
+/** How long a shop keeping `hours` is open in a whole day, in seconds (#226). */
+export function openSecondsPerDay(hours, calendar) {
+  return openWindows(hours, calendar).reduce((sum, [a, b]) => sum + b - a, 0);
+}
+
+/**
+ * The seconds a shop keeping `hours` is open in `[from, to)`, split by calendar day (#226): one
+ * `{day, seconds}` per day with any open time in it, `day` counting whole days from the epoch.
+ *
+ * @param {Hours} hours
+ * @param {number} from
+ * @param {number} to
+ * @param {CalendarDays} calendar
+ * @returns {{day: number, seconds: number}[]}
+ */
+export function openSpansByDay(hours, from, to, calendar) {
+  const length = secondsPerDay(calendar);
+  const windows = openWindows(hours, calendar);
+  const spans = [];
+  for (let day = Math.floor(from / length); day * length < to; day++) {
+    const base = day * length;
+    const seconds = windows.reduce((sum, [a, b]) => sum + Math.max(0, Math.min(to, base + b) - Math.max(from, base + a)), 0);
+    if (seconds > 0) spans.push({ day, seconds });
+  }
+  return spans;
+}
+
+/**
  * The most recent instant a shop with `hours` opens in `(previous, now]`, on
  * or after `dueAt` — or null if there isn't one.
  *
