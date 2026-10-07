@@ -71,6 +71,12 @@
       <button type="button" class="mp-hero-chip mp-terms-chip chip-terms" data-pen="Terms Chip" popovertarget="{{appId}}-terms-popover" style="anchor-name: --{{appId}}-terms">
         {{mpIcon "scale" pen="Terms icon"}}<span data-pen="Terms Label">{{header.termsChip}}</span>{{mpIcon "chevron-down" pen="Terms chevron"}}
       </button>
+      {{!-- Today's kind of day (#226, design IS2fO): its line on hover; never the numbers behind it. --}}
+      {{#if header.day}}
+      <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip" data-tooltip="{{header.day.text}}">
+        {{mpIcon "users" pen="Day icon"}}<span data-pen="Day Label">{{header.day.name}}</span>
+      </span>
+      {{/if}}
     </div>
     {{!-- A narrow window's short chips (design r7HIUl). --}}
     <div class="mp-chips mp-narrow-only" data-pen="Chips">

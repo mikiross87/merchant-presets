@@ -14,7 +14,8 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { categoryFor, lineTotalCp, planTrade, safeShopOf } from "./trade-plan.mjs";
-import { dayOf, LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
+import { LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
+import { customersTable, rollDay } from "./customers-world.mjs";
 import { activeDeal } from "./deals.mjs";
 import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, showsRollButtons, validCall } from "./haggle.mjs";
 import { coinsFor, effectiveRates } from "./pricing.mjs";
@@ -471,33 +472,6 @@ async function scheduledRestocks(worldTime, previous, options = {}) {
 }
 
 /* ---------------------------------------------------------------- other customers (#226) */
-
-/**
- * The busy-day table a shop rolls on: its own, or the shipped one for its size, found in the stock
- * pack by its tradeDays flag. Null when neither can be found.
- */
-async function customersTable(shop) {
-  if (shop.customers.table) return fromUuid(shop.customers.table).catch(() => null);
-  const pack = game.packs.get(`${MODULE}.stock`);
-  if (!pack) return null;
-  const index = await pack.getIndex({ fields: [`flags.${MODULE}.tradeDays`] });
-  const entry = index.find(e => e.flags?.[MODULE]?.tradeDays === (shop.tier ?? "Town"));
-  return entry ? pack.getDocument(entry._id) : null;
-}
-
-/** A table result as the shop keeps it: what players read, and the multipliers behind it. */
-function daySnapshot(result) {
-  const day = dayOf(result) ?? {};
-  const text = String(result.description ?? "").replace(/<[^>]*>/g, "").trim();
-  return { id: result.id ?? result._id, name: result.name ?? "", text, global: day.global ?? 1, boosts: day.boosts ?? {} };
-}
-
-/** Rolls the kind of day on `table`, quietly: no chat card, nothing marked drawn. */
-async function rollDay(table) {
-  if (!table) return null;
-  const { results } = await table.roll();
-  return results?.[0] ? daySnapshot(results[0]) : null;
-}
 
 /**
  * What other customers bought from `actor` between `from` and `to` (#226): stock leaves the shelf
