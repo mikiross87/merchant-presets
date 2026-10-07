@@ -189,10 +189,10 @@ const median = values => {
  * @param {string|true} input.drawnBy   The shop's shelf key.
  * @param {boolean} input.infiniteStock The world's stock setting.
  * @param {(item: object, stock: object) => number} input.unitPriceCpOf  What one unit earns, in cp.
- * @returns {{updates: object[], sold: {name: string, quantity: number}[], earnedCp: number}}
+ * @returns {{updates: object[], deletes: string[], sold: {name: string, quantity: number}[], earnedCp: number}}
  */
 export function planDrain({ items, spans, perDay, from = 0, tier, average, level, drawnBy, infiniteStock, unitPriceCpOf }) {
-  const none = { updates: [], sold: [], earnedCp: 0 };
+  const none = { updates: [], deletes: [], sold: [], earnedCp: 0 };
   if (!(level > 0) || !(perDay > 0) || !spans?.length) return none;
   const lines = items.filter(i => isDrainable(i, { drawnBy, infiniteStock })).map(item => {
     const stock = safeStockOf(item);
@@ -213,9 +213,25 @@ export function planDrain({ items, spans, perDay, from = 0, tier, average, level
   const changed = lines.filter(l => l.quantity !== l.item.system.quantity);
   if (!changed.length) return none;
   const sold = changed.map(l => ({ name: l.item.name, quantity: l.item.system.quantity - l.quantity }));
+  // A good that sells out goes when its line says not to keep it, as at a trade.
+  const goes = l => l.quantity === 0 && !l.stock.keep;
   return {
-    updates: changed.map(l => ({ _id: l.item._id, "system.quantity": l.quantity })),
+    updates: changed.filter(l => !goes(l)).map(l => ({ _id: l.item._id, "system.quantity": l.quantity })),
+    deletes: changed.filter(goes).map(l => l.item._id),
     sold,
     earnedCp: changed.reduce((sum, l) => sum + (l.item.system.quantity - l.quantity) * unitPriceCpOf(l.item, l.stock), 0)
   };
+}
+
+/**
+ * The setting's value to write on this world's first load with it (#226): Off where shops are
+ * already trading, so an upgrade doesn't start emptying their shelves unasked; null leaves the
+ * Busy default, or a value the GM already chose.
+ *
+ * @param {boolean} hasStoredValue  Whether the world's settings storage already holds one.
+ * @param {boolean} worldHasShops   Whether the world already holds a shop.
+ * @returns {"off"|null}
+ */
+export function planCustomersDefault(hasStoredValue, worldHasShops) {
+  return !hasStoredValue && worldHasShops ? "off" : null;
 }

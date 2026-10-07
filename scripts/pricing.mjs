@@ -91,6 +91,26 @@ export function totalCp(coins, currencies) {
 }
 
 /**
+ * `amountCp` as the coins people make change in, largest first, the rest in the finest coin: what
+ * other customers paid, landing in a till (#226). Denominations the world lacks are skipped.
+ *
+ * @param {number} amountCp
+ * @param {Record<string, {conversion: number}>} currencies
+ * @returns {Record<string, number>}  Only the coins there are some of.
+ */
+export function coinsFor(amountCp, currencies) {
+  const base = baseDenomination(currencies);
+  const coins = {};
+  let left = Math.floor(amountCp);
+  for (const [denomination, value] of denominationsByValue(currencies)) {
+    if (denomination !== base && !EVERYDAY_COINS.includes(denomination)) continue;
+    const n = Math.floor(left / value);
+    if (n > 0) { coins[denomination] = n; left -= n * value; }
+  }
+  return coins;
+}
+
+/**
  * The coins people make change in. A coin broken for change or an exact payout splits into these,
  * never electrum or platinum (Sell frame TGXBN: 57 gp 5 sp, not 57 gp 1 ep), as the unlimited
  * till pays (trade-plan.mjs `bottomlessTill`). Electrum a purse actually holds is still spent.
