@@ -508,7 +508,9 @@ function dedupedByName(draws) {
  *   if the shop had just been dragged in fresh. A good another shop drew
  *   stays (see {@link isDrawn}).
  * - `"topup"`: only a drawn line the shop has actually sold through is drawn
- *   again; everything still genuinely in stock is untouched. This is driven
+ *   again; everything still genuinely in stock is untouched, except a line
+ *   other customers drew down (#226), which goes back up to the quantity it
+ *   last rolled (`flags.merchant-presets.rolled`) and never lower. This is driven
  *   by `draws` — the table's own lines — not by what is sitting on the
  *   shelf: a sold-out line may still be there at `quantity: 0` (`keep: true`
  *   goods sit at zero rather than vanish) or may already be gone entirely
@@ -567,7 +569,16 @@ export function planRestock(shop, items, draws, context) {
         continue;
       }
       const existing = drawnNow.find(i => i.name === draw.name);
-      if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
+      const have = existing?.system?.quantity ?? 0;
+      const rolled = existing?.flags?.["merchant-presets"]?.rolled;
+      if (existing && have !== 0) {
+        // Other customers drew it down (#226): back up to what it last rolled, never cut to a lower roll.
+        if (Number.isFinite(rolled) && have < rolled) {
+          updates.push({ _id: existing._id, "system.quantity": rolled, "flags.merchant-presets.rolled": rolled });
+          restocked.push(draw.name);
+        }
+        continue;   // otherwise still in stock: leave it
+      }
       const quantity = Math.max(0, draw.quantity ?? 0);
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       const back = newAt(draw.name);
