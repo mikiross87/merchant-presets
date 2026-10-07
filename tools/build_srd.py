@@ -119,6 +119,8 @@ def rare_find(src, line, ti):
     """The stock formula for a magic line, 1dN-(N-1); None for any other line."""
     if line.get("cat") != MAGIC_CAT:
         return None
+    if line.get("bundle", 1) > 1:
+        sys.exit(f"{line['n']}: a magic line is one copy, not a bundle")
     rarity = (src.get("system") or {}).get("rarity")
     n = MAGIC_ODDS.get(rarity, (None, None, None))[ti]
     if not n:
@@ -566,9 +568,9 @@ def main():
                 bundle = line.get("bundle", 1)
                 if line.get("service"):
                     formula = "1"
-                elif rare_find(src, line, ti):
+                elif rare := rare_find(src, line, ti):
                     # A Bag of Holding takes the same odds; its one copy is above.
-                    formula = rare_find(src, line, ti)
+                    formula = rare
                 elif is_container:
                     formula = "1"
                 else:

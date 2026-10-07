@@ -477,7 +477,8 @@ function dedupedByName(draws) {
  *   out. One still on the shelf is *updated* (same item, refilled); one
  *   that's gone is a fresh *create*. A container can't be refilled (dnd5e
  *   pins its quantity to 1): one kept at zero is deleted, and a fresh copy
- *   is created for each one short of its target count.
+ *   is created for each one short of its target count, unless its line
+ *   rolled 0 this time (#233).
  *
  * `restock.table: null` (no stock table assigned) is a no-op: an empty plan,
  * nothing deleted, refilled or drawn.
