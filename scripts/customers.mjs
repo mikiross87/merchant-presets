@@ -188,10 +188,11 @@ const median = values => {
  * @param {number} input.level    The world setting's multiplier; 0 drains nothing.
  * @param {string|true} input.drawnBy   The shop's shelf key.
  * @param {boolean} input.infiniteStock The world's stock setting.
- * @param {(item: object, stock: object) => number} input.unitPriceCpOf  What one unit earns, in cp.
+ * @param {(item: object, stock: object, quantity: number) => number} input.priceCpOf  What `quantity`
+ *   of a good earn together, in cp: priced as one lot, so goods under a copper each still earn.
  * @returns {{updates: object[], deletes: string[], sold: {name: string, quantity: number}[], earnedCp: number}}
  */
-export function planDrain({ items, spans, perDay, from = 0, tier, average, level, drawnBy, infiniteStock, unitPriceCpOf }) {
+export function planDrain({ items, spans, perDay, from = 0, tier, average, level, drawnBy, infiniteStock, priceCpOf }) {
   const none = { updates: [], deletes: [], sold: [], earnedCp: 0 };
   if (!(level > 0) || !(perDay > 0) || !spans?.length) return none;
   const lines = items.filter(i => isDrainable(i, { drawnBy, infiniteStock })).map(item => {
@@ -219,7 +220,7 @@ export function planDrain({ items, spans, perDay, from = 0, tier, average, level
     updates: changed.filter(l => !goes(l)).map(l => ({ _id: l.item._id, "system.quantity": l.quantity })),
     deletes: changed.filter(goes).map(l => l.item._id),
     sold,
-    earnedCp: changed.reduce((sum, l) => sum + (l.item.system.quantity - l.quantity) * unitPriceCpOf(l.item, l.stock), 0)
+    earnedCp: changed.reduce((sum, l) => sum + priceCpOf(l.item, l.stock, l.item.system.quantity - l.quantity), 0)
   };
 }
 
@@ -246,6 +247,19 @@ export function todayOf(state, todayIndex) {
   const kept = state?.day;
   if (!kept || kept.index !== todayIndex) return null;
   return { day: kept.override ?? kept.rolled ?? null, rolled: kept.rolled ?? null, overridden: !!kept.override };
+}
+
+/**
+ * The day a drain writes back: what it rolled or read, with the GM's Today pick as it stands now.
+ * The pick is written by the shop window, which doesn't wait for a drain, so one made while the
+ * drain ran must not be lost.
+ *
+ * @param {object|null} written  `customers.day` as the shop holds it at the write.
+ * @param {object|null} kept     The day the drain read or rolled.
+ */
+export function keptDay(written, kept) {
+  if (!kept) return written ?? null;
+  return written?.index === kept.index ? { ...kept, override: written.override ?? null } : kept;
 }
 
 /** A day's category boosts, grouped by size, biggest first: `[{multiplier, categories}]`. */

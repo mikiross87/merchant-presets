@@ -22,8 +22,8 @@ than for the code. Reference the issue or PR it closes.
   changes the busy-day table it rolls on. A new world setting, Other
   customers, is Off, Quiet or Busy; worlds that already had shops start Off.
   (#226)
-- A top-up restock now refills a line other customers half emptied back to its
-  last roll, not only lines that sold out. (#226)
+- A top-up restock now refills a line that's running low back to the quantity
+  it last rolled, whoever bought it down, not only lines that sold out. (#226)
 
 ### Changed
 

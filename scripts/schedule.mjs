@@ -574,7 +574,9 @@ export function planRestock(shop, items, draws, context) {
       if (existing && have !== 0) {
         // Other customers drew it down (#226): back up to what it last rolled, never cut to a lower roll.
         if (Number.isFinite(rolled) && have < rolled) {
-          updates.push({ _id: existing._id, "system.quantity": rolled, "flags.merchant-presets.rolled": rolled });
+          // Still on the shelf, so it keeps its own settings (a hidden one stays hidden): only a line that left comes back with the line's.
+          updates.push({ _id: existing._id, "system.quantity": rolled, "flags.merchant-presets.rolled": rolled,
+            "flags.merchant-presets.stock": existing.flags?.["merchant-presets"]?.stock });
           restocked.push(draw.name);
         }
         continue;   // otherwise still in stock: leave it

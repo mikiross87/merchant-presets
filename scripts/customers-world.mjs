@@ -8,13 +8,19 @@ import { worldFollowsClock } from "./clock.mjs";
 
 const MODULE = "merchant-presets";
 
-/** The shipped busy-day tables in the stock pack, as `{uuid, name, tier}`. */
+let shipped = null;
+/**
+ * The shipped busy-day tables in the stock pack, as `{uuid, name, tier}`: looked up once a session,
+ * since the clock pass asks on every tick and the window on every render.
+ */
 export async function shippedDayTables() {
+  if (shipped) return shipped;
   const pack = game.packs?.get(`${MODULE}.stock`);
   if (!pack) return [];
   const index = await pack.getIndex({ fields: [`flags.${MODULE}.tradeDays`] });
-  return index.filter(e => e.flags?.[MODULE]?.tradeDays)
+  shipped = index.filter(e => e.flags?.[MODULE]?.tradeDays)
     .map(e => ({ uuid: e.uuid ?? `Compendium.${pack.collection}.RollTable.${e._id}`, name: e.name, tier: e.flags[MODULE].tradeDays }));
+  return shipped;
 }
 
 /**

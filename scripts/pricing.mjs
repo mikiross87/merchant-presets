@@ -100,14 +100,8 @@ export function totalCp(coins, currencies) {
  */
 export function coinsFor(amountCp, currencies) {
   const base = baseDenomination(currencies);
-  const coins = {};
-  let left = Math.floor(amountCp);
-  for (const [denomination, value] of denominationsByValue(currencies)) {
-    if (denomination !== base && !EVERYDAY_COINS.includes(denomination)) continue;
-    const n = Math.floor(left / value);
-    if (n > 0) { coins[denomination] = n; left -= n * value; }
-  }
-  return coins;
+  return breakIntoCoins(Math.floor(amountCp), denominationsByValue(currencies)
+    .filter(([denomination]) => denomination === base || EVERYDAY_COINS.includes(denomination)));
 }
 
 /**

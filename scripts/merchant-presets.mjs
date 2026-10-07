@@ -14,7 +14,7 @@ import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting
 import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { categoryFor, lineTotalCp, planTrade, safeShopOf } from "./trade-plan.mjs";
-import { LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
+import { isDrainable, keptDay, LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
 import { customersTable, rollDay } from "./customers-world.mjs";
 import { activeDeal } from "./deals.mjs";
 import { allowedSkills, callable, checkRollMessage, haggleCard, haggleEnds, resolveCall, showsRollButtons, validCall } from "./haggle.mjs";
@@ -405,15 +405,9 @@ async function scheduleShop(actor, now, previous, calendar, { restocks = true, l
   const raw = actor.flags[MODULE].shop;
   let state = actor.flags[MODULE].schedule;
   if (!state) {
-    const shop = safeShopOf(actor);
-    const days = shop ? await daysOf(shop.restock.every) : null;
-    if (days == null || !shop.restock.table) return null;
-    // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
-    // would skip the adoption, and its first restock would add a second shelf.
-    const table = await fromUuid(shop.restock.table).catch(() => null);
-    if (!table) return null;
-    if (!await adoptOnce(actor, table)) return null;
-    await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
+    await scheduleFirst(actor, now, calendar);
+    // Unscheduled (no table, or it never restocks) is no reason for nobody to shop there (#226 review).
+    await drainShop(actor, previous, now, calendar, level);
     return null;
   }
   // The GM changed the interval since it was scheduled: count the new one from the last restock,
@@ -442,6 +436,19 @@ async function scheduleShop(actor, now, previous, calendar, { restocks = true, l
   const days = await daysOf(due.nextEvery);
   await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(due.at, days ?? 1, calendar), every: due.nextEvery } });
   return restocked;
+}
+
+/** A shop seen by the clock for the first time: adopted and scheduled, no restock. */
+async function scheduleFirst(actor, now, calendar) {
+  const shop = safeShopOf(actor);
+  const days = shop ? await daysOf(shop.restock.every) : null;
+  if (days == null || !shop.restock.table) return;
+  // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
+  // would skip the adoption, and its first restock would add a second shelf.
+  const table = await fromUuid(shop.restock.table).catch(() => null);
+  if (!table) return;
+  if (!await adoptOnce(actor, table)) return;
+  await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
 }
 
 /**
@@ -488,34 +495,42 @@ async function drainShop(actor, from, to, calendar, level) {
   const start = Math.max(from, state.drainedTo ?? from);
   const spans = openSpansByDay(shop.hours, start, to, calendar);
   if (!spans.length) return;
+  const world = worldTerms(key => game.settings.get(MODULE, key));
+  const items = actor.items.map(i => i.toObject());
+  // Nothing on the shelf they could buy: no table to fetch, no day to roll (#226 review).
+  if (!items.some(i => isDrainable(i, { drawnBy: shelf, infiniteStock: world.infiniteStock }))) return;
   const table = await customersTable(shop);
   const today = Math.floor(to / secondsPerDay(calendar));
   let kept = state.day ?? null;
+  let rolledToday = false;
   for (const span of spans) {
     const known = kept?.index === span.day ? kept.override ?? kept.rolled : null;
     if (known) span.result = known;
     else {
       span.result = await rollDay(table);
       // A day the GM set back to As rolled before it was ever rolled keeps the roll it now gets.
-      if (span.day === today) kept = { index: today, rolled: span.result, override: kept?.index === today ? kept.override ?? null : null };
+      if (span.day === today) {
+        kept = { index: today, rolled: span.result, override: kept?.index === today ? kept.override ?? null : null };
+        rolledToday = true;
+      }
     }
   }
-  const world = worldTerms(key => game.settings.get(MODULE, key));
   const currencies = CONFIG.DND5E.currencies;
   const plan = planDrain({
-    items: actor.items.map(i => i.toObject()), spans, perDay: openSecondsPerDay(shop.hours, calendar), from: start,
+    items, spans, perDay: openSecondsPerDay(shop.hours, calendar), from: start,
     tier: shop.tier, average: table ? tableAverage(table.results) : null, level, drawnBy: shelf, infiniteStock: world.infiniteStock,
-    unitPriceCpOf: (item, stock) => lineTotalCp(item, effectiveRates(world.rates, shop.terms, categoryFor(item, stock)).sellsAt.rate,
-      stock.bundle, 1, currencies)
+    priceCpOf: (item, stock, quantity) => lineTotalCp(item, effectiveRates(world.rates, shop.terms, categoryFor(item, stock)).sellsAt.rate,
+      stock.bundle, quantity, currencies)
   });
   const sold = plan.updates.length || plan.deletes.length;
-  if (!sold && kept === state.day) return;
+  if (!sold && !rolledToday) return;
   if (plan.updates.length) await actor.updateEmbeddedDocuments("Item", plan.updates);
   if (plan.deletes.length) await actor.deleteEmbeddedDocuments("Item", plan.deletes);
   const coins = !world.infinitePurse && plan.earnedCp > 0 ? coinsFor(plan.earnedCp, currencies) : {};
   await actor.update({
     ...Object.fromEntries(Object.entries(coins).map(([k, n]) => [`system.currency.${k}`, (actor.system.currency?.[k] ?? 0) + n])),
-    [`flags.${MODULE}.customers`]: { drainedTo: to, day: kept }
+    // The GM's Today pick as it stands now: the window may have written one while this ran.
+    [`flags.${MODULE}.customers`]: { drainedTo: to, day: keptDay(actor.flags[MODULE].customers?.day ?? null, kept) }
   });
   if (sold) {
     await syncStockWeight(actor);
@@ -2108,13 +2123,16 @@ Hooks.once("ready", async () => {
 
   // The world's one-time autoRestock decision (#105), before any shop migrates. Awaited: a failed
   // write here must close migrationGateOpen before anything below can migrate a shop (#100 review).
-  try { await applyCustomersDefault(); }
-  catch (err) { console.error(`${MODULE} | could not apply the other customers default`, err); }
   try { await applyAutoRestockDefault(); }
   catch (err) {
     migrationGateOpen = false;
     console.error(`${MODULE} | could not apply the autoRestock default; migration deferred to next load`, err);
   }
+
+  // The world's one-time other customers decision (#226): Off where shops already trade. Not awaited
+  // by anything that follows, so a failed write only leaves the decision to the next load.
+  try { await applyCustomersDefault(); }
+  catch (err) { console.error(`${MODULE} | could not apply the other customers default`, err); }
 
   // A GM's arriving shop is taken in on one tab: the active GM's claiming tab, whichever GM brought
   // it, where setups, trades and the scheduled restocks run on one queue. Anywhere else, two tabs,
