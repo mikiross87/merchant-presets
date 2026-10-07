@@ -1242,6 +1242,35 @@
 
 .shop-sheet .settings-formula { width: 8rem; }
 
+/* Customers (#226, design GVLI3; off, E6jfnh). */
+.shop-sheet .mp-world-value { display: flex; align-items: center; gap: 6px; font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-world-value b { font-weight: 700; color: var(--mp-text); }
+.shop-sheet .mp-today-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--mp-surface);
+  outline: 1px solid var(--mp-line);
+}
+.shop-sheet .mp-today-title { align-self: stretch; display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-today-title b { flex: 1 1 0; font: 700 15px/18px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-today-title span { flex: none; font: 700 13px/15px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-text); }
+.shop-sheet .mp-today-text { align-self: stretch; margin: 0; font: italic 400 13px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-today-text.is-off { line-height: 1.35; }
+.shop-sheet .mp-today-meta { align-self: stretch; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-today-select { flex: none; width: 150px; }
+.shop-sheet .mp-today-plain { font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
+.shop-sheet .mp-customers-note { line-height: 16px; }
+.shop-sheet .mp-day-chip { outline: 1px solid #e3ce9e80; }
+.shop-sheet .mp-day-chip .mp-icon { color: var(--mp-gold-light); }
+.shop-sheet .mp-day-preview { align-self: stretch; display: flex; flex-direction: column; gap: 8px; }
+.shop-sheet .mp-day-strip { display: flex; padding: 12px; border-radius: 4px; background: var(--mp-chip); }
+.shop-sheet .mp-day-tip { padding: 8px 10px; border-radius: 4px; background: var(--mp-surface); outline: 1px solid var(--mp-line); }
+.shop-sheet .mp-day-tip span { display: block; font: italic 400 13px/16px "Crimson Pro", system-ui, sans-serif; color: var(--mp-text); }
+
 /* Restock (design aaJcp). */
 .shop-sheet .mp-form-last { flex: none; display: flex; flex-direction: column; min-height: 100cqh; }
 .shop-sheet .mp-table-card {

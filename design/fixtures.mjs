@@ -228,7 +228,7 @@ const ROWS = { Longsword: 7, Handaxe: 11, Javelin: 21, "Longsword +1": 1, Breast
  * size on `tab`, and `then` (an in-page statement, `app` in scope) run after it renders. `from`
  * (an in-page expression) is the shop, when it isn't the world actor called `name`.
  */
-const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", coin = "finite", name = SHOP, from = null } = {}) => `async ({ theme, width, height }) => {
+const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then = "", size = null, root = "app.id", hour = 10, autoRestock = false, clock = "auto", coin = "finite", name = SHOP, from = null, customers = "off", day = null } = {}) => `async ({ theme, width, height }) => {
   ${size ? `width = ${size.width}; height = ${size.height};` : ""}
   // The frame's hour on the 14th of Mirtul, and the world's restock switch (the GM's frames set them).
   if (game.user.isGM) {
@@ -247,6 +247,18 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     await smith.updateEmbeddedDocuments("Item", Object.entries(${JSON.stringify(ROWS)})
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
+    // Other customers (#226): off but in band 20, which also keeps today's kind of day on the smith,
+    // as drawn from the shipped Town table. No frame sees a day an earlier one kept.
+    await game.settings.set("merchant-presets", "otherCustomers", ${JSON.stringify(customers)});
+    await smith.update({ "flags.merchant-presets.customers": ${day ? `await (async () => {
+      const pack = game.packs.get("merchant-presets.stock");
+      const index = await pack.getIndex({ fields: ["flags.merchant-presets.tradeDays"] });
+      const table = await pack.getDocument(index.find(e => e.flags?.["merchant-presets"]?.tradeDays === "Town")._id);
+      const r = table.results.find(r => r.name === ${JSON.stringify(day)});
+      const { global, boosts } = r.flags["merchant-presets"].day;
+      const index0 = Math.floor(game.time.worldTime / perDay);
+      return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: r.name, text: r.description, global, boosts }, override: null } };
+    })()` : "null"} });
     // And from its preset's stock table and quantities (#190): band 19 gives it a table of its own.
     const presetRestock = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop.restock;
     const restock = smith.flags["merchant-presets"].shop.restock;
@@ -356,6 +368,8 @@ const refusedTab = ownTable(`
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
+/** Band 20 (#226): the storefront on a Market day, its chip in the hero (design IS2fO). */
+const storefrontDay = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, customers: "busy", day: "Market day" });
 /**
  * The Closed frames: 3:00 on the 14th, four hours before the smith opens, with scheduled restocks
  * on and the next one due on the 21st (every 7 days); a shop restocked the day before.
@@ -522,6 +536,10 @@ const settingsAt = (section, deals = false, jump = true) => openShop({ tab: "set
 /** Settings jumped to Till (#147, band 14): the smith's 212 gp, refilled to the Town preset's 800 gp; or under unlimited merchant coin. */
 const tillSettings = coin => openShop({ tab: "settings", autoRestock: true, coin, before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "till";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="till"]').click();` });
+/** Band 20 (#226): Settings jumped to Customers, Busy on a Market day (design GVLI3), or Off (E6jfnh). */
+const customersTab = level => openShop({ tab: "settings", autoRestock: true, customers: level, day: level === "off" ? null : "Market day",
+  before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "customers";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="customers"]').click();` });
 const noClockSettings = openShop({ tab: "settings", autoRestock: true, clock: "never", before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "hours";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="hours"]').click();` });
 const noClockSealed = tradeState({ act: sealThenPutBack("buy"), clock: "never" });
@@ -775,5 +793,11 @@ export const FRAMES = {
   PfjAq: frame("19 Settings (GM) · Restock, own table — Light", "light", 920, 760, "Gamemaster", ownTableTab),
   Y4CVJo: frame("19 Settings (GM) · Restock, own table — Dark", "dark", 920, 760, "Gamemaster", ownTableTab),
   U9Jt8Z: frame("19 Settings (GM) · Restock, formula refused — Light", "light", 920, 760, "Gamemaster", refusedTab),
-  vFOQJ: frame("19 Settings (GM) · Restock, formula refused — Dark", "dark", 920, 760, "Gamemaster", refusedTab)
+  vFOQJ: frame("19 Settings (GM) · Restock, formula refused — Dark", "dark", 920, 760, "Gamemaster", refusedTab),
+  GVLI3: frame("20 Settings (GM) · Customers — Light", "light", 920, 760, "Gamemaster", customersTab("busy")),
+  lKAUz: frame("20 Settings (GM) · Customers — Dark", "dark", 920, 760, "Gamemaster", customersTab("busy")),
+  E6jfnh: frame("20 Settings (GM) · Customers, off — Light", "light", 920, 760, "Gamemaster", customersTab("off")),
+  anMLG: frame("20 Settings (GM) · Customers, off — Dark", "dark", 920, 760, "Gamemaster", customersTab("off")),
+  IS2fO: frame("20 Storefront · Today's trade — Light", "light", 920, 680, "Gamemaster", storefrontDay),
+  p59mX: frame("20 Storefront · Today's trade — Dark", "dark", 920, 680, "Gamemaster", storefrontDay)
 };

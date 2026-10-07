@@ -365,7 +365,7 @@
     </div>
     <div class="mp-today-card" data-pen="Today card">
       {{#if customers.off}}
-        <p class="mp-today-text" data-pen="Off text">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.OffText"}}</p>
+        <p class="mp-today-text is-off" data-pen="Off text">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.OffText"}}</p>
       {{else}}
         <span class="mp-till-kicker" data-pen="Today kicker">{{customers.today.kicker}}</span>
         <span class="mp-today-title" data-pen="Today title row">
@@ -417,7 +417,7 @@
           {{/if}}
         {{/unless}}
         {{#if customers.table}}
-          <button type="button" class="mp-table-open" data-action="openCustomersTable" data-pen="Table open" aria-label="{{customers.table.name}}">{{mpIcon "external-link" pen="Table open"}}</button>
+          <button type="button" class="mp-table-open" data-action="openCustomersTable" aria-label="{{customers.table.name}}">{{mpIcon "external-link" pen="Table open"}}</button>
         {{/if}}
       </div>
       <p class="mp-hint mp-customers-note" data-pen="Customers note">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.Note"}}</p>
