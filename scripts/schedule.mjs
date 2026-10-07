@@ -265,8 +265,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
  *   `system`, `img`, its own `flags`, …) to build the embedded copy from.
  * @property {number} quantity  This restock's already-rolled quantity for a
  *   fresh copy of this line — used as-is for a reroll, or for a topup line
- *   that turns out to need drawing. Unused for a container, whose count comes
- *   from `context.containers` instead of a roll.
+ *   that turns out to need drawing. A container reads it only as in stock
+ *   today or not (#233); its count of copies comes from `context.containers`.
  *
  * @typedef {object} RestockContext
  * @property {number} purse    `flags.merchant-presets.purse`: the shop's starting gp.
@@ -519,7 +519,8 @@ export function planRestock(shop, items, draws, context) {
         const copies = drawnNow.filter(i => i.name === draw.name);
         for (const gone of copies.filter(i => i.system?.quantity === 0)) deletes.push(gone._id);
         const have = copies.filter(i => i.system?.quantity !== 0).length;
-        const want = context.containers?.[draw.name] ?? 1;
+        // Its count of copies when its line is in stock today; a magic container rolls for that (#233).
+        const want = (draw.quantity ?? 1) > 0 ? context.containers?.[draw.name] ?? 1 : 0;
         for (let n = have; n < want; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
         if (want > have) restocked.push(draw.name);
         continue;
@@ -556,7 +557,7 @@ export function planRestock(shop, items, draws, context) {
   const creates = [];
   for (const draw of uniqueDraws) {
     if (draw.data.type === "container") {
-      const count = context.containers?.[draw.name] ?? 1;
+      const count = (draw.quantity ?? 1) > 0 ? context.containers?.[draw.name] ?? 1 : 0;
       for (let n = 0; n < count; n++) creates.push(drawnItem(draw, context, { quantity: 1, container: null }, newAt(draw.name)));
       continue;
     }
