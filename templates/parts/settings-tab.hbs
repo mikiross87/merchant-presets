@@ -351,6 +351,79 @@
     </div>
   </section>
 
+  {{!-- Other customers (#226, design GVLI3; off, E6jfnh): the world's level, today's kind of day
+        and its override, and the busy-day table it rolls on. --}}
+  <section class="settings-section" data-section="customers" data-pen="Section Customers">
+    {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.customers")}}
+    <p class="mp-hint" data-pen="Customers hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.Hint"}}</p>
+    <div class="mp-rate-row" data-pen="Row World">
+      <span class="mp-rate-label" data-pen="World label">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.World"}}</span>
+      <span class="mp-world-value" data-pen="World value">
+        <b data-pen="World level">{{customers.levelName}}</b>
+        <span data-pen="World plain">{{#if customers.off}}{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.WorldOff"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.WorldOn"}}{{/if}}</span>
+      </span>
+    </div>
+    <div class="mp-today-card" data-pen="Today card">
+      {{#if customers.off}}
+        <p class="mp-today-text is-off" data-pen="Off text">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.OffText"}}</p>
+      {{else}}
+        <span class="mp-till-kicker" data-pen="Today kicker">{{customers.today.kicker}}</span>
+        <span class="mp-today-title" data-pen="Today title row">
+          <b data-pen="Today name">{{customers.today.name}}</b>
+          {{#if customers.today.trade}}<span data-pen="Today trade">{{customers.today.trade}}</span>{{/if}}
+        </span>
+        <p class="mp-today-text" data-pen="Today text">{{customers.today.text}}</p>
+        <span class="mp-today-meta" data-pen="Today meta">{{customers.today.meta}}</span>
+      {{/if}}
+    </div>
+    {{#unless customers.off}}
+      <div class="mp-rate-row" data-pen="Row Today">
+        <span class="mp-rate-label" data-pen="Today label">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.Today"}}</span>
+        <label class="mp-select mp-today-select" data-pen="Today select">
+          <span class="mp-select-value" data-pen="Today value">{{customers.choice}}</span>{{mpIcon "chevron-down" pen="Today chevron"}}
+          <select class="mp-select-native" data-op="customersDay" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Customers.TodayLabel'}}" {{disabled readOnly}}>
+            <option value="" {{#unless customers.overridden}}selected{{/unless}}>{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.AsRolled"}}</option>
+            {{#each customers.days}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+          </select>
+        </label>
+        <span class="mp-today-plain" data-pen="Today plain">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.TodayPlain"}}</span>
+      </div>
+      <span class="mp-how" data-pen="Days label">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.DaysRollOn"}}</span>
+      {{!-- As the stock table's card (design GfO9j): Change picks another, a RollTable dropped on the
+            section becomes it, Reset puts the shipped one back, and the icon opens it. --}}
+      <div class="mp-table-card" data-pen="Table card">
+        {{mpIcon "dices" pen="Table icon"}}
+        <span class="mp-table-text" data-pen="Table text">
+          {{#if customers.table}}
+            <b data-pen="Table name">{{customers.table.name}}</b>
+            <span data-pen="Table meta">{{customers.table.meta}}</span>
+          {{else}}
+            <b data-pen="Table name">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.NoTableName"}}</b>
+            <span data-pen="Table meta">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.NoTable"}}</span>
+          {{/if}}
+        </span>
+        {{#unless readOnly}}
+          <label class="mp-select mp-table-change" data-pen="Table change">
+            <span class="mp-select-value" data-pen="Change text">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.Change"}}</span>{{mpIcon "chevron-down" pen="Change chevron"}}
+            <select class="mp-select-native" data-op="customersTable" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Customers.ChangeLabel'}}">
+              {{#unless customers.table}}<option value="" selected></option>{{/unless}}
+              {{#each customers.tables}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+            </select>
+          </label>
+          {{#if customers.canResetTable}}
+            <button type="button" class="mp-table-reset" data-action="resetCustomersTable" data-pen="Table reset" data-tooltip="{{localize 'MERCHANT_PRESETS.Shop.Settings.Customers.ResetTableHint'}}">
+              {{mpIcon "rotate-ccw" pen="Reset icon"}}<span data-pen="Reset text">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.ResetTable"}}</span>
+            </button>
+          {{/if}}
+        {{/unless}}
+        {{#if customers.table}}
+          <button type="button" class="mp-table-open" data-action="openCustomersTable" aria-label="{{customers.table.name}}">{{mpIcon "external-link" pen="Table open"}}</button>
+        {{/if}}
+      </div>
+      <p class="mp-hint mp-customers-note" data-pen="Customers note">{{localize "MERCHANT_PRESETS.Shop.Settings.Customers.Note"}}</p>
+    {{/unless}}
+  </section>
+
   {{!-- The last section, on a page-tall wrapper: jumped to, it scrolls to the top (design U0HcWc). --}}
   <div class="mp-form-last">
   <section class="settings-section" data-section="till" data-pen="Section Till">
@@ -416,6 +489,24 @@
       <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.TillNote"}}</p>
     {{else}}
       <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.TillUnlimited"}}</p>
+    {{/if}}
+  {{else if preview.customers}}
+    {{!-- The hero's day chip as players get it, with its line as on hover (design GVLI3); nothing while off (E6jfnh). --}}
+    {{#if preview.customers.off}}
+      <span class="mp-kicker" data-pen="Header label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.Nothing"}}</span>
+      <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.CustomersOff"}}</p>
+    {{else if preview.customers.day}}
+      <span class="mp-kicker" data-pen="Header label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.InHeader"}}</span>
+      <div class="mp-day-preview" data-pen="Day preview">
+        <div class="mp-day-strip" data-pen="Header strip">
+          <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip">{{mpIcon "users" pen="Day icon"}}<span data-pen="Day Label">{{preview.customers.day.name}}</span></span>
+        </div>
+        <div class="mp-day-tip" data-pen="Day tip"><span data-pen="Day tip text">{{preview.customers.day.text}}</span></div>
+      </div>
+      <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.CustomersNote"}}</p>
+    {{else}}
+      <span class="mp-kicker" data-pen="Header label">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.InHeader"}}</span>
+      <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.CustomersNotYet"}}</p>
     {{/if}}
   {{else if preview.restock}}
     <span class="mp-kicker" data-pen="After label">{{preview.restock.label}}</span>

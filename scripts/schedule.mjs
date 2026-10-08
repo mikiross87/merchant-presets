@@ -128,6 +128,46 @@ export function nextCloseAt(hours, worldTime, calendar) {
 }
 
 /**
+ * The stretches of one calendar day a shop keeping `hours` is open, as `[start, end)` seconds
+ * from midnight. The closing minute counts as open, as `isOpen` counts it; an overnight window
+ * opens both ends of the day.
+ */
+function openWindows(hours, calendar) {
+  const day = secondsPerDay(calendar);
+  if (!hours) return [[0, day]];
+  const open = minutesOf(hours.open, calendar) * calendar.secondsPerMinute;
+  const end = (minutesOf(hours.close, calendar) + 1) * calendar.secondsPerMinute;
+  return open < end ? [[open, end]] : [[0, end], [open, day]];
+}
+
+/** How long a shop keeping `hours` is open in a whole day, in seconds (#226). */
+export function openSecondsPerDay(hours, calendar) {
+  return openWindows(hours, calendar).reduce((sum, [a, b]) => sum + b - a, 0);
+}
+
+/**
+ * The seconds a shop keeping `hours` is open in `[from, to)`, split by calendar day (#226): one
+ * `{day, seconds}` per day with any open time in it, `day` counting whole days from the epoch.
+ *
+ * @param {Hours} hours
+ * @param {number} from
+ * @param {number} to
+ * @param {CalendarDays} calendar
+ * @returns {{day: number, seconds: number}[]}
+ */
+export function openSpansByDay(hours, from, to, calendar) {
+  const length = secondsPerDay(calendar);
+  const windows = openWindows(hours, calendar);
+  const spans = [];
+  for (let day = Math.floor(from / length); day * length < to; day++) {
+    const base = day * length;
+    const seconds = windows.reduce((sum, [a, b]) => sum + Math.max(0, Math.min(to, base + b) - Math.max(from, base + a)), 0);
+    if (seconds > 0) spans.push({ day, seconds });
+  }
+  return spans;
+}
+
+/**
  * The most recent instant a shop with `hours` opens in `(previous, now]`, on
  * or after `dueAt` — or null if there isn't one.
  *
@@ -468,7 +508,9 @@ function dedupedByName(draws) {
  *   if the shop had just been dragged in fresh. A good another shop drew
  *   stays (see {@link isDrawn}).
  * - `"topup"`: only a drawn line the shop has actually sold through is drawn
- *   again; everything still genuinely in stock is untouched. This is driven
+ *   again; everything still genuinely in stock is untouched, except a line
+ *   other customers drew down (#226), which goes back up to the quantity it
+ *   last rolled (`flags.merchant-presets.rolled`) and never lower. This is driven
  *   by `draws` — the table's own lines — not by what is sitting on the
  *   shelf: a sold-out line may still be there at `quantity: 0` (`keep: true`
  *   goods sit at zero rather than vanish) or may already be gone entirely
@@ -527,7 +569,18 @@ export function planRestock(shop, items, draws, context) {
         continue;
       }
       const existing = drawnNow.find(i => i.name === draw.name);
-      if (existing && existing.system?.quantity !== 0) continue;   // still in stock: leave it
+      const have = existing?.system?.quantity ?? 0;
+      const rolled = existing?.flags?.["merchant-presets"]?.rolled;
+      if (existing && have !== 0) {
+        // Other customers drew it down (#226): back up to what it last rolled, never cut to a lower roll.
+        if (Number.isFinite(rolled) && have < rolled) {
+          // Still on the shelf, so it keeps its own settings (a hidden one stays hidden): only a line that left comes back with the line's.
+          updates.push({ _id: existing._id, "system.quantity": rolled, "flags.merchant-presets.rolled": rolled,
+            "flags.merchant-presets.stock": existing.flags?.["merchant-presets"]?.stock });
+          restocked.push(draw.name);
+        }
+        continue;   // otherwise still in stock: leave it
+      }
       const quantity = Math.max(0, draw.quantity ?? 0);
       if (quantity === 0) continue;   // drew empty again: leave it sold out (or absent)
       const back = newAt(draw.name);

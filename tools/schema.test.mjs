@@ -334,3 +334,10 @@ test("a shop's New lines formula is optional: null until a GM sets one, then a d
   assert.equal(validateShop({ version: SHOP_VERSION, restock: { default: "lots" } }).ok, false);
   assert.equal(validateShop({ version: SHOP_VERSION, restock: { default: 2 } }).ok, false, "a formula is text, as quantities are");
 });
+
+test("customers.table names a busy-day table, or null for the shipped one for the shop's size (#226)", () => {
+  assert.equal(shopFrom({ version: SHOP_VERSION }).customers.table, null);
+  assert.equal(validateShop({ version: SHOP_VERSION, customers: { table: "RollTable.abc" } }).ok, true);
+  assert.match(errorsOf(validateShop({ version: SHOP_VERSION, customers: { table: 5 } })), /customers\.table/);
+  assert.match(errorsOf(validateShop({ version: SHOP_VERSION, customers: { odds: 2 } })), /customers\.odds/);
+});

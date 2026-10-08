@@ -1,0 +1,13 @@
+{"days": [
+  {"name": "Dead quiet", "text": "Hardly a soul came through the door.", "global": 0.25, "boosts": {}, "weights": [15, 5, 2]},
+  {"name": "Slow", "text": "A sleepy day; a few browsers.", "global": 0.5, "boosts": {}, "weights": [25, 10, 5]},
+  {"name": "Fever in the lanes", "text": "Folk stayed in, or bought remedies.", "global": 0.5, "boosts": {"Potions": 3, "Holy Symbols": 2}, "weights": [5, 5, 5]},
+  {"name": "Steady", "text": "The usual trickle of regulars.", "global": 1, "boosts": {}, "weights": [32, 35, 30]},
+  {"name": "Busy", "text": "Locals kept the till ringing.", "global": 2, "boosts": {}, "weights": [8, 15, 25]},
+  {"name": "Market day", "text": "Stalls filled the square and the crowd followed.", "global": 3, "boosts": {}, "weights": [5, 5, 10]},
+  {"name": "Caravan in town", "text": "A merchant train rolled in, hungry and short of supplies.", "global": 1, "boosts": {"Food & Drink": 3, "Adventuring Gear": 3, "Tack & Harness": 3, "Mounts & Animals": 2, "Vehicles": 2}, "weights": [4, 5, 5]},
+  {"name": "Militia mustering", "text": "The watch is arming up.", "global": 1, "boosts": {"Weapons": 3, "Armor": 3, "Ammunition": 3}, "weights": [0, 5, 5]},
+  {"name": "Festival", "text": "Bunting, bells and a thirsty crowd.", "global": 1, "boosts": {"Food & Drink": 3, "Instruments": 3}, "weights": [4, 5, 5]},
+  {"name": "Pilgrims / holy day", "text": "Pilgrims came to give thanks.", "global": 1, "boosts": {"Holy Symbols": 4, "Potions": 2, "Food & Drink": 2}, "weights": [2, 5, 3]},
+  {"name": "Wealthy visitors", "text": "A noble's entourage went shopping.", "global": 1, "boosts": {"Magic Items": 3, "Spell Scrolls": 3, "Instruments": 2, "Tools": 2}, "weights": [0, 5, 5]}
+]}

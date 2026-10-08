@@ -22,6 +22,8 @@ import { activeDeal } from "./deals.mjs";
 import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
 import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
+import { boostGroups } from "./customers.mjs";
+import { customersLevel, customersTable, dayIndex, daySnapshot, shippedDayTables, shopToday } from "./customers-world.mjs";
 import { isItemLine, isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
@@ -72,6 +74,7 @@ const SETTINGS_SECTIONS = [
   { id: "wontBuy", icon: "lucide:ban" },
   { id: "hours", icon: "lucide:hourglass" },
   { id: "restock", icon: "lucide:refresh-cw" },
+  { id: "customers", icon: "lucide:users" },
   { id: "till", icon: "lucide:coins" }
 ];
 
@@ -207,6 +210,9 @@ function rollsACount(formula) {
 
 /** A value quoted for an attribute selector. */
 const attr = value => String(value).replace(/["\\]/g, "\\$&");
+
+/** Items as a list in the world's language: "Weapons, Armor and Ammunition". */
+const listOf = items => new Intl.ListFormat(game.i18n.lang, { type: "conjunction" }).format(items);
 
 /**
  * A selector that finds `control` again in the next render: its data-op and the data it edits
@@ -512,6 +518,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       resetToPreset: ShopSheet.#onResetToPreset,
       openTable: ShopSheet.#onOpenTable,
       resetTable: ShopSheet.#onResetTable,
+      openCustomersTable: ShopSheet.#onOpenCustomersTable,
+      resetCustomersTable: ShopSheet.#onResetCustomersTable,
       importShop: ShopSheet.#onImportShop
     }
   };
@@ -961,7 +969,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shortTerms: `${sentence(chipWord(chipSellsAt))} · ${rateFraction(chipBuysAt)}`,
       // The description, as text, behind a narrow window's info button.
       descriptionText: foundry.utils.cleanHTML(config.description ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
-      terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies)
+      terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies),
+      // Today's kind of day (#226, design IS2fO): its name, and its line on hover. Not in a
+      // compendium preview, whose copy never traded.
+      day: this.preview ? null : shopToday(actor)?.day ?? null
     };
   }
 
@@ -2056,6 +2067,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         gold: coinsOf("gp")
       },
       deals: { list: shop.deals.map(d => this.#dealCard(d)) },
+      customers: await this.#customersContext(actor, shop),
       canReset: !!preset,
       // What players see at these terms: the header chip and its worked example, then each deal in
       // force as its own character sees it.
@@ -2068,6 +2080,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
         // The Sell tab's till card as players get it, with no bill on it: none under unlimited coin.
         till: this._settingsSection === "till" ? { card: unlimited ? null : { coins: heldCoins(actor.system.currency ?? {}, currencies) } } : null,
+        // The hero's day chip as players get it (#226, design GVLI3); nothing while off (E6jfnh).
+        customers: this._settingsSection === "customers" ? (customersLevel() ? { day: shopToday(actor)?.day ?? null } : { off: true }) : null,
         chip: header.termsChipBase,
         // The narrow window's docked Players see, in one line: the chip, then each deal in force.
         line: [header.termsChipBase, ...shop.deals.filter(d => d.buy && activeDeal(shop, d.actor, game.time.worldTime))
@@ -2268,8 +2282,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // #190: a line's formula, blank putting the preset's back; New lines; another table.
       quantity: async shop => ({ op, id: control.dataset.id, formula: value, preset: await this.#presetShop(shop) }),
       defaultQuantity: () => ({ op, formula: value }),
-      table: () => this.#tableChange(value)
+      table: () => this.#tableChange(value),
+      customersTable: () => this.#customersTableChange(value)
     }[op];
+    if (op === "customersDay") return this.#setToday(value, settingSelector(control));
     // The schedule's select (design aaJcp) offers what its pills do: the same choice.
     if (op === "everyChoice") return ShopSheet.#onSetEvery.call(this, null, { dataset: { every: value } });
     // A formula the GM typed, a quantity or the schedule's days, must roll a number (#229 review):
@@ -2697,9 +2713,96 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    */
   async _onDropDocument(event, document) {
     if (document?.documentName !== "RollTable") return super._onDropDocument(event, document);
-    if (!game.user.isGM || this.preview || !event.target?.closest?.("[data-section='restock']")) return null;
+    if (!game.user.isGM || this.preview) return null;
+    // On the Customers section it becomes the busy-day table (#226); on Restock, the stock table.
+    if (event.target?.closest?.("[data-section='customers']")) {
+      await this.#edit(() => this.#customersTableChange(document.uuid));
+      return document;
+    }
+    if (!event.target?.closest?.("[data-section='restock']")) return null;
     await this.#edit(() => this.#tableChange(document.uuid));
     return document;
+  }
+
+  /**
+   * The Customers section (#226, design GVLI3; off, E6jfnh): the world's level, today's kind of
+   * day with its override, and the busy-day table it rolls on.
+   */
+  async #customersContext(actor, shop) {
+    const i18n = (key, data) => game.i18n.localize(`MERCHANT_PRESETS.Shop.Settings.Customers.${key}`, data);
+    const level = game.settings.get(MODULE, "otherCustomers");
+    const levelName = i18n(`Level.${level}`);
+    if (!customersLevel()) return { off: true, levelName };
+    const table = await customersTable(shop);
+    const today = shopToday(actor);
+    const day = today?.day;
+    const boosts = boostGroups(day).map(g => i18n("Boost", { categories: listOf(g.categories), n: g.multiplier }));
+    const source = today?.overridden ? i18n("Picked", { name: today.rolled?.name ?? "—" }) : i18n("Rolled", { table: table?.name ?? "—" });
+    const shipped = await shippedDayTables();
+    const choices = new Map([...game.tables.contents.map(t => [t.uuid, t.name]), ...shipped.map(t => [t.uuid, t.name])]);
+    if (table && !choices.has(table.uuid)) choices.set(table.uuid, table.name);
+    return {
+      off: false,
+      levelName,
+      today: {
+        kicker: i18n("TodayKicker", { date: this.#dayMonth(game.time.worldTime) }),
+        name: day?.name ?? i18n("NotYet"),
+        trade: day ? i18n("Trade", { n: day.global }) : null,
+        text: day?.text ?? i18n("NotYetText"),
+        meta: day ? [...boosts, source].join(" · ") : null
+      },
+      overridden: !!today?.overridden,
+      choice: today?.overridden ? day.name : i18n("AsRolled"),
+      days: table ? [...table.results].map(r => ({ id: r.id, name: r.name, selected: !!today?.overridden && day?.id === r.id })) : [],
+      table: table ? { uuid: table.uuid, name: table.name, meta: i18n("TableMeta", { count: table.results.size }) } : null,
+      tables: [...choices].map(([uuid, name]) => ({ uuid, name, selected: uuid === table?.uuid })),
+      canResetTable: !!shop.customers.table
+    };
+  }
+
+  /** The change that makes `uuid` the shop's busy-day table (#226); null, and a warning, for one that can't be found. */
+  async #customersTableChange(uuid) {
+    const table = uuid ? await Promise.resolve(fromUuid(uuid)).catch(() => null) : null;
+    if (table?.documentName !== "RollTable") {
+      ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NoSuchTable"));
+      this.render({ parts: ["body"] });
+      return null;
+    }
+    // The shipped table for the shop's size is no table of its own.
+    const shipped = (await shippedDayTables()).find(t => t.tier === (safeShopOf(this.document)?.tier ?? "Town"));
+    return { op: "customersTable", uuid: table.uuid === shipped?.uuid ? null : table.uuid };
+  }
+
+  /**
+   * The Today select (#226): another kind of day for today, or As rolled for the roll. Kept with
+   * today's roll on the shop (`flags.merchant-presets.customers.day`), not in its config: it lasts
+   * the day.
+   */
+  #setToday(id, field) {
+    return this.#queue(async () => {
+      if (!game.user.isGM || this.preview) return;
+      const shop = safeShopOf(this.document);
+      if (!shop) return;
+      const table = await customersTable(shop);
+      const result = id ? table?.results.get(id) : null;
+      const index = dayIndex();
+      const kept = this.document.flags?.[MODULE]?.customers?.day;
+      const day = kept?.index === index ? { ...kept } : { index, rolled: null, override: null };
+      day.override = result ? daySnapshot(result) : null;
+      await this.document.update({ [`flags.${MODULE}.customers.day`]: _replace(day) });
+    }, field);
+  }
+
+  static async #onOpenCustomersTable() {
+    const shop = safeShopOf(this.document);
+    const table = shop ? await customersTable(shop) : null;
+    table?.sheet?.render(true);
+  }
+
+  /** The Customers table card's Reset (#226): the shipped busy-day table for the shop's size. */
+  static async #onResetCustomersTable() {
+    if (!game.user.isGM || this.preview) return;
+    await this.#edit(() => ({ op: "customersTable", uuid: null }));
   }
 
   static async #onOpenTable() {

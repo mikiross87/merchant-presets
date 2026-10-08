@@ -738,6 +738,35 @@ def main():
                     "hideTokenWhenClosed": False},
                     "version": "3.3.4"}}})
 
+    # The busy-day tables (#226): one per size, as every trade ships at three sizes. A shop
+    # rolls on its size's table once per open day; each result carries its multipliers. The
+    # runtime finds a size's table by its tradeDays flag, not its id.
+    days = json.load(open(os.path.join(MOD, "data/trade-days.json")))["days"]
+    fold_d = fid("tradedaysfolder")
+    docs_t.append({"_id": fold_d, "_key": f"!folders!{fold_d}", "name": "Trade Days",
+                   "type": "RollTable", "sorting": "a", "folder": None, "sort": 100000,
+                   "color": STOCK_COLOR, "flags": {}})
+    for key, label, purse_mul, ti in TIERS:
+        tid = fid("tradedays", label)
+        results = []; at = 0
+        for d in days:
+            w = d["weights"][ti]
+            if not w: continue
+            rid = fid(tid, d["name"])
+            results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}", "type": "text",
+                            "name": d["name"], "img": "icons/environment/people/group.webp",
+                            "description": d["text"], "weight": w, "range": [at + 1, at + w],
+                            "drawn": False,
+                            "flags": {"merchant-presets": {"day": {"global": d["global"], "boosts": d["boosts"]}}}})
+            at += w
+        docs_t.append({"_id": tid, "_key": f"!tables!{tid}", "name": f"Trade Days ({label})",
+                       "img": "icons/environment/people/group.webp", "folder": fold_d,
+                       "description": f"<p>What kind of day a {label.lower()} shop is having: how busy it is, and what "
+                                      "sells. A shop rolls once per open day; each result's flags carry its multipliers.</p>",
+                       "formula": f"1d{at}", "replacement": True, "displayRoll": True,
+                       "sort": ti, "ownership": {"default": 0},
+                       "flags": {"merchant-presets": {"tradeDays": label}}, "results": results})
+
     def write(docs, d):
         for doc in docs:
             safe = re.sub(r"[^A-Za-z0-9]+", "_", doc["name"]).strip("_")

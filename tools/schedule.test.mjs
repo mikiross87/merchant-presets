@@ -489,6 +489,34 @@ test("a restock is fresh stock only when it brings back something players can se
   assert.equal(planRestock(shop, [], [{ ...draws[0], quantity: 10 }], { ...context, at: T }).fresh, true, "a reroll's visible lines");
 });
 
+test("a top-up refills a line other customers drew down to the quantity it last rolled, never lower (#226)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const withRolled = (id, quantity, rolled) => {
+    const item = drawn(id, "Arrows", "consumable", quantity);
+    item.flags["merchant-presets"].rolled = rolled;
+    return item;
+  };
+  const refill = items => planRestock(topup, items, [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  const plan = refill([withRolled("i1", 3, 20)]);
+  assert.deepEqual(plan.updates.map(u => [u._id, u["system.quantity"], u["flags.merchant-presets.rolled"]]), [["i1", 20, 20]],
+    "back to its own 20, not this restock's 10");
+  assert.deepEqual(plan.restocked, ["Arrows"]);
+  assert.deepEqual(plan.creates, []);
+  assert.deepEqual(refill([withRolled("i1", 25, 20)]).updates, [], "above its roll: left alone");
+  assert.deepEqual(refill([withRolled("i1", 20, 20)]).updates, [], "at its roll: left alone");
+  assert.deepEqual(refill([drawn("i1", "Arrows", "consumable", 3)]).updates, [], "no roll recorded (before #190): left alone");
+});
+
+test("a drawn-down line refills with its own stock config, so a hidden one isn't fresh stock (#226 review)", () => {
+  const topup = rawShop({ restock: { mode: "topup" } });
+  const hidden = drawn("i1", "Arrows", "consumable", 3);
+  const own = { ...arrowsStock, hidden: true };
+  Object.assign(hidden.flags["merchant-presets"], { rolled: 20, stock: own });
+  const plan = planRestock(topup, [hidden], [{ ...draws[0], quantity: 10 }], { ...context, at: T });
+  assert.deepEqual(plan.updates.map(u => u["flags.merchant-presets.stock"]), [own]);
+  assert.equal(plan.fresh, false, "nothing players can see came back");
+});
+
 test("a container line that rolled 0 is not on the shelf this restock, in either mode (#233)", () => {
   // A Bag of Holding restocks on 1d4-3 like any magic item: a 0 leaves it off, however many copies a 1 brings.
   const none = { ...draws[2], quantity: 0 };

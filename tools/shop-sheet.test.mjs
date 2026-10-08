@@ -2088,7 +2088,7 @@ test("without a world clock, Restock's Players see falls back to the terms, not 
 test("Settings has a Till section after Restock (#147, design U0HcWc)", async t => {
   const { sheet } = openSettings(t);
   const { settings } = await sheet._prepareContext({});
-  assert.deepEqual(settings.sections.map(s => s.id), ["terms", "deals", "wontBuy", "hours", "restock", "till"]);
+  assert.deepEqual(settings.sections.map(s => s.id), ["terms", "deals", "wontBuy", "hours", "restock", "customers", "till"]);
   assert.equal(settings.sections.at(-1).icon, "lucide:coins");
 });
 
@@ -2645,4 +2645,90 @@ test("the Deals foot has Call for a haggle beside Add deal, and a read-only prev
   const foot = hbs.slice(hbs.indexOf('data-pen="Deals foot"'), hbs.indexOf("</section>", hbs.indexOf('data-pen="Deals foot"')));
   assert.match(foot, /\{\{#unless readOnly\}\}<button[^>]*data-action="callHaggle" data-pen="Call haggle"/);
   assert.ok(foot.indexOf("callHaggle") < foot.indexOf("addDeal"));
+});
+
+/* ------------------------------------------------------------ #226 other customers */
+
+/** A GM's own busy-day table: two kinds of day, each carrying its multipliers. */
+const DAYS_TABLE = {
+  documentName: "RollTable", uuid: "RollTable.days", name: "Ironbridge Days",
+  results: collection([
+    { id: "d1", name: "Market day", description: "<p>Stalls filled the square.</p>", flags: { "merchant-presets": { day: { global: 3, boosts: {} } } } },
+    { id: "d2", name: "Militia mustering", description: "The watch is arming up.", flags: { "merchant-presets": { day: { global: 1, boosts: { Weapons: 3, Armor: 3 } } } } }
+  ])
+};
+const MARKET_DAY = { id: "d1", name: "Market day", text: "Stalls filled the square.", global: 3, boosts: {} };
+
+/** A GM's Settings on a shop whose other customers roll on DAYS_TABLE, at `level`, today's day kept as `day`. */
+function openCustomers(t, { level = "busy", day = null } = {}) {
+  const opened = openSettings(t, { shopConfig: { customers: { table: DAYS_TABLE.uuid } } });
+  if (day) opened.shop.flags["merchant-presets"].customers = { drainedTo: 0, day };
+  const values = globalThis.game.settings.values;
+  const before = values.otherCustomers;
+  values.otherCustomers = level;
+  const lookup = globalThis.fromUuid;
+  globalThis.fromUuid = async uuid => (uuid === DAYS_TABLE.uuid ? DAYS_TABLE : lookup(uuid));
+  t.after(() => { values.otherCustomers = before; globalThis.fromUuid = lookup; });
+  return opened;
+}
+
+test("Customers, off in this world, says so and offers nothing to set (#226, design E6jfnh)", async t => {
+  const { sheet } = openCustomers(t, { level: "off" });
+  sheet._settingsSection = "customers";
+  const { settings, header } = await sheet._prepareContext({});
+  assert.deepEqual(settings.customers, { off: true, levelName: "MERCHANT_PRESETS.Shop.Settings.Customers.Level.off" });
+  assert.deepEqual(settings.preview.customers, { off: true });
+  assert.equal(header.day, null, "no chip in the header either");
+});
+
+test("Customers shows today's kind of day as rolled, its table, and puts the chip in the header (#226, design GVLI3)", async t => {
+  const { sheet } = openCustomers(t, { day: { index: 0, rolled: MARKET_DAY, override: null } });
+  sheet._settingsSection = "customers";
+  const { settings, header } = await sheet._prepareContext({});
+  const c = settings.customers;
+  assert.equal(c.off, false);
+  assert.equal(c.today.name, "Market day");
+  assert.equal(c.today.text, "Stalls filled the square.");
+  assert.equal(c.overridden, false);
+  assert.deepEqual(c.days.map(d => [d.id, d.selected]), [["d1", false], ["d2", false]]);
+  assert.equal(c.table.uuid, DAYS_TABLE.uuid);
+  assert.equal(c.canResetTable, true, "a table of the GM's own");
+  assert.deepEqual(settings.preview.customers, { day: MARKET_DAY });
+  assert.deepEqual(header.day, MARKET_DAY);
+});
+
+test("a day kept from yesterday isn't today's: not rolled yet, no chip (#226)", async t => {
+  globalThis.game.time.worldTime = 0;
+  const { sheet } = openCustomers(t, { day: { index: -1, rolled: MARKET_DAY, override: null } });
+  const { settings, header } = await sheet._prepareContext({});
+  assert.equal(settings.customers.today.name, "MERCHANT_PRESETS.Shop.Settings.Customers.NotYet");
+  assert.equal(settings.customers.today.trade, null);
+  assert.equal(header.day, null);
+});
+
+test("Today picks another kind of day for today, kept with the roll; As rolled puts the roll back (#226)", async t => {
+  const { sheet, shop } = openCustomers(t, { day: { index: 0, rolled: MARKET_DAY, override: null } });
+  shop.update = async changes => {
+    shop.updates.push(changes);
+    const day = changes["flags.merchant-presets.customers.day"];
+    if (day) shop.flags["merchant-presets"].customers.day = structuredClone(day.replaced ?? day);
+  };
+  await change(sheet, { op: "customersDay" }, { value: "d2" });
+  const picked = shop.flags["merchant-presets"].customers.day;
+  assert.equal(picked.rolled.name, "Market day", "the roll is kept");
+  assert.deepEqual(picked.override, { id: "d2", name: "Militia mustering", text: "The watch is arming up.", global: 1, boosts: { Weapons: 3, Armor: 3 } });
+  const { settings, header } = await sheet._prepareContext({});
+  assert.equal(settings.customers.overridden, true);
+  assert.equal(header.day.name, "Militia mustering");
+  await change(sheet, { op: "customersDay" }, { value: "" });
+  assert.equal(shop.flags["merchant-presets"].customers.day.override, null);
+});
+
+test("a RollTable dropped on Customers becomes the busy-day table (#226)", async t => {
+  const { sheet, shop } = openCustomers(t);
+  shop.flags["merchant-presets"].shop.customers = { table: null };
+  const on = section => ({ target: { closest: selector => (selector === `[data-section='${section}']` ? {} : null) } });
+  await sheet._onDropDocument(on("customers"), DAYS_TABLE);
+  assert.equal(writtenShop(shop).customers.table, DAYS_TABLE.uuid);
+  assert.equal(writtenShop(shop).restock.table, null, "not the stock table");
 });

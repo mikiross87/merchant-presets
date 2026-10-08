@@ -35,7 +35,8 @@ export const SHOP_DEFAULTS = deepFreeze({
   // #105; `default`: the formula a table line with none of its own rolls, null for 1 (#190)
   restock: { table: null, quantities: {}, default: null, onOpen: true, every: 7, mode: "reroll" },
   wontBuy: { types: [], kinds: [] },
-  deals: []                // one character's own price here (#111)
+  deals: [],               // one character's own price here (#111)
+  customers: { table: null }   // #226: the busy-day table; null rolls the shipped one for the shop's size
 });
 
 export const STOCK_DEFAULTS = deepFreeze({
@@ -166,7 +167,8 @@ const shopShape = shape({
   // dnd5e item types and our `kind`s. Checked for shape only: the item types
   // live in CONFIG, which a Foundry-free module can't read.
   wontBuy: shape({ types: list(name), kinds: list(name) }),
-  deals: list(deal, d => d?.actor)
+  deals: list(deal, d => d?.actor),
+  customers: shape({ table: nullOr(name) })
 }, ["version"]);
 
 const stockShape = shape({
