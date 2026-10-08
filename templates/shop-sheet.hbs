@@ -73,7 +73,8 @@
       </button>
       {{!-- Today's kind of day (#226, design IS2fO): its line on hover; never the numbers behind it. --}}
       {{#if header.day}}
-      <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip" data-tooltip="{{header.day.text}}">
+      {{!-- data-tooltip-text: shown as text, never as HTML, whatever a GM's table says. --}}
+      <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip" data-tooltip-text="{{header.day.text}}">
         {{mpIcon "users" pen="Day icon"}}<span data-pen="Day Label">{{header.day.name}}</span>
       </span>
       {{/if}}

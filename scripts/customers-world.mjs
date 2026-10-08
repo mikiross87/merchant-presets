@@ -33,10 +33,17 @@ export async function customersTable(shop) {
   return shipped ? fromUuid(shipped.uuid).catch(() => null) : null;
 }
 
+/**
+ * A result's description as plain text: read by the browser's own parser, so a GM's HTML can't
+ * survive as markup. Without a DOM (the Node tests) it's kept as it is; it's only ever shown as text.
+ */
+const plainText = html => (globalThis.DOMParser
+  ? new DOMParser().parseFromString(String(html), "text/html").body.textContent : String(html)).trim();
+
 /** A table result as the shop keeps it: what players read, and the multipliers behind it. */
 export function daySnapshot(result) {
   const day = dayOf(result) ?? {};
-  const text = String(result.description ?? "").replace(/<[^>]*>/g, "").trim();
+  const text = plainText(result.description ?? "");
   return { id: result.id ?? result._id, name: result.name ?? "", text, global: day.global ?? 1, boosts: day.boosts ?? {} };
 }
 
