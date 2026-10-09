@@ -83,7 +83,6 @@ test("only spellcasting actually bought counts, as the GM's client and the playe
   assert.deepEqual(castsIn({ kind: "sell", lines: prices.buyerReceive }), [], "selling a service back casts nothing");
 });
 
-
 /* ------------------------------------------- the spell's own card (#87, #237) */
 
 // On dnd5e 6 a named service is announced as dnd5e's usage card for the spell, spoken by the
@@ -202,7 +201,6 @@ test("with the setting off, nothing is posted", async () => {
   assert.deepEqual(messages, []);
 });
 
-
 /* ------------------------------------- the spell's own card, on dnd5e 6 (#87, #237) */
 
 /** dnd5e 6's spell as the runtime sees it: its data, and an unsaved copy whose activity builds the card. */
@@ -213,58 +211,87 @@ class SpellCopy {
     const effects = (data.effects ?? []).map(e => ({ effect: { ...e, uuid: `${parent.uuid}.Item.${id}.ActiveEffect.${e._id}` } }));
     const activities = (data.activities ?? []).map(a => ({ ...a, effects: a.withEffects ? effects : [], metadata: { usage: { messageType: "usage" } } }));
     this.system = { activities: { contents: activities },
-      getCardData: async ({ activity }) => ({ activity: { id: activity.id, name: activity.name }, buttons: [{ action: "heal" }],
-        item: { id, name: data.name, uuid: `${parent.uuid}.Item.${id}` }, description: `<p>${data.name}</p>` }) };
+      getCardData: async ({ activity }) => {
+        if (data.broken) throw new Error("dnd5e changed its card data");
+        return { activity: { id: activity.id, name: activity.name }, buttons: [{ action: "heal" }],
+          item: { id, name: data.name, uuid: `${parent.uuid}.Item.${id}` }, description: `<p>${data.name}</p>` };
+      } };
   }
 }
-const spellDoc = (uuid, name, { effects = [], withEffects = false } = {}) => ({ uuid, name, effects: effects.map(e => ({ ...e, uuid: `${uuid}.ActiveEffect.${e._id}` })),
-  toObject: () => ({ _id: uuid.split(".").pop(), name, type: "spell", effects, activities: [
+const spellDoc = (uuid, name, { effects = [], withEffects = false, broken = false } = {}) => ({ uuid, name,
+  effects: effects.map(e => ({ ...e, uuid: `${uuid}.ActiveEffect.${e._id}` })),
+  toObject: () => ({ _id: uuid.split(".").pop(), name, type: "spell", broken, effects, activities: [
     { id: "cast", name: "Cast", withEffects: false }, { id: "revive", name: "Revive", withEffects }] }) });
+const raiseDead = opts => spellDoc(RAISE_DEAD, "Raise Dead", { withEffects: true, effects: [
+  { _id: "day1", name: "Resurrection Sickness (Day 1)", type: "base" }, { _id: "spell", name: "Contingency", type: "enchantment" }], ...opts });
 
-test("on dnd5e 6, a named spell is announced as its own card, spoken by the shop, with its effects to apply", async () => {
+const IDENTIFY = "Compendium.dnd5e.spells24.Item.phbsplIdentify00";
+const named = temple.items.find(i => i.name === "Spellcasting: Raise Dead");
+temple.items.push({ ...structuredClone(named), _id: "identify0000001", name: "Spellcasting: Identify",
+  flags: { ...structuredClone(named.flags), "merchant-presets": { ...named.flags["merchant-presets"], spell: IDENTIFY } } });
+
+/** Run `fn` on dnd5e 6 with `spells` in its compendium; the world goes back to how it was, whatever `fn` does. */
+async function onDnd5e6(spells, fn) {
+  const utils = globalThis.foundry.utils;
   globalThis.game.system = { id: "dnd5e", version: "6.0.6" };
-  globalThis.foundry.utils.isNewerVersion = (a, b) => a.localeCompare(b, undefined, { numeric: true }) > 0;
+  utils.isNewerVersion = (a, b) => a.localeCompare(b, undefined, { numeric: true }) > 0;
   globalThis.Item = { implementation: SpellCopy };
-  world.compendium.set(RAISE_DEAD, spellDoc(RAISE_DEAD, "Raise Dead", { withEffects: true, effects: [
-    { _id: "day1", name: "Resurrection Sickness (Day 1)", type: "base" }, { _id: "spell", name: "Contingency", type: "enchantment" }] }));
+  for (const spell of spells) world.compendium.set(spell.uuid, spell);
   try {
-    const [card, ...more] = await posted("Spellcasting: Raise Dead", 2);
-    assert.equal(more.length, 0, "one card, and no message line");
-    assert.equal(card.type, "usage");
-    assert.equal(card.content, undefined, "dnd5e shows content instead of the card");
-    assert.equal(card.speaker.alias, "Temple & Faith Store (Town)");
-    assert.equal(card.flavor, "Cast twice for <strong>Aria</strong>");
-    assert.equal(card.system.activity.name, "Revive");
-    assert.deepEqual(card.system.buttons, []);
-    assert.equal(card.system.item.uuid, null);
-    const data = card.flags.dnd5e.item.data;
-    assert.equal(data.name, "Raise Dead");
-    assert.equal(card.system.item.id, data._id);
-    assert.notEqual(data._id, "phbsplRaiseDead0", "a copy of its own, not the compendium's id");
-    assert.deepEqual(card.system.effects, [`${temple.uuid}.Item.${data._id}.ActiveEffect.day1`]);
+    await fn();
   } finally {
-    world.compendium.delete(RAISE_DEAD);
-  }
-});
-
-test("on dnd5e 6, a spell without effects is its card alone; a level service and an unfetchable spell keep the line", async () => {
-  const IDENTIFY = "Compendium.dnd5e.spells24.Item.phbsplIdentify00";
-  world.compendium.set(IDENTIFY, spellDoc(IDENTIFY, "Identify"));
-  const named = temple.items.find(i => i.name === "Spellcasting: Raise Dead");
-  temple.items.push({ ...structuredClone(named), _id: "identify0000001", name: "Spellcasting: Identify",
-    flags: { ...structuredClone(named.flags), "merchant-presets": { ...named.flags["merchant-presets"], spell: IDENTIFY } } });
-  try {
-    const [card] = await posted("Spellcasting: Identify");
-    assert.equal(card.system.activity.name, "Cast");
-    assert.deepEqual(card.system.effects, []);
-    assert.equal(card.flavor, "Cast for <strong>Aria</strong>");
-    const [level] = await posted("Spellcasting: Level 3");
-    assert.ok(level.content.includes("Tell the GM which spell."), level.content);
-    const [missing] = await posted("Spellcasting: Greater Restoration");
-    assert.ok(missing.content.includes(`casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} for <strong>Aria</strong>.`), missing.content);
-  } finally {
-    world.compendium.delete(IDENTIFY);
+    for (const spell of spells) world.compendium.delete(spell.uuid);
     delete globalThis.game.system;
+    delete utils.isNewerVersion;
     delete globalThis.Item;
   }
-});
+}
+
+/** Buy several of the temple's goods in one trade; the messages beside the receipt. */
+const postedAll = async lines => {
+  const before = world.calls.messages.length;
+  const result = await api.trade({ tradeId: globalThis.foundry.utils.randomID(), kind: "buy", shopUuid: temple.uuid, buyerUuid: aria.uuid,
+    lines: lines.map(([name, quantity]) => ({ itemId: temple.items.find(i => i.name === name)._id, quantity })) });
+  assert.equal(result.status, "sealed", JSON.stringify(result));
+  await tick();
+  return world.calls.messages.slice(before).filter(m => !m.content?.includes("mp-receipt"));
+};
+
+test("on dnd5e 6, a named spell is announced as its own card, spoken by the shop, with its effects to apply", () => onDnd5e6([raiseDead()], async () => {
+  const [card, ...more] = await posted("Spellcasting: Raise Dead", 2);
+  assert.equal(more.length, 0, "one card, and no message line");
+  assert.equal(card.type, "usage");
+  assert.equal(card.content, undefined, "dnd5e shows content instead of the card");
+  assert.equal(card.speaker.alias, "Temple & Faith Store (Town)");
+  assert.equal(card.flavor, "Cast twice for <strong>Aria</strong>");
+  assert.equal(card.system.activity.name, "Revive");
+  assert.deepEqual(card.system.buttons, []);
+  assert.equal(card.system.item.uuid, null);
+  const data = card.flags.dnd5e.item.data;
+  assert.equal(data.name, "Raise Dead");
+  assert.equal(card.system.item.id, data._id);
+  assert.notEqual(data._id, "phbsplRaiseDead0", "a copy of its own, not the compendium's id");
+  assert.deepEqual(card.system.effects, [`${temple.uuid}.Item.${data._id}.ActiveEffect.day1`]);
+}));
+
+test("on dnd5e 6, a spell without effects is its card alone; a level service and an unfetchable spell keep the line", () => onDnd5e6([spellDoc(IDENTIFY, "Identify")], async () => {
+  const [card] = await posted("Spellcasting: Identify");
+  assert.equal(card.system.activity.name, "Cast");
+  assert.deepEqual(card.system.effects, []);
+  assert.equal(card.flavor, "Cast for <strong>Aria</strong>");
+  const [level] = await posted("Spellcasting: Level 3");
+  assert.ok(level.content.includes("Tell the GM which spell."), level.content);
+  const [missing] = await posted("Spellcasting: Greater Restoration");
+  assert.ok(missing.content.includes(`casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} for <strong>Aria</strong>.`), missing.content);
+}));
+
+test("on dnd5e 6, a card that can't be built falls back to the line, and the rest of the purchase is still announced", () =>
+  onDnd5e6([raiseDead({ broken: true }), spellDoc(IDENTIFY, "Identify")], async () => {
+    const messages = await postedAll([["Spellcasting: Raise Dead", 1], ["Spellcasting: Identify", 1], ["Spellcasting: Level 3", 1]]);
+    assert.deepEqual(messages.map(m => m.type ?? "line"), ["usage", "line"]);
+    assert.equal(messages[0].flags.dnd5e.item.data.name, "Identify");
+    const line = messages[1].content;
+    assert.ok(line.includes(`casts @UUID[${RAISE_DEAD}]{Raise Dead} for <strong>Aria</strong>.`), line);
+    assert.ok(line.includes(`@UUID[${RAISE_DEAD}.ActiveEffect.day1]{Resurrection Sickness (Day 1)}`), line);
+    assert.ok(line.includes("Tell the GM which spell."), line);
+  }));
