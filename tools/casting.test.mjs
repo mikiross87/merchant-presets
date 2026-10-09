@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { actorEffects, castingMessage, castsIn, chatRecipients } from "../scripts/casting.mjs";
+import { activityEffects, actorEffects, castActivity, castFlavor, castingMessage, castsIn, chatRecipients, spellCard, spellCards }
+  from "../scripts/casting.mjs";
 import { createWorld, loadRuntime } from "./foundry-stub.mjs";
 
 // Buying a spellcasting service moves gold and nothing else (#70). The trade's
@@ -82,6 +83,60 @@ test("only spellcasting actually bought counts, as the GM's client and the playe
   assert.deepEqual(castsIn({ kind: "sell", lines: prices.buyerReceive }), [], "selling a service back casts nothing");
 });
 
+
+/* ------------------------------------------- the spell's own card (#87, #237) */
+
+// On dnd5e 6 a named service is announced as dnd5e's usage card for the spell, spoken by the
+// shop (design band 21): the spell's description and pills, and, for a spell with effects, the
+// tray the GM applies them from.
+
+test("the card's flavor line says for whom, and how many times", () => {
+  assert.equal(castFlavor("Aria", 1), "Cast for <strong>Aria</strong>");
+  assert.equal(castFlavor("Aria", 2), "Cast twice for <strong>Aria</strong>");
+  assert.equal(castFlavor("Aria", 3), "Cast 3 times for <strong>Aria</strong>");
+  assert.equal(castFlavor("A & <B>", 1), "Cast for <strong>A &amp; &lt;B&gt;</strong>");
+});
+
+test("spell cards are dnd5e 6's: 5.3 keeps the message line", () => {
+  const newer = (a, b) => a.localeCompare(b, undefined, { numeric: true }) > 0;
+  assert.equal(spellCards("6.0.0", newer), true);
+  assert.equal(spellCards("6.0.6", newer), true);
+  assert.equal(spellCards("5.3.3", newer), false);
+  assert.equal(spellCards(undefined, newer), false);
+});
+
+const effect = (uuid, type = "base") => ({ effect: { uuid, type } });
+
+test("the card's effects are its activity's, without enchantments", () => {
+  assert.deepEqual(activityEffects({ effects: [effect("E.day1"), effect("E.contingency", "enchantment"), { _id: "gone" }] }), ["E.day1"]);
+  assert.deepEqual(activityEffects(undefined), []);
+});
+
+test("the card shows the activity that carries effects, else the spell's first", () => {
+  const plain = { name: "Cast", effects: [] }, revive = { name: "Revive", effects: [effect("E.day1")] };
+  assert.equal(castActivity([plain, revive]), revive);
+  assert.equal(castActivity([plain, { name: "Use", effects: [] }]), plain);
+  assert.equal(castActivity([]), undefined);
+});
+
+test("the card is built on dnd5e's snapshot of the spell: no compendium link, no buttons, no content", () => {
+  const data = { _id: "copy00000000001", name: "Raise Dead", type: "spell" };
+  const card = { title: "Raise Dead - Revive", type: "usage", system: {
+    activity: { id: "act", name: "Revive" }, buttons: [{ action: "rollHealing" }],
+    item: { id: "copy00000000001", name: "Raise Dead", uuid: "Actor.shop.Item.copy00000000001" }, description: "<p>With a touch…</p>" } };
+  const message = spellCard({ card, data, effects: ["Actor.shop.Item.copy00000000001.ActiveEffect.day1"],
+    flavor: "Cast for <strong>Aria</strong>", speaker: { actor: "shop", alias: "Temple" }, whisper: ["gm"] });
+  assert.deepEqual(message, {
+    title: "Raise Dead - Revive", type: "usage", speaker: { actor: "shop", alias: "Temple" }, whisper: ["gm"],
+    flavor: "Cast for <strong>Aria</strong>",
+    system: { activity: { id: "act", name: "Revive" }, buttons: [], description: "<p>With a touch…</p>",
+      effects: ["Actor.shop.Item.copy00000000001.ActiveEffect.day1"],
+      item: { id: "copy00000000001", name: "Raise Dead", uuid: null } },
+    flags: { dnd5e: { item: { data } } }
+  });
+  assert.equal(card.system.buttons.length, 1, "dnd5e's card data is left as it was");
+});
+
 /* ------------------------------------------------ through the real runtime */
 
 const world = createWorld();
@@ -145,4 +200,71 @@ test("with the setting off, nothing is posted", async () => {
   const messages = await posted("Spellcasting: Raise Dead");
   world.settings.spellcastingToChat = true;
   assert.deepEqual(messages, []);
+});
+
+
+/* ------------------------------------- the spell's own card, on dnd5e 6 (#87, #237) */
+
+/** dnd5e 6's spell as the runtime sees it: its data, and an unsaved copy whose activity builds the card. */
+class SpellCopy {
+  constructor(data, { parent }) {
+    Object.assign(this, { name: data.name, parent, data });
+    const id = data._id;
+    const effects = (data.effects ?? []).map(e => ({ effect: { ...e, uuid: `${parent.uuid}.Item.${id}.ActiveEffect.${e._id}` } }));
+    const activities = (data.activities ?? []).map(a => ({ ...a, effects: a.withEffects ? effects : [], metadata: { usage: { messageType: "usage" } } }));
+    this.system = { activities: { contents: activities },
+      getCardData: async ({ activity }) => ({ activity: { id: activity.id, name: activity.name }, buttons: [{ action: "heal" }],
+        item: { id, name: data.name, uuid: `${parent.uuid}.Item.${id}` }, description: `<p>${data.name}</p>` }) };
+  }
+}
+const spellDoc = (uuid, name, { effects = [], withEffects = false } = {}) => ({ uuid, name, effects: effects.map(e => ({ ...e, uuid: `${uuid}.ActiveEffect.${e._id}` })),
+  toObject: () => ({ _id: uuid.split(".").pop(), name, type: "spell", effects, activities: [
+    { id: "cast", name: "Cast", withEffects: false }, { id: "revive", name: "Revive", withEffects }] }) });
+
+test("on dnd5e 6, a named spell is announced as its own card, spoken by the shop, with its effects to apply", async () => {
+  globalThis.game.system = { id: "dnd5e", version: "6.0.6" };
+  globalThis.foundry.utils.isNewerVersion = (a, b) => a.localeCompare(b, undefined, { numeric: true }) > 0;
+  globalThis.Item = { implementation: SpellCopy };
+  world.compendium.set(RAISE_DEAD, spellDoc(RAISE_DEAD, "Raise Dead", { withEffects: true, effects: [
+    { _id: "day1", name: "Resurrection Sickness (Day 1)", type: "base" }, { _id: "spell", name: "Contingency", type: "enchantment" }] }));
+  try {
+    const [card, ...more] = await posted("Spellcasting: Raise Dead", 2);
+    assert.equal(more.length, 0, "one card, and no message line");
+    assert.equal(card.type, "usage");
+    assert.equal(card.content, undefined, "dnd5e shows content instead of the card");
+    assert.equal(card.speaker.alias, "Temple & Faith Store (Town)");
+    assert.equal(card.flavor, "Cast twice for <strong>Aria</strong>");
+    assert.equal(card.system.activity.name, "Revive");
+    assert.deepEqual(card.system.buttons, []);
+    assert.equal(card.system.item.uuid, null);
+    const data = card.flags.dnd5e.item.data;
+    assert.equal(data.name, "Raise Dead");
+    assert.equal(card.system.item.id, data._id);
+    assert.notEqual(data._id, "phbsplRaiseDead0", "a copy of its own, not the compendium's id");
+    assert.deepEqual(card.system.effects, [`${temple.uuid}.Item.${data._id}.ActiveEffect.day1`]);
+  } finally {
+    world.compendium.delete(RAISE_DEAD);
+  }
+});
+
+test("on dnd5e 6, a spell without effects is its card alone; a level service and an unfetchable spell keep the line", async () => {
+  const IDENTIFY = "Compendium.dnd5e.spells24.Item.phbsplIdentify00";
+  world.compendium.set(IDENTIFY, spellDoc(IDENTIFY, "Identify"));
+  const named = temple.items.find(i => i.name === "Spellcasting: Raise Dead");
+  temple.items.push({ ...structuredClone(named), _id: "identify0000001", name: "Spellcasting: Identify",
+    flags: { ...structuredClone(named.flags), "merchant-presets": { ...named.flags["merchant-presets"], spell: IDENTIFY } } });
+  try {
+    const [card] = await posted("Spellcasting: Identify");
+    assert.equal(card.system.activity.name, "Cast");
+    assert.deepEqual(card.system.effects, []);
+    assert.equal(card.flavor, "Cast for <strong>Aria</strong>");
+    const [level] = await posted("Spellcasting: Level 3");
+    assert.ok(level.content.includes("Tell the GM which spell."), level.content);
+    const [missing] = await posted("Spellcasting: Greater Restoration");
+    assert.ok(missing.content.includes(`casts @UUID[${GREATER_RESTORATION}]{Greater Restoration} for <strong>Aria</strong>.`), missing.content);
+  } finally {
+    world.compendium.delete(IDENTIFY);
+    delete globalThis.game.system;
+    delete globalThis.Item;
+  }
 });
