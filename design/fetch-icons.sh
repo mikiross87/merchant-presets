@@ -52,5 +52,7 @@ icons/creatures/mammals/ox-bull-horned-glowing-orange.webp
 icons/creatures/mammals/deer-antlers-blue.webp
 icons/creatures/mammals/dog-husky-white-blue.webp
 icons/magic/symbols/triangle-glowing-green.webp
+icons/magic/death/skull-fire-white-yellow.webp
+icons/tools/scribal/magnifying-glass.webp
 LIST
 echo "copied $(find "$DEST" -type f | wc -l | tr -d ' ') icons to $DEST"

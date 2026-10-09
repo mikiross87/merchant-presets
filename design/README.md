@@ -31,9 +31,10 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 18 | Haggling (#112): Settings (GM) · Deals — Light / Dark (**Call for a haggle** beside **Add deal**); Call form — Light / Dark (built like the deal form: Character, Side, Skill with "Player's choice" as the default, DC with the shopkeeper's passive Insight); below them, the Haggle chat card board, light and dark: the call open as the player sees it at the player's choice (**Roll Persuasion**, **Roll Deception**, **Roll Intimidation**) and at a skill the GM chose (one **Roll Deception**), open as a GM sees it (the GM line "DC 14"), rolled (the GM line names the skill: "Deception 16 vs DC 14"), and lapsed. The Settings frame draws the GM's window, as every Settings frame does |
 | 19 | Restock quantities (#190): Settings (GM) · Restock, own table — Light / Dark: a GM's own stock table assigned (**Change** and **Reset** on the table card), **New lines** set to 1d4, and the quantity list scrolled to its end, where a line the GM added (Shovel) shows the New lines formula as its placeholder. The preset state of the same card and list (**Change** only, New lines blank) is drawn in bands 03, 09 and 13. Beside them, Settings (GM) · Restock, formula refused — Light / Dark (#229): a formula that doesn't roll keeps what was typed, outlined in `danger`, with "… doesn't roll a number" under it in `danger-ink`, on New lines ("2d") and on a list line ("1d2-"). The schedule's Dice… formula is refused the same way |
 | 20 | Other customers (#226): Settings (GM) · Customers — Light / Dark (**Customers** in the section nav, between Restock and Till, in every Settings frame): the world's level (Off / Quiet / Busy, set in the module's settings), today's card (the kind of day, its trade multiplier, the line players see in the ledger hand, and the table it was rolled on), **Today** to override it (**As rolled** by default), and the busy-day table card (**Change**, as the stock table's). Beside them, Settings (GM) · Customers, off — Light / Dark: the world is Off, and the section says nothing sells between restocks. Below, Storefront · Today's trade — Light / Dark: the hero's **Day Chip** (the kind of day, at the end of the chips row; off in every other frame) with its line on hover |
+| 21 | Spellcasting chat card (#87, #237): Spellcasting · Chat Card — Light / Dark. A bought named service is announced as dnd5e 6's own usage card for the spell, spoken by the shop: Raise Dead as a GM sees it (the spell's description, materials and pills, and the **Effects** tray with **Apply**), and Identify bought twice (no effects, so no tray). The only part this module draws is the flavor line under the shop's name: "Cast for **Aria**", "Cast twice for **Aria**". Players see the same card without the tray. The rest is dnd5e's card, measured from dnd5e 6.0.6 in both themes; Pencil has no small caps or dashed strokes, so the sender's small caps and the dashed rules are drawn plain. Level services and dnd5e 5.3 keep today's message |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (21, at y 18700) and gets a row here.
+A new agreed screen goes in the next band (22, at y 19592) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
@@ -80,6 +81,13 @@ The shop sits beside dnd5e's own sheets, so its tokens are dnd5e's, measured fro
 | `accent-on-dark` | `#e3ce9e` | `#e3ce9e` | `--dnd5e-color-gold` under `.dnd5e-flag-high-contrast` only |
 | `text-on-dark-soft` | `#efe6d8` | `#efe6d8` | `--color-light-2` |
 | `seal-mark` | `#e7d1b1` | `#e7d1b1` | `--color-light-3` |
+| `chat-ink` | `#191813` | `#cfd2da` | dnd5e chat card text (band 21 only) |
+| `chat-glyph` | `#191813` | `#9f9275` | dnd5e activity icon (band 21 only) |
+| `chat-rule` | `#434857` | `#434857` | dnd5e card's dashed rules (band 21 only) |
+| `chat-pill-edge` / `chat-pill-ink` | `#666666` / `#4e4e4e` | `#434857` / `#cfd2da` | dnd5e card pills (band 21 only) |
+| `chat-wash` | transparent | `#ffffff08` | dnd5e card description (band 21 only) |
+| `chat-well` | `#3d3d3d` | `#0d0b0b` | behind dnd5e's item and effect icons (band 21 only) |
+| `chat-button` / `chat-button-edge` | `#0000000d` / `#999999` | `#242731` / `#333742` | dnd5e's **Apply** button (band 21 only) |
 
 Notes:
 
@@ -87,6 +95,7 @@ Notes:
 - dnd5e only defines `#e3ce9e` in its high-contrast sheet, so the build needs a module variable for `accent-on-dark`.
 - `text-on-dark-soft` (the shop description) and `seal-mark` (the wax seal's mark) were drawn as `#e8dcd6` and `#f3dcb0`, which have no source. Decided 2026-09-25 (#125): snap both to the nearest Foundry colour. Foundry's sci-fi theme overrides `--color-light-2/3` with blues. The standard light and dark themes don't.
 - The light app background is a paper texture over parchment, and the dark one is a denim texture over `#0d0b0b`. Both textures are transparent overlays, so the mockups use the base colours. The build uses the variable, which brings the texture with it.
+- The `chat-*` tokens are dnd5e 6.0.6's chat card, measured from the rendered card (computed styles) in both themes. They draw band 21, which is dnd5e's own card; the module's CSS never uses them.
 - `surface-row-alt` in dark is `color-mix(in oklab, #252830, black 10%)`, rounded.
 
 ## Typography
