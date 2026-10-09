@@ -158,7 +158,7 @@ const posted = async (name, quantity = 1) => {
     buyerUuid: aria.uuid, lines: [{ itemId, quantity }] });
   assert.equal(result.status, "sealed", JSON.stringify(result));
   await tick();
-  return world.calls.messages.slice(before).filter(m => !m.content.includes("mp-receipt"));
+  return world.calls.messages.slice(before).filter(m => !m.content?.includes("mp-receipt"));
 };
 
 test("buying a named spell posts one message, spoken by the shop, with the spell and its effects", async () => {

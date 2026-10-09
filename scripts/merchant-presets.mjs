@@ -10,7 +10,8 @@ import { libWrapper } from "./libwrapper-shim.mjs";
 import { FOLLOW_CLOCK_MODES, worldFollowsClock } from "./clock.mjs";
 import { accessModeOf, accessOf, accessOwnership, actorInReach, canOpenOn, canVisit } from "./reach.mjs";
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
-import { actorEffects, castingMessage, castsIn, chatRecipients } from "./casting.mjs";
+import { activityEffects, actorEffects, castActivity, castFlavor, castingMessage, castsIn, chatRecipients, spellCard, spellCards }
+  from "./casting.mjs";
 import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { categoryFor, lineTotalCp, planTrade, safeShopOf } from "./trade-plan.mjs";
@@ -868,10 +869,11 @@ async function recordDeed(buyer, good, uuids) {
  * (#70). The message text, and why it carries no price, is scripts/casting.mjs.
  *
  * Posted by the client that asked for the trade, like the meal prompt, so one
- * trade makes one message and no GM has to be at the table. A named service
- * links its spell, fetched here for the effects the GM may drag onto the
- * target; a spell that cannot be fetched is still announced, linked, without
- * them.
+ * trade makes one message and no GM has to be at the table. On dnd5e 6 a named
+ * service is the spell's own card, one per spell bought, with the tray the GM
+ * applies its effects from (#87, #237). Otherwise it links its spell, fetched
+ * here for the effects the GM may drag onto the target; a spell that cannot be
+ * fetched is still announced, linked, without them.
  *
  * @param {import("./trade.mjs").ShopTrade} trade
  * @param {{askedHere: boolean, chatMode: number}} where  `chatMode` is the
@@ -887,18 +889,38 @@ async function announceSpellcasting(trade, { askedHere, chatMode }) {
   const buyer = await fromUuid(trade.buyerUuid);
   if (!seller || !buyer) return;
 
+  const speaker = ChatMessage.getSpeaker({ actor: seller });
+  const whisper = chatRecipients(chatMode, game.users.filter(u => u.isGM).map(u => u.id), trade.userId);
+  const cards = spellCards(game.system?.version, foundry.utils.isNewerVersion);
   const casts = [];
   for (const { item, quantity } of bought) {
     const spell = goodFlag(item, "spell") ?? null;
     const doc = spell ? await fromUuid(spell).catch(() => null) : null;
-    casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
+    const card = cards && doc ? await spellCardFor(doc, seller, { speaker, whisper, flavor: castFlavor(buyer.name, quantity) }) : null;
+    if (card) await ChatMessage.create(card);
+    else casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
   }
+  if (!casts.length) return;
 
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor: seller }),
-    content: castingMessage({ shop: seller.name, buyer: buyer.name, casts }),
-    whisper: chatRecipients(chatMode, game.users.filter(u => u.isGM).map(u => u.id), trade.userId)
-  });
+  await ChatMessage.create({ speaker, whisper, content: castingMessage({ shop: seller.name, buyer: buyer.name, casts }) });
+}
+
+/**
+ * dnd5e 6's card for a spell the shop cast (casting.mjs `spellCard`), built from a copy of the
+ * spell owned by the shop and never saved, or null if the spell has no activity to show.
+ */
+async function spellCardFor(doc, shop, { speaker, whisper, flavor }) {
+  const data = doc.toObject();
+  data._id = foundry.utils.randomID();
+  const copy = new Item.implementation(data, { parent: shop });
+  const activity = castActivity(copy.system?.activities?.contents);
+  if (!activity) return null;
+  const card = {
+    system: await copy.system.getCardData({ activity }),
+    title: `${copy.name} - ${activity.name}`,
+    type: activity.metadata?.usage?.messageType ?? "usage"
+  };
+  return spellCard({ card, data, effects: activityEffects(activity), flavor, speaker, whisper });
 }
 
 /* ------------------------------------------------------------ trade listeners */
