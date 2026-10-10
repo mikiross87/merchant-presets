@@ -24,6 +24,12 @@ than for the code. Reference the issue or PR it closes.
   (#226)
 - A top-up restock now refills a line that's running low back to the quantity
   it last rolled, whoever bought it down, not only lines that sold out. (#226)
+- On dnd5e 6, a bought spellcasting service is announced as the spell's own
+  chat card, spoken by the shop and marked "Cast for Aria": its description,
+  level, school and components. For a spell with effects, such as Raise Dead's
+  Resurrection Sickness, the GM selects the token it was cast on and applies
+  them from the card's Effects tray, instead of dragging them from links.
+  Level services, and worlds on dnd5e 5.3, keep the message line. (#87, #237)
 
 ### Changed
 

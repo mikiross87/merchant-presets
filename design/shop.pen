@@ -1,5 +1,5 @@
 {
-  "version": "2.20",
+  "version": "2.21",
   "children": [
     {
       "type": "frame",
@@ -53671,6 +53671,1784 @@
       "theme": {
         "mode": "dark"
       }
+    },
+    {
+      "type": "frame",
+      "id": "tybWa",
+      "x": 800,
+      "y": 18700,
+      "name": "21 Spellcasting · Chat Card — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "fill": "$surface-app",
+      "layout": "vertical",
+      "gap": 20,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "HFN0I",
+          "name": "Chat title",
+          "fill": "$text-title",
+          "content": "Spellcasting chat card",
+          "fontFamily": "$font-title",
+          "fontSize": 24,
+          "fontWeight": "700"
+        },
+        {
+          "type": "frame",
+          "id": "S0Hl3",
+          "name": "Cards",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "TZM6i",
+              "name": "Col Named service with effects, as a GM sees it",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "aqivJ",
+                  "name": "Named service with effects, as a GM sees it caption",
+                  "fill": "$text-primary",
+                  "content": "Named service with effects, as a GM sees it",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "saFJM",
+                  "name": "Message Raise Dead",
+                  "width": 292,
+                  "fill": "$surface-app",
+                  "cornerRadius": 6,
+                  "stroke": "$border",
+                  "strokeWidth": {
+                    "top": 1,
+                    "right": 1,
+                    "bottom": 2,
+                    "left": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": [
+                    8,
+                    0,
+                    9,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LhuFr",
+                      "name": "Message header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "padding": [
+                        1,
+                        8,
+                        2,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "hxVrP",
+                          "name": "Sender row",
+                          "width": "fill_container",
+                          "height": 20,
+                          "gap": 4,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "jnwze",
+                              "name": "Sender",
+                              "fill": "$chat-ink",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Temple & Faith Store",
+                              "fontFamily": "Roboto Slab",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "W24uAU",
+                              "name": "Timestamp",
+                              "fill": "$text-secondary",
+                              "content": "2s ago",
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "g3LsVI",
+                              "name": "Message menu",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "ellipsis-vertical",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EypSv",
+                          "name": "Flavor",
+                          "width": "fill_container",
+                          "height": 20,
+                          "gap": 3,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "GCVTu",
+                              "name": "Flavor cast",
+                              "fill": "$text-secondary",
+                              "content": "Cast for",
+                              "fontFamily": "Roboto Condensed",
+                              "fontSize": 12,
+                              "fontWeight": "normal",
+                              "fontStyle": "italic"
+                            },
+                            {
+                              "type": "text",
+                              "id": "azzta",
+                              "name": "Flavor buyer",
+                              "fill": "$text-secondary",
+                              "content": "Aria",
+                              "fontFamily": "Roboto Condensed",
+                              "fontSize": 12,
+                              "fontWeight": "700",
+                              "fontStyle": "italic"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XdeH8",
+                      "name": "Card header",
+                      "width": "fill_container",
+                      "height": 24,
+                      "gap": 8,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "H3larZ",
+                          "name": "Item icon",
+                          "width": 24,
+                          "height": 24,
+                          "fill": [
+                            "$chat-well",
+                            {
+                              "type": "image",
+                              "enabled": true,
+                              "url": "assets/items/skull-fire-white-yellow.webp",
+                              "mode": "cover"
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "s2zQ7",
+                          "name": "Activity icon",
+                          "width": 24,
+                          "height": 24,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "pEViY",
+                              "x": 2,
+                              "y": 2,
+                              "name": "Activity glyph",
+                              "geometry": "M196 496c-16.62 0-30-13.38-30-30v-120h-120c-16.62 0-30-13.38-30-30v-120c0-16.62 13.38-30 30-30h120v-120c0-16.62 13.38-30 30-30h120c16.62 0 30 13.38 30 30v120h120c16.62 0 30 13.38 30 30v120c0 16.62-13.38 30-30 30h-120v120c0 16.62-13.38 30-30 30z m0-135h120l-60-60z m0-75h120l-60-60z m0-75h120l-60-60z",
+                              "viewBox": [
+                                0,
+                                0,
+                                512,
+                                512
+                              ],
+                              "fill": "$chat-glyph",
+                              "width": 20,
+                              "height": 20
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "z6F38U",
+                          "name": "Name stacked",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mYOrF",
+                              "name": "Title",
+                              "fill": "$chat-ink",
+                              "content": "Raise Dead",
+                              "lineHeight": 1,
+                              "fontFamily": "Roboto Slab",
+                              "fontSize": 12,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "CvPNo",
+                              "name": "Subtitle",
+                              "fill": "$text-secondary",
+                              "content": "Revive",
+                              "lineHeight": 1,
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "W6tQJK",
+                          "name": "Chevron",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "chevron-down",
+                          "library": "lucide",
+                          "fill": "$chat-ink"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Tchcn",
+                      "name": "Card description",
+                      "width": "fill_container",
+                      "fill": "$chat-wash",
+                      "stroke": "$chat-rule",
+                      "strokeWidth": {
+                        "top": 1,
+                        "bottom": 1
+                      },
+                      "layout": "vertical",
+                      "gap": 7,
+                      "padding": [
+                        13,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "z5UdVt",
+                          "name": "Description 1",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "With a touch, you revive a dead creature if it has been dead no longer than 10 days and it wasn't Undead when it died.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yiuFY",
+                          "name": "Description 2",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The creature returns to life with 1 Hit Point. This spell also neutralizes any poisons that affected the creature at the time of death.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "e9SIv",
+                          "name": "Description 3",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "This spell closes all mortal wounds, but it doesn't restore missing body parts. If the creature is lacking body parts or organs integral for its survival—its head, for instance—the spell automatically fails.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qV4rU",
+                          "name": "Description 4",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Coming back from the dead is an ordeal. The target takes a −4 penalty to D20 Tests. Every time the target finishes a Long Rest, the penalty is reduced by 1 until it becomes 0.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rX2tf",
+                      "name": "Card body",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "voWY3",
+                          "name": "Materials",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LALHn",
+                              "name": "Materials label",
+                              "fill": "$chat-ink",
+                              "content": "MATERIALS",
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "m4YuEQ",
+                              "name": "Materials",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "a diamond worth 500+ GP, which the spell consumes",
+                              "lineHeight": 1.25,
+                              "fontFamily": "Roboto",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "VJVHU",
+                          "name": "Properties row",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "bNq1A",
+                              "name": "Tag",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "tag",
+                              "library": "lucide",
+                              "fill": "$accent-gold"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "qGH5N",
+                              "name": "Pills",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "U8J5H",
+                                  "name": "Pills line",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "Iesz7",
+                                      "name": "Pill 5th Level",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "LSFdp",
+                                          "name": "5th Level",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "5th Level",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "EO4ml",
+                                      "name": "Pill Necromancy",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "vfwuQ",
+                                          "name": "Necromancy",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Necromancy",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "INNpk",
+                                      "name": "Pill V, S, M",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "cjwfW",
+                                          "name": "V, S, M",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "V, S, M",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "zEip9",
+                                      "name": "Pill Action",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "iOwaH",
+                                          "name": "Action",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Action",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "b5EBzP",
+                                  "name": "Pills line",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "iSWBY",
+                                      "name": "Pill Instantaneous",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "j7zbUd",
+                                          "name": "Instantaneous",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Instantaneous",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "L6MQK",
+                                      "name": "Pill Self",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "JupvC",
+                                          "name": "Self",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Self",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Lun4k",
+                          "name": "Targets row",
+                          "width": "fill_container",
+                          "height": 24,
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "W1m7gk",
+                              "name": "Target source",
+                              "width": 24,
+                              "height": 24,
+                              "cornerRadius": 4,
+                              "stroke": "$chat-button-edge",
+                              "strokeWidth": 1,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "v8GYo",
+                                  "name": "Target source icon",
+                                  "width": 12,
+                                  "height": 12,
+                                  "icon": "scan",
+                                  "library": "lucide",
+                                  "fill": "$text-secondary"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yFFJh",
+                              "name": "Pill No Targets",
+                              "cornerRadius": 3,
+                              "stroke": "$danger",
+                              "strokeWidth": 1,
+                              "gap": 3,
+                              "padding": [
+                                2,
+                                5
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "CQhnK",
+                                  "name": "No Targets",
+                                  "fill": "$danger",
+                                  "content": "No Targets",
+                                  "fontFamily": "Roboto Condensed",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R3adu",
+                      "name": "Effects tray",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "padding": [
+                        3,
+                        0,
+                        4,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "V4XyM",
+                          "name": "Tray label",
+                          "width": "fill_container",
+                          "height": 14,
+                          "gap": 4,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "t3JIb",
+                              "name": "Tray rule left",
+                              "fill": "$chat-rule",
+                              "width": "fill_container",
+                              "height": 1
+                            },
+                            {
+                              "type": "icon",
+                              "id": "AjRdQ",
+                              "name": "Bolt",
+                              "width": 11,
+                              "height": 11,
+                              "icon": "zap",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "KjENm",
+                              "name": "Tray label text",
+                              "fill": "$text-secondary",
+                              "content": "EFFECTS",
+                              "fontFamily": "Roboto",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "PwGHT",
+                              "name": "Caret",
+                              "width": 9,
+                              "height": 9,
+                              "icon": "chevron-down",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            },
+                            {
+                              "type": "rectangle",
+                              "id": "BgGoQ",
+                              "name": "Tray rule right",
+                              "fill": "$chat-rule",
+                              "width": "fill_container",
+                              "height": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "R1Qlwt",
+                          "name": "Effects",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "padding": [
+                            0,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "OFopn",
+                              "name": "Effect 1",
+                              "width": "fill_container",
+                              "height": 25,
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ndeLV",
+                                  "name": "Effect icon",
+                                  "width": 18,
+                                  "height": 18,
+                                  "fill": "$chat-well",
+                                  "cornerRadius": 3,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1,
+                                  "layout": "none",
+                                  "children": [
+                                    {
+                                      "type": "path",
+                                      "id": "Mbkn2",
+                                      "x": 2,
+                                      "y": 2,
+                                      "name": "Effect glyph",
+                                      "geometry": "M246.008 18.742c-111.91-0.002-190.573 38.286-204.668 80.67h0.002c-25.93 77.97 72.846 117.983 216.416 92.307 78.262-14 182.29 16.69 123.08 80.35 151.465-68.768 22.753-120.352-128.742-102.648-88.326 10.322-160.02 11.012-170.92-37.805-7.92-35.467 76.538-71.817 167.17-77.25 89.626-5.373 183.32 37.95 170.533 64.828-17.172 36.097-126.9 7.75-120.308-25.113 2.21-11.017 19.864-15.988 42.05-14.6-30.58-10.615-72.8-11.888-79.427 12.846-4.788 17.872 27.71 42.46 72.418 53.73 54.674 13.782 115.05 5.32 115.05-46.136 0-44.9-92.297-81.18-202.655-81.18z m-11.08 196.158c-53.913 0.166-99.455 27.145-110.98 70.15-7.384 27.56 1.155 56.586 19.86 81.18 2.062 2.712-0.42 8.23-3.505 11.094-51.883 48.172-12.11 89.938 25.113 51.393-16.988 47.312 24.365 66.46 46.72 24.53-2.453 47.795 41.422 54.253 51.977 8.76 12.305 50.245 66.506 34.658 47.305-33.29-1.426-5.044 0.676-9.273 4.672-10.506 33.486-10.338 58.973-33.09 67.164-63.66 5.56-20.75 2.315-42.26-7.766-62.013l-56.636 13.39 38.91-38.91c-18.736-20.818-45.76-37.6-77.88-46.206-13.436-3.6-26.748-5.462-39.712-5.837v-0.004c-1.756-0.052-3.503-0.075-5.242-0.07z m-37.04 65.096c3.502 0.035 7.058 0.51 10.598 1.457 22.658 6.07 36.103 29.36 30.032 52.018-6.07 22.658-29.36 36.103-52.018 30.032-22.657-6.07-36.102-29.36-30.03-52.018 5.12-19.117 22.5-31.676 41.417-31.488z m2.782 40.19c-7.255 0-13.137 5.883-13.137 13.136 0 7.253 5.882 13.133 13.137 13.133 7.255 0 13.137-5.88 13.137-13.133 0-7.255-5.882-13.136-13.137-13.136z m96.088 17.546c2.542 0.026 5.124 0.37 7.693 1.057 16.445 4.405 26.202 21.307 21.796 37.75-4.406 16.445-21.308 26.204-37.752 21.798-16.443-4.406-26.2-21.308-21.795-37.752 3.717-13.874 16.33-22.99 30.058-22.854z m-51.955 24.47c8.905 23.324 15.9 66.205-16.97 56.83-31.33-8.898-0.897-41.16 16.97-56.83z",
+                                      "viewBox": [
+                                        0,
+                                        0,
+                                        512,
+                                        512
+                                      ],
+                                      "fill": "#ffffff",
+                                      "width": 14,
+                                      "height": 14
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "GmRG9",
+                                  "name": "Effect title",
+                                  "fill": "$chat-ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Resurrection Sickness (Day 1)",
+                                  "fontFamily": "Roboto Slab",
+                                  "fontSize": 12,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Mzxim",
+                                  "name": "Pill None",
+                                  "cornerRadius": 3,
+                                  "stroke": "$chat-pill-edge",
+                                  "strokeWidth": 1,
+                                  "gap": 3,
+                                  "padding": [
+                                    2,
+                                    5
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "q9Ca0D",
+                                      "name": "Pill icon",
+                                      "width": 10,
+                                      "height": 10,
+                                      "icon": "clock-3",
+                                      "library": "lucide",
+                                      "fill": "$text-secondary"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Q5SZBv",
+                                      "name": "None",
+                                      "fill": "$text-secondary",
+                                      "content": "None",
+                                      "fontFamily": "Roboto Condensed",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ellipse",
+                                  "id": "RC0Ty",
+                                  "name": "Pip on",
+                                  "fill": "$accent-gold",
+                                  "width": 7,
+                                  "height": 7
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zM82W",
+                              "name": "Effect 2",
+                              "width": "fill_container",
+                              "height": 25,
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "XtDRs",
+                                  "name": "Effect icon",
+                                  "width": 18,
+                                  "height": 18,
+                                  "fill": "$chat-well",
+                                  "cornerRadius": 3,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1,
+                                  "layout": "none",
+                                  "children": [
+                                    {
+                                      "type": "path",
+                                      "id": "wTyJJ",
+                                      "x": 2,
+                                      "y": 2,
+                                      "name": "Effect glyph",
+                                      "geometry": "M246.008 18.742c-111.91-0.002-190.573 38.286-204.668 80.67h0.002c-25.93 77.97 72.846 117.983 216.416 92.307 78.262-14 182.29 16.69 123.08 80.35 151.465-68.768 22.753-120.352-128.742-102.648-88.326 10.322-160.02 11.012-170.92-37.805-7.92-35.467 76.538-71.817 167.17-77.25 89.626-5.373 183.32 37.95 170.533 64.828-17.172 36.097-126.9 7.75-120.308-25.113 2.21-11.017 19.864-15.988 42.05-14.6-30.58-10.615-72.8-11.888-79.427 12.846-4.788 17.872 27.71 42.46 72.418 53.73 54.674 13.782 115.05 5.32 115.05-46.136 0-44.9-92.297-81.18-202.655-81.18z m-11.08 196.158c-53.913 0.166-99.455 27.145-110.98 70.15-7.384 27.56 1.155 56.586 19.86 81.18 2.062 2.712-0.42 8.23-3.505 11.094-51.883 48.172-12.11 89.938 25.113 51.393-16.988 47.312 24.365 66.46 46.72 24.53-2.453 47.795 41.422 54.253 51.977 8.76 12.305 50.245 66.506 34.658 47.305-33.29-1.426-5.044 0.676-9.273 4.672-10.506 33.486-10.338 58.973-33.09 67.164-63.66 5.56-20.75 2.315-42.26-7.766-62.013l-56.636 13.39 38.91-38.91c-18.736-20.818-45.76-37.6-77.88-46.206-13.436-3.6-26.748-5.462-39.712-5.837v-0.004c-1.756-0.052-3.503-0.075-5.242-0.07z m-37.04 65.096c3.502 0.035 7.058 0.51 10.598 1.457 22.658 6.07 36.103 29.36 30.032 52.018-6.07 22.658-29.36 36.103-52.018 30.032-22.657-6.07-36.102-29.36-30.03-52.018 5.12-19.117 22.5-31.676 41.417-31.488z m2.782 40.19c-7.255 0-13.137 5.883-13.137 13.136 0 7.253 5.882 13.133 13.137 13.133 7.255 0 13.137-5.88 13.137-13.133 0-7.255-5.882-13.136-13.137-13.136z m96.088 17.546c2.542 0.026 5.124 0.37 7.693 1.057 16.445 4.405 26.202 21.307 21.796 37.75-4.406 16.445-21.308 26.204-37.752 21.798-16.443-4.406-26.2-21.308-21.795-37.752 3.717-13.874 16.33-22.99 30.058-22.854z m-51.955 24.47c8.905 23.324 15.9 66.205-16.97 56.83-31.33-8.898-0.897-41.16 16.97-56.83z",
+                                      "viewBox": [
+                                        0,
+                                        0,
+                                        512,
+                                        512
+                                      ],
+                                      "fill": "#ffffff",
+                                      "width": 14,
+                                      "height": 14
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "BWOWT",
+                                  "name": "Effect title",
+                                  "fill": "$chat-ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Resurrection Sickness (Day 2)",
+                                  "fontFamily": "Roboto Slab",
+                                  "fontSize": 12,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "XUbr0",
+                                  "name": "Pill None",
+                                  "cornerRadius": 3,
+                                  "stroke": "$chat-pill-edge",
+                                  "strokeWidth": 1,
+                                  "gap": 3,
+                                  "padding": [
+                                    2,
+                                    5
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "G9OPKD",
+                                      "name": "Pill icon",
+                                      "width": 10,
+                                      "height": 10,
+                                      "icon": "clock-3",
+                                      "library": "lucide",
+                                      "fill": "$text-secondary"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "JFM9a",
+                                      "name": "None",
+                                      "fill": "$text-secondary",
+                                      "content": "None",
+                                      "fontFamily": "Roboto Condensed",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ellipse",
+                                  "id": "PII5n",
+                                  "name": "Pip",
+                                  "width": 7,
+                                  "height": 7,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "STr2G",
+                              "name": "Effect 3",
+                              "width": "fill_container",
+                              "height": 25,
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "f9b7VD",
+                                  "name": "Effect icon",
+                                  "width": 18,
+                                  "height": 18,
+                                  "fill": "$chat-well",
+                                  "cornerRadius": 3,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1,
+                                  "layout": "none",
+                                  "children": [
+                                    {
+                                      "type": "path",
+                                      "id": "eCkeL",
+                                      "x": 2,
+                                      "y": 2,
+                                      "name": "Effect glyph",
+                                      "geometry": "M246.008 18.742c-111.91-0.002-190.573 38.286-204.668 80.67h0.002c-25.93 77.97 72.846 117.983 216.416 92.307 78.262-14 182.29 16.69 123.08 80.35 151.465-68.768 22.753-120.352-128.742-102.648-88.326 10.322-160.02 11.012-170.92-37.805-7.92-35.467 76.538-71.817 167.17-77.25 89.626-5.373 183.32 37.95 170.533 64.828-17.172 36.097-126.9 7.75-120.308-25.113 2.21-11.017 19.864-15.988 42.05-14.6-30.58-10.615-72.8-11.888-79.427 12.846-4.788 17.872 27.71 42.46 72.418 53.73 54.674 13.782 115.05 5.32 115.05-46.136 0-44.9-92.297-81.18-202.655-81.18z m-11.08 196.158c-53.913 0.166-99.455 27.145-110.98 70.15-7.384 27.56 1.155 56.586 19.86 81.18 2.062 2.712-0.42 8.23-3.505 11.094-51.883 48.172-12.11 89.938 25.113 51.393-16.988 47.312 24.365 66.46 46.72 24.53-2.453 47.795 41.422 54.253 51.977 8.76 12.305 50.245 66.506 34.658 47.305-33.29-1.426-5.044 0.676-9.273 4.672-10.506 33.486-10.338 58.973-33.09 67.164-63.66 5.56-20.75 2.315-42.26-7.766-62.013l-56.636 13.39 38.91-38.91c-18.736-20.818-45.76-37.6-77.88-46.206-13.436-3.6-26.748-5.462-39.712-5.837v-0.004c-1.756-0.052-3.503-0.075-5.242-0.07z m-37.04 65.096c3.502 0.035 7.058 0.51 10.598 1.457 22.658 6.07 36.103 29.36 30.032 52.018-6.07 22.658-29.36 36.103-52.018 30.032-22.657-6.07-36.102-29.36-30.03-52.018 5.12-19.117 22.5-31.676 41.417-31.488z m2.782 40.19c-7.255 0-13.137 5.883-13.137 13.136 0 7.253 5.882 13.133 13.137 13.133 7.255 0 13.137-5.88 13.137-13.133 0-7.255-5.882-13.136-13.137-13.136z m96.088 17.546c2.542 0.026 5.124 0.37 7.693 1.057 16.445 4.405 26.202 21.307 21.796 37.75-4.406 16.445-21.308 26.204-37.752 21.798-16.443-4.406-26.2-21.308-21.795-37.752 3.717-13.874 16.33-22.99 30.058-22.854z m-51.955 24.47c8.905 23.324 15.9 66.205-16.97 56.83-31.33-8.898-0.897-41.16 16.97-56.83z",
+                                      "viewBox": [
+                                        0,
+                                        0,
+                                        512,
+                                        512
+                                      ],
+                                      "fill": "#ffffff",
+                                      "width": 14,
+                                      "height": 14
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Q936ui",
+                                  "name": "Effect title",
+                                  "fill": "$chat-ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Resurrection Sickness (Day 3)",
+                                  "fontFamily": "Roboto Slab",
+                                  "fontSize": 12,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "lqxL5",
+                                  "name": "Pill None",
+                                  "cornerRadius": 3,
+                                  "stroke": "$chat-pill-edge",
+                                  "strokeWidth": 1,
+                                  "gap": 3,
+                                  "padding": [
+                                    2,
+                                    5
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "gCtal",
+                                      "name": "Pill icon",
+                                      "width": 10,
+                                      "height": 10,
+                                      "icon": "clock-3",
+                                      "library": "lucide",
+                                      "fill": "$text-secondary"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "MTDvm",
+                                      "name": "None",
+                                      "fill": "$text-secondary",
+                                      "content": "None",
+                                      "fontFamily": "Roboto Condensed",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ellipse",
+                                  "id": "hmDrk",
+                                  "name": "Pip",
+                                  "width": 7,
+                                  "height": 7,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "JTiyB",
+                              "name": "Effect 4",
+                              "width": "fill_container",
+                              "height": 25,
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "vWOPi",
+                                  "name": "Effect icon",
+                                  "width": 18,
+                                  "height": 18,
+                                  "fill": "$chat-well",
+                                  "cornerRadius": 3,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1,
+                                  "layout": "none",
+                                  "children": [
+                                    {
+                                      "type": "path",
+                                      "id": "tikno",
+                                      "x": 2,
+                                      "y": 2,
+                                      "name": "Effect glyph",
+                                      "geometry": "M246.008 18.742c-111.91-0.002-190.573 38.286-204.668 80.67h0.002c-25.93 77.97 72.846 117.983 216.416 92.307 78.262-14 182.29 16.69 123.08 80.35 151.465-68.768 22.753-120.352-128.742-102.648-88.326 10.322-160.02 11.012-170.92-37.805-7.92-35.467 76.538-71.817 167.17-77.25 89.626-5.373 183.32 37.95 170.533 64.828-17.172 36.097-126.9 7.75-120.308-25.113 2.21-11.017 19.864-15.988 42.05-14.6-30.58-10.615-72.8-11.888-79.427 12.846-4.788 17.872 27.71 42.46 72.418 53.73 54.674 13.782 115.05 5.32 115.05-46.136 0-44.9-92.297-81.18-202.655-81.18z m-11.08 196.158c-53.913 0.166-99.455 27.145-110.98 70.15-7.384 27.56 1.155 56.586 19.86 81.18 2.062 2.712-0.42 8.23-3.505 11.094-51.883 48.172-12.11 89.938 25.113 51.393-16.988 47.312 24.365 66.46 46.72 24.53-2.453 47.795 41.422 54.253 51.977 8.76 12.305 50.245 66.506 34.658 47.305-33.29-1.426-5.044 0.676-9.273 4.672-10.506 33.486-10.338 58.973-33.09 67.164-63.66 5.56-20.75 2.315-42.26-7.766-62.013l-56.636 13.39 38.91-38.91c-18.736-20.818-45.76-37.6-77.88-46.206-13.436-3.6-26.748-5.462-39.712-5.837v-0.004c-1.756-0.052-3.503-0.075-5.242-0.07z m-37.04 65.096c3.502 0.035 7.058 0.51 10.598 1.457 22.658 6.07 36.103 29.36 30.032 52.018-6.07 22.658-29.36 36.103-52.018 30.032-22.657-6.07-36.102-29.36-30.03-52.018 5.12-19.117 22.5-31.676 41.417-31.488z m2.782 40.19c-7.255 0-13.137 5.883-13.137 13.136 0 7.253 5.882 13.133 13.137 13.133 7.255 0 13.137-5.88 13.137-13.133 0-7.255-5.882-13.136-13.137-13.136z m96.088 17.546c2.542 0.026 5.124 0.37 7.693 1.057 16.445 4.405 26.202 21.307 21.796 37.75-4.406 16.445-21.308 26.204-37.752 21.798-16.443-4.406-26.2-21.308-21.795-37.752 3.717-13.874 16.33-22.99 30.058-22.854z m-51.955 24.47c8.905 23.324 15.9 66.205-16.97 56.83-31.33-8.898-0.897-41.16 16.97-56.83z",
+                                      "viewBox": [
+                                        0,
+                                        0,
+                                        512,
+                                        512
+                                      ],
+                                      "fill": "#ffffff",
+                                      "width": 14,
+                                      "height": 14
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "b6QW4",
+                                  "name": "Effect title",
+                                  "fill": "$chat-ink",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Resurrection Sickness (Day 4)",
+                                  "fontFamily": "Roboto Slab",
+                                  "fontSize": 12,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "G1fEg8",
+                                  "name": "Pill None",
+                                  "cornerRadius": 3,
+                                  "stroke": "$chat-pill-edge",
+                                  "strokeWidth": 1,
+                                  "gap": 3,
+                                  "padding": [
+                                    2,
+                                    5
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "X92Vqv",
+                                      "name": "Pill icon",
+                                      "width": 10,
+                                      "height": 10,
+                                      "icon": "clock-3",
+                                      "library": "lucide",
+                                      "fill": "$text-secondary"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "NLLOo",
+                                      "name": "None",
+                                      "fill": "$text-secondary",
+                                      "content": "None",
+                                      "fontFamily": "Roboto Condensed",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "ellipse",
+                                  "id": "siwtC",
+                                  "name": "Pip",
+                                  "width": 7,
+                                  "height": 7,
+                                  "stroke": "$accent-gold",
+                                  "strokeWidth": 1
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "e8siS",
+                          "name": "Apply wrap",
+                          "width": "fill_container",
+                          "padding": [
+                            4,
+                            8,
+                            0,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "gX06b",
+                              "name": "Apply",
+                              "width": "fill_container",
+                              "fill": "$chat-button",
+                              "cornerRadius": 4,
+                              "stroke": "$chat-button-edge",
+                              "strokeWidth": 1,
+                              "gap": 4,
+                              "padding": [
+                                3,
+                                3,
+                                4,
+                                3
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "dowlJ",
+                                  "name": "Apply icon",
+                                  "width": 11,
+                                  "height": 11,
+                                  "icon": "reply-all",
+                                  "library": "lucide",
+                                  "fill": "$chat-ink"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "nqSV3",
+                                  "name": "Apply label",
+                                  "fill": "$chat-ink",
+                                  "content": "APPLY",
+                                  "fontFamily": "Roboto",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "zXyFS",
+              "name": "Col Named service without effects, bought twice",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gBqm4",
+                  "name": "Named service without effects, bought twice caption",
+                  "fill": "$text-primary",
+                  "content": "Named service without effects, bought twice",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "yDeFq",
+                  "name": "Message Identify",
+                  "width": 292,
+                  "fill": "$surface-app",
+                  "cornerRadius": 6,
+                  "stroke": "$border",
+                  "strokeWidth": {
+                    "top": 1,
+                    "right": 1,
+                    "bottom": 2,
+                    "left": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": [
+                    8,
+                    0,
+                    10,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fOiSN",
+                      "name": "Message header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "padding": [
+                        1,
+                        8,
+                        2,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "USeMZ",
+                          "name": "Sender row",
+                          "width": "fill_container",
+                          "height": 20,
+                          "gap": 4,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "d4ihzl",
+                              "name": "Sender",
+                              "fill": "$chat-ink",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Temple & Faith Store",
+                              "fontFamily": "Roboto Slab",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "rmJnc",
+                              "name": "Timestamp",
+                              "fill": "$text-secondary",
+                              "content": "2s ago",
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "kmfWZ",
+                              "name": "Message menu",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "ellipsis-vertical",
+                              "library": "lucide",
+                              "fill": "$text-secondary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "q1emxp",
+                          "name": "Flavor",
+                          "width": "fill_container",
+                          "height": 20,
+                          "gap": 3,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "kQBkD",
+                              "name": "Flavor cast",
+                              "fill": "$text-secondary",
+                              "content": "Cast twice for",
+                              "fontFamily": "Roboto Condensed",
+                              "fontSize": 12,
+                              "fontWeight": "normal",
+                              "fontStyle": "italic"
+                            },
+                            {
+                              "type": "text",
+                              "id": "w3kr8F",
+                              "name": "Flavor buyer",
+                              "fill": "$text-secondary",
+                              "content": "Aria",
+                              "fontFamily": "Roboto Condensed",
+                              "fontSize": 12,
+                              "fontWeight": "700",
+                              "fontStyle": "italic"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yWv2G",
+                      "name": "Card header",
+                      "width": "fill_container",
+                      "height": 24,
+                      "gap": 8,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NtpHK",
+                          "name": "Item icon",
+                          "width": 24,
+                          "height": 24,
+                          "fill": [
+                            "$chat-well",
+                            {
+                              "type": "image",
+                              "enabled": true,
+                              "url": "assets/items/magnifying-glass.webp",
+                              "mode": "cover"
+                            }
+                          ],
+                          "cornerRadius": 4,
+                          "stroke": "$accent-gold",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "mOUX3",
+                          "name": "Activity icon",
+                          "width": 24,
+                          "height": 24,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "KuXHO",
+                              "x": 2,
+                              "y": 2,
+                              "name": "Activity glyph",
+                              "geometry": "M331.188 16.72c-40.712-0.002-81.41 15.408-112.438 46.436-43.866 43.864-56.798 107-38.813 162.25l-162.907 162.906v25.75l170.22-170.218c2.75 5.84 5.847 11.555 9.344 17.094l-179.564 179.562v51.78h46.97l181.875-181.874c5.516 3.515 11.212 6.668 17.03 9.438l-172.465 172.436h27.03l164.75-164.75c55.182 17.85 118.21 4.884 162-38.905 41.415-41.414 54.998-99.91 41.282-152.813l-105.282 105.313-90.033-23.938-23.968-90.03 105.311-105.314c-13.213-3.41-26.772-5.125-40.342-5.125z",
+                              "viewBox": [
+                                0,
+                                0,
+                                512,
+                                512
+                              ],
+                              "fill": "$chat-glyph",
+                              "width": 20,
+                              "height": 20
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iZTiV",
+                          "name": "Name stacked",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ZPxio",
+                              "name": "Title",
+                              "fill": "$chat-ink",
+                              "content": "Identify",
+                              "lineHeight": 1,
+                              "fontFamily": "Roboto Slab",
+                              "fontSize": 12,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ZD7kO",
+                              "name": "Subtitle",
+                              "fill": "$text-secondary",
+                              "content": "Use",
+                              "lineHeight": 1,
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "sp1tZ",
+                          "name": "Chevron",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "chevron-down",
+                          "library": "lucide",
+                          "fill": "$chat-ink"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Q1XzdK",
+                      "name": "Card description",
+                      "width": "fill_container",
+                      "fill": "$chat-wash",
+                      "stroke": "$chat-rule",
+                      "strokeWidth": {
+                        "top": 1,
+                        "bottom": 1
+                      },
+                      "layout": "vertical",
+                      "gap": 7,
+                      "padding": [
+                        13,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GTzFJ",
+                          "name": "Description 1",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "You touch an object throughout the spell's casting. If the object is a magic item or some other magical object, you learn its properties and how to use them, whether it requires Attunement, and how many charges it has, if any. You learn whether any ongoing spells are affecting the item and what they are. If the item was created by a spell, you learn that spell's name.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "M8ExWq",
+                          "name": "Description 2",
+                          "fill": "$chat-ink",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "If you instead touch a creature throughout the casting, you learn which ongoing spells, if any, are currently affecting it.",
+                          "lineHeight": 1.25,
+                          "textAlign": "justify",
+                          "fontFamily": "Roboto",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J57A6y",
+                      "name": "Card body",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        0,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "y20G1",
+                          "name": "Materials",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "uTqB0",
+                              "name": "Materials label",
+                              "fill": "$chat-ink",
+                              "content": "MATERIALS",
+                              "fontFamily": "Roboto",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "X2rkpY",
+                              "name": "Materials",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "a pearl worth 100+ GP",
+                              "lineHeight": 1.25,
+                              "fontFamily": "Roboto",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Wdw3j",
+                          "name": "Properties row",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "zTvOm",
+                              "name": "Tag",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "tag",
+                              "library": "lucide",
+                              "fill": "$accent-gold"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "IZXqn",
+                              "name": "Pills",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "LVPfz",
+                                  "name": "Pills line",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "pqBM2",
+                                      "name": "Pill 1st Level",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "FezO3",
+                                          "name": "1st Level",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "1st Level",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "PCHsP",
+                                      "name": "Pill Divination",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "dA2m5",
+                                          "name": "Divination",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Divination",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "XsW3i",
+                                      "name": "Pill Ritual",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "m7oiHb",
+                                          "name": "Ritual",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Ritual",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "Bs1oZ",
+                                      "name": "Pill V, S, M",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "b3P2a7",
+                                          "name": "V, S, M",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "V, S, M",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "BXD9y",
+                                      "name": "Pill Action",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "dYLox",
+                                          "name": "Action",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Action",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "HFWtf",
+                                  "name": "Pills line",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "E8MEOh",
+                                      "name": "Pill Instantaneous",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "SffhO",
+                                          "name": "Instantaneous",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Instantaneous",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "cIoVW",
+                                      "name": "Pill Self",
+                                      "cornerRadius": 3,
+                                      "stroke": "$chat-pill-edge",
+                                      "strokeWidth": 1,
+                                      "gap": 3,
+                                      "padding": [
+                                        2,
+                                        5
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "oWg7o",
+                                          "name": "Self",
+                                          "fill": "$chat-pill-ink",
+                                          "content": "Self",
+                                          "fontFamily": "Roboto Condensed",
+                                          "fontSize": 11,
+                                          "fontWeight": "normal"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "MWRdp",
+          "name": "Note",
+          "fill": "$text-secondary",
+          "textGrowth": "fixed-width",
+          "width": 608,
+          "content": "dnd5e 6's own usage card (#87, #237). Ours is the flavor line under the shop's name. Players see the same card without the Effects tray. dnd5e 5.3 keeps today's message.",
+          "fontFamily": "$font-body",
+          "fontSize": 12,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "id": "OiqK9",
+      "type": "ref",
+      "ref": "tybWa",
+      "name": "21 Spellcasting · Chat Card — Dark",
+      "x": 1800,
+      "y": 18700,
+      "theme": {
+        "mode": "dark"
+      }
     }
   ],
   "themes": {
@@ -54003,6 +55781,146 @@
     "seal-mark": {
       "type": "color",
       "value": "#e7d1b1"
+    },
+    "chat-ink": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#191813",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#cfd2da",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-glyph": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#191813",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#9f9275",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-rule": {
+      "type": "color",
+      "value": "#434857"
+    },
+    "chat-pill-edge": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#434857",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-pill-ink": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#4e4e4e",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#cfd2da",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-wash": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#00000000",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#ffffff08",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-well": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#3d3d3d",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#0d0b0b",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-button": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#0000000d",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#242731",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "chat-button-edge": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#999999",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#333742",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
     }
   },
   "fileToken": "7a4b9da5-dc1f-4721-a7b2-8afe3af81858"

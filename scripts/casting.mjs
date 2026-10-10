@@ -67,6 +67,68 @@ export function castingMessage({ shop, buyer, casts }) {
   }).join("");
 }
 
+/* ------------------------------------------- the spell's own card (#87, #237) */
+
+/**
+ * On dnd5e 6 a named service is announced as dnd5e's own usage card for the spell, spoken by the
+ * shop (design band 21): the spell's description and pills, and, for a spell with effects, the
+ * tray the GM applies them from. dnd5e 5.3 has the `usage` type but not the item card's face, so
+ * it keeps `castingMessage`.
+ *
+ * @param {string|undefined} version  dnd5e's version
+ * @param {(a: string, b: string) => boolean} isNewerVersion  foundry.utils.isNewerVersion
+ */
+export function spellCards(version, isNewerVersion) {
+  return !!version && !isNewerVersion("6.0.0", version);
+}
+
+/** The card's flavor line, under the shop's name: "Cast twice for **Aria**". */
+export function castFlavor(buyer, quantity) {
+  return `Cast${times(quantity)} for <strong>${escape(buyer)}</strong>`;
+}
+
+/**
+ * The uuids of the effects an activity can put on a creature: its tray. Enchantments change an
+ * item, as in `actorEffects`.
+ *
+ * @param {{effects?: {effect?: {uuid: string, type?: string}}[]}|undefined} activity
+ * @returns {string[]}
+ */
+export function activityEffects(activity) {
+  return (activity?.effects ?? []).map(e => e.effect).filter(e => e && e.type !== "enchantment").map(e => e.uuid);
+}
+
+/** The activity the card shows: the one carrying effects, else the spell's first. */
+export function castActivity(activities) {
+  const all = Array.from(activities ?? []);
+  return all.find(a => activityEffects(a).length) ?? all[0];
+}
+
+/**
+ * The card as a chat message. It is built the way dnd5e keeps a scroll used up by casting: the
+ * spell isn't on any actor, and a compendium link only resolves on a client that has the spell
+ * loaded, so `system.item.uuid` is null and dnd5e rebuilds the spell from `flags.dnd5e.item.data`
+ * on the speaker, the shop, on every client. No buttons (Raise Dead's healing roll, Symbol's
+ * save): nothing is cast. No content either, since dnd5e shows content instead of the card.
+ *
+ * @param {object} input
+ * @param {{system: object, title: string, type: string}} input.card  dnd5e's card data for the
+ *   activity (`getCardData`), on a copy of the spell owned by the shop
+ * @param {object} input.data      That copy's data; its `_id` is the card's `system.item.id`.
+ * @param {string[]} input.effects The tray (`activityEffects`).
+ * @param {string} input.flavor    `castFlavor`
+ * @param {object} input.speaker
+ * @param {string[]} input.whisper `chatRecipients`
+ */
+export function spellCard({ card, data, effects, flavor, speaker, whisper }) {
+  const { system, ...rest } = card;
+  return {
+    ...rest, speaker, whisper, flavor,
+    system: { ...system, buttons: [], effects, item: { ...system.item, uuid: null } },
+    flags: { dnd5e: { item: { data } } }
+  };
+}
+
 /**
  * Who sees the message, on the 0-3 scale 1.x took from Item Piles' *Output to
  * chat* (merchant-presets.mjs `nativeChatMode` maps *Trades in chat* onto it):
