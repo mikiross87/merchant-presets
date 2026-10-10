@@ -896,11 +896,11 @@ async function announceSpellcasting(trade, { askedHere, chatMode }) {
   for (const { item, quantity } of bought) {
     const spell = goodFlag(item, "spell") ?? null;
     const doc = spell ? await fromUuid(spell).catch(() => null) : null;
-    // A card that can't be built (dnd5e changed its card data) still leaves the spell its line.
+    // A card that can't be built or posted (dnd5e changed its card data) still leaves the spell its line.
     const card = cards && doc ? await spellCardFor(doc, seller, { speaker, whisper, flavor: castFlavor(buyer.name, quantity) })
-      .catch(err => { console.error(`${MODULE} | could not build the card for "${doc.name}"`, err); return null; }) : null;
-    if (card) await ChatMessage.create(card);
-    else casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
+      .then(card => card && ChatMessage.create(card))
+      .catch(err => { console.error(`${MODULE} | could not post the card for "${doc.name}"`, err); return null; }) : null;
+    if (!card) casts.push({ name: item.name, quantity, spell, effects: actorEffects(doc?.effects) });
   }
   if (!casts.length) return;
 
