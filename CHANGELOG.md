@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-10-10
+
 ### Added
 
 - Shops have other customers. Between restocks, other people buy from each
@@ -492,7 +494,8 @@ trades out itself. For GMs upgrading a world:
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/mikiross87/merchant-presets/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/mikiross87/merchant-presets/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/mikiross87/merchant-presets/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/mikiross87/merchant-presets/compare/v1.2.4...v2.0.0
