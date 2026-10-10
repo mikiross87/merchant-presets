@@ -295,3 +295,20 @@ test("on dnd5e 6, a card that can't be built falls back to the line, and the res
     assert.ok(line.includes(`@UUID[${RAISE_DEAD}.ActiveEffect.day1]{Resurrection Sickness (Day 1)}`), line);
     assert.ok(line.includes("Tell the GM which spell."), line);
   }));
+
+test("on dnd5e 6, a card dnd5e refuses to post falls back to the line, and the rest of the purchase is still announced", () =>
+  onDnd5e6([raiseDead(), spellDoc(IDENTIFY, "Identify")], async () => {
+    const create = globalThis.ChatMessage.create;
+    globalThis.ChatMessage.create = async data => {
+      if (data.flags?.dnd5e?.item?.data?.name === "Raise Dead") throw new Error("dnd5e refused the card data");
+      return create(data);
+    };
+    try {
+      const messages = await postedAll([["Spellcasting: Raise Dead", 1], ["Spellcasting: Identify", 1]]);
+      assert.deepEqual(messages.map(m => m.type ?? "line"), ["usage", "line"]);
+      assert.equal(messages[0].flags.dnd5e.item.data.name, "Identify");
+      assert.ok(messages[1].content.includes(`casts @UUID[${RAISE_DEAD}]{Raise Dead} for <strong>Aria</strong>.`), messages[1].content);
+    } finally {
+      globalThis.ChatMessage.create = create;
+    }
+  }));
