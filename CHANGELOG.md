@@ -27,7 +27,8 @@ than for the code. Reference the issue or PR it closes.
 
 - The Stable no longer sells coach rides or road and gate tolls: they come
   from the older SRD 5.1 and aren't in SRD 5.2. Stables already in your
-  world keep them. (#243)
+  world drop them from their stock and shelf the next time the world loads,
+  and go on restocking as before. (#243)
 
 ## [2.3.0] - 2026-10-10
 
