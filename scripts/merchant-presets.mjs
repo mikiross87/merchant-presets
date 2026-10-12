@@ -2291,6 +2291,8 @@ async function arrive(actor) {
     if (sheetClass) await actor.update({ "flags.core.sheetClass": sheetClass });
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
+    // One from an older build, arriving after the load-time pass, before it ever restocks (#243).
+    await retireGoods(actor);
     if (rollsOnArrival(actor)) await restock(actor);
   } finally {
     arriving.delete(actor.id);
