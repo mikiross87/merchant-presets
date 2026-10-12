@@ -13,7 +13,7 @@ const tick = async (n = 5) => { for (let i = 0; i < n; i++) await new Promise(re
 
 /** A Stable (Town) as a 2.3.0 world holds it: its own world stock table, with the coach ride and
  *  the toll as lines and on the shelf, and a GM's dice on the coach ride's line. */
-async function upgraded() {
+async function upgraded({ arrivesLater = false } = {}) {
   const world = createWorld();
   const shop = world.merchant("Stable_Town_");
   const packed = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
@@ -35,7 +35,6 @@ async function upgraded() {
       flags: { "merchant-presets": { drawn: "stableShelf0001", kind: "travel" } }, _stats: { compendiumSource: line.documentUuid } },
     "toObject", { value() { return structuredClone({ ...this }); } }));
   }
-  world.actors.push(shop);
   // Each line the pack still ships, as the compendium serves it. The two old goods are gone.
   for (const result of packed.results) {
     const name = result.name;
@@ -43,7 +42,13 @@ async function upgraded() {
       name, toObject: () => ({ name, type: "loot", img: "x.webp", system: { quantity: 1, price: { value: 1, denomination: "gp" } }, flags: {} })
     });
   }
+  if (!arrivesLater) world.actors.push(shop);
   await loadRuntime(world);
+  if (arrivesLater) {
+    // Imported mid-session, from a world compendium or an old export, after the load-time pass.
+    world.actors.push(shop);
+    await world.fire("createActor", shop, {}, "gm");
+  }
   await tick();
   return { world, shop, table };
 }
@@ -99,4 +104,12 @@ test("a shop whose stock table is gone still lets go of its shelf copies", async
   await loadRuntime(world);
   await tick();
   assert.deepEqual(shop.items.filter(i => i.name === "Old coach").map(i => i.name), []);
+});
+
+test("a 2.3.0 Stable that arrives after the world loaded lets go of them as it arrives", async () => {
+  const { shop, table } = await upgraded({ arrivesLater: true });
+  const gone = n => /Coach Ride|Road or Gate Toll/.test(n);
+  assert.deepEqual(table.results.filter(r => gone(r.name)).map(r => r.name), []);
+  assert.deepEqual(shop.items.filter(i => gone(i.name)).map(i => i.name), []);
+  assert.equal(shop.flags["merchant-presets"].shop.restock.quantities.coachLine000001, undefined);
 });
