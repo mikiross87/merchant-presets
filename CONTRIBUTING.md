@@ -105,7 +105,9 @@ described on #33.
 `data/srd-text.json` gives the goods the SRD describes in prose, not as items
 (mounts, vehicles, saddles, food, lodging, the level spellcasting services),
 the SRD's own words (#243). Each entry quotes sentences from a
-`dnd5e.content24` page, a table cell, a stat block or a page to link, and
+`dnd5e.content24` page, a table cell, a stat block or a page to link, after an
+optional `lead` sentence where goods quoting the same text need telling apart
+(the level services name their level, #247), and
 `build_srd.py` writes the good's description from it. It stops if a quote isn't
 verbatim on its page, a cell doesn't read that way in the table, or a link
 doesn't resolve. Edit the file, never those descriptions in `_source/goods`: the

@@ -158,14 +158,19 @@ test("a spell component opens with its spell's phrase word for word, the + kept 
   assert.deepEqual(COMPONENTS.filter(r => "desc" in r).map(r => r.name), [], "no row words its own description");
 });
 
+const LEVELS = {
+  "Spellcasting: Cantrip": "a cantrip", "Spellcasting: Level 1": "a level 1 spell", "Spellcasting: Level 2": "a level 2 spell",
+  "Spellcasting: Level 3": "a level 3 spell", "Spellcasting: Level 4-5": "a level 4 or 5 spell",
+  "Spellcasting: Level 6-8": "a level 6, 7 or 8 spell", "Spellcasting: Level 9": "a level 9 spell"
+};
+
 test("the level spellcasting services name their level, then quote the SRD's Spellcasting page (#247)", () => {
   const levels = goods.filter(g => /^Spellcasting: (Cantrip|Level )/.test(g.name));
   assert.equal(levels.length, 7);
   for (const g of levels) {
     assert.ok(SRD_TEXT[g.name], `${g.name} is in data/srd-text.json`);
     assert.match(g.system.description.value, /If a spell has expensive components, add the cost of those components/, g.name);
-    const level = g.name === "Spellcasting: Cantrip" ? "a cantrip"
-      : `a level ${g.name.replace("Spellcasting: Level ", "").replace(/^(\d)-(\d)$/, (_, a, b) => b - a === 1 ? `${a} or ${b}` : `${a}, ${+a + 1} or ${b}`)} spell`;
-    assert.ok(g.system.description.value.startsWith(`<p>A spellcaster casts ${level} on your behalf.</p>`), `${g.name} names its level first`);
+    assert.ok(g.system.description.value.startsWith(`<p>A spellcaster casts ${LEVELS[g.name]} on your behalf.</p>`),
+      `${g.name} names its level first`);
   }
 });

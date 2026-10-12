@@ -293,9 +293,10 @@ def srd_plain(content):
 
 def sync_goods_text():
     """Write the descriptions data/srd-text.json gives hand-authored goods, in
-    the SRD's own words (#243): each quote, which must appear verbatim on its
-    SRD 5.2 page, a table cell checked against the same page, a stat-block link
-    and a link to an SRD page, in that order. Any quote, cell, link or good that
+    the SRD's own words (#243): an optional lead sentence of ours (#247), each
+    quote, which must appear verbatim on its SRD 5.2 page, a table cell checked
+    against the same page, a stat-block link and a link to an SRD page, in that
+    order. Any quote, cell, link or good that
     does not resolve stops the build before anything is written. Idempotent:
     only rewrites a file whose description actually changed."""
     entries = json.load(open(os.path.join(MOD, "data/srd-text.json")))["goods"]
@@ -320,7 +321,8 @@ def sync_goods_text():
     for name, e in entries.items():
         if name not in files:
             problems.append(f"{name}: no such good in _source/goods"); continue
-        parts = []
+        # A sentence of ours ahead of the SRD's, where goods quote the same text and need telling apart (#247).
+        parts = [f"<p>{html.escape(e['lead'], quote=False)}</p>"] if e.get("lead") else []
         if e.get("quotes") or e.get("row"):
             pg = pages.get(e.get("page"))
             if not pg:
@@ -347,7 +349,7 @@ def sync_goods_text():
                 parts.append(f"<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.{pg[0]}"
                              f".JournalEntryPage.{pg[1]}]{{{pg[2]}}}</p>")
         if not parts:
-            problems.append(f"{name}: nothing to write (no quotes, row, actor or see)")
+            problems.append(f"{name}: nothing to write (no lead, quotes, row, actor or see)")
         out[name] = "".join(parts)
     if problems:
         sys.exit("data/srd-text.json does not match the SRD:\n  " + "\n  ".join(problems))
