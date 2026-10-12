@@ -86,7 +86,8 @@ replaces every component good and line.
 
 It also writes the spellcasting services sold by name (#55) and their lines.
 The seven level services (`Spellcasting: Cantrip` to `Level 9`) are edited by
-hand, and the named services take their prices from them.
+hand, and the named services take their prices from them. Their description
+is `data/srd-text.json`'s (#247).
 
 `data/magic.json` holds the magic items (#33), and `tools/build_magic_goods.py`
 writes their lines in `data/recipes.json` (category `Magic Items`; don't edit
@@ -102,12 +103,15 @@ base's. The live check that holds the baking to dnd5e's own enchanting is
 described on #33.
 
 `data/srd-text.json` gives the goods the SRD describes in prose, not as items
-(mounts, vehicles, saddles, food, lodging), the SRD's own words (#243). Each
-entry quotes sentences from a `dnd5e.content24` page, a table cell, a stat block
-or a page to link, and `build_srd.py` writes the good's description from it. It
-stops if a quote isn't verbatim on its page, a cell doesn't read that way in the
-table, or a link doesn't resolve. Edit the file, never those descriptions in
-`_source/goods`: the next run puts them back.
+(mounts, vehicles, saddles, food, lodging, the level spellcasting services),
+the SRD's own words (#243). Each entry quotes sentences from a
+`dnd5e.content24` page, a table cell, a stat block or a page to link, after an
+optional `lead` sentence where goods quoting the same text need telling apart
+(the level services name their level, #247), and
+`build_srd.py` writes the good's description from it. It stops if a quote isn't
+verbatim on its page, a cell doesn't read that way in the table, or a link
+doesn't resolve. Edit the file, never those descriptions in `_source/goods`: the
+next run puts them back.
 
 Regenerating is a separate, rarer step than packing, because it needs five of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops

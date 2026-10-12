@@ -2956,7 +2956,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3020,7 +3020,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3084,7 +3084,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3544,7 +3544,7 @@
       "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
       "system": {
         "description": {
-          "value": "<p>Incense worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
+          "value": "<p>Burning incense worth 10+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -3608,7 +3608,7 @@
       "img": "icons/commodities/wood/kindling-stick-tan.webp",
       "system": {
         "description": {
-          "value": "<p>Incense worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
+          "value": "<p>Incense worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -3672,7 +3672,7 @@
       "img": "icons/tools/scribal/ink-quill-pink.webp",
       "system": {
         "description": {
-          "value": "<p>Rare inks worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTeleportat]{Teleportation Circle}: consumed</li></ul>",
+          "value": "<p>Rare inks worth 50+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTeleportat]{Teleportation Circle}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 1,
@@ -3736,7 +3736,7 @@
       "img": "icons/commodities/materials/bowl-liquid-white.webp",
       "system": {
         "description": {
-          "value": "<p>Salt and powdered silver worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicCircl]{Magic Circle}: consumed</li></ul>",
+          "value": "<p>Salt and powdered silver worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicCircl]{Magic Circle}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 1,
@@ -3800,7 +3800,7 @@
       "img": "icons/commodities/metal/plating-metal-rod-steel.webp",
       "system": {
         "description": {
-          "value": "<p>A silver rod worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGuardsandW]{Guards and Wards}: not consumed</li></ul>",
+          "value": "<p>A silver rod worth 10+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGuardsandW]{Guards and Wards}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -3864,7 +3864,7 @@
       "img": "icons/commodities/treasure/horn-carved-banded.webp",
       "system": {
         "description": {
-          "value": "<p>A focus worth 100 GP: a jeweled horn for hearing or a glass eye for seeing.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplClairvoyan]{Clairvoyance}: not consumed</li></ul>",
+          "value": "<p>A focus worth 100+ GP, either a jeweled horn for hearing or a glass eye for seeing.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplClairvoyan]{Clairvoyance}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,

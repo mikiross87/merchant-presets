@@ -3453,7 +3453,7 @@
       "img": "icons/consumables/mushrooms/umbonate-brown.webp",
       "system": {
         "description": {
-          "value": "<p>Mushroom powder worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTrueSeeing]{True Seeing}: consumed</li></ul>",
+          "value": "<p>Mushroom powder worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplTrueSeeing]{True Seeing}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 12,

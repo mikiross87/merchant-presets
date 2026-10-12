@@ -126,6 +126,12 @@ test("a listed good that doesn't exist, a link the packs don't have, or an entry
   }
 });
 
+test("a lead sentence comes before the quotes, so goods quoting the same SRD text can still say what each is (#247)", () => {
+  const r = syncText([good("Saddle, Military")], { "Saddle, Military": { ...SADDLE, lead: "A saddle for war." } });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.out["Saddle, Military"], "<p>A saddle for war.</p>" + SADDLE.quotes.map(q => `<p>${q}</p>`).join(""));
+});
+
 test("a second run changes nothing", () => {
   const goodsIn = [good("Saddle, Military")];
   const first = syncText(goodsIn, { "Saddle, Military": SADDLE });
@@ -133,4 +139,38 @@ test("a second run changes nothing", () => {
     { "Saddle, Military": SADDLE });
   assert.equal(first.stdout, "1");
   assert.equal(again.stdout, "0");
+});
+
+/* ---------------------------------------- spell components and level services (#247) */
+
+const COMPONENTS = JSON.parse(readFileSync(new URL("../data/components.json", import.meta.url), "utf8")).components;
+const SRD_TEXT = JSON.parse(readFileSync(new URL("../data/srd-text.json", import.meta.url), "utf8")).goods;
+
+test("a spell component opens with its spell's phrase word for word, the + kept (#247)", () => {
+  const wrong = COMPONENTS.flatMap(row => {
+    const name = `${row.name} (${row.price.toLocaleString("en")} GP)`;
+    const good = goods.find(g => g.name === name);
+    const phrase = row.spells[0].phrase;
+    const expected = `<p>${phrase[0].toUpperCase()}${phrase.slice(1)}.</p>`;
+    return good?.system.description.value.startsWith(expected) ? [] : [`${name}: ${good?.system.description.value.slice(0, 80)}`];
+  });
+  assert.deepEqual(wrong, []);
+  assert.deepEqual(COMPONENTS.filter(r => "desc" in r).map(r => r.name), [], "no row words its own description");
+});
+
+const LEVELS = {
+  "Spellcasting: Cantrip": "a cantrip", "Spellcasting: Level 1": "a level 1 spell", "Spellcasting: Level 2": "a level 2 spell",
+  "Spellcasting: Level 3": "a level 3 spell", "Spellcasting: Level 4-5": "a level 4 or 5 spell",
+  "Spellcasting: Level 6-8": "a level 6, 7 or 8 spell", "Spellcasting: Level 9": "a level 9 spell"
+};
+
+test("the level spellcasting services name their level, then quote the SRD's Spellcasting page (#247)", () => {
+  const levels = goods.filter(g => /^Spellcasting: (Cantrip|Level )/.test(g.name));
+  assert.equal(levels.length, 7);
+  for (const g of levels) {
+    assert.ok(SRD_TEXT[g.name], `${g.name} is in data/srd-text.json`);
+    assert.match(g.system.description.value, /If a spell has expensive components, add the cost of those components/, g.name);
+    assert.ok(g.system.description.value.startsWith(`<p>A spellcaster casts ${LEVELS[g.name]} on your behalf.</p>`),
+      `${g.name} names its level first`);
+  }
 });

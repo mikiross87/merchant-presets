@@ -17,6 +17,11 @@ than for the code. Reference the issue or PR it closes.
   describe themselves in the SRD's own words. A saddle says what it does,
   a mount shows how much it can carry, a ship links its stat block, and
   food and lodging link the SRD page that prices them. (#243)
+- Spell components describe themselves in their spell's own words, such as
+  "One 150+ GP black onyx stone.", and each level spellcasting service names
+  its level, then quotes the SRD's Spellcasting Services rule. The shop
+  window's note still says which spells are sold by name with their
+  components included. (#247)
 
 ### Fixed
 
