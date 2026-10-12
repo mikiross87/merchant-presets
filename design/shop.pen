@@ -1293,7 +1293,7 @@
                   "fill": "$text-on-dark-soft",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.",
+                  "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
                   "lineHeight": 1.4,
                   "fontFamily": "$font-body",
                   "fontSize": 13,
@@ -1456,7 +1456,7 @@
                           "id": "ioeoD",
                           "name": "Day Label",
                           "fill": "$text-on-dark",
-                          "content": "Market day",
+                          "content": "Very busy",
                           "fontFamily": "$font-compact",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -9875,7 +9875,7 @@
               "content": "Inn & Tavern"
             },
             "Cx08R": {
-              "content": "Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for."
+              "content": "Sells Food & Drink, Lodging, Magic Items and Meals."
             },
             "xlRXV": {
               "content": "Open · closes at 2:00"
@@ -51122,7 +51122,7 @@
                               "fill": "$text-primary",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Market day",
+                              "content": "Very busy",
                               "fontFamily": "$font-body",
                               "fontSize": 15,
                               "fontWeight": "700"
@@ -51146,7 +51146,7 @@
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Stalls filled the square and the crowd followed.",
+                          "content": "Customers ×3.",
                           "fontFamily": "$font-slip",
                           "fontSize": 13,
                           "fontWeight": "normal",
@@ -51471,7 +51471,7 @@
                               "id": "kuMVO",
                               "name": "Day Label",
                               "fill": "$text-on-dark",
-                              "content": "Market day",
+                              "content": "Very busy",
                               "fontFamily": "$font-compact",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -51501,7 +51501,7 @@
                           "fill": "$text-primary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Stalls filled the square and the crowd followed.",
+                          "content": "Customers ×3.",
                           "fontFamily": "$font-slip",
                           "fontSize": 13,
                           "fontWeight": "normal",
@@ -53651,7 +53651,7 @@
               "id": "iGtEo",
               "name": "Day tip text",
               "fill": "$text-primary",
-              "content": "Stalls filled the square and the crowd followed.",
+              "content": "Customers ×3.",
               "fontFamily": "$font-slip",
               "fontSize": 13,
               "fontWeight": "normal",
