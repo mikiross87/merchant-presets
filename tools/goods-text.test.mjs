@@ -112,12 +112,13 @@ test("text the SRD page doesn't have stops the build, naming the good, and write
   assert.equal(r.out["Saddle, Riding"], "<p>Our own words.</p>");
 });
 
-test("a listed good that doesn't exist, or a link the packs don't have, stops the build", () => {
+test("a listed good that doesn't exist, a link the packs don't have, or an entry with nothing to write stops the build", () => {
   for (const [entries, expect] of [
     [{ Unicorn: SADDLE }, /Unicorn/],
     [{ Camel: { actor: "mmNoSuchActor000" } }, /mmNoSuchActor000/],
     [{ Camel: { see: "Lifestyle Expenses / Hirelings" } }, /Hirelings/],
-    [{ Camel: { page: "Mounts and Vehicles / Mounts and Cargo", row: "Camel", cell: "999 lb.", label: "Carrying capacity" } }, /999 lb\./]
+    [{ Camel: { page: "Mounts and Vehicles / Mounts and Cargo", row: "Camel", cell: "999 lb.", label: "Carrying capacity" } }, /999 lb\./],
+    [{ Camel: { page: "Mounts and Vehicles / Mounts and Cargo", quote: ["A typo for quotes."] } }, /Camel: nothing to write/]
   ]) {
     const r = syncText([good("Camel")], entries);
     assert.notEqual(r.status, 0, JSON.stringify(entries));

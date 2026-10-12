@@ -88,3 +88,15 @@ test("a 2.x Stable on the pack's own stock table lets go of them too: off its sh
   assert.deepEqual(shop.flags["merchant-presets"].shop.restock.quantities, { [packed.results[0].id]: "1d6" },
     "the dice of lines its table no longer has go; a line's own dice stay");
 });
+
+test("a shop whose stock table is gone still lets go of its shelf copies", async () => {
+  const world = createWorld();
+  const shop = world.merchant("Stable_Town_");
+  shop.flags["merchant-presets"].shop.restock.table = "RollTable.deletedTable0001";
+  shop.items.push(Object.defineProperty({ _id: "oldGood00000000", id: "oldGood00000000", name: "Old coach", type: "loot",
+    system: { quantity: 1 }, flags: {}, _stats: { compendiumSource: COACH } }, "toObject", { value() { return { ...this }; } }));
+  world.actors.push(shop);
+  await loadRuntime(world);
+  await tick();
+  assert.deepEqual(shop.items.filter(i => i.name === "Old coach").map(i => i.name), []);
+});
