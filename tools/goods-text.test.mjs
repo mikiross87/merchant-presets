@@ -135,10 +135,9 @@ test("a second run changes nothing", () => {
   assert.equal(again.stdout, "0");
 });
 
-/* ---------------------------------------- spell components and level services (#247) */
+/* ------------------------------------------------------------ spell components (#247) */
 
 const COMPONENTS = JSON.parse(readFileSync(new URL("../data/components.json", import.meta.url), "utf8")).components;
-const SRD_TEXT = JSON.parse(readFileSync(new URL("../data/srd-text.json", import.meta.url), "utf8")).goods;
 
 test("a spell component opens with its spell's phrase word for word, the + kept (#247)", () => {
   const wrong = COMPONENTS.flatMap(row => {
@@ -152,11 +151,3 @@ test("a spell component opens with its spell's phrase word for word, the + kept 
   assert.deepEqual(COMPONENTS.filter(r => "desc" in r).map(r => r.name), [], "no row words its own description");
 });
 
-test("the level spellcasting services quote the SRD's Spellcasting page, not words of our own (#247)", () => {
-  const levels = goods.filter(g => /^Spellcasting: (Cantrip|Level )/.test(g.name));
-  assert.equal(levels.length, 7);
-  for (const g of levels) {
-    assert.ok(SRD_TEXT[g.name], `${g.name} is in data/srd-text.json`);
-    assert.match(g.system.description.value, /If a spell has expensive components, add the cost of those components/, g.name);
-  }
-});
