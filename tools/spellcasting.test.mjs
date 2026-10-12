@@ -8,6 +8,8 @@ import { readdirSync, readFileSync } from "node:fs";
 // work without the caster; the level services say what to add for any other.
 const SERVICE_RULE = "Spells with expensive components that work without the caster are also listed by name, "
   + "with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.";
+// SRD 5.2, Lifestyle Expenses → Spellcasting: the level services quote it (#247).
+const SRD_RULE = "If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.";
 const SHOP_RULE = "Spells with expensive components that work without the caster are listed by name, with the "
   + "components in the price; for any other spell, add the cost of any expensive components you don't bring.";
 
@@ -57,11 +59,11 @@ const EXPECTED = {
   "Temple & Faith Store": [2, 12, 19]
 };
 
-test("the seven level services say what to add for a spell not listed by name (#55)", () => {
+test("the seven level services say what to add in the SRD's words; the shop window says which spells are listed by name (#55, #247)", () => {
   assert.equal(levels.length, 7);
   for (const s of levels) {
-    assert.ok(s.system.description.value.includes(SERVICE_RULE), s.name);
-    assert.ok(!s.system.description.value.includes("add the cost of those components"), s.name);
+    assert.ok(s.system.description.value.includes(SRD_RULE), s.name);
+    assert.ok(!s.system.description.value.includes(SERVICE_RULE), s.name);
   }
 });
 
