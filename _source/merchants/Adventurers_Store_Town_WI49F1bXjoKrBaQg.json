@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>"
+        "value": "<p>Sells Adventuring Gear and Magic Items.</p>"
       }
     },
     "currency": {
@@ -9985,7 +9985,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>",
+        "description": "<p>Sells Adventuring Gear and Magic Items.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -10088,7 +10088,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Kit for people who expect to sleep outdoors and be shot at. Packs made up by trade, ready to be shouldered and walked out with.</p>",
+        "description": "<p>Sells Adventuring Gear and Magic Items.</p>",
         "merchantImage": "icons/environment/settlement/market-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

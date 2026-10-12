@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p>"
+        "value": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>"
       }
     },
     "currency": {
@@ -15489,7 +15489,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -15610,7 +15610,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>",
         "merchantImage": "icons/environment/settlement/blacksmith.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

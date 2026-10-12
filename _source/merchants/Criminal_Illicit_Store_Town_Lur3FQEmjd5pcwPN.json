@@ -534,7 +534,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>"
+        "value": "<p>Sells Adventuring Gear, Armor, Magic Items, Poisons, Tools and Weapons.</p>"
       }
     },
     "currency": {
@@ -11121,7 +11121,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Poisons, Tools and Weapons.</p>",
         "terms": {
           "sellsAt": 1.25,
           "buysAt": 0.35,
@@ -11216,7 +11216,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>No sign, no fixed hours you would admit to knowing, and a door that is answered rather than opened. Pays badly, charges dearly, and asks nothing at all.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Poisons, Tools and Weapons.</p>",
         "merchantImage": "icons/environment/settlement/sewer-entrance.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

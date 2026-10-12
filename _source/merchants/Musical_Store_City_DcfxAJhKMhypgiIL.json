@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>"
+        "value": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>"
       }
     },
     "currency": {
@@ -4911,7 +4911,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>",
+        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -4976,7 +4976,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Somebody is always tuning something. Instruments hang by their necks along one wall, and the maker will happily play each one at you before you choose.</p>",
+        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>",
         "merchantImage": "icons/environment/settlement/gazebo.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

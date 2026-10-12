@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>"
+        "value": "<p>Sells Adventuring Gear, Magic Items, Spell Components and Tools.</p>"
       }
     },
     "currency": {
@@ -3530,7 +3530,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Spell Components and Tools.</p>",
         "terms": {
           "sellsAt": 1.0,
           "buysAt": 0.6,
@@ -3607,7 +3607,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>A narrow counter, a good lamp, and a strongbox bolted to the floor. Buys stones and worked metal at a fairer rate than most, because they know what it is worth.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Spell Components and Tools.</p>",
         "merchantImage": "icons/environment/settlement/house-city.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

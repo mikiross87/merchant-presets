@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Hides curing out back and the smell to prove it. Boots, belts, jerkins and the straps that hold everything else together.</p>"
+        "value": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>"
       }
     },
     "currency": {
@@ -4172,7 +4172,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Hides curing out back and the smell to prove it. Boots, belts, jerkins and the straps that hold everything else together.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -4237,7 +4237,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Hides curing out back and the smell to prove it. Boots, belts, jerkins and the straps that hold everything else together.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>",
         "merchantImage": "icons/environment/settlement/house-two-stories-small.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

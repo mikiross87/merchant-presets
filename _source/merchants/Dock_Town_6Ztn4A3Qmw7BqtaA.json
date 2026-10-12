@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>"
+        "value": "<p>Sells Magic Items, Services and Vehicles.</p>"
       }
     },
     "currency": {
@@ -3541,7 +3541,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
+        "description": "<p>Sells Magic Items, Services and Vehicles.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -3602,7 +3602,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Tar, rope and shouting. Passage bought at the quayside, and for those with far more money than sense, a hull of their own.</p>",
+        "description": "<p>Sells Magic Items, Services and Vehicles.</p>",
         "merchantImage": "icons/environment/settlement/abandoned-pier.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

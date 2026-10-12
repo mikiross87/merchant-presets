@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>"
+        "value": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>"
       }
     },
     "currency": {
@@ -3181,7 +3181,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
+        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -3247,7 +3247,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.</p>",
+        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>",
         "merchantImage": "icons/environment/settlement/tavern.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

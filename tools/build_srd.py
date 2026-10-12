@@ -366,6 +366,57 @@ def sync_goods_text():
         changed += 1
     return changed
 
+def listed(xs):
+    """'A', 'A and B', 'A, B and C'."""
+    return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
+
+def shop_description(shop, key):
+    """What a shop sells at a settlement size, from its own stock lines (#249). Not its hours: a GM
+    changes those in the shop's Settings, and the window shows them already."""
+    cats = sorted({l["cat"] for l in shop["stock"] if key in l["t"]})
+    return f"<p>Sells {listed(cats)}.</p>"
+
+# The by-name rule every caster shop states (#55): spells with costly components sold by name.
+CASTER_RULE = ("Spells with expensive components that work without the caster are listed by name, with the "
+               "components in the price; for any other spell, add the cost of any expensive components you don't bring.")
+
+def caster_note(note):
+    """A caster shop's spell lists and slots a day by size, then the by-name rule (#249)."""
+    v, t, c = note["slots"]
+    return (f"<p><em>Casts spells from the {note['lists']} lists: roll {v} spell slots a day in a village, "
+            f"{t} in a town, {c} in a city. {CASTER_RULE}</em></p>")
+
+# A kind of day's demand, by its `global` multiplier (#249).
+DEMAND = {0.25: "Very quiet", 0.5: "Quiet", 1: "Steady", 2: "Busy", 3: "Very busy"}
+
+def day_texts(days):
+    """Every kind of day's name and line, in data order, from what it does to trade (#249): its
+    demand, and the categories it boosts, biggest first. A name gives the top boosted category,
+    and the next ones only as far as an earlier day already has that name, so it stays short
+    enough for the header chip; the line lists them all."""
+    used, out = set(), []
+    for day in days:
+        if day["global"] not in DEMAND:
+            sys.exit(f"trade day with global {day['global']}: no demand word for it in DEMAND")
+        groups = {}
+        for cat, n in day["boosts"].items():
+            groups.setdefault(n, []).append(cat)
+        ordered = sorted(groups.items(), key=lambda g: -g[0])
+        cats = [cat for _, cs in ordered for cat in cs]
+        demand = DEMAND[day["global"]]
+        name = demand
+        for k in range(1, len(cats) + 1):
+            what = f"{listed(cats[:k])} in demand"
+            name = what if day["global"] == 1 else f"{demand}; {what}"
+            if name not in used:
+                break
+        if name in used:
+            sys.exit(f"two kinds of day are both named {name!r}")
+        used.add(name)
+        faster = [f"{cat} ×{n:g}" for n, cs in ordered for cat in cs]
+        out.append((name, f"Customers ×{day['global']:g}." + (f" Selling faster: {', '.join(faster)}." if faster else "")))
+    return out
+
 def restock_every(every, label):
     """A shop's data/recipes.json `restock` interval, doubled for a Village
     (#105): a number doubles, a dice formula gets a `*2` on the outside."""
@@ -715,11 +766,12 @@ def main():
                 item_flags[i["name"]] = f
 
             table_uuid = f"Compendium.merchant-presets.stock.RollTable.{tid}"
-            description = f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else "")
+            described = shop_description(shop, key)
+            description = described + (caster_note(shop["note"]) if shop.get("note") else "")
 
             docs_t.append({"_id": tid, "_key": f"!tables!{tid}", "name": name,
                            "img": shop["img"], "folder": fold_t,
-                           "description": f"<p>{shop['desc']}</p><p><em>Stock list for a {label.lower()}.</em></p>",
+                           "description": f"{described}<p><em>Stock list for a {label.lower()}.</em></p>",
                            "formula": f"1d{len(results)}", "replacement": True, "displayRoll": True,
                            "sort": 0, "ownership": {"default": 0}, "flags": {}, "results": results})
 
@@ -736,7 +788,7 @@ def main():
             sysd = statblock(npc)
             sysd["currency"] = {"pp": 0, "gp": round(shop["purse"] * purse_mul),
                                 "ep": 0, "sp": 0, "cp": 0}
-            sysd["details"]["biography"] = {"value": f"<p>{shop['desc']}</p>"}
+            sysd["details"]["biography"] = {"value": described}
 
             # The #98/#99 config, beside the Item Piles flags below: not read
             # by next's runtime yet (#102-#105), but derived from the same
@@ -831,6 +883,7 @@ def main():
     # rolls on its size's table once per open day; each result carries its multipliers. The
     # runtime finds a size's table by its tradeDays flag, not its id.
     days = json.load(open(os.path.join(MOD, "data/trade-days.json")))["days"]
+    texts = day_texts(days)
     fold_d = fid("tradedaysfolder")
     docs_t.append({"_id": fold_d, "_key": f"!folders!{fold_d}", "name": "Trade Days",
                    "type": "RollTable", "sorting": "a", "folder": None, "sort": 100000,
@@ -838,13 +891,13 @@ def main():
     for key, label, purse_mul, ti in TIERS:
         tid = fid("tradedays", label)
         results = []; at = 0
-        for d in days:
+        for d, (name, line) in zip(days, texts):
             w = d["weights"][ti]
             if not w: continue
-            rid = fid(tid, d["name"])
+            rid = fid(tid, name)
             results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}", "type": "text",
-                            "name": d["name"], "img": "icons/environment/people/group.webp",
-                            "description": d["text"], "weight": w, "range": [at + 1, at + w],
+                            "name": name, "img": "icons/environment/people/group.webp",
+                            "description": line, "weight": w, "range": [at + 1, at + w],
                             "drawn": False,
                             "flags": {"merchant-presets": {"day": {"global": d["global"], "boosts": d["boosts"]}}}})
             at += w
