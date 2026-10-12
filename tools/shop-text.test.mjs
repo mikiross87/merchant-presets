@@ -58,7 +58,7 @@ test("a caster shop's note says which lists it casts from and its slots a day, t
   assert.equal(casters.length, 3);
   for (const shop of casters) {
     const [v, t, c] = shop.note.slots;
-    const note = `<p><em>Casts spells from the ${shop.note.lists} lists: ${v} spell slots a day in a village, `
+    const note = `<p><em>Casts spells from the ${shop.note.lists} lists: roll ${v} spell slots a day in a village, `
       + `${t} in a town, ${c} in a city. ${SHOP_RULE}</em></p>`;
     for (const m of merchants.filter(x => x.name.startsWith(`${shop.name} (`))) {
       assert.ok(m.flags["merchant-presets"].shop.description.endsWith(note), m.name);
@@ -73,14 +73,30 @@ const groups = boosts => {
   return [...by].sort((a, b) => b[0] - a[0]);
 };
 
-/** A kind of day's name and line, from its data alone. */
-function dayText({ global, boosts }) {
-  const [top] = groups(boosts);
-  const name = !top ? DEMAND[global]
-    : global === 1 ? `${list(top[1])} in demand` : `${DEMAND[global]}; ${list(top[1])} in demand`;
+/** The categories a kind of day boosts, biggest boost first, in the data's order within each. */
+const boosted = boosts => groups(boosts).flatMap(([, cats]) => cats);
+
+/** Every kind of day's name, in data order: its top boosted category, and the next ones only as far
+ *  as an earlier day already has that name, so a name stays short enough for the header chip. */
+const NAMES = (() => {
+  const used = new Set();
+  return days.map(({ global, boosts }) => {
+    const cats = boosted(boosts);
+    let name = DEMAND[global];
+    for (let k = 1; k <= cats.length; k++) {
+      const what = `${list(cats.slice(0, k))} in demand`;
+      name = global === 1 ? what : `${DEMAND[global]}; ${what}`;
+      if (!used.has(name)) break;
+    }
+    used.add(name);
+    return name;
+  });
+})();
+
+/** A kind of day's line, from its data alone. */
+function dayLine({ global, boosts }) {
   const faster = groups(boosts).flatMap(([n, cats]) => cats.map(c => `${c} ×${n}`));
-  const line = `Customers ×${global}.${faster.length ? ` Selling faster: ${faster.join(", ")}.` : ""}`;
-  return { name, line };
+  return `Customers ×${global}.${faster.length ? ` Selling faster: ${faster.join(", ")}.` : ""}`;
 }
 
 test("a kind of day is named and described by what it does to trade, one name each (#249)", () => {
@@ -90,9 +106,28 @@ test("a kind of day is named and described by what it does to trade, one name ea
     const names = table.results.map(r => r.name);
     assert.equal(new Set(names).size, names.length, `${table.name}: names are unique`);
     for (const r of table.results) {
-      const { name, line } = dayText(r.flags["merchant-presets"].day);
-      assert.equal(r.name, name);
-      assert.equal(r.description, line, r.name);
+      const day = r.flags["merchant-presets"].day;
+      const i = days.findIndex(d => d.global === day.global && JSON.stringify(d.boosts) === JSON.stringify(day.boosts));
+      assert.equal(r.name, NAMES[i]);
+      assert.equal(r.description, dayLine(day), r.name);
     }
   }
+});
+
+test("day names stay short enough for the header chip, and read as GMs see them (#249 review)", () => {
+  assert.deepEqual(NAMES, ["Very quiet", "Quiet", "Quiet; Potions in demand", "Steady", "Busy", "Very busy",
+    "Food & Drink in demand", "Weapons in demand", "Food & Drink and Instruments in demand", "Holy Symbols in demand",
+    "Magic Items in demand"]);
+  const town = tables.find(t => t.flags?.["merchant-presets"]?.tradeDays === "Town");
+  assert.deepEqual(town.results.map(r => r.name), NAMES, "the shipped Town table, every kind of day");
+  const fever = town.results.find(r => r.name === "Quiet; Potions in demand");
+  assert.equal(fever.description, "Customers ×0.5. Selling faster: Potions ×3, Holy Symbols ×2.");
+});
+
+test("a shop and a caster read as GMs see them (#249 review)", () => {
+  const smith = merchants.find(m => m.name === "Armourer & Blacksmiths (Town)");
+  assert.equal(smith.system.details.biography.value, "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p>");
+  const arcane = merchants.find(m => m.name === "Arcane Store (Village)");
+  assert.match(arcane.flags["merchant-presets"].shop.description,
+    /Casts spells from the arcane lists: roll 1d4\+1 spell slots a day in a village, 1d8\+1 in a town, 1d12\+1 in a city\./);
 });
