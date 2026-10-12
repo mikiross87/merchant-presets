@@ -211,9 +211,10 @@ async function releaseStraysAll() {
 
 /**
  * Let go of the goods this module no longer ships (#243) on one shop: its world stock table's
- * lines for them, their dice in its restock config, and their copies on its shelf. Left on the
- * table, a dropped good stops the shop restocking for good (`drawsFor`). A stock table still in
- * the pack is current, and nothing is let go while the goods pack isn't loaded.
+ * lines for them, its line dice for lines its table no longer has, and their copies on its shelf.
+ * Left on the table, a dropped good stops the shop restocking for good (`drawsFor`). A stock table
+ * still in the pack is current, and nothing is let go while the goods pack, or the shop's table,
+ * isn't there to read.
  *
  * @param {Actor} actor
  * @returns {Promise<boolean>} whether anything was let go
@@ -222,13 +223,14 @@ async function retireGoods(actor) {
   const index = game.packs?.get(`${MODULE}.goods`)?.index;
   const shop = safeShopOf(actor);
   if (!index || !shop) return false;
-  const table = shop.restock.table?.startsWith("RollTable.") ? await fromUuid(shop.restock.table).catch(() => null) : null;
-  const { resultIds, itemIds } = retiredGoods([...(table?.results ?? [])], [...actor.items], id => index.has(id));
-  if (resultIds.length) await table.deleteEmbeddedDocuments("TableResult", resultIds);
-  const dice = resultIds.filter(id => shop.restock.quantities?.[id] != null);
-  if (dice.length) await actor.update(Object.fromEntries(dice.map(id => [`flags.${MODULE}.shop.restock.quantities.-=${id}`, null])));
+  const table = shop.restock.table ? await fromUuid(shop.restock.table).catch(() => null) : null;
+  if (!table) return false;
+  const { resultIds, itemIds, diceIds } = retiredGoods([...table.results], [...actor.items], id => index.has(id),
+    shop.restock.quantities);
+  if (resultIds.length && !table.pack) await table.deleteEmbeddedDocuments("TableResult", resultIds);
+  if (diceIds.length) await actor.update(Object.fromEntries(diceIds.map(id => [`flags.${MODULE}.shop.restock.quantities.-=${id}`, null])));
   if (itemIds.length) await actor.deleteEmbeddedDocuments("Item", itemIds);
-  return resultIds.length + itemIds.length > 0;
+  return resultIds.length + itemIds.length + diceIds.length > 0;
 }
 
 /**

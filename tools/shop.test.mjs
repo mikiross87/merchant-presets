@@ -265,10 +265,14 @@ test("retiredGoods finds the table lines and shelf items of goods the pack dropp
     { _id: "i3", _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.phbagBell0000000" } },
     { _id: "i4" }
   ];
-  assert.deepEqual(retiredGoods(results, items, shipped), { resultIds: ["r2"], itemIds: ["i1"] });
+  const quantities = { r1: "1d6", r2: "2d4", gone: "1" };
+  assert.deepEqual(retiredGoods(results, items, shipped, quantities),
+    { resultIds: ["r2"], itemIds: ["i1"], diceIds: ["r2", "gone"] },
+    "the dropped line's dice go with it, as do dice for a line the table no longer has; a kept line's stay");
 });
 
 test("retiredGoods finds nothing on a shop whose goods all still ship", () => {
-  assert.deepEqual(retiredGoods([{ id: "r1", documentUuid: `${GOODS_PREFIX}kept000000000001` }], [], () => true),
-    { resultIds: [], itemIds: [] });
+  assert.deepEqual(retiredGoods([{ id: "r1", documentUuid: `${GOODS_PREFIX}kept000000000001` }], [], () => true, { r1: "1" }),
+    { resultIds: [], itemIds: [], diceIds: [] });
+  assert.deepEqual(retiredGoods([], [], () => true), { resultIds: [], itemIds: [], diceIds: [] }, "no dice kept");
 });

@@ -197,20 +197,25 @@ export const GOODS_PREFIX = "Compendium.merchant-presets.goods.Item.";
 /**
  * What a shop still holds of goods this module no longer ships (#243): the
  * stock table lines and the shelf items that point at a good its pack has
- * dropped. A restock draws every line of the table and stops at one that
- * doesn't resolve (#135 review), so such a line would stop the shop
- * restocking for good. Only our own goods count: anything else that doesn't
- * resolve (an SRD item, a GM's world item) is not ours to let go of.
+ * dropped, and the line dice it keeps for lines its table no longer has. A
+ * restock draws every line of the table and stops at one that doesn't
+ * resolve (#135 review), so such a line would stop the shop restocking for
+ * good. Only our own goods count: anything else that doesn't resolve (an SRD
+ * item, a GM's world item) is not ours to let go of.
  *
  * @param {{id?: string, _id?: string, documentUuid?: string}[]} results  The stock table's results.
  * @param {{_id?: string, id?: string, _stats?: {compendiumSource?: string}}[]} items  The shop's items.
  * @param {(id: string) => boolean} shipped  Whether the goods pack still has the good with this id.
- * @returns {{resultIds: string[], itemIds: string[]}}
+ * @param {Record<string, string>} [quantities]  The shop's line dice, by result id (`restock.quantities`).
+ * @returns {{resultIds: string[], itemIds: string[], diceIds: string[]}}
  */
-export function retiredGoods(results, items, shipped) {
+export function retiredGoods(results, items, shipped, quantities = {}) {
   const retired = uuid => typeof uuid === "string" && uuid.startsWith(GOODS_PREFIX) && !shipped(uuid.slice(GOODS_PREFIX.length));
+  const resultIds = results.filter(r => retired(r.documentUuid)).map(r => r.id ?? r._id);
+  const kept = new Set(results.map(r => r.id ?? r._id).filter(id => !resultIds.includes(id)));
   return {
-    resultIds: results.filter(r => retired(r.documentUuid)).map(r => r.id ?? r._id),
-    itemIds: items.filter(i => retired(i._stats?.compendiumSource)).map(i => i._id ?? i.id)
+    resultIds,
+    itemIds: items.filter(i => retired(i._stats?.compendiumSource)).map(i => i._id ?? i.id),
+    diceIds: Object.keys(quantities).filter(id => !kept.has(id))
   };
 }
