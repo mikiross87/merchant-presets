@@ -3797,7 +3797,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a cantrip on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3861,7 +3861,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 1 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3925,7 +3925,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 2 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -3989,7 +3989,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 3 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -4053,7 +4053,7 @@
       "img": "icons/magic/symbols/runes-star-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A spellcaster casts a level 4 or 5 spell on your behalf.</p><p>Spells with expensive components that work without the caster are also listed by name, with the components in the price. For any other spell, add the cost of any expensive components you don't bring yourself.</p>",
+          "value": "<p>Most settlements contain individuals who are willing to cast spells in exchange for payment.</p><p>If a spell has expensive components, add the cost of those components to the cost listed in the Spellcasting Services table.</p><p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000.JournalEntryPage.mhsrVbdk7Nxzll72]{Spellcasting}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -4909,7 +4909,7 @@
       "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
       "system": {
         "description": {
-          "value": "<p>A diamond worth 300 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify}: consumed</li></ul>",
+          "value": "<p>A diamond worth 300+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 1,
@@ -4974,7 +4974,7 @@
       "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A diamond worth 500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
+          "value": "<p>A diamond worth 500+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -5039,7 +5039,7 @@
       "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
       "system": {
         "description": {
-          "value": "<p>Diamond dust worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
+          "value": "<p>Diamond dust worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -5104,7 +5104,7 @@
       "img": "icons/consumables/plants/dried-herb-bundle-brown.webp",
       "system": {
         "description": {
-          "value": "<p>Incense worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
+          "value": "<p>Burning incense worth 10+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindFamili]{Find Familiar}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 4,
@@ -5168,7 +5168,7 @@
       "img": "icons/commodities/wood/kindling-stick-tan.webp",
       "system": {
         "description": {
-          "value": "<p>Incense worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
+          "value": "<p>Incense worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplDivination]{Divination}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -5232,7 +5232,7 @@
       "img": "icons/commodities/wood/kindling-stick-brown.webp",
       "system": {
         "description": {
-          "value": "<p>Incense worth 250 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplLegendLore]{Legend Lore}: consumed</li></ul>",
+          "value": "<p>Incense worth 250+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplLegendLore]{Legend Lore}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -5296,7 +5296,7 @@
       "img": "icons/commodities/treasure/token-engraved-symbols-grey.webp",
       "system": {
         "description": {
-          "value": "<p>Specially marked sticks, bones, cards, or other divinatory tokens worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury}: not consumed</li></ul>",
+          "value": "<p>Specially marked sticks, bones, cards, or other divinatory tokens worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAugury0000]{Augury}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 7,
@@ -5360,7 +5360,7 @@
       "img": "icons/sundries/gaming/rune-card.webp",
       "system": {
         "description": {
-          "value": "<p>A set of divination tools—such as cards or runes—worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindthePat]{Find the Path}: not consumed</li></ul>",
+          "value": "<p>A set of divination tools—such as cards or runes—worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplFindthePat]{Find the Path}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,

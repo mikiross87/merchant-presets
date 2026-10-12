@@ -184,8 +184,8 @@ def good_id(row):
     return fid("component", row["identifier"])
 
 def sentence(phrase):
-    text = phrase.replace("+ GP", " GP")
-    return text[0].upper() + text[1:] + "."
+    """The spell's phrase as its own sentence, word for word: the SRD's wording, its "+" kept (#247)."""
+    return phrase[0].upper() + phrase[1:] + "."
 
 def use_note(part):
     each = {"target": "one for each target, ", "corpse": "one for each corpse, "}.get(part["per"], "")
@@ -199,7 +199,7 @@ def make_component(row, spells, parts):
         part = claim(spells, parts, set(), use["spell"], use["phrase"])
         link = f"@UUID[Compendium.{SPELLS_PACK}.Item.{spell['_id']}]{{{spell['name']}}}"
         uses.append(f"<li>{link}: {use_note(part)}</li>")
-    desc = row.get("desc") or sentence(row["spells"][0]["phrase"])
+    desc = sentence(row["spells"][0]["phrase"])
     gid = good_id(row)
     doc = {
         "_id": gid, "_key": f"!items!{gid}", "name": good_name(row), "type": "loot",

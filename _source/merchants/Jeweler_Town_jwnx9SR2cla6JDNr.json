@@ -1017,7 +1017,7 @@
       "img": "icons/commodities/gems/gem-faceted-round-white.webp",
       "system": {
         "description": {
-          "value": "<p>A diamond worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplChromaticO]{Chromatic Orb}: not consumed</li></ul>",
+          "value": "<p>A diamond worth 50+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplChromaticO]{Chromatic Orb}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1082,7 +1082,7 @@
       "img": "icons/commodities/gems/gem-faceted-diamond-silver-.webp",
       "system": {
         "description": {
-          "value": "<p>A diamond worth 300 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify}: consumed</li></ul>",
+          "value": "<p>A diamond worth 300+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRevivify00]{Revivify}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1147,7 +1147,7 @@
       "img": "icons/commodities/gems/gem-faceted-diamond-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A diamond worth 500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
+          "value": "<p>A diamond worth 500+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplRaiseDead0]{Raise Dead}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicJar00]{Magic Jar}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1212,7 +1212,7 @@
       "img": "icons/commodities/gems/pearl-natural.webp",
       "system": {
         "description": {
-          "value": "<p>A pearl worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplIdentify00]{Identify}: not consumed</li></ul>",
+          "value": "<p>A pearl worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplIdentify00]{Identify}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -1277,7 +1277,7 @@
       "img": "icons/commodities/gems/gem-faceted-round-black.webp",
       "system": {
         "description": {
-          "value": "<p>A black onyx stone worth 150 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplCreateUnde]{Create Undead}: one for each corpse, not consumed</li></ul>",
+          "value": "<p>One 150+ GP black onyx stone.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplCreateUnde]{Create Undead}: one for each corpse, not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -1342,7 +1342,7 @@
       "img": "icons/commodities/gems/powder-raw-white.webp",
       "system": {
         "description": {
-          "value": "<p>A pinch of diamond dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplNondetecti]{Nondetection}: consumed</li></ul>",
+          "value": "<p>A pinch of diamond dust worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplNondetecti]{Nondetection}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 7,
@@ -1407,7 +1407,7 @@
       "img": "icons/commodities/gems/gem-fragments-rough-grey.webp",
       "system": {
         "description": {
-          "value": "<p>Diamond dust worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
+          "value": "<p>Diamond dust worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplStoneskin0]{Stoneskin}: consumed</li><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGreaterRes]{Greater Restoration}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 4,
@@ -1472,7 +1472,7 @@
       "img": "icons/commodities/materials/powder-grey.webp",
       "system": {
         "description": {
-          "value": "<p>Powdered diamond worth 200 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGlyphofWar]{Glyph of Warding}: consumed</li></ul>",
+          "value": "<p>Powdered diamond worth 200+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplGlyphofWar]{Glyph of Warding}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 4,
@@ -1537,7 +1537,7 @@
       "img": "icons/commodities/gems/gem-fragments-red.webp",
       "system": {
         "description": {
-          "value": "<p>Ruby dust worth 50 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplContinualF]{Continual Flame}: consumed</li></ul>",
+          "value": "<p>Ruby dust worth 50+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplContinualF]{Continual Flame}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1602,7 +1602,7 @@
       "img": "icons/commodities/gems/gem-fragments-green.webp",
       "system": {
         "description": {
-          "value": "<p>Jade dust worth 10 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMouth]{Magic Mouth}: consumed</li></ul>",
+          "value": "<p>Jade dust worth 10+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplMagicMouth]{Magic Mouth}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 8,
@@ -1667,7 +1667,7 @@
       "img": "icons/commodities/materials/bowl-powder-teal.webp",
       "system": {
         "description": {
-          "value": "<p>Jade dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplProgrammed]{Programmed Illusion}: not consumed</li></ul>",
+          "value": "<p>Jade dust worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplProgrammed]{Programmed Illusion}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
@@ -1732,7 +1732,7 @@
       "img": "icons/commodities/materials/bowl-powder-gold.webp",
       "system": {
         "description": {
-          "value": "<p>Gold dust worth 25 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplArcaneLock]{Arcane Lock}: consumed</li></ul>",
+          "value": "<p>Gold dust worth 25+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplArcaneLock]{Arcane Lock}: consumed</li></ul>",
           "chat": ""
         },
         "quantity": 5,
@@ -1797,7 +1797,7 @@
       "img": "icons/commodities/materials/powder-black.webp",
       "system": {
         "description": {
-          "value": "<p>The powder of a crushed black pearl worth 500 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplCircleofDe]{Circle of Death}: not consumed</li></ul>",
+          "value": "<p>The powder of a crushed black pearl worth 500+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplCircleofDe]{Circle of Death}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1862,7 +1862,7 @@
       "img": "icons/equipment/finger/ring-band-engraved-scrolls-silver.webp",
       "system": {
         "description": {
-          "value": "<p>A pair of platinum rings worth 50 GP each.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond}: not consumed</li></ul>",
+          "value": "<p>A pair of platinum rings worth 50+ GP each.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplWardingBon]{Warding Bond}: not consumed</li></ul>",
           "chat": ""
         },
         "quantity": 2,
@@ -1927,7 +1927,7 @@
       "img": "icons/commodities/metal/ingot-stamped-silver.webp",
       "system": {
         "description": {
-          "value": "<p>A silver bar worth 100 GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAstralProj]{Astral Projection}: one for each target, consumed</li></ul>",
+          "value": "<p>One silver bar worth 100+ GP.</p><p>Material component for:</p><ul><li>@UUID[Compendium.dnd5e.spells24.Item.phbsplAstralProj]{Astral Projection}: one for each target, consumed</li></ul>",
           "chat": ""
         },
         "quantity": 3,
