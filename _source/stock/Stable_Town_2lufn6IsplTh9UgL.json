@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/stables-horses.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p><p><em>Stock list for a town.</em></p>",
-  "formula": "1d16",
+  "formula": "1d14",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -233,38 +233,6 @@
       "range": [
         14,
         14
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "WnqA8YM8mLurVpfC",
-      "_key": "!tables.results!2lufn6IsplTh9UgL.WnqA8YM8mLurVpfC",
-      "type": "document",
-      "name": "Coach Ride between Towns (per mile)",
-      "img": "icons/environment/settlement/wagon.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.aoRU3x8WIjLDElJu",
-      "weight": 1,
-      "range": [
-        15,
-        15
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "h6vA3oZtthlx3qPG",
-      "_key": "!tables.results!2lufn6IsplTh9UgL.h6vA3oZtthlx3qPG",
-      "type": "document",
-      "name": "Road or Gate Toll",
-      "img": "icons/environment/settlement/city-gate.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.PT7FtDwr7B48MWSb",
-      "weight": 1,
-      "range": [
-        16,
-        16
       ],
       "drawn": false,
       "description": "",

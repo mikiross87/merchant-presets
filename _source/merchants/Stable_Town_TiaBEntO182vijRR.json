@@ -569,7 +569,7 @@
       "img": "icons/environment/settlement/wagon.webp",
       "system": {
         "description": {
-          "value": "<p>An enclosed four-wheeled passenger vehicle.</p>",
+          "value": "<p>An animal pulling a carriage, cart, chariot, sled, or wagon can move weight up to five times its base carrying capacity, including the weight of the vehicle.</p>",
           "chat": ""
         },
         "quantity": 2,
@@ -633,7 +633,7 @@
       "img": "icons/environment/settlement/wagon-black.webp",
       "system": {
         "description": {
-          "value": "<p>A two-wheeled cart drawn by a single beast.</p>",
+          "value": "<p>An animal pulling a carriage, cart, chariot, sled, or wagon can move weight up to five times its base carrying capacity, including the weight of the vehicle.</p>",
           "chat": ""
         },
         "quantity": 7,
@@ -697,7 +697,7 @@
       "img": "icons/sundries/survival/bedroll-brown.webp",
       "system": {
         "description": {
-          "value": "<p>A saddle that helps you stay mounted in combat.</p>",
+          "value": "<p>A saddle comes with a bit, a bridle, reins, and any other equipment needed to use the saddle.</p><p>A Military Saddle gives Advantage on any ability check you make to remain mounted.</p>",
           "chat": ""
         },
         "quantity": 3,
@@ -761,7 +761,7 @@
       "img": "icons/sundries/survival/bedroll-brown.webp",
       "system": {
         "description": {
-          "value": "<p>A common riding saddle.</p>",
+          "value": "<p>A saddle comes with a bit, a bridle, reins, and any other equipment needed to use the saddle.</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -825,7 +825,7 @@
       "img": "icons/environment/settlement/wagon-black.webp",
       "system": {
         "description": {
-          "value": "<p>A runnered vehicle for snow and ice.</p>",
+          "value": "<p>An animal pulling a carriage, cart, chariot, sled, or wagon can move weight up to five times its base carrying capacity, including the weight of the vehicle.</p>",
           "chat": ""
         },
         "quantity": 7,
@@ -889,7 +889,7 @@
       "img": "icons/environment/settlement/wagon.webp",
       "system": {
         "description": {
-          "value": "<p>A four-wheeled cargo wagon.</p>",
+          "value": "<p>An animal pulling a carriage, cart, chariot, sled, or wagon can move weight up to five times its base carrying capacity, including the weight of the vehicle.</p>",
           "chat": ""
         },
         "quantity": 5,
@@ -953,7 +953,7 @@
       "img": "icons/environment/settlement/farm-silo-windmill.webp",
       "system": {
         "description": {
-          "value": "<p>Feed for one animal for a day.</p>",
+          "value": "<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbMountsAndVehi.JournalEntryPage.NVPIUDJEdFDaErTg]{Mounts and Cargo}.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -1017,7 +1017,7 @@
       "img": "icons/environment/settlement/stable.webp",
       "system": {
         "description": {
-          "value": "<p>Stabling and grooming for one mount, per day.</p>",
+          "value": "<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbMountsAndVehi.JournalEntryPage.NVPIUDJEdFDaErTg]{Mounts and Cargo}.</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -1081,7 +1081,7 @@
       "img": "icons/commodities/treasure/figurine-camel.webp",
       "system": {
         "description": {
-          "value": "<p>A desert beast of burden.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmCamel000000000]{Camel}</p>",
+          "value": "<p>Carrying capacity: 450 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmCamel000000000]{Camel}</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -1146,7 +1146,7 @@
       "img": "icons/creatures/mammals/ox-bull-horned-glowing-orange.webp",
       "system": {
         "description": {
-          "value": "<p>A heavy horse bred for hauling.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmDraftHorse0000]{Draft Horse}</p>",
+          "value": "<p>Carrying capacity: 540 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmDraftHorse0000]{Draft Horse}</p>",
           "chat": ""
         },
         "quantity": 3,
@@ -1211,7 +1211,7 @@
       "img": "icons/creatures/mammals/deer-antlers-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A saddle horse.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmRidingHorse000]{Riding Horse}</p>",
+          "value": "<p>Carrying capacity: 480 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmRidingHorse000]{Riding Horse}</p>",
           "chat": ""
         },
         "quantity": 3,
@@ -1276,7 +1276,7 @@
       "img": "icons/creatures/mammals/dog-husky-white-blue.webp",
       "system": {
         "description": {
-          "value": "<p>A large guard and hunting dog.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMastiff0000000]{Mastiff}</p>",
+          "value": "<p>Carrying capacity: 195 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMastiff0000000]{Mastiff}</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -1341,7 +1341,7 @@
       "img": "icons/creatures/mammals/livestock-sheep-green.webp",
       "system": {
         "description": {
-          "value": "<p>A sure-footed pack animal.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMule0000000000]{Mule}</p>",
+          "value": "<p>Carrying capacity: 420 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmMule0000000000]{Mule}</p>",
           "chat": ""
         },
         "quantity": 15,
@@ -1406,7 +1406,7 @@
       "img": "icons/creatures/mammals/deer-antlers-green.webp",
       "system": {
         "description": {
-          "value": "<p>A small riding horse.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmPony0000000000]{Pony}</p>",
+          "value": "<p>Carrying capacity: 225 lb.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmPony0000000000]{Pony}</p>",
           "chat": ""
         },
         "quantity": 6,
@@ -1464,132 +1464,6 @@
       },
       "_id": "cNFFcC15arPih7CS",
       "_key": "!actors.items!TiaBEntO182vijRR.cNFFcC15arPih7CS"
-    },
-    {
-      "name": "Coach Ride between Towns (per mile)",
-      "type": "loot",
-      "img": "icons/environment/settlement/wagon.webp",
-      "system": {
-        "description": {
-          "value": "<p>A seat on a coach between settlements, per mile.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 3,
-          "denomination": "cp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "custom": "Merchant Presets",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true
-          }
-        },
-        "merchant-presets": {
-          "kind": "travel",
-          "stock": {
-            "infinite": true,
-            "keep": true,
-            "service": true,
-            "noBuyback": true,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.aoRU3x8WIjLDElJu"
-      },
-      "_id": "O0O3f8QOiB7utsgw",
-      "_key": "!actors.items!TiaBEntO182vijRR.O0O3f8QOiB7utsgw"
-    },
-    {
-      "name": "Road or Gate Toll",
-      "type": "loot",
-      "img": "icons/environment/settlement/city-gate.webp",
-      "system": {
-        "description": {
-          "value": "<p>A toll levied on a road or at a gate.</p>",
-          "chat": ""
-        },
-        "quantity": 1,
-        "weight": {
-          "value": 0,
-          "units": "lb"
-        },
-        "price": {
-          "value": 1,
-          "denomination": "cp"
-        },
-        "rarity": "",
-        "identified": true,
-        "container": null,
-        "identifier": "",
-        "source": {
-          "custom": "Merchant Presets",
-          "rules": "2024",
-          "revision": 1
-        },
-        "type": {
-          "value": "",
-          "subtype": ""
-        },
-        "properties": []
-      },
-      "effects": [],
-      "flags": {
-        "item-piles": {
-          "item": {
-            "infiniteQuantity": "yes",
-            "keepOnMerchant": true,
-            "isService": true,
-            "cantBeSoldToMerchants": true
-          }
-        },
-        "merchant-presets": {
-          "kind": "travel",
-          "stock": {
-            "infinite": true,
-            "keep": true,
-            "service": true,
-            "noBuyback": true,
-            "category": "",
-            "bundle": 1,
-            "hidden": false,
-            "notForSale": false
-          }
-        }
-      },
-      "_stats": {
-        "compendiumSource": "Compendium.merchant-presets.goods.Item.PT7FtDwr7B48MWSb"
-      },
-      "_id": "7c78J0Hg2PqtiFKP",
-      "_key": "!actors.items!TiaBEntO182vijRR.7c78J0Hg2PqtiFKP"
     },
     {
       "name": "Shortsword",
@@ -2313,18 +2187,6 @@
           "keepOnMerchant": true,
           "isService": false,
           "cantBeSoldToMerchants": false
-        },
-        "Coach Ride between Towns (per mile)": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true
-        },
-        "Road or Gate Toll": {
-          "infiniteQuantity": "yes",
-          "keepOnMerchant": true,
-          "isService": true,
-          "cantBeSoldToMerchants": true
         }
       },
       "containers": {},
@@ -2364,9 +2226,7 @@
             "Of3144Xc61i4oC9N": "1d3+1",
             "XGvvhLAfDfyQgviP": "1d6+2",
             "rc6SG4pTPJ1YmCpn": "2d6+4",
-            "oM3D9HIvGD79W1Ry": "1d6+2",
-            "WnqA8YM8mLurVpfC": "1",
-            "h6vA3oZtthlx3qPG": "1"
+            "oM3D9HIvGD79W1Ry": "1d6+2"
           },
           "onOpen": true,
           "every": 7,
@@ -2386,6 +2246,7 @@
             "lodging",
             "spellcasting",
             "component",
+            "travel",
             "magic"
           ]
         }
@@ -2417,7 +2278,7 @@
           },
           {
             "path": "flags.merchant-presets.kind",
-            "filters": "food-drink,meal,lodging,spellcasting,component,gear"
+            "filters": "food-drink,meal,lodging,spellcasting,component,travel,gear"
           }
         ],
         "buyPriceModifier": 1.0,
@@ -2442,9 +2303,7 @@
               "Of3144Xc61i4oC9N": "1d3+1",
               "XGvvhLAfDfyQgviP": "1d6+2",
               "rc6SG4pTPJ1YmCpn": "2d6+4",
-              "oM3D9HIvGD79W1Ry": "1d6+2",
-              "WnqA8YM8mLurVpfC": "1",
-              "h6vA3oZtthlx3qPG": "1"
+              "oM3D9HIvGD79W1Ry": "1d6+2"
             }
           }
         ],

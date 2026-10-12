@@ -569,7 +569,7 @@
       "img": "icons/magic/air/wind-weather-sailing-ship.webp",
       "system": {
         "description": {
-          "value": "<p>A flying vessel kept aloft by bound elemental air.</p>",
+          "value": "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.VBTtG9kjHNQstG0a]{Airship}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -633,7 +633,7 @@
       "img": "icons/environment/settlement/ship.webp",
       "system": {
         "description": {
-          "value": "<p>A large oared warship.</p>",
+          "value": "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobGalley0000]{Galley}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -697,7 +697,7 @@
       "img": "icons/environment/vehicles/boat-fishing-masted.webp",
       "system": {
         "description": {
-          "value": "<p>A shallow-draft river and coastal boat.</p>",
+          "value": "<p>Keelboats and Rowboats are used on lakes and rivers.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobKeelboat00]{Keelboat}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -761,7 +761,7 @@
       "img": "icons/environment/settlement/ship.webp",
       "system": {
         "description": {
-          "value": "<p>A narrow raiding vessel, oared and sailed.</p>",
+          "value": "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobLongship00]{Longship}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -825,7 +825,7 @@
       "img": "icons/environment/vehicles/boat-fishing-masted.webp",
       "system": {
         "description": {
-          "value": "<p>A small open boat for two to four passengers.</p>",
+          "value": "<p>Keelboats and Rowboats are used on lakes and rivers.</p><p>A Rowboat can be carried and weighs 100 pounds.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobRowboat000]{Rowboat}</p>",
           "chat": ""
         },
         "quantity": 4,
@@ -889,7 +889,7 @@
       "img": "icons/skills/trades/profession-sailing-ship.webp",
       "system": {
         "description": {
-          "value": "<p>A seagoing merchant vessel.</p>",
+          "value": "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobSailingShi]{Sailing Ship}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -953,7 +953,7 @@
       "img": "icons/environment/settlement/ship.webp",
       "system": {
         "description": {
-          "value": "<p>A purpose-built vessel of war.</p>",
+          "value": "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobWarship000]{Warship}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -1017,7 +1017,7 @@
       "img": "icons/environment/settlement/abandoned-pier.webp",
       "system": {
         "description": {
-          "value": "<p>Passage aboard a vessel, per mile.</p>",
+          "value": "<p>A passenger usually pays 5 SP per day for a hammock, but prices can vary from ship to ship.</p>",
           "chat": ""
         },
         "quantity": 1,

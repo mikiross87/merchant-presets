@@ -566,7 +566,7 @@
       "img": "icons/environment/vehicles/boat-fishing-masted.webp",
       "system": {
         "description": {
-          "value": "<p>A shallow-draft river and coastal boat.</p>",
+          "value": "<p>Keelboats and Rowboats are used on lakes and rivers.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobKeelboat00]{Keelboat}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -630,7 +630,7 @@
       "img": "icons/environment/vehicles/boat-fishing-masted.webp",
       "system": {
         "description": {
-          "value": "<p>A small open boat for two to four passengers.</p>",
+          "value": "<p>Keelboats and Rowboats are used on lakes and rivers.</p><p>A Rowboat can be carried and weighs 100 pounds.</p><p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.phbmobRowboat000]{Rowboat}</p>",
           "chat": ""
         },
         "quantity": 1,
@@ -694,7 +694,7 @@
       "img": "icons/environment/settlement/abandoned-pier.webp",
       "system": {
         "description": {
-          "value": "<p>Passage aboard a vessel, per mile.</p>",
+          "value": "<p>A passenger usually pays 5 SP per day for a hammock, but prices can vary from ship to ship.</p>",
           "chat": ""
         },
         "quantity": 1,
