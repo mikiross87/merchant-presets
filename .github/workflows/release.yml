@@ -101,7 +101,7 @@ jobs:
           zip -r module.zip . \
             -x "*.git*" -x ".github/*" -x "_source/*" -x "tools/*" -x "data/*" \
             -x "node_modules/*" -x "package*.json" -x "eslint.config.mjs" \
-            -x "design/*" -x "docs/*"
+            -x "design/*" -x "docs/*" -x "CHANGELOG.md"
 
       - name: Require release notes for this version
         run: |
