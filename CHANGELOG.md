@@ -18,8 +18,10 @@ than for the code. Reference the issue or PR it closes.
   arcane and druidic stores add which spell lists they cast from and their
   spell slots a day. (#249)
 - Kinds of trading day are named for what they do, such as "Very busy" or
-  "Weapons, Armor and Ammunition in demand", and the shop's day chip says how
-  many customers it brings and what sells faster. (#249)
+  "Weapons in demand", and the shop's day chip says how
+  many customers it brings and what sells faster. Shops and day tables
+  already in your world keep their old text; drag a shop in again to get
+  the new. (#249)
 - Mounts, ships, carts and wagons, saddles, food, meals and inn stays now
   describe themselves in the SRD's own words. A saddle says what it does,
   a mount shows how much it can carry, a ship links its stat block, and

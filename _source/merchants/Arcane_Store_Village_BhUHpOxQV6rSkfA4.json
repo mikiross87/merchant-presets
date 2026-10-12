@@ -4524,7 +4524,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons.</p><p><em>Casts spells from the arcane lists: 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons.</p><p><em>Casts spells from the arcane lists: roll 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -4610,7 +4610,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons.</p><p><em>Casts spells from the arcane lists: 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons.</p><p><em>Casts spells from the arcane lists: roll 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/wizard-castle.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

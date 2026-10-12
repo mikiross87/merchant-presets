@@ -383,31 +383,39 @@ CASTER_RULE = ("Spells with expensive components that work without the caster ar
 def caster_note(note):
     """A caster shop's spell lists and slots a day by size, then the by-name rule (#249)."""
     v, t, c = note["slots"]
-    return (f"<p><em>Casts spells from the {note['lists']} lists: {v} spell slots a day in a village, "
+    return (f"<p><em>Casts spells from the {note['lists']} lists: roll {v} spell slots a day in a village, "
             f"{t} in a town, {c} in a city. {CASTER_RULE}</em></p>")
 
 # A kind of day's demand, by its `global` multiplier (#249).
 DEMAND = {0.25: "Very quiet", 0.5: "Quiet", 1: "Steady", 2: "Busy", 3: "Very busy"}
 
-def day_text(day):
-    """A kind of day's name and line, from what it does to trade (#249): its demand, and the
-    categories it boosts, biggest first."""
-    if day["global"] not in DEMAND:
-        sys.exit(f"trade day with global {day['global']}: no demand word for it in DEMAND")
-    groups = {}
-    for cat, n in day["boosts"].items():
-        groups.setdefault(n, []).append(cat)
-    ordered = sorted(groups.items(), key=lambda g: -g[0])
-    demand = DEMAND[day["global"]]
-    if not ordered:
+def day_texts(days):
+    """Every kind of day's name and line, in data order, from what it does to trade (#249): its
+    demand, and the categories it boosts, biggest first. A name gives the top boosted category,
+    and the next ones only as far as an earlier day already has that name, so it stays short
+    enough for the header chip; the line lists them all."""
+    used, out = set(), []
+    for day in days:
+        if day["global"] not in DEMAND:
+            sys.exit(f"trade day with global {day['global']}: no demand word for it in DEMAND")
+        groups = {}
+        for cat, n in day["boosts"].items():
+            groups.setdefault(n, []).append(cat)
+        ordered = sorted(groups.items(), key=lambda g: -g[0])
+        cats = [cat for _, cs in ordered for cat in cs]
+        demand = DEMAND[day["global"]]
         name = demand
-    elif day["global"] == 1:
-        name = f"{listed(ordered[0][1])} in demand"
-    else:
-        name = f"{demand}; {listed(ordered[0][1])} in demand"
-    faster = [f"{cat} ×{n:g}" for n, cats in ordered for cat in cats]
-    line = f"Customers ×{day['global']:g}." + (f" Selling faster: {', '.join(faster)}." if faster else "")
-    return name, line
+        for k in range(1, len(cats) + 1):
+            what = f"{listed(cats[:k])} in demand"
+            name = what if day["global"] == 1 else f"{demand}; {what}"
+            if name not in used:
+                break
+        if name in used:
+            sys.exit(f"two kinds of day are both named {name!r}")
+        used.add(name)
+        faster = [f"{cat} ×{n:g}" for n, cs in ordered for cat in cs]
+        out.append((name, f"Customers ×{day['global']:g}." + (f" Selling faster: {', '.join(faster)}." if faster else "")))
+    return out
 
 def restock_every(every, label):
     """A shop's data/recipes.json `restock` interval, doubled for a Village
@@ -875,6 +883,7 @@ def main():
     # rolls on its size's table once per open day; each result carries its multipliers. The
     # runtime finds a size's table by its tradeDays flag, not its id.
     days = json.load(open(os.path.join(MOD, "data/trade-days.json")))["days"]
+    texts = day_texts(days)
     fold_d = fid("tradedaysfolder")
     docs_t.append({"_id": fold_d, "_key": f"!folders!{fold_d}", "name": "Trade Days",
                    "type": "RollTable", "sorting": "a", "folder": None, "sort": 100000,
@@ -882,12 +891,9 @@ def main():
     for key, label, purse_mul, ti in TIERS:
         tid = fid("tradedays", label)
         results = []; at = 0
-        for d in days:
+        for d, (name, line) in zip(days, texts):
             w = d["weights"][ti]
             if not w: continue
-            name, line = day_text(d)
-            if any(r["name"] == name for r in results):
-                sys.exit(f"Trade Days ({label}): two kinds of day are both named {name!r}")
             rid = fid(tid, name)
             results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}", "type": "text",
                             "name": name, "img": "icons/environment/people/group.webp",
