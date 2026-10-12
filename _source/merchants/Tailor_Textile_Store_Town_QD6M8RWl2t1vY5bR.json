@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Magic Items and Tools. Open 8:00–18:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Magic Items and Tools.</p>"
       }
     },
     "currency": {
@@ -3361,7 +3361,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Magic Items and Tools. Open 8:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items and Tools.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -3424,7 +3424,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Magic Items and Tools. Open 8:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items and Tools.</p>",
         "merchantImage": "icons/environment/settlement/house-two-stories.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

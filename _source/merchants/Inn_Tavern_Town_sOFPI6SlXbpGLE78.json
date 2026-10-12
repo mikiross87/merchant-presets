@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Food & Drink, Lodging, Magic Items and Meals. Open 6:00–2:00.</p>"
+        "value": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>"
       }
     },
     "currency": {
@@ -2910,7 +2910,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals. Open 6:00–2:00.</p>",
+        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -2974,7 +2974,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals. Open 6:00–2:00.</p>",
+        "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p>",
         "merchantImage": "icons/environment/settlement/tavern.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

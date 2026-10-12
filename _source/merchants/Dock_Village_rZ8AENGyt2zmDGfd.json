@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Services and Vehicles. Open 5:00–19:00.</p>"
+        "value": "<p>Sells Services and Vehicles.</p>"
       }
     },
     "currency": {
@@ -1050,7 +1050,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Services and Vehicles. Open 5:00–19:00.</p>",
+        "description": "<p>Sells Services and Vehicles.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -1103,7 +1103,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Services and Vehicles. Open 5:00–19:00.</p>",
+        "description": "<p>Sells Services and Vehicles.</p>",
         "merchantImage": "icons/environment/settlement/abandoned-pier.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

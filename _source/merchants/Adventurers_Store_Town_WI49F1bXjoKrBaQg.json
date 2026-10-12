@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear and Magic Items. Open 7:00–19:00.</p>"
+        "value": "<p>Sells Adventuring Gear and Magic Items.</p>"
       }
     },
     "currency": {
@@ -9985,7 +9985,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Sells Adventuring Gear and Magic Items. Open 7:00–19:00.</p>",
+        "description": "<p>Sells Adventuring Gear and Magic Items.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -10088,7 +10088,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear and Magic Items. Open 7:00–19:00.</p>",
+        "description": "<p>Sells Adventuring Gear and Magic Items.</p>",
         "merchantImage": "icons/environment/settlement/market-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

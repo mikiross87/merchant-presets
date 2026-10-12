@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Spell Components and Tools. Open 9:00–17:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Spell Components and Tools.</p>"
       }
     },
     "currency": {
@@ -2104,7 +2104,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Spell Components and Tools. Open 9:00–17:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Spell Components and Tools.</p>",
         "terms": {
           "sellsAt": 1.0,
           "buysAt": 0.6,
@@ -2174,7 +2174,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Spell Components and Tools. Open 9:00–17:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Spell Components and Tools.</p>",
         "merchantImage": "icons/environment/settlement/house-city.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

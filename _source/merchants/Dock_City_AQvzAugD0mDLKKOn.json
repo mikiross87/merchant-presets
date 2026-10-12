@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Magic Items, Services and Vehicles. Open 5:00–19:00.</p>"
+        "value": "<p>Sells Magic Items, Services and Vehicles.</p>"
       }
     },
     "currency": {
@@ -4393,7 +4393,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Sells Magic Items, Services and Vehicles. Open 5:00–19:00.</p>",
+        "description": "<p>Sells Magic Items, Services and Vehicles.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -4458,7 +4458,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Magic Items, Services and Vehicles. Open 5:00–19:00.</p>",
+        "description": "<p>Sells Magic Items, Services and Vehicles.</p>",
         "merchantImage": "icons/environment/settlement/abandoned-pier.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

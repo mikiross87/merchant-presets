@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Armor, Tools and Weapons. Open 6:00–18:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Armor, Tools and Weapons.</p>"
       }
     },
     "currency": {
@@ -8055,7 +8055,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Armor, Tools and Weapons. Open 6:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Tools and Weapons.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -8138,7 +8138,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Armor, Tools and Weapons. Open 6:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Tools and Weapons.</p>",
         "merchantImage": "icons/environment/settlement/blacksmith.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

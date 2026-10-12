@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Instruments and Magic Items. Open 10:00–20:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>"
       }
     },
     "currency": {
@@ -3662,7 +3662,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items. Open 10:00–20:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -3723,7 +3723,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items. Open 10:00–20:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p>",
         "merchantImage": "icons/environment/settlement/gazebo.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

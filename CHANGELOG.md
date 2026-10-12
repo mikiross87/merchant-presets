@@ -13,10 +13,10 @@ than for the code. Reference the issue or PR it closes.
 
 ### Changed
 
-- Shops describe themselves with what they sell at their size and when
-  they're open, such as "Sells Adventuring Gear, Armor, Poisons, Tools and
-  Weapons. Open 20:00–4:00." The temple, arcane and druidic stores add which
-  spell lists they cast from and their spell slots a day. (#249)
+- Shops describe themselves with what they sell at their size, such as
+  "Sells Adventuring Gear, Armor, Poisons, Tools and Weapons." The temple,
+  arcane and druidic stores add which spell lists they cast from and their
+  spell slots a day. (#249)
 - Kinds of trading day are named for what they do, such as "Very busy" or
   "Weapons, Armor and Ammunition in demand", and the shop's day chip says how
   many customers it brings and what sells faster. (#249)

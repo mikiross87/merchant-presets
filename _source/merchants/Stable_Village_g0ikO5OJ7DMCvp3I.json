@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>"
+        "value": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles.</p>"
       }
     },
     "currency": {
@@ -1755,7 +1755,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>",
+        "description": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -1816,7 +1816,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>",
+        "description": "<p>Sells Mounts & Animals, Services, Tack & Harness and Vehicles.</p>",
         "merchantImage": "icons/environment/settlement/stables-horses.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

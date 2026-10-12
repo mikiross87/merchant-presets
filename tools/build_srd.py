@@ -371,10 +371,10 @@ def listed(xs):
     return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
 
 def shop_description(shop, key):
-    """What a shop sells at a settlement size and when it's open, from its own data (#249)."""
+    """What a shop sells at a settlement size, from its own stock lines (#249). Not its hours: a GM
+    changes those in the shop's Settings, and the window shows them already."""
     cats = sorted({l["cat"] for l in shop["stock"] if key in l["t"]})
-    open_, close = shop["hours"]
-    return f"<p>Sells {listed(cats)}. Open {open_}:00–{close}:00.</p>"
+    return f"<p>Sells {listed(cats)}.</p>"
 
 # The by-name rule every caster shop states (#55): spells with costly components sold by name.
 CASTER_RULE = ("Spells with expensive components that work without the caster are listed by name, with the "

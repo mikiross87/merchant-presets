@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Food & Drink and Tools.</p>"
       }
     },
     "currency": {
@@ -7045,7 +7045,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -7134,7 +7134,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools.</p>",
         "merchantImage": "icons/environment/settlement/wood-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

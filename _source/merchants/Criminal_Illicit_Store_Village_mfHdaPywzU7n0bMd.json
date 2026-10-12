@@ -531,7 +531,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons. Open 20:00–4:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons.</p>"
       }
     },
     "currency": {
@@ -5963,7 +5963,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons. Open 20:00–4:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons.</p>",
         "terms": {
           "sellsAt": 1.25,
           "buysAt": 0.35,
@@ -6034,7 +6034,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons. Open 20:00–4:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Armor, Poisons, Tools and Weapons.</p>",
         "merchantImage": "icons/environment/settlement/sewer-entrance.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

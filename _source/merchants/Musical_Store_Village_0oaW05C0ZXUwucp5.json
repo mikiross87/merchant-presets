@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Instruments. Open 10:00–20:00.</p>"
+        "value": "<p>Sells Instruments.</p>"
       }
     },
     "currency": {
@@ -2450,7 +2450,7 @@
         "version": 1,
         "tier": "Village",
         "source": null,
-        "description": "<p>Sells Instruments. Open 10:00–20:00.</p>",
+        "description": "<p>Sells Instruments.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -2509,7 +2509,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Instruments. Open 10:00–20:00.</p>",
+        "description": "<p>Sells Instruments.</p>",
         "merchantImage": "icons/environment/settlement/gazebo.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

@@ -25,8 +25,8 @@ export const STABLE = "Stable";
  *
  * - the Harptos calendar, at 10:00 on the 14th of Mirtul ("mid-morning"); no automatic restock,
  *   so moving the clock never redraws the shelf;
- * - *Armourer & Blacksmith*: a fresh import of the Town smith, renamed, with the frames'
- *   description, 07:00-19:00, the world's list/half, a 212 gp till, and exactly the stock rows the
+ * - *Armourer & Blacksmith*: a fresh import of the Town smith, renamed, with its own
+ *   description (#249), 07:00-19:00, the world's list/half, a 212 gp till, and exactly the stock rows the
  *   Storefront draws (Longsword 7, Handaxe 11, Javelin 21 new, Longsword +1 1, Breastplate 1 new,
  *   Chain Mail 4, Shield sold out, Smith's Tools 4) beside the first GEAR lines of the drawn gear, so
  *   the nav counts are the frames' own (All goods 20, Weapons 4, Armor 3, Tools 1, Gear 12); the
@@ -167,7 +167,6 @@ export async function setup() {
     "ownership.default": 1,
     "system.currency": { pp: 0, gp: 212, ep: 0, sp: 0, cp: 0 },
     [`flags.${MP}.visibility`]: true,
-    [`flags.${MP}.shop.description`]: "Hot, loud, and busy from before dawn. Blades and plate made and mended, and the only place in a small settlement that can shoe a horse and hammer out a helm.",
     [`flags.${MP}.shop.hours`]: { open: { hour: 7, minute: 0 }, close: { hour: 19, minute: 0 } },
     [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
     [`flags.${MP}.shop.deals`]: []
@@ -189,7 +188,6 @@ export async function setup() {
     name: innName,
     "ownership.default": 1,
     [`flags.${MP}.visibility`]: true,
-    [`flags.${MP}.shop.description`]: "Beds upstairs, a fire downstairs, and a landlord who has heard every story twice. Rooms by the night at whatever standard you can stomach paying for.",
     [`flags.${MP}.shop.terms`]: { sellsAt: null, buysAt: null, categories: [] },
     [`flags.${MP}.shop.deals`]: []
   });
@@ -248,20 +246,18 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
     // Other customers (#226): off but in band 20, which also keeps today's kind of day on the smith,
-    // as drawn from the shipped Town table. No frame sees a day an earlier one kept. Its trade comes
-    // from the shipped day with that multiplier; its name and line are the frames' own sample
-    // content, as the smith's description is (#249).
+    // as drawn from the shipped Town table. No frame sees a day an earlier one kept. The day is the
+    // shipped one with that multiplier and no boosts, named and described from its data (#249).
     await game.settings.set("merchant-presets", "otherCustomers", ${JSON.stringify(customers)});
     await smith.update({ "flags.merchant-presets.customers": ${day ? `await (async () => {
       const pack = game.packs.get("merchant-presets.stock");
       const index = await pack.getIndex({ fields: ["flags.merchant-presets.tradeDays"] });
       const table = await pack.getDocument(index.find(e => e.flags?.["merchant-presets"]?.tradeDays === "Town")._id);
-      const sample = ${JSON.stringify(day)};
-      const r = table.results.find(r => r.flags["merchant-presets"].day.global === sample.global
+      const r = table.results.find(r => r.flags["merchant-presets"].day.global === ${JSON.stringify(day)}
         && !Object.keys(r.flags["merchant-presets"].day.boosts).length);
       const { global, boosts } = r.flags["merchant-presets"].day;
       const index0 = Math.floor(game.time.worldTime / perDay);
-      return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: sample.name, text: sample.text, global, boosts }, override: null } };
+      return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: r.name, text: r.description, global, boosts }, override: null } };
     })()` : "null"} });
     // And from its preset's stock table and quantities (#190): band 19 gives it a table of its own.
     const presetRestock = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop.restock;
@@ -372,9 +368,8 @@ const refusedTab = ownTable(`
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
-/** Band 20 (#226): the storefront on a Market day, its chip in the hero (design IS2fO). */
-const storefrontDay = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, customers: "busy",
-  day: { global: 3, name: "Market day", text: "Stalls filled the square and the crowd followed." } });
+/** Band 20 (#226): the storefront on a Very busy day, its chip in the hero (design IS2fO). */
+const storefrontDay = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, customers: "busy", day: 3 });
 /**
  * The Closed frames: 3:00 on the 14th, four hours before the smith opens, with scheduled restocks
  * on and the next one due on the 21st (every 7 days); a shop restocked the day before.
@@ -541,8 +536,8 @@ const settingsAt = (section, deals = false, jump = true) => openShop({ tab: "set
 /** Settings jumped to Till (#147, band 14): the smith's 212 gp, refilled to the Town preset's 800 gp; or under unlimited merchant coin. */
 const tillSettings = coin => openShop({ tab: "settings", autoRestock: true, coin, before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "till";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="till"]').click();` });
-/** Band 20 (#226): Settings jumped to Customers, Busy on a Market day (design GVLI3), or Off (E6jfnh). */
-const customersTab = level => openShop({ tab: "settings", autoRestock: true, customers: level, day: level === "off" ? null : "Market day",
+/** Band 20 (#226): Settings jumped to Customers, Busy on a Very busy day (design GVLI3), or Off (E6jfnh). */
+const customersTab = level => openShop({ tab: "settings", autoRestock: true, customers: level, day: level === "off" ? null : 3,
   before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "customers";`,
   then: `app.element.querySelector('.mp-nav-link[data-section="customers"]').click();` });
 const noClockSettings = openShop({ tab: "settings", autoRestock: true, clock: "never", before: withoutDeals + restocked(1) + `shop.sheet._settingsSection = "hours";`,

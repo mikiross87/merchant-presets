@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from "node:fs";
 
 /**
  * Shops and trade days describe themselves with facts from their own data, not flavour text of
- * ours (#249): what a shop sells and when it's open, what a caster shop casts and how much, and
+ * ours (#249): what a shop sells, what a caster shop casts and how much, and
  * what a kind of day does to trade. Checked against the built `_source`, from `data/` directly.
  */
 
@@ -25,11 +25,10 @@ const list = xs => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")}
 const SHOP_RULE = "Spells with expensive components that work without the caster are listed by name, with the "
   + "components in the price; for any other spell, add the cost of any expensive components you don't bring.";
 
-/** What a shop of `shop`'s trade, at `tier`, says it sells and when it opens. */
+/** What a shop of `shop`'s trade, at `tier`, says it sells. Not its hours: a GM changes those. */
 function described(shop, tier) {
   const cats = [...new Set(shop.stock.filter(l => l.t.includes(TIER[tier])).map(l => l.cat))].sort();
-  const [open, close] = shop.hours;
-  return `<p>Sells ${list(cats)}. Open ${open}:00–${close}:00.</p>`;
+  return `<p>Sells ${list(cats)}.</p>`;
 }
 
 const shopOf = m => {
@@ -43,7 +42,7 @@ test("data/ holds no flavour text: no shop blurbs, caster notes as data, trade d
   assert.deepEqual(days.filter(d => "name" in d || "text" in d).map(d => d.name), []);
 });
 
-test("every merchant says what it sells at its size and when it's open, wherever its description shows (#249)", () => {
+test("every merchant says what it sells at its size, wherever its description shows (#249)", () => {
   assert.equal(merchants.length, 51);
   for (const m of merchants) {
     const { shop, tier } = shopOf(m);

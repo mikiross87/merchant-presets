@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>"
+        "value": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools.</p>"
       }
     },
     "currency": {
@@ -8113,7 +8113,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -8191,7 +8191,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools.</p>",
         "merchantImage": "icons/environment/settlement/winemaker-still-vintner.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
