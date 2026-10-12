@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/stables-horses.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d22",
+  "formula": "1d19",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -303,54 +303,6 @@
       "flags": {}
     },
     {
-      "_id": "XBKO8eIUgOZRnV9b",
-      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.XBKO8eIUgOZRnV9b",
-      "type": "document",
-      "name": "Coach Ride between Towns (per mile)",
-      "img": "icons/environment/settlement/wagon.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.aoRU3x8WIjLDElJu",
-      "weight": 1,
-      "range": [
-        19,
-        19
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "prSKvcg3gBqAO5C3",
-      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.prSKvcg3gBqAO5C3",
-      "type": "document",
-      "name": "Coach Ride within a City (per mile)",
-      "img": "icons/environment/settlement/wagon.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.TmkfaPAJ5g00V9cM",
-      "weight": 1,
-      "range": [
-        20,
-        20
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "83UQhQb0xgCIryNH",
-      "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.83UQhQb0xgCIryNH",
-      "type": "document",
-      "name": "Road or Gate Toll",
-      "img": "icons/environment/settlement/city-gate.webp",
-      "documentUuid": "Compendium.merchant-presets.goods.Item.PT7FtDwr7B48MWSb",
-      "weight": 1,
-      "range": [
-        21,
-        21
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
       "_id": "LmuhbOk6OMrMh2aI",
       "_key": "!tables.results!Zo7FQ1U9WAIDxcxO.LmuhbOk6OMrMh2aI",
       "type": "document",
@@ -359,8 +311,8 @@
       "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHorseshoesOfS",
       "weight": 1,
       "range": [
-        22,
-        22
+        19,
+        19
       ],
       "drawn": false,
       "description": "",

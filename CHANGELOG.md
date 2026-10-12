@@ -11,6 +11,25 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Changed
+
+- Mounts, ships, carts and wagons, saddles, food, meals and inn stays now
+  describe themselves in the SRD's own words. A saddle says what it does,
+  a mount shows how much it can carry, a ship links its stat block, and
+  food and lodging link the SRD page that prices them. (#243)
+
+### Fixed
+
+- A hammock on a ship is described as costing per day, as it's priced, not
+  per mile. (#242)
+
+### Removed
+
+- The Stable no longer sells coach rides or road and gate tolls: they come
+  from the older SRD 5.1 and aren't in SRD 5.2. Stables already in your
+  world drop them from their stock and shelf the next time the world loads,
+  and go on restocking as before. (#243)
+
 ## [2.3.0] - 2026-10-10
 
 ### Added

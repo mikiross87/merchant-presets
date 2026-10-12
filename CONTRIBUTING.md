@@ -101,12 +101,21 @@ Slayer: rare, base price + 4,000 gp). dnd5e's enchanting leaves those as the
 base's. The live check that holds the baking to dnd5e's own enchanting is
 described on #33.
 
+`data/srd-text.json` gives the goods the SRD describes in prose, not as items
+(mounts, vehicles, saddles, food, lodging), the SRD's own words (#243). Each
+entry quotes sentences from a `dnd5e.content24` page, a table cell, a stat block
+or a page to link, and `build_srd.py` writes the good's description from it. It
+stops if a quote isn't verbatim on its page, a cell doesn't read that way in the
+table, or a link doesn't resolve. Edit the file, never those descriptions in
+`_source/goods`: the next run puts them back.
+
 Regenerating is a separate, rarer step than packing, because it needs five of
 the dnd5e system's SRD compendiums unpacked to JSON — the equipment the shops
 sell, the actors the shopkeepers are statted from, the monster features those
 stat blocks reference, the spells whose material components the component
 goods and named services come from, and the content pack whose class spell
-lists decide which shop hires out which spell:
+lists decide which shop hires out which spell and whose rules text some goods
+quote:
 
 ```
 for p in equipment24 actors24 monsterfeatures24 spells24 content24; do
@@ -117,7 +126,8 @@ MP_SPELLS_DIR=/tmp/spells24 MP_CONTENT_DIR=/tmp/content24 \
   python3 tools/build_spell_goods.py
 MP_SRD_DIR=/tmp/equipment24 python3 tools/build_magic_goods.py
 MP_SRD_DIR=/tmp/equipment24 MP_ACTORS_DIR=/tmp/actors24 \
-  MP_FEATS_DIR=/tmp/monsterfeatures24 python3 tools/build_srd.py
+  MP_FEATS_DIR=/tmp/monsterfeatures24 MP_CONTENT_DIR=/tmp/content24 \
+  python3 tools/build_srd.py
 npm run pack
 ```
 

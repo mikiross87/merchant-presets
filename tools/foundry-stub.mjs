@@ -17,7 +17,9 @@ function set(o, path, value) {
   const last = keys.pop();
   let at = o;
   for (const k of keys) at = at[k] ??= {};
-  at[last] = value;
+  // Foundry's own deletion key: `a.b.-=c: null` removes `c`.
+  if (last.startsWith("-=")) delete at[last.slice(2)];
+  else at[last] = value;
 }
 
 /** A shipped document from _source, as the compendium serves it. */
@@ -25,6 +27,15 @@ export function source(sub, prefix) {
   const dir = new URL(`../_source/${sub}/`, import.meta.url);
   const file = readdirSync(dir).find(f => f.startsWith(prefix));
   return JSON.parse(readFileSync(new URL(file, dir), "utf8"));
+}
+
+/** Every good _source/goods ships, by id, the way a pack's `index` holds them. */
+function goodsIndex() {
+  const dir = new URL("../_source/goods/", import.meta.url);
+  return new Map(readdirSync(dir).filter(f => f.endsWith(".json"))
+    .map(f => JSON.parse(readFileSync(new URL(f, dir), "utf8")))
+    .filter(d => d._key?.startsWith("!items!"))
+    .map(d => [d._id, { _id: d._id, name: d.name }]));
 }
 
 let nextId = 1;
@@ -139,7 +150,8 @@ export function createWorld() {
       on: (name, fn) => socketHandlers.set(name, fn),
       emit: (name, message) => calls.socket.push({ name, message })
     },
-    packs: [],
+    // The goods pack's index, as Foundry loads it at startup: the ids _source/goods ships.
+    packs: Object.assign([], { get: id => (id === "merchant-presets.goods" ? { index: goodsIndex() } : undefined) }),
     // The key itself: a test reads which text was asked for, not an English translation.
     i18n: { lang: "en", localize: key => key },
     world: { id: "stub-world" },

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, tierOf }
+import { GOODS_PREFIX, isPreset, keepableItems, listShops, needsWiring, planShop, retiredGoods, rollsOnArrival, tierOf }
   from "../scripts/shop.mjs";
 
 /** A real shipped document, as the generator writes it. */
@@ -246,4 +246,33 @@ test("an NPC pointed at a stock table but never set up is treated as new", () =>
   const plan = planShop(temple(), npc, ["longsword0000001"], templeShop);
   assert.ok(!plan.deletes.includes("spell00000000001") && !plan.deletes.includes("feat000000000001"));
   assert.ok(!plan.deletes.includes("longsword0000001"));
+});
+
+/* ---------------------------------------------------- goods no longer shipped (#243) */
+
+test("retiredGoods finds the table lines and shelf items of goods the pack dropped, and only ours", () => {
+  const shipped = id => id === "kept000000000001";
+  const results = [
+    { id: "r1", documentUuid: `${GOODS_PREFIX}kept000000000001` },
+    { id: "r2", documentUuid: `${GOODS_PREFIX}dropped000000001` },
+    { id: "r3", documentUuid: "Compendium.dnd5e.equipment24.Item.phbagBell0000000" },
+    { id: "r4", documentUuid: "Item.worldItem0000001" },
+    { id: "r5", type: "text" }
+  ];
+  const items = [
+    { _id: "i1", _stats: { compendiumSource: `${GOODS_PREFIX}dropped000000001` } },
+    { _id: "i2", _stats: { compendiumSource: `${GOODS_PREFIX}kept000000000001` } },
+    { _id: "i3", _stats: { compendiumSource: "Compendium.dnd5e.equipment24.Item.phbagBell0000000" } },
+    { _id: "i4" }
+  ];
+  const quantities = { r1: "1d6", r2: "2d4", gone: "1" };
+  assert.deepEqual(retiredGoods(results, items, shipped, quantities),
+    { resultIds: ["r2"], itemIds: ["i1"], diceIds: ["r2", "gone"] },
+    "the dropped line's dice go with it, as do dice for a line the table no longer has; a kept line's stay");
+});
+
+test("retiredGoods finds nothing on a shop whose goods all still ship", () => {
+  assert.deepEqual(retiredGoods([{ id: "r1", documentUuid: `${GOODS_PREFIX}kept000000000001` }], [], () => true, { r1: "1" }),
+    { resultIds: [], itemIds: [], diceIds: [] });
+  assert.deepEqual(retiredGoods([], [], () => true), { resultIds: [], itemIds: [], diceIds: [] }, "no dice kept");
 });

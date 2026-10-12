@@ -70,12 +70,12 @@ test("every stock item's config validates; shopkeeper gear carries none", () => 
       checked++;
     }
   }
-  assert.equal(checked, 2001);
+  assert.equal(checked, 1994);
 });
 
 test("every good that carries Item Piles flags has a valid stock config", () => {
   const withFlags = goods.filter(g => g.flags?.["item-piles"]?.item);
-  assert.equal(withFlags.length, 113);
+  assert.equal(withFlags.length, 110);
   for (const g of withFlags) {
     const stock = g.flags?.["merchant-presets"]?.stock;
     assert.ok(stock, g.name);

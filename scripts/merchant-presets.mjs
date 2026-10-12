@@ -12,7 +12,7 @@ import { accessModeOf, accessOf, accessOwnership, actorInReach, canOpenOn, canVi
 import { applyMeal, mealsFeed, NUTRITION_MINIMUM, NUTRITION_MODULE, nutritionOfItem, oneAtATime, usageConsumes } from "./nutrition.mjs";
 import { activityEffects, actorEffects, castActivity, castFlavor, castingMessage, castsIn, chatRecipients, spellCard, spellCards }
   from "./casting.mjs";
-import { isPreset, keepableItems, listShops, needsWiring, planShop, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
+import { isPreset, keepableItems, listShops, needsWiring, planShop, retiredGoods, rollsOnArrival, TIERS, tierOf } from "./shop.mjs";
 import { boughtWith, goodFlag } from "./trade.mjs";
 import { categoryFor, lineTotalCp, planTrade, safeShopOf } from "./trade-plan.mjs";
 import { isDrainable, keptDay, LEVELS, planCustomersDefault, planDrain, tableAverage } from "./customers.mjs";
@@ -205,6 +205,46 @@ async function releaseStraysAll() {
     if (!isPreset(actor)) continue;
     try { if (await releaseStrays(actor)) n++; }
     catch (err) { console.error(`${MODULE} | could not release strays on "${actor.name}"`, err); }
+  }
+  return n;
+}
+
+/**
+ * Let go of the goods this module no longer ships (#243) on one shop: its world stock table's
+ * lines for them, its line dice for lines its table no longer has, and their copies on its shelf.
+ * Left on the table, a dropped good stops the shop restocking for good (`drawsFor`). A stock table
+ * still in the pack is current. Nothing is let go while the goods pack isn't loaded, and no dice
+ * while the shop's table can't be read.
+ *
+ * @param {Actor} actor
+ * @returns {Promise<boolean>} whether anything was let go
+ */
+async function retireGoods(actor) {
+  const index = game.packs?.get(`${MODULE}.goods`)?.index;
+  const shop = safeShopOf(actor);
+  if (!index || !shop) return false;
+  const table = shop.restock.table ? await fromUuid(shop.restock.table).catch(() => null) : null;
+  const { resultIds, itemIds, diceIds: lines } = retiredGoods([...(table?.results ?? [])], [...actor.items],
+    id => index.has(id), shop.restock.quantities);
+  // Without a table to read, which dice are dead can't be told: they wait for it.
+  const diceIds = table ? lines : [];
+  if (resultIds.length && !table.pack) await table.deleteEmbeddedDocuments("TableResult", resultIds);
+  if (diceIds.length) await actor.update(Object.fromEntries(diceIds.map(id => [`flags.${MODULE}.shop.restock.quantities.-=${id}`, null])));
+  if (itemIds.length) await actor.deleteEmbeddedDocuments("Item", itemIds);
+  return resultIds.length + itemIds.length + diceIds.length > 0;
+}
+
+/**
+ * Let go of goods no longer shipped across every one of our shops in the world.
+ * @returns {Promise<number>} how many shops changed
+ */
+async function retireGoodsAll() {
+  if (game.users.activeGM !== game.user) return 0;     // one GM does the writing
+  let n = 0;
+  for (const actor of game.actors) {
+    if (!isPreset(actor)) continue;
+    try { if (await retireGoods(actor)) n++; }
+    catch (err) { console.error(`${MODULE} | could not let go of retired goods on "${actor.name}"`, err); }
   }
   return n;
 }
@@ -2171,6 +2211,9 @@ Hooks.once("ready", async () => {
     arrive(actor).catch(err => console.error(`${MODULE} |`, err));
   });
 
+  // Before any restock: a good the pack dropped would stop its shop restocking (#243).
+  const retired = await retireGoodsAll();
+  if (retired) log(`let go of goods no longer shipped on ${retired} shop(s)`);
   // The shops restock on their own schedule (#105).
   registerRestock();
   // A shop arriving is new to this world, whatever its flags say: one exported after it was made
@@ -2248,6 +2291,8 @@ async function arrive(actor) {
     if (sheetClass) await actor.update({ "flags.core.sheetClass": sheetClass });
     if (!isPreset(actor)) return;
     await releaseStrays(actor);
+    // One from an older build, arriving after the load-time pass, before it ever restocks (#243).
+    await retireGoods(actor);
     if (rollsOnArrival(actor)) await restock(actor);
   } finally {
     arriving.delete(actor.id);

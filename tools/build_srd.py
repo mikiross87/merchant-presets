@@ -7,7 +7,7 @@ or DMG modules is touched, so the packs can be published.
 
 Ids are content-derived hashes so a rebuild keeps every UUID stable.
 """
-import json, glob, os, re, sys, hashlib, unicodedata, urllib.request, collections, random
+import json, glob, html, os, re, sys, hashlib, unicodedata, urllib.request, collections, random
 
 MOD   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # An unpacked copy of the system's dnd5e.equipment24 pack. Not in this repo:
@@ -23,6 +23,9 @@ ACTORS_PACK = "dnd5e.actors24"
 # blocks reference — Multiattack, Parry, Spellcasting and the rest.
 FEATS  = os.environ.get("MP_FEATS_DIR") or (sys.argv[3] if len(sys.argv) > 3 else "")
 FEATS_PACK = "dnd5e.monsterfeatures24"
+# And of dnd5e.content24, the SRD's rules text: data/srd-text.json quotes it for
+# the goods the SRD describes in prose rather than as items (#243).
+CONTENT = os.environ.get("MP_CONTENT_DIR") or (sys.argv[4] if len(sys.argv) > 4 else "")
 B62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def assert_world_closed():
@@ -281,6 +284,86 @@ def sync_goods_stock():
         changed += 1
     return changed
 
+def srd_plain(content):
+    """A journal page's text as a reader sees it: links read as their labels,
+    tags and entities gone, whitespace collapsed. Quotes are matched against this."""
+    t = re.sub(r"(?:@|&amp;|&)\w+\[[^\]]*\]\{([^}]*)\}", r"\1", content or "")
+    t = html.unescape(re.sub(r"<[^>]+>", " ", t))
+    return re.sub(r"\s+", " ", t).strip()
+
+def sync_goods_text():
+    """Write the descriptions data/srd-text.json gives hand-authored goods, in
+    the SRD's own words (#243): each quote, which must appear verbatim on its
+    SRD 5.2 page, a table cell checked against the same page, a stat-block link
+    and a link to an SRD page, in that order. Any quote, cell, link or good that
+    does not resolve stops the build before anything is written. Idempotent:
+    only rewrites a file whose description actually changed."""
+    entries = json.load(open(os.path.join(MOD, "data/srd-text.json")))["goods"]
+    pages = {}
+    for f in glob.glob(os.path.join(CONTENT, "*.json")):
+        j = json.load(open(f))
+        for pg in j.get("pages") or []:
+            pages[f"{j['name']} / {pg['name']}"] = (j["_id"], pg["_id"], pg["name"],
+                                                     srd_plain((pg.get("text") or {}).get("content")))
+    actors = {}
+    for f in glob.glob(os.path.join(ACTORS, "*.json")):
+        d = json.load(open(f))
+        if d.get("_key", "!actors!").startswith("!actors!") and "_id" in d:
+            actors[d["_id"]] = d["name"]
+    files = {}
+    for f in glob.glob(os.path.join(MOD, "_source/goods/*.json")):
+        d = json.load(open(f))
+        if d.get("_key", "").startswith("!items!"):
+            files[d["name"]] = (f, d)
+
+    problems, out = [], {}
+    for name, e in entries.items():
+        if name not in files:
+            problems.append(f"{name}: no such good in _source/goods"); continue
+        parts = []
+        if e.get("quotes") or e.get("row"):
+            pg = pages.get(e.get("page"))
+            if not pg:
+                problems.append(f"{name}: no SRD page {e.get('page')!r}"); continue
+            for q in e.get("quotes", []):
+                if q not in pg[3]:
+                    problems.append(f"{name}: {e['page']!r} does not say {q!r}")
+                parts.append(f"<p>{html.escape(q, quote=False)}</p>")
+            if e.get("row"):
+                if f"{e['row']} {e['cell']}" not in pg[3]:
+                    problems.append(f"{name}: {e['page']!r} has no row {e['row']!r} reading {e['cell']!r}")
+                parts.append(f"<p>{e['label']}: {e['cell']}</p>")
+        if e.get("actor"):
+            if e["actor"] not in actors:
+                problems.append(f"{name}: no SRD actor {e['actor']}")
+            else:
+                parts.append(f"<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.{e['actor']}]"
+                             f"{{{actors[e['actor']]}}}</p>")
+        if e.get("see"):
+            pg = pages.get(e["see"])
+            if not pg:
+                problems.append(f"{name}: no SRD page {e['see']!r}")
+            else:
+                parts.append(f"<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.{pg[0]}"
+                             f".JournalEntryPage.{pg[1]}]{{{pg[2]}}}</p>")
+        if not parts:
+            problems.append(f"{name}: nothing to write (no quotes, row, actor or see)")
+        out[name] = "".join(parts)
+    if problems:
+        sys.exit("data/srd-text.json does not match the SRD:\n  " + "\n  ".join(problems))
+
+    changed = 0
+    for name, text in out.items():
+        f, doc = files[name]
+        desc = doc["system"]["description"]
+        if desc.get("value") == text:
+            continue
+        desc["value"] = text
+        json.dump(doc, open(f, "w"), indent=2, ensure_ascii=False)
+        open(f, "a").write("\n")
+        changed += 1
+    return changed
+
 def restock_every(every, label):
     """A shop's data/recipes.json `restock` interval, doubled for a Village
     (#105): a number doubles, a dice formula gets a `*2` on the outside."""
@@ -491,7 +574,11 @@ def main():
         sys.exit("point MP_ACTORS_DIR (or argv[2]) at an unpacked dnd5e.actors24 directory")
     if not FEATS or not os.path.isdir(FEATS):
         sys.exit("point MP_FEATS_DIR (or argv[3]) at an unpacked dnd5e.monsterfeatures24 directory")
+    if not CONTENT or not os.path.isdir(CONTENT):
+        sys.exit("point MP_CONTENT_DIR (or argv[4]) at an unpacked dnd5e.content24 directory")
     assert_world_closed()
+    # Goods the SRD describes in prose take its words (#243), before they are embedded below.
+    worded = sync_goods_text()
     # Every good's own stock flag, before it is either embedded in a merchant
     # (below) or read for its category (make_item, above).
     stamped = sync_goods_stock()
@@ -774,6 +861,7 @@ def main():
             json.dump(doc, open(p, "w"), indent=2, ensure_ascii=False); open(p, "a").write("\n")
     write(docs_a, actors_dir); write(docs_t, tables_dir)
 
+    print(f"goods in the SRD's words: {worded} rewritten")
     print(f"goods stock flags: {stamped} stamped or updated")
     print(f"merchants: {len([d for d in docs_a if d['_key'].startswith('!actors!')])}"
           f"  stock lines: {sum(counts.values())}  tables: {len([d for d in docs_t if d['_key'].startswith('!tables!')])}")
