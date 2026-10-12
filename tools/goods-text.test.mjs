@@ -126,6 +126,12 @@ test("a listed good that doesn't exist, a link the packs don't have, or an entry
   }
 });
 
+test("a lead sentence comes before the quotes, so goods quoting the same SRD text can still say what each is (#247)", () => {
+  const r = syncText([good("Saddle, Military")], { "Saddle, Military": { ...SADDLE, lead: "A saddle for war." } });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(r.out["Saddle, Military"], "<p>A saddle for war.</p>" + SADDLE.quotes.map(q => `<p>${q}</p>`).join(""));
+});
+
 test("a second run changes nothing", () => {
   const goodsIn = [good("Saddle, Military")];
   const first = syncText(goodsIn, { "Saddle, Military": SADDLE });
@@ -152,11 +158,14 @@ test("a spell component opens with its spell's phrase word for word, the + kept 
   assert.deepEqual(COMPONENTS.filter(r => "desc" in r).map(r => r.name), [], "no row words its own description");
 });
 
-test("the level spellcasting services quote the SRD's Spellcasting page, not words of our own (#247)", () => {
+test("the level spellcasting services name their level, then quote the SRD's Spellcasting page (#247)", () => {
   const levels = goods.filter(g => /^Spellcasting: (Cantrip|Level )/.test(g.name));
   assert.equal(levels.length, 7);
   for (const g of levels) {
     assert.ok(SRD_TEXT[g.name], `${g.name} is in data/srd-text.json`);
     assert.match(g.system.description.value, /If a spell has expensive components, add the cost of those components/, g.name);
+    const level = g.name === "Spellcasting: Cantrip" ? "a cantrip"
+      : `a level ${g.name.replace("Spellcasting: Level ", "").replace(/^(\d)-(\d)$/, (_, a, b) => b - a === 1 ? `${a} or ${b}` : `${a}, ${+a + 1} or ${b}`)} spell`;
+    assert.ok(g.system.description.value.startsWith(`<p>A spellcaster casts ${level} on your behalf.</p>`), `${g.name} names its level first`);
   }
 });
