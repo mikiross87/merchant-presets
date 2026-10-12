@@ -98,7 +98,7 @@ test("a table cell and a stat block are read from the SRD, and links resolve to 
   assert.equal(r.out.Camel, "<p>Carrying capacity: 450 lb.</p>"
     + "<p>Stat block: @UUID[Compendium.dnd5e.actors24.Actor.mmCamel000000000]{Camel}</p>");
   assert.equal(r.out["Meal, Poor"], "<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.phbServices00000"
-    + ".JournalEntryPage.foodPage00000000]{Food, Drink, and Lodging}.</p>");
+    + ".JournalEntryPage.foodPage00000000]{Food, Drink, and Lodging}</p>");
 });
 
 test("text the SRD page doesn't have stops the build, naming the good, and writes nothing", () => {
