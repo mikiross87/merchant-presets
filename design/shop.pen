@@ -35463,7 +35463,7 @@
               "enabled": false
             },
             "Cx08R": {
-              "content": "Not a shop so much as a counter beside the door, where the faithful leave coin and take away what the temple can spare. Healing draughts, holy water, a symbol to carry. Spellcasting here…"
+              "content": "Sells Adventuring Gear, Holy Symbols, Magic Items, Potions, Services, Spell Components, Tools and Weapons. Casts spells from the divine lists: roll 1d4+1 spell slots a day in a village,…"
             },
             "xlRXV": {
               "content": "Open · closes at 20:00"
@@ -36995,7 +36995,7 @@
               "enabled": false
             },
             "Cx08R": {
-              "content": "Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day."
+              "content": "Sells Mounts & Animals, Services, Tack & Harness and Vehicles."
             },
             "xlRXV": {
               "content": "Open · closes at 20:00"
@@ -37080,7 +37080,7 @@
                       "id": "i6cuFt",
                       "name": "All goods count",
                       "fill": "$text-secondary",
-                      "content": "16",
+                      "content": "14",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -37277,55 +37277,6 @@
                       "name": "Mounts count",
                       "fill": "$text-secondary",
                       "content": "6",
-                      "fontFamily": "$font-compact",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "hwA0g",
-                  "name": "Cat Travel",
-                  "width": "fill_container",
-                  "fill": "#00000000",
-                  "cornerRadius": 4,
-                  "stroke": "#00000000",
-                  "gap": 8,
-                  "padding": [
-                    7,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "NL5Z2",
-                      "name": "Travel icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "map",
-                      "library": "lucide",
-                      "fill": "$text-secondary"
-                    },
-                    {
-                      "type": "text",
-                      "id": "Ycy6q",
-                      "name": "Travel label",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Travel",
-                      "fontFamily": "$font-body",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "text",
-                      "id": "JxeqI",
-                      "name": "Travel count",
-                      "fill": "$text-secondary",
-                      "content": "2",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
