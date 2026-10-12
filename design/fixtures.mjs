@@ -248,16 +248,20 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
     // Other customers (#226): off but in band 20, which also keeps today's kind of day on the smith,
-    // as drawn from the shipped Town table. No frame sees a day an earlier one kept.
+    // as drawn from the shipped Town table. No frame sees a day an earlier one kept. Its trade comes
+    // from the shipped day with that multiplier; its name and line are the frames' own sample
+    // content, as the smith's description is (#249).
     await game.settings.set("merchant-presets", "otherCustomers", ${JSON.stringify(customers)});
     await smith.update({ "flags.merchant-presets.customers": ${day ? `await (async () => {
       const pack = game.packs.get("merchant-presets.stock");
       const index = await pack.getIndex({ fields: ["flags.merchant-presets.tradeDays"] });
       const table = await pack.getDocument(index.find(e => e.flags?.["merchant-presets"]?.tradeDays === "Town")._id);
-      const r = table.results.find(r => r.name === ${JSON.stringify(day)});
+      const sample = ${JSON.stringify(day)};
+      const r = table.results.find(r => r.flags["merchant-presets"].day.global === sample.global
+        && !Object.keys(r.flags["merchant-presets"].day.boosts).length);
       const { global, boosts } = r.flags["merchant-presets"].day;
       const index0 = Math.floor(game.time.worldTime / perDay);
-      return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: r.name, text: r.description, global, boosts }, override: null } };
+      return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: sample.name, text: sample.text, global, boosts }, override: null } };
     })()` : "null"} });
     // And from its preset's stock table and quantities (#190): band 19 gives it a table of its own.
     const presetRestock = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop.restock;
@@ -369,7 +373,8 @@ const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
 const storefrontPlayer = openShop({ basket: BASKET });
 /** Band 20 (#226): the storefront on a Market day, its chip in the hero (design IS2fO). */
-const storefrontDay = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, customers: "busy", day: "Market day" });
+const storefrontDay = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET, customers: "busy",
+  day: { global: 3, name: "Market day", text: "Stalls filled the square and the crowd followed." } });
 /**
  * The Closed frames: 3:00 on the 14th, four hours before the smith opens, with scheduled restocks
  * on and the next one due on the 21st (every 7 days); a shop restocked the day before.

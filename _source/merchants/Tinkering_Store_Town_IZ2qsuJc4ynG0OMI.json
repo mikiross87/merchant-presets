@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p>"
+        "value": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 8:00–18:00.</p>"
       }
     },
     "currency": {
@@ -6267,7 +6267,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p>",
+        "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 8:00–18:00.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -6343,7 +6343,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Every surface covered, nothing thrown away. Locks, hinges, bell-pulls and small mechanisms of unclear purpose, plus the tools to make more of them.</p>",
+        "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 8:00–18:00.</p>",
         "merchantImage": "icons/environment/settlement/pottery-shop-shed-red.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

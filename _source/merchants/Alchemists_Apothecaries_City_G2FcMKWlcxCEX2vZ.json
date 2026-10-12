@@ -535,7 +535,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>"
+        "value": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>"
       }
     },
     "currency": {
@@ -11616,7 +11616,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -11708,7 +11708,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Jars of things that help and, behind the counter, a few that do not. The proprietor will ask what you need it for and may not believe the answer.</p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools. Open 8:00–18:00.</p>",
         "merchantImage": "icons/environment/settlement/winemaker-still-vintner.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

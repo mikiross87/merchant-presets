@@ -530,7 +530,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>"
+        "value": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>"
       }
     },
     "currency": {
@@ -7602,7 +7602,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>",
+        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -7693,7 +7693,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>The shop everyone uses for everything: rope, lamp oil, a cooking pot, a length of chain. Nothing here is remarkable, which is the point.</p>",
+        "description": "<p>Sells Adventuring Gear, Food & Drink and Tools. Open 7:00–19:00.</p>",
         "merchantImage": "icons/environment/settlement/wood-stall.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

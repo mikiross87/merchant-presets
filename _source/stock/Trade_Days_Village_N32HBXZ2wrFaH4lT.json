@@ -19,12 +19,12 @@
   },
   "results": [
     {
-      "_id": "CnBe7YVKVieP6hn5",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.CnBe7YVKVieP6hn5",
+      "_id": "mM3ZTowYWX9gvyXA",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.mM3ZTowYWX9gvyXA",
       "type": "text",
-      "name": "Dead quiet",
+      "name": "Very quiet",
       "img": "icons/environment/people/group.webp",
-      "description": "Hardly a soul came through the door.",
+      "description": "Customers ×0.25.",
       "weight": 15,
       "range": [
         1,
@@ -41,12 +41,12 @@
       }
     },
     {
-      "_id": "6chRuuENJDvpmW9V",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.6chRuuENJDvpmW9V",
+      "_id": "gCPm4HnRKDEYHPz2",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.gCPm4HnRKDEYHPz2",
       "type": "text",
-      "name": "Slow",
+      "name": "Quiet",
       "img": "icons/environment/people/group.webp",
-      "description": "A sleepy day; a few browsers.",
+      "description": "Customers ×0.5.",
       "weight": 25,
       "range": [
         16,
@@ -63,12 +63,12 @@
       }
     },
     {
-      "_id": "Q2PlzlT8TY8aQNYl",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.Q2PlzlT8TY8aQNYl",
+      "_id": "Iii8CsahYz8CJVEy",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.Iii8CsahYz8CJVEy",
       "type": "text",
-      "name": "Fever in the lanes",
+      "name": "Quiet; Potions in demand",
       "img": "icons/environment/people/group.webp",
-      "description": "Folk stayed in, or bought remedies.",
+      "description": "Customers ×0.5. Selling faster: Potions ×3, Holy Symbols ×2.",
       "weight": 5,
       "range": [
         41,
@@ -93,7 +93,7 @@
       "type": "text",
       "name": "Steady",
       "img": "icons/environment/people/group.webp",
-      "description": "The usual trickle of regulars.",
+      "description": "Customers ×1.",
       "weight": 32,
       "range": [
         46,
@@ -115,7 +115,7 @@
       "type": "text",
       "name": "Busy",
       "img": "icons/environment/people/group.webp",
-      "description": "Locals kept the till ringing.",
+      "description": "Customers ×2.",
       "weight": 8,
       "range": [
         78,
@@ -132,12 +132,12 @@
       }
     },
     {
-      "_id": "2sQ01keqYpXNUcMu",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.2sQ01keqYpXNUcMu",
+      "_id": "biCTX3pKhIOTgl5X",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.biCTX3pKhIOTgl5X",
       "type": "text",
-      "name": "Market day",
+      "name": "Very busy",
       "img": "icons/environment/people/group.webp",
-      "description": "Stalls filled the square and the crowd followed.",
+      "description": "Customers ×3.",
       "weight": 5,
       "range": [
         86,
@@ -154,12 +154,12 @@
       }
     },
     {
-      "_id": "ZAen9NCtMD2bhPfY",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.ZAen9NCtMD2bhPfY",
+      "_id": "TSdFuLBoLljf32SM",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.TSdFuLBoLljf32SM",
       "type": "text",
-      "name": "Caravan in town",
+      "name": "Food & Drink, Adventuring Gear and Tack & Harness in demand",
       "img": "icons/environment/people/group.webp",
-      "description": "A merchant train rolled in, hungry and short of supplies.",
+      "description": "Customers ×1. Selling faster: Food & Drink ×3, Adventuring Gear ×3, Tack & Harness ×3, Mounts & Animals ×2, Vehicles ×2.",
       "weight": 4,
       "range": [
         91,
@@ -182,12 +182,12 @@
       }
     },
     {
-      "_id": "4ZqMNNsluCIn4gP3",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.4ZqMNNsluCIn4gP3",
+      "_id": "ilojL4ULjkpkHziC",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.ilojL4ULjkpkHziC",
       "type": "text",
-      "name": "Festival",
+      "name": "Food & Drink and Instruments in demand",
       "img": "icons/environment/people/group.webp",
-      "description": "Bunting, bells and a thirsty crowd.",
+      "description": "Customers ×1. Selling faster: Food & Drink ×3, Instruments ×3.",
       "weight": 4,
       "range": [
         95,
@@ -207,12 +207,12 @@
       }
     },
     {
-      "_id": "5F0npsVce5po7fFe",
-      "_key": "!tables.results!N32HBXZ2wrFaH4lT.5F0npsVce5po7fFe",
+      "_id": "d5HbLhLSsoWZZVkA",
+      "_key": "!tables.results!N32HBXZ2wrFaH4lT.d5HbLhLSsoWZZVkA",
       "type": "text",
-      "name": "Pilgrims / holy day",
+      "name": "Holy Symbols in demand",
       "img": "icons/environment/people/group.webp",
-      "description": "Pilgrims came to give thanks.",
+      "description": "Customers ×1. Selling faster: Holy Symbols ×4, Potions ×2, Food & Drink ×2.",
       "weight": 2,
       "range": [
         99,

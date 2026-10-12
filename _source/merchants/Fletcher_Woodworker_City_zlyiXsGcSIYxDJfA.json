@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>"
+        "value": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 7:00–17:00.</p>"
       }
     },
     "currency": {
@@ -7716,7 +7716,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>",
+        "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 7:00–17:00.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -7795,7 +7795,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Staves seasoning in the rafters and arrows counted into bundles of twenty. Bows to order, and shafts by the dozen for anyone who shoots often enough to lose them.</p>",
+        "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons. Open 7:00–17:00.</p>",
         "merchantImage": "icons/environment/settlement/lumbermill.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

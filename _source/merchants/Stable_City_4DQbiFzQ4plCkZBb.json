@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>"
+        "value": "<p>Sells Magic Items, Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>"
       }
     },
     "currency": {
@@ -2850,7 +2850,7 @@
         "version": 1,
         "tier": "City",
         "source": null,
-        "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>",
+        "description": "<p>Sells Magic Items, Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -2915,7 +2915,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Straw, flies and the warm smell of horse. Beasts sold, hired and boarded, with tack to match and feed by the day.</p>",
+        "description": "<p>Sells Magic Items, Mounts & Animals, Services, Tack & Harness and Vehicles. Open 5:00–20:00.</p>",
         "merchantImage": "icons/environment/settlement/stables-horses.webp",
         "displayItemTypes": true,
         "canInspectItems": true,

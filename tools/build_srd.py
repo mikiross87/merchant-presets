@@ -366,6 +366,49 @@ def sync_goods_text():
         changed += 1
     return changed
 
+def listed(xs):
+    """'A', 'A and B', 'A, B and C'."""
+    return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
+
+def shop_description(shop, key):
+    """What a shop sells at a settlement size and when it's open, from its own data (#249)."""
+    cats = sorted({l["cat"] for l in shop["stock"] if key in l["t"]})
+    open_, close = shop["hours"]
+    return f"<p>Sells {listed(cats)}. Open {open_}:00–{close}:00.</p>"
+
+# The by-name rule every caster shop states (#55): spells with costly components sold by name.
+CASTER_RULE = ("Spells with expensive components that work without the caster are listed by name, with the "
+               "components in the price; for any other spell, add the cost of any expensive components you don't bring.")
+
+def caster_note(note):
+    """A caster shop's spell lists and slots a day by size, then the by-name rule (#249)."""
+    v, t, c = note["slots"]
+    return (f"<p><em>Casts spells from the {note['lists']} lists: {v} spell slots a day in a village, "
+            f"{t} in a town, {c} in a city. {CASTER_RULE}</em></p>")
+
+# A kind of day's demand, by its `global` multiplier (#249).
+DEMAND = {0.25: "Very quiet", 0.5: "Quiet", 1: "Steady", 2: "Busy", 3: "Very busy"}
+
+def day_text(day):
+    """A kind of day's name and line, from what it does to trade (#249): its demand, and the
+    categories it boosts, biggest first."""
+    if day["global"] not in DEMAND:
+        sys.exit(f"trade day with global {day['global']}: no demand word for it in DEMAND")
+    groups = {}
+    for cat, n in day["boosts"].items():
+        groups.setdefault(n, []).append(cat)
+    ordered = sorted(groups.items(), key=lambda g: -g[0])
+    demand = DEMAND[day["global"]]
+    if not ordered:
+        name = demand
+    elif day["global"] == 1:
+        name = f"{listed(ordered[0][1])} in demand"
+    else:
+        name = f"{demand}; {listed(ordered[0][1])} in demand"
+    faster = [f"{cat} ×{n:g}" for n, cats in ordered for cat in cats]
+    line = f"Customers ×{day['global']:g}." + (f" Selling faster: {', '.join(faster)}." if faster else "")
+    return name, line
+
 def restock_every(every, label):
     """A shop's data/recipes.json `restock` interval, doubled for a Village
     (#105): a number doubles, a dice formula gets a `*2` on the outside."""
@@ -715,11 +758,12 @@ def main():
                 item_flags[i["name"]] = f
 
             table_uuid = f"Compendium.merchant-presets.stock.RollTable.{tid}"
-            description = f"<p>{shop['desc']}</p>" + (f"<p><em>{shop['note']}</em></p>" if shop.get("note") else "")
+            described = shop_description(shop, key)
+            description = described + (caster_note(shop["note"]) if shop.get("note") else "")
 
             docs_t.append({"_id": tid, "_key": f"!tables!{tid}", "name": name,
                            "img": shop["img"], "folder": fold_t,
-                           "description": f"<p>{shop['desc']}</p><p><em>Stock list for a {label.lower()}.</em></p>",
+                           "description": f"{described}<p><em>Stock list for a {label.lower()}.</em></p>",
                            "formula": f"1d{len(results)}", "replacement": True, "displayRoll": True,
                            "sort": 0, "ownership": {"default": 0}, "flags": {}, "results": results})
 
@@ -736,7 +780,7 @@ def main():
             sysd = statblock(npc)
             sysd["currency"] = {"pp": 0, "gp": round(shop["purse"] * purse_mul),
                                 "ep": 0, "sp": 0, "cp": 0}
-            sysd["details"]["biography"] = {"value": f"<p>{shop['desc']}</p>"}
+            sysd["details"]["biography"] = {"value": described}
 
             # The #98/#99 config, beside the Item Piles flags below: not read
             # by next's runtime yet (#102-#105), but derived from the same
@@ -841,10 +885,13 @@ def main():
         for d in days:
             w = d["weights"][ti]
             if not w: continue
-            rid = fid(tid, d["name"])
+            name, line = day_text(d)
+            if any(r["name"] == name for r in results):
+                sys.exit(f"Trade Days ({label}): two kinds of day are both named {name!r}")
+            rid = fid(tid, name)
             results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}", "type": "text",
-                            "name": d["name"], "img": "icons/environment/people/group.webp",
-                            "description": d["text"], "weight": w, "range": [at + 1, at + w],
+                            "name": name, "img": "icons/environment/people/group.webp",
+                            "description": line, "weight": w, "range": [at + 1, at + w],
                             "drawn": False,
                             "flags": {"merchant-presets": {"day": {"global": d["global"], "boosts": d["boosts"]}}}})
             at += w

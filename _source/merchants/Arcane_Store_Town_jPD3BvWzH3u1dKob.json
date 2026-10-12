@@ -533,7 +533,7 @@
       },
       "alignment": "Neutral",
       "biography": {
-        "value": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p>"
+        "value": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons. Open 10:00–18:00.</p>"
       }
     },
     "currency": {
@@ -13179,7 +13179,7 @@
         "version": 1,
         "tier": "Town",
         "source": null,
-        "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons. Open 10:00–18:00.</p><p><em>Casts spells from the arcane lists: 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "terms": {
           "sellsAt": null,
           "buysAt": null,
@@ -13309,7 +13309,7 @@
       "data": {
         "enabled": false,
         "type": "merchant",
-        "description": "<p>Quiet, warm, and further inside than the frontage suggests. Focuses and components openly; wands and scrolls for those who can pay and be trusted with them.</p><p><em>Spellcasting here draws on the arcane lists. How much a caster will part with in a day is finite: roll 1d4+1 slots in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
+        "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons. Open 10:00–18:00.</p><p><em>Casts spells from the arcane lists: 1d4+1 spell slots a day in a village, 1d8+1 in a town, 1d12+1 in a city. Spells with expensive components that work without the caster are listed by name, with the components in the price; for any other spell, add the cost of any expensive components you don't bring.</em></p>",
         "merchantImage": "icons/environment/settlement/wizard-castle.webp",
         "displayItemTypes": true,
         "canInspectItems": true,
