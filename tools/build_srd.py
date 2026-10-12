@@ -346,6 +346,8 @@ def sync_goods_text():
             else:
                 parts.append(f"<p>See @UUID[Compendium.dnd5e.content24.JournalEntry.{pg[0]}"
                              f".JournalEntryPage.{pg[1]}]{{{pg[2]}}}</p>")
+        if not parts:
+            problems.append(f"{name}: nothing to write (no quotes, row, actor or see)")
         out[name] = "".join(parts)
     if problems:
         sys.exit("data/srd-text.json does not match the SRD:\n  " + "\n  ".join(problems))

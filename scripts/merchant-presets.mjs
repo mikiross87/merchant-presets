@@ -213,8 +213,8 @@ async function releaseStraysAll() {
  * Let go of the goods this module no longer ships (#243) on one shop: its world stock table's
  * lines for them, its line dice for lines its table no longer has, and their copies on its shelf.
  * Left on the table, a dropped good stops the shop restocking for good (`drawsFor`). A stock table
- * still in the pack is current, and nothing is let go while the goods pack, or the shop's table,
- * isn't there to read.
+ * still in the pack is current. Nothing is let go while the goods pack isn't loaded, and no dice
+ * while the shop's table can't be read.
  *
  * @param {Actor} actor
  * @returns {Promise<boolean>} whether anything was let go
@@ -224,9 +224,10 @@ async function retireGoods(actor) {
   const shop = safeShopOf(actor);
   if (!index || !shop) return false;
   const table = shop.restock.table ? await fromUuid(shop.restock.table).catch(() => null) : null;
-  if (!table) return false;
-  const { resultIds, itemIds, diceIds } = retiredGoods([...table.results], [...actor.items], id => index.has(id),
-    shop.restock.quantities);
+  const { resultIds, itemIds, diceIds: lines } = retiredGoods([...(table?.results ?? [])], [...actor.items],
+    id => index.has(id), shop.restock.quantities);
+  // Without a table to read, which dice are dead can't be told: they wait for it.
+  const diceIds = table ? lines : [];
   if (resultIds.length && !table.pack) await table.deleteEmbeddedDocuments("TableResult", resultIds);
   if (diceIds.length) await actor.update(Object.fromEntries(diceIds.map(id => [`flags.${MODULE}.shop.restock.quantities.-=${id}`, null])));
   if (itemIds.length) await actor.deleteEmbeddedDocuments("Item", itemIds);
