@@ -69,3 +69,22 @@ test("it lets go of those goods: off its stock table, its shelf and its line dic
   assert.deepEqual(shop.items.filter(i => gone(i.name)).map(i => i.name), []);
   assert.equal(shop.flags["merchant-presets"].shop.restock.quantities.coachLine000001, undefined);
 });
+
+test("a 2.x Stable on the pack's own stock table lets go of them too: off its shelf and its line dice", async () => {
+  const world = createWorld();
+  const shop = world.merchant("Stable_Town_");
+  const packed = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
+  const flags = shop.flags["merchant-presets"];
+  // 2.3.0's own result ids for the two lines, which its Settings kept dice for; the pack's table has neither now.
+  flags.shop.restock.quantities = { WnqA8YM8mLurVpfC: "2d4", h6vA3oZtthlx3qPG: "1", [packed.results[0].id]: "1d6" };
+  for (const [i, uuid] of [COACH, TOLL].entries()) {
+    shop.items.push(Object.defineProperty({ _id: `oldGood0000000${i}`, id: `oldGood0000000${i}`, name: `Old ${i}`, type: "loot",
+      system: { quantity: 1 }, flags: {}, _stats: { compendiumSource: uuid } }, "toObject", { value() { return { ...this }; } }));
+  }
+  world.actors.push(shop);
+  await loadRuntime(world);
+  await tick();
+  assert.deepEqual(shop.items.filter(i => i.name.startsWith("Old ")).map(i => i.name), []);
+  assert.deepEqual(shop.flags["merchant-presets"].shop.restock.quantities, { [packed.results[0].id]: "1d6" },
+    "the dice of lines its table no longer has go; a line's own dice stay");
+});
