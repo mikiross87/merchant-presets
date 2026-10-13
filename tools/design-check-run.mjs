@@ -151,7 +151,10 @@ const browser = await chromium.launch({ executablePath, args: ["--use-gl=swiftsh
 async function login(context, user) {
   const page = await context.newPage();
   await page.goto(`${URL}/join`);
-  await page.fill("input[name=username]", user);
+  // V14's join page names the user in a text field, or picks one from a list on some worlds.
+  const field = await page.waitForSelector("input[name=username], select[name=userId]");
+  if (await field.evaluate(el => el.tagName === "SELECT")) await field.selectOption({ label: user });
+  else await field.fill(user);
   await page.click("button[name=join]");
   await page.waitForFunction(() => globalThis.game?.ready, null, { timeout: 90_000 });
   // Core's banners (headless Chromium has no GPU, and says so) would sit over the window's shot.
