@@ -257,7 +257,8 @@ Constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Target `main`. CI must pass: both linters, unit tests, manifest validation,
+- Target `main`, or the integration branch while one is open (see
+  [RELEASING.md](RELEASING.md#branches)). CI must pass: both linters, unit tests, manifest validation,
   CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
   from source, and the paid-content check.
 - One logical change per PR, with commit subjects written as prose rather than

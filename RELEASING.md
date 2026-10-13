@@ -56,8 +56,11 @@ A hotfix is an issue branch released as a patch (see [Hotfixes](#hotfixes)).
 Foundry installs from the latest release, never from a branch, so `main` does
 not have to be the published version for GMs to be safe. A long-lived
 integration branch is the exception, for a major version that can't land in
-releasable stages (2.0 used one, `next`); give it the same CI and protection
-as `main` and delete it at release.
+releasable stages (2.0 used one, `next`). Add it to `ci.yml`'s `push` and
+`pull_request` branches and give it `main`'s protection, merge `main` into it
+after every release, and close its issues by hand (`Closes #N` only fires on
+the default branch). It merges into `main` through the release PR and is
+deleted.
 
 ## Cutting a release
 
