@@ -311,3 +311,42 @@ test("the Customers table card names a busy-day table, or goes back to the shipp
   assert.equal(own.shop.customers.table, "RollTable.mine");
   assert.equal(applyChange(own.shop, { op: "customersTable", uuid: null }).shop.customers.table, null);
 });
+
+/* ------------------------------------------------------------ the magic clock (#234) */
+
+const MAGIC_TABLE = "Compendium.merchant-presets.stock.RollTable.magic";
+const magicPreset = shop({ restock: { table: PRESET_TABLE, quantities: { r1: "2d6+4" } },
+  magic: { table: MAGIC_TABLE, quantities: { m1: "1d6-5" }, default: null, onOpen: true, every: "3d6+14", mode: "reroll" } });
+
+test("each restock edit lands on the clock it names, the everyday one by default (#234)", () => {
+  let config = applied(magicPreset, { op: "every", every: "14", clock: "magic" });
+  assert.equal(config.magic.every, 14);
+  assert.equal(config.restock.every, 7, "the everyday clock is untouched");
+  config = applied(config, { op: "mode", mode: "topup", clock: "magic" });
+  assert.deepEqual([config.magic.mode, config.restock.mode], ["topup", "reroll"]);
+  config = applied(config, { op: "quantity", id: "m1", formula: "1d4-3", preset: magicPreset, clock: "magic" });
+  assert.deepEqual(config.magic.quantities, { m1: "1d4-3" });
+  config = applied(config, { op: "quantity", id: "m1", formula: "", preset: magicPreset, clock: "magic" });
+  assert.deepEqual(config.magic.quantities, { m1: "1d6-5" }, "blank puts the magic preset's back");
+  config = applied(config, { op: "defaultQuantity", formula: "1d2-1", clock: "magic" });
+  assert.deepEqual([config.magic.default, config.restock.default], ["1d2-1", null]);
+  config = applied(config, { op: "every", every: "3" });
+  assert.deepEqual([config.restock.every, config.magic.every], [3, 14]);
+});
+
+test("the magic clock takes its own table, and Reset puts the magic preset's back (#234)", () => {
+  let config = applied(magicPreset, { op: "table", uuid: "RollTable.myMagic", resultIds: ["m1"], clock: "magic" });
+  assert.deepEqual([config.magic.table, config.magic.quantities, config.restock.table], ["RollTable.myMagic", { m1: "1d6-5" }, PRESET_TABLE]);
+  config = applied(config, { op: "resetTable", preset: magicPreset, clock: "magic" });
+  assert.deepEqual(config.magic, magicPreset.magic);
+  assert.equal(tableIsPreset(config.magic, magicPreset.magic), true);
+  refused(config, { op: "resetTable", preset: preset190, clock: "magic" });   // that preset has no magic clock
+});
+
+test("a shop with no magic clock refuses magic edits, and Reset to preset brings the preset's (#234)", () => {
+  refused(preset190, { op: "every", every: "7", clock: "magic" });
+  refused(preset190, { op: "table", uuid: "RollTable.x", resultIds: [], clock: "magic" });
+  refused(preset190, { op: "every", every: "7", clock: "weekly" });
+  assert.deepEqual(applied(preset190, { op: "reset", preset: magicPreset }).magic, magicPreset.magic);
+  assert.equal(applied(magicPreset, { op: "reset", preset: preset190 }).magic, null);
+});
