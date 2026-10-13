@@ -231,10 +231,18 @@
 
   <section class="settings-section" data-section="restock" data-pen="Section Restock">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.restock")}}
+    {{!-- Everyday | Magic (#234, design wtrSi): a shop with a magic clock shows one at a time. --}}
+    {{#if restock.clocks}}
+      <div class="mp-pills mp-clock-switch" role="group" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Clock.Label'}}" data-pen="Clock switch">
+        {{#each restock.clocks}}
+          <button type="button" class="mp-pill {{#if active}}active{{/if}}" data-action="restockClock" data-clock="{{id}}" aria-pressed="{{active}}" data-pen="Clock {{label}}"><span data-pen="{{label}} text">{{label}}</span></button>
+        {{/each}}
+      </div>
+    {{/if}}
     {{#if restock.noClock}}
       <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.NoClock"}}</p>
     {{else}}
-      <p class="mp-hint" data-pen="Restock hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}</p>
+      <p class="mp-hint" data-pen="Restock hint">{{#if restock.magic}}{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.MagicHint"}}{{else}}{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Hint"}}{{/if}}</p>
       {{#if restock.autoOff}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.WorldOff"}}</p>{{/if}}
     {{/if}}
     {{!-- The stock table (design GfO9j): Change picks another, a RollTable dropped on the section

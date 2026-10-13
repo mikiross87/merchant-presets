@@ -1394,6 +1394,8 @@
   cursor: pointer;
 }
 .shop-sheet .mp-pill.active { background: var(--mp-accent); outline-color: var(--mp-accent); font-weight: 700; color: #ffffff; }
+/* Everyday | Magic (#234, design wtrSi): the schedule's pills, flush with the section. */
+.shop-sheet .mp-clock-switch { padding-left: 0; }
 .shop-sheet .mp-schedule > .mp-hint { align-self: stretch; }
 .shop-sheet .mp-how { align-self: flex-start; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
 .shop-sheet .mp-option {

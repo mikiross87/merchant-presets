@@ -24,7 +24,7 @@ import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
 import { boostGroups } from "./customers.mjs";
 import { customersLevel, customersTable, dayIndex, daySnapshot, shippedDayTables, shopToday } from "./customers-world.mjs";
-import { isItemLine, isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
+import { clockOf, isItemLine, isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
@@ -66,6 +66,9 @@ const stockConfigOf = item => (item ? safeStockOf(item) : null) ?? STOCK_DEFAULT
  * and the window's own checks decide again.
  */
 const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
+
+/** The Settings edits that act on a restock clock (#234), stamped with the side they were made on. */
+const RESTOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantity", "table", "resetTable"]);
 
 /** The GM Settings tab's sections (#110), in its side nav's order, with their icons. */
 const SETTINGS_SECTIONS = [
@@ -515,6 +518,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       editDeal: ShopSheet.#onEditDeal,
       removeDeal: ShopSheet.#onRemoveDeal,
       restockNow: ShopSheet.#onRestockNow,
+      restockClock: ShopSheet.#onRestockClock,
       resetToPreset: ShopSheet.#onResetToPreset,
       openTable: ShopSheet.#onOpenTable,
       resetTable: ShopSheet.#onResetTable,
@@ -591,6 +595,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._settlePending = false;
     /** Whether a narrow window shows Players see in place of the Settings form (its dock's chevron). */
     this._previewOpen = false;
+    /** The Restock section's side (#234, design wtrSi): the everyday clock, or the magic one. */
+    this._restockClock = "restock";
     /** Whether the GM picked "Dice…" and the schedule's formula field is showing, before a formula is set. */
     this._everyDice = false;
     /**
@@ -1047,11 +1053,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * counted for another schedule is recounted at the clock's next tick (`scheduleShop`), and a
    * shop with no table, or set never to restock, never does.
    */
-  #nextRestockAt(actor, shop) {
-    const schedule = actor.flags?.[MODULE]?.schedule;
-    const { chip } = everyChoice(shop.restock);
-    return chip !== "never" && shop.restock.table && schedule?.dueAt != null
-      && (schedule.every === undefined || schedule.every === shop.restock.every) ? schedule.dueAt : null;
+  #nextRestockAt(actor, shop, clock = "restock") {
+    const schedule = actor.flags?.[MODULE]?.[clock === "magic" ? "magicSchedule" : "schedule"];
+    const config = clockOf(shop, clock);
+    if (!config) return null;
+    const { chip } = everyChoice(config);
+    return chip !== "never" && config.table && schedule?.dueAt != null
+      && (schedule.every === undefined || schedule.every === config.every) ? schedule.dueAt : null;
+  }
+
+  /** The clock the Restock section shows (#234): magic only while picked, on a shop that has one. */
+  #restockClockOf(shop) {
+    return shop?.magic && this._restockClock === "magic" ? "magic" : "restock";
   }
 
   /** "21 Mirtul": a day of the month and its name (design x9IX9); the calendar's own date elsewhere. */
@@ -1883,20 +1896,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * (Village: 14 days)". The other tiers are the same merchant's in its compendium, read off the
    * pack's index; a preset whose name carries no tier reads "Preset default: 7 days".
    */
-  async #presetLine(merchant, preset, pillLabel) {
+  async #presetLine(merchant, preset, pillLabel, clock = "restock") {
     const label = restock => pillLabel(restock?.onOpen === false ? "never" : restock?.every ?? "never");
     const { title, tierFromName: tier } = titleParts(merchant.name);
     let tiers = [];
     const pack = merchant.pack ? game.packs?.get(merchant.pack) : null;
     if (tier && pack) {
       try {
-        const index = await pack.getIndex({ fields: [`flags.${MODULE}.shop.restock`] });
-        tiers = [...index].map(e => ({ ...titleParts(e.name), restock: foundry.utils.getProperty(e, `flags.${MODULE}.shop.restock`) }))
+        const index = await pack.getIndex({ fields: [`flags.${MODULE}.shop.${clock}`] });
+        tiers = [...index].map(e => ({ ...titleParts(e.name), restock: foundry.utils.getProperty(e, `flags.${MODULE}.shop.${clock}`) }))
           .filter(e => e.title === title && e.tierFromName && e.restock)
           .map(e => ({ tier: e.tierFromName, every: label(e.restock) }));
       } catch { /* the line names the preset's own schedule alone */ }
     }
-    const line = presetSchedule({ tier, every: label(preset.restock) }, tiers);
+    const line = presetSchedule({ tier, every: label(preset[clock]) }, tiers);
     const key = "MERCHANT_PRESETS.Shop.Settings.Restock";
     const others = line.others.map(o => game.i18n.localize(`${key}.PresetOther`, o)).join(", ");
     return tier
@@ -1926,20 +1939,23 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
     const ruleChoices = this.#ruleChoices(actor, shop);
 
-    const table = shop.restock.table ? await Promise.resolve(fromUuid(shop.restock.table)).catch(() => null) : null;
+    // The side the switch shows (#234): the magic clock's own table, lines and schedule.
+    const clock = this.#restockClockOf(shop);
+    const config = clockOf(shop, clock);
+    const table = config.table ? await Promise.resolve(fromUuid(config.table)).catch(() => null) : null;
     // The lines a restock rolls a quantity for, in table order (#190, design HKGIx).
     const lines = table ? [...(table.results ?? [])].filter(isItemLine).map(r => ({ id: r.id ?? r._id, name: r.name || r.text || r.description || "" })) : [];
-    const { chip, formula } = everyChoice(shop.restock);
+    const { chip, formula } = everyChoice(config);
     // As the schedule's pills name it ("7 days"): the preset line (design aaJcp).
     const pillLabel = every => (every === "never" ? i18n("Restock.Never") : every === 1 ? i18n("Restock.Daily")
       : Number.isInteger(every) ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: every }) : String(every));
     const everyLabel = every => (every === "never" ? i18n("Restock.Never")
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
-    const schedule = actor.flags?.[MODULE]?.schedule;
+    const schedule = actor.flags?.[MODULE]?.[clock === "magic" ? "magicSchedule" : "schedule"];
     // Whatever drew the shelf last, Restock now included, fresh stock or not; the schedule's own
     // record before #145.
-    const lastRestock = actor.flags?.[MODULE]?.lastRestockAt ?? schedule?.lastRestock ?? null;
+    const lastRestock = actor.flags?.[MODULE]?.[clock === "magic" ? "magicLastRestockAt" : "lastRestockAt"] ?? schedule?.lastRestock ?? null;
     // Players the GM gave their own level: the switch sets only the default, so they keep it.
     const visitOthers = Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
       const user = id !== "default" && game.users?.get(id);
@@ -2022,18 +2038,21 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         noClock: !worldFollowsClock()
       },
       restock: {
+        // The switch (design wtrSi), only on a shop with a magic clock.
+        clocks: shop.magic ? ["restock", "magic"].map(id => ({ id, label: i18n(`Restock.Clock.${id}`), active: id === clock })) : null,
+        magic: clock === "magic",
         table: table ? { name: table.name, uuid: table.uuid,
           meta: game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.TableMeta", { count: lines.length }) } : null,
         // Another table (#190): the world's, and the preset's wherever it lives (design GfO9j).
-        tables: this.#tableChoices(shop, preset),
-        canResetTable: !!preset && !tableIsPreset(shop.restock, preset.restock),
+        tables: this.#tableChoices(config, preset ? clockOf(preset, clock) : null),
+        canResetTable: !!preset?.[clock] && !tableIsPreset(config, clockOf(preset, clock)),
         // Striped by place, so a line's refusal (design U9Jt8Z) shares its stripe.
-        quantities: quantityRows(lines, shop.restock).map((row, i) => {
+        quantities: quantityRows(lines, config).map((row, i) => {
           const refused = this._refused.get(`quantity:${row.id}`);
           return { ...row, key: row.name.toLocaleLowerCase(), alt: i % 2 === 1,
             value: refused?.value ?? row.value, refused: refused?.message ?? null };
         }),
-        newLines: this._refused.get("defaultQuantity")?.value ?? shop.restock.default ?? "",
+        newLines: this._refused.get("defaultQuantity")?.value ?? config.default ?? "",
         newLinesRefused: this._refused.get("defaultQuantity")?.message ?? null,
         find: this._quantityFilter ?? "",
         chips: [...EVERY_CHOICES.map(String), "dice", "never"].map(id => ({
@@ -2045,12 +2064,13 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         showFormula: chip === "dice" || this._everyDice || this._refused.has("every"),
         formula: this._refused.get("every")?.value ?? formula,
         formulaRefused: this._refused.get("every")?.message ?? null,
-        current: chip === "never" ? everyLabel("never") : everyLabel(shop.restock.every),
-        presetLine: presetOf ? await this.#presetLine(presetOf.merchant, preset, pillLabel) : null,
-        reroll: shop.restock.mode === "reroll",
-        purseGp: actor.flags?.[MODULE]?.purse ?? null,
+        current: chip === "never" ? everyLabel("never") : chip === "dice" ? i18n("Restock.Dice") : everyLabel(config.every),
+        presetLine: presetOf?.shop[clock] ? await this.#presetLine(presetOf.merchant, preset, pillLabel, clock) : null,
+        reroll: config.mode === "reroll",
+        // Only the everyday restock refills the till (#234): the magic side says nothing of it.
+        purseGp: clock === "magic" ? null : actor.flags?.[MODULE]?.purse ?? null,
         last: lastRestock != null ? this.#dayMonthTime(lastRestock) : null,
-        next: this.#nextRestockAt(actor, shop) != null ? this.#nextLine(schedule.dueAt) : null,
+        next: this.#nextRestockAt(actor, shop, clock) != null ? this.#nextLine(schedule.dueAt) : null,
         autoOff: !game.settings.get(MODULE, "autoRestock"),
         noClock: !worldFollowsClock()
       },
@@ -2193,15 +2213,15 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * The tables the card's Change offers (#190): the world's, by name, with the preset's own and
    * the one in use added wherever they live (a compendium's), the one in use selected.
    */
-  #tableChoices(shop, preset) {
+  #tableChoices(restock, presetRestock) {
     const choices = new Map(game.tables.contents.map(t => [t.uuid, t.name]));
-    for (const uuid of [preset?.restock.table, shop.restock.table]) {
+    for (const uuid of [presetRestock?.table, restock.table]) {
       if (!uuid || choices.has(uuid)) continue;
       let name = null;
       try { name = fromUuidSync(uuid, { strict: false })?.name ?? null; } catch { /* a pack not indexed */ }
       choices.set(uuid, name ?? uuid);
     }
-    return [...choices].map(([uuid, name]) => ({ uuid, name, selected: uuid === shop.restock.table }))
+    return [...choices].map(([uuid, name]) => ({ uuid, name, selected: uuid === restock.table }))
       .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
   }
 
@@ -2337,14 +2357,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * edit would write the defaults over it, a 1.x shop's migration marker included.
    */
   #edit(makeChange, field = null) {
+    // The side showing when the GM made the edit, whatever it shows by the time the edit runs (#234).
+    const side = this._restockClock;
     return this.#queue(async () => {
       const shop = safeShopOf(this.document);
       if (!shop) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Broken"));
         return;
       }
-      const change = await makeChange(shop);
+      let change = await makeChange(shop);
       if (!change) return;
+      // A restock edit lands on the side it was made on (shop-settings.mjs `applyChange`).
+      if (RESTOCK_EDITS.has(change.op) && change.clock === undefined) change = { ...change, clock: shop.magic && side === "magic" ? "magic" : "restock" };
       const result = applyChange(shop, change);
       if (!result.ok) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));
@@ -2632,10 +2656,23 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onRestockNow() {
     if (!game.user.isGM || this.preview) return;
-    const answer = await game.modules.get(MODULE).api?.requestRestock?.(this.document);
+    const clock = this.#restockClockOf(safeShopOf(this.document));
+    const answer = await game.modules.get(MODULE).api?.requestRestock?.(this.document, { clock });
     const status = answer?.status ?? "no-answer";
     if (status === "failed") ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Failed"));
     else if (status === "no-answer") ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.NoAnswer"));
+  }
+
+  /** The switch (#234, design wtrSi): the Restock section shows the other clock. */
+  static #onRestockClock(_event, target) {
+    const clock = target.dataset.clock === "magic" ? "magic" : "restock";
+    if (clock === this._restockClock) return;
+    this._restockClock = clock;
+    // What was typed or picked there was for the other clock's fields.
+    this._refused.clear();
+    this._everyDice = false;
+    this._quantityFilter = "";
+    this.render({ parts: ["body"] });
   }
 
   static async #onResetToPreset() {
@@ -2806,7 +2843,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   static async #onOpenTable() {
-    const uuid = shopConfigOf(this.document).restock.table;
+    const shop = shopConfigOf(this.document);
+    const uuid = clockOf(shop, this.#restockClockOf(shop))?.table;
     const table = uuid ? await Promise.resolve(fromUuid(uuid)).catch(() => null) : null;
     table?.sheet?.render(true);
   }
