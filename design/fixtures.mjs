@@ -130,7 +130,9 @@ export async function setup() {
       const now = drawnHere();
       // Adoption stamps the goods already there before the roll replaces them: a steady count means
       // nothing until the roll's last write, lastRestockAt, has landed too (#199).
-      steady = now > 0 && now === seen && actor.flags[MP]?.lastRestockAt != null ? steady + 1 : 0;
+      // A shop with a magic clock (#234) rolls that one after the everyday one: its last write too.
+      const done = actor.flags[MP]?.lastRestockAt != null && (!actor.flags[MP]?.shop?.magic || actor.flags[MP]?.magicLastRestockAt != null);
+      steady = now > 0 && now === seen && done ? steady + 1 : 0;
       seen = now;
     }
     if (steady < 3) throw new Error(`${what}'s arrival roll never finished`);
@@ -146,7 +148,8 @@ export async function setup() {
     const line = (await pack.getDocument(entry._id)).items.getName(magic)?.toObject();
     if (!line) throw new Error(`the Town smith has no ${magic} line`);
     delete line._id;
-    await shop.createEmbeddedDocuments("Item", [foundry.utils.mergeObject(line, { [`flags.${MP}.drawn`]: shop.flags[MP].shelf })]);
+    // A magic find, drawn by the magic clock (#234).
+    await shop.createEmbeddedDocuments("Item", [foundry.utils.mergeObject(line, { [`flags.${MP}.drawn`]: `${shop.flags[MP].shelf}/magic` })]);
   }
 
   const rows = { Longsword: [7], Handaxe: [11], Javelin: [21, true], "Longsword +1": [1], Breastplate: [1, true], "Chain Mail": [4], Shield: [0], "Smith's Tools": [4] };
@@ -245,6 +248,11 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
     await smith.updateEmbeddedDocuments("Item", Object.entries(${JSON.stringify(ROWS)})
       .map(([n, q]) => ({ _id: smith.items.getName(n)?.id, "system.quantity": q })).filter(u => u._id));
     await game.actors.getName("Aria").update({ "system.currency": { pp: 3, gp: 47, ep: 0, sp: 12, cp: 30 } });
+    // Band 22's extra magic finds go, and the Longsword +1 it marks New is plain again (#234).
+    const extras = smith.items.filter(i => i.flags["merchant-presets"]?.fixtureExtra).map(i => i.id);
+    if (extras.length) await smith.deleteEmbeddedDocuments("Item", extras);
+    const plus1 = smith.items.getName("Longsword +1");
+    if (plus1?.flags["merchant-presets"]?.newAt != null) await plus1.update({ "flags.merchant-presets.newAt": null });
     // Other customers (#226): off but in band 20, which also keeps today's kind of day on the smith,
     // as drawn from the shipped Town table. No frame sees a day an earlier one kept. The day is the
     // shipped one with that multiplier and no boosts, named and described from its data (#249).
@@ -260,7 +268,12 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
       return { drainedTo: game.time.worldTime, day: { index: index0, rolled: { id: r.id, name: r.name, text: r.description, global, boosts }, override: null } };
     })()` : "null"} });
     // And from its preset's stock table and quantities (#190): band 19 gives it a table of its own.
-    const presetRestock = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop.restock;
+    const presetShop = (await fromUuid(smith._stats.compendiumSource))?.flags["merchant-presets"].shop;
+    const presetRestock = presetShop?.restock;
+    // Its magic clock as the preset ships it (#234).
+    if (presetShop && JSON.stringify(smith.flags["merchant-presets"].shop.magic) !== JSON.stringify(presetShop.magic)) {
+      await smith.update({ "flags.merchant-presets.shop.magic": _replace(presetShop.magic) });
+    }
     const restock = smith.flags["merchant-presets"].shop.restock;
     if (presetRestock && (restock.table !== presetRestock.table || restock.default != null
       || JSON.stringify(restock.quantities) !== JSON.stringify(presetRestock.quantities))) {
@@ -278,8 +291,9 @@ const openShop = ({ tab = "buy", before = "", basket = [], sellBasket = [], then
   const shop = ${from ?? `game.actors.getName(${JSON.stringify(name)})`};
   ${before}
   const app = shop.sheet;
-  // No formula left refused from an earlier frame (#229 review, band 19).
+  // No formula left refused from an earlier frame (#229 review, band 19), and Restock on its Everyday side (#234).
   app._refused?.clear();
+  app._restockClock = "restock";
   app._buyerUuid = game.actors.getName("Aria").uuid;
   for (const [name, quantity] of ${JSON.stringify(basket)}) app._baskets.buy.set(shop.items.getName(name).id, quantity);
   const aria = game.actors.getName("Aria");
@@ -333,10 +347,10 @@ const restockTab = openShop({ tab: "settings", autoRestock: true,
  * quantity list scrolled to its last seven lines, where the Shovel takes New lines'.
  */
 const OWN_TABLE = "Ironbridge Smithy";
-/** In-page: the quantity list scrolled so Mithral Chain Mail is its first line, as band 19 draws it. */
+/** In-page: the quantity list scrolled so Scimitar is its first whole line, as band 19 draws it. */
 const scrollToMithral = `
   const rows = app.element.querySelector(".mp-quantity-rows");
-  const first = rows.querySelector('[data-name="mithral chain mail"]');
+  const first = rows.querySelector('[data-name="scimitar"]');
   rows.scrollTop += first.getBoundingClientRect().top - rows.getBoundingClientRect().top;`;
 /** The own-table frame's state, then `then` (in-page). */
 const ownTable = (then = "") => openShop({ tab: "settings", autoRestock: true,
@@ -357,13 +371,36 @@ const ownTable = (then = "") => openShop({ tab: "settings", autoRestock: true,
   ${then}${scrollToMithral}` });
 const ownTableTab = ownTable();
 /**
- * Band 19's refused frames (#229 review, design U9Jt8Z): New lines typed "2d" and Mithral Plate
- * Armor "1d2-", each left as the GM leaves a field, so the window refuses them as it would.
+ * Band 19's refused frames (#229 review, design U9Jt8Z): New lines typed "2d" and Shortsword
+ * "1d2-", each left as the GM leaves a field, so the window refuses them as it would.
  */
 const refusedTab = ownTable(`
   const leave = async (input, text) => { input.focus(); input.value = text; input.blur(); await new Promise(r => setTimeout(r, 600)); };
   await leave(app.element.querySelector('[data-op="defaultQuantity"]'), "2d");
-  await leave(app.element.querySelector('.mp-quantity-row[data-name="mithral plate armor"] input'), "1d2-");`);
+  await leave(app.element.querySelector('.mp-quantity-row[data-name="shortsword"] input'), "1d2-");`);
+/**
+ * Band 22 (#234, design wtrSi): Restock switched to Magic. The magic clock last restocked on the 2nd
+ * at 7:00 and is next due on the 19th; this morning's everyday restock is fresh. On the shelf are
+ * the Longsword +1 and Dagger +1 it brought (New) and a Shield +1 that was there before.
+ */
+const magicTab = openShop({ tab: "settings", autoRestock: true,
+  before: withoutDeals + restocked(0) + `await shop.update({ "flags.merchant-presets.schedule": { lastRestock: ${opening(0)}, dueAt: ${opening(-7)}, every: 7 },
+    "flags.merchant-presets.magicSchedule": { lastRestock: ${opening(12)}, dueAt: ${opening(-5)}, every: "3d6+14" },
+    "flags.merchant-presets.magicLastRestockAt": ${opening(12)} });
+  const pack = game.packs.get("merchant-presets.merchants");
+  const smith = await pack.getDocument(shop._stats.compendiumSource.split(".").at(-1));
+  const magic = \`\${shop.flags["merchant-presets"].shelf}/magic\`;
+  await shop.createEmbeddedDocuments("Item", [["Shield +1", 350, null], ["Dagger +1", 450, ${opening(0)}]].map(([name, sort, newAt]) => {
+    const line = smith.items.getName(name).toObject();
+    delete line._id;
+    return foundry.utils.mergeObject(line, { sort, "system.quantity": 1, "flags.merchant-presets": { drawn: magic, newAt, fixtureExtra: true } });
+  }));
+  await shop.items.getName("Longsword +1").update({ "flags.merchant-presets.newAt": ${opening(0)} });
+  shop.sheet._settingsSection = "restock";`,
+  then: `app.element.querySelector('.mp-nav-link[data-section="restock"]').click();
+  await new Promise(r => setTimeout(r, 400));
+  app.element.querySelector('[data-action="restockClock"][data-clock="magic"]').click();
+  await new Promise(r => setTimeout(r, 600));` });
 /** The Storefront's bill: the frames' three lines. The player's frame can't clear deals; a GM frame run first does. */
 const BASKET = [["Longsword", 1], ["Handaxe", 2], ["Javelin", 10]];
 const storefront = openShop({ before: withoutDeals + restocked(0) + newBadges(true), basket: BASKET });
@@ -793,6 +830,8 @@ export const FRAMES = {
   PfjAq: frame("19 Settings (GM) · Restock, own table — Light", "light", 920, 760, "Gamemaster", ownTableTab),
   Y4CVJo: frame("19 Settings (GM) · Restock, own table — Dark", "dark", 920, 760, "Gamemaster", ownTableTab),
   U9Jt8Z: frame("19 Settings (GM) · Restock, formula refused — Light", "light", 920, 760, "Gamemaster", refusedTab),
+  wtrSi: frame("22 Settings (GM) · Restock, magic — Light", "light", 920, 760, "Gamemaster", magicTab),
+  tFju7: frame("22 Settings (GM) · Restock, magic — Dark", "dark", 920, 760, "Gamemaster", magicTab),
   vFOQJ: frame("19 Settings (GM) · Restock, formula refused — Dark", "dark", 920, 760, "Gamemaster", refusedTab),
   GVLI3: frame("20 Settings (GM) · Customers — Light", "light", 920, 760, "Gamemaster", customersTab("busy")),
   lKAUz: frame("20 Settings (GM) · Customers — Dark", "dark", 920, 760, "Gamemaster", customersTab("busy")),

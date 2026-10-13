@@ -1018,6 +1018,8 @@
 
 .shop-sheet .mp-rate-row { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+/* A label longer than the column: the schedule's "Days, as a dice formula" (#234, design wtrSi). */
+.shop-sheet .mp-rate-label.is-wide { width: auto; }
 .shop-sheet .mp-field {
   flex: none;
   display: flex;
@@ -1240,7 +1242,6 @@
 .shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
 
-.shop-sheet .settings-formula { width: 8rem; }
 
 /* Customers (#226, design GVLI3; off, E6jfnh). */
 .shop-sheet .mp-world-value { display: flex; align-items: center; gap: 6px; font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
@@ -1345,7 +1346,6 @@
 .shop-sheet .mp-quantity-rows > .is-alt { background: var(--mp-inset); }
 /* A formula that doesn't roll (#229 review, design U9Jt8Z): outlined, and why under it. */
 .shop-sheet .mp-field.is-refused, .shop-sheet .mp-field.is-refused:focus-within { outline-color: var(--mp-red); }
-.shop-sheet .settings-formula.is-refused { outline: 1px solid var(--mp-red); }
 .shop-sheet .mp-refused { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-danger-ink); }
 .shop-sheet .mp-refused.is-new-lines { padding-left: 90px; }
 .shop-sheet .mp-refused.is-line { padding: 0 10px 5px; }

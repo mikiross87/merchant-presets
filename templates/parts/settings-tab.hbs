@@ -330,8 +330,13 @@
         {{/each}}
       </div>
       {{#if restock.showFormula}}
-        <label class="settings-line">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}
-          <input type="text" class="settings-formula {{#if restock.formulaRefused}}is-refused{{/if}}" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" {{disabled restock.noClock}} {{#if restock.formulaRefused}}aria-invalid="true"{{/if}} /></label>
+        {{!-- The schedule's own formula (design wtrSi's Formula row). --}}
+        <div class="mp-schedule-row" data-pen="Formula row">
+          <span class="mp-rate-label is-wide" data-pen="Formula label">{{localize "MERCHANT_PRESETS.Shop.Settings.Restock.Formula"}}</span>
+          <label class="mp-field {{#if restock.formulaRefused}}is-refused{{/if}}" data-pen="Field Formula">
+            <input type="text" data-pen="Value" value="{{restock.formula}}" placeholder="1d4+2" data-op="every" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Restock.Formula'}}" {{disabled restock.noClock}} {{#if restock.formulaRefused}}aria-invalid="true"{{/if}} />
+          </label>
+        </div>
         {{#if restock.formulaRefused}}<p class="mp-refused" role="alert">{{restock.formulaRefused}}</p>{{/if}}
       {{/if}}
       {{#if restock.presetLine}}<p class="mp-hint" data-pen="Schedule default">{{restock.presetLine}}</p>{{/if}}

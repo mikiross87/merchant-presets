@@ -24,7 +24,7 @@ import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
 import { boostGroups } from "./customers.mjs";
 import { customersLevel, customersTable, dayIndex, daySnapshot, shippedDayTables, shopToday } from "./customers-world.mjs";
-import { clockOf, isItemLine, isOpen, nextCloseAt, nextOpen } from "./schedule.mjs";
+import { clockOf, isItemLine, isOpen, magicKey, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
@@ -1947,8 +1947,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const lines = table ? [...(table.results ?? [])].filter(isItemLine).map(r => ({ id: r.id ?? r._id, name: r.name || r.text || r.description || "" })) : [];
     const { chip, formula } = everyChoice(config);
     // As the schedule's pills name it ("7 days"): the preset line (design aaJcp).
+    // A dice formula in days too: "3d6+14 days" (#234, design wtrSi).
     const pillLabel = every => (every === "never" ? i18n("Restock.Never") : every === 1 ? i18n("Restock.Daily")
-      : Number.isInteger(every) ? game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: every }) : String(every));
+      : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.Days", { days: every }));
     const everyLabel = every => (every === "never" ? i18n("Restock.Never")
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
@@ -2096,7 +2097,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
         // header chip at an open hour and a closed one (design S2swP). Won't buy's is Aria's Sell
         // tab, added once that is built (_prepareContext).
         // Not without a world clock (#149): no badge or chip would show, so the terms do instead.
-        restock: this._settingsSection === "restock" && worldFollowsClock() ? this.#restockPreview(actor, shop, world, currencies) : null,
+        restock: this._settingsSection === "restock" && worldFollowsClock() ? this.#restockPreview(actor, shop, world, currencies, clock) : null,
         hours: this._settingsSection === "hours" ? this.#hoursPreview(shop.hours) : null,
         // The Sell tab's till card as players get it, with no bill on it: none under unlimited coin.
         till: this._settingsSection === "till" ? { card: unlimited ? null : { coins: heldCoins(actor.system.currency ?? {}, currencies) } } : null,
@@ -2180,7 +2181,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * marked New with the first good after them, each with its stock, as players see them after a
    * restock (#152).
    */
-  #restockPreview(actor, shop, world, currencies) {
+  #restockPreview(actor, shop, world, currencies, clock = "restock") {
     const hours = closingHours(shop);
     // New as the last restock left the shelf: the goods it brought back, and any still New then.
     const at = actor.flags?.[MODULE]?.restockedAt ?? game.time.worldTime;
@@ -2189,6 +2190,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rates = { world, shopTerms: shop.terms, chipSellsAt: effectiveRates(world, shop.terms).sellsAt.rate };
     const rows = [];
     for (const { data, stock } of this.#shelf(actor)) {
+      // The Magic side shows the magic finds (#234, design wtrSi).
+      if (clock === "magic" && data.flags?.[MODULE]?.drawn !== magicKey(shelf)) continue;
       const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock(), bundleOf);
       if (row.unpriced || row.worthless) continue;
       rows.push({
