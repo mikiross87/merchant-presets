@@ -36,7 +36,8 @@ export const SHOP_DEFAULTS = deepFreeze({
   restock: { table: null, quantities: {}, default: null, onOpen: true, every: 7, mode: "reroll" },
   wontBuy: { types: [], kinds: [] },
   deals: [],               // one character's own price here (#111)
-  customers: { table: null }   // #226: the busy-day table; null rolls the shipped one for the shop's size
+  customers: { table: null },  // #226: the busy-day table; null rolls the shipped one for the shop's size
+  magic: null              // #234: the magic shelf's own clock, `restock`'s shape; null: the shop has none
 });
 
 export const STOCK_DEFAULTS = deepFreeze({
@@ -139,6 +140,22 @@ const hours = (v, path, errors) => {
   }
 };
 
+/** A restock clock (#105), everyday or magic (#234): its table, line dice, schedule and mode. */
+const restockShape = (table, required = []) => shape({
+  table,
+  quantities: (v, path, errors) => {
+    if (!isObject(v)) return errors.push(`${path}: must be an object`);
+    for (const [id, f] of Object.entries(v)) formula(f, `${path}.${id}`, errors);
+  },
+  default: nullOr(formula),
+  onOpen: bool,
+  every: (v, path, errors) => {
+    if (v === "never" || isInt(v, 1, Infinity)) return;
+    formula(v, path, errors);
+  },
+  mode: oneOf(["reroll", "topup"])
+}, required);
+
 const shopShape = shape({
   version: check(v => v === SHOP_VERSION, `must be ${SHOP_VERSION}`),
   tier: oneOf(TIERS),
@@ -150,25 +167,13 @@ const shopShape = shape({
     categories: list(categoryRule, c => c?.category)
   }),
   hours: nullOr(hours),
-  restock: shape({
-    table: nullOr(name),
-    quantities: (v, path, errors) => {
-      if (!isObject(v)) return errors.push(`${path}: must be an object`);
-      for (const [id, f] of Object.entries(v)) formula(f, `${path}.${id}`, errors);
-    },
-    default: nullOr(formula),
-    onOpen: bool,
-    every: (v, path, errors) => {
-      if (v === "never" || isInt(v, 1, Infinity)) return;
-      formula(v, path, errors);
-    },
-    mode: oneOf(["reroll", "topup"])
-  }),
+  restock: restockShape(nullOr(name)),
   // dnd5e item types and our `kind`s. Checked for shape only: the item types
   // live in CONFIG, which a Foundry-free module can't read.
   wontBuy: shape({ types: list(name), kinds: list(name) }),
   deals: list(deal, d => d?.actor),
-  customers: shape({ table: nullOr(name) })
+  customers: shape({ table: nullOr(name) }),
+  magic: nullOr(restockShape(name, ["table"]))
 }, ["version"]);
 
 const stockShape = shape({

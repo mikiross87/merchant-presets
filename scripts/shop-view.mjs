@@ -1,4 +1,4 @@
-import { isDrawn, nextCloseAt, secondsPerDay } from "./schedule.mjs";
+import { drawnByShop, nextCloseAt, secondsPerDay } from "./schedule.mjs";
 import { rollsOnArrival } from "./shop.mjs";
 import { effectiveRates, pay, payExact } from "./pricing.mjs";
 import { bottomlessTill, bundleFor, bundlePriceCp, categoryFor, dealtIn, isGear, isMagic, isNamedSpell, kindOf, lineTotalCp, rarityOf } from "./trade-plan.mjs";
@@ -593,7 +593,7 @@ export function isFresh(lastRestock, now, hours, days) {
 /**
  * Whether a good wears "New" (#152): this shop's restock brought it back in stock (its `newAt`,
  * schedule.mjs `planRestock`), that's still fresh, and it hasn't sold out again since. Only on the
- * shop that drew it (schedule.mjs `isDrawn`): a good a GM drags from one shop to another keeps its
+ * shop that drew it, by either clock (schedule.mjs `drawnByShop`): a good a GM drags from one shop to another keeps its
  * flags, but not its badge.
  *
  * @param {{system?: {quantity?: number}, flags?: object}} item
@@ -603,7 +603,7 @@ export function isFresh(lastRestock, now, hours, days) {
  * @param {{secondsPerMinute: number, minutesPerHour: number, hoursPerDay: number}} days
  */
 export function isNewGood(item, shelf, now, hours, days) {
-  return isDrawn(item, shelf) && item.system?.quantity !== 0
+  return drawnByShop(item, shelf) && item.system?.quantity !== 0
     && isFresh(item.flags?.["merchant-presets"]?.newAt, now, hours, days);
 }
 
