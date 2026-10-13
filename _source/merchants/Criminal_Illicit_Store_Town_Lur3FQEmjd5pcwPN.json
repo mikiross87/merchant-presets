@@ -11179,20 +11179,28 @@
             "AnUO75DijF31A9Qm": "1d3+1",
             "gjgHtvbWQGXE4Ugk": "1d6+2",
             "3WpEOO49Wb076mO0": "1d6+2",
-            "TZkZVV2Wod8AjFRy": "1d6+2",
-            "WyL4ckp0ki5A5UMv": "1d6-5",
-            "X9e6g1Z94UWhsazl": "1d6-5",
-            "9skBCvaH5YnEGKEi": "1d6-5",
-            "TUacJqBkD04EKlep": "1d6-5",
-            "Zyl8WqZdu3q2fGCg": "1d6-5",
-            "YhRfPkWrjQcFcdwF": "1d6-5",
-            "Fg5Ly55dowMXSYey": "1d6-5",
-            "7gC7Pd0jgB01N0H3": "1d6-5",
-            "BjbMX60oFXn65TU0": "1d6-5",
-            "K3fzkQot8xFfxhaT": "1d6-5"
+            "TZkZVV2Wod8AjFRy": "1d6+2"
           },
           "onOpen": true,
           "every": "1d4+2",
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.vmufCTtYKgKl7JSO",
+          "quantities": {
+            "h9CnKJh0eRWLCs2c": "1d6-5",
+            "p4GVQlL4Bhx6IviM": "1d6-5",
+            "dB43J0eniuGUYrZX": "1d6-5",
+            "sxN06EYJCe92Kzh5": "1d6-5",
+            "evgcnPNahJ09wVEx": "1d6-5",
+            "yJ47haHi684XW6oF": "1d6-5",
+            "zBFswrn1CQmwpbsO": "1d6-5",
+            "rR9f7JitP6XZzE4k": "1d6-5",
+            "ZwRmS1z8ZGwFUmdz": "1d6-5",
+            "nLmaIQxVxfIh8Goj": "1d6-5"
+          },
+          "onOpen": true,
+          "every": "3d6+14",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -11285,17 +11293,7 @@
               "AnUO75DijF31A9Qm": "1d3+1",
               "gjgHtvbWQGXE4Ugk": "1d6+2",
               "3WpEOO49Wb076mO0": "1d6+2",
-              "TZkZVV2Wod8AjFRy": "1d6+2",
-              "WyL4ckp0ki5A5UMv": "1d6-5",
-              "X9e6g1Z94UWhsazl": "1d6-5",
-              "9skBCvaH5YnEGKEi": "1d6-5",
-              "TUacJqBkD04EKlep": "1d6-5",
-              "Zyl8WqZdu3q2fGCg": "1d6-5",
-              "YhRfPkWrjQcFcdwF": "1d6-5",
-              "Fg5Ly55dowMXSYey": "1d6-5",
-              "7gC7Pd0jgB01N0H3": "1d6-5",
-              "BjbMX60oFXn65TU0": "1d6-5",
-              "K3fzkQot8xFfxhaT": "1d6-5"
+              "TZkZVV2Wod8AjFRy": "1d6+2"
             }
           }
         ],

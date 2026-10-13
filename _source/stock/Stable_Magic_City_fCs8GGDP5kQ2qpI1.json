@@ -1,0 +1,34 @@
+{
+  "_id": "fCs8GGDP5kQ2qpI1",
+  "_key": "!tables!fCs8GGDP5kQ2qpI1",
+  "name": "Stable · Magic (City)",
+  "img": "icons/environment/settlement/stables-horses.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Magic Items, Mounts & Animals, Services, Tack & Harness and Vehicles.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d1",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "veK44fa3VBl4EmvB",
+      "_key": "!tables.results!fCs8GGDP5kQ2qpI1.veK44fa3VBl4EmvB",
+      "type": "document",
+      "name": "Horseshoes of Speed",
+      "img": "icons/tools/smithing/horseshoe-steel-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHorseshoesOfS",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

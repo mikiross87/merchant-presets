@@ -1,0 +1,50 @@
+{
+  "_id": "eTQaIG2qBWaGB4MY",
+  "_key": "!tables!eTQaIG2qBWaGB4MY",
+  "name": "Temple & Faith Store · Magic (Town)",
+  "img": "icons/environment/settlement/church.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Holy Symbols, Magic Items, Potions, Services, Spell Components, Tools and Weapons.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d2",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "3VW8xM8Nfqepw63h",
+      "_key": "!tables.results!eTQaIG2qBWaGB4MY.3VW8xM8Nfqepw63h",
+      "type": "document",
+      "name": "Periapt of Health",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfHeal",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xcY21E6cDKajSAXe",
+      "_key": "!tables.results!eTQaIG2qBWaGB4MY.xcY21E6cDKajSAXe",
+      "type": "document",
+      "name": "Periapt of Wound Closure",
+      "img": "icons/equipment/neck/pendant-faceted-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfWoun",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "_id": "320RlPLyiVCs7pcS",
+  "_key": "!tables!320RlPLyiVCs7pcS",
+  "name": "Musical Store · Magic (City)",
+  "img": "icons/environment/settlement/gazebo.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Instruments and Magic Items.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d5",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "OJinWHI9C3dFLzq5",
+      "_key": "!tables.results!320RlPLyiVCs7pcS.OJinWHI9C3dFLzq5",
+      "type": "document",
+      "name": "Pipes of Haunting",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfHaunti",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dWqeecVZo3dQXKZ8",
+      "_key": "!tables.results!320RlPLyiVCs7pcS.dWqeecVZo3dQXKZ8",
+      "type": "document",
+      "name": "Pipes of the Sewers",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipesOfTheSew",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "z5OYMj7QdpEgMnrl",
+      "_key": "!tables.results!320RlPLyiVCs7pcS.z5OYMj7QdpEgMnrl",
+      "type": "document",
+      "name": "Horn of Blasting",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHornOfBlastin",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7jk7wIaVLMd4vKZV",
+      "_key": "!tables.results!320RlPLyiVCs7pcS.7jk7wIaVLMd4vKZV",
+      "type": "document",
+      "name": "Brass Horn of Valhalla",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBrassHornOfVa",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "siDuXNYhxabzhxGm",
+      "_key": "!tables.results!320RlPLyiVCs7pcS.siDuXNYhxabzhxGm",
+      "type": "document",
+      "name": "Silver Horn of Valhalla",
+      "img": "icons/tools/instruments/flute-simple-wood.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSilverHornOfV",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

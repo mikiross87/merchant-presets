@@ -117,6 +117,9 @@ TIERS = [("v", "Village", 0.4, 0), ("t", "Town", 1.0, 1), ("c", "City", 2.5, 2)]
 # magic items (#33) and keep their price bands.
 MAGIC_ODDS = {"common": (4, 3, 2), "uncommon": (None, 6, 4), "rare": (None, None, 10)}
 MAGIC_CAT = "Magic Items"
+# The magic lines restock on their own slower, rolled clock (#234), off a second
+# table: a find stays on the shelf for weeks. A Village doubles the Town's.
+MAGIC_EVERY = {"Town": "3d6+14", "City": "3d6+7"}
 
 def rare_find(src, line, ti):
     """The stock formula for a magic line, 1dN-(N-1); None for any other line."""
@@ -674,7 +677,8 @@ def main():
             aid = fid("actor", shop["id"], label)
             tid = fid("table", shop["id"], label)
 
-            items = []; results = []; containers = {}
+            tid_m = fid(tid, "magic")
+            items = []; results = []; magic_results = []; containers = {}
             for line in lines:
                 if line.get("uuid"):
                     gid = line["uuid"].rsplit(".", 1)[-1]
@@ -706,6 +710,7 @@ def main():
                 price = (it["system"].get("price") or {})
                 gp = (price.get("value") or 0) * COIN.get(price.get("denomination"), 1)
                 bundle = line.get("bundle", 1)
+                rare = None
                 if line.get("service"):
                     formula = "1"
                 elif rare := rare_find(src, line, ti):
@@ -716,13 +721,15 @@ def main():
                 else:
                     stock_roll = band(gp, ti)
                     formula = f"({stock_roll})*{bundle}" if bundle > 1 else stock_roll
-                rid = fid(tid, uuid)
-                if any(r["_id"] == rid for r in results):
+                # A magic line goes on the magic table (#234), every other line on the everyday one.
+                table_id, table_results = (tid_m, magic_results) if rare else (tid, results)
+                rid = fid(table_id, uuid)
+                if any(r["_id"] == rid for r in table_results):
                     continue
-                results.append({"_id": rid, "_key": f"!tables.results!{tid}.{rid}",
+                table_results.append({"_id": rid, "_key": f"!tables.results!{table_id}.{rid}",
                                 "type": "document", "name": src["name"], "img": src.get("img"),
                                 "documentUuid": uuid, "weight": 1,
-                                "range": [len(results) + 1, len(results) + 1],
+                                "range": [len(table_results) + 1, len(table_results) + 1],
                                 "drawn": False, "description": "", "flags": {}})
                 it["flags"]["item-piles"]["__formula"] = formula
 
@@ -751,6 +758,7 @@ def main():
                 if f is not None:
                     by_uuid[i["_stats"]["compendiumSource"]] = f
             per_result = {r["_id"]: by_uuid.get(r["documentUuid"], "1") for r in results}
+            magic_per_result = {r["_id"]: by_uuid[r["documentUuid"]] for r in magic_results}
 
             # Item Piles rebuilds a restocked shelf straight from the source
             # compendium, and SRD items carry no Item Piles flags — so poisons
@@ -774,6 +782,13 @@ def main():
                            "description": f"{described}<p><em>Stock list for a {label.lower()}.</em></p>",
                            "formula": f"1d{len(results)}", "replacement": True, "displayRoll": True,
                            "sort": 0, "ownership": {"default": 0}, "flags": {}, "results": results})
+            magic_uuid = f"Compendium.merchant-presets.stock.RollTable.{tid_m}" if magic_results else None
+            if magic_results:
+                docs_t.append({"_id": tid_m, "_key": f"!tables!{tid_m}", "name": f"{shop['name']} · Magic ({label})",
+                               "img": shop["img"], "folder": fold_t,
+                               "description": f"{described}<p><em>Stock list for a {label.lower()}.</em></p>",
+                               "formula": f"1d{len(magic_results)}", "replacement": True, "displayRoll": True,
+                               "sort": 0, "ownership": {"default": 0}, "flags": {}, "results": magic_results})
 
             # The shopkeeper behind the counter. Gear is appended after the item
             # filters are computed, not before: were it already in `items`, its
@@ -806,6 +821,10 @@ def main():
                          "close": {"hour": shop["hours"][1], "minute": 0}},
                 "restock": {"table": table_uuid, "quantities": per_result, "onOpen": True,
                            "every": restock_every(shop["restock"], label), "mode": "reroll"},
+                # The magic lines' own clock (#234); null for a shop that stocks none.
+                "magic": ({"table": magic_uuid, "quantities": magic_per_result, "onOpen": True,
+                           "every": restock_every(MAGIC_EVERY["Town" if label == "Village" else label], label),
+                           "mode": "reroll"} if magic_uuid else None),
                 # Shopkeeper gear is always in refuse_kinds (no stock line ever
                 # carries that kind), but the runtime already refuses it as
                 # fixed behaviour (isGear); leave it off the config so wontBuy

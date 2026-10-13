@@ -1,0 +1,354 @@
+{
+  "_id": "ckobXxiXdwgCHYDC",
+  "_key": "!tables!ckobXxiXdwgCHYDC",
+  "name": "Alchemists & Apothecaries · Magic (City)",
+  "img": "icons/environment/settlement/winemaker-still-vintner.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Magic Items, Potions, Spell Components and Tools.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d21",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "AsZSzb3utOqeFDgt",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.AsZSzb3utOqeFDgt",
+      "type": "document",
+      "name": "Potion of Climbing",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7pzoDBPM0JPOixhG",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.7pzoDBPM0JPOixhG",
+      "type": "document",
+      "name": "Oil of Slipperiness",
+      "img": "icons/consumables/potions/bottle-circular-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgOilOfSlipperi",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EbxNpXlMJiHim1NQ",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.EbxNpXlMJiHim1NQ",
+      "type": "document",
+      "name": "Philter of Love",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPhilterOfLove",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dssciadr5LJam6xF",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.dssciadr5LJam6xF",
+      "type": "document",
+      "name": "Potion of Animal Friendship",
+      "img": "icons/consumables/potions/potion-jar-corked-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfAnima",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wZ9dw0L9hUQRlcY8",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.wZ9dw0L9hUQRlcY8",
+      "type": "document",
+      "name": "Potion of Giant Strength (Hill)",
+      "img": "icons/consumables/potions/bottle-bulb-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHillPotionOfG",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "kNP4vPmvGi1TG5NS",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.kNP4vPmvGi1TG5NS",
+      "type": "document",
+      "name": "Potion of Growth",
+      "img": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfGrowt",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cazptdW2sA99hY8t",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.cazptdW2sA99hY8t",
+      "type": "document",
+      "name": "Potion of Resistance",
+      "img": "icons/consumables/potions/potion-bottle-labeled-medicine-capped-red-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfResis",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FakWs4X1kdsqlsRP",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.FakWs4X1kdsqlsRP",
+      "type": "document",
+      "name": "Potion of Water Breathing",
+      "img": "icons/consumables/potions/potion-bottle-corked-labeled-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfWater",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "F6S2GiRhuoGiUZrg",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.F6S2GiRhuoGiUZrg",
+      "type": "document",
+      "name": "Dust of Dryness",
+      "img": "icons/commodities/materials/bowl-powder-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDustOfDryness",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0b2xpVy4BqdmAWjt",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.0b2xpVy4BqdmAWjt",
+      "type": "document",
+      "name": "Elixir of Health",
+      "img": "icons/consumables/potions/potion-flask-corked-shiny-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgElixirOfHealt",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gZl1wc8pi5wlLsz0",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.gZl1wc8pi5wlLsz0",
+      "type": "document",
+      "name": "Oil of Etherealness",
+      "img": "icons/consumables/potions/bottle-conical-corked-labeled-shell-cyan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgOilOfEthereal",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NbPx37V4OJ9GP8j6",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.NbPx37V4OJ9GP8j6",
+      "type": "document",
+      "name": "Potion of Clairvoyance",
+      "img": "icons/consumables/potions/bottle-conical-corked-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClair",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qOoPJ1Q6cNHZsCrE",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.qOoPJ1Q6cNHZsCrE",
+      "type": "document",
+      "name": "Potion of Diminution",
+      "img": "icons/consumables/potions/bottle-bulb-corked-glowing-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfDimin",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iUcSMrcXY99vkK62",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.iUcSMrcXY99vkK62",
+      "type": "document",
+      "name": "Potion of Gaseous Form",
+      "img": "icons/consumables/potions/bottle-conical-fumes-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfGaseo",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EcsBegBl3hOaeWR4",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.EcsBegBl3hOaeWR4",
+      "type": "document",
+      "name": "Potion of Giant Strength (Fire)",
+      "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFirePotionOfG",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WQ1Sttg7wbYzMRX4",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.WQ1Sttg7wbYzMRX4",
+      "type": "document",
+      "name": "Potion of Giant Strength (Frost)",
+      "img": "icons/consumables/potions/bottle-round-corked-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFrostPotionOf",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "0rWgZSnFeNSHbIrN",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.0rWgZSnFeNSHbIrN",
+      "type": "document",
+      "name": "Potion of Giant Strength (Stone)",
+      "img": "icons/consumables/potions/bottle-bulb-corked-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStonePotionOf",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nUmDQcSEUfwe0Bxl",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.nUmDQcSEUfwe0Bxl",
+      "type": "document",
+      "name": "Potion of Heroism",
+      "img": "icons/consumables/potions/bottle-conical-bubbling-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfHeroi",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "pKbpEgkhYLqIPEaJ",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.pKbpEgkhYLqIPEaJ",
+      "type": "document",
+      "name": "Potion of Invisibility",
+      "img": "icons/consumables/potions/bottle-bulb-empty-glass.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfInvis",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "K26NS6ck3sgqOVzs",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.K26NS6ck3sgqOVzs",
+      "type": "document",
+      "name": "Potion of Invulnerability",
+      "img": "icons/consumables/potions/potion-bottle-labeled-medicine-capped-red-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfInvul",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cMzMFTSiVekUa5bu",
+      "_key": "!tables.results!ckobXxiXdwgCHYDC.cMzMFTSiVekUa5bu",
+      "type": "document",
+      "name": "Potion of Mind Reading",
+      "img": "icons/consumables/potions/bottle-round-corked-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfMindR",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

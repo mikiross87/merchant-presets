@@ -1,0 +1,1458 @@
+{
+  "_id": "OmkojAAI3jAc50uE",
+  "_key": "!tables!OmkojAAI3jAc50uE",
+  "name": "Armourer & Blacksmiths · Magic (City)",
+  "img": "icons/environment/settlement/blacksmith.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d90",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "EBy0A05O5xj74eQn",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.EBy0A05O5xj74eQn",
+      "type": "document",
+      "name": "Sentinel Shield",
+      "img": "icons/equipment/shield/targe-copper-eye.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.9fgRB1fykSFKXVFJ",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5KnBmbxJSeDWiVid",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.5KnBmbxJSeDWiVid",
+      "type": "document",
+      "name": "Arrow-Catching Shield",
+      "img": "icons/skills/melee/shield-block-fire-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgArrowcatching",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1jCAHLW2C7G3EaBg",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.1jCAHLW2C7G3EaBg",
+      "type": "document",
+      "name": "Mace of Smiting",
+      "img": "icons/weapons/maces/mace-studded-steel.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgMaceOfSmiting",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "g0K1OkZNqKZhhf92",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.g0K1OkZNqKZhhf92",
+      "type": "document",
+      "name": "Sun Blade",
+      "img": "icons/commodities/treasure/sceptre-jeweled-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSunBlade00000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "od6eTWdLR8IOY4Hl",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.od6eTWdLR8IOY4Hl",
+      "type": "document",
+      "name": "Dagger of Venom",
+      "img": "icons/weapons/daggers/dagger-double-skull-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDaggerOfVenom",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nQmFO1mUfwFhOggM",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.nQmFO1mUfwFhOggM",
+      "type": "document",
+      "name": "Javelin of Lightning",
+      "img": "icons/weapons/polearms/spear-barbed-silver.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgJavelinOfLigh",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uwCeF17SJAior0sy",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.uwCeF17SJAior0sy",
+      "type": "document",
+      "name": "Gauntlets of Ogre Power",
+      "img": "icons/equipment/hand/gauntlet-armored-steel-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGauntletsOfOg",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BKVpIjkflgEwcK8L",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.BKVpIjkflgEwcK8L",
+      "type": "document",
+      "name": "Belt of Giant Strength (hill)",
+      "img": "icons/equipment/waist/belt-buckle-arrow-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmghilBeltofGian",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "31g85SCWKGE9W1xu",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.31g85SCWKGE9W1xu",
+      "type": "document",
+      "name": "Longsword +1",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.6cVv2lHnUuZVMT2M",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xupnjNGh5P3juApp",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.xupnjNGh5P3juApp",
+      "type": "document",
+      "name": "Shortsword +1",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.W8WoYvY5Wn5v3gwB",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MyEakmSYLrtjOjey",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.MyEakmSYLrtjOjey",
+      "type": "document",
+      "name": "Greatsword +1",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.b61rFsXgBPiX7ubz",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "El1tBPDZNLt0v0zt",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.El1tBPDZNLt0v0zt",
+      "type": "document",
+      "name": "Rapier +1",
+      "img": "icons/weapons/swords/sword-guard-bronze.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.peiTmPHlXAOmZL1r",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1g8JTIW0zALwxBXB",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.1g8JTIW0zALwxBXB",
+      "type": "document",
+      "name": "Scimitar +1",
+      "img": "icons/weapons/swords/scimitar-worn-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.dONUTanUySotA7fj",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "aDjjmchoAsO0fxAK",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.aDjjmchoAsO0fxAK",
+      "type": "document",
+      "name": "Battleaxe +1",
+      "img": "icons/weapons/axes/axe-battle-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lSNORERk1LPtHlt2",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cxE0fMlUBXer2Q3K",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.cxE0fMlUBXer2Q3K",
+      "type": "document",
+      "name": "Greataxe +1",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.DVQPZW8ClPkWlsNy",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rccwnvD3y6sun3pA",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.rccwnvD3y6sun3pA",
+      "type": "document",
+      "name": "Warhammer +1",
+      "img": "icons/weapons/hammers/hammer-drilling-spiked.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.RFdrvWUfb1nl5dKU",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OKWl4FmJNvGnFXqB",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.OKWl4FmJNvGnFXqB",
+      "type": "document",
+      "name": "Mace +1",
+      "img": "icons/weapons/maces/mace-flanged-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.B7UzqZnNYk3caxsk",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "b81qIEygPbRnW8M3",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.b81qIEygPbRnW8M3",
+      "type": "document",
+      "name": "Dagger +1",
+      "img": "icons/weapons/daggers/dagger-straight-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cjpMECh3fKnghbFn",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2IxrzFEoF5SnFSQN",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.2IxrzFEoF5SnFSQN",
+      "type": "document",
+      "name": "Spear +1",
+      "img": "icons/weapons/polearms/spear-flared-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.d6BhdvUBzVURRr7T",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6pNP7U7Aefaxszx2",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.6pNP7U7Aefaxszx2",
+      "type": "document",
+      "name": "Quarterstaff +1",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.WTtt8ywLg30WB0HD",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "B3D39PxlyZRrjkOK",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.B3D39PxlyZRrjkOK",
+      "type": "document",
+      "name": "Longsword +2",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.PUh3gVV8JSUOfTvW",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mA4mw64zQZQ8dchr",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.mA4mw64zQZQ8dchr",
+      "type": "document",
+      "name": "Shortsword +2",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wvDSeymlOH97k47P",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FLJfKqGxaiAywZfs",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.FLJfKqGxaiAywZfs",
+      "type": "document",
+      "name": "Greatsword +2",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.uke3EM9dm0zTuHvv",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "A9DIaLdvpyX4UGKb",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.A9DIaLdvpyX4UGKb",
+      "type": "document",
+      "name": "Rapier +2",
+      "img": "icons/weapons/swords/sword-guard-bronze.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.IGGwDBhuEoZ2yh3L",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xHbzQPJCTHDk587Y",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.xHbzQPJCTHDk587Y",
+      "type": "document",
+      "name": "Scimitar +2",
+      "img": "icons/weapons/swords/scimitar-worn-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.BILShKkrfrEarUmg",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "15yn7fyhbUesEj9w",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.15yn7fyhbUesEj9w",
+      "type": "document",
+      "name": "Battleaxe +2",
+      "img": "icons/weapons/axes/axe-battle-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.8mC0vzWp8cN5gUhp",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "GFE6o7iPH0LgWJkH",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.GFE6o7iPH0LgWJkH",
+      "type": "document",
+      "name": "Greataxe +2",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.yPR7i4F627Ds4J0b",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Hb7T5LO5wdwKRWN3",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.Hb7T5LO5wdwKRWN3",
+      "type": "document",
+      "name": "Warhammer +2",
+      "img": "icons/weapons/hammers/hammer-drilling-spiked.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Cr3HFsOGwyND5cXp",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6fYUP6SV6hk64wmu",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.6fYUP6SV6hk64wmu",
+      "type": "document",
+      "name": "Mace +2",
+      "img": "icons/weapons/maces/mace-flanged-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.v1w58ao4wGpSb7HP",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6WhBvizLRbMM32MQ",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.6WhBvizLRbMM32MQ",
+      "type": "document",
+      "name": "Dagger +2",
+      "img": "icons/weapons/daggers/dagger-straight-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.606XlqNsghZVZjio",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WfW0CdP2FYcB6XLa",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.WfW0CdP2FYcB6XLa",
+      "type": "document",
+      "name": "Spear +2",
+      "img": "icons/weapons/polearms/spear-flared-green.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4U3hpQ1rsRl11tSG",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EZ00Imc1VQkBN5ov",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.EZ00Imc1VQkBN5ov",
+      "type": "document",
+      "name": "Quarterstaff +2",
+      "img": "icons/weapons/staves/staff-simple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.agbSIGGvoO3zoK5p",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "auK0uo2frNlMQ8xA",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.auK0uo2frNlMQ8xA",
+      "type": "document",
+      "name": "Shield +1",
+      "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.PtNINaeqIhkx0ldL",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "awEdhIOtmUl2lDyo",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.awEdhIOtmUl2lDyo",
+      "type": "document",
+      "name": "Shield +2",
+      "img": "icons/equipment/shield/round-wooden-boss-steel-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ko8Gke9NEwHffyJ2",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lzKzjsoVj3V0e2yf",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.lzKzjsoVj3V0e2yf",
+      "type": "document",
+      "name": "Leather Armor +1",
+      "img": "icons/equipment/chest/breastplate-scale-leather.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Sfyff9MDUk07bxpa",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zXRFAPUGdgYf1Lrf",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.zXRFAPUGdgYf1Lrf",
+      "type": "document",
+      "name": "Studded Leather Armor +1",
+      "img": "icons/equipment/chest/breastplate-rivited-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.91PRaYKAdar5GFh1",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rHyYFBwaqB4lOF9d",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.rHyYFBwaqB4lOF9d",
+      "type": "document",
+      "name": "Chain Shirt +1",
+      "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZezjIxBFZGOdudzm",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ESVP2UDb21uMsx97",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.ESVP2UDb21uMsx97",
+      "type": "document",
+      "name": "Breastplate +1",
+      "img": "icons/equipment/chest/breastplate-collared-steel-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.hExAFUIvmafL42qV",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "r3XFigGDlSHxFhVh",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.r3XFigGDlSHxFhVh",
+      "type": "document",
+      "name": "Half Plate Armor +1",
+      "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.AWrNmrIvyxnF7Arr",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "NaDLl09AtnGlLR1b",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.NaDLl09AtnGlLR1b",
+      "type": "document",
+      "name": "Chain Mail +1",
+      "img": "icons/equipment/chest/breastplate-metal-scaled-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.6auX1WDAbs4Qd9mF",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qSUGjWvD4flcBpAw",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.qSUGjWvD4flcBpAw",
+      "type": "document",
+      "name": "Splint Armor +1",
+      "img": "icons/equipment/chest/breastplate-layered-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fiPwl2C9jTEMmUgN",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AFxkgxn5DpGMzftu",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.AFxkgxn5DpGMzftu",
+      "type": "document",
+      "name": "Plate Armor +1",
+      "img": "icons/equipment/chest/breastplate-collared-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.yF9gUogK9vpPAtUc",
+      "weight": 1,
+      "range": [
+        42,
+        42
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "h8aDRc4lXxDopIEi",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.h8aDRc4lXxDopIEi",
+      "type": "document",
+      "name": "Adamantine Chain Shirt",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.R925G202IWbGnRfF",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mG4u3mfkST4e4p8C",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.mG4u3mfkST4e4p8C",
+      "type": "document",
+      "name": "Adamantine Breastplate",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.XYZrjTyO1V5TtVq6",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "tSVKvjZCKuzOVQ4M",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.tSVKvjZCKuzOVQ4M",
+      "type": "document",
+      "name": "Adamantine Chain Mail",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.WYfRYzF2KQE6WJHL",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "i2TYTrJ7r1daJPOL",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.i2TYTrJ7r1daJPOL",
+      "type": "document",
+      "name": "Adamantine Plate Armor",
+      "img": "icons/equipment/chest/breastplate-layered-leather-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bN2aGZ4dLvrrbhP0",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1lf1kiu0QwP8f2Lg",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.1lf1kiu0QwP8f2Lg",
+      "type": "document",
+      "name": "Mithral Chain Shirt",
+      "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.HtNevYf68na1T6bk",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "8gNaO4ehiBmCdxCl",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.8gNaO4ehiBmCdxCl",
+      "type": "document",
+      "name": "Mithral Breastplate",
+      "img": "icons/equipment/chest/breastplate-collared-steel-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.VXZcgr5aRqSpd1aG",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "43QokooDLfBnL47X",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.43QokooDLfBnL47X",
+      "type": "document",
+      "name": "Mithral Chain Mail",
+      "img": "icons/equipment/chest/breastplate-metal-scaled-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nfVd8WoIB76u6LOp",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "m4XDvjSdciREHQuG",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.m4XDvjSdciREHQuG",
+      "type": "document",
+      "name": "Mithral Plate Armor",
+      "img": "icons/equipment/chest/breastplate-collared-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.50YYfhNo7T5hGyjj",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "P5vhiKk4IG29oOrf",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.P5vhiKk4IG29oOrf",
+      "type": "document",
+      "name": "Elven Chain Shirt",
+      "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.5iec2goJzVsCP2fg",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gMgGqftDxNhVQ5cO",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.gMgGqftDxNhVQ5cO",
+      "type": "document",
+      "name": "Breastplate of Acid Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.fxvkgPAadTTYXi8z",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3LHicoMztzKTIXMo",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.3LHicoMztzKTIXMo",
+      "type": "document",
+      "name": "Breastplate of Cold Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.jq96nVO1EMYkfcGs",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qHEOqPJ7RosMMSTv",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.qHEOqPJ7RosMMSTv",
+      "type": "document",
+      "name": "Breastplate of Fire Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ypBQcH4IwGzpVBuU",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5p5F1WnBVc5EHfAs",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.5p5F1WnBVc5EHfAs",
+      "type": "document",
+      "name": "Breastplate of Force Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.hACLXKgcyNCtRShC",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MN8E2Ic2YzAicGMa",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.MN8E2Ic2YzAicGMa",
+      "type": "document",
+      "name": "Breastplate of Lightning Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nXSwG2wv571qCjRa",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "P59u5588YIjhL6ci",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.P59u5588YIjhL6ci",
+      "type": "document",
+      "name": "Breastplate of Necrotic Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.4WnDUg0pcTTkBH7P",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bcG2zeWnngOIO9tQ",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.bcG2zeWnngOIO9tQ",
+      "type": "document",
+      "name": "Breastplate of Poison Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Krm6D7PpRVdUYrAG",
+      "weight": 1,
+      "range": [
+        58,
+        58
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "q7saOBUYzqYBt7LO",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.q7saOBUYzqYBt7LO",
+      "type": "document",
+      "name": "Breastplate of Psychic Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.MMMI10R3bJdiLZ9D",
+      "weight": 1,
+      "range": [
+        59,
+        59
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AvJ8NQWq55NmchTo",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.AvJ8NQWq55NmchTo",
+      "type": "document",
+      "name": "Breastplate of Radiant Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.KXHDtS0q8LUUrTqN",
+      "weight": 1,
+      "range": [
+        60,
+        60
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "x4RT5isTYkzJvwQE",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.x4RT5isTYkzJvwQE",
+      "type": "document",
+      "name": "Breastplate of Thunder Resistance",
+      "img": "icons/equipment/chest/breastplate-layered-gold.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.F3n6nGZq5cX3RNWM",
+      "weight": 1,
+      "range": [
+        61,
+        61
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "I0Re7hQjIfsMV3Qv",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.I0Re7hQjIfsMV3Qv",
+      "type": "document",
+      "name": "Flame Tongue Longsword",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QIpTVmkrxPDleNbg",
+      "weight": 1,
+      "range": [
+        62,
+        62
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ijQaNiMXd4gP4z1R",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.ijQaNiMXd4gP4z1R",
+      "type": "document",
+      "name": "Flame Tongue Scimitar",
+      "img": "icons/weapons/swords/scimitar-worn-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Ke78Mh25cwcm6I2W",
+      "weight": 1,
+      "range": [
+        63,
+        63
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "LXYhHW1kafqW7sjE",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.LXYhHW1kafqW7sjE",
+      "type": "document",
+      "name": "Flame Tongue Shortsword",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.paBKXDzcZP6jS5mC",
+      "weight": 1,
+      "range": [
+        64,
+        64
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "lMgXHi1lGMdH3NoO",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.lMgXHi1lGMdH3NoO",
+      "type": "document",
+      "name": "Flame Tongue Greatsword",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.n5ZlQ4hq5xD0tCZx",
+      "weight": 1,
+      "range": [
+        65,
+        65
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MDOyG892AXVS9r8v",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.MDOyG892AXVS9r8v",
+      "type": "document",
+      "name": "Giant Slayer Longsword",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.yBeG0T6iMr2r8F71",
+      "weight": 1,
+      "range": [
+        66,
+        66
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6Ms7wuMlYYBjnPmj",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.6Ms7wuMlYYBjnPmj",
+      "type": "document",
+      "name": "Giant Slayer Greatsword",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.7QCvWHI66Dt3c0ib",
+      "weight": 1,
+      "range": [
+        67,
+        67
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rJHTvACT8fZp4bQb",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.rJHTvACT8fZp4bQb",
+      "type": "document",
+      "name": "Giant Slayer Greataxe",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.COAcmWhQNtJXaCK0",
+      "weight": 1,
+      "range": [
+        68,
+        68
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "88XAODetdfz5T83M",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.88XAODetdfz5T83M",
+      "type": "document",
+      "name": "Giant Slayer Longbow",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.D8DNt5aCvCXvcr9r",
+      "weight": 1,
+      "range": [
+        69,
+        69
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "BhSjx3DFbCaCRgXm",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.BhSjx3DFbCaCRgXm",
+      "type": "document",
+      "name": "Dragon Slayer Longsword",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.9TTIzUJcINqfvN1D",
+      "weight": 1,
+      "range": [
+        70,
+        70
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dZg4HzUNuOglT5l1",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.dZg4HzUNuOglT5l1",
+      "type": "document",
+      "name": "Dragon Slayer Greatsword",
+      "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.ZneeK8AJxIUMlxes",
+      "weight": 1,
+      "range": [
+        71,
+        71
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Q9mEkjpxJnRyn0RT",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.Q9mEkjpxJnRyn0RT",
+      "type": "document",
+      "name": "Dragon Slayer Greataxe",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bO2TNWjXS3LHCPMP",
+      "weight": 1,
+      "range": [
+        72,
+        72
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "L8IxpBHh71HTPbyL",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.L8IxpBHh71HTPbyL",
+      "type": "document",
+      "name": "Dragon Slayer Longbow",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.GpKNvsz0qZte1fnP",
+      "weight": 1,
+      "range": [
+        73,
+        73
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MUDYtsY9eLvvya8q",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.MUDYtsY9eLvvya8q",
+      "type": "document",
+      "name": "Vicious Longsword",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.5S3XDExToqMDT8jc",
+      "weight": 1,
+      "range": [
+        74,
+        74
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7VMCj89s7TTlyUjD",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.7VMCj89s7TTlyUjD",
+      "type": "document",
+      "name": "Vicious Greataxe",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.H8hDr4v3HOeBKSpx",
+      "weight": 1,
+      "range": [
+        75,
+        75
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zLoVaAaIVfwOlb55",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.zLoVaAaIVfwOlb55",
+      "type": "document",
+      "name": "Vicious Rapier",
+      "img": "icons/weapons/swords/sword-guard-bronze.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.bTUfD8vvYK70hzpu",
+      "weight": 1,
+      "range": [
+        76,
+        76
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TXX68qhFOcqumIDy",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.TXX68qhFOcqumIDy",
+      "type": "document",
+      "name": "Longsword of Wounding",
+      "img": "icons/weapons/swords/greatsword-guard.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.F0IKSiamv2BuQEKK",
+      "weight": 1,
+      "range": [
+        77,
+        77
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "CMapPgs0deHfkdTt",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.CMapPgs0deHfkdTt",
+      "type": "document",
+      "name": "Shortsword of Wounding",
+      "img": "icons/weapons/swords/sword-guard-worn-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.gCIs2P5MNW9uNEAg",
+      "weight": 1,
+      "range": [
+        78,
+        78
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9xUufJo27d9FWJls",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.9xUufJo27d9FWJls",
+      "type": "document",
+      "name": "Scimitar of Wounding",
+      "img": "icons/weapons/swords/scimitar-worn-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.lhpdKc0dYkaDzNxr",
+      "weight": 1,
+      "range": [
+        79,
+        79
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XROZmv9ESmi3oddl",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.XROZmv9ESmi3oddl",
+      "type": "document",
+      "name": "Rapier of Wounding",
+      "img": "icons/weapons/swords/sword-guard-bronze.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.Av9H0aAh6aJ6IlCU",
+      "weight": 1,
+      "range": [
+        80,
+        80
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Tw6lrH0UuyQPRSF7",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.Tw6lrH0UuyQPRSF7",
+      "type": "document",
+      "name": "Longsword of Life Stealing",
+      "img": "icons/weapons/swords/sword-guard-worn.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cATMGbxBqcwCZ9Mc",
+      "weight": 1,
+      "range": [
+        81,
+        81
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1jUh9fssSbxBWaE4",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.1jUh9fssSbxBWaE4",
+      "type": "document",
+      "name": "Shortsword of Life Stealing",
+      "img": "icons/weapons/swords/sword-guard-worn.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.XcKeQ1LFBgD8Km3w",
+      "weight": 1,
+      "range": [
+        82,
+        82
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jQRkwXyTMEV7sFWs",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.jQRkwXyTMEV7sFWs",
+      "type": "document",
+      "name": "Scimitar of Life Stealing",
+      "img": "icons/weapons/swords/sword-guard-worn.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.An86yv6Oe3rg9iGU",
+      "weight": 1,
+      "range": [
+        83,
+        83
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "CrEkQJJlpHwu35YA",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.CrEkQJJlpHwu35YA",
+      "type": "document",
+      "name": "Rapier of Life Stealing",
+      "img": "icons/weapons/swords/sword-guard-worn.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.7vWzVYRGjQcdI1YJ",
+      "weight": 1,
+      "range": [
+        84,
+        84
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZDRsTUsDx4m2rHlA",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.ZDRsTUsDx4m2rHlA",
+      "type": "document",
+      "name": "Berserker Battleaxe",
+      "img": "icons/weapons/axes/axe-battle-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.15qudKV3olZXdgVy",
+      "weight": 1,
+      "range": [
+        85,
+        85
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VNGskMEoSDHRhrni",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.VNGskMEoSDHRhrni",
+      "type": "document",
+      "name": "Berserker Greataxe",
+      "img": "icons/weapons/axes/axe-double-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.brJvb01QIYSPPoUz",
+      "weight": 1,
+      "range": [
+        86,
+        86
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "s23QDhaydXRGRnx9",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.s23QDhaydXRGRnx9",
+      "type": "document",
+      "name": "Berserker Handaxe",
+      "img": "icons/weapons/axes/axe-broad-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.mJpmJ83fF2Fyw2qg",
+      "weight": 1,
+      "range": [
+        87,
+        87
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dhWKoNsT88Buoler",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.dhWKoNsT88Buoler",
+      "type": "document",
+      "name": "Longsword of Warning",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.uk3OV57ljuNGjmXF",
+      "weight": 1,
+      "range": [
+        88,
+        88
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IlIfmltvtTlyX0uO",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.IlIfmltvtTlyX0uO",
+      "type": "document",
+      "name": "Rapier of Warning",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.hwCBLZ7PoyT1554w",
+      "weight": 1,
+      "range": [
+        89,
+        89
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IXyRLPrZKX9qGtkQ",
+      "_key": "!tables.results!OmkojAAI3jAc50uE.IXyRLPrZKX9qGtkQ",
+      "type": "document",
+      "name": "Dagger of Warning",
+      "img": "icons/weapons/hammers/hammer-double-engraved-ruby.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.SnjQVEh2vh3pN0XO",
+      "weight": 1,
+      "range": [
+        90,
+        90
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

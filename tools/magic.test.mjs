@@ -131,13 +131,14 @@ const stockTables = new Map(load("stock").filter(d => d._key.startsWith("!tables
 test("each magic line is a rare find: 1dN-(N-1) by its rarity and the shop's size (#233)", () => {
   const wrong = [];
   for (const m of merchants) {
-    const { table, quantities } = m.flags["merchant-presets"].shop.restock;
-    const results = stockTables.get(table).results;
+    // On whichever clock's table holds it: the magic one since #234.
+    const clocks = [m.flags["merchant-presets"].shop.restock, m.flags["merchant-presets"].shop.magic].filter(Boolean);
     for (const i of stock(m).filter(isMagic)) {
       if (STAPLE.test(i.name)) continue;
       const n = ODDS[i.system.rarity]?.[tierOf(m.name)];
-      const r = results.find(r => r.documentUuid === i._stats.compendiumSource);
-      const formula = quantities[r?._id];
+      const clock = clocks.find(c => stockTables.get(c.table).results.some(r => r.documentUuid === i._stats.compendiumSource));
+      const r = clock && stockTables.get(clock.table).results.find(r => r.documentUuid === i._stats.compendiumSource);
+      const formula = clock?.quantities[r?._id];
       if (!n || formula !== `1d${n}-${n - 1}`) wrong.push(`${m.name}: ${i.name} (${i.system.rarity}) ${formula}`);
     }
   }

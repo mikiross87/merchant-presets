@@ -17,10 +17,11 @@ const TEMPLE = "Temple_Faith_Store_Town_";
 const JEWELER = "Jeweler_Town_";
 
 const world = createWorld();
-/** Serve every stock table line's document, as the SRD and goods packs would. */
+/** Serve every stock table line's document, as the SRD and goods packs would: both clocks' tables (#234). */
 function stockPack(actor) {
-  const table = world.compendium.get(actor.flags["merchant-presets"].shop.restock.table);
-  for (const result of table?.results ?? []) {
+  const { restock, magic } = actor.flags["merchant-presets"].shop;
+  const results = [restock, magic].filter(Boolean).flatMap(c => world.compendium.get(c.table)?.results ?? []);
+  for (const result of results) {
     if (world.compendium.has(result.documentUuid)) continue;
     const onShelf = actor.items.find(i => i.name === result.name);
     const name = result.name;

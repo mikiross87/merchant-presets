@@ -1,0 +1,130 @@
+{
+  "_id": "bb5le8L3kS2GHlK4",
+  "_key": "!tables!bb5le8L3kS2GHlK4",
+  "name": "Tinkering Store · Magic (City)",
+  "img": "icons/environment/settlement/pottery-shop-shed-red.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d7",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "ehB97GowFOrR0wNz",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.ehB97GowFOrR0wNz",
+      "type": "document",
+      "name": "Immovable Rod",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nLgpmuRIbihyQOsp",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.nLgpmuRIbihyQOsp",
+      "type": "document",
+      "name": "Lantern of Revealing",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "q6J51q107VaB4Nys",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.q6J51q107VaB4Nys",
+      "type": "document",
+      "name": "Chime of Opening",
+      "img": "icons/commodities/tech/pipe-cylinder.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgChimeOfOpenin",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WRCAVidm93pKfOcH",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.WRCAVidm93pKfOcH",
+      "type": "document",
+      "name": "Eversmoking Bottle",
+      "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEversmokingBo",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QUl9dOTNQMrTFtPC",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.QUl9dOTNQMrTFtPC",
+      "type": "document",
+      "name": "Iron Bands",
+      "img": "icons/commodities/metal/clasp-steel-braid.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgIronBandsOfBi",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "g8y8hZaVI1wo2VG0",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.g8y8hZaVI1wo2VG0",
+      "type": "document",
+      "name": "Instant Fortress",
+      "img": "icons/commodities/treasure/token-engraved-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDaernsInstant",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xRq4k748bVJ1pMIU",
+      "_key": "!tables.results!bb5le8L3kS2GHlK4.xRq4k748bVJ1pMIU",
+      "type": "document",
+      "name": "Cube of Force",
+      "img": "icons/sundries/gaming/dice-runed-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCubeOfForce00",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

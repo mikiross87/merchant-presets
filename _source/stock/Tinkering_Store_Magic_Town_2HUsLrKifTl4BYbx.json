@@ -1,0 +1,66 @@
+{
+  "_id": "2HUsLrKifTl4BYbx",
+  "_key": "!tables!2HUsLrKifTl4BYbx",
+  "name": "Tinkering Store · Magic (Town)",
+  "img": "icons/environment/settlement/pottery-shop-shed-red.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d3",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "k4SZoGf0iz530Dxe",
+      "_key": "!tables.results!2HUsLrKifTl4BYbx.k4SZoGf0iz530Dxe",
+      "type": "document",
+      "name": "Immovable Rod",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qp6VyQ3AJLOuNLo4",
+      "_key": "!tables.results!2HUsLrKifTl4BYbx.qp6VyQ3AJLOuNLo4",
+      "type": "document",
+      "name": "Lantern of Revealing",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jrD9TlZfnEHbY4SA",
+      "_key": "!tables.results!2HUsLrKifTl4BYbx.jrD9TlZfnEHbY4SA",
+      "type": "document",
+      "name": "Eversmoking Bottle",
+      "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEversmokingBo",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

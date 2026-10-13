@@ -1,0 +1,98 @@
+{
+  "_id": "niJMQiomqKcquIAP",
+  "_key": "!tables!niJMQiomqKcquIAP",
+  "name": "Tailor & Textile Store · Magic (Town)",
+  "img": "icons/environment/settlement/house-two-stories.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Magic Items and Tools.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d5",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "dnW0nH2EZDRQgT8f",
+      "_key": "!tables.results!niJMQiomqKcquIAP.dnW0nH2EZDRQgT8f",
+      "type": "document",
+      "name": "Hat of Disguise",
+      "img": "icons/equipment/head/hat-belted-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHatOfDisguise",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "FQ56bJO4CJU272Gm",
+      "_key": "!tables.results!niJMQiomqKcquIAP.FQ56bJO4CJU272Gm",
+      "type": "document",
+      "name": "Robe of Useful Items",
+      "img": "icons/equipment/back/cloak-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRobeOfUsefulI",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "AwReIvQRUc9KipSK",
+      "_key": "!tables.results!niJMQiomqKcquIAP.AwReIvQRUc9KipSK",
+      "type": "document",
+      "name": "Cloak of Protection",
+      "img": "icons/equipment/back/cloak-heavy-fur-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfProtec",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IZrB9e88oxiOr7PO",
+      "_key": "!tables.results!niJMQiomqKcquIAP.IZrB9e88oxiOr7PO",
+      "type": "document",
+      "name": "Cloak of Elvenkind",
+      "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfElvenk",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "N2qM8eHBcOVF1VYz",
+      "_key": "!tables.results!niJMQiomqKcquIAP.N2qM8eHBcOVF1VYz",
+      "type": "document",
+      "name": "Slippers of Spider Climbing",
+      "img": "icons/equipment/feet/boots-leather-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSlippersOfSpi",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

@@ -1,0 +1,930 @@
+{
+  "_id": "0Lcf1gLkL4h7XCfM",
+  "_key": "!tables!0Lcf1gLkL4h7XCfM",
+  "name": "Arcane Store · Magic (City)",
+  "img": "icons/environment/settlement/wizard-castle.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Magic Items, Services, Spell Components, Spell Scrolls, Tools and Weapons.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d57",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "5frgqqWheJtdI3XK",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.5frgqqWheJtdI3XK",
+      "type": "document",
+      "name": "Wand of Magic Detection",
+      "img": "icons/weapons/wands/wand-gem-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfMagicDe",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uJQGpWgydmKeJ1hY",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.uJQGpWgydmKeJ1hY",
+      "type": "document",
+      "name": "Wand of Magic Missiles",
+      "img": "icons/weapons/wands/wand-gem-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfMagicMi",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gccqiDnbkzcXky9j",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.gccqiDnbkzcXky9j",
+      "type": "document",
+      "name": "Wand of Secrets",
+      "img": "icons/weapons/staves/staff-ornate-orb-steel-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfSecrets",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "k7AWBBxiX1oy5gHs",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.k7AWBBxiX1oy5gHs",
+      "type": "document",
+      "name": "Wand of Web",
+      "img": "icons/weapons/staves/staff-crescent-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfWeb0000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "6wWrUw9VKyTTBATg",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.6wWrUw9VKyTTBATg",
+      "type": "document",
+      "name": "Wand of Binding",
+      "img": "icons/weapons/wands/wand-skull-feathers.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfBinding",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "kwGqJL7t1uwePP9H",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.kwGqJL7t1uwePP9H",
+      "type": "document",
+      "name": "Wand of Enemy Detection",
+      "img": "icons/weapons/wands/wand-simple-eye.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfEnemyDe",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KJ6AHvVDHsP17lm6",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.KJ6AHvVDHsP17lm6",
+      "type": "document",
+      "name": "Wand of Fear",
+      "img": "icons/weapons/staves/staff-animal-skull-horned.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfFear000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zBzqQfZTVau8YJNh",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.zBzqQfZTVau8YJNh",
+      "type": "document",
+      "name": "Wand of Fireballs",
+      "img": "icons/weapons/staves/staff-obsidian.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfFirebal",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iS9gISnspt1PLsvf",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.iS9gISnspt1PLsvf",
+      "type": "document",
+      "name": "Wand of Lightning Bolts",
+      "img": "icons/weapons/staves/staff-ornate-jeweled-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfLightni",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MdCmBd9OThyzTby6",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.MdCmBd9OThyzTby6",
+      "type": "document",
+      "name": "Wand of Paralysis",
+      "img": "icons/weapons/wands/wand-gem-violet.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWandOfParalys",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jNhFD5wsrpXfG7WQ",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.jNhFD5wsrpXfG7WQ",
+      "type": "document",
+      "name": "Staff of Charming",
+      "img": "icons/weapons/staves/staff-ornate-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStaffOfCharmi",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KmW1MppuCgbI1aDs",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.KmW1MppuCgbI1aDs",
+      "type": "document",
+      "name": "Staff of Withering",
+      "img": "icons/weapons/staves/staff-animal-skull-bull.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStaffOfWither",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sSlBggGPhAxG6jQ9",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.sSlBggGPhAxG6jQ9",
+      "type": "document",
+      "name": "Headband of Intellect",
+      "img": "icons/equipment/finger/ring-cabochon-silver-gold-red.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wBDobMrWTrL1BjNS",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "curucwNmA9wnlR2X",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.curucwNmA9wnlR2X",
+      "type": "document",
+      "name": "Pearl of Power",
+      "img": "icons/commodities/gems/pearl-blue-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPearlOfPower0",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "daiChv5QmvXh81zW",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.daiChv5QmvXh81zW",
+      "type": "document",
+      "name": "Circlet of Blasting",
+      "img": "icons/equipment/finger/ring-cabochon-notched-gold-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCircletOfBlas",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VTudvaw3Ohx7GuXr",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.VTudvaw3Ohx7GuXr",
+      "type": "document",
+      "name": "Hat of Disguise",
+      "img": "icons/equipment/head/hat-belted-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHatOfDisguise",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dTXCUEx3qBbOzYV5",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.dTXCUEx3qBbOzYV5",
+      "type": "document",
+      "name": "Helm of Comprehending Languages",
+      "img": "icons/equipment/head/helm-spangen-ridged.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHelmOfCompreh",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XMXOHdZc5O9fjetI",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.XMXOHdZc5O9fjetI",
+      "type": "document",
+      "name": "Helm of Telepathy",
+      "img": "icons/equipment/head/helm-spangen.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHelmOfTelepat",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1F7GA4xcEmMAeK4D",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.1F7GA4xcEmMAeK4D",
+      "type": "document",
+      "name": "Medallion of Thoughts",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgMedallionOfTh",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2WNxsP1zMfHl4P0S",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.2WNxsP1zMfHl4P0S",
+      "type": "document",
+      "name": "Eyes of Charming",
+      "img": "icons/tools/scribal/spectacles-glasses.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEyesOfCharmin",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mTCkcwCPZ3962hNi",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.mTCkcwCPZ3962hNi",
+      "type": "document",
+      "name": "Eyes of Minute Seeing",
+      "img": "icons/tools/scribal/spectacles-glasses.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEyesOfMinuteS",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1FWAOo6iWmx6DJ1S",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.1FWAOo6iWmx6DJ1S",
+      "type": "document",
+      "name": "Eyes of the Eagle",
+      "img": "icons/equipment/head/goggles-leather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEyesOfTheEagl",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Snl5VVwLpefubEWl",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.Snl5VVwLpefubEWl",
+      "type": "document",
+      "name": "Robe of Useful Items",
+      "img": "icons/equipment/back/cloak-simple-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRobeOfUsefulI",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2te8zkK7ZfPYDxhb",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.2te8zkK7ZfPYDxhb",
+      "type": "document",
+      "name": "Bag of Holding",
+      "img": "icons/containers/bags/pack-engraved-leather-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBagOfHolding0",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "OaMgXULp4Kxbr3Q1",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.OaMgXULp4Kxbr3Q1",
+      "type": "document",
+      "name": "Cloak of Protection",
+      "img": "icons/equipment/back/cloak-heavy-fur-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfProtec",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1X5FWvd1F6bfXMdy",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.1X5FWvd1F6bfXMdy",
+      "type": "document",
+      "name": "Amulet of Proof against Detection and Location",
+      "img": "icons/equipment/neck/pendant-faceted-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAmuletOfProof",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WMwMBsuwAJkT0Ns5",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.WMwMBsuwAJkT0Ns5",
+      "type": "document",
+      "name": "Ring of Mind Shielding",
+      "img": "icons/equipment/finger/ring-cabochon-gold-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfMindShi",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "5dVaNduH9WEhfWnq",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.5dVaNduH9WEhfWnq",
+      "type": "document",
+      "name": "Ring of Protection",
+      "img": "icons/equipment/finger/ring-cabochon-silver-gold-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfProtect",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "kiY68JBbRFuDynBG",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.kiY68JBbRFuDynBG",
+      "type": "document",
+      "name": "Ring of Spell Storing",
+      "img": "icons/equipment/finger/ring-cabochon-silver-gold-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfSpellSt",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "MQhSYwUpi80OzlQv",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.MQhSYwUpi80OzlQv",
+      "type": "document",
+      "name": "Ring of Feather Falling",
+      "img": "icons/equipment/finger/ring-cabochon-silver-gold-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfFeather",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TztVNbXLWcYGCRkp",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.TztVNbXLWcYGCRkp",
+      "type": "document",
+      "name": "Deck of Illusions",
+      "img": "icons/sundries/gaming/playing-cards-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDeckOfIllusio",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uo5f7mpPKmw82bxS",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.uo5f7mpPKmw82bxS",
+      "type": "document",
+      "name": "Immovable Rod",
+      "img": "icons/commodities/tech/pipe-lead-closed.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.wrQigS960vAJFeiR",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "afnD3GOm1pXOxelV",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.afnD3GOm1pXOxelV",
+      "type": "document",
+      "name": "Pipe of Smoke Monsters",
+      "img": "icons/sundries/misc/pipe-elegant.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPipeOfSmokeMo",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "YUpYfMBt53pCOGhZ",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.YUpYfMBt53pCOGhZ",
+      "type": "document",
+      "name": "Elemental Gem (Blue Sapphire)",
+      "img": "icons/commodities/gems/gem-rough-rose-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBlueElemental",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "74lIxTU4HlNhibls",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.74lIxTU4HlNhibls",
+      "type": "document",
+      "name": "Elemental Gem (Emerald)",
+      "img": "icons/commodities/gems/gem-rough-cushion-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEmeraldElemen",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "p3CfYJP1EcLPZXSI",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.p3CfYJP1EcLPZXSI",
+      "type": "document",
+      "name": "Elemental Gem (Red Corundum)",
+      "img": "icons/commodities/gems/gem-rough-cushion-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRedElementalG",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7n9NekQoxMrPEZ8D",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.7n9NekQoxMrPEZ8D",
+      "type": "document",
+      "name": "Elemental Gem (Yellow Diamond)",
+      "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgYellowElement",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EltLxKfVokqKDjA5",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.EltLxKfVokqKDjA5",
+      "type": "document",
+      "name": "Bracers of Defense",
+      "img": "icons/equipment/wrist/bracer-yellow-fancy.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBracersOfDefe",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KXV0AIxIxydBaIQt",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.KXV0AIxIxydBaIQt",
+      "type": "document",
+      "name": "Cape of the Mountebank",
+      "img": "icons/equipment/head/hood-cloth-trimmed-pink-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCapeOfTheMoun",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ecfGWNUURH4VlGuT",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.ecfGWNUURH4VlGuT",
+      "type": "document",
+      "name": "Mantle of Spell Resistance",
+      "img": "icons/equipment/back/cape-layered-violet-white-swirl.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgMantleOfSpell",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "w7zmAo2aO9NLNSOB",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.w7zmAo2aO9NLNSOB",
+      "type": "document",
+      "name": "Necklace of Fireballs",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfFir",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "Fwm4QBNt2JfK62sf",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.Fwm4QBNt2JfK62sf",
+      "type": "document",
+      "name": "Robe of Eyes",
+      "img": "icons/equipment/head/hood-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRobeOfEyes000",
+      "weight": 1,
+      "range": [
+        42,
+        42
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "o6LRb4WPrvYVoPtf",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.o6LRb4WPrvYVoPtf",
+      "type": "document",
+      "name": "Gem of Seeing",
+      "img": "icons/commodities/gems/gem-rough-rose-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGemOfSeeing00",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uRjkGA8AyhSV35sV",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.uRjkGA8AyhSV35sV",
+      "type": "document",
+      "name": "Portable Hole",
+      "img": "icons/creatures/eyes/void-single-black-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPortableHole0",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "VqkN65eBLnvbG5Ge",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.VqkN65eBLnvbG5Ge",
+      "type": "document",
+      "name": "Brooch of Shielding",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBroochOfShiel",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "wbfvqX4VyCWB8zET",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.wbfvqX4VyCWB8zET",
+      "type": "document",
+      "name": "Ring of Resistance (Acid)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.f7cTwqsgZ2z4Untf",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9g9w5xj4Kj6hzfXj",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.9g9w5xj4Kj6hzfXj",
+      "type": "document",
+      "name": "Ring of Resistance (Cold)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.vNQAao8lsGyFZ1QK",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qKubvnFLRRTDpCZC",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.qKubvnFLRRTDpCZC",
+      "type": "document",
+      "name": "Ring of Resistance (Fire)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QeDJTrDV54LwiF0a",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "p3YURW6PwzBvk6sD",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.p3YURW6PwzBvk6sD",
+      "type": "document",
+      "name": "Ring of Resistance (Force)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qvoAN4YGb3B17zEK",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TzREXwQ2MpmmZuHw",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.TzREXwQ2MpmmZuHw",
+      "type": "document",
+      "name": "Ring of Resistance (Lightning)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nwm44FcQuOc3pXEm",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uVqh7IQPaAW9bpEE",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.uVqh7IQPaAW9bpEE",
+      "type": "document",
+      "name": "Ring of Resistance (Necrotic)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.c2tYrkxGybiVAQsh",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "t9OLammCeUsA0xt9",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.t9OLammCeUsA0xt9",
+      "type": "document",
+      "name": "Ring of Resistance (Poison)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.odXacKLM8qBBDjvi",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "cjk7sk14ia8fahaf",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.cjk7sk14ia8fahaf",
+      "type": "document",
+      "name": "Ring of Resistance (Psychic)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.N4FNNWNuSgWBvOg2",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IJZsxc6QDk9ZVr7g",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.IJZsxc6QDk9ZVr7g",
+      "type": "document",
+      "name": "Ring of Resistance (Radiant)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nW9MS6U4zBYQQFHo",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "jZHBV9IzCvmEueBw",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.jZHBV9IzCvmEueBw",
+      "type": "document",
+      "name": "Ring of Resistance (Thunder)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.oBztcELiyKQOdne6",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hH0fYHt3nQ73tZXE",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.hH0fYHt3nQ73tZXE",
+      "type": "document",
+      "name": "Wand of the War Mage, +1",
+      "img": "icons/weapons/wands/wand-gem-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qvZjvZyIPJcI4szY",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oCtTRIshNbyDcVLk",
+      "_key": "!tables.results!0Lcf1gLkL4h7XCfM.oCtTRIshNbyDcVLk",
+      "type": "document",
+      "name": "Wand of the War Mage, +2",
+      "img": "icons/weapons/wands/wand-gem-blue.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.k7aD0ifbAUqjOPe1",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

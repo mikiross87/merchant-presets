@@ -4419,22 +4419,30 @@
             "Kg1fGV9ihyO34HkF": "1d4+2",
             "2d86DjEYuJGLBgEE": "1d2-1",
             "4OYr0PdyDJyseb2X": "1d2-1",
-            "w4Jf0uy52lQ3FqyV": "1",
-            "4HUwe9PTDerwXj1m": "1d4-3",
-            "bfCajAxDOuw2qOLK": "1d4-3",
-            "oVeZDrZoJl30puH8": "1d4-3",
-            "qGRQbxNuXVqnL3kt": "1d4-3",
-            "Fs8spugbsSBDMtsU": "1d4-3",
-            "mnep2abzAmXQyAVw": "1d4-3",
-            "P0S0o9tH3ZyS9gEz": "1d4-3",
-            "uDEOYyB9ucQbURKC": "1d10-9",
-            "Zmcdk3rxRlOyMry8": "1d4-3",
-            "qbwCQk8ATfy0Jpgn": "1d4-3",
-            "1pBF0WWPmUVelXR1": "1d4-3",
-            "KBg1WMwXhzpHK0PY": "1d10-9"
+            "w4Jf0uy52lQ3FqyV": "1"
           },
           "onOpen": true,
           "every": 3,
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.MQVTisEc7MU55NpB",
+          "quantities": {
+            "QQCRhc3sbx2PGrd7": "1d4-3",
+            "fuEryjQpi887UT1L": "1d4-3",
+            "cBZoCzLzOQ34xHc2": "1d4-3",
+            "kpgzTGA7cLexPJzf": "1d4-3",
+            "PPBlcUT77B3kOcKT": "1d4-3",
+            "mPjQ7QdA3zi9MTMl": "1d4-3",
+            "azXT12AtwiEIsFQw": "1d4-3",
+            "skhrzCPbC6fLbA2w": "1d10-9",
+            "qHrwRgd86b7ym7rt": "1d4-3",
+            "IHxye4IsSsqQmaSM": "1d4-3",
+            "C9I9K4pWru2O5lnT": "1d4-3",
+            "cQkuKwAYbsVxDNt9": "1d10-9"
+          },
+          "onOpen": true,
+          "every": "3d6+7",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -4499,19 +4507,7 @@
               "Kg1fGV9ihyO34HkF": "1d4+2",
               "2d86DjEYuJGLBgEE": "1d2-1",
               "4OYr0PdyDJyseb2X": "1d2-1",
-              "w4Jf0uy52lQ3FqyV": "1",
-              "4HUwe9PTDerwXj1m": "1d4-3",
-              "bfCajAxDOuw2qOLK": "1d4-3",
-              "oVeZDrZoJl30puH8": "1d4-3",
-              "qGRQbxNuXVqnL3kt": "1d4-3",
-              "Fs8spugbsSBDMtsU": "1d4-3",
-              "mnep2abzAmXQyAVw": "1d4-3",
-              "P0S0o9tH3ZyS9gEz": "1d4-3",
-              "uDEOYyB9ucQbURKC": "1d10-9",
-              "Zmcdk3rxRlOyMry8": "1d4-3",
-              "qbwCQk8ATfy0Jpgn": "1d4-3",
-              "1pBF0WWPmUVelXR1": "1d4-3",
-              "KBg1WMwXhzpHK0PY": "1d10-9"
+              "w4Jf0uy52lQ3FqyV": "1"
             }
           }
         ],

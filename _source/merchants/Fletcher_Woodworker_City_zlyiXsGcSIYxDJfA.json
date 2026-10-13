@@ -7754,22 +7754,30 @@
             "IXgkH5uxtn7r37nW": "2d6+4",
             "9YxKcOhD9n3styek": "1d4+2",
             "hYD6UhVY4Rg9FtzN": "1d4+2",
-            "eKvTMeTkz05XdcTc": "1d4+2",
-            "OMyF1vW1bUNSnfsc": "1d4-3",
-            "n4CTC9c5wV60Of5g": "1d4-3",
-            "wyy9Hl3iYYJpJCN1": "1d4-3",
-            "ay1ou4XMIqwGzkJ2": "1d4-3",
-            "we71Ol5hZfHWOt4h": "1d4-3",
-            "NfaN1mbBviF3parz": "1d4-3",
-            "jLykIRM4cGn1551P": "1d4-3",
-            "FieFIGqyNOgmSR5r": "1d10-9",
-            "4KdQMTd0Hqri8nqp": "1d10-9",
-            "COUslav4dMoPhbGK": "1d10-9",
-            "ztZHbzbMsefEF6CZ": "1d10-9",
-            "xFuaRPLJOyTwEa3g": "1d10-9"
+            "eKvTMeTkz05XdcTc": "1d4+2"
           },
           "onOpen": true,
           "every": 5,
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.LsaHdXf8vS56PkT2",
+          "quantities": {
+            "ylK0GhL25VTigINw": "1d4-3",
+            "opdYiu9GsqCfZBcY": "1d4-3",
+            "jdQCjdUrIbK1tpXD": "1d4-3",
+            "emiGwAU9dqWQtOv5": "1d4-3",
+            "M9MqJMgIkk7XEVZz": "1d4-3",
+            "Dq1qSrJEch7JlMpB": "1d4-3",
+            "QEPXFK4KmBTr9DfZ": "1d4-3",
+            "11dakaggCWL8h8TH": "1d10-9",
+            "VAwlzUR9iSL7wOTn": "1d10-9",
+            "JDSGzDW7hNQSjzT3": "1d10-9",
+            "iscBQPGcGZ5C5nLg": "1d10-9",
+            "SaHYgTpwFpkomCtZ": "1d10-9"
+          },
+          "onOpen": true,
+          "every": "3d6+7",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -7848,19 +7856,7 @@
               "IXgkH5uxtn7r37nW": "2d6+4",
               "9YxKcOhD9n3styek": "1d4+2",
               "hYD6UhVY4Rg9FtzN": "1d4+2",
-              "eKvTMeTkz05XdcTc": "1d4+2",
-              "OMyF1vW1bUNSnfsc": "1d4-3",
-              "n4CTC9c5wV60Of5g": "1d4-3",
-              "wyy9Hl3iYYJpJCN1": "1d4-3",
-              "ay1ou4XMIqwGzkJ2": "1d4-3",
-              "we71Ol5hZfHWOt4h": "1d4-3",
-              "NfaN1mbBviF3parz": "1d4-3",
-              "jLykIRM4cGn1551P": "1d4-3",
-              "FieFIGqyNOgmSR5r": "1d10-9",
-              "4KdQMTd0Hqri8nqp": "1d10-9",
-              "COUslav4dMoPhbGK": "1d10-9",
-              "ztZHbzbMsefEF6CZ": "1d10-9",
-              "xFuaRPLJOyTwEa3g": "1d10-9"
+              "eKvTMeTkz05XdcTc": "1d4+2"
             }
           }
         ],
