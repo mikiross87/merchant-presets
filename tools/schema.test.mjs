@@ -356,7 +356,8 @@ test("a shop's magic clock is null by default, and a 2.x shop with none complete
 test("a magic clock has restock's shape, and must name its table (#234)", () => {
   assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: magicEntry }), { ok: true, errors: [] });
   assert.deepEqual(shopFrom({ version: SHOP_VERSION, magic: magicEntry }).magic, magicEntry);
-  const { table, ...untabled } = magicEntry;
+  const untabled = { ...magicEntry };
+  delete untabled.table;
   assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: untabled }).errors, ["magic.table: missing"]);
   assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: { ...magicEntry, table: null } }).errors,
     ["magic.table: must be a non-empty string"]);
