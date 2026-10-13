@@ -717,6 +717,7 @@ test("a good is New while the restock that brought it back is fresh, and only on
   assert.equal(isNewGood(good(at), "shelfA", 10 * DAY + H(19, 1), SMITH_HOURS, DAYS), false, "cleared at closing");
   assert.equal(isNewGood(good(at, true), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "drawn before shelves had keys");
   assert.equal(isNewGood(good(at, "shelfB"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false, "dragged in from another shop");
+  assert.equal(isNewGood(good(at, "shelfA/magic"), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), true, "a magic find (#234)");
   assert.equal(isNewGood(good(undefined), "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
   assert.equal(isNewGood({ flags: {} }, "shelfA", 10 * DAY + H(12), SMITH_HOURS, DAYS), false);
 });

@@ -131,13 +131,14 @@ const stockTables = new Map(load("stock").filter(d => d._key.startsWith("!tables
 test("each magic line is a rare find: 1dN-(N-1) by its rarity and the shop's size (#233)", () => {
   const wrong = [];
   for (const m of merchants) {
-    const { table, quantities } = m.flags["merchant-presets"].shop.restock;
-    const results = stockTables.get(table).results;
+    // On whichever clock's table holds it: the magic one since #234.
+    const clocks = [m.flags["merchant-presets"].shop.restock, m.flags["merchant-presets"].shop.magic].filter(Boolean);
     for (const i of stock(m).filter(isMagic)) {
       if (STAPLE.test(i.name)) continue;
       const n = ODDS[i.system.rarity]?.[tierOf(m.name)];
-      const r = results.find(r => r.documentUuid === i._stats.compendiumSource);
-      const formula = quantities[r?._id];
+      const clock = clocks.find(c => stockTables.get(c.table).results.some(r => r.documentUuid === i._stats.compendiumSource));
+      const r = clock && stockTables.get(clock.table).results.find(r => r.documentUuid === i._stats.compendiumSource);
+      const formula = clock?.quantities[r?._id];
       if (!n || formula !== `1d${n}-${n - 1}`) wrong.push(`${m.name}: ${i.name} (${i.system.rarity}) ${formula}`);
     }
   }
@@ -161,4 +162,41 @@ test("Adamantine and Mithral Armor come on four bases each, not eight (#233)", (
     assert.deepEqual(baked.filter(g => g.name.startsWith(`${metal} `)).map(g => g.name).sort(),
       ["Breastplate", "Chain Mail", "Chain Shirt", "Plate Armor"].map(b => `${metal} ${b}`), metal);
   }
+});
+
+/* ------------------------------------------------------------ the magic clock (#234) */
+
+const tables = new Map(load("stock").filter(d => d._key.startsWith("!tables!")).map(t => [`Compendium.merchant-presets.stock.RollTable.${t._id}`, t]));
+const plain = s => s.normalize("NFKD").replace(/’/g, "'").toLowerCase();
+/** A shop's Magic Items lines at one size, by name, as data/recipes.json lists them. */
+const magicLines = (shop, tier) => new Set(shop.stock.filter(l => l.cat === "Magic Items" && l.t.includes(tier[0].toLowerCase())).map(l => plain(l.n)));
+const MAGIC_EVERY = { City: "3d6+7", Town: "3d6+14", Village: "(3d6+14)*2" };
+
+test("each shop's Magic Items lines are on a magic table of their own, and on no other (#234)", () => {
+  let shops = 0;
+  for (const shop of recipes.shops) {
+    for (const tier of ["Village", "Town", "City"]) {
+      const merchant = merchants.find(m => m.name === `${shop.name} (${tier})`);
+      if (!merchant) continue;
+      const config = merchant.flags["merchant-presets"].shop;
+      const wanted = magicLines(shop, tier);
+      const everyday = tables.get(config.restock.table);
+      assert.deepEqual(everyday.results.filter(r => wanted.has(plain(r.name))).map(r => r.name), [], `${merchant.name}: magic on the everyday table`);
+      if (!wanted.size) {
+        assert.equal(config.magic, null, `${merchant.name} has no magic lines, so no magic clock`);
+        continue;
+      }
+      shops++;
+      const magic = tables.get(config.magic.table);
+      assert.ok(magic, `${merchant.name}: its magic table ships`);
+      assert.equal(magic.name, `${shop.name} · Magic (${tier})`);
+      assert.ok(magic.results.length > 0 && magic.results.every(r => wanted.has(plain(r.name))), `${merchant.name}: only magic lines`);
+      assert.equal(magic.formula, `1d${magic.results.length}`);
+      assert.deepEqual(Object.keys(config.magic.quantities).sort(), magic.results.map(r => r._id).sort());
+      assert.ok(Object.values(config.magic.quantities).every(f => /^1d(\d+)-\d+$/.test(f)), `${merchant.name}: rare-find odds`);
+      assert.deepEqual({ ...config.magic, quantities: undefined, table: undefined },
+        { quantities: undefined, table: undefined, onOpen: true, every: MAGIC_EVERY[tier], mode: "reroll" });
+    }
+  }
+  assert.ok(shops > 10, `${shops} shops with a magic clock`);
 });

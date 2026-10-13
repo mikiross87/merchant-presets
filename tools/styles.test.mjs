@@ -112,3 +112,15 @@ test("the header's clamped description shows its whole text on hover (#231)", ()
   assert.ok(description);
   assert.match(description, /\bdata-tooltip="\{\{header\.descriptionText\}\}"/);
 });
+
+test("a good's name gives way to its New badge and price, on the shelf and in Players see (#234 live run)", () => {
+  // A long magic name ("Adamantine Chain Mail") ran its New badge into the price in Players see:
+  // the name line there had no cap, so it pushed past its column. Both rows cut the name short.
+  const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => ({ sels: split(sel.trim()), body }));
+  const ruled = (selector, declaration) => rules.some(r => r.sels.includes(selector) && declaration.test(r.body));
+  for (const row of [".mp-row", ".mp-preview-text"]) {
+    assert.ok(ruled(`.shop-sheet ${row} .mp-name-line`, /max-width:\s*100%/), `${row}: the name line stays in its column`);
+    assert.ok(ruled(`.shop-sheet ${row} .mp-name-line > span:first-child`, /text-overflow:\s*ellipsis/), `${row}: the name is cut short`);
+  }
+});

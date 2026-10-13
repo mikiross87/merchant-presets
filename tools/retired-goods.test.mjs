@@ -13,7 +13,7 @@ const tick = async (n = 5) => { for (let i = 0; i < n; i++) await new Promise(re
 
 /** A Stable (Town) as a 2.3.0 world holds it: its own world stock table, with the coach ride and
  *  the toll as lines and on the shelf, and a GM's dice on the coach ride's line. */
-async function upgraded({ arrivesLater = false } = {}) {
+async function upgraded({ arrivesLater = false, onMagic = false } = {}) {
   const world = createWorld();
   const shop = world.merchant("Stable_Town_");
   const packed = world.compendium.get(shop.flags["merchant-presets"].shop.restock.table);
@@ -26,8 +26,14 @@ async function upgraded({ arrivesLater = false } = {}) {
   };
   world.tables.push(table);
   const flags = shop.flags["merchant-presets"];
-  flags.shop.restock.table = table.uuid;
-  flags.shop.restock.quantities = { coachLine000001: "2d4" };
+  if (onMagic) {
+    // A GM's own magic table (#234) holding the old lines; the everyday clock stays on the pack's.
+    table.results = old.map(r => ({ ...r }));
+    flags.shop.magic = { table: table.uuid, quantities: { coachLine000001: "2d4" }, default: null, onOpen: true, every: 10, mode: "reroll" };
+  } else {
+    flags.shop.restock.table = table.uuid;
+    flags.shop.restock.quantities = { coachLine000001: "2d4" };
+  }
   flags.shelf = "stableShelf0001";
   for (const [i, line] of old.entries()) {
     shop.items.push(Object.defineProperty({ _id: `oldGood0000000${i}`, id: `oldGood0000000${i}`, name: line.name, type: "loot",
@@ -112,4 +118,10 @@ test("a 2.3.0 Stable that arrives after the world loaded lets go of them as it a
   assert.deepEqual(table.results.filter(r => gone(r.name)).map(r => r.name), []);
   assert.deepEqual(shop.items.filter(i => gone(i.name)).map(i => i.name), []);
   assert.equal(shop.flags["merchant-presets"].shop.restock.quantities.coachLine000001, undefined);
+});
+
+test("a magic table of the GM's own lets go of them too: off the table and its line dice (#234 review)", async () => {
+  const { shop, table } = await upgraded({ onMagic: true });
+  assert.deepEqual(table.results.map(r => r.name), []);
+  assert.equal(shop.flags["merchant-presets"].shop.magic.quantities.coachLine000001, undefined);
 });

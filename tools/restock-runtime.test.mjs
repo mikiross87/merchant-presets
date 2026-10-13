@@ -563,3 +563,122 @@ test("a top-up that brought nothing back isn't fresh stock (#152 review)", async
   await clock(at(3, 8));
   assert.equal(shop.flags["merchant-presets"].restockedAt ?? null, null);
 });
+
+/* ------------------------------------------------------------ the magic clock (#234) */
+
+const MAGIC_LINES = ["Lamp", "Lantern, Hooded"];
+
+/** The General Store with two of its lines moved to a magic table of their own, on a 10-day clock. */
+async function setUpMagic({ every = 10 } = {}) {
+  const ctx = await setUp();
+  giveMagicClock(ctx, every);
+  return ctx;
+}
+
+/** What Reset to preset does to a shop the preset now gives a magic clock: two lines move to its own table. */
+function giveMagicClock({ world, shop }, every = 10) {
+  const config = shop.flags["merchant-presets"].shop;
+  const everyday = world.compendium.get(config.restock.table) ?? world.tables.find(t => t.uuid === config.restock.table);
+  const uuid = "Compendium.merchant-presets.stock.RollTable.magicTest00001";
+  world.compendium.set(uuid, { uuid, name: "General Store · Magic (Town)",
+    results: everyday.results.filter(r => MAGIC_LINES.includes(r.name)) });
+  everyday.results = everyday.results.filter(r => !MAGIC_LINES.includes(r.name));
+  config.magic = { table: uuid, quantities: {}, default: null, onOpen: true, every, mode: "reroll" };
+}
+
+const stampOf = item => item.flags?.["merchant-presets"]?.drawn;
+const ids = (shop, names) => shop.items.filter(i => names.includes(i.name)).map(i => i._id).sort();
+const everydayIds = shop => shop.items.filter(i => !MAGIC_LINES.includes(i.name) && stampOf(i)).map(i => i._id).sort();
+
+test("the first tick adopts each table's goods with its own clock's key, and schedules both clocks (#234)", async () => {
+  const { shop, clock } = await setUpMagic();
+  await clock(at(0, 1));
+  const flags = shop.flags["merchant-presets"];
+  assert.ok(byName(shop, "Bell").every(i => stampOf(i) === flags.shelf));
+  assert.ok(MAGIC_LINES.flatMap(n => byName(shop, n)).every(i => stampOf(i) === `${flags.shelf}/magic`));
+  assert.deepEqual(flags.schedule, { lastRestock: at(0, 1), dueAt: at(3), every: 3 });
+  assert.deepEqual(flags.magicSchedule, { lastRestock: at(0, 1), dueAt: at(10), every: 10 });
+});
+
+test("an everyday restock leaves the magic shelf, and the magic clock keeps its own day (#234)", async () => {
+  const { shop, clock } = await setUpMagic();
+  await clock(at(0, 1));
+  const magic = ids(shop, MAGIC_LINES);
+  await clock(at(3, 8));
+  assert.deepEqual(ids(shop, MAGIC_LINES), magic, "the magic finds are still there");
+  assert.equal(shop.flags["merchant-presets"].lastRestockAt, at(3, 7));
+  assert.equal(shop.flags["merchant-presets"].magicLastRestockAt ?? null, null);
+
+  await clock(at(10, 8));
+  assert.notDeepEqual(ids(shop, MAGIC_LINES), magic, "the magic shelf was redrawn");
+  assert.equal(shop.flags["merchant-presets"].magicLastRestockAt, at(10, 7));
+  assert.equal(shop.flags["merchant-presets"].magicSchedule.dueAt, at(20));
+});
+
+test("a magic restock on its own leaves the till alone (#234)", async () => {
+  const { shop, clock } = await setUpMagic({ every: 2 });
+  shop.flags["merchant-presets"].shop.restock.every = 30;   // only the magic clock falls due
+  await clock(at(0, 1));
+  shop.system.currency.gp = 5;
+  const everyday = everydayIds(shop);
+  await clock(at(2, 8));
+  assert.equal(shop.system.currency.gp, 5);
+  assert.deepEqual(everydayIds(shop), everyday);
+  assert.equal(shop.flags["merchant-presets"].magicLastRestockAt, at(2, 7));
+});
+
+test("both clocks due in one tick restock once each, and each is scheduled again from its own day (#234)", async () => {
+  const { shop, clock } = await setUpMagic({ every: 3 });
+  await clock(at(0, 1));
+  const magic = ids(shop, MAGIC_LINES);
+  const everyday = everydayIds(shop);
+  await clock(at(3, 8));
+  assert.notDeepEqual(ids(shop, MAGIC_LINES), magic);
+  assert.notDeepEqual(everydayIds(shop), everyday);
+  assert.equal(byName(shop, "Lamp").length <= 1 && byName(shop, "Bell").length <= 1, true, "no second shelf");
+  assert.equal(shop.flags["merchant-presets"].schedule.dueAt, at(6));
+  assert.equal(shop.flags["merchant-presets"].magicSchedule.dueAt, at(6));
+});
+
+test("Restock now names its clock: the magic one redraws only the magic shelf and moves only its own due day (#234)", async () => {
+  const { shop, clock } = await setUpMagic();
+  await clock(at(0, 1));
+  const everyday = everydayIds(shop);
+  const magic = ids(shop, MAGIC_LINES);
+  globalThis.game.time.worldTime = at(1, 12);
+  const answer = await globalThis.game.modules.get("merchant-presets").api.requestRestock(shop, { clock: "magic" });
+  assert.equal(answer.status, "restocked");
+  assert.notDeepEqual(ids(shop, MAGIC_LINES), magic);
+  assert.deepEqual(everydayIds(shop), everyday);
+  assert.equal(shop.flags["merchant-presets"].magicSchedule.dueAt, at(11));
+  assert.equal(shop.flags["merchant-presets"].schedule.dueAt, at(3), "the everyday clock keeps its day");
+  await globalThis.game.modules.get("merchant-presets").api.requestRestock(shop);
+  assert.notDeepEqual(everydayIds(shop), everyday, "the everyday clock by default");
+});
+
+test("setting a shop up again clears the magic clock's state too (#234)", async () => {
+  const { world, shop, clock } = await setUpMagic();
+  await clock(at(0, 1));
+  shop.flags["merchant-presets"].magicLastRestockAt = at(0, 1);
+  const city = "Compendium.merchant-presets.merchants.Actor.cityGeneralStore";
+  world.compendium.set(city, { uuid: city, toObject: () => source("merchants", "General_Store_City_") });
+  await globalThis.game.modules.get("merchant-presets").api.setUpShop(shop, city, []);
+  assert.equal(shop.flags["merchant-presets"].magicSchedule ?? null, null);
+  assert.equal(shop.flags["merchant-presets"].magicLastRestockAt ?? null, null);
+});
+
+test("a shop given a magic clock after its shelf was adopted moves its magic goods onto the magic shelf (#234 review)", async () => {
+  const ctx = await setUp();
+  const { shop, clock } = ctx;
+  await clock(at(0, 1));                         // adopted with one table: the lamps carry the shelf key
+  const shelf = shop.flags["merchant-presets"].shelf;
+  giveMagicClock(ctx);                           // Reset to preset
+  const lamps = ids(shop, MAGIC_LINES);
+  await clock(at(1, 1));                         // the magic clock's first tick
+  assert.ok(MAGIC_LINES.flatMap(n => byName(shop, n)).every(i => stampOf(i) === `${shelf}/magic`), "now the magic clock's");
+  assert.deepEqual(ids(shop, MAGIC_LINES), lamps, "kept, not deleted");
+  await clock(at(3, 8));                         // the everyday restock
+  assert.deepEqual(ids(shop, MAGIC_LINES), lamps, "the everyday reroll leaves them");
+  await globalThis.game.modules.get("merchant-presets").api.requestRestock(shop, { clock: "magic" });
+  assert.ok(MAGIC_LINES.every(n => byName(shop, n).length <= 1), "no second copy beside the first");
+});

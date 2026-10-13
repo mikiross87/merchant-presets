@@ -6994,11 +6994,19 @@
             "nO5k4yKFvv7Km3nT": "1",
             "AbDKLdYccKwj4juN": "1",
             "dn7KkL89iX7FpBcZ": "1",
-            "wzYZ924oxPKQVIPn": "1",
-            "p2l0nOmml1JZC5nL": "1d4-3"
+            "wzYZ924oxPKQVIPn": "1"
           },
           "onOpen": true,
           "every": 14,
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.FG3nqNLTrm3bhTEA",
+          "quantities": {
+            "edzLsUFugNhPjHMO": "1d4-3"
+          },
+          "onOpen": true,
+          "every": "(3d6+14)*2",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -7090,8 +7098,7 @@
               "nO5k4yKFvv7Km3nT": "1",
               "AbDKLdYccKwj4juN": "1",
               "dn7KkL89iX7FpBcZ": "1",
-              "wzYZ924oxPKQVIPn": "1",
-              "p2l0nOmml1JZC5nL": "1d4-3"
+              "wzYZ924oxPKQVIPn": "1"
             }
           }
         ],

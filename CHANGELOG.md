@@ -13,6 +13,14 @@ than for the code. Reference the issue or PR it closes.
 
 ### Changed
 
+- Magic items restock on their own slower clock: every 3d6+7 days in a
+  city and 3d6+14 in a town (twice that in a village), rolled again after
+  each restock. Everyday goods keep their usual schedule, so a magic find
+  stays on the shelf until someone buys it or the magic clock comes round.
+  Settings → Restock has an Everyday | Magic switch, and each side has its
+  own table, schedule and Restock now. Only the everyday restock refills
+  the till. Shops already in your world keep one stock table; drag a shop
+  in again, or use Reset to preset, to give it the magic clock. (#234)
 - Shops describe themselves with what they sell at their size, such as
   "Sells Adventuring Gear, Armor, Poisons, Tools and Weapons." The temple,
   arcane and druidic stores add which spell lists they cast from and their

@@ -5,7 +5,7 @@
   "img": "icons/environment/settlement/tavern.webp",
   "folder": "oU4lXLMdZn45shCQ",
   "description": "<p>Sells Food & Drink, Lodging, Magic Items and Meals.</p><p><em>Stock list for a city.</em></p>",
-  "formula": "1d19",
+  "formula": "1d18",
   "replacement": true,
   "displayRoll": true,
   "sort": 0,
@@ -297,22 +297,6 @@
       "range": [
         18,
         18
-      ],
-      "drawn": false,
-      "description": "",
-      "flags": {}
-    },
-    {
-      "_id": "1wMak5mPRXmkYS8B",
-      "_key": "!tables.results!okPjfGrrREHWJrrQ.1wMak5mPRXmkYS8B",
-      "type": "document",
-      "name": "Bead of Nourishment",
-      "img": "icons/equipment/neck/necklace-simple-mushroom-red.webp",
-      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBeadOfNourish",
-      "weight": 1,
-      "range": [
-        19,
-        19
       ],
       "drawn": false,
       "description": "",

@@ -14237,24 +14237,32 @@
             "aPE2MxL7UQpy4teJ": "1d4+2",
             "x5unsDUi6AmZf55P": "2d6+4",
             "jwrOKTTE6TlWidJr": "2d6+4",
-            "n5AGwnRcUTnnZpB3": "2d6+4",
-            "Xe1jjINpZG39sabg": "1d10-9",
-            "cr1C9IPY0mMGdDcT": "1d4-3",
-            "wAEcRT6qO3mCPmhH": "1d4-3",
-            "jz8lbUM7YPsKYhxR": "1d4-3",
-            "oDJ7EerYO3jATuWR": "1d4-3",
-            "7BEB9EqPEdxdwIfx": "1d10-9",
-            "iJX0MIJLCmmMUbpO": "1d4-3",
-            "tIZfm3Rw1hGyc1JO": "1d4-3",
-            "HzALlOU8YkJADr3m": "1d4-3",
-            "K6iTDmhLpEYKreqg": "1d4-3",
-            "RPK2Ry4VOvkwI4MD": "1d4-3",
-            "xe4Ks8jmCOXRO3fi": "1d4-3",
-            "ZLiFd8wMys03Knr1": "1d10-9",
-            "UOMK5t7jQCuMmXwa": "1d10-9"
+            "n5AGwnRcUTnnZpB3": "2d6+4"
           },
           "onOpen": true,
           "every": "1d4+2",
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.Bu1h6wfMiEGFAyRz",
+          "quantities": {
+            "EEfi1wfqeNwsbssh": "1d10-9",
+            "IXsFqF9omWzSqWP7": "1d4-3",
+            "4LYYmNIXOVIwudvW": "1d4-3",
+            "NPyiBFxHBgYK1DvC": "1d4-3",
+            "ikTlNZIEBknexuFo": "1d4-3",
+            "kWvKfaecQSf4gzuy": "1d10-9",
+            "llABDBZUf8AIGdFR": "1d4-3",
+            "0ZVK39DM6P8KsEC1": "1d4-3",
+            "5jMo4pE390DfSlDO": "1d4-3",
+            "W4rm3t9CXV4LCUyF": "1d4-3",
+            "TWnWHMnwngOLByoU": "1d4-3",
+            "3iMap8DAdPESjZMg": "1d4-3",
+            "Gqgrl1oyIA2HEg1T": "1d10-9",
+            "nSZTdXHJkrco2bbi": "1d10-9"
+          },
+          "onOpen": true,
+          "every": "3d6+7",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -14355,21 +14363,7 @@
               "aPE2MxL7UQpy4teJ": "1d4+2",
               "x5unsDUi6AmZf55P": "2d6+4",
               "jwrOKTTE6TlWidJr": "2d6+4",
-              "n5AGwnRcUTnnZpB3": "2d6+4",
-              "Xe1jjINpZG39sabg": "1d10-9",
-              "cr1C9IPY0mMGdDcT": "1d4-3",
-              "wAEcRT6qO3mCPmhH": "1d4-3",
-              "jz8lbUM7YPsKYhxR": "1d4-3",
-              "oDJ7EerYO3jATuWR": "1d4-3",
-              "7BEB9EqPEdxdwIfx": "1d10-9",
-              "iJX0MIJLCmmMUbpO": "1d4-3",
-              "tIZfm3Rw1hGyc1JO": "1d4-3",
-              "HzALlOU8YkJADr3m": "1d4-3",
-              "K6iTDmhLpEYKreqg": "1d4-3",
-              "RPK2Ry4VOvkwI4MD": "1d4-3",
-              "xe4Ks8jmCOXRO3fi": "1d4-3",
-              "ZLiFd8wMys03Knr1": "1d10-9",
-              "UOMK5t7jQCuMmXwa": "1d10-9"
+              "n5AGwnRcUTnnZpB3": "2d6+4"
             }
           }
         ],

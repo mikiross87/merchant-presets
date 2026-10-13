@@ -155,6 +155,8 @@ test("only drawn, finite, physical goods drain: never gear, services, hand-added
   assert.equal(isDrainable(good("a", "Longsword", 5, { stock: { infinite: true } }), ctx), false);
   assert.equal(isDrainable(good("a", "Longsword", 5), { ...ctx, infiniteStock: true }), false, "unlimited world");
   assert.equal(isDrainable(good("a", "Longsword", 5, { stock: { infinite: false } }), { ...ctx, infiniteStock: true }), true, "limited line in an unlimited world");
+  assert.equal(isDrainable(good("a", "Longsword +1", 1, { drawn: "shelf/magic" }), ctx), true, "a magic find sells like any drawn good (#234)");
+  assert.equal(isDrainable(good("a", "Longsword +1", 1, { drawn: "other/magic" }), ctx), false, "another shop's find");
 });
 
 const shelf = [good("a", "Longsword", 40), good("b", "Dagger", 40, {}), good("c", "Shovel", 3, { drawn: undefined })];

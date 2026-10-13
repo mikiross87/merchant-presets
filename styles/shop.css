@@ -1018,6 +1018,8 @@
 
 .shop-sheet .mp-rate-row { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-rate-label { flex: none; width: 80px; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
+/* A label longer than the column: the schedule's "Days, as a dice formula" (#234, design wtrSi). */
+.shop-sheet .mp-rate-label.is-wide { width: auto; }
 .shop-sheet .mp-field {
   flex: none;
   display: flex;
@@ -1196,6 +1198,9 @@
 .shop-sheet .mp-preview-icon { flex: none; width: 32px; height: 32px; border: none; border-radius: 4px; outline: 1px solid var(--mp-gold); object-fit: cover; }
 .shop-sheet .mp-preview-text { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .shop-sheet .mp-name-line { display: flex; align-items: center; gap: 6px; font: 500 13px/15px Roboto, system-ui, sans-serif; white-space: nowrap; color: var(--mp-text); }
+/* A long name gives way to its New badge and the price, as on the shelf (#234: "Adamantine Chain Mail"). */
+.shop-sheet .mp-preview-text .mp-name-line { max-width: 100%; }
+.shop-sheet .mp-preview-text .mp-name-line > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .shop-sheet .mp-price-block { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .shop-sheet .mp-list-price { font: 400 11px/13px "Roboto Condensed", system-ui, sans-serif; white-space: nowrap; color: var(--mp-muted); }
 .shop-sheet .mp-price-line { display: flex; align-items: center; gap: 6px; }
@@ -1240,7 +1245,6 @@
 .shop-sheet .settings-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 1rem; font-size: 0.85rem; }
 .shop-sheet .settings-checks label, .shop-sheet .settings-line { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
 
-.shop-sheet .settings-formula { width: 8rem; }
 
 /* Customers (#226, design GVLI3; off, E6jfnh). */
 .shop-sheet .mp-world-value { display: flex; align-items: center; gap: 6px; font: 400 13px/15px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-muted); }
@@ -1345,7 +1349,6 @@
 .shop-sheet .mp-quantity-rows > .is-alt { background: var(--mp-inset); }
 /* A formula that doesn't roll (#229 review, design U9Jt8Z): outlined, and why under it. */
 .shop-sheet .mp-field.is-refused, .shop-sheet .mp-field.is-refused:focus-within { outline-color: var(--mp-red); }
-.shop-sheet .settings-formula.is-refused { outline: 1px solid var(--mp-red); }
 .shop-sheet .mp-refused { margin: 0; font: 400 12px/14px "Roboto Condensed", system-ui, sans-serif; color: var(--mp-danger-ink); }
 .shop-sheet .mp-refused.is-new-lines { padding-left: 90px; }
 .shop-sheet .mp-refused.is-line { padding: 0 10px 5px; }
@@ -1394,6 +1397,8 @@
   cursor: pointer;
 }
 .shop-sheet .mp-pill.active { background: var(--mp-accent); outline-color: var(--mp-accent); font-weight: 700; color: #ffffff; }
+/* Everyday | Magic (#234, design wtrSi): the schedule's pills, flush with the section. */
+.shop-sheet .mp-clock-switch { align-self: flex-start; padding-left: 0; }
 .shop-sheet .mp-schedule > .mp-hint { align-self: stretch; }
 .shop-sheet .mp-how { align-self: flex-start; font: 500 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-text); }
 .shop-sheet .mp-option {

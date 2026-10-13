@@ -1,0 +1,130 @@
+{
+  "_id": "jQ5gywPiwUSyXHLg",
+  "_key": "!tables!jQ5gywPiwUSyXHLg",
+  "name": "Fletcher & Woodworker · Magic (Town)",
+  "img": "icons/environment/settlement/lumbermill.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Ammunition, Magic Items, Tools and Weapons.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d7",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "IBbb9pihpIjL5t6n",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.IBbb9pihpIjL5t6n",
+      "type": "document",
+      "name": "Bracers of Archery",
+      "img": "icons/equipment/wrist/bracer-banded-leather.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBracersOfArch",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZMtxdNM1ItBZSrht",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.ZMtxdNM1ItBZSrht",
+      "type": "document",
+      "name": "Efficient Quiver",
+      "img": "icons/containers/ammunition/arrows-quiver-brown-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgQuiverOfEhlon",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PYx1nx1m4HT29b25",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.PYx1nx1m4HT29b25",
+      "type": "document",
+      "name": "Longbow +1",
+      "img": "icons/weapons/bows/longbow-recurve-leather-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.3BOB7HgPWrlHB4kD",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "TC5CXowQ8KRuyWMJ",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.TC5CXowQ8KRuyWMJ",
+      "type": "document",
+      "name": "Shortbow +1",
+      "img": "icons/weapons/bows/shortbow-leather.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.eJvDTFsYLMaUPJcX",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iiBc1F52UvaiTl0x",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.iiBc1F52UvaiTl0x",
+      "type": "document",
+      "name": "Light Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.cFTwsiqeJ2qYlul6",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3frZ9MOfVDQGDH3N",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.3frZ9MOfVDQGDH3N",
+      "type": "document",
+      "name": "Heavy Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-loaded-black.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.CriagYKuEAzBwRSn",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "shenuAtL6YyJ5TpV",
+      "_key": "!tables.results!jQ5gywPiwUSyXHLg.shenuAtL6YyJ5TpV",
+      "type": "document",
+      "name": "Hand Crossbow +1",
+      "img": "icons/weapons/crossbows/crossbow-slotted.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QGV06ulqiSpksSuS",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, quantityFormula, restockStockFlags, rolledCount,
+  adoptDrawn, drawnByShop, dropsNewMark, dueRestock, isDrawn, magicKey, initialSchedule, intervalOf, isOpen, lineMemory, nextDue, nextOpen, planRestock, quantityFormula, restockStockFlags, rolledCount,
   scheduleNext
 } from "../scripts/schedule.mjs";
 import { SHOP_VERSION } from "../scripts/schema.mjs";
@@ -788,4 +788,70 @@ test("a container copy doesn't carry a rolled record from the good it was drawn 
   const backpack = { ...draws[2], data: { ...draws[2].data, flags: { "merchant-presets": { rolled: 9 } } } };
   const plan = planRestock(shop, [], [backpack], context);
   for (const b of plan.creates) assert.equal("rolled" in b.flags["merchant-presets"], false);
+});
+
+/* ------------------------------------------------------------ the magic clock (#234) */
+
+const magicTable = "Compendium.merchant-presets.stock.RollTable.magic";
+const twoClockShop = rawShop({ restock: { mode: "reroll", every: 7 },
+  magic: { table: magicTable, quantities: {}, default: null, onOpen: true, every: "3d6+14", mode: "reroll" } });
+const swordDraw = { name: "Longsword +1", quantity: 1, data: { type: "weapon", name: "Longsword +1", system: { rarity: "uncommon" }, flags: {} } };
+const stamped = (id, name, by, quantity = 1) => ({ _id: id, name, type: "weapon", system: { quantity }, flags: { "merchant-presets": { drawn: by } } });
+
+test("the magic key is the shelf key's own, and a shop's goods are drawn by either (#234)", () => {
+  assert.equal(magicKey("gs"), "gs/magic");
+  assert.equal(drawnByShop(stamped("a", "Arrows", "gs"), "gs"), true);
+  assert.equal(drawnByShop(stamped("b", "Longsword +1", "gs/magic"), "gs"), true);
+  assert.equal(drawnByShop(stamped("c", "Bell", true), "gs"), true, "drawn before shelves had keys");
+  assert.equal(drawnByShop(stamped("d", "Bell", "pawn/magic"), "gs"), false, "another shop's find");
+});
+
+test("a legacy drawn: true belongs to the everyday shelf, never the magic one (#234)", () => {
+  assert.equal(isDrawn(stamped("c", "Bell", true), "gs"), true);
+  assert.equal(isDrawn(stamped("c", "Bell", true), "gs/magic"), false);
+});
+
+test("a magic reroll replaces only the magic shelf, and an everyday reroll leaves it alone (#234)", () => {
+  const items = [stamped("e1", "Arrows", "gs", 40), stamped("e2", "Bell", true), stamped("m1", "Longsword +1", "gs/magic"),
+    stamped("m2", "Shield +1", "gs/magic")];
+  const magic = planRestock(twoClockShop, items, [swordDraw], { ...context, drawnBy: "gs/magic", clock: "magic" });
+  assert.deepEqual(magic.deletes, ["m1", "m2"]);
+  assert.deepEqual(magic.creates.map(c => [c.name, c.flags["merchant-presets"].drawn]), [["Longsword +1", "gs/magic"]]);
+  const everyday = planRestock(twoClockShop, items, [{ ...draws[0], quantity: 10 }], { ...context, drawnBy: "gs" });
+  assert.deepEqual(everyday.deletes, ["e1", "e2"]);
+});
+
+test("the magic clock never touches the till (#234)", () => {
+  const magic = planRestock(twoClockShop, [], [swordDraw], { ...context, drawnBy: "gs/magic", clock: "magic" });
+  assert.equal(magic.currency, null);
+  assert.equal(planRestock(twoClockShop, [], [swordDraw], { ...context, drawnBy: "gs" }).currency, 250, "the everyday one still does");
+});
+
+test("the magic clock follows its own mode (#234)", () => {
+  const topupMagic = rawShop({ restock: { mode: "reroll" }, magic: { ...twoClockShop.magic, mode: "topup" } });
+  const items = [stamped("m1", "Longsword +1", "gs/magic")];
+  const plan = planRestock(topupMagic, items, [swordDraw], { ...context, drawnBy: "gs/magic", clock: "magic" });
+  assert.deepEqual([plan.deletes, plan.creates, plan.updates], [[], [], []], "still in stock: left alone");
+});
+
+test("a shop with no magic clock plans nothing for it, and never falls due (#234)", () => {
+  const plan = planRestock(weeklyShop, [stamped("e1", "Arrows", "gs")], [swordDraw], { ...context, drawnBy: "gs/magic", clock: "magic" });
+  assert.deepEqual(plan, { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false });
+  assert.equal(dueRestock(weeklyShop, { lastRestock: at(0), dueAt: at(1) }, at(0), at(3, 8), calendar, "magic").due, false);
+});
+
+test("dueRestock reads the clock it's given (#234)", () => {
+  const state = { lastRestock: at(0), dueAt: at(20) };
+  const shop = rawShop({ restock: { every: 7 }, magic: { ...twoClockShop.magic } });
+  assert.deepEqual(dueRestock(shop, state, at(20, 6), at(20, 8), calendar, "magic"), { due: true, at: at(20, 7), nextEvery: "3d6+14" });
+  assert.equal(dueRestock(shop, state, at(20, 6), at(20, 8), calendar).nextEvery, 7, "everyday by default");
+  const off = rawShop({ magic: { ...twoClockShop.magic, onOpen: false } });
+  assert.equal(dueRestock(off, state, at(20, 6), at(20, 8), calendar, "magic").due, false);
+});
+
+test("adoption stamps each table's lines with its own clock's key (#234)", () => {
+  const items = [{ _id: "a", name: "Arrows", type: "consumable", system: {}, flags: {} },
+    { _id: "s", name: "Longsword +1", type: "weapon", system: {}, flags: {} }];
+  assert.deepEqual([...adoptDrawn(items, ["Arrows"], "gs"), ...adoptDrawn(items, ["Longsword +1"], magicKey("gs"))], [
+    { _id: "a", "flags.merchant-presets.drawn": "gs" }, { _id: "s", "flags.merchant-presets.drawn": "gs/magic" }]);
 });

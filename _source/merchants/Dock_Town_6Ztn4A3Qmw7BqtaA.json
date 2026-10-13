@@ -3564,20 +3564,28 @@
             "EI1KIKBGVa9g8lOJ": "1d2-1",
             "GlbPaSQyZTEq3PXn": "1d3+1",
             "KgSIUpHXObeevVQa": "1d2-1",
-            "Z5vT80yuydp0WqEa": "1",
-            "X0tIpfzqFyNU1VmD": "1d6-5",
-            "42rXiFGzUZeFPaI9": "1d6-5",
-            "j3kTPh6V5W30Ut2n": "1d6-5",
-            "oFz0gzkmlYpD8qMb": "1d6-5",
-            "vDJCyHFWcX9xphEE": "1d6-5",
-            "Cq1q9AuRSGjSwaXW": "1d6-5",
-            "aHyzas2D7hsZU4mG": "1d6-5",
-            "jSr4mxiVMFaT3miP": "1d6-5",
-            "H7Q8YXkYXj4EpvG7": "1d6-5",
-            "p12G4zlH96gcfiPP": "1d6-5"
+            "Z5vT80yuydp0WqEa": "1"
           },
           "onOpen": true,
           "every": 3,
+          "mode": "reroll"
+        },
+        "magic": {
+          "table": "Compendium.merchant-presets.stock.RollTable.dvi86AjgZHJBvPsw",
+          "quantities": {
+            "IGYC1KQBn27oaIJB": "1d6-5",
+            "OFhCLJPHnS0aa10j": "1d6-5",
+            "2O6Mwl6wPSG0BvFB": "1d6-5",
+            "pbM6vSMTp7pCIGjc": "1d6-5",
+            "GrcDN7m8B3CiwNTg": "1d6-5",
+            "m1HS55UZ1BoKsXN9": "1d6-5",
+            "QGcloUuuVhgmEtMF": "1d6-5",
+            "uAhPLhSgkVasjf5I": "1d6-5",
+            "tN9ErTksVAogXO7S": "1d6-5",
+            "ki7TThQDxOTw1pEa": "1d6-5"
+          },
+          "onOpen": true,
+          "every": "3d6+14",
           "mode": "reroll"
         },
         "wontBuy": {
@@ -3640,17 +3648,7 @@
               "EI1KIKBGVa9g8lOJ": "1d2-1",
               "GlbPaSQyZTEq3PXn": "1d3+1",
               "KgSIUpHXObeevVQa": "1d2-1",
-              "Z5vT80yuydp0WqEa": "1",
-              "X0tIpfzqFyNU1VmD": "1d6-5",
-              "42rXiFGzUZeFPaI9": "1d6-5",
-              "j3kTPh6V5W30Ut2n": "1d6-5",
-              "oFz0gzkmlYpD8qMb": "1d6-5",
-              "vDJCyHFWcX9xphEE": "1d6-5",
-              "Cq1q9AuRSGjSwaXW": "1d6-5",
-              "aHyzas2D7hsZU4mG": "1d6-5",
-              "jSr4mxiVMFaT3miP": "1d6-5",
-              "H7Q8YXkYXj4EpvG7": "1d6-5",
-              "p12G4zlH96gcfiPP": "1d6-5"
+              "Z5vT80yuydp0WqEa": "1"
             }
           }
         ],

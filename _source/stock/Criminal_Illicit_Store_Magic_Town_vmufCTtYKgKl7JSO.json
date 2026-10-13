@@ -1,0 +1,178 @@
+{
+  "_id": "vmufCTtYKgKl7JSO",
+  "_key": "!tables!vmufCTtYKgKl7JSO",
+  "name": "Criminal & Illicit Store · Magic (Town)",
+  "img": "icons/environment/settlement/sewer-entrance.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Armor, Magic Items, Poisons, Tools and Weapons.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d10",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "h9CnKJh0eRWLCs2c",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.h9CnKJh0eRWLCs2c",
+      "type": "document",
+      "name": "Hat of Disguise",
+      "img": "icons/equipment/head/hat-belted-simple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgHatOfDisguise",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "p4GVQlL4Bhx6IviM",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.p4GVQlL4Bhx6IviM",
+      "type": "document",
+      "name": "Medallion of Thoughts",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgMedallionOfTh",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "dB43J0eniuGUYrZX",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.dB43J0eniuGUYrZX",
+      "type": "document",
+      "name": "Eyes of Charming",
+      "img": "icons/tools/scribal/spectacles-glasses.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgEyesOfCharmin",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "sxN06EYJCe92Kzh5",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.sxN06EYJCe92Kzh5",
+      "type": "document",
+      "name": "Ring of Mind Shielding",
+      "img": "icons/equipment/finger/ring-cabochon-gold-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfMindShi",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "evgcnPNahJ09wVEx",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.evgcnPNahJ09wVEx",
+      "type": "document",
+      "name": "Boots of Elvenkind",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yJ47haHi684XW6oF",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.yJ47haHi684XW6oF",
+      "type": "document",
+      "name": "Cloak of Elvenkind",
+      "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfElvenk",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "zBFswrn1CQmwpbsO",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.zBFswrn1CQmwpbsO",
+      "type": "document",
+      "name": "Gloves of Thievery",
+      "img": "icons/equipment/hand/glove-tooled-leather-red-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfThiev",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rR9f7JitP6XZzE4k",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.rR9f7JitP6XZzE4k",
+      "type": "document",
+      "name": "Dust of Disappearance",
+      "img": "icons/magic/water/bubbles-air-water-light.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDustOfDisappe",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ZwRmS1z8ZGwFUmdz",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.ZwRmS1z8ZGwFUmdz",
+      "type": "document",
+      "name": "Dust of Sneezing and Choking",
+      "img": "icons/magic/water/bubbles-air-water-light.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDustOfSneezin",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nLmaIQxVxfIh8Goj",
+      "_key": "!tables.results!vmufCTtYKgKl7JSO.nLmaIQxVxfIh8Goj",
+      "type": "document",
+      "name": "Potion of Poison",
+      "img": "icons/consumables/potions/potion-bottle-skull-label-poison-teal.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfPoiso",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

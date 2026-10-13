@@ -1,0 +1,434 @@
+{
+  "_id": "CvttU4PlpqK97cAu",
+  "_key": "!tables!CvttU4PlpqK97cAu",
+  "name": "Jeweler · Magic (City)",
+  "img": "icons/environment/settlement/house-city.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Magic Items, Spell Components and Tools.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d26",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "jmtMPDKc4kGR2HgO",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.jmtMPDKc4kGR2HgO",
+      "type": "document",
+      "name": "Ring of Protection",
+      "img": "icons/equipment/finger/ring-cabochon-silver-gold-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfProtect",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4FyD7FYvZlOhnOMK",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.4FyD7FYvZlOhnOMK",
+      "type": "document",
+      "name": "Stone of Good Luck (Luckstone)",
+      "img": "icons/commodities/gems/gem-rough-rectangle-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStoneOfGoodLu",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ciI2Wj6LGDrMb7VW",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.ciI2Wj6LGDrMb7VW",
+      "type": "document",
+      "name": "Gem of Brightness",
+      "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGemOfBrightne",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nerHRZksRVRbzaGo",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.nerHRZksRVRbzaGo",
+      "type": "document",
+      "name": "Brooch of Shielding",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBroochOfShiel",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "A3Z1L0Cz7DrltaLC",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.A3Z1L0Cz7DrltaLC",
+      "type": "document",
+      "name": "Silver Raven",
+      "img": "icons/commodities/materials/feather-blue-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "WGDRMpahge0VFxsI",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.WGDRMpahge0VFxsI",
+      "type": "document",
+      "name": "Onyx Dog",
+      "img": "icons/sundries/misc/pet-collar-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpOnyxDogRar",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bwqplc1V64MAZP6d",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.bwqplc1V64MAZP6d",
+      "type": "document",
+      "name": "Serpentine Owl",
+      "img": "icons/commodities/materials/feather-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpSerpentine",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QHRNBptfc5a4W15Y",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.QHRNBptfc5a4W15Y",
+      "type": "document",
+      "name": "Bronze Griffon",
+      "img": "icons/commodities/bones/hurn-curved-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpBronzeGrif",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "CqMf9kqZDi5w76aU",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.CqMf9kqZDi5w76aU",
+      "type": "document",
+      "name": "Ebony Fly",
+      "img": "icons/commodities/biological/legs-insect-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpEbonyFlyRa",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hWCMIIpnrXvkJE3N",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.hWCMIIpnrXvkJE3N",
+      "type": "document",
+      "name": "Golden Lions",
+      "img": "icons/commodities/claws/claw-bear-brown-grey.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpGoldenLion",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "qPk4eOFzKfSlUMT2",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.qPk4eOFzKfSlUMT2",
+      "type": "document",
+      "name": "Ivory Goats",
+      "img": "icons/commodities/bones/horn-curved-worn-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpIvoryGoats",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "YJhJFmIIOZNi9USF",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.YJhJFmIIOZNi9USF",
+      "type": "document",
+      "name": "Marble Elephant",
+      "img": "icons/commodities/bones/horn-worn-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFwpMarbleElep",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XnyvMtgIPaU6HE6R",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.XnyvMtgIPaU6HE6R",
+      "type": "document",
+      "name": "Ioun Stone of Awareness",
+      "img": "icons/commodities/gems/gem-rough-cushion-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAwarenessIoun",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "EgOTbpyHWSKC2Ktf",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.EgOTbpyHWSKC2Ktf",
+      "type": "document",
+      "name": "Ioun Stone of Protection",
+      "img": "icons/commodities/gems/gem-rough-ball-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgProtectionIou",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "hSSNIQX4LcXlUKM3",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.hSSNIQX4LcXlUKM3",
+      "type": "document",
+      "name": "Ioun Stone of Reserve",
+      "img": "icons/commodities/gems/gem-rough-cushion-purple-pink.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgReserveIounSt",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "JlqkD1TVot6Rj2v4",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.JlqkD1TVot6Rj2v4",
+      "type": "document",
+      "name": "Ioun Stone of Sustenance",
+      "img": "icons/commodities/stone/geode-raw-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSustenanceIou",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "IFKx9YKNV0zy6ycV",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.IFKx9YKNV0zy6ycV",
+      "type": "document",
+      "name": "Ring of Resistance (Acid)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.f7cTwqsgZ2z4Untf",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "SKJpkAV4clT2mJ9d",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.SKJpkAV4clT2mJ9d",
+      "type": "document",
+      "name": "Ring of Resistance (Cold)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.vNQAao8lsGyFZ1QK",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "U2SCWgOlOcAKfYcs",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.U2SCWgOlOcAKfYcs",
+      "type": "document",
+      "name": "Ring of Resistance (Fire)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.QeDJTrDV54LwiF0a",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "bPMWBNGiIywdck2P",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.bPMWBNGiIywdck2P",
+      "type": "document",
+      "name": "Ring of Resistance (Force)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.qvoAN4YGb3B17zEK",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "4deIv6EMOzzvuvog",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.4deIv6EMOzzvuvog",
+      "type": "document",
+      "name": "Ring of Resistance (Lightning)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nwm44FcQuOc3pXEm",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "A56K5NQ6q9KnzqYD",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.A56K5NQ6q9KnzqYD",
+      "type": "document",
+      "name": "Ring of Resistance (Necrotic)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.c2tYrkxGybiVAQsh",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9J60eJI0ikZuuCzc",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.9J60eJI0ikZuuCzc",
+      "type": "document",
+      "name": "Ring of Resistance (Poison)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.odXacKLM8qBBDjvi",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "xr0DjYe1NVIvdF09",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.xr0DjYe1NVIvdF09",
+      "type": "document",
+      "name": "Ring of Resistance (Psychic)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.N4FNNWNuSgWBvOg2",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "s01vhgBcOEZ72Mfj",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.s01vhgBcOEZ72Mfj",
+      "type": "document",
+      "name": "Ring of Resistance (Radiant)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.nW9MS6U4zBYQQFHo",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "XMV76UXU7eWjTUzt",
+      "_key": "!tables.results!CvttU4PlpqK97cAu.XMV76UXU7eWjTUzt",
+      "type": "document",
+      "name": "Ring of Resistance (Thunder)",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.oBztcELiyKQOdne6",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

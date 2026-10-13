@@ -23,9 +23,9 @@ function set(o, path, value) {
 }
 
 /** A shipped document from _source, as the compendium serves it. */
-export function source(sub, prefix) {
+export function source(sub, prefix, id = "") {
   const dir = new URL(`../_source/${sub}/`, import.meta.url);
-  const file = readdirSync(dir).find(f => f.startsWith(prefix));
+  const file = readdirSync(dir).find(f => f.startsWith(prefix) && f.endsWith(`${id}.json`));
   return JSON.parse(readFileSync(new URL(file, dir), "utf8"));
 }
 
@@ -192,6 +192,12 @@ export function createWorld() {
     if (!compendium.has(tableUuid)) {
       compendium.set(tableUuid, { uuid: tableUuid, name: stock.name,
         results: stock.results.map(r => ({ ...r, id: r._id })) });
+    }
+    // Its magic table (#234), wherever the shop ships one.
+    const magicUuid = doc.flags["merchant-presets"]?.shop?.magic?.table;
+    if (magicUuid && !compendium.has(magicUuid)) {
+      const magic = source("stock", "", magicUuid.split(".").at(-1));
+      compendium.set(magicUuid, { uuid: magicUuid, name: magic.name, results: magic.results.map(r => ({ ...r, id: r._id })) });
     }
     if (table) doc.flags["item-piles"].data.tablesForPopulate[0].uuid = table;
     return actorLike(flagged(Object.assign(doc, {

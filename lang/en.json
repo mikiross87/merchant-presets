@@ -390,6 +390,8 @@
         },
         "Restock": {
           "Hint": "Restocking draws the shelf from the stock table and refills the till.",
+          "MagicHint": "The magic shelf draws from its own table, on its own clock.",
+          "Clock": { "restock": "Everyday", "magic": "Magic", "Label": "Which restock" },
           "WorldOff": "Scheduled restocks are off for the whole world (Configure Settings); Restock now still works.",
           "NoClock": "Restocks happen by hand only, with Restock now: the world clock doesn't run.",
           "ByHand": "Restock by hand whenever you like.",

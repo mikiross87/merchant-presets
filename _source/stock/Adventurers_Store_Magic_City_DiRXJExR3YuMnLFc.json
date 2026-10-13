@@ -1,0 +1,402 @@
+{
+  "_id": "DiRXJExR3YuMnLFc",
+  "_key": "!tables!DiRXJExR3YuMnLFc",
+  "name": "Adventurers' Store · Magic (City)",
+  "img": "icons/environment/settlement/market-stall.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear and Magic Items.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d24",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "kR4j2WPG9zZ9fn2j",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.kR4j2WPG9zZ9fn2j",
+      "type": "document",
+      "name": "Potion of Climbing",
+      "img": "icons/consumables/potions/potion-vial-corked-labeled-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfClimb",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PjTFIhF4lmwD5ErZ",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.PjTFIhF4lmwD5ErZ",
+      "type": "document",
+      "name": "Bag of Holding",
+      "img": "icons/containers/bags/pack-engraved-leather-tan.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBagOfHolding0",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "T4vGyUPmGZJxxw4p",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.T4vGyUPmGZJxxw4p",
+      "type": "document",
+      "name": "Boots of Elvenkind",
+      "img": "icons/equipment/feet/boots-pointed-cloth-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfElvenk",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "mF8iPscbU580CSFM",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.mF8iPscbU580CSFM",
+      "type": "document",
+      "name": "Cloak of Elvenkind",
+      "img": "icons/equipment/back/cloak-collared-feathers-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgCloakOfElvenk",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "amCqoQhOhEanqeXO",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.amCqoQhOhEanqeXO",
+      "type": "document",
+      "name": "Rope of Climbing",
+      "img": "icons/sundries/survival/rope-wrapped-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRopeOfClimbin",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "v3An7C6NpomuxgvI",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.v3An7C6NpomuxgvI",
+      "type": "document",
+      "name": "Goggles of Night",
+      "img": "icons/equipment/head/goggles-leather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGogglesOfNigh",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "9qJITdXQANRAplBL",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.9qJITdXQANRAplBL",
+      "type": "document",
+      "name": "Decanter of Endless Water",
+      "img": "icons/consumables/potions/potion-flask-corked-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgDecanterOfEnd",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "QoiXdg4aCNqCdJZp",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.QoiXdg4aCNqCdJZp",
+      "type": "document",
+      "name": "Boots of Striding and Springing",
+      "img": "icons/equipment/feet/boots-collared-leather-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfStridi",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "3u2lw0BgIDtcZMCO",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.3u2lw0BgIDtcZMCO",
+      "type": "document",
+      "name": "Gloves of Swimming and Climbing",
+      "img": "icons/equipment/hand/glove-cuffed-leather-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGlovesOfSwimm",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "17BR89k1TKxPTDH7",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.17BR89k1TKxPTDH7",
+      "type": "document",
+      "name": "Necklace of Adaptation",
+      "img": "icons/equipment/neck/amulet-carved-stone-spiral-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfAda",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yaErqfLOeOfIl1u6",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.yaErqfLOeOfIl1u6",
+      "type": "document",
+      "name": "Ring of Jumping",
+      "img": "icons/equipment/finger/ring-winged-gold-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfJumping",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "guoOdD4zkbmrZexO",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.guoOdD4zkbmrZexO",
+      "type": "document",
+      "name": "Ring of Swimming",
+      "img": "icons/equipment/finger/ring-shell-white-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfSwimmin",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "nWWgmMyK0R1xnFl8",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.nWWgmMyK0R1xnFl8",
+      "type": "document",
+      "name": "Ring of Warmth",
+      "img": "icons/equipment/finger/ring-cabochon-gold-orange.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfWarmth0",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2GRLIEVL1K7YdIXK",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.2GRLIEVL1K7YdIXK",
+      "type": "document",
+      "name": "Ring of Water Walking",
+      "img": "icons/equipment/finger/ring-faceted-gold-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRingOfWaterWa",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "2vPVhBqE7TvlwErq",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.2vPVhBqE7TvlwErq",
+      "type": "document",
+      "name": "Boots of the Winterlands",
+      "img": "icons/equipment/feet/boots-leather-banded-furred.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBootsOfTheWin",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "g5Hrzy1oBEpILST2",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.g5Hrzy1oBEpILST2",
+      "type": "document",
+      "name": "Slippers of Spider Climbing",
+      "img": "icons/equipment/feet/boots-leather-black.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgSlippersOfSpi",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "KWMtePDLXg2eqb3b",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.KWMtePDLXg2eqb3b",
+      "type": "document",
+      "name": "Lantern of Revealing",
+      "img": "icons/sundries/lights/lantern-iron-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgLanternOfReve",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "oqcxF27ZzUsmoYKJ",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.oqcxF27ZzUsmoYKJ",
+      "type": "document",
+      "name": "Rope of Entanglement",
+      "img": "icons/sundries/survival/rope-wrapped-purple.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgRopeOfEntangl",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "UfN0SOxiaXoPhuNq",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.UfN0SOxiaXoPhuNq",
+      "type": "document",
+      "name": "Feather Token (Anchor)",
+      "img": "icons/commodities/materials/feather-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAnchorQuaalsF",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "rsE3cOnjwaPA48mM",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.rsE3cOnjwaPA48mM",
+      "type": "document",
+      "name": "Feather Token (Fan)",
+      "img": "icons/commodities/materials/feather-colored-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFanQuaalsFeat",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "R68y8S2XUgwvwRbV",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.R68y8S2XUgwvwRbV",
+      "type": "document",
+      "name": "Feather Token (Tree)",
+      "img": "icons/commodities/materials/feather-colored-green.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgTreeQuaalsFea",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "C1jufqnDbGgHDTjK",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.C1jufqnDbGgHDTjK",
+      "type": "document",
+      "name": "Folding Boat",
+      "img": "icons/environment/settlement/ship.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgFoldingBoat00",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "gKJGlQdrwrsNbi9s",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.gKJGlQdrwrsNbi9s",
+      "type": "document",
+      "name": "Winged Boots",
+      "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWingedBoots00",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "HUPEhO9vbQkn9ihM",
+      "_key": "!tables.results!DiRXJExR3YuMnLFc.HUPEhO9vbQkn9ihM",
+      "type": "document",
+      "name": "Wind Fan",
+      "img": "icons/commodities/treasure/trinket-wing-white.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgWindFan000000",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

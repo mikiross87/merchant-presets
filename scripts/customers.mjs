@@ -11,7 +11,7 @@
  * the same stored state always drains the same way: reloading never changes a result.
  */
 
-import { isDrawn } from "./schedule.mjs";
+import { drawnByShop } from "./schedule.mjs";
 import { isGear, safeStockOf } from "./trade-plan.mjs";
 
 const MODULE = "merchant-presets";
@@ -157,7 +157,7 @@ export function poisson(lambda, random) {
  * unlimited stock: the same exclusions restock already applies.
  */
 export function isDrainable(item, { drawnBy, infiniteStock }) {
-  if (isGear(item) || !isDrawn(item, drawnBy) || !(item.system?.quantity > 0)) return false;
+  if (isGear(item) || !drawnByShop(item, drawnBy) || !(item.system?.quantity > 0)) return false;
   const stock = safeStockOf(item);
   if (!stock || stock.service) return false;
   return !(stock.infinite ?? infiniteStock);

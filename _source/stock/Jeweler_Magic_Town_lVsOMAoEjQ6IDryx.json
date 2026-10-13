@@ -1,0 +1,82 @@
+{
+  "_id": "lVsOMAoEjQ6IDryx",
+  "_key": "!tables!lVsOMAoEjQ6IDryx",
+  "name": "Jeweler · Magic (Town)",
+  "img": "icons/environment/settlement/house-city.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Magic Items, Spell Components and Tools.</p><p><em>Stock list for a town.</em></p>",
+  "formula": "1d4",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "KzIKIP0WQf42OBce",
+      "_key": "!tables.results!lVsOMAoEjQ6IDryx.KzIKIP0WQf42OBce",
+      "type": "document",
+      "name": "Stone of Good Luck (Luckstone)",
+      "img": "icons/commodities/gems/gem-rough-rectangle-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStoneOfGoodLu",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "iUuuitmopsD65ZN4",
+      "_key": "!tables.results!lVsOMAoEjQ6IDryx.iUuuitmopsD65ZN4",
+      "type": "document",
+      "name": "Gem of Brightness",
+      "img": "icons/commodities/gems/gem-faceted-octagon-yellow.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgGemOfBrightne",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PpsnWb6usqLwboN9",
+      "_key": "!tables.results!lVsOMAoEjQ6IDryx.PpsnWb6usqLwboN9",
+      "type": "document",
+      "name": "Brooch of Shielding",
+      "img": "icons/equipment/neck/pendant-bronze-gem-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgBroochOfShiel",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "7pylBTWYRH9YMLBy",
+      "_key": "!tables.results!lVsOMAoEjQ6IDryx.7pylBTWYRH9YMLBy",
+      "type": "document",
+      "name": "Silver Raven",
+      "img": "icons/commodities/materials/feather-blue-grey.webp",
+      "documentUuid": "Compendium.merchant-presets.goods.Item.oZ03PU7Sf2BzEfBg",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

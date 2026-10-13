@@ -1,0 +1,162 @@
+{
+  "_id": "rORTbrjzJ5jLgVii",
+  "_key": "!tables!rORTbrjzJ5jLgVii",
+  "name": "Temple & Faith Store · Magic (City)",
+  "img": "icons/environment/settlement/church.webp",
+  "folder": "oU4lXLMdZn45shCQ",
+  "description": "<p>Sells Adventuring Gear, Holy Symbols, Magic Items, Potions, Services, Spell Components, Tools and Weapons.</p><p><em>Stock list for a city.</em></p>",
+  "formula": "1d9",
+  "replacement": true,
+  "displayRoll": true,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "results": [
+    {
+      "_id": "n384s2tiI89jj8tA",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.n384s2tiI89jj8tA",
+      "type": "document",
+      "name": "Elixir of Health",
+      "img": "icons/consumables/potions/potion-flask-corked-shiny-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgElixirOfHealt",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "RgkyKiBEfWmKcR1O",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.RgkyKiBEfWmKcR1O",
+      "type": "document",
+      "name": "Potion of Heroism",
+      "img": "icons/consumables/potions/bottle-conical-bubbling-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPotionOfHeroi",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "ISkrb5jI5czpv8Ur",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.ISkrb5jI5czpv8Ur",
+      "type": "document",
+      "name": "Periapt of Health",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfHeal",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "yC8bygGpZIPLUPtD",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.yC8bygGpZIPLUPtD",
+      "type": "document",
+      "name": "Periapt of Wound Closure",
+      "img": "icons/equipment/neck/pendant-faceted-blue.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfWoun",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "I7qBlcv343XP4ma1",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.I7qBlcv343XP4ma1",
+      "type": "document",
+      "name": "Periapt of Proof against Poison",
+      "img": "icons/equipment/neck/necklace-hook-brown.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgPeriaptOfProo",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "PdxDs4uDhGBmN2yh",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.PdxDs4uDhGBmN2yh",
+      "type": "document",
+      "name": "Necklace of Prayer Beads",
+      "img": "icons/equipment/neck/necklace-runed-white-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgNecklaceOfPra",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "1DqgzeOPS3eUQGQ4",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.1DqgzeOPS3eUQGQ4",
+      "type": "document",
+      "name": "Amulet of Health",
+      "img": "icons/equipment/neck/pendant-faceted-red.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgAmuletOfHealt",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "uKvWgO3OYFv3GNoj",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.uKvWgO3OYFv3GNoj",
+      "type": "document",
+      "name": "Mace of Disruption",
+      "img": "icons/weapons/maces/shortmace-ornate-gold.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgMaceOfDisrupt",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    },
+    {
+      "_id": "eUilFCqIfjiYiYJH",
+      "_key": "!tables.results!rORTbrjzJ5jLgVii.eUilFCqIfjiYiYJH",
+      "type": "document",
+      "name": "Staff of Healing",
+      "img": "icons/weapons/staves/staff-ornate-cross.webp",
+      "documentUuid": "Compendium.dnd5e.equipment24.Item.dmgStaffOfHealin",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false,
+      "description": "",
+      "flags": {}
+    }
+  ]
+}

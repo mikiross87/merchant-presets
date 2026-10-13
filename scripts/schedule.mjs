@@ -38,7 +38,7 @@
  * @typedef {{lastRestock: number, dueAt: number|null}} ScheduleState  What a shop needs stored between checks.
  */
 
-import { shopFrom } from "./schema.mjs";
+import { SHOP_DEFAULTS, shopFrom } from "./schema.mjs";
 import { isVisibleStock, safeStockOf } from "./trade-plan.mjs";
 
 const minutesOf = (time, calendar) => time.hour * calendar.minutesPerHour + time.minute;
@@ -267,14 +267,17 @@ export function scheduleNext(at, days, calendar) {
  * @param {number} previous
  * @param {number} now
  * @param {CalendarDays} calendar
+ * @param {"restock"|"magic"} [clock]  Which of the shop's clocks (#234): everyday by default.
  * @returns {{due: boolean, at: number|null, nextEvery: number|string|null}}
  *   `at` is the `worldTime` it fired at; `nextEvery` is `restock.every`,
  *   unresolved, for {@link scheduleNext}. Both null when `due` is false.
  */
-export function dueRestock(shop, state, previous, now, calendar) {
+export function dueRestock(shop, state, previous, now, calendar, clock = "restock") {
   if (now <= previous) return { due: false, at: null, nextEvery: null };
-  const { restock, hours } = shopFrom(shop);
-  if (!restock.onOpen || restock.every === "never" || restock.table == null || state?.dueAt == null) {
+  const full = shopFrom(shop);
+  const restock = clockOf(full, clock);
+  const { hours } = full;
+  if (!restock || !restock.onOpen || restock.every === "never" || restock.table == null || state?.dueAt == null) {
     return { due: false, at: null, nextEvery: null };
   }
   const at = nextOpening(hours, state.dueAt, previous, now, calendar);
@@ -283,6 +286,30 @@ export function dueRestock(shop, state, previous, now, calendar) {
 }
 
 /* ------------------------------------------------------------------ restock plan (#105) */
+
+/**
+ * A completed shop config's clock (#234): `restock`, the everyday one, or `magic`, over the
+ * restock defaults; null for a shop with no magic clock.
+ *
+ * @param {object} shop  A complete config (`shopFrom`'s).
+ * @param {"restock"|"magic"} clock
+ * @returns {object|null}
+ */
+export const clockOf = (shop, clock) =>
+  clock === "magic" ? (shop.magic ? { ...SHOP_DEFAULTS.restock, ...shop.magic } : null) : shop.restock;
+
+/**
+ * Where each of a shop's clocks keeps its state on the actor (#234): its schedule and its last
+ * restock (Settings' Last restocked).
+ */
+export const CLOCK_FLAGS = Object.freeze({
+  restock: Object.freeze({ schedule: "schedule", last: "lastRestockAt" }),
+  magic: Object.freeze({ schedule: "magicSchedule", last: "magicLastRestockAt" })
+});
+
+/** The key the magic clock stamps its goods with (#234): the shop's shelf key's own. */
+export const magicKey = shelf => `${shelf}/magic`;
+const isMagicKey = drawnBy => typeof drawnBy === "string" && drawnBy.endsWith("/magic");
 
 /**
  * @typedef {object} Item  A shop's embedded item, plainly — `actor.items.map(i => i.toObject())`.
@@ -322,6 +349,8 @@ export function dueRestock(shop, state, previous, now, calendar) {
  * @property {number} [at]  When the restock happened: the opening it was due at, or now for one by
  *   hand. Goods it brings back in stock are New from then (#152).
  * @property {boolean} [markNew]  False on a shop's first roll, which brings nothing "back" (#152).
+ * @property {"restock"|"magic"} [clock]  Which clock restocks (#234): everyday by default. The magic
+ *   one draws for `shop.magic`, stamps `drawnBy` (its `magicKey`) and leaves the till alone.
  *
  * @typedef {object} RestockPlan
  * @property {string[]} deletes   Item ids to delete.
@@ -405,12 +434,15 @@ const isGear = item => item.flags?.["merchant-presets"]?.kind === "gear";
  * Something this shop's restocks drew, as opposed to something the GM added by hand, or a good
  * another shop drew that was sold here (Item Piles copies every flag). `drawn` holds the shelf
  * key of the shop that drew it (`context.drawnBy`); a bare `true` (from before it held one)
- * counts as this shop's.
+ * counts as this shop's everyday shelf, never its magic one (#234).
  */
 export const isDrawn = (item, drawnBy) => {
   const by = item.flags?.["merchant-presets"]?.drawn;
-  return by === true || (by != null && by === drawnBy);
+  return by === true ? !isMagicKey(drawnBy) : by != null && by === drawnBy;
 };
+
+/** Something either of this shop's clocks drew (#234): what other customers and the New badge read. */
+export const drawnByShop = (item, shelf) => isDrawn(item, shelf) || isDrawn(item, magicKey(shelf));
 
 /**
  * One fresh embedded copy of `draw`, stamped drawn and carrying its full #98
@@ -523,7 +555,7 @@ function dedupedByName(draws) {
  *   rolled 0 this time (#233).
  *
  * `restock.table: null` (no stock table assigned) is a no-op: an empty plan,
- * nothing deleted, refilled or drawn.
+ * nothing deleted, refilled or drawn. So is the magic clock of a shop that has none (#234).
  *
  * A `draws` line with a name shared by an earlier line collapses to that
  * earlier one, in both modes: one line, one item.
@@ -536,12 +568,14 @@ function dedupedByName(draws) {
  * @returns {RestockPlan}
  */
 export function planRestock(shop, items, draws, context) {
-  const { restock } = shopFrom(shop);
-  if (restock.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false };
+  const clock = context.clock ?? "restock";
+  const restock = clockOf(shopFrom(shop), clock);
+  if (restock?.table == null) return { deletes: [], creates: [], updates: [], currency: null, restocked: [], fresh: false };
 
   const uniqueDraws = dedupedByName(draws);
   const drawnNow = items.filter(i => !isGear(i) && isDrawn(i, context.drawnBy));
-  const currency = refilledPurse(context);
+  // Only the everyday restock refills the till (#234).
+  const currency = clock === "restock" ? refilledPurse(context) : null;
   const newAt = newAtFor(items, context);
 
   if (restock.mode === "topup") {
@@ -645,6 +679,23 @@ export function adoptDrawn(items, tableNames, drawnBy) {
   return items
     .filter(i => !isGear(i) && i.flags?.["merchant-presets"]?.drawn == null && names.has(i.name))
     .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": drawnBy }));
+}
+
+/**
+ * The item updates that move a shop's goods onto its magic shelf when it gains its magic clock
+ * after its shelf was adopted (#234 review, Reset to preset): its everyday goods under a line the
+ * magic table now has. Left on the everyday key, the everyday reroll would delete them, and the
+ * magic restock add copies beside them.
+ *
+ * @param {Item[]} items  The shop's embedded items, plainly.
+ * @param {string[]} magicNames  The names of its magic table's lines.
+ * @param {string} shelf  The shop's shelf key.
+ * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": magicKey(shelf)}` updates.
+ */
+export function moveToMagic(items, magicNames, shelf) {
+  const names = new Set(magicNames);
+  return items.filter(i => !isGear(i) && isDrawn(i, shelf) && names.has(i.name))
+    .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": magicKey(shelf) }));
 }
 
 /**
