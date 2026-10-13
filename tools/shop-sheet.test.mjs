@@ -2732,3 +2732,79 @@ test("a RollTable dropped on Customers becomes the busy-day table (#226)", async
   assert.equal(writtenShop(shop).customers.table, DAYS_TABLE.uuid);
   assert.equal(writtenShop(shop).restock.table, null, "not the stock table");
 });
+
+/* ------------------------------------------------------------ #234 the magic clock */
+
+/** The magic table (design wtrSi): two magic lines at their #233 odds. */
+const MAGIC_TABLE = {
+  documentName: "RollTable", uuid: "Compendium.merchant-presets.stock.RollTable.smithMagic", name: "Armourer & Blacksmiths · Magic (Town)",
+  results: [
+    { id: "m1", name: "Adamantine Breastplate", documentUuid: "Compendium.dnd5e.equipment24.Item.adBreast" },
+    { id: "m2", name: "Battleaxe +1", documentUuid: "Compendium.dnd5e.equipment24.Item.axe1" }
+  ]
+};
+const MAGIC = { table: MAGIC_TABLE.uuid, quantities: { m1: "1d6-5", m2: "1d6-5" }, default: null, onOpen: true, every: "3d6+14", mode: "reroll" };
+
+/** A GM's Settings on a shop with both clocks, its preset the same. */
+function openMagic(t, magic = MAGIC) {
+  const opened = openRestock(t, { table: OWN_TABLE.uuid, quantities: { r1: "2d6+4" } });
+  opened.shop.flags["merchant-presets"].shop.magic = structuredClone(magic);
+  opened.preset.magic = structuredClone(MAGIC);
+  const before = globalThis.fromUuid;
+  globalThis.fromUuid = async uuid => (uuid === MAGIC_TABLE.uuid ? MAGIC_TABLE : before(uuid));
+  return opened;
+}
+
+test("a shop with no magic clock shows no switch (#234)", async t => {
+  const { sheet } = openRestock(t, { table: OWN_TABLE.uuid });
+  assert.equal((await restockOf(sheet)).clocks, null);
+});
+
+test("the switch shows Everyday first, then Magic shows the magic clock's own table, lines and schedule (#234, design wtrSi)", async t => {
+  const { sheet } = openMagic(t);
+  sheet.render = () => {};
+  let restock = await restockOf(sheet);
+  assert.deepEqual(restock.clocks.map(c => [c.id, c.active]), [["restock", true], ["magic", false]]);
+  assert.equal(restock.table.uuid, OWN_TABLE.uuid);
+  assert.equal(restock.magic, false);
+  await act(sheet, "restockClock", { clock: "magic" });
+  restock = await restockOf(sheet);
+  assert.deepEqual(restock.clocks.map(c => c.active), [false, true]);
+  assert.equal(restock.magic, true, "no till note on the magic side");
+  assert.equal(restock.table.uuid, MAGIC_TABLE.uuid);
+  assert.deepEqual(restock.quantities.map(q => [q.name, q.value]), [["Adamantine Breastplate", "1d6-5"], ["Battleaxe +1", "1d6-5"]]);
+  assert.deepEqual([restock.showFormula, restock.formula], [true, "3d6+14"]);
+  assert.ok(restock.chips.find(c => c.id === "dice").active);
+  assert.equal(restock.canResetTable, false, "the magic preset's own");
+});
+
+test("on the Magic side, edits, Reset and Restock now act on the magic clock (#234)", async t => {
+  const { sheet, shop } = openMagic(t, { ...MAGIC, quantities: { m1: "1d4-3" } });
+  sheet.render = () => {};
+  await act(sheet, "restockClock", { clock: "magic" });
+  await change(sheet, { op: "quantity", id: "m2" }, { value: "1d2-1" });
+  assert.deepEqual(writtenShop(shop).magic.quantities, { m1: "1d4-3", m2: "1d2-1" });
+  assert.deepEqual(writtenShop(shop).restock.quantities, { r1: "2d6+4" }, "the everyday clock untouched");
+  await change(sheet, { op: "every" }, { value: "14" });
+  assert.equal(writtenShop(shop).magic.every, 14);
+  await act(sheet, "resetTable");
+  assert.deepEqual(writtenShop(shop).magic.quantities, MAGIC.quantities);
+  const asked = [];
+  api.requestRestock = async (actor, options) => { asked.push(options); return { status: "restocked", restocked: [] }; };
+  t.after(() => { delete api.requestRestock; });
+  await act(sheet, "restockNow");
+  assert.deepEqual(asked, [{ clock: "magic" }]);
+  await act(sheet, "restockClock", { clock: "restock" });
+  await act(sheet, "restockNow");
+  assert.deepEqual(asked.at(-1), { clock: "restock" });
+});
+
+test("switching sides lets go of a refused formula, which belonged to the other clock (#234)", async t => {
+  const { sheet } = openMagic(t);
+  globalThis.Roll = StrictRoll;
+  t.after(() => { globalThis.Roll = FairRoll; });
+  sheet.render = () => {};
+  await change(sheet, { op: "defaultQuantity" }, { value: "2d" });
+  await act(sheet, "restockClock", { clock: "magic" });
+  assert.equal((await restockOf(sheet)).newLinesRefused, null);
+});
