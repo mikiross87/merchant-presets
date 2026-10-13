@@ -2808,3 +2808,18 @@ test("switching sides lets go of a refused formula, which belonged to the other 
   await act(sheet, "restockClock", { clock: "magic" });
   assert.equal((await restockOf(sheet)).newLinesRefused, null);
 });
+
+test("each side's Players see shows its own clock's goods: the Everyday side leaves the magic finds out (#234 review)", async t => {
+  const { sheet, shop } = openMagic(t);
+  sheet.render = () => {};
+  shop.flags["merchant-presets"].shelf = "shelfA";
+  // The magic find first on the shelf, where Players see always shows a row.
+  shop.items.splice(0, shop.items.length, ...[["lamp", "shelfA/magic"], ["rope", "shelfA"]].map(([id, drawn]) =>
+    item(id, { quantity: 1, flags: { "merchant-presets": { drawn } } })));
+  globalThis.game.settings.values.followClock = "always";
+  sheet._settingsSection = "restock";
+  const names = async () => (await sheet._prepareContext({})).settings.preview.restock.rows.map(r => r.name);
+  assert.ok(!(await names()).includes("lamp"), "no magic find on the Everyday side");
+  await act(sheet, "restockClock", { clock: "magic" });
+  assert.deepEqual(await names(), ["lamp"]);
+});
