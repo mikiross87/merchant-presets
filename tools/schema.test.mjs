@@ -341,3 +341,25 @@ test("customers.table names a busy-day table, or null for the shipped one for th
   assert.match(errorsOf(validateShop({ version: SHOP_VERSION, customers: { table: 5 } })), /customers\.table/);
   assert.match(errorsOf(validateShop({ version: SHOP_VERSION, customers: { odds: 2 } })), /customers\.odds/);
 });
+
+/* ------------------------------------------------------------ the magic clock (#234) */
+
+const magicEntry = { table: "Compendium.merchant-presets.stock.RollTable.magic", quantities: { r1: "1d6-5" },
+  default: null, onOpen: true, every: "3d6+14", mode: "reroll" };
+
+test("a shop's magic clock is null by default, and a 2.x shop with none completes to null (#234)", () => {
+  assert.equal(SHOP_DEFAULTS.magic, null);
+  assert.equal(shopFrom({ version: SHOP_VERSION }).magic, null);
+  assert.equal(validateShop({ version: SHOP_VERSION, magic: null }).ok, true);
+});
+
+test("a magic clock has restock's shape, and must name its table (#234)", () => {
+  assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: magicEntry }), { ok: true, errors: [] });
+  assert.deepEqual(shopFrom({ version: SHOP_VERSION, magic: magicEntry }).magic, magicEntry);
+  const { table, ...untabled } = magicEntry;
+  assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: untabled }).errors, ["magic.table: missing"]);
+  assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: { ...magicEntry, table: null } }).errors,
+    ["magic.table: must be a non-empty string"]);
+  assert.deepEqual(validateShop({ version: SHOP_VERSION, magic: { ...magicEntry, mode: "swap" } }).errors,
+    ["magic.mode: must be one of reroll, topup"]);
+});
