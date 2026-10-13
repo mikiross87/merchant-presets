@@ -23,8 +23,8 @@ import { coinsFor, effectiveRates } from "./pricing.mjs";
 import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
-  adoptDrawn, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, openSecondsPerDay, openSpansByDay, planRestock,
-  quantityFormula, restockStockFlags, rolledCount, scheduleNext, secondsPerDay
+  adoptDrawn, clockOf, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, openSecondsPerDay, openSpansByDay, planRestock,
+  magicKey, quantityFormula, restockStockFlags, rolledCount, scheduleNext, secondsPerDay
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -322,20 +322,37 @@ const shelfKeyOf = actor => actor.flags?.[MODULE]?.shelf ?? null;
 const isPlayer = id => { const user = game.users.get(id); return !!user && !user.isGM; };
 
 /**
+ * A shop's restock clocks (#234): the everyday one, and the magic one when it has one. Each keeps
+ * its schedule and its last restock under its own flags.
+ */
+const CLOCK_FLAGS = { restock: { schedule: "schedule", last: "lastRestockAt" },
+  magic: { schedule: "magicSchedule", last: "magicLastRestockAt" } };
+const clocksOf = shop => (shop?.magic ? ["restock", "magic"] : ["restock"]);
+/** What a clock stamps its goods with: the shelf key, or its magic key (schedule.mjs `magicKey`). */
+const drawnKey = (shelf, clock) => (clock === "magic" ? magicKey(shelf) : shelf);
+
+/**
  * Adopt a shop's shelf, once, before its first native restock: give it a shelf
- * key, and stamp its current table goods with it (schedule.mjs `adoptDrawn`).
+ * key, and stamp its current table goods with it (schedule.mjs `adoptDrawn`),
+ * each clock's table's goods with that clock's key (#234).
  * A shop with a key is adopted
  * already, so a good the GM adds by hand later, under a table line's name,
  * stays theirs.
  *
+ * @param {Actor} actor
+ * @param {object} shop  its complete config (`safeShopOf`)
  * @returns {Promise<string|null>} the shop's shelf key; null if it can't be
- *   adopted yet (see `lineNames`)
+ *   adopted yet (a table missing, or see `lineNames`)
  */
-async function adoptOnce(actor, table) {
+async function adoptOnce(actor, shop) {
   const known = shelfKeyOf(actor);
   if (known) return known;
-  const names = await lineNames(table);
-  if (!names) {
+  const tables = [];
+  for (const clock of clocksOf(shop)) {
+    const table = await fromUuid(clockOf(shop, clock).table).catch(() => null);
+    tables.push({ clock, names: table ? await lineNames(table) : null });
+  }
+  if (tables.some(t => !t.names)) {
     if (!unresolvedWarned.has(actor.uuid)) {
       unresolvedWarned.add(actor.uuid);
       console.warn(`${MODULE} | "${actor.name}": not every line of its stock table resolves; not restocking it yet`);
@@ -343,7 +360,8 @@ async function adoptOnce(actor, table) {
     return null;
   }
   const key = foundry.utils.randomID();
-  const updates = adoptDrawn(actor.items.map(i => i.toObject()), names, key);
+  const items = actor.items.map(i => i.toObject());
+  const updates = tables.flatMap(({ clock, names }) => adoptDrawn(items, names, drawnKey(key, clock)));
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   await actor.update({ [`flags.${MODULE}.shelf`]: key });
   return key;
@@ -360,55 +378,75 @@ async function adoptOnce(actor, table) {
  * @returns {Promise<string[]|null>} the lines it drew or topped up; null if
  *   it couldn't restock at all (no shop config, or its table is gone)
  */
-function restock(actor, options) {
+function restock(actor, options = {}) {
   return runTrade(async () => {
+    const clock = options.clock ?? "restock";
     const restocked = await restockNow(actor, options);
     // A scheduled shop restocked by hand counts its next due day from today, as a scheduled
-    // restock would, or the next opening would reroll the shelf just rolled (#135 review).
-    const state = actor.flags?.[MODULE]?.schedule;
-    const every = safeShopOf(actor)?.restock.every;
+    // restock would, or the next opening would reroll the shelf just rolled (#135 review). Only
+    // the clock that restocked (#234).
+    const key = CLOCK_FLAGS[clock].schedule;
+    const state = actor.flags?.[MODULE]?.[key];
+    const every = clockOf(safeShopOf(actor) ?? {}, clock)?.every;
     const days = restocked !== null && state ? await daysOf(every) : null;
     if (days != null) {
-      await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(game.time.worldTime, days, game.time.calendar.days), every } });
+      await actor.update({ [`flags.${MODULE}.${key}`]: { ...scheduleNext(game.time.worldTime, days, game.time.calendar.days), every } });
     }
     return restocked;
   });
 }
 
+/** Restock every clock a shop has (#234), the everyday one first: what arriving in the world rolls. */
+async function restockAll(actor, restockWith = restockNow) {
+  let restocked = null;
+  for (const clock of clocksOf(safeShopOf(actor))) {
+    const lines = await restockWith(actor, { clock });
+    if (lines) restocked = [...(restocked ?? []), ...lines];
+  }
+  return restocked;
+}
+
 /**
- * Restocks `actor` now. `at` is when the restock happened: the opening a scheduled one was due at,
- * even when the clock caught up with it later, or now. A shop's first roll, from whichever caller,
+ * Restocks `actor`'s `clock` now (#234: the everyday one unless it's magic). `at` is when the
+ * restock happened: the opening a scheduled one was due at, even when the clock caught up with it
+ * later, or now. A shop's first roll, from whichever caller,
  * brings nothing back in stock (#152): one that's still fresh pack data (`needsWiring`) with no
  * shelf key yet has never been drawn (#153). A shop that sold out entirely keeps its key, and one
  * a 1.x world wired to its own table was drawn there (#158 review).
  */
-async function restockNow(actor, { at = game.time.worldTime } = {}) {
+async function restockNow(actor, { at = game.time.worldTime, clock = "restock" } = {}) {
   const raw = actor.flags?.[MODULE]?.shop;
   const shop = safeShopOf(actor);
-  if (!shop?.restock.table) return null;
-  const table = await fromUuid(shop.restock.table).catch(() => null);
+  const config = shop ? clockOf(shop, clock) : null;
+  if (!config?.table) return null;
+  const table = await fromUuid(config.table).catch(() => null);
   if (!table) {
-    console.warn(`${MODULE} | "${actor.name}": its stock table ${shop.restock.table} is gone; nothing restocked`);
+    console.warn(`${MODULE} | "${actor.name}": its stock table ${config.table} is gone; nothing restocked`);
     return null;
   }
-  const markNew = shelfKeyOf(actor) != null || !needsWiring(actor);
-  const shelf = await adoptOnce(actor, table);
+  // A clock's first roll on fresh pack data brings nothing back: the everyday one before the shelf
+  // has a key, the magic one before it has ever restocked (it rolls after the everyday one, #234).
+  const rolledBefore = clock === "magic" ? actor.flags?.[MODULE]?.magicLastRestockAt != null : shelfKeyOf(actor) != null;
+  const markNew = rolledBefore || !needsWiring(actor);
+  const shelf = await adoptOnce(actor, shop);
   if (!shelf) return null;
+  const drawnBy = drawnKey(shelf, clock);
 
   const items = actor.items.map(i => i.toObject());
-  const draws = await drawsFor(table, shop.restock);
+  const draws = await drawsFor(table, config);
   if (!draws) return null;
   const record = actor.flags?.[MODULE]?.itemFlags ?? {};
   // What the shelf says of each line now, over what it said at earlier restocks: a line that
   // left the shelf comes back with the GM's settings (schedule.mjs `lineMemory`).
-  const memory = lineMemory(actor.flags?.[MODULE]?.lines, items, shelf);
+  const memory = lineMemory(actor.flags?.[MODULE]?.lines, items, drawnBy);
   const remembered = new Map(memory.map(line => [line.name, line]));
   const plan = planRestock(raw, items, draws, {
     purse: actor.flags?.[MODULE]?.purse,
     currentGp: actor.system?.currency?.gp,
-    stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), shelf),
+    stockFlags: restockStockFlags(items, draws, name => remembered.get(name)?.stock ?? stockFromRecord(record[name]), drawnBy),
     containers: actor.flags?.[MODULE]?.containers ?? {},
-    drawnBy: shelf,
+    drawnBy,
+    clock,
     at,
     markNew
   });
@@ -424,7 +462,7 @@ async function restockNow(actor, { at = game.time.worldTime } = {}) {
   // windows render the new shelf with its chip at once.
   await actor.update({
     ...(plan.currency != null ? { "system.currency.gp": plan.currency } : {}),
-    [`flags.${MODULE}.lastRestockAt`]: at,
+    [`flags.${MODULE}.${CLOCK_FLAGS[clock].last}`]: at,
     ...(markNew && plan.fresh ? { [`flags.${MODULE}.restockedAt`]: at } : {})
   });
   await syncStockWeight(actor);        // the shelf and the till have both just moved
@@ -444,52 +482,64 @@ async function scheduleShop(actor, now, previous, calendar, { restocks = true, l
     return null;
   }
   const raw = actor.flags[MODULE].shop;
-  let state = actor.flags[MODULE].schedule;
-  if (!state) {
-    await scheduleFirst(actor, now, calendar);
-    // Unscheduled (no table, or it never restocks) is no reason for nobody to shop there (#226 review).
-    await drainShop(actor, previous, now, calendar, level);
-    return null;
-  }
-  // The GM changed the interval since it was scheduled: count the new one from the last restock,
-  // rather than waiting out the old due date (#135 review).
-  const every = safeShopOf(actor)?.restock.every;
-  if (every !== undefined && state.every !== undefined && state.every !== every) {
-    const days = await daysOf(every);
-    if (days != null) {
-      state = { ...scheduleNext(state.lastRestock, days, calendar), every };
-      await actor.update({ [`flags.${MODULE}.schedule`]: state });
+  const shop = safeShopOf(actor);
+  const dues = [];
+  for (const clock of clocksOf(shop)) {
+    const key = CLOCK_FLAGS[clock].schedule;
+    let state = actor.flags[MODULE][key];
+    if (!state) {
+      await scheduleFirst(actor, now, calendar, clock);
+      continue;
     }
+    // The GM changed the interval since it was scheduled: count the new one from the last restock,
+    // rather than waiting out the old due date (#135 review).
+    const every = shop ? clockOf(shop, clock)?.every : undefined;
+    if (every !== undefined && state.every !== undefined && state.every !== every) {
+      const days = await daysOf(every);
+      if (days != null) {
+        state = { ...scheduleNext(state.lastRestock, days, calendar), every };
+        await actor.update({ [`flags.${MODULE}.${key}`]: state });
+      }
+    }
+    const due = dueRestock(raw, state, previous, now, calendar, clock);
+    if (due.due) dues.push({ ...due, clock });
   }
-  const due = dueRestock(raw, state, previous, now, calendar);
-  if (!due.due) {
+  // Unscheduled (no table, or it never restocks) is no reason for nobody to shop there (#226 review).
+  if (!dues.length) {
     await drainShop(actor, previous, now, calendar, level);
     return null;
   }
-  // Other customers shop up to the restock, and again from it (#226): a shop restocked at dawn has
-  // lost stock by dusk.
-  await drainShop(actor, previous, due.at, calendar, level);
-  const restocked = await restockNow(actor, { at: due.at });
-  await drainShop(actor, due.at, now, calendar, level);
-  // Couldn't run (its table or a line's document is missing): still due, so the next opening
-  // tries again, rather than the shop skipping a whole cycle.
-  if (restocked === null) return null;
-  const days = await daysOf(due.nextEvery);
-  await actor.update({ [`flags.${MODULE}.schedule`]: { ...scheduleNext(due.at, days ?? 1, calendar), every: due.nextEvery } });
+  // Other customers shop up to each restock, and again from it (#226): a shop restocked at dawn
+  // has lost stock by dusk. Both clocks due at once restock in the order they fell due (#234).
+  dues.sort((a, b) => a.at - b.at);
+  let from = previous;
+  let restocked = null;
+  for (const due of dues) {
+    await drainShop(actor, from, due.at, calendar, level);
+    from = due.at;
+    const lines = await restockNow(actor, { at: due.at, clock: due.clock });
+    // Couldn't run (its table or a line's document is missing): still due, so the next opening
+    // tries again, rather than the shop skipping a whole cycle.
+    if (lines === null) continue;
+    const days = await daysOf(due.nextEvery);
+    await actor.update({ [`flags.${MODULE}.${CLOCK_FLAGS[due.clock].schedule}`]: { ...scheduleNext(due.at, days ?? 1, calendar), every: due.nextEvery } });
+    log(`"${actor.name}": ${due.clock === "magic" ? "magic" : "everyday"} restock`);
+    restocked = [...(restocked ?? []), ...lines];
+  }
+  await drainShop(actor, from, now, calendar, level);
   return restocked;
 }
 
-/** A shop seen by the clock for the first time: adopted and scheduled, no restock. */
-async function scheduleFirst(actor, now, calendar) {
+/** A shop's `clock` seen by the clock for the first time: adopted and scheduled, no restock. */
+async function scheduleFirst(actor, now, calendar, clock = "restock") {
   const shop = safeShopOf(actor);
-  const days = shop ? await daysOf(shop.restock.every) : null;
-  if (days == null || !shop.restock.table) return;
+  const config = shop ? clockOf(shop, clock) : null;
+  const days = config ? await daysOf(config.every) : null;
+  if (days == null || !config.table) return;
   // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
   // would skip the adoption, and its first restock would add a second shelf.
-  const table = await fromUuid(shop.restock.table).catch(() => null);
-  if (!table) return;
-  if (!await adoptOnce(actor, table)) return;
-  await actor.update({ [`flags.${MODULE}.schedule`]: { ...initialSchedule(now, days, calendar), every: shop.restock.every } });
+  if (!await adoptOnce(actor, shop)) return;
+  await actor.update({ [`flags.${MODULE}.${CLOCK_FLAGS[clock].schedule}`]: { ...initialSchedule(now, days, calendar), every: config.every } });
 }
 
 /**
@@ -1215,7 +1265,8 @@ async function handleRestockQuery(request, { user }) {
   const shop = user?.isGM ? await actorAt(request?.shopUuid) : null;
   // A restock that throws has stopped: answered as failed, logged here, never left to read as a
   // query that timed out and may still run (#140 review).
-  const restocked = shop ? await restock(shop).catch(err => { console.error(`${MODULE} | restock of "${shop.name}" failed`, err); return null; }) : null;
+  const clock = request?.clock === "magic" ? "magic" : "restock";
+  const restocked = shop ? await restock(shop, { clock }).catch(err => { console.error(`${MODULE} | restock of "${shop.name}" failed`, err); return null; }) : null;
   return { restocked };
 }
 
@@ -1226,13 +1277,14 @@ async function handleRestockQuery(request, { user }) {
  * scheduled sweep, and still run.
  *
  * @param {Actor} actor
+ * @param {{clock?: "restock"|"magic"}} [options]  which clock to restock (#234), the everyday one by default
  * @returns {Promise<{status: "restocked"|"failed"|"no-answer", restocked: string[]|null}>}
  */
-async function requestRestock(actor) {
+async function requestRestock(actor, { clock = "restock" } = {}) {
   const gm = game.users.activeGM;
   if (!gm) return { status: "no-answer", restocked: null };
   try {
-    const restocked = (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
+    const restocked = (await gm.query(RESTOCK_QUERY, { shopUuid: actor.uuid, clock }, { timeout: QUERY_TIMEOUT_MS }))?.restocked ?? null;
     return { status: restocked ? "restocked" : "failed", restocked };
   } catch (err) {
     console.warn(`${MODULE} | restock of "${actor.name}" unconfirmed:`, err.message);
@@ -1747,9 +1799,11 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
       // A new shelf from a new table: the next restock adopts it afresh (#135 review).
       [`flags.${MODULE}.shelf`]: null,
       [`flags.${MODULE}.schedule`]: null,
+      [`flags.${MODULE}.magicSchedule`]: null,
       [`flags.${MODULE}.lines`]: null,
       [`flags.${MODULE}.restockedAt`]: null,
       [`flags.${MODULE}.lastRestockAt`]: null,
+      [`flags.${MODULE}.magicLastRestockAt`]: null,
       "system.currency": plan.currency
     });
     if (plan.creates.length) await actor.createEmbeddedDocuments("Item", plan.creates, { keepId: true });
@@ -1758,7 +1812,7 @@ async function setUpShopNow(actor, sourceUuid, keepIds) {
     // this user's own updates fire updateActor, whose arrival hook would otherwise roll the shelf
     // a second time (#138 review). Already on the trade queue, so the restock is called directly.
     await migrateShop(actor);
-    await restockNow(actor);
+    await restockAll(actor);
   } finally {
     rewiring.delete(actor.id);
   }
@@ -2293,7 +2347,7 @@ async function arrive(actor) {
     await releaseStrays(actor);
     // One from an older build, arriving after the load-time pass, before it ever restocks (#243).
     await retireGoods(actor);
-    if (rollsOnArrival(actor)) await restock(actor);
+    if (rollsOnArrival(actor)) await restockAll(actor, restock);
   } finally {
     arriving.delete(actor.id);
   }
