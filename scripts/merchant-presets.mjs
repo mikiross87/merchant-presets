@@ -24,7 +24,7 @@ import { icon } from "./icons.mjs";
 import { DRINK_IDENTIFIERS, partOfDay, shelfCardProperties } from "./shop-view.mjs";
 import {
   adoptDrawn, clockOf, dropsNewMark, dueRestock, initialSchedule, intervalOf, isOpen, isItemLine, lineMemory, openSecondsPerDay, openSpansByDay, planRestock,
-  magicKey, quantityFormula, restockStockFlags, rolledCount, scheduleNext, secondsPerDay
+  CLOCK_FLAGS, magicKey, moveToMagic, quantityFormula, restockStockFlags, rolledCount, scheduleNext, secondsPerDay
 } from "./schedule.mjs";
 import {
   bundleResolver, checkParties, CLAIM_HEARTBEAT_MS, claimsTrades, clientOutcome, HAGGLE_QUERY, hookPayload, outcomes, QUERY, QUERY_TIMEOUT_MS,
@@ -223,15 +223,21 @@ async function retireGoods(actor) {
   const index = game.packs?.get(`${MODULE}.goods`)?.index;
   const shop = safeShopOf(actor);
   if (!index || !shop) return false;
-  const table = shop.restock.table ? await fromUuid(shop.restock.table).catch(() => null) : null;
-  const { resultIds, itemIds, diceIds: lines } = retiredGoods([...(table?.results ?? [])], [...actor.items],
-    id => index.has(id), shop.restock.quantities);
-  // Without a table to read, which dice are dead can't be told: they wait for it.
-  const diceIds = table ? lines : [];
-  if (resultIds.length && !table.pack) await table.deleteEmbeddedDocuments("TableResult", resultIds);
-  if (diceIds.length) await actor.update(Object.fromEntries(diceIds.map(id => [`flags.${MODULE}.shop.restock.quantities.-=${id}`, null])));
-  if (itemIds.length) await actor.deleteEmbeddedDocuments("Item", itemIds);
-  return resultIds.length + itemIds.length + diceIds.length > 0;
+  let changed = 0;
+  // Each clock's table and dice (#234 review): a GM's own magic table holds goods too.
+  for (const clock of clocksOf(shop)) {
+    const config = clockOf(shop, clock);
+    const table = config.table ? await fromUuid(config.table).catch(() => null) : null;
+    const { resultIds, itemIds, diceIds: lines } = retiredGoods([...(table?.results ?? [])], [...actor.items],
+      id => index.has(id), config.quantities);
+    // Without a table to read, which dice are dead can't be told: they wait for it.
+    const diceIds = table ? lines : [];
+    if (resultIds.length && !table.pack) await table.deleteEmbeddedDocuments("TableResult", resultIds);
+    if (diceIds.length) await actor.update(Object.fromEntries(diceIds.map(id => [`flags.${MODULE}.shop.${clock}.quantities.-=${id}`, null])));
+    if (itemIds.length) await actor.deleteEmbeddedDocuments("Item", itemIds);
+    changed += resultIds.length + itemIds.length + diceIds.length;
+  }
+  return changed > 0;
 }
 
 /**
@@ -323,10 +329,8 @@ const isPlayer = id => { const user = game.users.get(id); return !!user && !user
 
 /**
  * A shop's restock clocks (#234): the everyday one, and the magic one when it has one. Each keeps
- * its schedule and its last restock under its own flags.
+ * its schedule and its last restock under its own flags (schedule.mjs `CLOCK_FLAGS`).
  */
-const CLOCK_FLAGS = { restock: { schedule: "schedule", last: "lastRestockAt" },
-  magic: { schedule: "magicSchedule", last: "magicLastRestockAt" } };
 const clocksOf = shop => (shop?.magic ? ["restock", "magic"] : ["restock"]);
 /** What a clock stamps its goods with: the shelf key, or its magic key (schedule.mjs `magicKey`). */
 const drawnKey = (shelf, clock) => (clock === "magic" ? magicKey(shelf) : shelf);
@@ -365,6 +369,23 @@ async function adoptOnce(actor, shop) {
   if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   await actor.update({ [`flags.${MODULE}.shelf`]: key });
   return key;
+}
+
+/**
+ * A magic clock seen for the first time on a shelf adopted before it had one (#234 review, Reset
+ * to preset): the goods under its table's lines move onto the magic shelf (schedule.mjs
+ * `moveToMagic`). A shop adopted with its magic clock has none to move. False while the magic
+ * table can't be read.
+ */
+async function adoptMagic(actor, shop, shelf) {
+  const flags = actor.flags?.[MODULE] ?? {};
+  if (flags[CLOCK_FLAGS.magic.schedule] || flags[CLOCK_FLAGS.magic.last] != null) return true;
+  const table = await fromUuid(shop.magic.table).catch(() => null);
+  const names = table ? await lineNames(table) : null;
+  if (!names) return false;
+  const updates = moveToMagic(actor.items.map(i => i.toObject()), names, shelf);
+  if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  return true;
 }
 
 /**
@@ -429,7 +450,7 @@ async function restockNow(actor, { at = game.time.worldTime, clock = "restock" }
   const rolledBefore = clock === "magic" ? actor.flags?.[MODULE]?.magicLastRestockAt != null : shelfKeyOf(actor) != null;
   const markNew = rolledBefore || !needsWiring(actor);
   const shelf = await adoptOnce(actor, shop);
-  if (!shelf) return null;
+  if (!shelf || (clock === "magic" && !await adoptMagic(actor, shop, shelf))) return null;
   const drawnBy = drawnKey(shelf, clock);
 
   const items = actor.items.map(i => i.toObject());
@@ -538,7 +559,8 @@ async function scheduleFirst(actor, now, calendar, clock = "restock") {
   if (days == null || !config.table) return;
   // No table yet (repointed, or its pack not loaded): try again next tick. Scheduling it now
   // would skip the adoption, and its first restock would add a second shelf.
-  if (!await adoptOnce(actor, shop)) return;
+  const shelf = await adoptOnce(actor, shop);
+  if (!shelf || (clock === "magic" && !await adoptMagic(actor, shop, shelf))) return;
   await actor.update({ [`flags.${MODULE}.${CLOCK_FLAGS[clock].schedule}`]: { ...initialSchedule(now, days, calendar), every: config.every } });
 }
 

@@ -16,7 +16,7 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import { EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
+import { CLOCK_EDITS, EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
@@ -24,7 +24,7 @@ import { icon } from "./icons.mjs";
 import { worldFollowsClock } from "./clock.mjs";
 import { boostGroups } from "./customers.mjs";
 import { customersLevel, customersTable, dayIndex, daySnapshot, shippedDayTables, shopToday } from "./customers-world.mjs";
-import { clockOf, isItemLine, isOpen, magicKey, nextCloseAt, nextOpen } from "./schedule.mjs";
+import { CLOCK_FLAGS, clockOf, isItemLine, isOpen, magicKey, nextCloseAt, nextOpen } from "./schedule.mjs";
 import { bundleFor, bundlePriceCp, categoryFor, isFixedExcluded, lineTotalCp, safeShopOf, safeStockOf } from "./trade-plan.mjs";
 import {
   basketTotals, buyRow, coinAriaLabel, coinBreakdown, groupCategories, isVisibleStock,
@@ -66,9 +66,6 @@ const stockConfigOf = item => (item ? safeStockOf(item) : null) ?? STOCK_DEFAULT
  * and the window's own checks decide again.
  */
 const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
-
-/** The Settings edits that act on a restock clock (#234), stamped with the side they were made on. */
-const RESTOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantity", "table", "resetTable"]);
 
 /** The GM Settings tab's sections (#110), in its side nav's order, with their icons. */
 const SETTINGS_SECTIONS = [
@@ -1054,7 +1051,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * shop with no table, or set never to restock, never does.
    */
   #nextRestockAt(actor, shop, clock = "restock") {
-    const schedule = actor.flags?.[MODULE]?.[clock === "magic" ? "magicSchedule" : "schedule"];
+    const schedule = actor.flags?.[MODULE]?.[CLOCK_FLAGS[clock].schedule];
     const config = clockOf(shop, clock);
     if (!config) return null;
     const { chip } = everyChoice(config);
@@ -1953,10 +1950,10 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const everyLabel = every => (every === "never" ? i18n("Restock.Never")
       : every === 1 ? i18n("Restock.Daily")
         : game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Restock.EveryDays", { days: every }));
-    const schedule = actor.flags?.[MODULE]?.[clock === "magic" ? "magicSchedule" : "schedule"];
+    const schedule = actor.flags?.[MODULE]?.[CLOCK_FLAGS[clock].schedule];
     // Whatever drew the shelf last, Restock now included, fresh stock or not; the schedule's own
     // record before #145.
-    const lastRestock = actor.flags?.[MODULE]?.[clock === "magic" ? "magicLastRestockAt" : "lastRestockAt"] ?? schedule?.lastRestock ?? null;
+    const lastRestock = actor.flags?.[MODULE]?.[CLOCK_FLAGS[clock].last] ?? schedule?.lastRestock ?? null;
     // Players the GM gave their own level: the switch sets only the default, so they keep it.
     const visitOthers = Object.entries(actor.ownership ?? {}).filter(([id, level]) => {
       const user = id !== "default" && game.users?.get(id);
@@ -2190,8 +2187,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     const rates = { world, shopTerms: shop.terms, chipSellsAt: effectiveRates(world, shop.terms).sellsAt.rate };
     const rows = [];
     for (const { data, stock } of this.#shelf(actor)) {
-      // The Magic side shows the magic finds (#234, design wtrSi).
-      if (clock === "magic" && data.flags?.[MODULE]?.drawn !== magicKey(shelf)) continue;
+      // Each side shows its own clock's goods (#234, design wtrSi): the magic finds on the Magic one.
+      const magicFind = data.flags?.[MODULE]?.drawn === magicKey(shelf);
+      if (shop.magic && magicFind !== (clock === "magic")) continue;
       const row = buyRow(data, stock, rates, null, currencies, worldInfiniteStock(), bundleOf);
       if (row.unpriced || row.worthless) continue;
       rows.push({
@@ -2371,7 +2369,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       let change = await makeChange(shop);
       if (!change) return;
       // A restock edit lands on the side it was made on (shop-settings.mjs `applyChange`).
-      if (RESTOCK_EDITS.has(change.op) && change.clock === undefined) change = { ...change, clock: shop.magic && side === "magic" ? "magic" : "restock" };
+      if (CLOCK_EDITS.has(change.op) && change.clock === undefined) change = { ...change, clock: shop.magic && side === "magic" ? "magic" : "restock" };
       const result = applyChange(shop, change);
       if (!result.ok) {
         ui.notifications.warn(game.i18n.localize("MERCHANT_PRESETS.Shop.Settings.Invalid", { errors: result.errors.join("; ") }));

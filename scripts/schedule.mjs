@@ -298,6 +298,15 @@ export function dueRestock(shop, state, previous, now, calendar, clock = "restoc
 export const clockOf = (shop, clock) =>
   clock === "magic" ? (shop.magic ? { ...SHOP_DEFAULTS.restock, ...shop.magic } : null) : shop.restock;
 
+/**
+ * Where each of a shop's clocks keeps its state on the actor (#234): its schedule and its last
+ * restock (Settings' Last restocked).
+ */
+export const CLOCK_FLAGS = Object.freeze({
+  restock: Object.freeze({ schedule: "schedule", last: "lastRestockAt" }),
+  magic: Object.freeze({ schedule: "magicSchedule", last: "magicLastRestockAt" })
+});
+
 /** The key the magic clock stamps its goods with (#234): the shop's shelf key's own. */
 export const magicKey = shelf => `${shelf}/magic`;
 const isMagicKey = drawnBy => typeof drawnBy === "string" && drawnBy.endsWith("/magic");
@@ -670,6 +679,23 @@ export function adoptDrawn(items, tableNames, drawnBy) {
   return items
     .filter(i => !isGear(i) && i.flags?.["merchant-presets"]?.drawn == null && names.has(i.name))
     .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": drawnBy }));
+}
+
+/**
+ * The item updates that move a shop's goods onto its magic shelf when it gains its magic clock
+ * after its shelf was adopted (#234 review, Reset to preset): its everyday goods under a line the
+ * magic table now has. Left on the everyday key, the everyday reroll would delete them, and the
+ * magic restock add copies beside them.
+ *
+ * @param {Item[]} items  The shop's embedded items, plainly.
+ * @param {string[]} magicNames  The names of its magic table's lines.
+ * @param {string} shelf  The shop's shelf key.
+ * @returns {object[]}  `{_id, "flags.merchant-presets.drawn": magicKey(shelf)}` updates.
+ */
+export function moveToMagic(items, magicNames, shelf) {
+  const names = new Set(magicNames);
+  return items.filter(i => !isGear(i) && isDrawn(i, shelf) && names.has(i.name))
+    .map(i => ({ _id: i._id, "flags.merchant-presets.drawn": magicKey(shelf) }));
 }
 
 /**

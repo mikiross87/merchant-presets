@@ -172,7 +172,7 @@ const CHANGES = {
 };
 
 /** The edits to one of a shop's restock clocks (#234): each takes that clock's config, not the shop's. */
-const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantity", "table", "resetTable"]);
+export const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantity", "table", "resetTable"]);
 
 /**
  * One Settings-tab edit applied to `shop`, a full config (`shopFrom`'s), which is left as it was.
