@@ -7,7 +7,7 @@
  */
 
 import { endsAfterDays } from "./deals.mjs";
-import { isOpen, nextCloseAt } from "./schedule.mjs";
+import { clockOf, isOpen, nextCloseAt } from "./schedule.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
 
@@ -114,40 +114,40 @@ const CHANGES = {
     if (!parsed) return "not a time of day";
     shop.hours[end] = parsed;
   },
-  every(shop, { every }) {
-    shop.restock.every = everyOf(every);
+  every(restock, { every }) {
+    restock.every = everyOf(every);
     // Picking a schedule is picking to restock: a shop that had restocking off starts again.
-    if (shop.restock.every !== "never") shop.restock.onOpen = true;
+    if (restock.every !== "never") restock.onOpen = true;
   },
-  mode(shop, { mode }) {
-    shop.restock.mode = mode;
+  mode(restock, { mode }) {
+    restock.mode = mode;
   },
   // A table line's formula (#190), named by its result id. Blank puts back the preset's formula
   // for that line, or, for a line the preset never had, leaves it to New lines.
-  quantity(shop, { id, formula, preset }) {
+  quantity(restock, { id, formula, preset, clock }) {
     if (typeof id !== "string" || !id) return "no such line";
     const typed = String(formula ?? "").trim();
-    const fallback = preset?.restock?.quantities?.[id];
-    if (typed) shop.restock.quantities[id] = typed;
-    else if (fallback !== undefined) shop.restock.quantities[id] = fallback;
-    else delete shop.restock.quantities[id];
+    const fallback = preset?.[clock]?.quantities?.[id];
+    if (typed) restock.quantities[id] = typed;
+    else if (fallback !== undefined) restock.quantities[id] = fallback;
+    else delete restock.quantities[id];
   },
-  defaultQuantity(shop, { formula }) {
-    shop.restock.default = String(formula ?? "").trim() || null;
+  defaultQuantity(restock, { formula }) {
+    restock.default = String(formula ?? "").trim() || null;
   },
   // Another stock table: the formulas of the lines it shares with the old one stay, by result id
   // (an imported or duplicated table keeps its results' ids).
-  table(shop, { uuid, resultIds }) {
+  table(restock, { uuid, resultIds }) {
     if (typeof uuid !== "string" || !uuid) return "no such table";
     if (!Array.isArray(resultIds)) return "the table's lines are unknown";
     const keep = new Set(resultIds);
-    shop.restock.table = uuid;
-    shop.restock.quantities = Object.fromEntries(Object.entries(shop.restock.quantities).filter(([id]) => keep.has(id)));
+    restock.table = uuid;
+    restock.quantities = Object.fromEntries(Object.entries(restock.quantities).filter(([id]) => keep.has(id)));
   },
-  resetTable(shop, { preset }) {
-    if (!preset?.restock) return "no preset to reset to";
-    const { table, quantities } = shopFrom(preset).restock;
-    Object.assign(shop.restock, { table, quantities: structuredClone(quantities), default: null });
+  resetTable(restock, { preset, clock }) {
+    const theirs = preset?.[clock] ? clockOf(shopFrom(preset), clock) : null;
+    if (!theirs) return "no preset to reset to";
+    Object.assign(restock, { table: theirs.table, quantities: structuredClone(theirs.quantities), default: null });
   },
   // Deals are named by their character, as rules are by category (see `ruleRate`).
   addDeal(shop, change) {
@@ -171,6 +171,9 @@ const CHANGES = {
   }
 };
 
+/** The edits to one of a shop's restock clocks (#234): each takes that clock's config, not the shop's. */
+const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantity", "table", "resetTable"]);
+
 /**
  * One Settings-tab edit applied to `shop`, a full config (`shopFrom`'s), which is left as it was.
  *
@@ -180,7 +183,8 @@ const CHANGES = {
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
  *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226)
- *   (#190; `preset` the preset merchant's shop config), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
+ *   (#190; `preset` the preset merchant's shop config; each of these restock edits may name its
+ *   `clock`, "restock" by default or "magic", #234), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
  *   (`resetToPreset`)
  * @returns {{ok: true, shop: object} | {ok: false, errors: string[]}}
@@ -189,7 +193,16 @@ export function applyChange(shop, change) {
   const edit = Object.hasOwn(CHANGES, change?.op) ? CHANGES[change.op] : null;
   if (!edit) return { ok: false, errors: [`unknown change ${change?.op}`] };
   const next = structuredClone(shop);
-  const refusal = edit(next, change);
+  let target = next;
+  if (CLOCK_EDITS.has(change.op)) {
+    // A restock edit names its clock, the everyday one unless it says magic.
+    const clock = change.clock ?? "restock";
+    if (clock !== "restock" && clock !== "magic") return { ok: false, errors: [`no such clock ${clock}`] };
+    if (!next[clock]) return { ok: false, errors: ["the shop has no magic clock"] };
+    target = next[clock];
+    change = { ...change, clock };
+  }
+  const refusal = edit(target, change);
   if (refusal) return { ok: false, errors: [refusal] };
   const { ok, errors } = validateShop(next);
   return ok ? { ok, shop: next } : { ok, errors };
