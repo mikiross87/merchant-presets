@@ -46722,7 +46722,7 @@
                               "id": "f2uRvM",
                               "name": "Line Rapier",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -46778,7 +46778,7 @@
                               "id": "nQj8i",
                               "name": "Line Scimitar",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -46834,7 +46834,7 @@
                               "id": "O7pqZ3",
                               "name": "Line Shortsword",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -46890,7 +46890,7 @@
                               "id": "W16Zb",
                               "name": "Line Trident",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -46946,7 +46946,7 @@
                               "id": "IZ5bK",
                               "name": "Line Warhammer",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -47002,7 +47002,7 @@
                               "id": "vozkd",
                               "name": "Line War Pick",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -47058,7 +47058,7 @@
                               "id": "xK0i7",
                               "name": "Line Shovel",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49167,7 +49167,7 @@
                               "clip": true,
                               "width": "fill_container",
                               "height": 10,
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 0,
@@ -49225,7 +49225,7 @@
                               "id": "TAKyA",
                               "name": "Line Scimitar",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49281,7 +49281,7 @@
                               "id": "dklQH",
                               "name": "Line Shortsword",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49337,7 +49337,7 @@
                               "id": "m82fVe",
                               "name": "Shortsword error",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "padding": [
                                 0,
                                 10,
@@ -49348,7 +49348,7 @@
                                 {
                                   "type": "text",
                                   "id": "SH9rc",
-                                  "name": "Mithral Plate Armor error text",
+                                  "name": "Shortsword error text",
                                   "fill": "$danger-ink",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
@@ -49364,7 +49364,7 @@
                               "id": "sL2Si",
                               "name": "Line Trident",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49420,7 +49420,7 @@
                               "id": "LYsTX",
                               "name": "Line Warhammer",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49476,7 +49476,7 @@
                               "id": "iTvpX",
                               "name": "Line War Pick",
                               "width": "fill_container",
-                              "fill": "$surface-row-alt",
+                              "fill": "#00000000",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -49532,7 +49532,7 @@
                               "id": "cq6Gy",
                               "name": "Line Shovel",
                               "width": "fill_container",
-                              "fill": "#00000000",
+                              "fill": "$surface-row-alt",
                               "gap": 10,
                               "padding": [
                                 4,
@@ -56551,7 +56551,7 @@
                             {
                               "type": "frame",
                               "id": "qAvzG",
-                              "name": "Line Adamantine Breastplate",
+                              "name": "Line Sentinel Shield",
                               "width": "fill_container",
                               "fill": "#00000000",
                               "gap": 10,
@@ -56564,11 +56564,11 @@
                                 {
                                   "type": "text",
                                   "id": "u7K9Uz",
-                                  "name": "Adamantine Breastplate name",
+                                  "name": "Sentinel Shield name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Adamantine Breastplate",
+                                  "content": "Sentinel Shield",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56576,7 +56576,7 @@
                                 {
                                   "type": "frame",
                                   "id": "nMJDy",
-                                  "name": "Adamantine Breastplate field",
+                                  "name": "Sentinel Shield field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56591,7 +56591,7 @@
                                     {
                                       "type": "text",
                                       "id": "n6Qd9i",
-                                      "name": "Adamantine Breastplate formula",
+                                      "name": "Sentinel Shield formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56607,7 +56607,7 @@
                             {
                               "type": "frame",
                               "id": "DRsRK",
-                              "name": "Line Adamantine Chain Mail",
+                              "name": "Line Javelin of Lightning",
                               "width": "fill_container",
                               "fill": "$surface-row-alt",
                               "gap": 10,
@@ -56620,11 +56620,11 @@
                                 {
                                   "type": "text",
                                   "id": "wT5WE",
-                                  "name": "Adamantine Chain Mail name",
+                                  "name": "Javelin of Lightning name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Adamantine Chain Mail",
+                                  "content": "Javelin of Lightning",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56632,7 +56632,7 @@
                                 {
                                   "type": "frame",
                                   "id": "B1Jye5",
-                                  "name": "Adamantine Chain Mail field",
+                                  "name": "Javelin of Lightning field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56647,7 +56647,7 @@
                                     {
                                       "type": "text",
                                       "id": "PLpOT",
-                                      "name": "Adamantine Chain Mail formula",
+                                      "name": "Javelin of Lightning formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56663,7 +56663,7 @@
                             {
                               "type": "frame",
                               "id": "OyV7S",
-                              "name": "Line Adamantine Chain Shirt",
+                              "name": "Line Gauntlets of Ogre Power",
                               "width": "fill_container",
                               "fill": "#00000000",
                               "gap": 10,
@@ -56676,11 +56676,11 @@
                                 {
                                   "type": "text",
                                   "id": "iacPS",
-                                  "name": "Adamantine Chain Shirt name",
+                                  "name": "Gauntlets of Ogre Power name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Adamantine Chain Shirt",
+                                  "content": "Gauntlets of Ogre Power",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56688,7 +56688,7 @@
                                 {
                                   "type": "frame",
                                   "id": "LWVtk",
-                                  "name": "Adamantine Chain Shirt field",
+                                  "name": "Gauntlets of Ogre Power field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56703,7 +56703,7 @@
                                     {
                                       "type": "text",
                                       "id": "fXcil",
-                                      "name": "Adamantine Chain Shirt formula",
+                                      "name": "Gauntlets of Ogre Power formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56719,7 +56719,7 @@
                             {
                               "type": "frame",
                               "id": "tFcBU",
-                              "name": "Line Adamantine Plate Armor",
+                              "name": "Line Longsword +1",
                               "width": "fill_container",
                               "fill": "$surface-row-alt",
                               "gap": 10,
@@ -56732,11 +56732,11 @@
                                 {
                                   "type": "text",
                                   "id": "NNRP4",
-                                  "name": "Adamantine Plate Armor name",
+                                  "name": "Longsword +1 name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Adamantine Plate Armor",
+                                  "content": "Longsword +1",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56744,7 +56744,7 @@
                                 {
                                   "type": "frame",
                                   "id": "dp3Qi",
-                                  "name": "Adamantine Plate Armor field",
+                                  "name": "Longsword +1 field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56759,7 +56759,7 @@
                                     {
                                       "type": "text",
                                       "id": "aTYO2",
-                                      "name": "Adamantine Plate Armor formula",
+                                      "name": "Longsword +1 formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56775,7 +56775,7 @@
                             {
                               "type": "frame",
                               "id": "p2Gh7",
-                              "name": "Line Battleaxe +1",
+                              "name": "Line Shortsword +1",
                               "width": "fill_container",
                               "fill": "#00000000",
                               "gap": 10,
@@ -56788,11 +56788,11 @@
                                 {
                                   "type": "text",
                                   "id": "c6K2O",
-                                  "name": "Battleaxe +1 name",
+                                  "name": "Shortsword +1 name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Battleaxe +1",
+                                  "content": "Shortsword +1",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56800,7 +56800,7 @@
                                 {
                                   "type": "frame",
                                   "id": "D0jsz",
-                                  "name": "Battleaxe +1 field",
+                                  "name": "Shortsword +1 field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56815,7 +56815,7 @@
                                     {
                                       "type": "text",
                                       "id": "oea9R",
-                                      "name": "Battleaxe +1 formula",
+                                      "name": "Shortsword +1 formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56831,7 +56831,7 @@
                             {
                               "type": "frame",
                               "id": "cCCQw",
-                              "name": "Line Dagger +1",
+                              "name": "Line Greatsword +1",
                               "width": "fill_container",
                               "fill": "$surface-row-alt",
                               "gap": 10,
@@ -56844,11 +56844,11 @@
                                 {
                                   "type": "text",
                                   "id": "qCh3h",
-                                  "name": "Dagger +1 name",
+                                  "name": "Greatsword +1 name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Dagger +1",
+                                  "content": "Greatsword +1",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56856,7 +56856,7 @@
                                 {
                                   "type": "frame",
                                   "id": "Q4H0mZ",
-                                  "name": "Dagger +1 field",
+                                  "name": "Greatsword +1 field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56871,7 +56871,7 @@
                                     {
                                       "type": "text",
                                       "id": "S3JfR",
-                                      "name": "Dagger +1 formula",
+                                      "name": "Greatsword +1 formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -56887,7 +56887,7 @@
                             {
                               "type": "frame",
                               "id": "SiX6j",
-                              "name": "Line Dagger of Warning",
+                              "name": "Line Rapier +1",
                               "width": "fill_container",
                               "fill": "#00000000",
                               "gap": 10,
@@ -56900,11 +56900,11 @@
                                 {
                                   "type": "text",
                                   "id": "kOXi6",
-                                  "name": "Dagger of Warning name",
+                                  "name": "Rapier +1 name",
                                   "fill": "$text-primary",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Dagger of Warning",
+                                  "content": "Rapier +1",
                                   "fontFamily": "$font-body",
                                   "fontSize": 13,
                                   "fontWeight": "normal"
@@ -56912,7 +56912,7 @@
                                 {
                                   "type": "frame",
                                   "id": "vqMie",
-                                  "name": "Dagger of Warning field",
+                                  "name": "Rapier +1 field",
                                   "width": 84,
                                   "fill": "$surface-card",
                                   "cornerRadius": 4,
@@ -56927,7 +56927,7 @@
                                     {
                                       "type": "text",
                                       "id": "K7d5Wa",
-                                      "name": "Dagger of Warning formula",
+                                      "name": "Rapier +1 formula",
                                       "fill": "$text-primary",
                                       "textGrowth": "fixed-width",
                                       "width": "fill_container",
@@ -57230,6 +57230,8 @@
                                   "id": "ON0IG",
                                   "name": "Value",
                                   "fill": "$text-primary",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "3d6+14",
                                   "fontFamily": "$font-compact",
                                   "fontSize": 14,
@@ -58012,7 +58014,7 @@
                       "fontSize": 13
                     },
                     "p7o2oz": {
-                      "enabled": false
+                      "enabled": true
                     },
                     "vYzUL": {
                       "content": "Last one"
