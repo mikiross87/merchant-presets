@@ -22,11 +22,11 @@ export function changelogSection(text, version) {
  * prerelease.
  */
 export function rollChangelog(text, version, date, repo) {
-  // A prerelease is a snapshot of develop, not a release: it is tagged straight
-  // on develop, takes its version from the tag and its notes from [Unreleased],
+  // A prerelease is a snapshot of main, not a release: it is tagged straight
+  // on main, takes its version from the tag and its notes from [Unreleased],
   // which stays intact for the release that follows (RELEASING.md).
   if (version.includes("-")) {
-    throw new Error(`${version} is a prerelease — tag develop instead of staging a release`);
+    throw new Error(`${version} is a prerelease — tag main instead of staging a release`);
   }
   if (changelogSection(text, version) !== null) {
     throw new Error(`CHANGELOG.md already has a [${version}] section`);

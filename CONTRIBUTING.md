@@ -257,10 +257,10 @@ Constraints worth knowing before changing the generator:
 
 ## Pull requests
 
-- Branch from `develop` and target it (see
-  [RELEASING.md](RELEASING.md#branches)). CI must pass: both linters, unit
-  tests, manifest validation, CHANGELOG shape, JSON parse over `_source` and
-  `data`, a full pack compile from source, and the paid-content check.
+- Target `main`, or the integration branch while one is open (see
+  [RELEASING.md](RELEASING.md#branches)). CI must pass: both linters, unit tests, manifest validation,
+  CHANGELOG shape, JSON parse over `_source` and `data`, a full pack compile
+  from source, and the paid-content check.
 - One logical change per PR, with commit subjects written as prose rather than
   conventional-commit prefixes — `chore(release):`, which `release:prepare`
   writes, is the one exception. Release notes come from `CHANGELOG.md`, not from
@@ -271,27 +271,24 @@ Constraints worth knowing before changing the generator:
 - Add a line under `[Unreleased]` in `CHANGELOG.md` — _Added_, _Changed_,
   _Fixed_ or _Removed_ — written for the GM reading the release page. That
   section becomes the release notes verbatim.
-- Don't bump `version` in `module.json`. `main` and `develop` carry the version
-  of the last release; the bump happens in a release PR (see
-  [RELEASING.md](RELEASING.md)).
+- Don't bump `version` in `module.json`. `main` carries the version of the last
+  release; the bump happens in a release PR (see [RELEASING.md](RELEASING.md)).
 
 ## Releases (maintainer)
 
 [RELEASING.md](RELEASING.md) describes the whole process: issues and
 milestones, the release PR that `npm run release:prepare` stages, and the tag
-that publishes. `main` holds released code only and `develop` collects the
-work for the next release. Their `module.json` keeps the last released version,
-and `git log vX.Y.Z..develop` is the unreleased set. The release PR merges into
-`main` with a merge commit, and `main` is merged back into `develop` after the
-tag. The release notes are that version's `CHANGELOG.md` section.
+that publishes. `main` is the release branch. Its `module.json` keeps the last
+released version, and `git log vX.Y.Z..main` is the unreleased set. The release
+notes are that version's `CHANGELOG.md` section.
 
 ### Prereleases
 
-To let a change bake, tag `develop` with a semver prerelease version — for
-example `git tag -a v1.3.0-beta.1 -m "v1.3.0-beta.1"`, then push the tag. There
-is no release PR: `main` and `develop` keep the last released version, and the
-workflow takes the prerelease's version from the tag. It detects the hyphen and
-handles the prerelease differently:
+To let a change bake, tag `main` with a semver prerelease version — for example
+`git tag -a v1.3.0-beta.1 -m "v1.3.0-beta.1"`, then push the tag. There is no
+release PR: `main` keeps the last released version, and the workflow takes the
+prerelease's version from the tag. It detects the hyphen and handles the
+prerelease differently:
 
 - Marked as a GitHub **prerelease** (won't show as the repo's "Latest release").
 - **Not** registered with the Foundry package registry, and the milestone stays
