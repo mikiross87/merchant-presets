@@ -7,7 +7,7 @@ maintainer's loop.
 ## The loop
 
 ```
-issue ──► milestone ──► branch + PR (Closes #N) ──► develop ──► release PR ──► main ──► tag ──► CI publishes ──► back-merge
+issue ──► milestone ──► branch + PR (Closes #N) ──► main ──► release PR ──► tag ──► CI publishes
 ```
 
 1. **Every problem or improvement is an issue** — even ones you fix yourself
@@ -37,41 +37,30 @@ issue ──► milestone ──► branch + PR (Closes #N) ──► develop �
    in `CHANGELOG.md` in the same PR — written for the GM reading the release
    page, not the developer reading `git log`.
 
-4. **`main` is released code only; `develop` is last release + merged work.**
-   Every commit on `main` is a release merge, a hotfix merge, or a tag target.
-   `module.json` carries the version of the last release on both branches until
-   a release PR bumps it; the unreleased work is visible in `CHANGELOG.md` and
-   the open milestone, not in a pre-release version string that Foundry would
-   show to players.
+4. **`main` is always last release + merged work.** `module.json` carries the
+   version of the last release until the release PR bumps it; the unreleased
+   work is visible in `CHANGELOG.md` and the open milestone, not in a
+   pre-release version string that Foundry would show to players.
 
 ## Branches
 
-Gitflow: `develop` collects merged work, and `main` only ever receives
-releases.
+GitHub Flow with release PRs, not gitflow: there is no `develop`.
 
-| branch           | lives        | comes from | merges into                     |
-| ---------------- | ------------ | ---------- | ------------------------------- |
-| `main`           | always       |            |                                 |
-| `develop`        | always       | `main`     | `main`, via a release branch    |
-| issue branch     | until its PR | `develop`  | `develop`                       |
-| `release/vX.Y.Z` | until its PR | `develop`  | `main`, then `main` → `develop` |
-| `hotfix/vX.Y.Z`  | until its PR | `main`     | `main`, then `main` → `develop` |
+| branch           | lives        | comes from | merges into |
+| ---------------- | ------------ | ---------- | ----------- |
+| `main`           | always       |            |             |
+| issue branch     | until its PR | `main`     | `main`      |
+| `release/vX.Y.Z` | until its PR | `main`     | `main`      |
 
-`develop` is the default branch: PRs target it, and `Closes #N` fires when they
-merge. After every release or hotfix is tagged, open a PR from `main` into
-`develop` (`gh pr create --base develop --head main`) and merge it with a merge
-commit, so `develop` carries the release commit and its version bump. A hotfix
-is released the same way (see [Hotfixes](#hotfixes)). Foundry installs from the
-latest release, never from a branch, so neither branch has to be the published
-version for GMs to be safe. CI runs on both.
-
-Expect a `CHANGELOG.md` conflict on the back-merge: `main` rolled `[Unreleased]`
-into the new `[X.Y.Z]` section and moved the footer links, while `develop` kept
-adding `[Unreleased]` entries. Resolve it by keeping `develop`'s new
-`[Unreleased]` entries above `main`'s new `[X.Y.Z]` section, and take `main`'s
-footer links. `release:prepare` refuses to stage a release from a `develop`
-that doesn't contain `main`, so a forgotten back-merge is caught before the
-release PR.
+A hotfix is an issue branch released as a patch (see [Hotfixes](#hotfixes)).
+Foundry installs from the latest release, never from a branch, so `main` does
+not have to be the published version for GMs to be safe. A long-lived
+integration branch is the exception, for a major version that can't land in
+releasable stages (2.0 used one, `next`). Add it to `ci.yml`'s `push` and
+`pull_request` branches and give it `main`'s protection, merge `main` into it
+after every release, and close its issues by hand (`Closes #N` only fires on
+the default branch). It merges into `main` through the release PR and is
+deleted.
 
 ## Cutting a release
 
@@ -79,28 +68,19 @@ When the milestone is done (or you decide to ship what's there and move the
 rest):
 
 ```sh
-git checkout develop && git pull
+git checkout main && git pull
 npm run release:prepare -- 1.2.0      # bumps module.json, rolls the changelog, commits on release/v1.2.0
 git push -u origin release/v1.2.0
-gh pr create --base main --fill
+gh pr create --fill
 ```
 
 Review the `[1.2.0]` section — it becomes the release body — and merge once
-CI is green. Merge it with a **merge commit**, not a squash or a rebase: either
-would leave the release commit off `main`'s history, so the tag would not be an
-ancestor of `main` and `release.yml` refuses it. Then tag **main's post-merge
-HEAD**, not the release branch:
+CI is green. Then tag **main's post-merge HEAD**, not the release branch:
 
 ```sh
 git checkout main && git pull
 git tag -a v1.2.0 -m "v1.2.0"
 git push origin v1.2.0
-```
-
-Then merge the release back into `develop`, with a merge commit:
-
-```sh
-gh pr create --base develop --head main --title "Merge v1.2.0 back into develop" --body "Back-merge after v1.2.0."
 ```
 
 The tag triggers `release.yml`, which re-runs CI on the tagged tree, checks the
@@ -123,25 +103,24 @@ uploads after publication.
 
 ## Prereleases
 
-A prerelease is a snapshot of `develop`, not a release: there is nothing to
-stage and nothing to merge, and `release:prepare` refuses one. Tag `develop`
-directly:
+A prerelease is a snapshot of `main`, not a release: there is nothing to stage
+and nothing to merge, and `release:prepare` refuses one. Tag `main` directly:
 
 ```sh
-git checkout develop && git pull
+git checkout main && git pull
 git tag -a v1.3.0-beta.1 -m "v1.3.0-beta.1"
 git push origin v1.3.0-beta.1
 ```
 
 The workflow takes the version from the tag and writes it into the `module.json`
-it ships — `develop`'s still reads the last release — and takes the release body
+it ships — `main`'s still reads the last release — and takes the release body
 from `[Unreleased]`, which is everything the beta is carrying. It marks the
 release a GitHub prerelease, skips the Foundry registry and leaves the milestone
 open. Testers install it from that tag's own pinned manifest URL, which existing
 installs never see (CONTRIBUTING.md).
 
-Because nothing was staged, `main` and `develop` keep the last released version
-and `[Unreleased]` keeps its entries. The plain `1.3.0` is then cut exactly as
+Because nothing was staged, `main` keeps the last released version and
+`[Unreleased]` keeps its entries. The plain `1.3.0` is then cut exactly as
 above, and its notes cover everything since `1.2.x` rather than only what came
 after the beta (#76).
 
@@ -153,30 +132,10 @@ after the beta (#76).
 - **major** (`2.0.0`) — existing merchants in a world need migrating, or the
   minimum Foundry / dnd5e version rises
 
-Prereleases (`1.3.0-beta.1`) are tagged straight on `develop` — see
+Prereleases (`1.3.0-beta.1`) are tagged straight on `main` — see
 [Prereleases](#prereleases).
 
 ## Hotfixes
 
-A fix that can't wait for the next release goes out as a patch from `main`,
-without what has merged into `develop` since. There are no long-lived release
-branches to backport to.
-
-```sh
-git checkout main && git pull
-npm run release:prepare -- 1.2.1 --hotfix   # opens hotfix/v1.2.1 from main
-```
-
-Commit the fix on that branch with its line under `[Unreleased]`, then stage
-the release on the same branch:
-
-```sh
-npm run release:prepare -- 1.2.1            # bumps module.json, rolls the changelog
-git push -u origin hotfix/v1.2.1
-gh pr create --base main --fill
-```
-
-Merge with a merge commit, tag main's post-merge HEAD and open the back-merge
-PR exactly as in [Cutting a release](#cutting-a-release); the script prints the
-commands. Expect the same `CHANGELOG.md` conflict on the back-merge, and resolve
-it as described under [Branches](#branches).
+Branch from `main`, fix, PR, then release as a patch. There are no long-lived
+release branches to backport to: a hotfix is just a small release.
