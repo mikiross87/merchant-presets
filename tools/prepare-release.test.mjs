@@ -121,6 +121,18 @@ test("refuses when local develop is not at origin/develop", () => {
   assert.match(r.stderr, /origin\/develop/);
 });
 
+test("refuses a develop that lacks origin/main", () => {
+  const work = repo("main");
+  writeFileSync(join(work, "x"), "x");
+  git(work, "add", "x");
+  git(work, "commit", "-q", "-m", "hotfix merge");
+  git(work, "push", "-q", "origin", "main");
+  git(work, "switch", "-q", "develop");
+  const r = run(work, "1.1.0");
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /merge the last release or hotfix back into develop/);
+});
+
 test("refuses an existing tag", () => {
   const work = repo("develop");
   git(work, "tag", "v1.1.0");
