@@ -9,7 +9,7 @@
 // Tagging is a separate, deliberate step after the PR merges — see RELEASING.md.
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { rollChangelog } from "./changelog.mjs";
 
 const [version, flag] = process.argv.slice(2);
@@ -58,6 +58,10 @@ CHANGELOG.md, then stage the release on this branch:
 let release;
 if (branch === "develop") {
   atOrigin("develop");
+  git("fetch", "origin", "main");
+  if (spawnSync("git", ["merge-base", "--is-ancestor", "origin/main", "HEAD"]).status !== 0) {
+    fail("develop does not contain origin/main — merge the last release or hotfix back into develop first (RELEASING.md)");
+  }
   release = `release/v${version}`;
   unused(release);
 } else if (branch === hotfixBranch) {
