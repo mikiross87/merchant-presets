@@ -65,6 +65,14 @@ is released the same way (see [Hotfixes](#hotfixes)). Foundry installs from the
 latest release, never from a branch, so neither branch has to be the published
 version for GMs to be safe. CI runs on both.
 
+Expect a `CHANGELOG.md` conflict on the back-merge: `main` rolled `[Unreleased]`
+into the new `[X.Y.Z]` section and moved the footer links, while `develop` kept
+adding `[Unreleased]` entries. Resolve it by keeping `develop`'s new
+`[Unreleased]` entries above `main`'s new `[X.Y.Z]` section, and take `main`'s
+footer links. `release:prepare` refuses to stage a release from a `develop`
+that doesn't contain `main`, so a forgotten back-merge is caught before the
+release PR.
+
 ## Cutting a release
 
 When the milestone is done (or you decide to ship what's there and move the
@@ -170,7 +178,5 @@ gh pr create --base main --fill
 
 Merge with a merge commit, tag main's post-merge HEAD and open the back-merge
 PR exactly as in [Cutting a release](#cutting-a-release); the script prints the
-commands. The back-merge usually conflicts in `CHANGELOG.md`, because `main`
-rolled `[Unreleased]` into `[1.2.1]` while `develop` kept adding to it. Resolve
-it by keeping `develop`'s `[Unreleased]` entries plus the new `[1.2.1]`
-section.
+commands. Expect the same `CHANGELOG.md` conflict on the back-merge, and resolve
+it as described under [Branches](#branches).
