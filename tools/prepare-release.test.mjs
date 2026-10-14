@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, readFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -45,7 +45,7 @@ function repo(branch) {
   // isolated config leaves at master.
   git(root, "init", "-q", "-b", "main", work);
   git(work, "remote", "add", "origin", origin);
-  execFileSync("mkdir", ["-p", join(work, "tools")]);
+  mkdirSync(join(work, "tools"), { recursive: true });
   writeFileSync(join(work, "tools/prepare-release.mjs"), readFileSync(script));
   writeFileSync(join(work, "tools/changelog.mjs"), readFileSync(changelogLib));
   writeFileSync(join(work, "module.json"), `{\n  "id": "r",\n  "version": "1.0.0",\n  "url": "https://github.com/o/r"\n}\n`);
@@ -108,6 +108,7 @@ test("refuses a hotfix branch for another version", () => {
   assert.equal(run(work, "1.0.1", "--hotfix").status, 0);
   const r = run(work, "1.0.2");
   assert.equal(r.status, 1);
+  assert.match(r.stderr, /hotfix\/v1\.0\.2/);
 });
 
 test("refuses when local develop is not at origin/develop", () => {
@@ -123,7 +124,9 @@ test("refuses when local develop is not at origin/develop", () => {
 test("refuses an existing tag", () => {
   const work = repo("develop");
   git(work, "tag", "v1.1.0");
-  assert.equal(run(work, "1.1.0").status, 1);
+  const r = run(work, "1.1.0");
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /already exists/);
 });
 
 test("usage error on a bad version or an unknown flag", () => {
