@@ -48,6 +48,9 @@ than for the code. Reference the issue or PR it closes.
   becomes a shop the first time you open it: its settings now save instead
   of snapping back with a "can't be read" warning. It starts on the
   defaults, a Town shop with no stock table. (#261)
+- The SEALED stamp lands at its resting angle instead of jumping once its
+  animation ends, and with reduced motion turned on it appears without
+  animating. (#276)
 
 ### Removed
 
