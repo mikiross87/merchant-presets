@@ -686,12 +686,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
    * An NPC the GM gave the shop sheet by hand (#261) has no shop config of ours, so it reads as
    * broken and the Settings tab refuses every edit: the GM opening it makes it a shop, on the
    * defaults. A 1.x merchant, or a config that's there but invalid, is left for the migration.
+   * A write the server refuses is logged and the window still opens, as it did before (#261 review).
    * @override
    */
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     if (!game.user.isGM || this.preview || isMigratable(this.document)) return;
-    await this.document.update({ [`flags.${MODULE}.shop`]: _replace(structuredClone(SHOP_DEFAULTS)) });
+    try { await this.document.update({ [`flags.${MODULE}.shop`]: _replace(structuredClone(SHOP_DEFAULTS)) }); }
+    catch (err) { console.error(`${MODULE} | couldn't make ${this.document.name} a shop`, err); }
   }
 
   /** @override */
