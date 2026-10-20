@@ -1384,6 +1384,19 @@ test("a GM opening an NPC that was never a shop makes it one, so its settings sa
   assert.deepEqual(warnings, []);
 });
 
+test("a refused write while making an NPC a shop still opens its window (#261 review)", async t => {
+  const { sheet, shop } = openSettings(t);
+  shop.flags = {};
+  shop.update = async () => { throw new Error("server says no"); };
+  const errors = [];
+  const logged = console.error;
+  console.error = (...args) => errors.push(args);
+  t.after(() => { console.error = logged; });
+  await sheet._onFirstRender({}, {});   // resolves: the render goes on
+  assert.equal(errors.length, 1);
+  assert.equal((await sheet._prepareContext({})).settings.broken, true);
+});
+
 test("opening a shop window makes nothing a shop that has a config, a 1.x merchant's or a player's or a compendium copy (#261)", async t => {
   const cases = [
     ["a 1.x merchant not yet migrated", shop => { shop.flags = { "merchant-presets": { itemFlags: {} } }; }, {}],
