@@ -44,6 +44,10 @@ than for the code. Reference the issue or PR it closes.
 
 - A hammock on a ship is described as costing per day, as it's priced, not
   per mile. (#242)
+- An NPC you switch to the shop window yourself, without *Set up as shop…*,
+  becomes a shop the first time you open it: its settings now save instead
+  of snapping back with a "can't be read" warning. It starts on the
+  defaults, a Town shop with no stock table. (#261)
 
 ### Removed
 

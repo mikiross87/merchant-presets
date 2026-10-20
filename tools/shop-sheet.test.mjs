@@ -25,6 +25,7 @@ class ActorSheetV2 {
   get isVisible() { return this.document.testUserPermission(globalThis.game.user, this.options.viewPermission); }
   _canDragDrop() { return this.isEditable; }
   _toggleDisabled(disabled) { this.disabled = disabled; }
+  async _onFirstRender() {}
   async _onRender() { if (!this.isEditable) this._toggleDisabled(true); }
   render() { this.renders++; }
   async _prepareContext() { return {}; }
@@ -949,7 +950,7 @@ function openSettings(t, { gm = true, shopConfig = {}, ownership = 0 } = {}) {
     shop.updates.push(changes);
     await new Promise(resolve => setImmediate(resolve));
     const written = changes["flags.merchant-presets.shop"];
-    if (written) shop.flags["merchant-presets"].shop = structuredClone(written.replaced);
+    if (written) (shop.flags["merchant-presets"] ??= {}).shop = structuredClone(written.replaced);
   };
   const preset = { ...structuredClone(SHOP_DEFAULTS), tier: "City", terms: { sellsAt: 1.25, buysAt: null, categories: [] } };
   const warnings = [];
@@ -1370,6 +1371,45 @@ test("a shop whose config can't be read is never overwritten with the defaults",
   await act(sheet, "resetToPreset");
   assert.equal(shop.updates.length, 0);
   assert.ok(warnings.length >= 3);
+});
+
+test("a GM opening an NPC that was never a shop makes it one, so its settings save (#261)", async t => {
+  const { sheet, shop, warnings } = openSettings(t);
+  shop.flags = {};   // an NPC the GM gave the shop sheet by hand: no config of ours at all
+  await sheet._onFirstRender({}, {});
+  assert.deepEqual(shop.flags["merchant-presets"]?.shop, SHOP_DEFAULTS);
+  assert.equal((await sheet._prepareContext({})).settings.broken, false);
+  await change(sheet, { op: "rate", side: "sellsAt" }, { value: "120" });
+  assert.equal(writtenShop(shop).terms.sellsAt, 1.2);
+  assert.deepEqual(warnings, []);
+});
+
+test("a refused write while making an NPC a shop still opens its window (#261 review)", async t => {
+  const { sheet, shop } = openSettings(t);
+  shop.flags = {};
+  shop.update = async () => { throw new Error("server says no"); };
+  const errors = [];
+  const logged = console.error;
+  console.error = (...args) => errors.push(args);
+  t.after(() => { console.error = logged; });
+  await sheet._onFirstRender({}, {});   // resolves: the render goes on
+  assert.equal(errors.length, 1);
+  assert.equal((await sheet._prepareContext({})).settings.broken, true);
+});
+
+test("opening a shop window makes nothing a shop that has a config, a 1.x merchant's or a player's or a compendium copy (#261)", async t => {
+  const cases = [
+    ["a 1.x merchant not yet migrated", shop => { shop.flags = { "merchant-presets": { itemFlags: {} } }; }, {}],
+    ["a broken config", shop => { shop.flags["merchant-presets"].shop = { version: 1 }; }, {}],
+    ["a player's window", shop => { shop.flags = {}; }, { gm: false }],
+    ["a compendium copy", shop => { shop.flags = {}; shop.pack = "world.shops"; }, {}]
+  ];
+  for (const [what, arrange, options] of cases) {
+    const { sheet, shop } = openSettings(t, options);
+    arrange(shop);
+    await sheet._onFirstRender({}, {});
+    assert.equal(shop.updates.length, 0, what);
+  }
 });
 
 test("a double click on a rule's trash removes that rule only (#140 review, round 2)", async t => {
