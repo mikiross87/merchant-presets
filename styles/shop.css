@@ -1567,13 +1567,13 @@
   40% { background: color-mix(in oklab, var(--mp-warning), transparent 60%); }
 }
 
+/* No end frame: the stamp lands on its own resting angle and opacity (#276). */
 @keyframes mp-stamp {
   from { opacity: 0; transform: rotate(20deg) scale(1.3); }
-  to { opacity: 1; transform: rotate(-8deg) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-sheet .mp-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button, .shop-sheet .mp-seal-button, .shop-sheet .mp-restock-now { animation: none !important; transition: none !important; }
+  .shop-sheet .mp-line, .shop-sheet .bill-seal-stamp, .shop-sheet .seal-button, .shop-sheet .mp-seal-button, .shop-sheet .mp-restock-now, .shop-sheet .mp-stamp { animation: none !important; transition: none !important; }
   .shop-sheet .mp-line.is-struck .mp-line-name { animation: none; }
 }
 
