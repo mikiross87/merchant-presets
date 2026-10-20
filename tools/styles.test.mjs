@@ -125,16 +125,15 @@ test("a good's name gives way to its New badge and price, on the shelf and in Pl
   }
 });
 
-test("the SEALED stamp lands at its resting angle, and holds still under reduced motion (#276)", () => {
-  // The stamp rests at one angle and its animation ended at another, so it jumped the moment the
-  // animation stopped; and the reduced-motion rule named classes no template uses, not the stamp.
+test("the SEALED stamp lands on its resting look, and holds still under reduced motion (#276)", () => {
+  // The stamp's animation ended at its own angle and opacity, not the stamp's resting ones, so it
+  // jumped the moment the animation stopped. With no end frame it ends on the stamp's own styles.
+  // And the reduced-motion rule named classes no template uses, not the stamp.
   const css = readFileSync(new URL("../styles/shop.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
-  const rest = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
-    .find(([, sel]) => split(sel.trim()).includes(".shop-sheet .mp-stamp"))?.[2].match(/transform:\s*([^;]+)/)?.[1].trim();
-  const landing = css.match(/@keyframes mp-stamp\s*\{[\s\S]*?\bto\s*\{([^}]*)\}/)?.[1].match(/transform:\s*([^;]+)/)?.[1].trim();
-  assert.ok(rest);
-  assert.equal(landing?.match(/rotate\([^)]*\)/)?.[0], rest.match(/rotate\([^)]*\)/)?.[0]);
-  const reduced = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+  const frames = css.match(/@keyframes mp-stamp\s*\{((?:[^{}]*\{[^{}]*\})*)[^{}]*\}/)?.[1];
+  assert.ok(frames, "the stamp has its keyframes");
+  assert.doesNotMatch(frames, /(^|[},])\s*(to|100%)\s*[{,]/);
+  const reduced = [...css.matchAll(/@media \(prefers-reduced-motion: reduce\)\s*\{((?:[^{}]*\{[^{}]*\})*)[^{}]*\}/g)].map(m => m[1]).join("");
   const still = [...reduced.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, , body]) => /animation:\s*none/.test(body)).flatMap(([, sel]) => split(sel.trim()));
   assert.ok(still.includes(".shop-sheet .mp-stamp"), "the stamp is in the reduced-motion rule");
 });
