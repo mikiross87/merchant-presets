@@ -11,6 +11,8 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-10-20
+
 ### Changed
 
 - Magic items restock on their own slower clock: every 3d6+7 days in a
@@ -542,7 +544,8 @@ trades out itself. For GMs upgrading a world:
 - Containers stocked as separate items, one each
 - Original item descriptions and SRD prices throughout
 
-[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/mikiross87/merchant-presets/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/mikiross87/merchant-presets/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/mikiross87/merchant-presets/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/mikiross87/merchant-presets/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/mikiross87/merchant-presets/compare/v2.0.0...v2.1.0
