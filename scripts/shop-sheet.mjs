@@ -33,6 +33,7 @@ import {
 } from "./shop-view.mjs";
 
 import { accessModeOf, accessOf, canOpenOn, canVisit, gmCandidates, reachOnScene, tokensOf } from "./reach.mjs";
+import { isMigratable } from "./migrate.mjs";
 
 const MODULE = "merchant-presets";
 const TEMPLATES = `modules/${MODULE}/templates`;
@@ -679,6 +680,18 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   async render(...args) {
     try { return await super.render(...args); }
     finally { this._settingsRendering = false; }
+  }
+
+  /**
+   * An NPC the GM gave the shop sheet by hand (#261) has no shop config of ours, so it reads as
+   * broken and the Settings tab refuses every edit: the GM opening it makes it a shop, on the
+   * defaults. A 1.x merchant, or a config that's there but invalid, is left for the migration.
+   * @override
+   */
+  async _onFirstRender(context, options) {
+    await super._onFirstRender(context, options);
+    if (!game.user.isGM || this.preview || isMigratable(this.document)) return;
+    await this.document.update({ [`flags.${MODULE}.shop`]: _replace(structuredClone(SHOP_DEFAULTS)) });
   }
 
   /** @override */
