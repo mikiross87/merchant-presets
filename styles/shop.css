@@ -1567,9 +1567,9 @@
   40% { background: color-mix(in oklab, var(--mp-warning), transparent 60%); }
 }
 
+/* No end frame: the stamp lands on its own resting angle and opacity (#276). */
 @keyframes mp-stamp {
   from { opacity: 0; transform: rotate(20deg) scale(1.3); }
-  to { opacity: 1; transform: rotate(-14deg) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
