@@ -199,8 +199,8 @@ function kindIcon(actor, shop) {
 /** CONST.DOCUMENT_OWNERSHIP_LEVELS: a shop players can visit is Limited to them by default. */
 const NONE = 0, LIMITED = 1;
 
-/** A Settings-tab field typed into (text, number, time), as opposed to a box, radio or select. */
-const isTypedField = control => control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type);
+/** A Settings-tab field typed into (text, number, time, a textarea), as opposed to a box, radio or select. */
+const isTypedField = control => (control.tagName === "INPUT" && !["checkbox", "radio"].includes(control.type)) || control.tagName === "TEXTAREA";
 
 /**
  * Whether a typed formula rolls a count a restock can use (#229 review): Foundry's own check,
@@ -671,7 +671,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       ? { selector: settingSelector(active), value: active.value, selection: selectionOf(active),
         // A value just refused goes back to the saved one: the field stays focused when the
         // browser window, not the field, lost focus, and would otherwise carry it over.
-        dirty: this._resetTyping !== settingSelector(active) && (isTypedField(active) || active.tagName === "TEXTAREA") && active.value !== active.defaultValue }
+        dirty: this._resetTyping !== settingSelector(active) && isTypedField(active) && active.value !== active.defaultValue }
       : null;
     this._resetTyping = null;
     // From here until `_onRender`, a blur is the re-render removing a field, not the GM leaving it.
@@ -749,6 +749,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
           if (this._settingsRendering || !control.isConnected) return;
           if (control.value !== control.defaultValue) this._onSettingChange(control);
         });
+        // A textarea keeps its Enter: a new line, not the end of the field.
+        if (control.tagName === "TEXTAREA") continue;
         control.addEventListener("keydown", event => {
           if (event.key !== "Enter") return;
           event.preventDefault();
