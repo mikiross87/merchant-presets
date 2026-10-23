@@ -219,7 +219,8 @@
   object-fit: cover;
   object-position: top;
 }
-.shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+/* Never narrower than its chips and title: the design's hero lets the purse run past its padding rather than wrap them (#285). */
+.shop-sheet .mp-identity { flex: 1 1 0; min-width: min-content; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
 .shop-sheet .mp-shop-name {
   margin: 0;
