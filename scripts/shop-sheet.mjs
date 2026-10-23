@@ -885,8 +885,9 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // always open, in the header too.
     const shop = shopConfigOf(actor);
     const config = keepsHours() ? shop : { ...shop, hours: null };
-    const { title, tierFromName } = titleParts(actor.name);
-    const tier = tierFromName ?? config.tier;
+    const { title } = titleParts(actor.name);
+    // The shop's own size (#284): GMs rename shops, and a name's suffix decides nothing.
+    const tier = config.tier;
 
     // schedule.mjs's own convention (its header): every function there takes the world clock's
     // *plain numbers* — `{secondsPerMinute, minutesPerHour, hoursPerDay}` — not `game.time.calendar`

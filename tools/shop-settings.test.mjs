@@ -350,3 +350,17 @@ test("a shop with no magic clock refuses magic edits, and Reset to preset brings
   assert.deepEqual(applied(preset190, { op: "reset", preset: magicPreset }).magic, magicPreset.magic);
   assert.equal(applied(magicPreset, { op: "reset", preset: preset190 }).magic, null);
 });
+
+/* ------------------------------------------------------------ size (#284) */
+
+test("the size is set to one of the three, and nothing else moves", () => {
+  const before = shop({ tier: "Town", description: "<p>Sells Instruments.</p>" });
+  const after = applied(before, { op: "tier", tier: "City" });
+  assert.equal(after.tier, "City");
+  assert.deepEqual({ ...after, tier: "Town" }, before);
+});
+
+test("a size that isn't Village, Town or City is refused", () => {
+  refused(shop(), { op: "tier", tier: "Hamlet" });
+  refused(shop(), { op: "tier" });
+});

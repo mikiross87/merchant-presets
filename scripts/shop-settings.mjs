@@ -10,6 +10,7 @@ import { endsAfterDays } from "./deals.mjs";
 import { clockOf, isOpen, nextCloseAt } from "./schedule.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
+import { TIERS } from "./shop.mjs";
 
 /** The item types a shop can refuse to buy: the physical ones, which are all a player can sell. */
 export const WONT_BUY_TYPES = ["weapon", "equipment", "consumable", "tool", "loot", "container"];
@@ -163,6 +164,11 @@ const CHANGES = {
     // Already gone (a double click): nothing to do.
     shop.deals = shop.deals.filter(d => d.actor !== actor);
   },
+  // The shop's own size (#284), which the header chip reads; the name's suffix decides nothing.
+  tier(shop, { tier }) {
+    if (!TIERS.includes(tier)) return "a shop is a Village, Town or City";
+    shop.tier = tier;
+  },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);
     if (!result.ok) return result.errors.join("; ");
@@ -182,7 +188,7 @@ export const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantit
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
- *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226)
+ *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226), `{op: "tier", tier}` (#284)
  *   (#190; `preset` the preset merchant's shop config; each of these restock edits may name its
  *   `clock`, "restock" by default or "magic", #234), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`
