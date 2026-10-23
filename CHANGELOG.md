@@ -15,7 +15,7 @@ than for the code. Reference the issue or PR it closes.
 
 - The Settings tab has a new first section, Details, and now opens on it.
   Set a shop's settlement size there (Village, Town or City): the header
-  chip, the busy-day customers table and the magic restock follow it,
+  chip, the busy-day customers table and how much customers buy follow it,
   whatever the shop is called (#284). Edit the shop's description there
   too: paragraphs you leave alone keep their formatting, and a paragraph
   you change becomes plain text (#283).

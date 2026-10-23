@@ -995,7 +995,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       shortOpen: open && config.hours ? game.i18n.localize("MERCHANT_PRESETS.Shop.OpenUntilShort", { time: closesAt }) : null,
       shortTerms: `${sentence(chipWord(chipSellsAt))} · ${rateFraction(chipBuysAt)}`,
       // The description, as text, behind a narrow window's info button.
-      descriptionText: foundry.utils.cleanHTML(config.description ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+      descriptionText: descriptionText(config.description).replace(/\s+/g, " "),
       terms: this.#termsContext(config, chipSellsAt, chipBuysAt, currencies),
       // Today's kind of day (#226, design IS2fO): its name, and its line on hover. Not in a
       // compendium preview, whose copy never traded.
@@ -2538,7 +2538,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
 
   static async #onSetTier(_event, target) {
     if (!game.user.isGM) return;
-    await this.#edit(() => ({ op: "tier", tier: target.dataset.tier }));
+    // The pill already chosen: nothing to write.
+    await this.#edit(shop => (shop.tier === target.dataset.tier ? null : { op: "tier", tier: target.dataset.tier }));
   }
 
   /** Adds a rule for a category the GM picks in a small form (a test passes it as `data-category`). */
