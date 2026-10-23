@@ -219,10 +219,10 @@
   object-fit: cover;
   object-position: top;
 }
-/* Never narrower than its chips and title: the design's hero lets the purse run past its padding rather than wrap them (#285). */
-.shop-sheet .mp-identity { flex: 1 1 0; min-width: min-content; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
-.shop-sheet .mp-title-line > :not(.mp-shop-name) { flex: none; }
+.shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+/* Fresh stock and the day's kind, above the name (design IS2fO); the line is left out when neither applies. */
+.shop-sheet .mp-today-line { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-title-line { max-width: 100%; min-width: 0; display: flex; align-items: center; }
 .shop-sheet .mp-shop-name {
   margin: 0;
   border: none;
@@ -230,8 +230,7 @@
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
-  /* Cut here (345 px; the longest shipped title, "Armourer & Blacksmiths", is 344), so a long name can't widen the text column and push the purse or the info button out of the window. */
-  max-width: 345px;
+  /* A name that can't fit the column is cut, so it never widens it or pushes the purse or the info button out of the window. */
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1622,7 +1621,6 @@
   .shop-sheet .mp-hero { gap: 12px; padding: 14px 16px; }
   .shop-sheet .mp-portrait { width: 76px; height: 76px; outline-width: 3px; outline-offset: -1.5px; }
   .shop-sheet .mp-shop-name { font-size: 22px; line-height: 30px; }
-  .shop-sheet .mp-fresh-chip { display: none; }
   .shop-sheet .mp-chips.mp-narrow-only { display: flex; gap: 6px; }
   .shop-sheet .mp-nchip {
     gap: 5px;

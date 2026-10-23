@@ -50,11 +50,23 @@
     <img class="mp-portrait" data-pen="Merchant Portrait" src="{{header.img}}" alt="" />
   </button>
   <div class="mp-identity" data-pen="Identity">
-    <div class="mp-title-line" data-pen="Title line">
-      <h1 class="mp-shop-name" data-pen="Shop Name">{{header.title}}</h1>
+    {{!-- What today holds (design IS2fO): fresh stock and the kind of day, on a line above the name; no line at all when neither applies. --}}
+    {{#if (or header.fresh header.day)}}
+    <div class="mp-today-line mp-wide-only" data-pen="Today line">
       {{#if header.fresh}}
         <span class="mp-hero-chip mp-fresh-chip" data-pen="Fresh Chip">{{mpIcon "sparkles" pen="Fresh icon"}}<span data-pen="Fresh label">{{localize "MERCHANT_PRESETS.Shop.FreshStockToday"}}</span></span>
       {{/if}}
+      {{!-- Today's kind of day (#226, design IS2fO): its line on hover; never the numbers behind it. --}}
+      {{#if header.day}}
+      {{!-- data-tooltip-text: shown as text, never as HTML, whatever a GM's table says. --}}
+      <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip" data-tooltip-text="{{header.day.text}}">
+        {{mpIcon "users" pen="Day icon"}}<span data-pen="Day Label">{{header.day.name}}</span>
+      </span>
+      {{/if}}
+    </div>
+    {{/if}}
+    <div class="mp-title-line" data-pen="Title line">
+      <h1 class="mp-shop-name" data-pen="Shop Name">{{header.title}}</h1>
     </div>
     {{!-- The shop's own #98 description; shipped shops carry it as HTML (a <p> of its own), so
           this renders it unescaped, after the sheet has run it through foundry.utils.cleanHTML. Its
@@ -73,13 +85,6 @@
       <button type="button" class="mp-hero-chip mp-terms-chip chip-terms" data-pen="Terms Chip" popovertarget="{{appId}}-terms-popover" style="anchor-name: --{{appId}}-terms">
         {{mpIcon "scale" pen="Terms icon"}}<span data-pen="Terms Label">{{header.termsChip}}</span>{{mpIcon "chevron-down" pen="Terms chevron"}}
       </button>
-      {{!-- Today's kind of day (#226, design IS2fO): its line on hover; never the numbers behind it. --}}
-      {{#if header.day}}
-      {{!-- data-tooltip-text: shown as text, never as HTML, whatever a GM's table says. --}}
-      <span class="mp-hero-chip mp-day-chip" data-pen="Day Chip" data-tooltip-text="{{header.day.text}}">
-        {{mpIcon "users" pen="Day icon"}}<span data-pen="Day Label">{{header.day.name}}</span>
-      </span>
-      {{/if}}
     </div>
     {{!-- A narrow window's short chips (design r7HIUl). --}}
     <div class="mp-chips mp-narrow-only" data-pen="Chips">
