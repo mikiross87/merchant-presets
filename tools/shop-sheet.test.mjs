@@ -2128,8 +2128,38 @@ test("without a world clock, Restock's Players see falls back to the terms, not 
 test("Settings has a Till section after Restock (#147, design U0HcWc)", async t => {
   const { sheet } = openSettings(t);
   const { settings } = await sheet._prepareContext({});
-  assert.deepEqual(settings.sections.map(s => s.id), ["terms", "deals", "wontBuy", "hours", "restock", "customers", "till"]);
+  assert.deepEqual(settings.sections.map(s => s.id), ["details", "terms", "deals", "wontBuy", "hours", "restock", "customers", "till"]);
   assert.equal(settings.sections.at(-1).icon, "lucide:coins");
+});
+
+test("Settings opens on Terms, and Details comes first with dnd5e's word for it (#283, #284, design umwfH)", async t => {
+  const { sheet } = openSettings(t);
+  const { settings } = await sheet._prepareContext({});
+  assert.equal(sheet._settingsSection, "terms");
+  assert.equal(settings.sections[0].label, "DND5E.Details");
+  assert.equal(settings.activeSection.id, "terms");
+  assert.equal(settings.preview.details, null);
+});
+
+test("the Details section marks the shop's size and shows its description as text (#283, #284)", async t => {
+  const { sheet } = openSettings(t, { shopConfig: { tier: "City", description: "<p>One <em>two</em></p><p>Three</p>" } });
+  sheet._settingsSection = "details";
+  const { settings } = await sheet._prepareContext({});
+  assert.deepEqual(settings.details.tiers, [{ id: "Village", label: "Village", active: false }, { id: "Town", label: "Town", active: false }, { id: "City", label: "City", active: true }]);
+  assert.equal(settings.details.description, "One two\n\nThree");
+  assert.equal(settings.preview.details.tier, "City");
+});
+
+test("a size pill writes the shop's tier, and a description field writes only what changed (#283, #284)", async t => {
+  const { sheet, shop } = openSettings(t, { shopConfig: { tier: "Town", description: "<p>One <em>two</em></p><p>Three</p>" } });
+  await act(sheet, "setTier", { tier: "City" });
+  assert.equal(writtenShop(shop).tier, "City");
+  shop.updates.length = 0;
+  await change(sheet, { op: "description" }, { value: "One two\n\nThree" });
+  assert.equal(shop.updates.length, 0, "the text as it stood writes nothing");
+  await change(sheet, { op: "description" }, { value: "One two\n\nFour" });
+  assert.match(writtenShop(shop).description, /Four/);
+  assert.match(writtenShop(shop).description, /<em>two<\/em>/, "a paragraph left alone keeps its markup");
 });
 
 test("the Till section shows every coin the shop holds, what a restock refills it to and the preset's (#147)", async t => {

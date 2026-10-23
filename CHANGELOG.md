@@ -11,6 +11,12 @@ than for the code. Reference the issue or PR it closes.
 
 ## [Unreleased]
 
+### Added
+
+- The Settings tab has a new first section, Details, where you set a shop's
+  settlement size (Village, Town or City) and edit its description. The
+  header chip follows the size at once (#283, #284).
+
 ## [2.4.0] - 2026-10-20
 
 ### Changed

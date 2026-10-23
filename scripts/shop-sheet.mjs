@@ -16,7 +16,8 @@
 import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
-import { CLOCK_EDITS, EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
+import { CLOCK_EDITS, EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, descriptionText, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
+import { TIERS } from "./shop.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
@@ -70,6 +71,8 @@ const LIVE_REFUSALS = ["closed", "cant-afford", "till-short"];
 
 /** The GM Settings tab's sections (#110), in its side nav's order, with their icons. */
 const SETTINGS_SECTIONS = [
+  // dnd5e's own word, since the module has none for it (#283, #284).
+  { id: "details", icon: "lucide:store", label: "DND5E.Details" },
   { id: "terms", icon: "lucide:scale" },
   { id: "deals", icon: "lucide:handshake" },
   { id: "wontBuy", icon: "lucide:ban" },
@@ -265,7 +268,7 @@ function dealChip(termsChip, deal, world, terms) {
  * words, since a strike can't cross coin icons. Empty when the deal didn't move the price.
  */
 /** Which Players see view a Settings section has: its own, or the terms and deals one. */
-const previewOf = section => (["restock", "wontBuy", "hours", "till"].includes(section) ? section : "terms");
+const previewOf = section => (["details", "restock", "wontBuy", "hours", "till"].includes(section) ? section : "terms");
 /** `items` in rows of `size`, each numbered from 1 for its layer name. */
 // A short last row keeps its checks under the columns above with empty cells (design dYANz, #184).
 const inRows = (items, size) => Array.from({ length: Math.ceil(items.length / size) }, (_, i) => {
@@ -511,6 +514,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       settingsSection: ShopSheet.#onSettingsSection,
       togglePreview: ShopSheet.#onTogglePreview,
       setEvery: ShopSheet.#onSetEvery,
+      setTier: ShopSheet.#onSetTier,
       addRule: ShopSheet.#onAddRule,
       removeRule: ShopSheet.#onRemoveRule,
       addDeal: ShopSheet.#onAddDeal,
@@ -755,7 +759,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // A compendium preview's settings are read, not changed (#199, design Zm5HK): every control
     // that would edit is off, dimmed by the tab's is-readonly styles.
     if (this.preview) {
-      for (const control of this.element?.querySelectorAll(".settings-tab :is([data-op]:not([data-op='findGood']), [data-action='setEvery'])") ?? []) control.disabled = true;
+      for (const control of this.element?.querySelectorAll(".settings-tab :is([data-op]:not([data-op='findGood']), [data-action='setEvery'], [data-action='setTier'])") ?? []) control.disabled = true;
     }
     // The quantity list's Find (#190, design HKGIx) narrows it to the goods whose name it holds.
     // Its own op only so a re-render keeps the GM's typing and caret, as every Settings field's.
@@ -2010,7 +2014,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // A config that failed validation shows the defaults here; editing is refused (see `#edit`).
       broken: !safeShopOf(actor),
       // One page: the nav jumps to a section, and marks the one last jumped to.
-      sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
+      sections: SETTINGS_SECTIONS.map(s => ({ ...s, label: s.label ? game.i18n.localize(s.label) : i18n(`Sections.${s.id}`), active: s.id === this._settingsSection })),
       // The narrow window's section dropdown shows the one jumped to (design bXBEW).
       get activeSection() { return this.sections.find(s => s.active) ?? this.sections[0]; },
       previewOpen: this._previewOpen,
@@ -2022,6 +2026,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // "Entirely" holds only while no player has access of their own; then the hint says so.
       visitHint: i18n(visitOthers ? "Visit.Hint" : "Visit.HintAll"),
       visitOthers,
+      // The shop's size and description (#283, #284): the description as the textarea shows it.
+      details: {
+        tiers: TIERS.map(id => ({ id, label: id, active: id === shop.tier })),
+        description: descriptionText(shop.description)
+      },
       terms: {
         // In words, what the shop actually charges and pays: capped, as the chip and trades are.
         sells: { ...rate("sellsAt"), word: termsWord(effective.sellsAt.rate, "sell") },
@@ -2108,6 +2117,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       // What players see at these terms: the header chip and its worked example, then each deal in
       // force as its own character sees it.
       preview: {
+        // Jumped to Details, Players see shows the header's size chip and description (design umwfH).
+        details: this._settingsSection === "details" ? { tier: header.tier, icon: header.kindIcon, description: header.descriptionText } : null,
         // Jumped to Restock, Players see shows the shelf after one (design aaJcp); to Hours, the
         // header chip at an open hour and a closed one (design S2swP). Won't buy's is Aria's Sell
         // tab, added once that is built (_prepareContext).
@@ -2306,6 +2317,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       await this.#queue(() => this.document.update({ "ownership.default": checked && !reach ? LIMITED : NONE, [`flags.${MODULE}.visibility`]: checked }));
       return;
     }
+    // Left as it was, nothing is written; the description is stored as paragraphs (`applyChange`).
+    if (op === "description") return this.#edit(shop => (descriptionText(shop.description) === value ? null : { op, text: value }), settingSelector(control));
     if (op === "till" || op === "purse") return this.#setTill(op, control.dataset.denomination, value, settingSelector(control));
     const change = {
       rate: () => ({ op, side, percent: typedNumber(value) }),
@@ -2517,6 +2530,11 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
       return;
     }
     await this.#edit(() => ({ op: "every", every }));
+  }
+
+  static async #onSetTier(_event, target) {
+    if (!game.user.isGM) return;
+    await this.#edit(() => ({ op: "tier", tier: target.dataset.tier }));
   }
 
   /** Adds a rule for a category the GM picks in a small form (a test passes it as `data-category`). */
