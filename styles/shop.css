@@ -222,6 +222,7 @@
 /* Never narrower than its chips and title: the design's hero lets the purse run past its padding rather than wrap them (#285). */
 .shop-sheet .mp-identity { flex: 1 1 0; min-width: min-content; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
+.shop-sheet .mp-title-line > :not(.mp-shop-name) { flex: none; }
 .shop-sheet .mp-shop-name {
   margin: 0;
   border: none;
@@ -229,8 +230,9 @@
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
-  /* A long name is cut here, so it can't widen the header's text column (min-width above) and push the purse or the info button out of the window. */
-  max-width: 340px;
+  /* Cut here (345 px; the longest shipped title, "Armourer & Blacksmiths", is 344), so a long name can't widen the text column and push the purse or the info button out of the window. */
+  max-width: 345px;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--mp-on-dark);
