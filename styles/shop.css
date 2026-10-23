@@ -229,6 +229,10 @@
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
+  /* A long name is cut here, so it can't widen the header's text column (min-width above) and push the purse or the info button out of the window. */
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--mp-on-dark);
 }
 .shop-sheet .mp-description { align-self: stretch; font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
