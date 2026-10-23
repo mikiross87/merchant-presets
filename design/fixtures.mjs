@@ -656,7 +656,7 @@ const previewCopy = (exported = false) => `await (async () => {
   return copy;
 })()`;
 const preview = openShop({ from: previewCopy() });
-const previewSettings = openShop({ tab: "settings", from: previewCopy(), before: `shop.sheet._settingsSection = "terms";` });
+const previewSettings = openShop({ tab: "settings", from: previewCopy(), before: `shop.sheet._settingsSection = "details";` });
 /** The exported shop's board (#214, design W9SYUv): its card in the wide window, its dock in the narrow one. */
 const exportedCard = openShop({ from: previewCopy(true), size: { width: 920, height: 680 },
   then: `app.element.querySelector('.tab.active [data-pen="Basket"]').id = app.id + "-basket";`, root: "`${app.id}-basket`" });
@@ -802,8 +802,8 @@ export const FRAMES = {
   ...dealFrames,
   PV7Sf: frame("11 Sell — Narrow (Light)", "light", 480, 803, "Gamemaster", sellNarrow),
   NipLU: frame("11 Sell — Narrow (Dark)", "dark", 480, 803, "Gamemaster", sellNarrow),
-  bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 803, "Gamemaster", settingsAt("terms", true, false)),
-  G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 803, "Gamemaster", settingsAt("terms", true, false)),
+  bXBEW: frame("11 Settings (GM) — Narrow (Light)", "light", 480, 803, "Gamemaster", settingsAt("details", true, false)),
+  G4W9Xw: frame("11 Settings (GM) — Narrow (Dark)", "dark", 480, 803, "Gamemaster", settingsAt("details", true, false)),
   "euA99:sealed": frame("12 Sell Trade States — Light · sealed", "light", 694, 596, "Gamemaster", sellSealed, { export: "euA99", part: "o05Tqq" }),
   "kJkCg:sealed": frame("12 Sell Trade States — Dark · sealed", "dark", 694, 596, "Gamemaster", sellSealed, { export: "kJkCg", part: "o05Tqq" }),
   RRqQ7: frame("13 Settings (GM) · No world clock — Light", "light", 920, 849, "Gamemaster", noClockSettings),

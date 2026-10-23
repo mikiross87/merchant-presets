@@ -2132,13 +2132,15 @@ test("Settings has a Till section after Restock (#147, design U0HcWc)", async t 
   assert.equal(settings.sections.at(-1).icon, "lucide:coins");
 });
 
-test("Settings opens on Terms, and Details comes first with dnd5e's word for it (#283, #284, design umwfH)", async t => {
-  const { sheet } = openSettings(t);
+test("Settings opens on Details, first with dnd5e's word for it, and the narrow dock reads the size (#283, #284, design umwfH, bXBEW)", async t => {
+  const { sheet } = openSettings(t, { shopConfig: { tier: "City" } });
   const { settings } = await sheet._prepareContext({});
-  assert.equal(sheet._settingsSection, "terms");
+  assert.equal(sheet._settingsSection, "details");
   assert.equal(settings.sections[0].label, "DND5E.Details");
-  assert.equal(settings.activeSection.id, "terms");
-  assert.equal(settings.preview.details, null);
+  assert.equal(settings.activeSection.id, "details");
+  assert.equal(settings.preview.line, "City");
+  sheet._settingsSection = "terms";
+  assert.equal((await sheet._prepareContext({})).settings.preview.details, null);
 });
 
 test("the Details section marks the shop's size and shows its description as text (#283, #284)", async t => {
