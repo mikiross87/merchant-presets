@@ -595,6 +595,8 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     this._settingsSection = "terms";
     /** The section a nav click jumped to, marked until the GM scrolls by hand (#172, #173 review); null: follow the scroll. */
     this._pinnedSection = null;
+    /** Whether the Settings form has been scrolled to the open section, once it first had a size (#283). */
+    this._settingsPlaced = false;
     /** Whether a section change is waiting for scrolling to stop to re-render Players see (#172). */
     this._settlePending = false;
     /** Whether a narrow window shows Players see in place of the Settings form (its dock's chevron). */
@@ -718,6 +720,20 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     }
     // The Settings form scrolls as one page: its nav follows the section being read (#172).
     const settingsForm = this.element?.querySelector(".settings-body");
+    if (settingsForm && !this._settingsPlaced) {
+      // Details comes first on the page, but the tab opens on Terms (#283): the form is scrolled
+      // there when it first has a size, which is when its tab is shown.
+      const place = () => {
+        if (!settingsForm.clientHeight) return false;
+        this._settingsPlaced = true;
+        this.#scrollToSection(settingsForm);
+        return true;
+      };
+      if (!place()) {
+        const observer = new ResizeObserver(() => { if (!settingsForm.isConnected || place()) observer.disconnect(); });
+        observer.observe(settingsForm);
+      }
+    }
     if (settingsForm) {
       let frame = null;
       settingsForm.addEventListener("scroll", () => {
@@ -2496,6 +2512,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     if (shown) shown.textContent = label;
   }
 
+  /** Scrolls the Settings `form` to the open section. */
+  #scrollToSection(form) {
+    const section = form?.querySelector(`.settings-section[data-section="${this._settingsSection}"]`);
+    if (!section) return;
+    const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
+    form.scrollTop += section.getBoundingClientRect().top - form.getBoundingClientRect().top - pad;
+  }
+
   /** Scrolls the form to `section` and marks it in the nav and the narrow dropdown. */
   #jumpToSection(sectionId, { fromDropdown = false } = {}) {
     const previous = this._settingsSection;
@@ -2508,12 +2532,7 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     for (const link of this.element.querySelectorAll(".mp-nav-link")) link.classList.toggle("active", link.dataset.section === sectionId);
     // Only the form scrolls: scrollIntoView would scroll the window's own content too, and take
     // its bar and hero off the top.
-    const form = this.element.querySelector(".settings-body");
-    const section = form?.querySelector(`.settings-section[data-section="${this._settingsSection}"]`);
-    if (section) {
-      const pad = parseFloat(getComputedStyle(form).scrollPaddingTop) || 0;
-      form.scrollTop += section.getBoundingClientRect().top - form.getBoundingClientRect().top - pad;
-    }
+    this.#scrollToSection(this.element.querySelector(".settings-body"));
     // Players see has its own view for some sections (design aaJcp, dYANz, S2swP), and the narrow
     // dropdown names the section it jumped to: either re-renders.
     if (changed && (fromDropdown || previewOf(previous) !== previewOf(sectionId))) this.render({ parts: ["body"] });
