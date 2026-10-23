@@ -438,3 +438,8 @@ test("a single Enter is a line break and a blank line a new paragraph (#283 revi
   assert.equal(applied(shop(), { op: "description", text: "One  \n  two\n\nThree" }).description, "<p>One<br>two</p><p>Three</p>");
   assert.equal(descriptionText("<p>Rope\n  and <br>nails</p>"), "Rope and\nnails");
 });
+
+test("stripping tags leaves no tag a nested one was hiding, and a typed &lt;b&gt; stays text (#283 review)", () => {
+  assert.equal(descriptionText("<p>a<scr<b>ipt>b</p>"), "ab");
+  assert.equal(descriptionText("<p>Food &amp; &lt;b&gt;Ale&lt;/b&gt;</p>"), "Food & <b>Ale</b>");
+});
