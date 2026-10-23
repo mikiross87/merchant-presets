@@ -71,7 +71,9 @@ function paragraphs(html) {
   const source = String(html ?? "");
   const found = [...source.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
   const parts = found.length ? found : [source];
-  const textOf = part => decode(part.replace(/\s+/g, " ").replace(/<br\b[^>]*>/gi, "\n").replace(/<[^>]*>/g, ""))
+  // Tags go until none is left, so a nested one (`<scr<b>ipt>`) can't leave a tag behind.
+  const strip = markup => { for (let last = null; last !== markup;) { last = markup; markup = markup.replace(/<[^>]*>/g, ""); } return markup; };
+  const textOf = part => decode(strip(part.replace(/\s+/g, " ").replace(/<br\b[^>]*>/gi, "\n")))
     .split("\n").map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
   const list = parts.map(part => ({ html: part, text: textOf(part) })).filter(p => p.text);
   const rest = found.length ? list.reduce((left, p) => left.replace(p.html, ""), source).trim() : "";

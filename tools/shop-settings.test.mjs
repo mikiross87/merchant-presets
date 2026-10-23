@@ -440,6 +440,7 @@ test("a single Enter is a line break and a blank line a new paragraph (#283 revi
 });
 
 test("stripping tags leaves no tag a nested one was hiding, and a typed &lt;b&gt; stays text (#283 review)", () => {
-  assert.equal(descriptionText("<p>a<scr<b>ipt>b</p>"), "ab");
+  assert.equal(descriptionText("<p>a<scr<b>ipt>b</p>"), "aipt>b");
+  assert.doesNotMatch(descriptionText("<p>a<<b>script>alert(1)</p>"), /<[a-z]/i);
   assert.equal(descriptionText("<p>Food &amp; &lt;b&gt;Ale&lt;/b&gt;</p>"), "Food & <b>Ale</b>");
 });

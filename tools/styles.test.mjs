@@ -106,11 +106,11 @@ test("every visually hidden input is positioned by its own label, not the window
 test("the header's clamped description shows its whole text on hover (#231)", () => {
   // `.mp-description` is clamped to two lines (design IeGac), so a long one (the arcane store's
   // spellcasting note) ends in "…" with the rest unreadable. Its tooltip carries the whole text,
-  // as the narrow window's info button does.
+  // as the narrow window's info button does, as text: typed markup in it isn't rendered.
   const hbs = readFileSync(new URL("../templates/shop-sheet.hbs", import.meta.url), "utf8");
   const description = hbs.match(/<div\b[^>]*class="[^"]*\bmp-description\b[^"]*"[^>]*>/)?.[0];
   assert.ok(description);
-  assert.match(description, /\bdata-tooltip="\{\{header\.descriptionText\}\}"/);
+  assert.match(description, /\bdata-tooltip-text="\{\{header\.descriptionText\}\}"/);
 });
 
 test("a good's name gives way to its New badge and price, on the shelf and in Players see (#234 live run)", () => {
