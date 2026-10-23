@@ -49,6 +49,21 @@ export function parseTime(text) {
   return hour < 24 && minute < 60 ? { hour, minute } : null;
 }
 
+const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: "\"", "#39": "'", apos: "'", nbsp: " " };
+const decode = text => text.replace(/&(amp|lt|gt|quot|#39|apos|nbsp);/g, (_, e) => ENTITIES[e]);
+const escape = text => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** A stored description's paragraphs (#283): each `<p>` as `{html, text}`; text with no `<p>` is one. */
+function paragraphs(html) {
+  const found = [...String(html ?? "").matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
+  const parts = found.length ? found : [String(html ?? "")];
+  return parts.map(part => ({ html: part, text: decode(part.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim() }))
+    .filter(p => p.text);
+}
+
+/** A description as the Settings tab's textarea shows it: its paragraphs' text, a blank line between. */
+export const descriptionText = html => paragraphs(html).map(p => p.text).join("\n\n");
+
 /**
  * Which schedule chip `restock` reads as: "1", "3", "7" or "14" days, "never" (never, or restocking
  * switched off), or "dice" with the formula (or an unlisted number of days) in `formula`.
@@ -169,6 +184,14 @@ const CHANGES = {
     if (!TIERS.includes(tier)) return "a shop is a Village, Town or City";
     shop.tier = tier;
   },
+  // The shop's description (#283), written as paragraphs of what's typed.
+  description(shop, { text }) {
+    if (typeof text !== "string") return "a description is text";
+    const stored = paragraphs(shop.description);
+    const typed = text.split(/(?:\r?\n[ \t]*){2,}/).map(t => t.replace(/\s+/g, " ").trim()).filter(Boolean);
+    // A paragraph left as it was keeps its own markup (a preset's italic caster note, #283).
+    shop.description = typed.map(t => stored.find(p => p.text === t)?.html ?? `<p>${escape(t)}</p>`).join("");
+  },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);
     if (!result.ok) return result.errors.join("; ");
@@ -188,7 +211,7 @@ export const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantit
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
- *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226), `{op: "tier", tier}` (#284)
+ *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226), `{op: "tier", tier}` (#284), `{op: "description", text}` (#283)
  *   (#190; `preset` the preset merchant's shop config; each of these restock edits may name its
  *   `clock`, "restock" by default or "magic", #234), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`

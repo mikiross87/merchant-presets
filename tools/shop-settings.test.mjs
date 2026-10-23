@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SHOP_DEFAULTS, shopFrom, validateShop } from "../scripts/schema.mjs";
-import { applyChange, dealFields, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, quantityRows, resetToPreset, tableIsPreset, timeText, wholeCoins } from "../scripts/shop-settings.mjs";
+import { applyChange, dealFields, descriptionText, dealReading, everyChoice, hoursSamples, openMinutes, parseTime, percentOf, quantityRows, resetToPreset, tableIsPreset, timeText, wholeCoins } from "../scripts/shop-settings.mjs";
 
 const WORLD = { sellsAt: 1, buysAt: 0.5 };
 const shop = (over = {}) => shopFrom({ version: 1, ...over });
@@ -363,4 +363,41 @@ test("the size is set to one of the three, and nothing else moves", () => {
 test("a size that isn't Village, Town or City is refused", () => {
   refused(shop(), { op: "tier", tier: "Hamlet" });
   refused(shop(), { op: "tier" });
+});
+
+/* ------------------------------------------------------------ description */
+
+const TEMPLE = "<p>Sells Spell Scrolls.</p><p><em>Casts spells &amp; more.</em></p>";
+
+test("a description shows as its paragraphs' text, a blank line between", () => {
+  assert.equal(descriptionText(TEMPLE), "Sells Spell Scrolls.\n\nCasts spells & more.");
+  assert.equal(descriptionText("Sells rope."), "Sells rope.");
+  assert.equal(descriptionText("<p>Rope<br>and nails</p>"), "Rope and nails");
+  assert.equal(descriptionText(""), "");
+});
+
+test("a paragraph left as it was keeps its own markup; a changed one is plain", () => {
+  const after = applied(shop({ description: TEMPLE }), { op: "description", text: "Sells scrolls.\n\nCasts spells & more." });
+  assert.equal(after.description, "<p>Sells scrolls.</p><p><em>Casts spells &amp; more.</em></p>");
+});
+
+test("what's typed is stored escaped and reads back as typed", () => {
+  const after = applied(shop(), { op: "description", text: `Use <b> & "quotes"` });
+  assert.equal(after.description, "<p>Use &lt;b&gt; &amp; &quot;quotes&quot;</p>");
+  assert.equal(descriptionText(after.description), `Use <b> & "quotes"`);
+});
+
+test("paragraphs split on any blank line, and blank ones go", () => {
+  const after = applied(shop(), { op: "description", text: " One.\r\n\r\n\n\nTwo. \n\n  \n" });
+  assert.equal(after.description, "<p>One.</p><p>Two.</p>");
+  assert.equal(applied(shop({ description: TEMPLE }), { op: "description", text: " \n " }).description, "");
+});
+
+test("the same text writes the same description", () => {
+  const config = shop({ description: TEMPLE });
+  assert.equal(applied(config, { op: "description", text: descriptionText(TEMPLE) }).description, TEMPLE);
+});
+
+test("a description that isn't text is refused", () => {
+  refused(shop(), { op: "description", text: 3 });
 });
