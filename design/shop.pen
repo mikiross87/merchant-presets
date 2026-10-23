@@ -1238,21 +1238,11 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "x9OKc",
-                  "name": "Title line",
-                  "gap": 12,
+                  "id": "H3z4WJ",
+                  "name": "Today line",
+                  "gap": 8,
                   "alignItems": "center",
                   "children": [
-                    {
-                      "type": "text",
-                      "id": "v4bjn",
-                      "name": "Shop Name",
-                      "fill": "$text-on-dark",
-                      "content": "Armourer & Blacksmith",
-                      "fontFamily": "$font-title",
-                      "fontSize": 30,
-                      "fontWeight": "700"
-                    },
                     {
                       "type": "frame",
                       "id": "uYCYY",
@@ -1289,6 +1279,65 @@
                           "fontWeight": "normal"
                         }
                       ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OmdZ0",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Day Chip",
+                      "enabled": false,
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "stroke": "#e3ce9e80",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "beQaz",
+                          "name": "Day icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "users",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ioeoD",
+                          "name": "Day Label",
+                          "fill": "$text-on-dark",
+                          "content": "Very busy",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "x9OKc",
+                  "name": "Title line",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v4bjn",
+                      "name": "Shop Name",
+                      "fill": "$text-on-dark",
+                      "content": "Armourer & Blacksmith",
+                      "fontFamily": "$font-title",
+                      "fontSize": 30,
+                      "fontWeight": "700"
                     }
                   ]
                 },
@@ -1426,46 +1475,6 @@
                           "icon": "chevron-down",
                           "library": "lucide",
                           "fill": "$accent-on-dark"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "OmdZ0",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Day Chip",
-                      "enabled": false,
-                      "fill": "#00000040",
-                      "cornerRadius": 999,
-                      "stroke": "#e3ce9e80",
-                      "strokeWidth": 1,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "beQaz",
-                          "name": "Day icon",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "users",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        },
-                        {
-                          "type": "text",
-                          "id": "ioeoD",
-                          "name": "Day Label",
-                          "fill": "$text-on-dark",
-                          "content": "Very busy",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -3549,13 +3558,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             }
           }
@@ -4927,13 +4933,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -6460,17 +6463,6 @@
       "y": 1778,
       "theme": {
         "mode": "dark"
-      },
-      "descendants": {
-        "PkCo2/uYCYY": {
-          "enabled": false
-        },
-        "PkCo2/amGqh": {
-          "enabled": false
-        },
-        "PkCo2/K7PByz": {
-          "enabled": false
-        }
       }
     },
     {
@@ -6515,12 +6507,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -8898,13 +8884,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PG7N6": {
@@ -18429,13 +18412,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PmOUn": {
@@ -20298,13 +20278,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PmOUn": {
@@ -30332,13 +30309,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PG7N6": {
@@ -33607,13 +33581,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -34667,13 +34638,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -35663,11 +35631,14 @@
                 "mode": "cover"
               }
             },
-            "v4bjn": {
-              "content": "Temple & Faith Store"
+            "H3z4WJ": {
+              "enabled": false
             },
             "uYCYY": {
               "enabled": false
+            },
+            "v4bjn": {
+              "content": "Temple & Faith Store"
             },
             "Cx08R": {
               "content": "Sells Adventuring Gear, Holy Symbols, Magic Items, Potions, Services, Spell Components, Tools and Weapons. Casts spells from the divine lists: roll 1d4+1 spell slots a day in a village,…"
@@ -37195,11 +37166,14 @@
                 "mode": "cover"
               }
             },
-            "v4bjn": {
-              "content": "Stable"
+            "H3z4WJ": {
+              "enabled": false
             },
             "uYCYY": {
               "enabled": false
+            },
+            "v4bjn": {
+              "content": "Stable"
             },
             "Cx08R": {
               "content": "Sells Mounts & Animals, Services, Tack & Harness and Vehicles."
@@ -38506,6 +38480,9 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
               "enabled": false
             },
@@ -39453,6 +39430,9 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
               "enabled": false
             },
@@ -42264,13 +42244,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -45910,12 +45887,6 @@
             "uYCYY": {
               "enabled": true
             },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
-              "enabled": true
-            },
             "PmOUn": {
               "fill": "$accent-on-dark"
             }
@@ -48325,12 +48296,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -50801,17 +50766,11 @@
             "uYCYY": {
               "enabled": false
             },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
-              "enabled": false
+            "OmdZ0": {
+              "enabled": true
             },
             "RetMP": {
               "content": "Sells at list · Buys at ½"
-            },
-            "OmdZ0": {
-              "enabled": true
             }
           }
         },
@@ -51853,13 +51812,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -55774,12 +55730,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
