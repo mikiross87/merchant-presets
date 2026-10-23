@@ -26796,7 +26796,7 @@
                   "name": "Section icon",
                   "width": 14,
                   "height": 14,
-                  "icon": "scale",
+                  "icon": "store",
                   "library": "lucide",
                   "fill": "$accent-strong"
                 },
@@ -26807,7 +26807,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Terms",
+                  "content": "Details",
                   "fontFamily": "$font-body",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -26908,6 +26908,205 @@
                   "fontFamily": "$font-compact",
                   "fontSize": 11,
                   "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RMwGU",
+              "name": "Section Details",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dzyAf",
+                  "name": "Details head",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "skrJg",
+                      "name": "Details title",
+                      "fill": "$text-title",
+                      "content": "Details",
+                      "fontFamily": "$font-title",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "Xw35u",
+                      "name": "Details rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DtMyZ",
+                  "name": "Row Settlement",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B88253",
+                      "name": "Settlement label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": 80,
+                      "content": "Settlement",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zud0k",
+                      "name": "Settlement pills",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "i1gs0",
+                          "name": "Pill Village",
+                          "fill": "#00000000",
+                          "cornerRadius": 999,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Phq3h",
+                              "name": "Village text",
+                              "fill": "$text-secondary",
+                              "content": "Village",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "o0fKFz",
+                          "name": "Pill Town",
+                          "fill": "$accent-strong",
+                          "cornerRadius": 999,
+                          "stroke": "$accent-strong",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "O9mk6n",
+                              "name": "Town text",
+                              "fill": "$text-on-dark",
+                              "content": "Town",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "c8aSJM",
+                          "name": "Pill City",
+                          "fill": "#00000000",
+                          "cornerRadius": 999,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "COLh7",
+                              "name": "City text",
+                              "fill": "$text-secondary",
+                              "content": "City",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Thx76",
+                  "name": "Description head",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "padding": [
+                    6,
+                    0,
+                    0,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B1GOT3",
+                      "name": "Description label",
+                      "fill": "$text-primary",
+                      "content": "Description",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SROL0",
+                  "name": "Description field",
+                  "width": "fill_container",
+                  "height": 88,
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "FSDsA",
+                      "name": "Description value",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 }
               ]
             },
@@ -27788,7 +27987,7 @@
                       "id": "c0HZS",
                       "name": "Preview line",
                       "fill": "$ink",
-                      "content": "Sells at list · Buys at ½ · Aria −10%",
+                      "content": "Town",
                       "fontFamily": "$font-slip",
                       "fontSize": 15,
                       "fontWeight": "600"
@@ -39844,43 +40043,6 @@
                   "id": "I33SO5",
                   "name": "Nav Details",
                   "width": "fill_container",
-                  "fill": "#00000000",
-                  "cornerRadius": 4,
-                  "stroke": "#00000000",
-                  "gap": 8,
-                  "padding": [
-                    7,
-                    10
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "opyuW",
-                      "name": "Details icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "store",
-                      "library": "lucide",
-                      "fill": "$text-secondary"
-                    },
-                    {
-                      "type": "text",
-                      "id": "W7yQO",
-                      "name": "Details label",
-                      "fill": "$text-primary",
-                      "content": "Details",
-                      "fontFamily": "$font-body",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "L4Q78",
-                  "name": "Nav Terms",
-                  "width": "fill_container",
                   "fill": "$surface-card",
                   "cornerRadius": 4,
                   "stroke": "$accent-gold",
@@ -39896,13 +40058,50 @@
                   "children": [
                     {
                       "type": "icon",
+                      "id": "opyuW",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "W7yQO",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L4Q78",
+                  "name": "Nav Terms",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
                       "id": "d7KDhq",
                       "name": "Terms icon",
                       "width": 14,
                       "height": 14,
                       "icon": "scale",
                       "library": "lucide",
-                      "fill": "$accent-strong"
+                      "fill": "$text-secondary"
                     },
                     {
                       "type": "text",
@@ -39912,7 +40111,7 @@
                       "content": "Terms",
                       "fontFamily": "$font-body",
                       "fontSize": 13,
-                      "fontWeight": "700"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -40237,6 +40436,205 @@
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zhGLr",
+                  "name": "Section Details",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L9iMru",
+                      "name": "Details head",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "fwvOW",
+                          "name": "Details title",
+                          "fill": "$text-title",
+                          "content": "Details",
+                          "fontFamily": "$font-title",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "MGJDD",
+                          "name": "Details rule",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lc6CO",
+                      "name": "Row Settlement",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hZbUi",
+                          "name": "Settlement label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Settlement",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YQ9KX",
+                          "name": "Settlement pills",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "cuXE3",
+                              "name": "Pill Village",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "N1lNh",
+                                  "name": "Village text",
+                                  "fill": "$text-secondary",
+                                  "content": "Village",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "NL1h8",
+                              "name": "Pill Town",
+                              "fill": "$accent-strong",
+                              "cornerRadius": 999,
+                              "stroke": "$accent-strong",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ZcEYx",
+                                  "name": "Town text",
+                                  "fill": "$text-on-dark",
+                                  "content": "Town",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "rupoG",
+                              "name": "Pill City",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "S2WJn",
+                                  "name": "City text",
+                                  "fill": "$text-secondary",
+                                  "content": "City",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Jsz2A",
+                      "name": "Description head",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        0,
+                        0,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "X2GF4A",
+                          "name": "Description label",
+                          "fill": "$text-primary",
+                          "content": "Description",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MGUNN",
+                      "name": "Description field",
+                      "width": "fill_container",
+                      "height": 88,
+                      "fill": "$surface-card",
+                      "cornerRadius": 4,
+                      "stroke": "$border-faint",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mjnho",
+                          "name": "Description value",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -40830,20 +41228,9 @@
                   ]
                 },
                 {
-                  "type": "text",
-                  "id": "eHdsa",
-                  "name": "Everyone label",
-                  "fill": "$text-secondary",
-                  "content": "EVERYONE",
-                  "fontFamily": "$font-compact",
-                  "fontSize": 10,
-                  "fontWeight": "700",
-                  "letterSpacing": 1.5
-                },
-                {
                   "type": "frame",
-                  "id": "X9xtq",
-                  "name": "Chip Sells at list · Buys at ½",
+                  "id": "Cp8SF",
+                  "name": "Chip Town",
                   "fill": "$header-1",
                   "cornerRadius": 999,
                   "gap": 6,
@@ -40855,20 +41242,20 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "yPmq7",
+                      "id": "CKP4y",
                       "name": "Chip icon",
                       "width": 12,
                       "height": 12,
-                      "icon": "scale",
+                      "icon": "hammer",
                       "library": "lucide",
                       "fill": "$accent-on-dark"
                     },
                     {
                       "type": "text",
-                      "id": "aCBzg",
+                      "id": "l6peVH",
                       "name": "Chip text",
                       "fill": "$text-on-dark",
-                      "content": "Sells at list · Buys at ½",
+                      "content": "Town",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -40876,57 +41263,16 @@
                   ]
                 },
                 {
-                  "id": "RwxR4",
-                  "type": "ref",
-                  "ref": "wUkvn",
-                  "name": "Preview Longsword",
-                  "width": "fill_container",
-                  "padding": [
-                    6,
-                    8
-                  ],
-                  "gap": 8,
-                  "descendants": {
-                    "MY7RE": {
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/items/greatsword-guard.webp",
-                        "mode": "cover"
-                      },
-                      "width": 32,
-                      "height": 32
-                    },
-                    "BZVOe": {
-                      "content": "Longsword",
-                      "fontSize": 13
-                    },
-                    "vYzUL": {
-                      "enabled": false
-                    },
-                    "UB234": {
-                      "enabled": false
-                    },
-                    "CZ7Dq/e1b2b": {
-                      "content": "15"
-                    },
-                    "xqAHK": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
                   "type": "text",
-                  "id": "ezq30",
-                  "name": "Preview foot",
+                  "id": "OBMbI",
+                  "name": "Preview description",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Open shop windows refresh for everyone when a change is saved.",
-                  "fontFamily": "$font-slip",
+                  "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                  "fontFamily": "$font-body",
                   "fontSize": 13,
-                  "fontWeight": "normal",
-                  "fontStyle": "italic"
+                  "fontWeight": "normal"
                 }
               ]
             }
