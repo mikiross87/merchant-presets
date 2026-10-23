@@ -17,9 +17,10 @@
  * is named; in capitals where CSS sets them.
  */
 export function collect({ rootSelector, attr, iconAttr }) {
+  const field = el => el.tagName === "INPUT" || el.tagName === "TEXTAREA";
   const textOf = (el, cs) => {
     // A field shows its value, or its placeholder while empty.
-    let text = el.tagName === "INPUT" ? (el.value || el.placeholder)
+    let text = field(el) ? (el.value || el.placeholder)
       : [...el.childNodes].filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent).join(" ");
     if (!text.trim() && el.children.length && !el.querySelector(`[${attr}]`) && !el.querySelector("svg")) text = el.textContent;
     return cs.textTransform === "uppercase" ? text.toUpperCase() : text;
@@ -43,7 +44,7 @@ export function collect({ rootSelector, attr, iconAttr }) {
   };
   const nodes = [root, ...[...root.querySelectorAll(`[${attr}]`)].filter(el => el.getClientRects().length > 0 && !clipped(el))];
   // An empty field shows its placeholder: measured as that text, its width and its colour.
-  const placeholder = el => el.tagName === "INPUT" && !el.value && el.placeholder;
+  const placeholder = el => field(el) && !el.value && el.placeholder;
   const textWidth = (text, cs) => {
     const ctx = document.createElement("canvas").getContext("2d");
     ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
