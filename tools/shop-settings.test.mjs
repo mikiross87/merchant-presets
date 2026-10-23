@@ -372,7 +372,7 @@ const TEMPLE = "<p>Sells Spell Scrolls.</p><p><em>Casts spells &amp; more.</em><
 test("a description shows as its paragraphs' text, a blank line between", () => {
   assert.equal(descriptionText(TEMPLE), "Sells Spell Scrolls.\n\nCasts spells & more.");
   assert.equal(descriptionText("Sells rope."), "Sells rope.");
-  assert.equal(descriptionText("<p>Rope<br>and nails</p>"), "Rope and nails");
+  assert.equal(descriptionText("<p>Rope<br>and nails</p>"), "Rope\nand nails");
   assert.equal(descriptionText(""), "");
   assert.equal(descriptionText("<p>Casts <em>spells</em>, more.</p>"), "Casts spells, more.");
 });
@@ -406,4 +406,35 @@ test("the same text writes the same description", () => {
 
 test("a description that isn't text is refused", () => {
   refused(shop(), { op: "description", text: 3 });
+});
+
+test("numeric and common named entities read as their characters, an unknown one as it was (#283 review)", () => {
+  assert.equal(descriptionText("<p>Mara&#8217;s wares &mdash; cheap&hellip;</p>"), "Mara’s wares — cheap…");
+  assert.equal(descriptionText("<p>It&#x27;s &#X27;ok&#39; &ldquo;a&rdquo; &lsquo;b&rsquo; 1&ndash;2</p>"), "It's 'ok' “a” ‘b’ 1–2");
+  assert.equal(descriptionText("<p>a&zwj;b &#1114112; &#xD800;</p>"), "a&zwj;b &#1114112; &#xD800;");
+  const after = applied(shop({ description: "<p>Mara&#8217;s wares</p>" }), { op: "description", text: "Mara’s wares, cheap." });
+  assert.equal(after.description, "<p>Mara’s wares, cheap.</p>");
+});
+
+test("blocks that aren't text paragraphs are kept, after the typed paragraphs (#283 review)", () => {
+  const list = "<p>Intro</p><ul><li>Rope</li></ul><h2>Hours</h2>";
+  assert.equal(descriptionText(list), "Intro");
+  assert.equal(applied(shop({ description: list }), { op: "description", text: "Intro!" }).description, "<p>Intro!</p><ul><li>Rope</li></ul><h2>Hours</h2>");
+  assert.equal(applied(shop({ description: list }), { op: "description", text: "Intro" }).description, list);
+  const image = "<p>Intro</p><p><img src=\"x.webp\"></p>";
+  assert.equal(applied(shop({ description: image }), { op: "description", text: "Intro, longer." }).description, "<p>Intro, longer.</p><p><img src=\"x.webp\"></p>");
+  assert.equal(applied(shop({ description: image }), { op: "description", text: "Intro" }).description, image);
+  const between = "<p>A</p><ul><li>x</li></ul><p>B</p>";
+  assert.equal(applied(shop({ description: between }), { op: "description", text: "A\n\nB" }).description, between, "unchanged text keeps the order too");
+  assert.equal(applied(shop({ description: TEMPLE }), { op: "description", text: descriptionText(TEMPLE) }).description, TEMPLE);
+  assert.equal(applied(shop({ description: "Bare text" }), { op: "description", text: "Bare text, new" }).description, "<p>Bare text, new</p>");
+});
+
+test("a single Enter is a line break and a blank line a new paragraph (#283 review)", () => {
+  const after = applied(shop(), { op: "description", text: "Open dawn to dusk.\nClosed on Sundays." });
+  assert.equal(after.description, "<p>Open dawn to dusk.<br>Closed on Sundays.</p>");
+  assert.equal(descriptionText(after.description), "Open dawn to dusk.\nClosed on Sundays.");
+  assert.equal(applied(after, { op: "description", text: "Open dawn to dusk.\nClosed on Sundays." }).description, after.description);
+  assert.equal(applied(shop(), { op: "description", text: "One  \n  two\n\nThree" }).description, "<p>One<br>two</p><p>Three</p>");
+  assert.equal(descriptionText("<p>Rope\n  and <br>nails</p>"), "Rope and\nnails");
 });
