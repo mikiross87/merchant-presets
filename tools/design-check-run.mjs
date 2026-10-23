@@ -17,7 +17,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright-core";
 import { FRAMES, setup } from "../design/fixtures.mjs";
 import { pairNodes, scoreFrame } from "./design-check.mjs";
-import { collect } from "./design-collect.mjs";
+import { collect, executablePath } from "./design-collect.mjs";
 
 // A flag followed by another flag (or nothing) is a switch: `--setup`.
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith("--")
@@ -27,9 +27,6 @@ const OUT = args.out ?? new globalThis.URL("../design/check/", import.meta.url).
 const WANTED = args.frames ? args.frames.split(",") : Object.keys(FRAMES);
 const BAR = 0.98;
 mkdirSync(OUT, { recursive: true });
-
-const executablePath = process.env.MP_CHROMIUM
-  ?? `${process.env.HOME}/Library/Caches/ms-playwright/chromium-1223/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing`;
 
 /**
  * Runs in the export's page: each text line as tall as Pencil draws it. The export writes

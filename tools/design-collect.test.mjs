@@ -7,19 +7,19 @@ import { existsSync } from "node:fs";
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { chromium } from "playwright-core";
-import { collect } from "./design-collect.mjs";
+import { collect, executablePath } from "./design-collect.mjs";
 
-const executablePath = process.env.MP_CHROMIUM
-  ?? `${process.env.HOME}/Library/Caches/ms-playwright/chromium-1223/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing`;
 const skip = !existsSync(executablePath) && "no Chromium for the design checker";
 
 let browser;
 before(async () => { if (!skip) browser = await chromium.launch({ executablePath }); });
 after(() => browser?.close());
 
-const texts = async html => {
+// What each named element shows, after `prep` (typing into the page, say) has run.
+const texts = async (html, prep) => {
   const page = await browser.newPage();
   await page.setContent(`<div id="root">${html}</div>`);
+  await prep?.(page);
   const nodes = await page.evaluate(collect, { rootSelector: "#root", attr: "data-pen", iconAttr: "data-icon" });
   await page.close();
   return Object.fromEntries(nodes.slice(1).map(n => [n.name, n.text]));
@@ -39,10 +39,6 @@ test("a field shows its value, or its placeholder while empty", { skip }, async 
 });
 
 test("a field's value is read as typed, not as first rendered", { skip }, async () => {
-  const page = await browser.newPage();
-  await page.setContent(`<div id="root"><textarea data-pen="Note"></textarea></div>`);
-  await page.fill("textarea", "Saved the smith's daughter");
-  const [, note] = await page.evaluate(collect, { rootSelector: "#root", attr: "data-pen", iconAttr: "data-icon" });
-  await page.close();
-  assert.equal(note.text, "Saved the smith's daughter");
+  const typed = await texts(`<textarea data-pen="Note"></textarea>`, page => page.fill("textarea", "Saved the smith's daughter"));
+  assert.equal(typed.Note, "Saved the smith's daughter");
 });

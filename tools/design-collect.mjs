@@ -1,9 +1,12 @@
 /**
  * The design conformance checker's in-page half (#145): `collect` runs inside both pages, the
  * frame's export and the shop window, through Playwright's `page.evaluate`, so it uses nothing
- * from outside its own body.
+ * from outside its own body. `executablePath` is the Chromium both the checker and its test launch.
  */
 /* global document, getComputedStyle, Node -- `collect` runs inside the pages */
+
+export const executablePath = process.env.MP_CHROMIUM
+  ?? `${process.env.HOME}/Library/Caches/ms-playwright/chromium-1223/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing`;
 
 /**
  * Runs in the page: `root`, then every rendered element under it carrying `attr`, in document
