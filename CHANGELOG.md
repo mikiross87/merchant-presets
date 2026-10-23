@@ -13,9 +13,22 @@ than for the code. Reference the issue or PR it closes.
 
 ### Added
 
-- The Settings tab has a new first section, Details, where you set a shop's
-  settlement size (Village, Town or City) and edit its description. The
-  header chip follows the size at once (#283, #284).
+- The Settings tab has a new first section, Details, and now opens on it.
+  Set a shop's settlement size there (Village, Town or City): the header
+  chip, the busy-day customers table and the magic restock follow it,
+  whatever the shop is called (#284). Edit the shop's description there
+  too: paragraphs you leave alone keep their formatting, and a paragraph
+  you change becomes plain text (#283).
+
+### Changed
+
+- The shopkeeper's portrait in the shop window is larger, drawn like
+  dnd5e's NPC sheet, and opens at full size when clicked, for players too.
+  The window opens a little taller to make room, and "Fresh stock today"
+  and the day's trade chip now sit on their own line above the shop's
+  name (#285).
+- A shop's size no longer follows a "(Village)", "(Town)" or "(City)" at
+  the end of its name; set it in Settings → Details (#284).
 
 ## [2.4.0] - 2026-10-20
 
