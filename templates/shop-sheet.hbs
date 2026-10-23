@@ -46,7 +46,9 @@
   </div>
 {{/inline}}
 <header class="mp-hero" data-pen="Hero">
-  <img class="mp-portrait" data-pen="Merchant Portrait" src="{{header.img}}" alt="" />
+  <button type="button" class="mp-portrait-button" data-action="portrait" aria-label="{{header.title}}">
+    <img class="mp-portrait" data-pen="Merchant Portrait" src="{{header.img}}" alt="" />
+  </button>
   <div class="mp-identity" data-pen="Identity">
     <div class="mp-title-line" data-pen="Title line">
       <h1 class="mp-shop-name" data-pen="Shop Name">{{header.title}}</h1>

@@ -185,14 +185,37 @@
   padding: 20px 24px;
   background: var(--mp-hero);
 }
-.shop-sheet .mp-portrait {
+/* Core's `button` rule (foundry2.css, "Buttons") gives a button a height, padding, background, border,
+   font and a hover/focus look; the portrait button is only the circle, so each is undone here. */
+.shop-sheet .mp-portrait-button {
   flex: none;
-  width: 76px;
-  height: 76px;
+  display: block;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
   border: none;
   border-radius: 50%;
-  outline: 2px solid var(--mp-gold);
+  background: none;
+  box-shadow: none;
+  outline: none;
+  line-height: 0;
+  transition: none;
+  cursor: var(--cursor-pointer, pointer);
+}
+.shop-sheet .mp-portrait-button:focus-visible { outline: 2px solid var(--mp-gold-light); outline-offset: 6px; }
+.shop-sheet .mp-portrait {
+  display: block;
+  width: 180px;
+  height: 180px;
+  border: none;
+  border-radius: 50%;
+  /* dnd5e's NPC sheet portrait (#285): a 6 px gold ring and a soft shadow, cropped from the top. */
+  outline: 6px solid var(--mp-gold);
+  box-shadow: 0 0 6px #000;
   object-fit: cover;
+  object-position: top;
 }
 .shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
@@ -1588,7 +1611,7 @@
   .shop-sheet .mp-wide-only { display: none; }
 
   .shop-sheet .mp-hero { gap: 12px; padding: 14px 16px; }
-  .shop-sheet .mp-portrait { width: 52px; height: 52px; }
+  .shop-sheet .mp-portrait { width: 76px; height: 76px; outline-width: 3px; }
   .shop-sheet .mp-shop-name { font-size: 22px; line-height: 30px; }
   .shop-sheet .mp-fresh-chip { display: none; }
   .shop-sheet .mp-chips.mp-narrow-only { display: flex; gap: 6px; }

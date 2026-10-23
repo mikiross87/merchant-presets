@@ -494,10 +494,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
     // stylesheet builds on to `@scope (.theme-light/.theme-dark) { .dnd5e2 { ... } }` — without
     // this class none of those variables resolve, design/README.md's token table included.
     classes: ["merchant-presets", "shop-sheet", "dnd5e2"],
-    position: { width: 920, height: 680 },
+    // 769: the NPC sheet's 180 px portrait (#285) makes the hero 89 px taller than the 680 it was drawn at.
+    position: { width: 920, height: 769 },
     window: { resizable: true, icon: "fa-solid fa-store" },
     actions: {
       npcSheet: ShopSheet.#onNpcSheet,
+      portrait: ShopSheet.#onPortrait,
       inspect: ShopSheet.#onInspect,
       selectCategory: ShopSheet.#onSelectCategory,
       toggleBill: ShopSheet.#onToggleBill,
@@ -2867,6 +2869,12 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   }
 
   /* -------------------------------------------------------------- header button */
+
+  /** The portrait at full size (#285): core's own image popout, which offers a GM "Show to players". */
+  static #onPortrait() {
+    const title = titleParts(this.document.name).title;
+    new foundry.applications.apps.ImagePopout({ src: this.document.img, uuid: this.document.uuid, window: { title } }).render({ force: true });
+  }
 
   static #onNpcSheet() {
     // Open dnd5e's own sheet directly, bypassing this module's registration, per #104: "a
