@@ -185,17 +185,44 @@
   padding: 20px 24px;
   background: var(--mp-hero);
 }
-.shop-sheet .mp-portrait {
+/* Core's `button` rule (foundry2.css, "Buttons") gives a button a height, padding, background, border,
+   font and a hover/focus look; the portrait button is only the circle, so each is undone here. */
+.shop-sheet .mp-portrait-button {
   flex: none;
-  width: 76px;
-  height: 76px;
+  display: block;
+  box-sizing: border-box;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
   border: none;
   border-radius: 50%;
-  outline: 2px solid var(--mp-gold);
+  background: none;
+  box-shadow: none;
+  outline: none;
+  line-height: 0;
+  transition: none;
+  cursor: var(--cursor-pointer, pointer);
+}
+.shop-sheet .mp-portrait-button:focus-visible { outline: 2px solid var(--mp-gold-light); outline-offset: 3px; }
+.shop-sheet .mp-portrait {
+  display: block;
+  width: 180px;
+  height: 180px;
+  border: none;
+  border-radius: 50%;
+  /* dnd5e's NPC sheet portrait (#285): a 6 px gold ring and a soft shadow, cropped from the top. */
+  outline: 6px solid var(--mp-gold);
+  /* The design's ring is drawn with the stroke centred on the edge (Pencil), so half of it sits inside the photo. */
+  outline-offset: -3px;
+  box-shadow: 0 0 6px #000;
   object-fit: cover;
+  object-position: top;
 }
 .shop-sheet .mp-identity { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.shop-sheet .mp-title-line { display: flex; align-items: center; gap: 12px; }
+/* Fresh stock and the day's kind, above the name (design IS2fO); the line is left out when neither applies. */
+.shop-sheet .mp-today-line { display: flex; align-items: center; gap: 8px; }
+.shop-sheet .mp-title-line { max-width: 100%; min-width: 0; display: flex; align-items: center; }
 .shop-sheet .mp-shop-name {
   margin: 0;
   border: none;
@@ -203,6 +230,10 @@
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
+  /* A name that can't fit the column is cut, so it never widens it or pushes the purse or the info button out of the window. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--mp-on-dark);
 }
 .shop-sheet .mp-description { align-self: stretch; font: 400 13px/18px Roboto, system-ui, sans-serif; color: var(--mp-on-dark-muted); }
@@ -909,7 +940,7 @@
 .shop-sheet .mp-preview-notice .mp-icon { flex: none; width: 16px; height: 16px; color: var(--mp-muted); }
 .shop-sheet .mp-preview-notice span { flex: 1 1 0; }
 /* What would edit is dimmed, as where shops keep no clock (design RRqQ7); the controls themselves are disabled at render. */
-.shop-sheet .settings-tab.is-readonly :is(.mp-rate-row, .mp-check.is-option, .mp-schedule, .mp-option, .settings-rule) { opacity: 0.45; }
+.shop-sheet .settings-tab.is-readonly :is(.mp-rate-row, .mp-check.is-option, .mp-schedule, .mp-option, .settings-rule, .mp-note-field) { opacity: 0.45; }
 
 /* -------------------------------------------------------------- settings tab (#110, design v8ap9) */
 
@@ -1212,6 +1243,7 @@
 .shop-sheet .mp-divider { flex: none; align-self: stretch; height: 1px; margin: 0; border: none; background: var(--mp-line); }
 /* Players see, jumped to Till: the Sell tab's till card, framed on the pane's own surface. */
 .shop-sheet .settings-preview .mp-till-card { align-self: stretch; outline: 1px solid var(--mp-line); }
+.shop-sheet .mp-preview-description { align-self: stretch; margin: 0; font: 400 13px/15px Roboto, system-ui, sans-serif; color: var(--mp-muted); }
 .shop-sheet .mp-preview-foot { align-self: stretch; margin: 0; font: italic 400 13px/14px "Crimson Pro", system-ui, sans-serif; color: var(--mp-muted); }
 
 /* The sections the design has no frame for yet (#145 step 4): kept to the same type and colours. */
@@ -1379,6 +1411,8 @@
 .shop-sheet .mp-select .mp-icon { width: 13px; height: 13px; color: var(--mp-muted); }
 .shop-sheet .mp-select-native { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .shop-sheet .mp-pills { display: flex; align-items: center; gap: 6px; padding-left: 90px; }
+/* Beside its label in a row (Details' Settlement, design umwfH), not under the schedule's select. */
+.shop-sheet .mp-rate-row .mp-pills { padding-left: 0; }
 .shop-sheet .mp-pill {
   text-transform: none;
   flex: none;
@@ -1588,9 +1622,8 @@
   .shop-sheet .mp-wide-only { display: none; }
 
   .shop-sheet .mp-hero { gap: 12px; padding: 14px 16px; }
-  .shop-sheet .mp-portrait { width: 52px; height: 52px; }
+  .shop-sheet .mp-portrait { width: 76px; height: 76px; outline-width: 3px; outline-offset: -1.5px; }
   .shop-sheet .mp-shop-name { font-size: 22px; line-height: 30px; }
-  .shop-sheet .mp-fresh-chip { display: none; }
   .shop-sheet .mp-chips.mp-narrow-only { display: flex; gap: 6px; }
   .shop-sheet .mp-nchip {
     gap: 5px;
@@ -1721,6 +1754,9 @@
   outline: 1px solid var(--mp-line);
 }
 .shop-sheet .mp-note-field:focus-within { outline-color: var(--mp-accent); }
+/* Details' description (design umwfH): the same field, taller. */
+.shop-sheet .mp-note-field.is-description { height: 88px; }
+.shop-sheet .settings-section .mp-note-head { padding-top: 6px; }
 .shop-sheet .mp-note-field textarea {
   all: unset;
   flex: 1 1 0;

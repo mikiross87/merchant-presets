@@ -30,12 +30,13 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 17 | Compendium preview, narrow (#199): Compendium Preview — Narrow (Light) / (Dark) |
 | 18 | Haggling (#112): Settings (GM) · Deals — Light / Dark (**Call for a haggle** beside **Add deal**); Call form — Light / Dark (built like the deal form: Character, Side, Skill with "Player's choice" as the default, DC with the shopkeeper's passive Insight); below them, the Haggle chat card board, light and dark: the call open as the player sees it at the player's choice (**Roll Persuasion**, **Roll Deception**, **Roll Intimidation**) and at a skill the GM chose (one **Roll Deception**), open as a GM sees it (the GM line "DC 14"), rolled (the GM line names the skill: "Deception 16 vs DC 14"), and lapsed. The Settings frame draws the GM's window, as every Settings frame does |
 | 19 | Restock quantities (#190): Settings (GM) · Restock, own table — Light / Dark: a GM's own stock table assigned (**Change** and **Reset** on the table card), **New lines** set to 1d4, and the quantity list scrolled to its end, where a line the GM added (Shovel) shows the New lines formula as its placeholder. The preset state of the same card and list (**Change** only, New lines blank) is drawn in bands 03, 09 and 13. Beside them, Settings (GM) · Restock, formula refused — Light / Dark (#229): a formula that doesn't roll keeps what was typed, outlined in `danger`, with "… doesn't roll a number" under it in `danger-ink`, on New lines ("2d") and on a list line ("1d2-"). The schedule's Dice… formula is refused the same way |
-| 20 | Other customers (#226): Settings (GM) · Customers — Light / Dark (**Customers** in the section nav, between Restock and Till, in every Settings frame): the world's level (Off / Quiet / Busy, set in the module's settings), today's card (the kind of day, its trade multiplier, the line players see in the ledger hand, and the table it was rolled on), **Today** to override it (**As rolled** by default), and the busy-day table card (**Change**, as the stock table's). Beside them, Settings (GM) · Customers, off — Light / Dark: the world is Off, and the section says nothing sells between restocks. Below, Storefront · Today's trade — Light / Dark: the hero's **Day Chip** (the kind of day, at the end of the chips row; off in every other frame) with its line on hover |
+| 20 | Other customers (#226): Settings (GM) · Customers — Light / Dark (**Customers** in the section nav, between Restock and Till, in every Settings frame): the world's level (Off / Quiet / Busy, set in the module's settings), today's card (the kind of day, its trade multiplier, the line players see in the ledger hand, and the table it was rolled on), **Today** to override it (**As rolled** by default), and the busy-day table card (**Change**, as the stock table's). Beside them, Settings (GM) · Customers, off — Light / Dark: the world is Off, and the section says nothing sells between restocks. Below, Storefront · Today's trade — Light / Dark: the hero's **Day Chip** (the kind of day, on the today line above the name beside "Fresh stock today"; off in every other frame) with its line on hover |
 | 21 | Spellcasting chat card (#87, #237): Spellcasting · Chat Card — Light / Dark. A bought named service is announced as dnd5e 6's own usage card for the spell, spoken by the shop: Raise Dead as a GM sees it (the spell's description, materials and pills, and the **Effects** tray with **Apply**), and Identify bought twice (no effects, so no tray). The only part this module draws is the flavor line under the shop's name: "Cast for **Aria**", "Cast twice for **Aria**". Players see the same card without the tray. The rest is dnd5e's card, measured from dnd5e 6.0.6 in both themes; Pencil has no small caps or dashed strokes, so the sender's small caps and the dashed rules are drawn plain. Level services and dnd5e 5.3 keep today's message |
 | 22 | Magic clock (#234): Settings (GM) · Restock, magic — Light / Dark. A shop with magic lines shows a switch, **Everyday** \| **Magic**, at the top of Restock (in the schedule pills' style), and every frame that draws Restock shows it at Everyday. The Magic side is the same section for the shop's second table: its own table card ("Armourer & Blacksmiths · Magic (Town)", 27 goods), the magic lines at their #233 odds (`1d6-5` in a Town), the schedule at **Dice…** with the formula field drawn ("Days, as a dice formula", `3d6+14`), its own last and next restock, and **Restock now**. No till note: only the everyday restock refills the till. Players see the magic finds with their *New* marks |
+| 23 | Shop details (#283, #284): Settings (GM) · Details — Light / Dark (**Details** first in the section nav, in every Settings frame; the tab still opens on Terms): **Settlement** as Village / Town / City pills in the schedule pills' style, and **Description** as a plain text field, paragraphs split by a blank line. Players see the size chip and the description as the header shows them. The labels reuse existing text: dnd5e's *Details* and *Description*, and *Settlement* from *Set up as shop…* |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (23, at y 20472) and gets a row here.
+A new agreed screen goes in the next band (24, at y 22845) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
@@ -124,11 +125,13 @@ Prices show coin glyphs, not "12.5 gp". The glyphs are dnd5e's `icons/currency/{
 Decided 2026-09-24: **the shop is the NPC actor, nothing more.** Import the Apothecary and that NPC is the shop: its name is the title, its image is the portrait, its coins are the till. A GM who wants a person behind the counter renames the NPC and gives it a portrait. There is no separate shopkeeper and no module actor type.
 
 - **Title:** the actor's name. A trailing size tier such as "(Town)" moves out of the title into its own chip.
+- **Portrait (#285):** the actor's image as dnd5e's NPC sheet draws it: a 180 px circle with a 6 px `accent-gold` ring and a soft black shadow (76 px with a 3 px ring in a narrow window). Clicking it opens the image full size.
 - **Voice: impersonal, always.** "Buys at ½ of value", "Won't buy food", "You receive", "The till holds 212 gp". Never a pronoun, and never the actor's name as a speaker, so the text stays right however the GM renames the shop.
 
 Rejected:
 - A linked shopkeeper NPC. Chosen briefly, then dropped by the owner: renaming the NPC covers it, with no links to maintain.
 - A module-defined "Shop" actor type. dnd5e's items and currency expect dnd5e's own actor types, and it would force a world migration.
+- Portrait (#285): a 112 px circle (a smaller step than the sheet's look), and the PC sheet's 180×230 card (a hero ~140 px taller). Mocked in the Explore lane, then deleted.
 
 ## Opening the shop (#104)
 
@@ -216,7 +219,7 @@ Restocking is **on by default and runs on a schedule per shop**. A restock repla
   - the last and next restock ("Next: 21 Mirtul at 7:00, in 7 days")
   - **Restock now**
 - **Players:**
-  - a "Fresh stock today" chip beside the shop name, and a **New** badge on goods that were sold out before the restock; both clear at closing
+  - a "Fresh stock today" chip on the today line above the shop name, and a **New** badge on goods that were sold out before the restock; both clear at closing
   - the closed card shows the next restock date
 
 Preset schedules by trade are listed on #105. Days follow the world calendar, not calendar weeks.
@@ -261,7 +264,7 @@ The world setting from #102 chooses off, GM only or public.
 
 ## Window sizes
 
-- Shop window: 920 × 680 by default; the GM Settings tab asks for 760 tall. Columns: 180 (categories or sections), flexible (stock or form), 280 (slip or preview).
+- Shop window: 920 × 769 by default (680 before #285's portrait); the GM Settings tab asks for 849 tall. Columns: 180 (categories or sections), flexible (stock or form), 280 (slip or preview).
 - **Narrow (below about 760 px; drawn at 480 px):**
   - the header shrinks to portrait, name and short chips; the description moves behind an info button
   - the buyer and the purse move to a strip under the header
@@ -287,7 +290,7 @@ Reusable in `shop.pen` (the Components frame):
 Reusable in the Window Parts frame:
 
 - Window Bar: title, the NPC sheet button and close
-- Hero: portrait, name with the "Fresh stock today" chip, description, the chips row, and the purse panel
+- Hero: portrait; the today line ("Fresh stock today" and the day chip, each only when it applies, the line gone when neither does); name; description; the chips row (open, size, terms); and the purse panel. The today line came with #285's larger portrait, which left the name too little room beside the chip
 - Tabs: Buy, Sell and Settings with its `GM` badge; Buy active
 
 The rest of the window (category nav, the Bill of Sale's lines, notices, the Terms popover, the Settings form, the chat card) is built from these and the tokens above.

@@ -10,6 +10,7 @@ import { endsAfterDays } from "./deals.mjs";
 import { clockOf, isOpen, nextCloseAt } from "./schedule.mjs";
 import { effectiveRates } from "./pricing.mjs";
 import { shopFrom, validateShop } from "./schema.mjs";
+import { TIERS } from "./shop.mjs";
 
 /** The item types a shop can refuse to buy: the physical ones, which are all a player can sell. */
 export const WONT_BUY_TYPES = ["weapon", "equipment", "consumable", "tool", "loot", "container"];
@@ -47,6 +48,40 @@ export function parseTime(text) {
   const hour = Number(match[1]), minute = Number(match[2]);
   return hour < 24 && minute < 60 ? { hour, minute } : null;
 }
+
+const ENTITIES = {
+  amp: "&", lt: "<", gt: ">", quot: "\"", apos: "'", nbsp: " ",
+  rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", mdash: "—", ndash: "–", hellip: "…"
+};
+/** Named and numeric (`&#8217;`, `&#x27;`) entities as their characters; any other, or an impossible code point, stays as written. */
+const decode = text => text.replace(/&(?:#(\d+)|#[xX]([0-9a-fA-F]+)|([a-zA-Z]+));/g, (entity, decimal, hex, name) => {
+  if (name) return ENTITIES[name] ?? entity;
+  const point = decimal ? Number(decimal) : parseInt(hex, 16);
+  return point > 0 && point <= 0x10FFFF && !(point >= 0xD800 && point <= 0xDFFF) ? String.fromCodePoint(point) : entity;
+});
+const escapeText = text => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * A stored description's text paragraphs (#283): each `<p>` holding text as `{html, text}`, a `<br>`
+ * read as a line break; text with no `<p>` is one. `rest` is the stored HTML without those
+ * paragraphs (a list, a heading, a picture, a `<p>` with only an image): kept on save, but not
+ * editable as text.
+ */
+function paragraphs(html) {
+  const source = String(html ?? "");
+  const found = [...source.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
+  const parts = found.length ? found : [source];
+  // Tags go until none is left, so a nested one (`<scr<b>ipt>`) can't leave a tag behind.
+  const strip = markup => { for (let last = null; last !== markup;) { last = markup; markup = markup.replace(/<[^>]*>/g, ""); } return markup; };
+  const textOf = part => decode(strip(part.replace(/\s+/g, " ").replace(/<br\b[^>]*>/gi, "\n")))
+    .split("\n").map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
+  const list = parts.map(part => ({ html: part, text: textOf(part) })).filter(p => p.text);
+  const rest = found.length ? list.reduce((left, p) => left.replace(p.html, ""), source).trim() : "";
+  return Object.assign(list, { rest });
+}
+
+/** A description as the Settings tab's textarea shows it: its paragraphs' text, a blank line between. */
+export const descriptionText = html => paragraphs(html).map(p => p.text).join("\n\n");
 
 /**
  * Which schedule chip `restock` reads as: "1", "3", "7" or "14" days, "never" (never, or restocking
@@ -163,6 +198,24 @@ const CHANGES = {
     // Already gone (a double click): nothing to do.
     shop.deals = shop.deals.filter(d => d.actor !== actor);
   },
+  // The shop's own size (#284), which the header chip reads; the name's suffix decides nothing.
+  tier(shop, { tier }) {
+    if (!TIERS.includes(tier)) return "a shop is a Village, Town or City";
+    shop.tier = tier;
+  },
+  // The shop's description (#283), written as paragraphs of what's typed.
+  description(shop, { text }) {
+    if (typeof text !== "string") return "a description is text";
+    const stored = paragraphs(shop.description);
+    // A blank line starts a paragraph, a single Enter is a line break inside it.
+    const typed = text.split(/(?:\r?\n[ \t]*){2,}/)
+      .map(t => t.split(/\r?\n/).map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n")).filter(Boolean);
+    // Text left as it was leaves the description as it was, blocks between its paragraphs in place.
+    if (typed.join("\n\n") === stored.map(p => p.text).join("\n\n")) return;
+    // A paragraph left as it was keeps its own markup (a preset's italic caster note, #283); what
+    // isn't a text paragraph follows the typed ones.
+    shop.description = typed.map(t => stored.find(p => p.text === t)?.html ?? `<p>${escapeText(t).replace(/\n/g, "<br>")}</p>`).join("") + stored.rest;
+  },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);
     if (!result.ok) return result.errors.join("; ");
@@ -182,7 +235,7 @@ export const CLOCK_EDITS = new Set(["every", "mode", "quantity", "defaultQuantit
  *   world}`, `{op: "ruleRate", category, side, percent}`, `{op: "removeRule", category}`, `{op:
  *   "wontBuy", list, value, on}`, `{op: "keepHours", on, fallback}`, `{op: "hour", end, time}`,
  *   `{op: "every", every}`, `{op: "mode", mode}`, `{op: "quantity", id, formula, preset}`, `{op:
- *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226)
+ *   "defaultQuantity", formula}`, `{op: "table", uuid, resultIds}`, `{op: "resetTable", preset}`, `{op: "customersTable", uuid}` (#226), `{op: "tier", tier}` (#284), `{op: "description", text}` (#283)
  *   (#190; `preset` the preset merchant's shop config; each of these restock edits may name its
  *   `clock`, "restock" by default or "magic", #234), `{op: "addDeal"|"editDeal", actor, name, buy, sell,
  *   note, ends}` (sides as percentages), `{op: "removeDeal", actor}` or `{op: "reset", preset}`

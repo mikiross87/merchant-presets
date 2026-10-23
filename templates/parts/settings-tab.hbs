@@ -133,6 +133,20 @@
   {{/if}}
   {{#if broken}}<p class="settings-note">{{localize "MERCHANT_PRESETS.Shop.Settings.Broken"}}</p>{{/if}}
 
+  <section class="settings-section" data-section="details" data-pen="Section Details">
+    {{> sectionHead title=(localize "DND5E.Details")}}
+    <div class="mp-rate-row" data-pen="Row Settlement">
+      <span class="mp-rate-label" data-pen="Settlement label">{{localize "MERCHANT_PRESETS.Shop.Settings.Details.Settlement"}}</span>
+      <div class="mp-pills" role="group" aria-label="{{localize 'MERCHANT_PRESETS.Shop.Settings.Details.Settlement'}}" data-pen="Settlement pills">
+        {{#each details.tiers}}
+          <button type="button" class="mp-pill {{#if active}}active{{/if}}" data-action="setTier" data-tier="{{id}}" aria-pressed="{{active}}" data-pen="Pill {{label}}"><span data-pen="{{label}} text">{{label}}</span></button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="mp-note-head" data-pen="Description head"><span class="mp-note-label" data-pen="Description label">{{localize "DND5E.Description"}}</span></div>
+    <label class="mp-note-field is-description" data-pen="Description field"><textarea data-op="description" aria-label="{{localize 'DND5E.Description'}}" data-pen="Description value" {{#if readOnly}}readonly{{/if}}>{{details.description}}</textarea></label>
+  </section>
+
   <section class="settings-section" data-section="terms" data-pen="Section Terms">
     {{> sectionHead title=(localize "MERCHANT_PRESETS.Shop.Settings.Sections.terms")}}
     <p class="mp-hint" data-pen="Terms hint">{{localize "MERCHANT_PRESETS.Shop.Settings.Terms.Hint"}}</p>
@@ -483,6 +497,10 @@
     <span class="mp-kicker" data-pen="Sell tab label">{{preview.wontBuy.label}}</span>
     {{#each preview.wontBuy.rows}}{{> previewRow this showStock=true}}{{/each}}
     <p class="mp-preview-foot" data-pen="Preview foot">{{localize "MERCHANT_PRESETS.Shop.Settings.Preview.WontBuyNote"}}</p>
+  {{else if preview.details}}
+    {{!-- The header's size chip and description as players get them (design umwfH). --}}
+    <span class="mp-chip" data-pen="Chip {{preview.details.tier}}">{{mpIcon preview.details.icon pen="Chip icon"}}<span data-pen="Chip text">{{preview.details.tier}}</span></span>
+    {{#if preview.details.description}}<p class="mp-preview-description" data-pen="Preview description">{{preview.details.description}}</p>{{/if}}
   {{else if preview.hours}}
     {{#each preview.hours.samples}}
       <span class="mp-kicker" data-pen="{{pen}} label">{{label}}</span>

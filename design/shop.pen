@@ -1072,7 +1072,7 @@
       "type": "frame",
       "id": "GZx14",
       "x": 760,
-      "y": -553,
+      "y": -642,
       "name": "00 Window Parts",
       "theme": {
         "mode": "light"
@@ -1217,10 +1217,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 76,
-              "height": 76,
+              "width": 180,
+              "height": 180,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 6,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -1232,21 +1238,11 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "x9OKc",
-                  "name": "Title line",
-                  "gap": 12,
+                  "id": "H3z4WJ",
+                  "name": "Today line",
+                  "gap": 8,
                   "alignItems": "center",
                   "children": [
-                    {
-                      "type": "text",
-                      "id": "v4bjn",
-                      "name": "Shop Name",
-                      "fill": "$text-on-dark",
-                      "content": "Armourer & Blacksmith",
-                      "fontFamily": "$font-title",
-                      "fontSize": 30,
-                      "fontWeight": "700"
-                    },
                     {
                       "type": "frame",
                       "id": "uYCYY",
@@ -1283,6 +1279,65 @@
                           "fontWeight": "normal"
                         }
                       ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OmdZ0",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Day Chip",
+                      "enabled": false,
+                      "fill": "#00000040",
+                      "cornerRadius": 999,
+                      "stroke": "#e3ce9e80",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        3,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "beQaz",
+                          "name": "Day icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "users",
+                          "library": "lucide",
+                          "fill": "$accent-on-dark"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ioeoD",
+                          "name": "Day Label",
+                          "fill": "$text-on-dark",
+                          "content": "Very busy",
+                          "fontFamily": "$font-compact",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "x9OKc",
+                  "name": "Title line",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v4bjn",
+                      "name": "Shop Name",
+                      "fill": "$text-on-dark",
+                      "content": "Armourer & Blacksmith",
+                      "fontFamily": "$font-title",
+                      "fontSize": 30,
+                      "fontWeight": "700"
                     }
                   ]
                 },
@@ -1420,46 +1475,6 @@
                           "icon": "chevron-down",
                           "library": "lucide",
                           "fill": "$accent-on-dark"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "OmdZ0",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Day Chip",
-                      "enabled": false,
-                      "fill": "#00000040",
-                      "cornerRadius": 999,
-                      "stroke": "#e3ce9e80",
-                      "strokeWidth": 1,
-                      "gap": 6,
-                      "padding": [
-                        3,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "beQaz",
-                          "name": "Day icon",
-                          "width": 12,
-                          "height": 12,
-                          "icon": "users",
-                          "library": "lucide",
-                          "fill": "$accent-on-dark"
-                        },
-                        {
-                          "type": "text",
-                          "id": "ioeoD",
-                          "name": "Day Label",
-                          "fill": "$text-on-dark",
-                          "content": "Very busy",
-                          "fontFamily": "$font-compact",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -1824,7 +1839,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -3506,7 +3521,7 @@
       "type": "frame",
       "id": "TGXBN",
       "x": 800,
-      "y": 800,
+      "y": 889,
       "name": "02 Sell — Light",
       "theme": {
         "mode": "light"
@@ -3514,7 +3529,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -3543,13 +3558,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             }
           }
@@ -4875,7 +4887,7 @@
       "ref": "TGXBN",
       "name": "02 Sell — Dark",
       "x": 1800,
-      "y": 800,
+      "y": 889,
       "theme": {
         "mode": "dark"
       }
@@ -4884,7 +4896,7 @@
       "type": "frame",
       "id": "v8ap9",
       "x": 800,
-      "y": 1600,
+      "y": 1778,
       "name": "03 Settings (GM) — Light",
       "theme": {
         "mode": "light"
@@ -4892,7 +4904,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -4921,13 +4933,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -5063,6 +5072,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "geEmh",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "QXWta",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qMQ6E",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -6451,27 +6497,16 @@
       "ref": "v8ap9",
       "name": "03 Settings (GM) — Dark",
       "x": 1800,
-      "y": 1600,
+      "y": 1778,
       "theme": {
         "mode": "dark"
-      },
-      "descendants": {
-        "PkCo2/uYCYY": {
-          "enabled": false
-        },
-        "PkCo2/amGqh": {
-          "enabled": false
-        },
-        "PkCo2/K7PByz": {
-          "enabled": false
-        }
       }
     },
     {
       "type": "frame",
       "id": "aaJcp",
       "x": 2800,
-      "y": 1600,
+      "y": 1778,
       "name": "03 Settings (GM) · Restock — Light",
       "theme": {
         "mode": "light"
@@ -6479,7 +6514,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -6509,12 +6544,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -6650,6 +6679,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "xBzm9",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "yLN67",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "eQ3RI",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -8846,7 +8912,7 @@
       "ref": "aaJcp",
       "name": "03 Settings (GM) · Restock — Dark",
       "x": 3800,
-      "y": 1600,
+      "y": 1778,
       "theme": {
         "mode": "dark"
       }
@@ -8855,7 +8921,7 @@
       "type": "frame",
       "id": "x9IX9",
       "x": 800,
-      "y": 2480,
+      "y": 2747,
       "name": "04 Closed — Light",
       "theme": {
         "mode": "light"
@@ -8863,7 +8929,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -8892,13 +8958,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PG7N6": {
@@ -9871,7 +9934,7 @@
       "ref": "x9IX9",
       "name": "04 Closed — Dark",
       "x": 1800,
-      "y": 2480,
+      "y": 2747,
       "theme": {
         "mode": "dark"
       }
@@ -9880,7 +9943,7 @@
       "type": "frame",
       "id": "mRg3y",
       "x": 800,
-      "y": 3280,
+      "y": 3636,
       "name": "05 Inn — Light",
       "theme": {
         "mode": "light"
@@ -9888,7 +9951,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -11414,7 +11477,7 @@
       "ref": "mRg3y",
       "name": "05 Inn — Dark",
       "x": 1800,
-      "y": 3280,
+      "y": 3636,
       "theme": {
         "mode": "dark"
       }
@@ -11423,7 +11486,7 @@
       "type": "frame",
       "id": "r7HIUl",
       "x": 800,
-      "y": 4080,
+      "y": 4525,
       "name": "06 Storefront — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -11431,7 +11494,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -11570,10 +11633,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -12768,7 +12837,7 @@
       "ref": "r7HIUl",
       "name": "06 Storefront — Narrow (Dark)",
       "x": 1800,
-      "y": 4080,
+      "y": 4525,
       "theme": {
         "mode": "dark"
       }
@@ -12777,7 +12846,7 @@
       "type": "frame",
       "id": "n9I5aQ",
       "x": 800,
-      "y": 4980,
+      "y": 5448,
       "name": "07 Buyer Picker — Light",
       "theme": {
         "mode": "light"
@@ -13605,7 +13674,7 @@
       "ref": "n9I5aQ",
       "name": "07 Buyer Picker — Dark",
       "x": 1800,
-      "y": 4980,
+      "y": 5448,
       "theme": {
         "mode": "dark"
       }
@@ -13614,7 +13683,7 @@
       "type": "frame",
       "id": "z5RBkd",
       "x": 2800,
-      "y": 4980,
+      "y": 5448,
       "name": "07 Trade Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -14518,7 +14587,7 @@
       "ref": "z5RBkd",
       "name": "07 Trade Chat Card — Dark",
       "x": 3800,
-      "y": 4980,
+      "y": 5448,
       "theme": {
         "mode": "dark"
       }
@@ -14527,7 +14596,7 @@
       "type": "frame",
       "id": "WNYhA",
       "x": 800,
-      "y": 5530,
+      "y": 5998,
       "name": "08 Trade States — Light",
       "theme": {
         "mode": "light"
@@ -18318,7 +18387,7 @@
       "ref": "WNYhA",
       "name": "08 Trade States — Dark",
       "x": 2800,
-      "y": 5530,
+      "y": 5998,
       "theme": {
         "mode": "dark"
       }
@@ -18380,7 +18449,7 @@
       "type": "frame",
       "id": "dYANz",
       "x": 800,
-      "y": 6405,
+      "y": 6873,
       "name": "09 Settings (GM) · Won't buy — Light",
       "theme": {
         "mode": "light"
@@ -18388,7 +18457,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -18417,13 +18486,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PmOUn": {
@@ -18559,6 +18625,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "SueWU",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "n1cYy",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "sOXAB",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -20249,7 +20352,7 @@
       "type": "frame",
       "id": "S2swP",
       "x": 2800,
-      "y": 6405,
+      "y": 6873,
       "name": "09 Settings (GM) · Hours — Light",
       "theme": {
         "mode": "light"
@@ -20257,7 +20360,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -20286,13 +20389,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PmOUn": {
@@ -20428,6 +20528,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "Hopcs",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "OOSqZ",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "M0Idw",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -22373,7 +22510,7 @@
       "type": "frame",
       "id": "Q6UvA",
       "x": 800,
-      "y": 7285,
+      "y": 7842,
       "name": "10 Deals — Light",
       "theme": {
         "mode": "light"
@@ -24665,7 +24802,7 @@
       "type": "frame",
       "id": "PV7Sf",
       "x": 800,
-      "y": 8095,
+      "y": 8652,
       "name": "11 Sell — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -24673,7 +24810,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -24812,10 +24949,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -25989,7 +26132,7 @@
       "type": "frame",
       "id": "bXBEW",
       "x": 2800,
-      "y": 8095,
+      "y": 8652,
       "name": "11 Settings (GM) — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -25997,7 +26140,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -26136,10 +26279,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -26647,7 +26796,7 @@
                   "name": "Section icon",
                   "width": 14,
                   "height": 14,
-                  "icon": "scale",
+                  "icon": "store",
                   "library": "lucide",
                   "fill": "$accent-strong"
                 },
@@ -26658,7 +26807,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Terms",
+                  "content": "Details",
                   "fontFamily": "$font-body",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -26759,6 +26908,205 @@
                   "fontFamily": "$font-compact",
                   "fontSize": 11,
                   "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RMwGU",
+              "name": "Section Details",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dzyAf",
+                  "name": "Details head",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "skrJg",
+                      "name": "Details title",
+                      "fill": "$text-title",
+                      "content": "Details",
+                      "fontFamily": "$font-title",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "Xw35u",
+                      "name": "Details rule",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DtMyZ",
+                  "name": "Row Settlement",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B88253",
+                      "name": "Settlement label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": 80,
+                      "content": "Settlement",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zud0k",
+                      "name": "Settlement pills",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "i1gs0",
+                          "name": "Pill Village",
+                          "fill": "#00000000",
+                          "cornerRadius": 999,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Phq3h",
+                              "name": "Village text",
+                              "fill": "$text-secondary",
+                              "content": "Village",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "o0fKFz",
+                          "name": "Pill Town",
+                          "fill": "$accent-strong",
+                          "cornerRadius": 999,
+                          "stroke": "$accent-strong",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "O9mk6n",
+                              "name": "Town text",
+                              "fill": "$text-on-dark",
+                              "content": "Town",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "c8aSJM",
+                          "name": "Pill City",
+                          "fill": "#00000000",
+                          "cornerRadius": 999,
+                          "stroke": "$border-faint",
+                          "strokeWidth": 1,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "COLh7",
+                              "name": "City text",
+                              "fill": "$text-secondary",
+                              "content": "City",
+                              "fontFamily": "$font-compact",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Thx76",
+                  "name": "Description head",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "padding": [
+                    6,
+                    0,
+                    0,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B1GOT3",
+                      "name": "Description label",
+                      "fill": "$text-primary",
+                      "content": "Description",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SROL0",
+                  "name": "Description field",
+                  "width": "fill_container",
+                  "height": 88,
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "FSDsA",
+                      "name": "Description value",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 }
               ]
             },
@@ -27639,7 +27987,7 @@
                       "id": "c0HZS",
                       "name": "Preview line",
                       "fill": "$ink",
-                      "content": "Sells at list · Buys at ½ · Aria −10%",
+                      "content": "Town",
                       "fontFamily": "$font-slip",
                       "fontSize": 15,
                       "fontWeight": "600"
@@ -27666,7 +28014,7 @@
       "type": "frame",
       "id": "mVjRf",
       "x": 2800,
-      "y": 4080,
+      "y": 4525,
       "name": "06 Storefront — Narrow · Bill open (Light)",
       "theme": {
         "mode": "light"
@@ -27674,7 +28022,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -27813,10 +28161,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -29514,7 +29868,7 @@
       "type": "frame",
       "id": "euA99",
       "x": 800,
-      "y": 8995,
+      "y": 9575,
       "name": "12 Sell Trade States — Light",
       "theme": {
         "mode": "light"
@@ -30190,7 +30544,7 @@
       "ref": "dYANz",
       "name": "09 Settings (GM) · Won't buy — Dark",
       "x": 1800,
-      "y": 6405,
+      "y": 6873,
       "theme": {
         "mode": "dark"
       }
@@ -30201,7 +30555,7 @@
       "ref": "S2swP",
       "name": "09 Settings (GM) · Hours — Dark",
       "x": 3800,
-      "y": 6405,
+      "y": 6873,
       "theme": {
         "mode": "dark"
       }
@@ -30212,7 +30566,7 @@
       "ref": "mVjRf",
       "name": "06 Storefront — Narrow · Bill open (Dark)",
       "x": 3800,
-      "y": 4080,
+      "y": 4525,
       "theme": {
         "mode": "dark"
       }
@@ -30223,7 +30577,7 @@
       "ref": "Q6UvA",
       "name": "10 Deals — Dark",
       "x": 2800,
-      "y": 7285,
+      "y": 7842,
       "theme": {
         "mode": "dark"
       }
@@ -30234,7 +30588,7 @@
       "ref": "PV7Sf",
       "name": "11 Sell — Narrow (Dark)",
       "x": 1800,
-      "y": 8095,
+      "y": 8652,
       "theme": {
         "mode": "dark"
       }
@@ -30245,7 +30599,7 @@
       "ref": "bXBEW",
       "name": "11 Settings (GM) — Narrow (Dark)",
       "x": 3800,
-      "y": 8095,
+      "y": 8652,
       "theme": {
         "mode": "dark"
       }
@@ -30256,7 +30610,7 @@
       "ref": "euA99",
       "name": "12 Sell Trade States — Dark",
       "x": 1800,
-      "y": 8995,
+      "y": 9575,
       "theme": {
         "mode": "dark"
       }
@@ -30265,7 +30619,7 @@
       "type": "frame",
       "id": "RRqQ7",
       "x": 800,
-      "y": 9711,
+      "y": 10291,
       "name": "13 Settings (GM) · No world clock — Light",
       "theme": {
         "mode": "light"
@@ -30273,7 +30627,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -30302,13 +30656,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "PG7N6": {
@@ -30447,6 +30798,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "te9HU",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "L3lIv",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Kwu8w",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -32417,13 +32805,13 @@
         "mode": "dark"
       },
       "x": 1800,
-      "y": 9711
+      "y": 10291
     },
     {
       "type": "frame",
       "id": "cPxfb",
       "x": 800,
-      "y": 10591,
+      "y": 11260,
       "name": "13 No world clock · Bill and receipt — Light",
       "theme": {
         "mode": "light"
@@ -33534,13 +33922,13 @@
         "mode": "dark"
       },
       "x": 1800,
-      "y": 10591
+      "y": 11260
     },
     {
       "type": "frame",
       "id": "U0HcWc",
       "x": 800,
-      "y": 11214,
+      "y": 11883,
       "name": "14 Settings (GM) · Till — Light",
       "theme": {
         "mode": "light"
@@ -33548,7 +33936,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -33577,13 +33965,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -33719,6 +34104,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "u1TudG",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "gL6iE",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Sq4Rq",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -34600,7 +35022,7 @@
       "type": "frame",
       "id": "Yusa2",
       "x": 2800,
-      "y": 11214,
+      "y": 11883,
       "name": "14 Settings (GM) · Till, unlimited coin — Light",
       "theme": {
         "mode": "light"
@@ -34608,7 +35030,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -34637,13 +35059,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -34779,6 +35198,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "VUdum",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "n41Gq7",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hr8T1",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -35563,7 +36019,7 @@
       "ref": "U0HcWc",
       "name": "14 Settings (GM) · Till — Dark",
       "x": 1800,
-      "y": 11214,
+      "y": 11883,
       "theme": {
         "mode": "dark"
       }
@@ -35574,7 +36030,7 @@
       "ref": "Yusa2",
       "name": "14 Settings (GM) · Till, unlimited coin — Dark",
       "x": 3800,
-      "y": 11214,
+      "y": 11883,
       "theme": {
         "mode": "dark"
       }
@@ -35583,7 +36039,7 @@
       "type": "frame",
       "id": "IeGac",
       "x": 800,
-      "y": 12094,
+      "y": 12852,
       "name": "15 Temple & Faith Store — Light",
       "theme": {
         "mode": "light"
@@ -35591,7 +36047,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -35633,11 +36089,14 @@
                 "mode": "cover"
               }
             },
-            "v4bjn": {
-              "content": "Temple & Faith Store"
+            "H3z4WJ": {
+              "enabled": false
             },
             "uYCYY": {
               "enabled": false
+            },
+            "v4bjn": {
+              "content": "Temple & Faith Store"
             },
             "Cx08R": {
               "content": "Sells Adventuring Gear, Holy Symbols, Magic Items, Potions, Services, Spell Components, Tools and Weapons. Casts spells from the divine lists: roll 1d4+1 spell slots a day in a village,…"
@@ -37115,7 +37574,7 @@
       "type": "frame",
       "id": "pI7Yd",
       "x": 2800,
-      "y": 12094,
+      "y": 12852,
       "name": "15 Stable — Light",
       "theme": {
         "mode": "light"
@@ -37123,7 +37582,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -37165,11 +37624,14 @@
                 "mode": "cover"
               }
             },
-            "v4bjn": {
-              "content": "Stable"
+            "H3z4WJ": {
+              "enabled": false
             },
             "uYCYY": {
               "enabled": false
+            },
+            "v4bjn": {
+              "content": "Stable"
             },
             "Cx08R": {
               "content": "Sells Mounts & Animals, Services, Tack & Harness and Vehicles."
@@ -38419,7 +38881,7 @@
       "ref": "IeGac",
       "name": "15 Temple & Faith Store — Dark",
       "x": 1800,
-      "y": 12094,
+      "y": 12852,
       "theme": {
         "mode": "dark"
       }
@@ -38430,7 +38892,7 @@
       "ref": "pI7Yd",
       "name": "15 Stable — Dark",
       "x": 3800,
-      "y": 12094,
+      "y": 12852,
       "theme": {
         "mode": "dark"
       }
@@ -38439,7 +38901,7 @@
       "type": "frame",
       "id": "L4tb2b",
       "x": 800,
-      "y": 12974,
+      "y": 13821,
       "name": "16 Compendium Preview — Light",
       "theme": {
         "mode": "light"
@@ -38447,7 +38909,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -38476,6 +38938,9 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
               "enabled": false
             },
@@ -39386,7 +39851,7 @@
       "type": "frame",
       "id": "Zm5HK",
       "x": 2800,
-      "y": 12974,
+      "y": 13821,
       "name": "16 Compendium Preview · Settings — Light",
       "theme": {
         "mode": "light"
@@ -39394,7 +39859,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -39423,6 +39888,9 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
               "enabled": false
             },
@@ -39572,8 +40040,8 @@
                 },
                 {
                   "type": "frame",
-                  "id": "L4Q78",
-                  "name": "Nav Terms",
+                  "id": "I33SO5",
+                  "name": "Nav Details",
                   "width": "fill_container",
                   "fill": "$surface-card",
                   "cornerRadius": 4,
@@ -39590,13 +40058,50 @@
                   "children": [
                     {
                       "type": "icon",
+                      "id": "opyuW",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "W7yQO",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L4Q78",
+                  "name": "Nav Terms",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
                       "id": "d7KDhq",
                       "name": "Terms icon",
                       "width": 14,
                       "height": 14,
                       "icon": "scale",
                       "library": "lucide",
-                      "fill": "$accent-strong"
+                      "fill": "$text-secondary"
                     },
                     {
                       "type": "text",
@@ -39606,7 +40111,7 @@
                       "content": "Terms",
                       "fontFamily": "$font-body",
                       "fontSize": 13,
-                      "fontWeight": "700"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -39931,6 +40436,205 @@
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zhGLr",
+                  "name": "Section Details",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L9iMru",
+                      "name": "Details head",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "fwvOW",
+                          "name": "Details title",
+                          "fill": "$text-title",
+                          "content": "Details",
+                          "fontFamily": "$font-title",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "MGJDD",
+                          "name": "Details rule",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lc6CO",
+                      "name": "Row Settlement",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hZbUi",
+                          "name": "Settlement label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Settlement",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YQ9KX",
+                          "name": "Settlement pills",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "cuXE3",
+                              "name": "Pill Village",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "N1lNh",
+                                  "name": "Village text",
+                                  "fill": "$text-secondary",
+                                  "content": "Village",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "NL1h8",
+                              "name": "Pill Town",
+                              "fill": "$accent-strong",
+                              "cornerRadius": 999,
+                              "stroke": "$accent-strong",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ZcEYx",
+                                  "name": "Town text",
+                                  "fill": "$text-on-dark",
+                                  "content": "Town",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "rupoG",
+                              "name": "Pill City",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "S2WJn",
+                                  "name": "City text",
+                                  "fill": "$text-secondary",
+                                  "content": "City",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Jsz2A",
+                      "name": "Description head",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        0,
+                        0,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "X2GF4A",
+                          "name": "Description label",
+                          "fill": "$text-primary",
+                          "content": "Description",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MGUNN",
+                      "name": "Description field",
+                      "width": "fill_container",
+                      "height": 88,
+                      "fill": "$surface-card",
+                      "cornerRadius": 4,
+                      "stroke": "$border-faint",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mjnho",
+                          "name": "Description value",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -40524,20 +41228,9 @@
                   ]
                 },
                 {
-                  "type": "text",
-                  "id": "eHdsa",
-                  "name": "Everyone label",
-                  "fill": "$text-secondary",
-                  "content": "EVERYONE",
-                  "fontFamily": "$font-compact",
-                  "fontSize": 10,
-                  "fontWeight": "700",
-                  "letterSpacing": 1.5
-                },
-                {
                   "type": "frame",
-                  "id": "X9xtq",
-                  "name": "Chip Sells at list · Buys at ½",
+                  "id": "Cp8SF",
+                  "name": "Chip Town",
                   "fill": "$header-1",
                   "cornerRadius": 999,
                   "gap": 6,
@@ -40549,20 +41242,20 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "yPmq7",
+                      "id": "CKP4y",
                       "name": "Chip icon",
                       "width": 12,
                       "height": 12,
-                      "icon": "scale",
+                      "icon": "hammer",
                       "library": "lucide",
                       "fill": "$accent-on-dark"
                     },
                     {
                       "type": "text",
-                      "id": "aCBzg",
+                      "id": "l6peVH",
                       "name": "Chip text",
                       "fill": "$text-on-dark",
-                      "content": "Sells at list · Buys at ½",
+                      "content": "Town",
                       "fontFamily": "$font-compact",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -40570,57 +41263,16 @@
                   ]
                 },
                 {
-                  "id": "RwxR4",
-                  "type": "ref",
-                  "ref": "wUkvn",
-                  "name": "Preview Longsword",
-                  "width": "fill_container",
-                  "padding": [
-                    6,
-                    8
-                  ],
-                  "gap": 8,
-                  "descendants": {
-                    "MY7RE": {
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "assets/items/greatsword-guard.webp",
-                        "mode": "cover"
-                      },
-                      "width": 32,
-                      "height": 32
-                    },
-                    "BZVOe": {
-                      "content": "Longsword",
-                      "fontSize": 13
-                    },
-                    "vYzUL": {
-                      "enabled": false
-                    },
-                    "UB234": {
-                      "enabled": false
-                    },
-                    "CZ7Dq/e1b2b": {
-                      "content": "15"
-                    },
-                    "xqAHK": {
-                      "enabled": false
-                    }
-                  }
-                },
-                {
                   "type": "text",
-                  "id": "ezq30",
-                  "name": "Preview foot",
+                  "id": "OBMbI",
+                  "name": "Preview description",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Open shop windows refresh for everyone when a change is saved.",
-                  "fontFamily": "$font-slip",
+                  "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                  "fontFamily": "$font-body",
                   "fontSize": 13,
-                  "fontWeight": "normal",
-                  "fontStyle": "italic"
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -40634,7 +41286,7 @@
       "ref": "L4tb2b",
       "name": "16 Compendium Preview — Dark",
       "x": 1800,
-      "y": 12974,
+      "y": 13821,
       "theme": {
         "mode": "dark"
       }
@@ -40645,7 +41297,7 @@
       "ref": "Zm5HK",
       "name": "16 Compendium Preview · Settings — Dark",
       "x": 3800,
-      "y": 12974,
+      "y": 13821,
       "theme": {
         "mode": "dark"
       }
@@ -40654,7 +41306,7 @@
       "type": "frame",
       "id": "M9qII3",
       "x": 800,
-      "y": 13854,
+      "y": 14790,
       "name": "17 Compendium Preview — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -40662,7 +41314,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -40801,10 +41453,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -41803,7 +42461,7 @@
       "ref": "M9qII3",
       "name": "17 Compendium Preview — Narrow (Dark)",
       "x": 1800,
-      "y": 13854,
+      "y": 14790,
       "theme": {
         "mode": "dark"
       }
@@ -41812,7 +42470,7 @@
       "type": "frame",
       "id": "W9SYUv",
       "x": 2800,
-      "y": 13854,
+      "y": 14790,
       "name": "16 Compendium Preview · Exported shop — Light",
       "theme": {
         "mode": "light"
@@ -42182,7 +42840,7 @@
       "ref": "W9SYUv",
       "name": "16 Compendium Preview · Exported shop — Dark",
       "x": 3800,
-      "y": 13854,
+      "y": 14790,
       "theme": {
         "mode": "dark"
       }
@@ -42191,7 +42849,7 @@
       "type": "frame",
       "id": "hiyHK",
       "x": 800,
-      "y": 14754,
+      "y": 15713,
       "name": "18 Haggling · Settings (GM) · Deals — Light",
       "theme": {
         "mode": "light"
@@ -42199,7 +42857,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -42228,13 +42886,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -42370,6 +43025,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "L9hkf",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "rspky",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FLdct",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -44254,7 +44946,7 @@
       "ref": "hiyHK",
       "name": "18 Haggling · Settings (GM) · Deals — Dark",
       "x": 1800,
-      "y": 14754,
+      "y": 15713,
       "theme": {
         "mode": "dark"
       }
@@ -44263,7 +44955,7 @@
       "type": "frame",
       "id": "XAkJh",
       "x": 800,
-      "y": 15634,
+      "y": 16682,
       "name": "18 Haggling · Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -45429,7 +46121,7 @@
       "ref": "XAkJh",
       "name": "18 Haggling · Chat Card — Dark",
       "x": 2800,
-      "y": 15634,
+      "y": 16682,
       "theme": {
         "mode": "dark"
       }
@@ -45438,7 +46130,7 @@
       "type": "frame",
       "id": "hQVb5",
       "x": 2800,
-      "y": 14754,
+      "y": 15713,
       "name": "18 Haggling · Call form — Light",
       "theme": {
         "mode": "light"
@@ -45825,7 +46517,7 @@
       "ref": "hQVb5",
       "name": "18 Haggling · Call form — Dark",
       "x": 3800,
-      "y": 14754,
+      "y": 15713,
       "theme": {
         "mode": "dark"
       }
@@ -45834,7 +46526,7 @@
       "type": "frame",
       "id": "PfjAq",
       "x": 800,
-      "y": 16140,
+      "y": 17188,
       "name": "19 Settings (GM) · Restock, own table — Light",
       "theme": {
         "mode": "light"
@@ -45842,7 +46534,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -45872,12 +46564,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -46013,6 +46699,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "HJ2Xh",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "gWErO",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "d12Ozb",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -48242,7 +48965,7 @@
       "ref": "PfjAq",
       "name": "19 Settings (GM) · Restock, own table — Dark",
       "x": 1800,
-      "y": 16140,
+      "y": 17188,
       "theme": {
         "mode": "dark"
       }
@@ -48251,7 +48974,7 @@
       "type": "frame",
       "id": "U9Jt8Z",
       "x": 2800,
-      "y": 16140,
+      "y": 17188,
       "name": "19 Settings (GM) · Restock, formula refused — Light",
       "theme": {
         "mode": "light"
@@ -48259,7 +48982,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -48289,12 +49012,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -48430,6 +49147,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "KIHhC",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "F9yUn",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "dIpNE",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -50716,7 +51470,7 @@
       "ref": "U9Jt8Z",
       "name": "19 Settings (GM) · Restock, formula refused — Dark",
       "x": 3800,
-      "y": 16140,
+      "y": 17188,
       "theme": {
         "mode": "dark"
       }
@@ -50725,7 +51479,7 @@
       "type": "frame",
       "id": "GVLI3",
       "x": 800,
-      "y": 17020,
+      "y": 18157,
       "name": "20 Settings (GM) · Customers — Light",
       "theme": {
         "mode": "light"
@@ -50733,7 +51487,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -50765,17 +51519,11 @@
             "uYCYY": {
               "enabled": false
             },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
-              "enabled": false
+            "OmdZ0": {
+              "enabled": true
             },
             "RetMP": {
               "content": "Sells at list · Buys at ½"
-            },
-            "OmdZ0": {
-              "enabled": true
             }
           }
         },
@@ -50907,6 +51655,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "HrCSZ",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "xAO2K",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "u92G2g",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -51780,7 +52565,7 @@
       "type": "frame",
       "id": "E6jfnh",
       "x": 2800,
-      "y": 17020,
+      "y": 18157,
       "name": "20 Settings (GM) · Customers, off — Light",
       "theme": {
         "mode": "light"
@@ -51788,7 +52573,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -51817,13 +52602,10 @@
           "ref": "UiMqw",
           "name": "Hero",
           "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
             "uYCYY": {
-              "enabled": false
-            },
-            "amGqh": {
-              "enabled": false
-            },
-            "K7PByz": {
               "enabled": false
             },
             "RetMP": {
@@ -51959,6 +52741,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "s3dBl7",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Jr9lq",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NAiAz",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -52494,7 +53313,7 @@
       "ref": "GVLI3",
       "name": "20 Settings (GM) · Customers — Dark",
       "x": 1800,
-      "y": 17020,
+      "y": 18157,
       "theme": {
         "mode": "dark"
       }
@@ -52505,7 +53324,7 @@
       "ref": "E6jfnh",
       "name": "20 Settings (GM) · Customers, off — Dark",
       "x": 3800,
-      "y": 17020,
+      "y": 18157,
       "theme": {
         "mode": "dark"
       }
@@ -52514,7 +53333,7 @@
       "type": "frame",
       "id": "IS2fO",
       "x": 800,
-      "y": 17900,
+      "y": 19126,
       "name": "20 Storefront · Today's trade — Light",
       "theme": {
         "mode": "light"
@@ -52522,7 +53341,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -53913,7 +54732,7 @@
       "ref": "IS2fO",
       "name": "20 Storefront · Today's trade — Dark",
       "x": 1800,
-      "y": 17900,
+      "y": 19126,
       "theme": {
         "mode": "dark"
       }
@@ -53922,7 +54741,7 @@
       "type": "frame",
       "id": "tybWa",
       "x": 800,
-      "y": 18700,
+      "y": 20015,
       "name": "21 Spellcasting · Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -55691,7 +56510,7 @@
       "ref": "tybWa",
       "name": "21 Spellcasting · Chat Card — Dark",
       "x": 1800,
-      "y": 18700,
+      "y": 20015,
       "theme": {
         "mode": "dark"
       }
@@ -55700,7 +56519,7 @@
       "type": "frame",
       "id": "wtrSi",
       "x": 800,
-      "y": 19592,
+      "y": 20907,
       "name": "22 Settings (GM) · Restock, magic — Light",
       "theme": {
         "mode": "light"
@@ -55708,7 +56527,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -55738,12 +56557,6 @@
           "name": "Hero",
           "descendants": {
             "uYCYY": {
-              "enabled": true
-            },
-            "amGqh": {
-              "enabled": true
-            },
-            "K7PByz": {
               "enabled": true
             },
             "PmOUn": {
@@ -55879,6 +56692,43 @@
                   "fill": "#00000000",
                   "width": "fill_container",
                   "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "r4maTz",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "EXfA0",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RXsxZ",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -58114,7 +58964,856 @@
       "ref": "wtrSi",
       "name": "22 Settings (GM) · Restock, magic — Dark",
       "x": 1800,
-      "y": 19592,
+      "y": 20907,
+      "theme": {
+        "mode": "dark"
+      }
+    },
+    {
+      "type": "frame",
+      "id": "umwfH",
+      "x": 800,
+      "y": 21876,
+      "name": "23 Settings (GM) · Details — Light",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "clip": true,
+      "width": 920,
+      "height": 849,
+      "fill": "$surface-app",
+      "cornerRadius": 6,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#00000040",
+        "offset": {
+          "x": 0,
+          "y": 8
+        },
+        "blur": 32
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "M35Cy",
+          "type": "ref",
+          "ref": "m382Vk",
+          "name": "Window Bar"
+        },
+        {
+          "id": "p3dB7",
+          "type": "ref",
+          "ref": "UiMqw",
+          "name": "Hero",
+          "descendants": {
+            "H3z4WJ": {
+              "enabled": false
+            },
+            "uYCYY": {
+              "enabled": false
+            },
+            "RetMP": {
+              "content": "Sells at list · Your price −10%"
+            }
+          }
+        },
+        {
+          "id": "yXWgo",
+          "type": "ref",
+          "ref": "ZwEAx",
+          "name": "Tabs",
+          "descendants": {
+            "gJ7DQ": {
+              "stroke": "#00000000"
+            },
+            "Kwsll": {
+              "fill": "$text-secondary"
+            },
+            "JEMqJ": {
+              "fill": "$text-secondary",
+              "fontWeight": "500"
+            },
+            "K2bP5": {
+              "stroke": "$accent-strong"
+            },
+            "vAzyi": {
+              "fill": "$accent-strong"
+            },
+            "gFtDe": {
+              "fill": "$text-primary",
+              "fontWeight": "700"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "jSohB",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "o7nwUt",
+              "name": "Section Nav",
+              "width": 180,
+              "height": "fill_container",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "right": 1
+              },
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "c4LmUp",
+                  "name": "Visit toggle",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "WkKES",
+                      "name": "Visit row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ORjbn",
+                          "name": "Visit label",
+                          "fill": "$text-primary",
+                          "content": "Players can visit",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "t0oiT",
+                          "name": "Switch",
+                          "width": 30,
+                          "height": 16,
+                          "fill": "$success",
+                          "cornerRadius": 8,
+                          "padding": 2,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "s4rD9h",
+                              "name": "Knob",
+                              "fill": "#ffffff",
+                              "width": 12,
+                              "height": 12
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "BuWUD",
+                      "name": "Visit hint",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Off hides the shop from players entirely.",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "id": "GiRxZ",
+                  "name": "Visit gap",
+                  "fill": "#00000000",
+                  "width": "fill_container",
+                  "height": 8
+                },
+                {
+                  "type": "frame",
+                  "id": "Q6ObQF",
+                  "name": "Nav Details",
+                  "width": "fill_container",
+                  "fill": "$surface-card",
+                  "cornerRadius": 4,
+                  "stroke": "$accent-gold",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "WfQZ0",
+                      "name": "Details icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "store",
+                      "library": "lucide",
+                      "fill": "$accent-strong"
+                    },
+                    {
+                      "type": "text",
+                      "id": "t2iU3F",
+                      "name": "Details label",
+                      "fill": "$text-primary",
+                      "content": "Details",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "t5nq7C",
+                  "name": "Nav Terms",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Y74kOV",
+                      "name": "Terms icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "scale",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "MA2f9",
+                      "name": "Terms label",
+                      "fill": "$text-primary",
+                      "content": "Terms",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VVo3s",
+                  "name": "Nav Deals",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ePnm5",
+                      "name": "Deals icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "handshake",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VRXN6",
+                      "name": "Deals label",
+                      "fill": "$text-primary",
+                      "content": "Deals",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "I7Xkz",
+                  "name": "Nav Won't buy",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "D3aSm",
+                      "name": "Won't buy icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "ban",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "m9YwUj",
+                      "name": "Won't buy label",
+                      "fill": "$text-primary",
+                      "content": "Won't buy",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "J8EVlQ",
+                  "name": "Nav Hours",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "xPiz4",
+                      "name": "Hours icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "hourglass",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yX7wi",
+                      "name": "Hours label",
+                      "fill": "$text-primary",
+                      "content": "Hours",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ok6gv",
+                  "name": "Nav Restock",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "F1sjQ",
+                      "name": "Restock icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "refresh-cw",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "SDZIi",
+                      "name": "Restock label",
+                      "fill": "$text-primary",
+                      "content": "Restock",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gUfYH",
+                  "name": "Nav Customers",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "pBYUw",
+                      "name": "Customers icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "users",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TCLV2",
+                      "name": "Customers label",
+                      "fill": "$text-primary",
+                      "content": "Customers",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LL8pW",
+                  "name": "Nav Till",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 4,
+                  "stroke": "#00000000",
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "EgQkP",
+                      "name": "Till icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "coins",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g74BU3",
+                      "name": "Till label",
+                      "fill": "$text-primary",
+                      "content": "Till",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XZ3Yb",
+                  "name": "Nav spacer",
+                  "width": "fill_container",
+                  "height": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "c3kDK",
+                  "name": "Reset",
+                  "width": "fill_container",
+                  "cornerRadius": 4,
+                  "stroke": "$border-faint",
+                  "strokeWidth": 1,
+                  "gap": 8,
+                  "padding": [
+                    7,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "UTCum",
+                      "name": "Reset icon",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "rotate-ccw",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TOvEQ",
+                      "name": "Reset label",
+                      "fill": "$text-secondary",
+                      "content": "Reset to preset",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ASudD",
+              "name": "Form",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                16,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "CITM4",
+                  "name": "Section Details",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "k65CKY",
+                      "name": "Details head",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "b43rPc",
+                          "name": "Details title",
+                          "fill": "$text-title",
+                          "content": "Details",
+                          "fontFamily": "$font-title",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "AGLIq",
+                          "name": "Details rule",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LMGWu",
+                      "name": "Row Settlement",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Va7ie",
+                          "name": "Settlement label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": 80,
+                          "content": "Settlement",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jWCFB",
+                          "name": "Settlement pills",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "oOsyJ",
+                              "name": "Pill Village",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "R3b2iC",
+                                  "name": "Village text",
+                                  "fill": "$text-secondary",
+                                  "content": "Village",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "zETj8",
+                              "name": "Pill Town",
+                              "fill": "$accent-strong",
+                              "cornerRadius": 999,
+                              "stroke": "$accent-strong",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "bYSqS",
+                                  "name": "Town text",
+                                  "fill": "$text-on-dark",
+                                  "content": "Town",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "gMDCF",
+                              "name": "Pill City",
+                              "fill": "#00000000",
+                              "cornerRadius": 999,
+                              "stroke": "$border-faint",
+                              "strokeWidth": 1,
+                              "padding": [
+                                3,
+                                9
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Bls18",
+                                  "name": "City text",
+                                  "fill": "$text-secondary",
+                                  "content": "City",
+                                  "fontFamily": "$font-compact",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rC97U",
+                      "name": "Description head",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        0,
+                        0,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Y9iKx2",
+                          "name": "Description label",
+                          "fill": "$text-primary",
+                          "content": "Description",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BtBm2",
+                      "name": "Description field",
+                      "width": "fill_container",
+                      "height": 88,
+                      "fill": "$surface-card",
+                      "cornerRadius": 4,
+                      "stroke": "$border-faint",
+                      "strokeWidth": 1,
+                      "padding": [
+                        6,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jBHbF",
+                          "name": "Description value",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hkspW",
+              "name": "Players See",
+              "width": 280,
+              "height": "fill_container",
+              "fill": "$surface-card",
+              "stroke": "$border-faint",
+              "strokeWidth": {
+                "left": 1
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vYhLz",
+                  "name": "Preview head",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "fvDck",
+                      "name": "Eye",
+                      "width": 15,
+                      "height": 15,
+                      "icon": "eye",
+                      "library": "lucide",
+                      "fill": "$accent-gold"
+                    },
+                    {
+                      "type": "text",
+                      "id": "z8JZh",
+                      "name": "Preview title",
+                      "fill": "$text-title",
+                      "content": "Players see",
+                      "fontFamily": "$font-title",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "I2EgAx",
+                  "name": "Chip Town",
+                  "fill": "$header-1",
+                  "cornerRadius": 999,
+                  "gap": 6,
+                  "padding": [
+                    3,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "lrYPQ",
+                      "name": "Chip icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "hammer",
+                      "library": "lucide",
+                      "fill": "$accent-on-dark"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hn4I6",
+                      "name": "Chip text",
+                      "fill": "$text-on-dark",
+                      "content": "Town",
+                      "fontFamily": "$font-compact",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "jnYr9",
+                  "name": "Preview description",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sells Adventuring Gear, Armor, Magic Items, Tools and Weapons.",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOMeo",
+      "type": "ref",
+      "ref": "umwfH",
+      "name": "23 Settings (GM) · Details — Dark",
+      "x": 1800,
+      "y": 21876,
       "theme": {
         "mode": "dark"
       }
