@@ -57,7 +57,7 @@ const escape = text => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace
 function paragraphs(html) {
   const found = [...String(html ?? "").matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
   const parts = found.length ? found : [String(html ?? "")];
-  return parts.map(part => ({ html: part, text: decode(part.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim() }))
+  return parts.map(part => ({ html: part, text: decode(part.replace(/<br\b[^>]*>/gi, " ").replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim() }))
     .filter(p => p.text);
 }
 

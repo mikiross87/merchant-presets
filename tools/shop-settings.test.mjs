@@ -374,6 +374,12 @@ test("a description shows as its paragraphs' text, a blank line between", () => 
   assert.equal(descriptionText("Sells rope."), "Sells rope.");
   assert.equal(descriptionText("<p>Rope<br>and nails</p>"), "Rope and nails");
   assert.equal(descriptionText(""), "");
+  assert.equal(descriptionText("<p>Casts <em>spells</em>, more.</p>"), "Casts spells, more.");
+});
+
+test("a paragraph with inline markup, left as it was, keeps it", () => {
+  const html = "<p>Casts <em>spells</em>, more.</p>";
+  assert.equal(applied(shop({ description: html }), { op: "description", text: descriptionText(html) }).description, html);
 });
 
 test("a paragraph left as it was keeps its own markup; a changed one is plain", () => {
