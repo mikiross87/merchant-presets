@@ -49,16 +49,33 @@ export function parseTime(text) {
   return hour < 24 && minute < 60 ? { hour, minute } : null;
 }
 
-const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: "\"", "#39": "'", apos: "'", nbsp: " " };
-const decode = text => text.replace(/&(amp|lt|gt|quot|#39|apos|nbsp);/g, (_, e) => ENTITIES[e]);
-const escape = text => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const ENTITIES = {
+  amp: "&", lt: "<", gt: ">", quot: "\"", apos: "'", nbsp: " ",
+  rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", mdash: "—", ndash: "–", hellip: "…"
+};
+/** Named and numeric (`&#8217;`, `&#x27;`) entities as their characters; any other, or an impossible code point, stays as written. */
+const decode = text => text.replace(/&(?:#(\d+)|#[xX]([0-9a-fA-F]+)|([a-zA-Z]+));/g, (entity, decimal, hex, name) => {
+  if (name) return ENTITIES[name] ?? entity;
+  const point = decimal ? Number(decimal) : parseInt(hex, 16);
+  return point > 0 && point <= 0x10FFFF && !(point >= 0xD800 && point <= 0xDFFF) ? String.fromCodePoint(point) : entity;
+});
+const escapeText = text => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-/** A stored description's paragraphs (#283): each `<p>` as `{html, text}`; text with no `<p>` is one. */
+/**
+ * A stored description's text paragraphs (#283): each `<p>` holding text as `{html, text}`, a `<br>`
+ * read as a line break; text with no `<p>` is one. `rest` is the stored HTML without those
+ * paragraphs (a list, a heading, a picture, a `<p>` with only an image): kept on save, but not
+ * editable as text.
+ */
 function paragraphs(html) {
-  const found = [...String(html ?? "").matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
-  const parts = found.length ? found : [String(html ?? "")];
-  return parts.map(part => ({ html: part, text: decode(part.replace(/<br\b[^>]*>/gi, " ").replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim() }))
-    .filter(p => p.text);
+  const source = String(html ?? "");
+  const found = [...source.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map(m => m[0]);
+  const parts = found.length ? found : [source];
+  const textOf = part => decode(part.replace(/\s+/g, " ").replace(/<br\b[^>]*>/gi, "\n").replace(/<[^>]*>/g, ""))
+    .split("\n").map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n");
+  const list = parts.map(part => ({ html: part, text: textOf(part) })).filter(p => p.text);
+  const rest = found.length ? list.reduce((left, p) => left.replace(p.html, ""), source).trim() : "";
+  return Object.assign(list, { rest });
 }
 
 /** A description as the Settings tab's textarea shows it: its paragraphs' text, a blank line between. */
@@ -188,9 +205,14 @@ const CHANGES = {
   description(shop, { text }) {
     if (typeof text !== "string") return "a description is text";
     const stored = paragraphs(shop.description);
-    const typed = text.split(/(?:\r?\n[ \t]*){2,}/).map(t => t.replace(/\s+/g, " ").trim()).filter(Boolean);
-    // A paragraph left as it was keeps its own markup (a preset's italic caster note, #283).
-    shop.description = typed.map(t => stored.find(p => p.text === t)?.html ?? `<p>${escape(t)}</p>`).join("");
+    // A blank line starts a paragraph, a single Enter is a line break inside it.
+    const typed = text.split(/(?:\r?\n[ \t]*){2,}/)
+      .map(t => t.split(/\r?\n/).map(line => line.replace(/\s+/g, " ").trim()).filter(Boolean).join("\n")).filter(Boolean);
+    // Text left as it was leaves the description as it was, blocks between its paragraphs in place.
+    if (typed.join("\n\n") === stored.map(p => p.text).join("\n\n")) return;
+    // A paragraph left as it was keeps its own markup (a preset's italic caster note, #283); what
+    // isn't a text paragraph follows the typed ones.
+    shop.description = typed.map(t => stored.find(p => p.text === t)?.html ?? `<p>${escapeText(t).replace(/\n/g, "<br>")}</p>`).join("") + stored.rest;
   },
   reset(shop, { preset }) {
     const result = resetToPreset(shop, preset);

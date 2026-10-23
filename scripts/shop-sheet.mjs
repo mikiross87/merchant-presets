@@ -17,7 +17,7 @@ import { effectiveRates, itemPriceCp, payExact, totalCp } from "./pricing.mjs";
 import { mealsFeed, NUTRITION_MODULE } from "./nutrition.mjs";
 import { SHOP_DEFAULTS, STOCK_DEFAULTS, shopFrom, validateShop } from "./schema.mjs";
 import { CLOCK_EDITS, EVERY_CHOICES, WONT_BUY_KINDS, WONT_BUY_TYPES, applyChange, dealFields, dealReading, descriptionText, everyChoice, hoursSamples, openMinutes, percentOf, quantityRows, tableIsPreset, timeText, wholeCoins } from "./shop-settings.mjs";
-import { TIERS } from "./shop.mjs";
+import { TIERS, tierOf } from "./shop.mjs";
 import { worldTerms } from "./trade-desk.mjs";
 import { activeDeal } from "./deals.mjs";
 import { HAGGLE_SKILLS, callable, playerOwned } from "./haggle.mjs";
@@ -691,14 +691,14 @@ const ShopSheet = hasApplicationsApi ? class ShopSheet extends foundry.applicati
   /**
    * An NPC the GM gave the shop sheet by hand (#261) has no shop config of ours, so it reads as
    * broken and the Settings tab refuses every edit: the GM opening it makes it a shop, on the
-   * defaults. A 1.x merchant, or a config that's there but invalid, is left for the migration.
+   * defaults, its size read from its name ("Docks Trader (City)"). A 1.x merchant, or a config that's there but invalid, is left for the migration.
    * A write the server refuses is logged and the window still opens, as it did before (#261 review).
    * @override
    */
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     if (!game.user.isGM || this.preview || isMigratable(this.document)) return;
-    try { await this.document.update({ [`flags.${MODULE}.shop`]: _replace(structuredClone(SHOP_DEFAULTS)) }); }
+    try { await this.document.update({ [`flags.${MODULE}.shop`]: _replace({ ...structuredClone(SHOP_DEFAULTS), tier: tierOf(this.document) }) }); }
     catch (err) { console.error(`${MODULE} | couldn't make ${this.document.name} a shop`, err); }
   }
 
