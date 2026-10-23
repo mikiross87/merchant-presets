@@ -1072,7 +1072,7 @@
       "type": "frame",
       "id": "GZx14",
       "x": 760,
-      "y": -553,
+      "y": -642,
       "name": "00 Window Parts",
       "theme": {
         "mode": "light"
@@ -1217,10 +1217,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 76,
-              "height": 76,
+              "width": 180,
+              "height": 180,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 6,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -1824,7 +1830,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -3506,7 +3512,7 @@
       "type": "frame",
       "id": "TGXBN",
       "x": 800,
-      "y": 800,
+      "y": 889,
       "name": "02 Sell — Light",
       "theme": {
         "mode": "light"
@@ -3514,7 +3520,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -4875,7 +4881,7 @@
       "ref": "TGXBN",
       "name": "02 Sell — Dark",
       "x": 1800,
-      "y": 800,
+      "y": 889,
       "theme": {
         "mode": "dark"
       }
@@ -4884,7 +4890,7 @@
       "type": "frame",
       "id": "v8ap9",
       "x": 800,
-      "y": 1600,
+      "y": 1778,
       "name": "03 Settings (GM) — Light",
       "theme": {
         "mode": "light"
@@ -4892,7 +4898,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -6451,7 +6457,7 @@
       "ref": "v8ap9",
       "name": "03 Settings (GM) — Dark",
       "x": 1800,
-      "y": 1600,
+      "y": 1778,
       "theme": {
         "mode": "dark"
       },
@@ -6471,7 +6477,7 @@
       "type": "frame",
       "id": "aaJcp",
       "x": 2800,
-      "y": 1600,
+      "y": 1778,
       "name": "03 Settings (GM) · Restock — Light",
       "theme": {
         "mode": "light"
@@ -6479,7 +6485,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -8846,7 +8852,7 @@
       "ref": "aaJcp",
       "name": "03 Settings (GM) · Restock — Dark",
       "x": 3800,
-      "y": 1600,
+      "y": 1778,
       "theme": {
         "mode": "dark"
       }
@@ -8855,7 +8861,7 @@
       "type": "frame",
       "id": "x9IX9",
       "x": 800,
-      "y": 2480,
+      "y": 2747,
       "name": "04 Closed — Light",
       "theme": {
         "mode": "light"
@@ -8863,7 +8869,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -9871,7 +9877,7 @@
       "ref": "x9IX9",
       "name": "04 Closed — Dark",
       "x": 1800,
-      "y": 2480,
+      "y": 2747,
       "theme": {
         "mode": "dark"
       }
@@ -9880,7 +9886,7 @@
       "type": "frame",
       "id": "mRg3y",
       "x": 800,
-      "y": 3280,
+      "y": 3636,
       "name": "05 Inn — Light",
       "theme": {
         "mode": "light"
@@ -9888,7 +9894,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -11414,7 +11420,7 @@
       "ref": "mRg3y",
       "name": "05 Inn — Dark",
       "x": 1800,
-      "y": 3280,
+      "y": 3636,
       "theme": {
         "mode": "dark"
       }
@@ -11423,7 +11429,7 @@
       "type": "frame",
       "id": "r7HIUl",
       "x": 800,
-      "y": 4080,
+      "y": 4525,
       "name": "06 Storefront — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -11431,7 +11437,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -11570,10 +11576,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -12768,7 +12780,7 @@
       "ref": "r7HIUl",
       "name": "06 Storefront — Narrow (Dark)",
       "x": 1800,
-      "y": 4080,
+      "y": 4525,
       "theme": {
         "mode": "dark"
       }
@@ -12777,7 +12789,7 @@
       "type": "frame",
       "id": "n9I5aQ",
       "x": 800,
-      "y": 4980,
+      "y": 5448,
       "name": "07 Buyer Picker — Light",
       "theme": {
         "mode": "light"
@@ -13605,7 +13617,7 @@
       "ref": "n9I5aQ",
       "name": "07 Buyer Picker — Dark",
       "x": 1800,
-      "y": 4980,
+      "y": 5448,
       "theme": {
         "mode": "dark"
       }
@@ -13614,7 +13626,7 @@
       "type": "frame",
       "id": "z5RBkd",
       "x": 2800,
-      "y": 4980,
+      "y": 5448,
       "name": "07 Trade Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -14518,7 +14530,7 @@
       "ref": "z5RBkd",
       "name": "07 Trade Chat Card — Dark",
       "x": 3800,
-      "y": 4980,
+      "y": 5448,
       "theme": {
         "mode": "dark"
       }
@@ -14527,7 +14539,7 @@
       "type": "frame",
       "id": "WNYhA",
       "x": 800,
-      "y": 5530,
+      "y": 5998,
       "name": "08 Trade States — Light",
       "theme": {
         "mode": "light"
@@ -18318,7 +18330,7 @@
       "ref": "WNYhA",
       "name": "08 Trade States — Dark",
       "x": 2800,
-      "y": 5530,
+      "y": 5998,
       "theme": {
         "mode": "dark"
       }
@@ -18380,7 +18392,7 @@
       "type": "frame",
       "id": "dYANz",
       "x": 800,
-      "y": 6405,
+      "y": 6873,
       "name": "09 Settings (GM) · Won't buy — Light",
       "theme": {
         "mode": "light"
@@ -18388,7 +18400,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -20249,7 +20261,7 @@
       "type": "frame",
       "id": "S2swP",
       "x": 2800,
-      "y": 6405,
+      "y": 6873,
       "name": "09 Settings (GM) · Hours — Light",
       "theme": {
         "mode": "light"
@@ -20257,7 +20269,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -22373,7 +22385,7 @@
       "type": "frame",
       "id": "Q6UvA",
       "x": 800,
-      "y": 7285,
+      "y": 7842,
       "name": "10 Deals — Light",
       "theme": {
         "mode": "light"
@@ -24665,7 +24677,7 @@
       "type": "frame",
       "id": "PV7Sf",
       "x": 800,
-      "y": 8095,
+      "y": 8652,
       "name": "11 Sell — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -24673,7 +24685,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -24812,10 +24824,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -25989,7 +26007,7 @@
       "type": "frame",
       "id": "bXBEW",
       "x": 2800,
-      "y": 8095,
+      "y": 8652,
       "name": "11 Settings (GM) — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -25997,7 +26015,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -26136,10 +26154,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -27666,7 +27690,7 @@
       "type": "frame",
       "id": "mVjRf",
       "x": 2800,
-      "y": 4080,
+      "y": 4525,
       "name": "06 Storefront — Narrow · Bill open (Light)",
       "theme": {
         "mode": "light"
@@ -27674,7 +27698,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -27813,10 +27837,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -29514,7 +29544,7 @@
       "type": "frame",
       "id": "euA99",
       "x": 800,
-      "y": 8995,
+      "y": 9575,
       "name": "12 Sell Trade States — Light",
       "theme": {
         "mode": "light"
@@ -30190,7 +30220,7 @@
       "ref": "dYANz",
       "name": "09 Settings (GM) · Won't buy — Dark",
       "x": 1800,
-      "y": 6405,
+      "y": 6873,
       "theme": {
         "mode": "dark"
       }
@@ -30201,7 +30231,7 @@
       "ref": "S2swP",
       "name": "09 Settings (GM) · Hours — Dark",
       "x": 3800,
-      "y": 6405,
+      "y": 6873,
       "theme": {
         "mode": "dark"
       }
@@ -30212,7 +30242,7 @@
       "ref": "mVjRf",
       "name": "06 Storefront — Narrow · Bill open (Dark)",
       "x": 3800,
-      "y": 4080,
+      "y": 4525,
       "theme": {
         "mode": "dark"
       }
@@ -30223,7 +30253,7 @@
       "ref": "Q6UvA",
       "name": "10 Deals — Dark",
       "x": 2800,
-      "y": 7285,
+      "y": 7842,
       "theme": {
         "mode": "dark"
       }
@@ -30234,7 +30264,7 @@
       "ref": "PV7Sf",
       "name": "11 Sell — Narrow (Dark)",
       "x": 1800,
-      "y": 8095,
+      "y": 8652,
       "theme": {
         "mode": "dark"
       }
@@ -30245,7 +30275,7 @@
       "ref": "bXBEW",
       "name": "11 Settings (GM) — Narrow (Dark)",
       "x": 3800,
-      "y": 8095,
+      "y": 8652,
       "theme": {
         "mode": "dark"
       }
@@ -30256,7 +30286,7 @@
       "ref": "euA99",
       "name": "12 Sell Trade States — Dark",
       "x": 1800,
-      "y": 8995,
+      "y": 9575,
       "theme": {
         "mode": "dark"
       }
@@ -30265,7 +30295,7 @@
       "type": "frame",
       "id": "RRqQ7",
       "x": 800,
-      "y": 9711,
+      "y": 10291,
       "name": "13 Settings (GM) · No world clock — Light",
       "theme": {
         "mode": "light"
@@ -30273,7 +30303,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -32417,13 +32447,13 @@
         "mode": "dark"
       },
       "x": 1800,
-      "y": 9711
+      "y": 10291
     },
     {
       "type": "frame",
       "id": "cPxfb",
       "x": 800,
-      "y": 10591,
+      "y": 11260,
       "name": "13 No world clock · Bill and receipt — Light",
       "theme": {
         "mode": "light"
@@ -33534,13 +33564,13 @@
         "mode": "dark"
       },
       "x": 1800,
-      "y": 10591
+      "y": 11260
     },
     {
       "type": "frame",
       "id": "U0HcWc",
       "x": 800,
-      "y": 11214,
+      "y": 11883,
       "name": "14 Settings (GM) · Till — Light",
       "theme": {
         "mode": "light"
@@ -33548,7 +33578,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -34600,7 +34630,7 @@
       "type": "frame",
       "id": "Yusa2",
       "x": 2800,
-      "y": 11214,
+      "y": 11883,
       "name": "14 Settings (GM) · Till, unlimited coin — Light",
       "theme": {
         "mode": "light"
@@ -34608,7 +34638,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -35563,7 +35593,7 @@
       "ref": "U0HcWc",
       "name": "14 Settings (GM) · Till — Dark",
       "x": 1800,
-      "y": 11214,
+      "y": 11883,
       "theme": {
         "mode": "dark"
       }
@@ -35574,7 +35604,7 @@
       "ref": "Yusa2",
       "name": "14 Settings (GM) · Till, unlimited coin — Dark",
       "x": 3800,
-      "y": 11214,
+      "y": 11883,
       "theme": {
         "mode": "dark"
       }
@@ -35583,7 +35613,7 @@
       "type": "frame",
       "id": "IeGac",
       "x": 800,
-      "y": 12094,
+      "y": 12852,
       "name": "15 Temple & Faith Store — Light",
       "theme": {
         "mode": "light"
@@ -35591,7 +35621,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -37115,7 +37145,7 @@
       "type": "frame",
       "id": "pI7Yd",
       "x": 2800,
-      "y": 12094,
+      "y": 12852,
       "name": "15 Stable — Light",
       "theme": {
         "mode": "light"
@@ -37123,7 +37153,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -38419,7 +38449,7 @@
       "ref": "IeGac",
       "name": "15 Temple & Faith Store — Dark",
       "x": 1800,
-      "y": 12094,
+      "y": 12852,
       "theme": {
         "mode": "dark"
       }
@@ -38430,7 +38460,7 @@
       "ref": "pI7Yd",
       "name": "15 Stable — Dark",
       "x": 3800,
-      "y": 12094,
+      "y": 12852,
       "theme": {
         "mode": "dark"
       }
@@ -38439,7 +38469,7 @@
       "type": "frame",
       "id": "L4tb2b",
       "x": 800,
-      "y": 12974,
+      "y": 13821,
       "name": "16 Compendium Preview — Light",
       "theme": {
         "mode": "light"
@@ -38447,7 +38477,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -39386,7 +39416,7 @@
       "type": "frame",
       "id": "Zm5HK",
       "x": 2800,
-      "y": 12974,
+      "y": 13821,
       "name": "16 Compendium Preview · Settings — Light",
       "theme": {
         "mode": "light"
@@ -39394,7 +39424,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -40634,7 +40664,7 @@
       "ref": "L4tb2b",
       "name": "16 Compendium Preview — Dark",
       "x": 1800,
-      "y": 12974,
+      "y": 13821,
       "theme": {
         "mode": "dark"
       }
@@ -40645,7 +40675,7 @@
       "ref": "Zm5HK",
       "name": "16 Compendium Preview · Settings — Dark",
       "x": 3800,
-      "y": 12974,
+      "y": 13821,
       "theme": {
         "mode": "dark"
       }
@@ -40654,7 +40684,7 @@
       "type": "frame",
       "id": "M9qII3",
       "x": 800,
-      "y": 13854,
+      "y": 14790,
       "name": "17 Compendium Preview — Narrow (Light)",
       "theme": {
         "mode": "light"
@@ -40662,7 +40692,7 @@
       "reusable": true,
       "clip": true,
       "width": 480,
-      "height": 780,
+      "height": 803,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -40801,10 +40831,16 @@
                 "url": "assets/items/blacksmith.webp",
                 "mode": "cover"
               },
-              "width": 52,
-              "height": 52,
+              "width": 76,
+              "height": 76,
               "stroke": "$accent-gold",
-              "strokeWidth": 2
+              "strokeWidth": 3,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#000000",
+                "blur": 6
+              }
             },
             {
               "type": "frame",
@@ -41803,7 +41839,7 @@
       "ref": "M9qII3",
       "name": "17 Compendium Preview — Narrow (Dark)",
       "x": 1800,
-      "y": 13854,
+      "y": 14790,
       "theme": {
         "mode": "dark"
       }
@@ -41812,7 +41848,7 @@
       "type": "frame",
       "id": "W9SYUv",
       "x": 2800,
-      "y": 13854,
+      "y": 14790,
       "name": "16 Compendium Preview · Exported shop — Light",
       "theme": {
         "mode": "light"
@@ -42182,7 +42218,7 @@
       "ref": "W9SYUv",
       "name": "16 Compendium Preview · Exported shop — Dark",
       "x": 3800,
-      "y": 13854,
+      "y": 14790,
       "theme": {
         "mode": "dark"
       }
@@ -42191,7 +42227,7 @@
       "type": "frame",
       "id": "hiyHK",
       "x": 800,
-      "y": 14754,
+      "y": 15713,
       "name": "18 Haggling · Settings (GM) · Deals — Light",
       "theme": {
         "mode": "light"
@@ -42199,7 +42235,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -44254,7 +44290,7 @@
       "ref": "hiyHK",
       "name": "18 Haggling · Settings (GM) · Deals — Dark",
       "x": 1800,
-      "y": 14754,
+      "y": 15713,
       "theme": {
         "mode": "dark"
       }
@@ -44263,7 +44299,7 @@
       "type": "frame",
       "id": "XAkJh",
       "x": 800,
-      "y": 15634,
+      "y": 16682,
       "name": "18 Haggling · Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -45429,7 +45465,7 @@
       "ref": "XAkJh",
       "name": "18 Haggling · Chat Card — Dark",
       "x": 2800,
-      "y": 15634,
+      "y": 16682,
       "theme": {
         "mode": "dark"
       }
@@ -45438,7 +45474,7 @@
       "type": "frame",
       "id": "hQVb5",
       "x": 2800,
-      "y": 14754,
+      "y": 15713,
       "name": "18 Haggling · Call form — Light",
       "theme": {
         "mode": "light"
@@ -45825,7 +45861,7 @@
       "ref": "hQVb5",
       "name": "18 Haggling · Call form — Dark",
       "x": 3800,
-      "y": 14754,
+      "y": 15713,
       "theme": {
         "mode": "dark"
       }
@@ -45834,7 +45870,7 @@
       "type": "frame",
       "id": "PfjAq",
       "x": 800,
-      "y": 16140,
+      "y": 17188,
       "name": "19 Settings (GM) · Restock, own table — Light",
       "theme": {
         "mode": "light"
@@ -45842,7 +45878,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -48242,7 +48278,7 @@
       "ref": "PfjAq",
       "name": "19 Settings (GM) · Restock, own table — Dark",
       "x": 1800,
-      "y": 16140,
+      "y": 17188,
       "theme": {
         "mode": "dark"
       }
@@ -48251,7 +48287,7 @@
       "type": "frame",
       "id": "U9Jt8Z",
       "x": 2800,
-      "y": 16140,
+      "y": 17188,
       "name": "19 Settings (GM) · Restock, formula refused — Light",
       "theme": {
         "mode": "light"
@@ -48259,7 +48295,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -50716,7 +50752,7 @@
       "ref": "U9Jt8Z",
       "name": "19 Settings (GM) · Restock, formula refused — Dark",
       "x": 3800,
-      "y": 16140,
+      "y": 17188,
       "theme": {
         "mode": "dark"
       }
@@ -50725,7 +50761,7 @@
       "type": "frame",
       "id": "GVLI3",
       "x": 800,
-      "y": 17020,
+      "y": 18157,
       "name": "20 Settings (GM) · Customers — Light",
       "theme": {
         "mode": "light"
@@ -50733,7 +50769,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -51780,7 +51816,7 @@
       "type": "frame",
       "id": "E6jfnh",
       "x": 2800,
-      "y": 17020,
+      "y": 18157,
       "name": "20 Settings (GM) · Customers, off — Light",
       "theme": {
         "mode": "light"
@@ -51788,7 +51824,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -52494,7 +52530,7 @@
       "ref": "GVLI3",
       "name": "20 Settings (GM) · Customers — Dark",
       "x": 1800,
-      "y": 17020,
+      "y": 18157,
       "theme": {
         "mode": "dark"
       }
@@ -52505,7 +52541,7 @@
       "ref": "E6jfnh",
       "name": "20 Settings (GM) · Customers, off — Dark",
       "x": 3800,
-      "y": 17020,
+      "y": 18157,
       "theme": {
         "mode": "dark"
       }
@@ -52514,7 +52550,7 @@
       "type": "frame",
       "id": "IS2fO",
       "x": 800,
-      "y": 17900,
+      "y": 19126,
       "name": "20 Storefront · Today's trade — Light",
       "theme": {
         "mode": "light"
@@ -52522,7 +52558,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 680,
+      "height": 769,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -53913,7 +53949,7 @@
       "ref": "IS2fO",
       "name": "20 Storefront · Today's trade — Dark",
       "x": 1800,
-      "y": 17900,
+      "y": 19126,
       "theme": {
         "mode": "dark"
       }
@@ -53922,7 +53958,7 @@
       "type": "frame",
       "id": "tybWa",
       "x": 800,
-      "y": 18700,
+      "y": 20015,
       "name": "21 Spellcasting · Chat Card — Light",
       "theme": {
         "mode": "light"
@@ -55691,7 +55727,7 @@
       "ref": "tybWa",
       "name": "21 Spellcasting · Chat Card — Dark",
       "x": 1800,
-      "y": 18700,
+      "y": 20015,
       "theme": {
         "mode": "dark"
       }
@@ -55700,7 +55736,7 @@
       "type": "frame",
       "id": "wtrSi",
       "x": 800,
-      "y": 19592,
+      "y": 20907,
       "name": "22 Settings (GM) · Restock, magic — Light",
       "theme": {
         "mode": "light"
@@ -55708,7 +55744,7 @@
       "reusable": true,
       "clip": true,
       "width": 920,
-      "height": 760,
+      "height": 849,
       "fill": "$surface-app",
       "cornerRadius": 6,
       "stroke": "$border",
@@ -58114,7 +58150,7 @@
       "ref": "wtrSi",
       "name": "22 Settings (GM) · Restock, magic — Dark",
       "x": 1800,
-      "y": 19592,
+      "y": 20907,
       "theme": {
         "mode": "dark"
       }

@@ -35,7 +35,7 @@ Frames sit on a grid, numbered by band, and the layer order matches it. Light va
 | 22 | Magic clock (#234): Settings (GM) · Restock, magic — Light / Dark. A shop with magic lines shows a switch, **Everyday** \| **Magic**, at the top of Restock (in the schedule pills' style), and every frame that draws Restock shows it at Everyday. The Magic side is the same section for the shop's second table: its own table card ("Armourer & Blacksmiths · Magic (Town)", 27 goods), the magic lines at their #233 odds (`1d6-5` in a Town), the schedule at **Dice…** with the formula field drawn ("Days, as a dice formula", `3d6+14`), its own last and next restock, and **Restock now**. No till note: only the everyday restock refills the till. Players see the magic finds with their *New* marks |
 | X | Explore lane: ideas, not agreed design (see below) |
 
-A new agreed screen goes in the next band (23, at y 20472) and gets a row here.
+A new agreed screen goes in the next band (23, at y 21876) and gets a row here.
 
 Every window mockup except **01 Storefront — Player (Light)** draws the GM's window (the popover, picker, chat card and trade-state frames draw no window): three tabs, the third badged `GM`, and the NPC sheet button in the window bar. That one frame draws the same window as a player gets it, with two tabs and no NPC sheet button.
 
@@ -124,11 +124,13 @@ Prices show coin glyphs, not "12.5 gp". The glyphs are dnd5e's `icons/currency/{
 Decided 2026-09-24: **the shop is the NPC actor, nothing more.** Import the Apothecary and that NPC is the shop: its name is the title, its image is the portrait, its coins are the till. A GM who wants a person behind the counter renames the NPC and gives it a portrait. There is no separate shopkeeper and no module actor type.
 
 - **Title:** the actor's name. A trailing size tier such as "(Town)" moves out of the title into its own chip.
+- **Portrait (#285):** the actor's image as dnd5e's NPC sheet draws it: a 180 px circle with a 6 px `accent-gold` ring and a soft black shadow (76 px with a 3 px ring in a narrow window). Clicking it opens the image full size.
 - **Voice: impersonal, always.** "Buys at ½ of value", "Won't buy food", "You receive", "The till holds 212 gp". Never a pronoun, and never the actor's name as a speaker, so the text stays right however the GM renames the shop.
 
 Rejected:
 - A linked shopkeeper NPC. Chosen briefly, then dropped by the owner: renaming the NPC covers it, with no links to maintain.
 - A module-defined "Shop" actor type. dnd5e's items and currency expect dnd5e's own actor types, and it would force a world migration.
+- Portrait (#285): a 112 px circle (a smaller step than the sheet's look), and the PC sheet's 180×230 card (a hero ~140 px taller). Mocked in the Explore lane, then deleted.
 
 ## Opening the shop (#104)
 
@@ -261,7 +263,7 @@ The world setting from #102 chooses off, GM only or public.
 
 ## Window sizes
 
-- Shop window: 920 × 680 by default; the GM Settings tab asks for 760 tall. Columns: 180 (categories or sections), flexible (stock or form), 280 (slip or preview).
+- Shop window: 920 × 769 by default (680 before #285's portrait); the GM Settings tab asks for 849 tall. Columns: 180 (categories or sections), flexible (stock or form), 280 (slip or preview).
 - **Narrow (below about 760 px; drawn at 480 px):**
   - the header shrinks to portrait, name and short chips; the description moves behind an info button
   - the buyer and the purse move to a strip under the header
