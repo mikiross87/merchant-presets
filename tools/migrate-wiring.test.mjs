@@ -106,3 +106,17 @@ test("a shop already on 2.0 still migrates its unlinked token's own traded items
   const bell = synthetic.items.find(i => i._id === "tokenBell000001");
   assert.equal(bell.flags["merchant-presets"]?.stock?.hidden, true);
 });
+
+test("an Item Piles service dropped on a shop is a service straight away (#289)", async () => {
+  const world = createWorld();
+  await loadRuntime(world);
+  const shop = world.merchant("General_Store_Town_");
+  const data = { name: "Stabling", type: "loot", flags: { "item-piles": { item: { isService: true } } } };
+  let written = null;
+  const doc = parent => ({ parent, toObject: () => structuredClone(data), updateSource: changes => { written = changes; } });
+  await world.fire("preCreateItem", doc(shop), data, {}, "gm");
+  assert.equal(written["flags.merchant-presets.stock"].service, true);
+  written = null;
+  await world.fire("preCreateItem", doc({ flags: {} }), data, {}, "gm");   // not a shop
+  assert.equal(written, null);
+});
