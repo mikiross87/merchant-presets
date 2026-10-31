@@ -76,6 +76,7 @@ export function createWorld() {
   // (#100 review: the autoRestock write must land before the actor's own).
   const calls = { itemUpdates: [], tablesCreated: 0, messages: [], writes: [], socket: [] };
   // This module's settings by key; another module's as "<module>.<key>".
+  const registered = {};
   const settings = {
     stockMode: "finite", merchantPurse: "finite", autoRestock: false, tradingHours: false,
     ignoreStockWeight: false, drinksHydrate: true, mealsFeed: true, activityFeeds: true, animalsSpawn: true,
@@ -166,7 +167,8 @@ export function createWorld() {
       })
     },
     settings: {
-      register() {},
+      // Kept, so a test can read what a setting tells the GM (its name, hint and choices).
+      register(scope, key, config) { registered[scope === "merchant-presets" ? key : `${scope}.${key}`] = config; },
       get: (scope, key) => settings[scope === "merchant-presets" ? key : `${scope}.${key}`],
       async set(scope, key, value) {
         const full = scope === "merchant-presets" ? key : `${scope}.${key}`;
@@ -265,7 +267,7 @@ export function createWorld() {
    *  it landing first, rather than being silently skipped over. */
   const failSetting = (scope, key) => failingSettings.add(scope === "merchant-presets" ? key : `${scope}.${key}`);
 
-  return { hooks, actors, tables, scenes, compendium, calls, settings, merchant, character, receive, fire, failSetting };
+  return { hooks, actors, tables, scenes, compendium, calls, settings, registered, merchant, character, receive, fire, failSetting };
 }
 
 /** Load the runtime into the world `createWorld` installed, and run init and ready. */
