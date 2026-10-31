@@ -1950,7 +1950,7 @@ Hooks.once("init", () => {
       + "firearms are always limited, and containers are always one-of). Finite: every good gets "
       + "a rolled stock count scaled to its price and the settlement size, and can sell out, so an "
       + "expensive item may not be in stock at all. Either way, a magic item is a rare find: on the "
-      + "shelf at some restocks, one at a time. Applies to merchants imported after the change.",
+      + "shelf at some restocks, one at a time.",
     scope: "world",
     config: true,
     type: String,
@@ -1966,7 +1966,7 @@ Hooks.once("init", () => {
     hint: "Finite: each shop has a purse scaled to its trade and settlement size (40 gp for a "
       + "village innkeeper, 12,500 for a city dock) and cannot buy beyond it, so a party with "
       + "3,000 gp of loot has to find a buyer who can afford it. Unlimited: any merchant can buy "
-      + "anything, and the purse is decorative. Applies to merchants imported after the change.",
+      + "anything, and the purse is decorative.",
     scope: "world",
     config: true,
     type: String,

@@ -99,3 +99,14 @@ test("a create and an update arriving together roll a merchant's shelf once", as
   assert.ok(rolled(smith));
   assert.equal(creates(), 1, "adopted once");
 });
+
+test("the Shop stock and Merchant coin hints don't say a change waits for the next import (#290)", async () => {
+  // Both are read at every trade and in the shop window (trade-desk.mjs `worldTerms`), so a change
+  // reaches every shop at once, ones already imported included.
+  const fresh = createWorld();
+  await loadRuntime(fresh);
+  for (const key of ["stockMode", "merchantPurse"]) {
+    assert.ok(fresh.registered[key], `${key} is registered`);
+    assert.doesNotMatch(fresh.registered[key].hint, /imported after/i, key);
+  }
+});
