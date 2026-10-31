@@ -1094,3 +1094,8 @@ test("a dropped Item Piles good gets its stock config at once (#289)", () => {
   assert.equal(dropStock({ ...ip({ isService: true }), flags: { "item-piles": { item: { isService: true } }, "merchant-presets": { stock: { keep: true } } } }, null), null);
   assert.equal(dropStock({ ...ip({ isService: true }), flags: { "item-piles": { item: { isService: true } }, "merchant-presets": { kind: "gear" } } }, null), null);
 });
+
+test("a dropped Item Piles good with only a bundle size takes it at once, as on the next load (#289 review)", () => {
+  const bundled = { name: "Arrows", type: "consumable", flags: { "item-piles": { system: { quantityForPrice: 20 } } } };
+  assert.equal(dropStock(bundled, null)?.bundle, 20);
+});
