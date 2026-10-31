@@ -35,6 +35,9 @@ than for the code. Reference the issue or PR it closes.
 - A service or never-runs-out good brought over from Item Piles and
   dropped onto a shop works as one straight away, instead of selling as an
   ordinary good until the world is reloaded (#289).
+- The Shop stock and Merchant coin settings no longer say a change applies
+  only to merchants imported afterwards. Since 2.0 a change reaches every
+  shop at once, ones already imported included (#290).
 
 ## [2.4.0] - 2026-10-20
 
