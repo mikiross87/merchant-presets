@@ -32,7 +32,7 @@ import {
   worldTerms
 } from "./trade-desk.mjs";
 import "./shop-sheet.mjs"; // #103: the shop window; self-registers as an actor sheet on import
-import { derivedShop, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
+import { derivedShop, dropStock, hasCurrentShop, isMadeVisitable, isMigratable, isOwnershipChosen, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planTokenMigration, planTokenUpdates, shopSheetOnArrival, shouldForceAutoRestockOff, stockFromRecord,
   tokenNeedsMigration,
   worldHasLegacyShops }
@@ -1929,6 +1929,14 @@ Hooks.on("preUpdateItem", (item, changes) => {
   const quantity = foundry.utils.getProperty(changes, "system.quantity");
   const setsNewAt = foundry.utils.hasProperty(changes, `flags.${MODULE}.newAt`);
   if (dropsNewMark(item, quantity, setsNewAt)) foundry.utils.setProperty(changes, `flags.${MODULE}.newAt`, null);
+});
+
+/** An Item Piles good dropped onto a shop takes its service and infinite settings now, not on the next load (#289). */
+Hooks.on("preCreateItem", item => {
+  if (!isMigratable(item.parent)) return;
+  // The document, not the creation data: data written with dot-path keys reads only through it.
+  const stock = dropStock(item.toObject(), item.parent);
+  if (stock) item.updateSource({ [`flags.${MODULE}.stock`]: stock });
 });
 
 Hooks.once("init", () => {
