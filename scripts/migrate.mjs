@@ -793,7 +793,7 @@ export function planItemUpdates(actor) {
  * The stock config an item dropped onto a shop takes at once (#289), from its Item Piles flags,
  * exactly as the load-time sweep (`planItemUpdates`) would give it on the next load — Item Piles'
  * `keepOnMerchant: false` default included. Null when there's nothing to derive: the shopkeeper's
- * gear, an item already carrying our config, one without Item Piles item flags, or one whose
+ * gear, an item already carrying our config, one without Item Piles flags at all, or one whose
  * derived config is still invalid.
  *
  * @param {object} item  The new item's data.
@@ -803,7 +803,7 @@ export function planItemUpdates(actor) {
  */
 export function dropStock(item, actor) {
   if (isGearItem(item) || item?.flags?.["merchant-presets"]?.stock) return null;
-  if (!item?.flags?.["item-piles"]?.item) return null;
+  if (!item?.flags?.["item-piles"]) return null;
   const repaired = repairStock(deriveStock(sourceFlagsOf(actor, item)));
   return repaired.ok ? repaired.stock : null;
 }
