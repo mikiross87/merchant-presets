@@ -36,8 +36,9 @@ than for the code. Reference the issue or PR it closes.
   dropped onto a shop works as one straight away, instead of selling as an
   ordinary good until the world is reloaded (#289).
 - The Shop stock and Merchant coin settings no longer say a change applies
-  only to merchants imported afterwards. Since 2.0 a change reaches every
-  shop at once, ones already imported included (#290).
+  only to merchants imported afterwards. Since 2.0 both are read at every
+  trade, so a change applies to shops already imported too; nothing is
+  rerolled or refilled (#290).
 
 ## [2.4.0] - 2026-10-20
 
