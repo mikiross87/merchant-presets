@@ -30,6 +30,12 @@ than for the code. Reference the issue or PR it closes.
 - A shop's size no longer follows a "(Village)", "(Town)" or "(City)" at
   the end of its name; set it in Settings → Details (#284).
 
+### Fixed
+
+- A service or never-runs-out good brought over from Item Piles and
+  dropped onto a shop works as one straight away, instead of selling as an
+  ordinary good until the world is reloaded (#289).
+
 ## [2.4.0] - 2026-10-20
 
 ### Changed

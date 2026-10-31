@@ -790,6 +790,25 @@ export function planItemUpdates(actor) {
 }
 
 /**
+ * The stock config an item dropped onto a shop takes at once (#289), from its Item Piles flags,
+ * exactly as the load-time sweep (`planItemUpdates`) would give it on the next load — Item Piles'
+ * `keepOnMerchant: false` default included. Null when there's nothing to derive: the shopkeeper's
+ * gear, an item already carrying our config, one without Item Piles flags at all, or one whose
+ * derived config is still invalid.
+ *
+ * @param {object} item  The new item's data.
+ * @param {object|null} actor  The shop, as the sweep passes it: on a 1.x shop whose `itemFlags`
+ *   record names the item, the record's keys win exactly as on the next load.
+ * @returns {object|null}
+ */
+export function dropStock(item, actor) {
+  if (isGearItem(item) || item?.flags?.["merchant-presets"]?.stock) return null;
+  if (!item?.flags?.["item-piles"]) return null;
+  const repaired = repairStock(deriveStock(sourceFlagsOf(actor, item)));
+  return repaired.ok ? repaired.stock : null;
+}
+
+/**
  * The stock config to put back after an Item Piles restock (#119), as an
  * `Actor#updateEmbeddedDocuments("Item", …)` payload. A restock rebuilds every
  * line the shop's own record (`flags.merchant-presets.itemFlags`) names from

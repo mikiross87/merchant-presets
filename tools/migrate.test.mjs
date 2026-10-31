@@ -7,7 +7,7 @@ import {
   SHOP_SHEET_ID, deriveShop, deriveStock, hasCurrentShop, needsMigration, packShopCandidates, planActorUpdate,
   planAutoRestockDefault, planItemUpdates, planOwnership, planRestockStock, planTokenDisable, planTokenUpdates,
   shopSheetOnArrival, shouldForceAutoRestockOff, planTokenMigration, tokenNeedsMigration,
-  worldHasLegacyShops, derivedShop
+  worldHasLegacyShops, derivedShop, dropStock
 } from "../scripts/migrate.mjs";
 
 /** A shipped merchant, straight off `_source`, matched by filename prefix.
@@ -1081,4 +1081,21 @@ test("a token already migrated, or one with nothing of its own, or a linked one,
   assert.equal(tokenNeedsMigration({ ...linked.token, actorLink: true }, linked.actor, linked.base), false);
   const traded = onToken(migratedStore(), { items: [tradedBell] });
   assert.equal(tokenNeedsMigration(traded.token, traded.actor, traded.base), true);
+});
+
+test("a dropped Item Piles good gets its stock config at once (#289)", () => {
+  const ip = item => ({ name: "Stabling", type: "loot", flags: { "item-piles": { item } } });
+  const service = dropStock(ip({ isService: true }), null);
+  assert.equal(validateStock(service).ok, true);
+  assert.equal(service.service, true);
+  assert.equal(service.keep, false);   // Item Piles' own default, as the load-time sweep gives
+  assert.equal(dropStock(ip({ infiniteQuantity: "yes" }), null).infinite, true);
+  assert.equal(dropStock({ name: "Rope", flags: {} }, null), null);
+  assert.equal(dropStock({ ...ip({ isService: true }), flags: { "item-piles": { item: { isService: true } }, "merchant-presets": { stock: { keep: true } } } }, null), null);
+  assert.equal(dropStock({ ...ip({ isService: true }), flags: { "item-piles": { item: { isService: true } }, "merchant-presets": { kind: "gear" } } }, null), null);
+});
+
+test("a dropped Item Piles good with only a bundle size takes it at once, as on the next load (#289 review)", () => {
+  const bundled = { name: "Arrows", type: "consumable", flags: { "item-piles": { system: { quantityForPrice: 20 } } } };
+  assert.equal(dropStock(bundled, null)?.bundle, 20);
 });
